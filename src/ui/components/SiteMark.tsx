@@ -1,7 +1,7 @@
 "use client";
 /**
- * LetItRip site mark — the icon glyph (distinct from the `SiteLogo` text
- * wordmark). Sourced from `public/logo.svg`'s path data, recolored to follow
+ * Site mark — the icon glyph (distinct from the `SiteLogo` text wordmark).
+ * Sourced from `public/logo.svg`'s path data, recolored to follow
  * the active theme via the same `--appkit-logo-stop-*` variables `SiteLogo`
  * uses, so a custom admin theme restyles both consistently.
  *
@@ -9,6 +9,7 @@
  * className overrides on primitive components.
  */
 import { useId } from "react";
+import { getBrandName } from "../../core/brand-resolver";
 import { MediaImage } from "../../features/media/MediaImage";
 
 export type SiteMarkSize = "sm" | "md" | "lg" | "xl" | "hero";
@@ -25,7 +26,7 @@ export interface SiteMarkProps {
    * `"on-primary"` renders the mark in `var(--appkit-color-text)`.
    */
   tone?: SiteMarkTone;
-  /** Accessible title; defaults to "LetItRip.in". */
+  /** Accessible title. Defaults to the configured brand name. */
   title?: string;
   /**
    * Optional admin-uploaded image URL. When present, renders an `<MediaImage>`
@@ -94,9 +95,22 @@ const MARK_TRANSFORMS: readonly string[] = [
 export function SiteMark({
   size = "md",
   tone = "brand",
-  title = "LetItRip.in",
+  /*
+   * 🛑 Was `title = "LetItRip.in"` — one consumer's name as a library default.
+   *
+   * Unlike `SiteLogo`, this is NOT the unreachable-glyph bug: the mark is
+   * geometric paths with no text, so `title` really is only the accessible
+   * name. That makes it the quieter half of the same problem — a screen reader
+   * announced this marketplace on every install, and nothing on screen
+   * disagreed, so there was no way to notice.
+   *
+   * Resolved per render rather than at module load, so it reflects
+   * `configureBrand()` whenever that ran.
+   */
+  title,
   src,
 }: SiteMarkProps) {
+  const accessibleTitle = title ?? getBrandName();
   const uid = useId();
   const gradientId = `${GRADIENT_ID_PREFIX}-${uid.replace(/:/g, "")}`;
   const heightCls = SIZE_HEIGHTS[size];
@@ -105,7 +119,7 @@ export function SiteMark({
     return (
       <MediaImage
         src={src}
-        alt={title}
+        alt={accessibleTitle}
         size="thumbnail"
         objectFit="contain"
         // backed by the catalogued `size` enum; no consumer-provided overrides.
@@ -122,12 +136,12 @@ export function SiteMark({
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 236 245"
       role="img"
-      aria-label={title}
+      aria-label={accessibleTitle}
       data-testid="site-mark"
       // backed by the catalogued `size` enum; no consumer-provided overrides.
       className={`block w-auto ${heightCls}`}
     >
-      <title>{title}</title>
+      <title>{accessibleTitle}</title>
       {isGradient && (
         <defs>
           {/* Reuses the same --appkit-logo-stop-* variables SiteLogo consumes

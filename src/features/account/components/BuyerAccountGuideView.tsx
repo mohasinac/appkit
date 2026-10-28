@@ -8,6 +8,7 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
 
@@ -153,7 +154,7 @@ export function BuyerAccountGuideView() {
           Account &amp; Safety
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">
-          Manage your LetItRip profile, stay safe from scams, and know how to report problems.
+          Manage your {getBrandName()} profile, stay safe from scams, and know how to report problems.
         </Text>
       </Section>
 

@@ -8,6 +8,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -41,7 +42,7 @@ function CommissionSection() {
       <Div>
         <Text className={SUBHEADING}>How it works</Text>
         <Text className="leading-relaxed">
-          LetItRip deducts a platform fee from every completed order before paying out to you.
+          {getBrandName()} deducts a platform fee from every completed order before paying out to you.
           The current fee rate is shown in your store Settings → Finance page and in the platform site settings.
           Custom commission rates are available to high-volume sellers — see the Capabilities guide for details.
         </Text>
@@ -159,7 +160,7 @@ const COUPON_FIELDS = [
   },
   {
     field: "First-time user only",
-    detail: "Restricts redemption to buyers with no prior completed orders on LetItRip.",
+    detail: `Restricts redemption to buyers with no prior completed orders on ${getBrandName()}.`,
   },
   {
     field: "Combine with seller coupons",
@@ -174,7 +175,7 @@ function CouponsSection() {
         <Text className={SUBHEADING}>Admin coupons vs store coupons</Text>
         <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>
-            <Span weight="bold">Admin coupons</Span> — created by LetItRip and apply platform-wide (all stores). You cannot create these.
+            <Span weight="bold">Admin coupons</Span> — created by {getBrandName()} and apply platform-wide (all stores). You cannot create these.
           </Li>
           <Li className={LIST_DISC}>
             <Span weight="bold">Store coupons</Span> — created by you. Apply only to purchases from your store. You control the terms.
@@ -208,7 +209,7 @@ function PromotedSection() {
         <Text className={SUBHEADING}>isPromoted — Deals & promoted sections</Text>
         <Text className="leading-relaxed">
           Promoted listings appear in the Deals carousel on the homepage and in search-result promoted slots.
-          For most stores, this flag is set by a LetItRip admin. If you want a product promoted, contact
+          For most stores, this flag is set by a {getBrandName()} admin. If you want a product promoted, contact
           support with the product slug and reason.
         </Text>
       </Div>
@@ -222,8 +223,8 @@ function PromotedSection() {
         </Text>
       </Div>
       <Alert variant="info" title="Promoted placement vs sponsored listings">
-        LetItRip does not currently offer paid sponsored placements — promoted and featured flags are
-        granted editorially by the LetItRip team based on listing quality and seller performance.
+        {getBrandName()} does not currently offer paid sponsored placements — promoted and featured flags are
+        granted editorially by the {getBrandName()} team based on listing quality and seller performance.
       </Alert>
     </Div>
   );
@@ -235,13 +236,13 @@ function TaxesSection() {
   return (
     <Div className={SECTION_BODY}>
       <Alert variant="warning" title="Seller tax responsibility">
-        LetItRip is a marketplace platform. Each seller operates independently and is individually
+        {getBrandName()} is a marketplace platform. Each seller operates independently and is individually
         responsible for applicable taxes on their sales, including GST where required by Indian tax law.
-        LetItRip does not collect or remit GST on your behalf. Consult a qualified tax advisor to
+        {getBrandName()} does not collect or remit GST on your behalf. Consult a qualified tax advisor to
         understand your obligations based on your turnover and registration status.
       </Alert>
       <Text className="leading-relaxed">
-        TCS (Tax Collected at Source) deducted by LetItRip under Section 194-O of the Income Tax Act
+        TCS (Tax Collected at Source) deducted by {getBrandName()} under Section 194-O of the Income Tax Act
         will be reflected in your annual Form 26AS. Your gross payouts (before TCS) are visible in the
         Finance → Payouts dashboard.
       </Text>

@@ -13,7 +13,7 @@
  *
  *   1. Almost no small seller will create a Meta app and mint a system user
  *      token. A setting nobody can complete is a feature nobody has.
- *   2. It made LetItRip the custodian of a live Meta credential per seller.
+ *   2. It made {getBrandName()} the custodian of a live Meta credential per seller.
  *      `StoreRepository.mapDoc` decrypted that token on EVERY read, so any
  *      code path that forgot to project was handling plaintext — a gap
  *      CLAUDE.md flags as deserving its own session.
@@ -49,6 +49,7 @@ import { Toggle } from "../../../ui/components/Toggle";
 import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { getBrandName } from "../../../core/brand-resolver";
 
 export interface SellerWhatsAppSettingsViewProps {
   /** Is this store currently subscribed? Server-resolved from the store document. */
@@ -117,7 +118,7 @@ export function SellerWhatsAppSettingsView({
         </Heading>
         <Text variant="secondary" className="mb-6" size="sm">
           Send your buyers order updates on WhatsApp — confirmed, shipped, delivered — from
-          LetItRip&apos;s verified business number. You don&apos;t need a WhatsApp Business
+          {getBrandName()}&apos;s verified business number. You don&apos;t need a WhatsApp Business
           account of your own, and nothing is installed on your phone.
         </Text>
 
@@ -169,7 +170,7 @@ export function SellerWhatsAppSettingsView({
             Nothing promotional — buyers who opted out of WhatsApp never receive these.
           </Text>
           <Text color="muted" size="sm">
-            Messages come from LetItRip&apos;s number, not yours, so your personal number stays
+            Messages come from {getBrandName()}&apos;s number, not yours, so your personal number stays
             private and replies land with our support team rather than on your phone.
           </Text>
           <Text color="muted" size="sm">

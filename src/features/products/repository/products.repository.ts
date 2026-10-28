@@ -80,6 +80,7 @@ import type { ProductStatus } from "../types";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /**
  * Canonical listing-kind tokens used in `listingType`. Note: the public Sieve
@@ -201,7 +202,7 @@ function interpolateDefaults(
     category: names[0],
     categoryPath: names.length ? [...names].reverse().join(" › ") : undefined,
     series: names[names.length - 2],
-    siteName: "LetItRip",
+    siteName: getBrandName(),
   }).text;
 }
 

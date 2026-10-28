@@ -5,6 +5,7 @@ import { Row } from "../../ui/components/Layout";
 import { Span } from "../../ui/components/Typography";
 import { resolveMediaUrl, resolveVideoUrl, getYouTubeVideoId } from "../../utils/media-url";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
+import { getBrandDomain } from "../../core/brand-resolver";
 
 /**
  * Visual watermark overlay configuration. Mirrors the runtime shape of
@@ -265,7 +266,7 @@ function MediaVideoWatermarkLayer({ config }: { config: MediaVideoWatermark }) {
         className="block text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.7)]"
         style={{ fontSize: "0.8em", fontWeight: 700, textAlign: "right" }}
       >
-        {config.text ?? "letitrip.in"}
+        {config.text ?? getBrandDomain()}
       </Span>
     </Div>
   );

@@ -25,6 +25,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { PRICE_LOOKUP_INDEX_TYPES, priceLookupTargetFor } from "../lookup-target";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /**
  * The realised-price lookup — a SEARCH tool, not a list.
@@ -648,7 +649,7 @@ function ResultCard({
             about is missing.
           */}
           <Text size="xs" color="muted">
-            Completed sales on LetItRip
+            Completed sales on {getBrandName()}
             {row.windowDays ? ` over the last ${row.windowDays} days` : ""}
             {row.computedAt ? ` · as of ${new Date(row.computedAt).toLocaleDateString("en-IN")}` : ""}
           </Text>
@@ -667,7 +668,7 @@ function ResultCard({
          */
         <Text size="sm" color="muted">
           {market
-            ? "Nothing has sold here on LetItRip yet, so the figures above are asking prices elsewhere rather than our own sales."
+            ? `Nothing has sold here on ${getBrandName()} yet, so the figures above are asking prices elsewhere rather than our own sales.`
             : canSeeMarket
               ? /*
                  * 🛑 BOTH halves are empty here, and saying so is the point.
@@ -679,7 +680,7 @@ function ResultCard({
                  * states and only one of them is about our marketplace.
                  */
                 "No price evidence for this one yet — nothing sold here, and no asking prices recorded for it either. It appears as soon as either exists."
-              : "No completed sales recorded here yet. Prices appear once something sells on LetItRip."}
+              : `No completed sales recorded here yet. Prices appear once something sells on ${getBrandName()}.`}
         </Text>
       )}
     </Stack>
@@ -990,7 +991,7 @@ export function PriceIndexToolView({
             </Row>
             <Text color="muted">
               Pick any bey, part or set to see what it actually sold for on
-              LetItRip — the range, the median, the average and the most recent
+              {getBrandName()} — the range, the median, the average and the most recent
               sale, broken down by condition — alongside what other Indian shops
               are asking for the same thing.
             </Text>
@@ -1065,7 +1066,7 @@ export function PriceIndexToolView({
               <Text weight="semibold">Two numbers, and the gap matters</Text>
               <Text size="sm" color="muted">
                 <Span weight="semibold">Sold</Span> is a completed sale on
-                LetItRip — not an asking price and not a guess. We publish a
+                {getBrandName()} — not an asking price and not a guess. We publish a
                 figure only once {threshold} or more sales support it, and the
                 index is recomputed once a day, so it is deliberately a day
                 behind.

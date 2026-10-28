@@ -7,10 +7,22 @@
  */
 
 import { normalizeError } from "../../../errors/normalize";
-const APP_ID = () =>
-  typeof process !== "undefined" && process.env.NEXT_PUBLIC_APP_ID
-    ? process.env.NEXT_PUBLIC_APP_ID
-    : "letitrip";
+import { getStorageNamespace } from "../../../constants/storage-keys";
+/*
+ * 🛑 A SECOND storage-key namespace owner, now removed.
+ *
+ * A1 made `constants/storage-keys.ts` the one namespace, injected by the
+ * consumer via `setStorageNamespace()`. This file had its own parallel
+ * mechanism reading a DIFFERENT env var (`NEXT_PUBLIC_APP_ID`) with a
+ * hardcoded `"letitrip"` fallback — so two modules decided what prefixes a
+ * browser key, and only one of them was configurable.
+ *
+ * The resolved value is unchanged for this install (the namespace is also
+ * "letitrip"), which matters: changing the prefix would ORPHAN every queued
+ * cart/wishlist op already sitting in a returning visitor's localStorage
+ * rather than migrating it.
+ */
+const APP_ID = () => getStorageNamespace();
 
 const CART_OPS_KEY = () => `${APP_ID()}_cart_ops`;
 const WL_OPS_KEY = () => `${APP_ID()}_wl_ops`;

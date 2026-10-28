@@ -19,6 +19,7 @@ import { Stack } from "../../../ui/components/Layout";
 import { MediaImage } from "../../media/MediaImage";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -104,8 +105,8 @@ export function PrizeRevealModal({
             Fairness guarantee:
           </Span>{" "}
           Winners are picked by <code>crypto.randomInt</code> running on
-          LetItRip's server the moment your prize is assigned. Neither the
-          store nor LetItRip staff can influence the outcome.{" "}
+          {getBrandName()}'s server the moment your prize is assigned. Neither the
+          store nor {getBrandName()} staff can influence the outcome.{" "}
           {rngSourceUrl ? (
             <Anchor href={rngSourceUrl} tone="none" underline="always">
               View RNG source code →

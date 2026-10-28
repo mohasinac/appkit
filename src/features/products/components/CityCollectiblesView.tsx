@@ -14,6 +14,7 @@ import { hidePublicTestData } from "../../../_internal/server/features/tester/vi
 import { MEETUP_CITIES, type MeetupCity } from "../constants/meetup-cities";
 import { ProductGrid } from "./ProductGrid";
 import type { ProductItem } from "../types";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -128,7 +129,7 @@ export async function CityCollectiblesView({ city }: CityCollectiblesViewProps) 
             <Alert variant="info">
               <Text weight="semibold">{`Nobody is selling in ${city.city} right now`}</Text>
               <Text size="sm">
-                {`Classified listings come and go quickly — this page lists them whenever a seller names ${city.city} as their meet-up point. In the meantime, everything on LetItRip ships nationwide.`}
+                {`Classified listings come and go quickly — this page lists them whenever a seller names ${city.city} as their meet-up point. In the meantime, everything on ${getBrandName()} ships nationwide.`}
               </Text>
               <Row gap="md" wrap className="mt-3">
                 <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>Browse everything</TextLink>
@@ -150,7 +151,7 @@ export async function CityCollectiblesView({ city }: CityCollectiblesViewProps) 
                 Meet somewhere public and busy, in daylight. Bring the exact
                 amount if you are paying cash, and check the item against its
                 listing photos before you hand anything over — a classified sale
-                is between you and the seller, so LetItRip&apos;s buyer
+                is between you and the seller, so {getBrandName()}&apos;s buyer
                 protection does not cover a cash handover.
               </Text>
               <Row gap="md" wrap className="mt-3">

@@ -1404,5 +1404,28 @@ export const SCHEMA_DEFAULTS = {
   UNKNOWN_USER: "Unknown User",
   ANONYMOUS_USER: "Anonymous",
   DEFAULT_DISPLAY_NAME: "User",
+  /**
+   * 🛑 NOT A DEFAULT — THIS CONSTANT GRANTS THE ADMIN ROLE, and it is the one
+   * brand literal in appkit that was DELIBERATELY left in place by A5d.
+   *
+   * Three consumer auth routes read it as an authorisation decision:
+   *   `email === SCHEMA_DEFAULTS.ADMIN_EMAIL ? "admin" : "user"`
+   * in `api/auth/register`, `api/auth/session` and `api/auth/google/callback`.
+   * So whoever controls this address is auto-promoted to admin at signup or at
+   * first session — in EVERY install of appkit, because the address is baked
+   * into the library rather than configured by the consumer.
+   *
+   * It was not changed with the other 131 brand literals because changing it
+   * changes who becomes an administrator. CLAUDE.md Rule #1 puts "security
+   * boundaries: auth, RBAC" on the escalate-before-acting list, and rewiring an
+   * admin-promotion check as a drive-by inside a branding sweep is exactly the
+   * shape that rule forbids — a wrong move here either locks the owner out or
+   * hands the role to someone else.
+   *
+   * The fix needs an owner decision, and the options differ in blast radius:
+   * move it to `appkit.config.js` and inject it like the brand; replace
+   * email-matching with an explicit role grant; or drop auto-promotion and seed
+   * the first admin. Tracked, not silently chosen.
+   */
   ADMIN_EMAIL: "admin@letitrip.in",
 } as const;

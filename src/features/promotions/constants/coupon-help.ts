@@ -12,6 +12,13 @@
  * `faq-coupons-and-discounts`.
  */
 
+/*
+ * 🛑 Carries a `{{siteName}}` token rather than a literal. This is module-level
+ * data, so a template literal here would resolve at IMPORT time — before the
+ * consumer's `configureBrand()` has run — and permanently capture appkit's
+ * neutral default. `CouponHelpDetails` resolves it at render. See
+ * `core/brand-text.ts`.
+ */
 export const COUPON_HELP = {
   title: "How coupons work",
 
@@ -19,7 +26,7 @@ export const COUPON_HELP = {
   stackingHeading: "You can use more than one coupon",
   stackingRules: [
     "One store coupon per store. If your cart has items from three stores, you can apply each of those stores' coupons at the same time.",
-    "Plus one platform-wide LetItRip coupon, on top of any store coupons.",
+    "Plus one platform-wide {{siteName}} coupon, on top of any store coupons.",
     // D51's third bucket, stated for the buyer. Without this line the rule
     // above reads as "one platform coupon" and a buyer with a points offer
     // applied would reasonably think it was using up that slot.

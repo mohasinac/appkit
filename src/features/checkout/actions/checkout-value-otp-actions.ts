@@ -30,6 +30,7 @@ import {
   buildCheckoutValueOtpMessage,
   type CheckoutValueOtpDoc,
 } from "../../auth/checkout-value-otp";
+import { getBrandName } from "../../../core/brand-resolver";
 
 export type CheckoutValueOtpChannel = "email" | "whatsapp";
 
@@ -64,7 +65,14 @@ export async function sendCheckoutValueOtp(
   const code = generateOtpCode();
   const codeHash = hashOtp(code);
   const expiresAt = new Date(Date.now() + CHECKOUT_VALUE_OTP_EXPIRY_MS);
-  const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "LetItRip";
+  /*
+   * 🛑 Was `process.env.NEXT_PUBLIC_SITE_NAME || "LetItRip"`, and the env var
+   * holds `"Let It Rip India"` — which is `appkit.config.js → brand.heroCaption`,
+   * not `brand.name`. So every high-value checkout OTP named the site something
+   * the brand owner does not call it, and an unconfigured install of appkit
+   * named it this marketplace.
+   */
+  const siteName = getBrandName();
 
   if (channel === "whatsapp") {
     if (!addressId) {

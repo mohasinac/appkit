@@ -23,6 +23,7 @@ import {
   type LabelProfileId,
 } from "../../../_internal/shared/features/print/label-profiles";
 import { formatMoney } from "../../../utils/number.formatter";
+import { getBrandName } from "../../../core/brand-resolver";
 
 interface PrintCenterStore {
   id: string;
@@ -126,7 +127,7 @@ function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName:
 
 export function PrintCenterView({
   store,
-  brandName = "LetItRip",
+  brandName = `${getBrandName()}`,
   initialProducts = [],
   initialOrders = [],
 }: PrintCenterViewProps) {

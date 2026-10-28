@@ -52,6 +52,7 @@ import { siteSettingsFormSchema } from "../schemas/site-settings-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
+import { getBrandName, getBrandDomain, getBrandSupportEmail, getBrandNoreplyEmail } from "../../../core/brand-resolver";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -287,7 +288,7 @@ export function AdminSiteSettingsView({
 
   // ⑥ Watermark
   const [watermarkType, setWatermarkType] = React.useState<"text" | "image">("text");
-  const [watermarkText, setWatermarkText] = React.useState("letitrip.in");
+  const [watermarkText, setWatermarkText] = React.useState(getBrandDomain());
   const [watermarkImageUrl, setWatermarkImageUrl] = React.useState("");
   const [watermarkSize, setWatermarkSize] = React.useState(10);
   const [watermarkOpacity, setWatermarkOpacity] = React.useState(10);
@@ -607,7 +608,7 @@ export function AdminSiteSettingsView({
     setPinterest(s.socialLinks?.pinterest ?? "");
 
     setWatermarkType(s.watermark?.type ?? "text");
-    setWatermarkText(s.watermark?.text ?? "letitrip.in");
+    setWatermarkText(s.watermark?.text ?? getBrandDomain());
     setWatermarkImageUrl(s.watermark?.imageUrl ?? "");
     setWatermarkSize(s.watermark?.size ?? 10);
     setWatermarkOpacity(s.watermark?.opacity ?? 10);
@@ -1109,7 +1110,7 @@ export function AdminSiteSettingsView({
               <Text size="xs" color="muted">
                 Override the About page content. Leave blank to use the platform defaults.
               </Text>
-              <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder="About LetItRip" />
+              <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder={`About ${getBrandName()}`} />
               <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
               <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
               <>
@@ -1117,7 +1118,7 @@ export function AdminSiteSettingsView({
                   label="Mission text"
                   value={aboutMissionText}
                   onChange={(e) => setAboutMissionText(e.target.value)}
-                  placeholder="LetItRip was built to democratise commerce…"
+                  placeholder={`${getBrandName()} was built to democratise commerce…`}
                   rows={4}
                 />
               </>
@@ -1173,7 +1174,7 @@ export function AdminSiteSettingsView({
 
               <Stack gap="sm" rounded="lg" border="default" padding="md">
                 <Input label="Team section title" value={aboutTeamTitle} onChange={(e) => setAboutTeamTitle(e.target.value)} placeholder="Meet the Team" />
-                <Input label="Team section subtitle" value={aboutTeamSubtitle} onChange={(e) => setAboutTeamSubtitle(e.target.value)} placeholder="The people building LetItRip" />
+                <Input label="Team section subtitle" value={aboutTeamSubtitle} onChange={(e) => setAboutTeamSubtitle(e.target.value)} placeholder={`The people building ${getBrandName()}`} />
                 {aboutTeamMembers.map((member, i) => (
                   <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
                     <Row justify="between" align="center">
@@ -1207,7 +1208,7 @@ export function AdminSiteSettingsView({
           {/* ① Branding */}
           <TabsContent value="branding">
             <SettingsTabForm id="branding" label="Branding">
-              <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetItRip" />
+              <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder={getBrandName()} />
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
               <ImageUpload label="Favicon" currentImage={faviconUrl} onUpload={(file) => upload(file, "store")} onChange={setFaviconUrl} />
@@ -1348,10 +1349,10 @@ export function AdminSiteSettingsView({
           {/* ④ SEO */}
           <TabsContent value="seo">
             <SettingsTabForm id="seo" label="Seo">
-              <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetItRip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
+              <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder={`${getBrandName()} — what you sell, where you sell it`} maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
-              <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder="https://letitrip.in" />
+              <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder={`https://${getBrandDomain()}`} />
               <Div id="setting-robots-noindex"><Toggle label="Robots noindex (disables search indexing — use carefully)" checked={seoNoIndex} onChange={setSeoNoIndex} /></Div>
             </SettingsTabForm>
           </TabsContent>
@@ -1360,17 +1361,17 @@ export function AdminSiteSettingsView({
           <TabsContent value="contact">
             <SettingsTabForm id="contact" label="Contact">
               <Grid cols={2} gap="md">
-                <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder="support@letitrip.in" />
+                <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder={getBrandSupportEmail()} />
                 <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
               </Grid>
               <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
               <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
               <Text className="pt-[0.5rem]" color="muted" size="sm" weight="medium">Social links</Text>
               <Grid cols={2} gap="md">
-                <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/letitrip" />
-                <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/letitrip" />
-                <Input label="Facebook URL" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="https://facebook.com/letitrip" />
-                <Input label="YouTube URL" value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="https://youtube.com/@letitrip" />
+                <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/yourbrand" />
+                <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/yourbrand" />
+                <Input label="Facebook URL" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="https://facebook.com/yourbrand" />
+                <Input label="YouTube URL" value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="https://youtube.com/@yourbrand" />
                 <Input label="WhatsApp number" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+91XXXXXXXXXX" />
                 {/*
                   Editable here for the first time. It was already stored and
@@ -1379,8 +1380,8 @@ export function AdminSiteSettingsView({
                   any tab wiped it. See the state declaration for why.
                 */}
                 <Input label="Business UPI VPA" value={upiVpa} onChange={(e) => setUpiVpa(e.target.value)} placeholder="name@bank" />
-                <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/letitrip" />
-                <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/letitrip" />
+                <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/yourbrand" />
+                <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/yourbrand" />
               </Grid>
             </SettingsTabForm>
           </TabsContent>
@@ -1395,7 +1396,7 @@ export function AdminSiteSettingsView({
                 onValueChange={(v) => setWatermarkType(v as "text" | "image")}
               />
               {watermarkType === "text" ? (
-                <Input label="Watermark text" value={watermarkText} onChange={(e) => setWatermarkText(e.target.value)} placeholder="letitrip.in" />
+                <Input label="Watermark text" value={watermarkText} onChange={(e) => setWatermarkText(e.target.value)} placeholder={getBrandDomain()} />
               ) : (
                 <ImageUpload label="Watermark image" currentImage={watermarkImageUrl} onUpload={(file) => upload(file, "store")} onChange={setWatermarkImageUrl} />
               )}
@@ -1748,7 +1749,7 @@ export function AdminSiteSettingsView({
                   error={gstProblems.legalName}
                   value={gstLegalName}
                   onChange={(e) => setGstLegalName(e.target.value)}
-                  placeholder="LetItRip Collectibles Pvt Ltd"
+                  placeholder={`${getBrandName()} Pvt Ltd`}
                 />
               </Grid>
               <Stack gap="xs">
@@ -1883,7 +1884,7 @@ export function AdminSiteSettingsView({
                   <Input label="SMTP port" value={smtpPort} onChange={(e) => setSmtpPort(e.target.value)} type="number" placeholder="587" />
                   <Input label="SMTP user" value={smtpUser} onChange={(e) => setSmtpUser(e.target.value)} placeholder="apikey" />
                 </Grid>
-                <Input label="From address" value={smtpFrom} onChange={(e) => setSmtpFrom(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
+                <Input label="From address" value={smtpFrom} onChange={(e) => setSmtpFrom(e.target.value)} placeholder={getBrandNoreplyEmail()} type="email" />
                 <Text size="xs" color="muted">
                   Transactional email is delivered through Resend — set the Resend API key below.
                   These SMTP fields are stored but not currently used for delivery.
@@ -1921,7 +1922,7 @@ export function AdminSiteSettingsView({
                 <Text size="xs" color="muted">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</Text>
                 <Grid cols={2} gap="md">
                   <MaskedInput label="Page Access Token" value={metaPageAccessToken} onChange={setMetaPageAccessToken} placeholder="EAAxxxxxxx…" />
-                  <Input label="Page ID (or handle)" value={metaPageId} onChange={(e) => setMetaPageId(e.target.value)} placeholder="letitrip" />
+                  <Input label="Page ID (or handle)" value={metaPageId} onChange={(e) => setMetaPageId(e.target.value)} placeholder="yourbrand" />
                 </Grid>
               </Stack>
               <Stack gap="sm">
@@ -2225,8 +2226,8 @@ export function AdminSiteSettingsView({
                     <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Resend API (for transactional email)</Text>
                     <MaskedInput label="Resend API Key" value={resendApiKey} onChange={setResendApiKey} placeholder="re_live_…" helperText="Get your key at resend.com — used for all transactional notifications." />
                     <Grid cols={2} gap="md">
-                      <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
-                      <Input label="From name" value={notifFromName} onChange={(e) => setNotifFromName(e.target.value)} placeholder="LetItRip" />
+                      <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder={getBrandNoreplyEmail()} type="email" />
+                      <Input label="From name" value={notifFromName} onChange={(e) => setNotifFromName(e.target.value)} placeholder={getBrandName()} />
                     </Grid>
                     <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Notification types (leave empty to send all types)</Text>
                     <PaginatedSelect<string>
@@ -2253,7 +2254,7 @@ export function AdminSiteSettingsView({
                       label="Recipients (To)"
                       value={digestRecipients}
                       onChange={(e) => setDigestRecipients(e.target.value)}
-                      placeholder={"mohasin@letitrip.in"}
+                      placeholder={getBrandSupportEmail()}
                       rows={3}
                       helperText="One address per line. Each address is billed as a separate send against the daily allowance — keep this list short."
                     />

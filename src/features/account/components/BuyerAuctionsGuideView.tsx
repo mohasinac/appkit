@@ -7,6 +7,7 @@ import { Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /* Phase 9 — one definition of the refund timeline. See the 🛑 at the call site. */
 const { refundBusinessDaysMin: REFUND_DAYS_MIN, refundBusinessDaysMax: REFUND_DAYS_MAX } =
@@ -40,7 +41,7 @@ const SECTIONS: AuctionSection[] = [
         <Text className={`${GC.textMuted} mb-3`}>Enter your bid amount — it must be at least the current high bid plus the increment — and click <Span weight="bold">Place Bid</Span>. You&apos;ll be asked to confirm.</Text>
         <Ul className={GC.listMuted}>
           <Li><Span weight="bold" className={GC.textStrong}>Outbid notification</Span> — you&apos;ll receive an in-app notification and email if someone outbids you.</Li>
-          <Li><Span weight="bold" className={GC.textStrong}>Max bid (proxy bidding)</Span> — enter the maximum you&apos;re willing to pay. LetItRip will automatically bid on your behalf up to that amount, in the minimum increments needed to keep you in the lead. Your max bid is never revealed to other bidders.</Li>
+          <Li><Span weight="bold" className={GC.textStrong}>Max bid (proxy bidding)</Span> — enter the maximum you&apos;re willing to pay. {getBrandName()} will automatically bid on your behalf up to that amount, in the minimum increments needed to keep you in the lead. Your max bid is never revealed to other bidders.</Li>
         </Ul>
         <Text className={`${GC.textMuted} mt-3`}>
           <Span weight="bold">Example:</Span> Current bid is ₹500, increment is ₹50. You set a max bid of ₹800. Your bid is placed at ₹550. If someone bids ₹600, the system auto-bids ₹650 for you — up to ₹800.
@@ -65,7 +66,7 @@ const SECTIONS: AuctionSection[] = [
     Icon: AlertTriangle, iconCls: "w-5 h-5 text-amber-500", title: "Bid Retraction Policy",
     content: (
       <Alert variant="warning">
-        Bids on LetItRip are <Span weight="bold">binding</Span>. Only place a bid if you intend to pay. Retraction requires contacting support with a valid reason. Repeated retractions may result in a temporary restriction on placing new bids.
+        Bids on {getBrandName()} are <Span weight="bold">binding</Span>. Only place a bid if you intend to pay. Retraction requires contacting support with a valid reason. Repeated retractions may result in a temporary restriction on placing new bids.
       </Alert>
     ),
   },
@@ -131,7 +132,7 @@ export function BuyerAuctionsGuideView() {
           Auctions &amp; Pre-orders
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">
-          How bidding works, how to win, and everything you need to know about pre-orders on LetItRip.
+          How bidding works, how to win, and everything you need to know about pre-orders on {getBrandName()}.
         </Text>
       </Section>
 

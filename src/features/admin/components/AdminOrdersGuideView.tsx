@@ -6,6 +6,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /*
  * Phase 9 — read from the published-value registry rather than restated.
@@ -32,7 +33,7 @@ export function AdminOrdersGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Orders &amp; Finance</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">Order statuses, payouts, disputes, returns, and commission math on LetItRip.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">Order statuses, payouts, disputes, returns, and commission math on {getBrandName()}.</Text>
       </Section>
 
       {[

@@ -14,6 +14,7 @@ import { ROUTES } from "../../../constants";
 import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import type { AboutTeamMember, AboutMilestone } from "../schemas/firestore";
+import { getBrandName } from "../../../core/brand-resolver";
 
 export interface DeveloperViewProps {
   labels?: {
@@ -59,7 +60,7 @@ export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
         centered={false}
         subtitleSize="sm"
         title={labels.title ?? "Meet the Developer"}
-        subtitle={labels.subtitle ?? "The person building LetItRip, one feature at a time."}
+        subtitle={labels.subtitle ?? `The person building ${getBrandName()}, one feature at a time.`}
       />
 
       <Div className={`${page.container.sm}`} padding="content-banner">

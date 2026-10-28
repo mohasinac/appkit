@@ -35,6 +35,7 @@ import type { ProductFeatureProductType } from "../../products/schemas/product-f
 import type { ListingType } from "../../products/types/index";
 
 import { normalizeError } from "../../../errors/normalize";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /**
  * "bundle" is a categoryType, not a ListingType, so it can't live in
@@ -492,7 +493,7 @@ function StepBasic({
     brand: values.brand ?? "",
     condition:
       CONDITION_OPTIONS.find((o) => o.value === (values.condition ?? "new"))?.label ?? "",
-    siteName: "LetItRip",
+    siteName: `${getBrandName()}`,
   };
 
   return (
@@ -1356,7 +1357,7 @@ function StepLiveItemSettings({
   return (
     <Stack gap="md">
       <Alert variant="warning">
-        Live animal / plant listings must comply with all applicable laws, CITES regulations, and local jurisdiction rules. LetItRip is not responsible for legal compliance — this is solely the seller's responsibility.
+        Live animal / plant listings must comply with all applicable laws, CITES regulations, and local jurisdiction rules. {getBrandName()} is not responsible for legal compliance — this is solely the seller's responsibility.
       </Alert>
       <FormGroup columns={2}>
         <FormField
@@ -1748,7 +1749,7 @@ function StepShipping({
       )}
       {/*
         🛑 The GST rate and HSN code are deliberately NOT here.
-        LetItRip is the seller of record and invoices under its own GSTIN, so
+        {getBrandName()} is the seller of record and invoices under its own GSTIN, so
         the rate is a tax determination owned by the category (via
         `productDefaults.taxCodeId`, resolved server-side by `deriveTaxonomy`)
         and by the admin who maintains the tax codes — never by the supplier.

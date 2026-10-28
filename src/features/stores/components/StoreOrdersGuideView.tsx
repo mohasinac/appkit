@@ -9,6 +9,7 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /* Phase 9 — one definition of the refund timeline. */
 const { refundBusinessDaysMin: REFUND_DAYS_MIN, refundBusinessDaysMax: REFUND_DAYS_MAX } =
@@ -194,7 +195,7 @@ function CancellationsSection() {
             <Span weight="bold">Seller (you)</Span> — can cancel any time before SHIPPED (e.g. item found damaged during packaging).
           </Li>
           <Li className={LIST_DISC}>
-            <Span weight="bold">LetItRip admin</Span> — can force-cancel at any status for policy violations or unresolved disputes.
+            <Span weight="bold">{getBrandName()} admin</Span> — can force-cancel at any status for policy violations or unresolved disputes.
           </Li>
         </Ul>
       </Div>
@@ -238,7 +239,7 @@ function ReturnsSection() {
         <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>The buyer's reason for return (pre-defined category + optional description).</Li>
           <Li className={LIST_DISC}>Photos of the item as received.</Li>
-          <Li className={LIST_DISC}>A 3-day SLA to respond before LetItRip mediates.</Li>
+          <Li className={LIST_DISC}>A 3-day SLA to respond before {getBrandName()} mediates.</Li>
         </Ul>
       </Div>
       <Div>
@@ -252,8 +253,8 @@ function ReturnsSection() {
       <Div>
         <Text className={SUBHEADING}>Rejecting a return</Text>
         <Text className="leading-relaxed">
-          You can reject a return request with a reason. If the buyer disagrees, they can escalate to LetItRip support.
-          LetItRip will mediate — if the evidence supports the buyer, the return will be approved regardless of your rejection.
+          You can reject a return request with a reason. If the buyer disagrees, they can escalate to {getBrandName()} support.
+          {getBrandName()} will mediate — if the evidence supports the buyer, the return will be approved regardless of your rejection.
           Unjustified rejections count against your seller rating.
         </Text>
       </Div>
@@ -302,7 +303,7 @@ function AuctionOrdersSection() {
 const FAQS = [
   {
     q: "What if the buyer claims non-delivery but tracking shows delivered?",
-    a: "Do not cancel immediately. Ask the buyer to check with neighbours and at the nearest post office or courier depot. If after 5 days the parcel is still missing, contact the carrier to file a trace. If the trace confirms loss, you may need to refund — document everything and contact LetItRip support if needed.",
+    a: `Do not cancel immediately. Ask the buyer to check with neighbours and at the nearest post office or courier depot. If after 5 days the parcel is still missing, contact the carrier to file a trace. If the trace confirms loss, you may need to refund — document everything and contact ${getBrandName()} support if needed.`,
   },
   {
     q: "Can I cancel an order after I've already shipped it?",
@@ -314,7 +315,7 @@ const FAQS = [
   },
   {
     q: "How do I handle a partial order if I sold multiple items?",
-    a: "Currently each product listing creates a separate order. If you sold a bundle, the bundle order must be fulfilled as a single shipment. If one item in a bundle is unavailable, contact the buyer and LetItRip support — partial fulfilment is not supported in the standard flow.",
+    a: `Currently each product listing creates a separate order. If you sold a bundle, the bundle order must be fulfilled as a single shipment. If one item in a bundle is unavailable, contact the buyer and ${getBrandName()} support — partial fulfilment is not supported in the standard flow.`,
   },
 ];
 

@@ -10,6 +10,7 @@ import type { StoreDocument } from "../schemas";
 import type { SellerStandingSnapshot } from "../types";
 import { SellerStandingPanel } from "./SellerStandingPanel";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const CLS_CHECK_ICON = "w-5 h-5 flex-shrink-0 text-emerald-500";
 const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 px-[var(--appkit-space-5)] py-[var(--appkit-space-4)]";
@@ -145,7 +146,7 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
             {storeName}
           </Heading>
           <Text color="inverse-muted" size="base">
-            Everything you need to know about selling on LetItRip.
+            Everything you need to know about selling on {getBrandName()}.
           </Text>
         </Div>
       </Section>

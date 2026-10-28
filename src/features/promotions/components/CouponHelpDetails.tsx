@@ -5,6 +5,7 @@ import { Details, Summary } from "../../../ui/components/Details";
 import { Stack } from "../../../ui/components/Layout";
 import { Text, Span } from "../../../ui/components/Typography";
 import { Ul, Li } from "../../../ui/components/Semantic";
+import { withBrand, withBrandAll } from "../../../core/brand-text";
 import { COUPON_HELP } from "../constants/coupon-help";
 
 export interface CouponHelpDetailsProps {
@@ -67,19 +68,19 @@ export function CouponHelpDetails({
       <Stack gap="comfortable" padding="md">
         <HelpSection
           heading={COUPON_HELP.stackingHeading}
-          items={COUPON_HELP.stackingRules}
+          items={withBrandAll(COUPON_HELP.stackingRules)}
         />
         <HelpSection
           heading={COUPON_HELP.applicationHeading}
-          items={COUPON_HELP.applicationRules}
+          items={withBrandAll(COUPON_HELP.applicationRules)}
         />
         <HelpSection
           heading={COUPON_HELP.failureHeading}
-          items={COUPON_HELP.failureReasons}
+          items={withBrandAll(COUPON_HELP.failureReasons)}
         />
         {showRevalidationNote && (
           <Text size="xs" color="muted">
-            {COUPON_HELP.revalidationNote}
+            {withBrand(COUPON_HELP.revalidationNote)}
           </Text>
         )}
       </Stack>

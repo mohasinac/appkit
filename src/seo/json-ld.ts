@@ -14,7 +14,28 @@
  */
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
+
+/**
+ * The brand name, from the injected identity rather than an env var.
+ *
+ * 🛑 A FUNCTION, not a module `const`, and that matters twice over. This was
+ * `const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App"`, which:
+ *
+ *  - captured its value at IMPORT time, so even after `configureBrand()` runs
+ *    it would have kept whatever it read first; and
+ *  - read the env var this file's own comment at `SiteIdentityOptions` records
+ *    as having shipped `"Letitrip"` to production — the wrong casing, in the
+ *    `Organization.name` Google may put in a Knowledge Panel.
+ *
+ * That comment fixed the two site-wide nodes by taking `opts.siteName`. It did
+ * not fix `publisher` below, which has no opts path, so every article still
+ * emitted the env value. Resolving through `getBrandName()` closes both: there
+ * is now one owner (`appkit.config.js → brand`) and no mis-typeable env var in
+ * the path.
+ */
+function siteName(): string {
+  return getBrandName();
+}
 
 /**
  * schema.org requires ABSOLUTE URLs. A relative `image` or `item` is not a
@@ -57,6 +78,7 @@ function absoluteUrl(value: unknown, base: string = SITE_URL): string | undefine
 }
 
 import { ProductStatusValues } from "../features/products/schemas";
+import { getBrandName } from "../core/brand-resolver";
 import { getDefaultCurrency } from "../core/baseline-resolver";
 // The defining module, never the `/client` entry: this file is reached from
 // server-only metadata paths and must not pull in a `"use client"` module
@@ -397,7 +419,7 @@ export function blogPostJsonLd(
     author: post.authorName
       ? { "@type": "Person", name: post.authorName, image: post.authorAvatar }
       : undefined,
-    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    publisher: { "@type": "Organization", name: siteName(), url: SITE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
   };
 }
@@ -452,7 +474,7 @@ export interface SiteIdentityOptions {
 }
 
 export function organizationJsonLd(opts?: SiteIdentityOptions): Record<string, JsonLdValue> {
-  const name = opts?.siteName?.trim() || SITE_NAME;
+  const name = opts?.siteName?.trim() || siteName();
   const base = (opts?.siteUrl?.trim() || SITE_URL).replace(/\/+$/, "");
   // `sameAs: []` was hardcoded empty while appkit.config.js carried real
   // socialUrls that nothing read. An empty array is worse than omitting the key.
@@ -506,7 +528,7 @@ export function organizationJsonLd(opts?: SiteIdentityOptions): Record<string, J
 }
 
 export function searchBoxJsonLd(opts?: SiteIdentityOptions): Record<string, JsonLdValue> {
-  const name = opts?.siteName?.trim() || SITE_NAME;
+  const name = opts?.siteName?.trim() || siteName();
   const base = (opts?.siteUrl?.trim() || SITE_URL).replace(/\/+$/, "");
   return {
     "@context": "https://schema.org",

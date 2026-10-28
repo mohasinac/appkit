@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 export function AdminUsersGuideView() {
   return (
@@ -18,7 +19,7 @@ export function AdminUsersGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Users &amp; Accounts</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">Managing users, roles, sessions, and employee accounts on LetItRip.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">Managing users, roles, sessions, and employee accounts on {getBrandName()}.</Text>
       </Section>
 
       {[

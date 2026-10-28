@@ -69,6 +69,7 @@ import { shipOrderSchema } from "../schemas/order-forms";
  */
 type ShipOrderPayload = z.infer<typeof shipOrderSchema>;
 import { applyZodIssues, rootLevelMessages } from "../../../ui/forms/apply-zod-issues";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /** A store pickup address, as `GET /api/store/addresses` returns it. */
 interface PickupOption {
@@ -197,7 +198,7 @@ export function DispatchForm({
         </Text>
         <Text size="xs" color="muted">
           {platformBooked
-            ? `Booked through LetItRip · ${trackingNumber}`
+            ? `Booked through ${getBrandName()} · ${trackingNumber}`
             : `Posted by you · ${trackingNumber}`}
         </Text>
       </Stack>
@@ -275,7 +276,7 @@ export function DispatchForm({
           aria-pressed={method === "platform"}
           onClick={() => setMethod("platform")}
         >
-          Book through LetItRip
+          Book through {getBrandName()}
         </Button>
       </Row>
 

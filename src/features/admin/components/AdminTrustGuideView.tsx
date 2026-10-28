@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const STILL_ALLOWED = "✓ Still allowed";
 /** Named because it is used on three rows in the seller-trust table. */
@@ -22,7 +23,7 @@ export function AdminTrustGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Trust &amp; Safety</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">Bans, scam registry, support tickets, moderation, and reports on LetItRip.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">Bans, scam registry, support tickets, moderation, and reports on {getBrandName()}.</Text>
       </Section>
 
       {[
@@ -169,7 +170,7 @@ export function AdminTrustGuideView() {
           Icon: ClipboardList, title: "Item Requests",
           content: (
             <Ul className={GC.listMuted}>
-              <Li>Buyers can submit "Want to Buy" item requests for items not currently listed on LetItRip.</Li>
+              <Li>Buyers can submit "Want to Buy" item requests for items not currently listed on {getBrandName()}.</Li>
               <Li>Admins review requests and can forward them to relevant verified sellers via the Item Requests section.</Li>
               <Li>High-frequency requests (5+ requests for the same item) should be shared with the seller community newsletter.</Li>
             </Ul>

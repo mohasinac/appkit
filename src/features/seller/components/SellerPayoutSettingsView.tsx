@@ -11,6 +11,7 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { getBrandName } from "../../../core/brand-resolver";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
@@ -53,7 +54,7 @@ const payoutSettingsDraftSchema = z.object({
 
   // The three fields that identify the SUPPLIER OF RECORD on this store's
   // invoices. A seller with a GSTIN invoices under it; one without
-  // invoices under LetItRip's (resolveSupplierIdentity).
+  // invoices under {getBrandName()}'s (resolveSupplierIdentity).
   //
   // `pan` and `businessType` were removed 2026-10-19: neither exists on
   // StoreDocument or UserDocument and the route stripped them, so a
@@ -563,7 +564,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           <Heading level={3} className="mb-2">Tax Information</Heading>
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Optional. Enter a GSTIN and your orders are invoiced under your own
-            registration; leave it blank and they are invoiced under LetItRip&apos;s.
+            registration; leave it blank and they are invoiced under {getBrandName()}&apos;s.
           </Text>
           <FormField
             name="gstin"

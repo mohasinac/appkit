@@ -76,7 +76,20 @@ const ACK_COUNT = REFUND_COPY.request.acknowledgments.length;
  * on `refundBusinessDaysMin` in the registry), so passing settings would imply
  * an editable number that does not exist.
  */
-const PUBLISHED_VALUES = resolvePublishedValues();
+/*
+ * 🛑 A FUNCTION, not a hoisted `const`.
+ *
+ * It was `const PUBLISHED_VALUES = resolvePublishedValues()` at module scope,
+ * which was harmless only by luck: the comment above correctly notes the sole
+ * token in this copy is the refund timeline. But `resolvePublishedValues()`
+ * now resolves `siteName`/`siteDomain` from the brand the consumer injects at
+ * boot, and a module-level call runs at IMPORT time — so the moment anyone
+ * adds `{{siteName}}` to an acknowledgment, it would silently render appkit's
+ * neutral "Site" inside something a buyer is agreeing to.
+ *
+ * Resolved per render instead. Same values, no capture.
+ */
+const publishedValues = () => resolvePublishedValues();
 
 interface RefundRequestDraft {
   reasonCode: ReturnReason | "";
@@ -220,7 +233,7 @@ export function RefundRequestView({
                  */
                 label={
                   <Text size="sm" className="leading-snug">
-                    {resolvePublishedCopy(text, PUBLISHED_VALUES)}
+                    {resolvePublishedCopy(text, publishedValues())}
                   </Text>
                 }
                 aria-label={`Acknowledgment ${i + 1}`}

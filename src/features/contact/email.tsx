@@ -16,6 +16,7 @@ import { siteSettingsRepository } from "../admin/repository/site-settings.reposi
 import { serverLogger } from "../../monitoring";
 import { currentYear, formatCurrency } from "../../utils";
 import { EmailBold, EmailButton, EmailContainer, EmailDivider, EmailDoc, EmailFooter, EmailHeader, EmailRow } from "../email/primitives";
+import { getBrandName } from "../../core/brand-resolver";
 
 /*
  * Derived from the provider contract rather than re-declared beside it. The
@@ -51,8 +52,13 @@ type SendEmailOptions = Omit<EmailOptions, "html"> & { html?: string };
  */
 export type SendEmailGuard = SendGuardContext;
 
+/*
+ * One of the five `NEXT_PUBLIC_SITE_NAME` readers with five different
+ * fallbacks that `core/brand-resolver.ts` was written to replace. Kept as a
+ * local function so the two call sites below are untouched.
+ */
 function getSiteName(): string {
-  return process.env.NEXT_PUBLIC_SITE_NAME?.trim() || "App";
+  return getBrandName();
 }
 
 function getSiteUrl(): string {

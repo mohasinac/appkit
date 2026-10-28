@@ -16,6 +16,7 @@ import { getAdminDb } from "../../../providers/db-firebase/admin";
 import { slugify } from "../../../utils";
 import { serverLogger } from "../../../monitoring/server-logger";
 import { normalizeError } from "../../../errors/normalize";
+import { getBrandName, getBrandDomain } from "../../../core/brand-resolver";
 
 /** Reservation collection: doc id IS the slug, so the id is the uniqueness. */
 export const USER_SLUGS_COLLECTION = "userSlugs";
@@ -33,7 +34,7 @@ const RESERVED = new Set([
   "signup", "signin", "new", "edit", "delete", "settings", "me", "self", "user",
   "users", "profile", "profiles", "store", "stores", "seller", "sellers",
   "support", "help", "about", "contact", "search", "null", "undefined", "root",
-  "system", "moderator", "staff", "team", "official", "letitrip",
+  "system", "moderator", "staff", "team", "official",
   // `/profile/{slug}/{tab}` values
   "overview", "catalogue",
 ]);
@@ -78,7 +79,23 @@ export function userSlugBase(
 
 /** Whether a candidate may be claimed at all. */
 function isClaimable(candidate: string): boolean {
-  return candidate.length > 0 && !RESERVED.has(candidate);
+  if (candidate.length === 0 || RESERVED.has(candidate)) return false;
+  /*
+   * The brand itself is reserved, resolved at CALL time rather than listed.
+   *
+   * 🛑 The literal `"letitrip"` used to sit in `RESERVED`, which reserved one
+   * marketplace's name in every install of appkit while leaving the actual
+   * consumer's brand claimable — i.e. exactly backwards. A username that
+   * impersonates the platform is the thing this set exists to stop.
+   *
+   * Call time, not module load: `RESERVED` is a module const and would capture
+   * appkit's neutral default before `configureBrand()` runs.
+   */
+  const brand = getBrandName().toLowerCase().replace(/[^a-z0-9]+/g, "");
+  if (brand && candidate === brand) return false;
+  const domain = getBrandDomain().toLowerCase();
+  const host = domain.split(".")[0]?.replace(/[^a-z0-9]+/g, "");
+  return !(host && candidate === host);
 }
 
 /**

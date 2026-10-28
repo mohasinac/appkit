@@ -8,6 +8,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandSupportEmail } from "../../../core/brand-resolver";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -202,7 +203,7 @@ function VisibilityStatesSection() {
     },
     {
       state: "Suspended",
-      note: "Admin action. All listings hidden. Store profile shows 'Unavailable' banner. Contact support@letitrip.in to resolve.",
+      note: `Admin action. All listings hidden. Store profile shows 'Unavailable' banner. Contact ${getBrandSupportEmail()} to resolve.`,
     },
   ];
   return (

@@ -605,7 +605,7 @@ export const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
 };
 
 export const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
-  title: "Why LetItRip?",
+  title: "Why choose us?",
   indicators: [
     /*
      * 🛑 `icon` holds an IconKey, not an emoji.

@@ -8,6 +8,7 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SellerStandingPanel } from "./SellerStandingPanel";
+import { getBrandName, getBrandDomain, getBrandSupportEmail } from "../../../core/brand-resolver";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -38,8 +39,8 @@ function WhatAreCapabilitiesSection() {
   return (
     <Div className={SECTION_BODY}>
       <Text className="leading-relaxed">
-        Capabilities are per-store feature flags granted by the LetItRip team. They are not self-serve —
-        they must be requested and approved. This gives LetItRip control over trust, quality, and platform safety
+        Capabilities are per-store feature flags granted by the {getBrandName()} team. They are not self-serve —
+        they must be requested and approved. This gives {getBrandName()} control over trust, quality, and platform safety
         as your store grows.
       </Text>
       <Text className="leading-relaxed">
@@ -96,7 +97,7 @@ const CAPABILITY_GROUPS = [
   {
     group: "Platform & Technical",
     items: [
-      { cap: "multiple_stores", unlocks: "You (same owner) can create more than one store on LetItRip.", defaultOn: false },
+      { cap: "multiple_stores", unlocks: `You (same owner) can create more than one store on ${getBrandName()}.`, defaultOn: false },
       { cap: "custom_store_slug", unlocks: "Change your store URL slug after the 7-day post-creation lock period.", defaultOn: false },
       { cap: "api_access", unlocks: "Programmatic API credentials for advanced integrations (future).", defaultOn: false },
       { cap: "lower_commission_rate", unlocks: "Negotiated reduced platform fee. Requires a signed agreement and minimum volume.", defaultOn: false },
@@ -151,7 +152,7 @@ const LOCKED_FEATURES = [
   {
     cap: "host_auctions",
     missing: ["Create auction listings", "Set reserve prices and bid increments", "Auto-notify winner at auction end"],
-    howToUnlock: "Contact support@letitrip.in with at least 10 delivered orders and 3 months of store activity. Our team reviews within 5 business days.",
+    howToUnlock: `Contact ${getBrandSupportEmail()} with at least 10 delivered orders and 3 months of store activity. Our team reviews within 5 business days.`,
     contractRequired: false,
   },
   {
@@ -163,7 +164,7 @@ const LOCKED_FEATURES = [
   {
     cap: "lower_commission_rate",
     missing: ["Reduced platform fee (custom rate)", "Higher net margin per order"],
-    howToUnlock: "Available to stores with ₹2L+ GMV per month. Contact your account manager or email partner@letitrip.in with your last 3 months' payout statements.",
+    howToUnlock: `Available to stores with ₹2L+ GMV per month. Contact your account manager or email partner@${getBrandDomain()} with your last 3 months' payout statements.`,
     contractRequired: true,
   },
   {
@@ -175,7 +176,7 @@ const LOCKED_FEATURES = [
   {
     cap: "bulk_listing_import",
     missing: ["CSV batch upload for products", "Template download for bulk edits"],
-    howToUnlock: "Contact support@letitrip.in — available to stores with verified status and 50+ published listings.",
+    howToUnlock: `Contact ${getBrandSupportEmail()} — available to stores with verified status and 50+ published listings.`,
     contractRequired: false,
   },
 ];
@@ -229,7 +230,7 @@ function VerifiedSellerSection() {
       <Div>
         <Text className={SUBHEADING}>Two different badges</Text>
         <Text className="leading-relaxed">
-          <Span weight="bold">Verified</Span> means LetItRip has checked who you are.
+          <Span weight="bold">Verified</Span> means {getBrandName()} has checked who you are.
           It is granted by an admin after an identity review, it is not earned by
           volume, and it does not expire on its own.{" "}
           <Span weight="bold">Trusted Seller</Span> is earned from your trading record

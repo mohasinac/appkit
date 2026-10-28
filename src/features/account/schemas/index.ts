@@ -72,7 +72,7 @@ export const updateProfileSchema = z.object({
   profileIsPublic: annotate(z.boolean().optional(), {
     section: "visibility", sectionLabel: "Visibility", order: 1, row: "full",
     label: "Public profile",
-    help: "When on, your profile is visible to other LetItRip users.",
+    help: "When on, your profile is visible to other members.",
   }),
 });
 

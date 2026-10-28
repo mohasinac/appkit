@@ -8,6 +8,7 @@ import { Li, Section, Table, Tbody, Td, Th, Thead, Tr, Ul } from "../../../ui/co
 import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -308,7 +309,7 @@ const MEDIA_TIPS = [
   { label: "Image ratio", detail: "1:1 (square) for card thumbnails; 4:3 works well for product detail gallery." },
   { label: "Minimum size", detail: "800 × 800 px recommended. Below 400 × 400 px will look blurry on Retina screens." },
   { label: "Max file size", detail: "50 MB per image. Prefer JPG for photos; PNG for packaging or cards with text." },
-  { label: "Watermark", detail: "LetItRip adds a watermark automatically. Do not add your own — double watermarks look unprofessional." },
+  { label: "Watermark", detail: `${getBrandName()} adds a watermark automatically. Do not add your own — double watermarks look unprofessional.` },
   { label: "Order", detail: "Drag images to reorder after upload. The first image is the card thumbnail used in search results." },
   { label: "Video", detail: "Add a YouTube video ID to embed an unboxing or showcase. Not a replacement for photos." },
 ];

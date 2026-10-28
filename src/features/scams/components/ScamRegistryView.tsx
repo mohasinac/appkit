@@ -30,6 +30,7 @@ import {
 } from "../../../ui";
 import { listVerifiedScammers } from "../actions/scam-actions";
 import type { ScammerDocument } from "../schemas/firestore";
+import { withBrand } from "../../../core/brand-text";
 import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
 import { SCAM_TYPES, SCAM_TYPE_LABELS } from "../constants/scam-types";
 
@@ -73,7 +74,7 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
               {SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}
             </Badge>
             <Badge variant="default">
-              {SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform}
+              {withBrand(SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform)}
             </Badge>
           </Row>
 

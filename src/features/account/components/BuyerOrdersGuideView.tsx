@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
 
@@ -31,7 +32,7 @@ const SECTIONS: OrderSection[] = [
     Icon: PackageCheck, title: "Order Lifecycle",
     content: (
       <Stack textSize="sm" gap="md">
-        <Text className={GC.textMuted}>Every order on LetItRip moves through these statuses:</Text>
+        <Text className={GC.textMuted}>Every order on {getBrandName()} moves through these statuses:</Text>
         <Stack gap="sm">
           {ORDER_STATUSES.map(({ status, desc }) => (
             <Row gap="3" key={status}>
@@ -88,7 +89,7 @@ const SECTIONS: OrderSection[] = [
           <Li><Span weight="bold" className={GC.textStrong}>UPI</Span> — typically 1–2 business days.</Li>
           <Li><Span weight="bold" className={GC.textStrong}>Net banking</Span> — 3–5 business days.</Li>
         </Ul>
-        <Text className={GC.textMuted}>Refunds go back to the original payment method. LetItRip does not issue platform credits in lieu of a refund unless both parties agree.</Text>
+        <Text className={GC.textMuted}>Refunds go back to the original payment method. {getBrandName()} does not issue platform credits in lieu of a refund unless both parties agree.</Text>
       </Stack>
     ),
   },
@@ -116,8 +117,8 @@ const SECTIONS: OrderSection[] = [
     Icon: Scale, title: "Dispute Escalation",
     content: (
       <Stack gap="3">
-        <Text className={GC.textMuted}>If the seller does not respond to your return request within <Span weight="bold">3 days</Span>, LetItRip&apos;s support team steps in to mediate.</Text>
-        <Text className={GC.textMuted}>If mediation cannot resolve the dispute, LetItRip issues a <Span weight="bold">full platform-funded refund</Span> to the buyer. The seller&apos;s payout for that order is withheld.</Text>
+        <Text className={GC.textMuted}>If the seller does not respond to your return request within <Span weight="bold">3 days</Span>, {getBrandName()}&apos;s support team steps in to mediate.</Text>
+        <Text className={GC.textMuted}>If mediation cannot resolve the dispute, {getBrandName()} issues a <Span weight="bold">full platform-funded refund</Span> to the buyer. The seller&apos;s payout for that order is withheld.</Text>
         <Alert variant="info">
           All dispute decisions are final. False dispute claims may result in account restrictions. Always provide accurate, photographic evidence when raising a dispute.
         </Alert>
@@ -142,7 +143,7 @@ export function BuyerOrdersGuideView() {
           Orders, Returns &amp; Support
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">
-          From placing an order to getting a refund — everything you need to know about managing your orders on LetItRip.
+          From placing an order to getting a refund — everything you need to know about managing your orders on {getBrandName()}.
         </Text>
       </Section>
 

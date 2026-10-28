@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 export function AdminContentGuideView() {
   return (
@@ -18,7 +19,7 @@ export function AdminContentGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Content &amp; Marketing</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">Blog posts, events, FAQs, carousel, homepage sections, ads, and newsletter on LetItRip.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">Blog posts, events, FAQs, carousel, homepage sections, ads, and newsletter on {getBrandName()}.</Text>
       </Section>
 
       {[

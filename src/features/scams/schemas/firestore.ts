@@ -657,7 +657,7 @@ export const SCAM_PLATFORM_LABELS: Record<ScamPlatform, string> = {
   twitter: "X (Twitter)",
   olx: "OLX",
   facebook_marketplace: "Facebook Marketplace",
-  letitrip: "LetItRip",
+  letitrip: "{{siteName}}",
   in_person: "In Person",
   phone_call: "Phone Call",
   other: "Other",

@@ -6,6 +6,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
 
@@ -67,7 +68,7 @@ const SECTIONS: ShoppingSection[] = [
       <Ul className={GC.listMuted}>
         <Li><Span weight="bold" className={GC.textStrong}>Shipping address</Span> — enter or select a saved address. All fields required: full name, phone, address line, city, state, pin code.</Li>
         <Li><Span weight="bold" className={GC.textStrong}>Payment methods</Span> — UPI, credit/debit card (Visa, Mastercard, Rupay), net banking — all processed via Razorpay.</Li>
-        <Li><Span weight="bold" className={GC.textStrong}>Secure checkout</Span> — LetItRip never stores your card details. All payment data is handled by Razorpay&apos;s PCI-DSS compliant gateway.</Li>
+        <Li><Span weight="bold" className={GC.textStrong}>Secure checkout</Span> — {getBrandName()} never stores your card details. All payment data is handled by Razorpay&apos;s PCI-DSS compliant gateway.</Li>
       </Ul>
     ),
   },
@@ -132,7 +133,7 @@ export function BuyerShoppingGuideView() {
           Shopping &amp; Checkout
         </Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">
-          Everything you need to know about finding, evaluating, and buying collectibles on LetItRip.
+          Everything you need to know about finding, evaluating, and buying collectibles on {getBrandName()}.
         </Text>
       </Section>
 

@@ -50,6 +50,7 @@ import type { ProductDocument } from "../../products/schemas/firestore";
 import { toStoreListItem } from "../../../_internal/server/features/stores/adapters";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { productImageUrls } from "../../products/schemas/firestore";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -719,7 +720,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         {!hasCover && hasMosaic && (
           <Div className="relative z-10 max-w-7xl mx-auto" padding="x-md">
             <Div padding="t-lg">
-              <ImageMosaic images={mosaicImages} alt={`${category?.name ?? slug} on LetItRip`} />
+              <ImageMosaic images={mosaicImages} alt={`${category?.name ?? slug} on ${getBrandName()}`} />
             </Div>
           </Div>
         )}

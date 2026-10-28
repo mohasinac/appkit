@@ -45,6 +45,7 @@ import {
   DEFAULT_NOTIFICATION_CHANNELS,
   meetsMinPriority,
 } from "../schemas/firestore";
+import { getBrandName, getBrandNoreplyEmail } from "../../../core/brand-resolver";
 
 /**
  * Notification types whose WhatsApp send is gated behind the SELLER's
@@ -407,8 +408,14 @@ export async function sendNotification(
     (!channels.email.types?.length || channels.email.types.includes(type))
   ) {
     const apiKey = creds.resendApiKey?.trim() ?? "";
-    const fromEmail = settings.emailSettings?.fromEmail ?? "noreply@letitrip.in";
-    const fromName = settings.emailSettings?.fromName ?? "LetItRip";
+    /*
+     * 🛑 These were `?? "noreply@letitrip.in"` and `?? "LetItRip"` — not
+     * placeholders but live ENVELOPE VALUES, so an install that had not filled
+     * in its email settings sent real mail as this marketplace. The admin
+     * setting still wins; only the fallback changed owner.
+     */
+    const fromEmail = settings.emailSettings?.fromEmail ?? getBrandNoreplyEmail();
+    const fromName = settings.emailSettings?.fromName ?? getBrandName();
     if (apiKey && !apiKey.includes("PLACEHOLDER") && (await isChannelHealthy("email"))) {
       try {
         const emailProvider = createResendProvider({ apiKey, fromEmail, fromName });

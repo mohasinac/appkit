@@ -6,6 +6,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 export function AdminAnalyticsGuideView() {
   return (
@@ -18,7 +19,7 @@ export function AdminAnalyticsGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Analytics</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">Revenue, order funnel, product performance, and store metrics on LetItRip.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">Revenue, order funnel, product performance, and store metrics on {getBrandName()}.</Text>
       </Section>
 
       {[

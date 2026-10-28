@@ -10,6 +10,8 @@
  * registration acknowledgement modal, and structured SEO data.
  */
 
+import { withBrand, withBrandAll } from "../../../core/brand-text";
+
 // ============================================================================
 // TYPES
 // ============================================================================
@@ -112,7 +114,7 @@ export const SCAM_CATEGORIES: ScamCategoryDefinition[] = [
     id: "identity_impersonation",
     label: "Identity & Impersonation",
     description:
-      "Scammer pretends to be a reputable seller, LetItRip support, or a trusted community member to steal your money or credentials.",
+      "Scammer pretends to be a reputable seller, {{siteName}} support, or a trusted community member to steal your money or credentials.",
     icon: "UserCheck",
   },
   {
@@ -147,7 +149,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     howItHappens:
       "A buyer approaches — often someone who appears knowledgeable — and insists your item is common, damaged, or worth only a fraction of the real price. They may say 'I saw this for ₹300 online' or 'this series is not popular anymore'. Once you sell at a deep discount, they immediately resell at true market value. This is especially common with vintage items whose original owners don't actively follow current pricing.",
     howToAvoid: [
-      "Check current sold listings on LetItRip, eBay, and local Facebook groups before agreeing to any price.",
+      "Check current sold listings on {{siteName}}, eBay, and local Facebook groups before agreeing to any price.",
       "Never accept a buyer's stated 'market price' at face value — do your own 5-minute research first.",
       "If someone seems unusually eager to buy at a specific low price, that is a red flag.",
       "PSA-graded and sealed vintage items especially hold hidden value — get independent opinions.",
@@ -182,7 +184,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     howToAvoid: [
       "Confirm all item specifics (set number, condition, edition) in writing before payment.",
       "Request detailed photos of the actual item being sold — not stock images.",
-      "Use LetItRip's on-platform messaging so all communications are recorded.",
+      "Use {{siteName}}'s on-platform messaging so all communications are recorded.",
       "Report listings that change their item description after you express interest.",
     ],
   },
@@ -198,7 +200,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     howToAvoid: [
       "Always ask for photos from multiple angles, including the corners, back, and any seal/hologram.",
       "Ask for proof of grading: PSA/BGS certificate number you can verify on their website.",
-      "For sealed products, ask for a photo of the original shrink wrap and any LetItRip hologram sticker.",
+      "For sealed products, ask for a photo of the original shrink wrap and any {{siteName}} hologram sticker.",
       "Video unboxing on delivery is your strongest evidence for dispute claims.",
     ],
   },
@@ -280,7 +282,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
       "Buyer sends money upfront via UPI, bank transfer, or wallet before receiving the item. Seller then stops responding: messages go unread, calls unanswered, account disappears or blocks the buyer. The money is gone and there is no enforceable recourse without platform protection.",
     howToAvoid: [
       "Never send full advance payment to an unverified individual seller outside a trusted platform.",
-      "Use LetItRip's order flow — payment is held by the platform until delivery is confirmed.",
+      "Use {{siteName}}'s order flow — payment is held by the platform until delivery is confirmed.",
       "For off-platform trades, insist on COD (cash on delivery) or use a mutually trusted physical middleman.",
       "Partial advance (≤20%) for legitimate preorders is more reasonable — never 100% upfront to an unknown.",
       "If a seller insists on full advance before sharing shipping details, do not proceed.",
@@ -329,8 +331,8 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     howToAvoid: [
       "Photograph and video the item before packing, and the packed parcel with tracking label visible.",
       "Use tracked shipping with proof of delivery signatures for high-value orders.",
-      "Collect buyer's full address, phone, and LetItRip account before shipping.",
-      "On LetItRip's platform, all transactions are logged — dispute resolution can use platform records.",
+      "Collect buyer's full address, phone, and {{siteName}} account before shipping.",
+      "On {{siteName}}'s platform, all transactions are logged — dispute resolution can use platform records.",
       "Be cautious of buyers who insist on credit card payment specifically for peer-to-peer deals.",
     ],
   },
@@ -366,7 +368,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
       "Ask for proof of supplier relationship: purchase order, supplier invoice, or import record.",
       "Be suspicious of preorders with no clear shipping date or supplier name.",
       "A seller who cannot provide any evidence of an actual supplier order likely doesn't have one.",
-      "LetItRip preorders require store verification — prefer platform transactions over off-platform deals.",
+      "{{siteName}} preorders require store verification — prefer platform transactions over off-platform deals.",
     ],
   },
 
@@ -380,7 +382,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
       "Scammer identifies a sold-out or unreleased product generating demand (e.g., a new Pokémon TCG set, limited Gundam model). They create a listing offering preorders at slightly below expected retail. After collecting enough deposits, the account disappears or is suspended.",
     howToAvoid: [
       "Verify that the seller has previously delivered similar preorders — check their store history.",
-      "For brand-new unreleased items, prefer official distributors or LetItRip-verified stores.",
+      "For brand-new unreleased items, prefer official distributors or {{siteName}}-verified stores.",
       "If the deal is significantly below expected retail for a sold-out item, it is very likely fraudulent.",
     ],
   },
@@ -397,7 +399,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
       "Set a personal deadline when placing any order with advance payment — if not shipped by date X, dispute immediately.",
       "Vague updates without tracking numbers or evidence of actual shipment are a warning sign.",
       "File a payment dispute with your UPI bank before the dispute window closes, even if the seller is still communicating.",
-      "On LetItRip, orders past their expected date can be escalated to admin — do not wait.",
+      "On {{siteName}}, orders past their expected date can be escalated to admin — do not wait.",
     ],
   },
 
@@ -410,12 +412,12 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     shortDescription:
       "Scammer steals product photos from a reputable seller's listings and creates identical listings to collect payment for nothing.",
     howItHappens:
-      "Scammer finds a legitimate seller's high-quality listing photos (from LetItRip, OLX, Instagram, or YouTube). They create a near-identical listing — same photos, similar description, slightly lower price. Buyers who search the seller's name or item find the fake listing first. After payment, nothing is shipped.",
+      "Scammer finds a legitimate seller's high-quality listing photos (from {{siteName}}, OLX, Instagram, or YouTube). They create a near-identical listing — same photos, similar description, slightly lower price. Buyers who search the seller's name or item find the fake listing first. After payment, nothing is shipped.",
     howToAvoid: [
-      "Verify the seller profile carefully — check their store on LetItRip, their review history, and how long they've been active.",
+      "Verify the seller profile carefully — check their store on {{siteName}}, their review history, and how long they've been active.",
       "Do a reverse image search on any listing photos to see if they appear elsewhere.",
       "If a price is significantly lower than the original seller's known price, it may be an impersonation.",
-      "Transact only through LetItRip's order flow — off-platform payments have no protection.",
+      "Transact only through {{siteName}}'s order flow — off-platform payments have no protection.",
     ],
   },
 
@@ -424,12 +426,12 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     category: "identity_impersonation",
     label: "Platform Impersonation (Fake Support)",
     shortDescription:
-      "Scammer pretends to be LetItRip support via WhatsApp/DM and requests OTP, bank details, or login credentials.",
+      "Scammer pretends to be {{siteName}} support via WhatsApp/DM and requests OTP, bank details, or login credentials.",
     howItHappens:
-      "You receive a message from 'LetItRip Support' on WhatsApp, Telegram, or Instagram DMs. The message claims there's a 'KYC issue', 'payment hold', or 'account verification'. They ask for your OTP, password, bank account number, or ask you to send a 'refund' to their UPI to receive a 'blocked payout'.",
+      "You receive a message from '{{siteName}} Support' on WhatsApp, Telegram, or Instagram DMs. The message claims there's a 'KYC issue', 'payment hold', or 'account verification'. They ask for your OTP, password, bank account number, or ask you to send a 'refund' to their UPI to receive a 'blocked payout'.",
     howToAvoid: [
-      "LetItRip support will NEVER ask for your password, OTP, or bank account details via WhatsApp.",
-      "Official LetItRip communication comes only from @letitrip.in email addresses.",
+      "{{siteName}} support will NEVER ask for your password, OTP, or bank account details via WhatsApp.",
+      "Official {{siteName}} communication comes only from @{{siteDomain}} email addresses.",
       "If you receive a suspicious support message, verify by logging into your account and checking the official support section.",
       "Never send money to 'unblock' a payout — this is always a scam.",
     ],
@@ -460,7 +462,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     howItHappens:
       "Scammer proposes using an 'escrow service' or 'trusted community middleman' to reassure the other party. The escrow account, website, or WhatsApp contact is created or controlled by the scammer. Both buyer and seller are told to send money or item to the 'neutral' party — who then disappears.",
     howToAvoid: [
-      "Use only LetItRip's platform for escrow protection — never third-party escrow services you haven't independently verified.",
+      "Use only {{siteName}}'s platform for escrow protection — never third-party escrow services you haven't independently verified.",
       "A genuine middleman will not be introduced by one party in the transaction.",
       "Verify any escrow service independently before using it — search their name online, look for reviews.",
     ],
@@ -578,7 +580,7 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
     howToAvoid: [
       "Photo and video every item before packing, and photograph the parcel with tracking label visible.",
       "On receiving a return, photograph the unopened return package before opening.",
-      "If return contents do not match what was sent, document immediately and escalate to LetItRip support.",
+      "If return contents do not match what was sent, document immediately and escalate to {{siteName}} support.",
       "For high-value items, add unique identifying marks (invisible ink, specific photo angles) that prove the returned item is yours.",
     ],
   },
@@ -588,9 +590,44 @@ export const SCAM_TYPES: ScamTypeDefinition[] = [
 // LOOKUP HELPERS
 // ============================================================================
 
-/** Get a scam type definition by its ID. */
+/**
+ * Resolve the brand tokens in one definition's prose.
+ *
+ * 🛑 `SCAM_TYPES` stores `{{siteName}}` / `{{siteDomain}}` rather than a literal, because
+ * it is module-level data and a template literal there would capture appkit's
+ * neutral default at import time — before the consumer's `configureBrand()`
+ * runs. See `core/brand-text.ts`.
+ *
+ * `id`, `category` and `label` are passed through untouched: they are keys and
+ * short names, carry no brand, and `label` is what the registry filter's
+ * `<PaginatedSelect>` options and the scam-report route match on.
+ */
+function resolveScamTypeBrand(t: ScamTypeDefinition): ScamTypeDefinition {
+  return {
+    ...t,
+    shortDescription: withBrand(t.shortDescription),
+    howItHappens: withBrand(t.howItHappens),
+    howToAvoid: withBrandAll(t.howToAvoid),
+  };
+}
+
+/**
+ * Every scam type, with brand tokens resolved — use this for anything that
+ * DISPLAYS or PUBLISHES the prose.
+ *
+ * 🛑 The raw `SCAM_TYPES` export is for `id` / `label` / `length` only. The
+ * consumer's `/scams/types` page feeds `howToAvoid` into `faqJsonLd`, so taking
+ * it from the raw array publishes a literal `{{siteName}}` into FAQ structured data
+ * that Google reads — a leak with no symptom on the rendered page.
+ */
+export function getScamTypes(): ScamTypeDefinition[] {
+  return SCAM_TYPES.map(resolveScamTypeBrand);
+}
+
+/** Get a scam type definition by its ID, with brand tokens resolved. */
 export function getScamType(id: ScamType): ScamTypeDefinition | undefined {
-  return SCAM_TYPES.find((t) => t.id === id);
+  const found = SCAM_TYPES.find((t) => t.id === id);
+  return found ? resolveScamTypeBrand(found) : undefined;
 }
 
 /**
@@ -617,7 +654,9 @@ export function isScamType(value: string): value is ScamType {
 export function getScamTypesByCategory(
   category: ScamCategory,
 ): ScamTypeDefinition[] {
-  return SCAM_TYPES.filter((t) => t.category === category);
+  return SCAM_TYPES.filter((t) => t.category === category).map(
+    resolveScamTypeBrand,
+  );
 }
 
 /** Get the category definition for a given scam type ID. */
@@ -626,7 +665,18 @@ export function getCategoryForScamType(
 ): ScamCategoryDefinition | undefined {
   const type = getScamType(scamTypeId);
   if (!type) return undefined;
-  return SCAM_CATEGORIES.find((c) => c.id === type.category);
+  const category = SCAM_CATEGORIES.find((c) => c.id === type.category);
+  return category
+    ? { ...category, description: withBrand(category.description) }
+    : undefined;
+}
+
+/** Every category, with brand tokens resolved. For display. */
+export function getScamCategories(): ScamCategoryDefinition[] {
+  return SCAM_CATEGORIES.map((c) => ({
+    ...c,
+    description: withBrand(c.description),
+  }));
 }
 
 /** Human-readable label map for quick lookups. */

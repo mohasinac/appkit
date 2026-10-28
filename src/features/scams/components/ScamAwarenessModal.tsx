@@ -15,6 +15,7 @@ import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SCAM_CATEGORIES } from "../constants/scam-types";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   price_manipulation: <IndianRupee className="h-5 w-5" />,
@@ -53,7 +54,7 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
       title={
         <Row gap="sm" align="center">
           <Shield className="h-5 w-5 text-[color:var(--appkit-color-warning,theme(colors.amber.500))]" />
-          <Span>Before you start — Stay Safe on LetItRip</Span>
+          <Span>Before you start — Stay Safe on {getBrandName()}</Span>
         </Row>
       }
       actions={
@@ -65,14 +66,14 @@ export function ScamAwarenessModal({ isOpen, onAcknowledged }: ScamAwarenessModa
             isLoading={mutation.isPending}
             onClick={() => mutation.mutate()}
           >
-            {mutation.isPending ? "Saving…" : "Continue to LetItRip →"}
+            {mutation.isPending ? "Saving…" : `Continue to ${getBrandName()} →`}
           </Button>
         </Row>
       }
     >
       <Stack gap="md">
         <Text variant="secondary" size="sm">
-          LetItRip connects you with verified sellers, but collectibles markets attract scams.
+          {getBrandName()} connects you with verified sellers, but collectibles markets attract scams.
           Take 60 seconds to learn the most common patterns — it could save your money.
         </Text>
 

@@ -36,6 +36,7 @@ import type {
   ScammerIncidentDocument,
   ScammerCommentDocument,
 } from "../schemas/firestore";
+import { withBrand } from "../../../core/brand-text";
 import {
   SCAM_PLATFORM_LABELS,
   SCAMMER_STATUS_LABELS,
@@ -44,6 +45,7 @@ import {
 } from "../schemas/firestore";
 import { SCAM_TYPE_LABELS, getScamType } from "../constants/scam-types";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 function formatDate(d: Date | string | undefined): string {
   if (!d) return "";
@@ -136,7 +138,7 @@ function ScammerHeaderCard({ scammer }: { scammer: ScammerDocument }) {
             {SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}
           </Badge>
           <Badge variant="default">
-            via {SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform}
+            via {withBrand(SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform)}
           </Badge>
           {scammer.tags.includes("repeat_offender") && (
             <Badge variant="danger">Repeat Offender</Badge>
@@ -192,7 +194,7 @@ function ScammerIncidentsSection({ incidents }: { incidents: ScammerIncidentDocu
                       {SCAM_TYPE_LABELS[inc.scamType] ?? inc.scamType}
                     </Badge>
                     <Badge variant="default">
-                      via {SCAM_PLATFORM_LABELS[inc.scamPlatform] ?? inc.scamPlatform}
+                      via {withBrand(SCAM_PLATFORM_LABELS[inc.scamPlatform] ?? inc.scamPlatform)}
                     </Badge>
                   </Row>
                   <Text variant="secondary" size="xs">
@@ -375,7 +377,7 @@ function ScammerActionsColumn({
           <Row gap="xs" align="center">
             <Shield className="h-3.5 w-3.5 shrink-0" />
             <Text size="xs" weight="medium">
-              Verified by LetItRip moderation on {formatDate(scammer.verifiedAt)}
+              Verified by {getBrandName()} moderation on {formatDate(scammer.verifiedAt)}
             </Text>
           </Row>
         </Alert>

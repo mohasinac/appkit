@@ -80,6 +80,7 @@ import {
 import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, PrizeDrawsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
 import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildPrizeDrawsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parsePrizeDrawsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -2341,7 +2342,7 @@ function SectionEditorPanel({
           label="Section title"
           value={socialFeedBuilder.title}
           onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, title: e.target.value }))}
-          placeholder="LetItRip on Instagram"
+          placeholder={`${getBrandName()} on Instagram`}
         />
         <Input
           label="Subtitle"
@@ -2364,7 +2365,7 @@ function SectionEditorPanel({
           label="Account handle / username"
           value={socialFeedBuilder.handle}
           onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, handle: e.target.value }))}
-          placeholder="letitrip"
+          placeholder="yourbrand"
         />
         <Select
           label="Post type"

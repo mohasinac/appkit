@@ -24,6 +24,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { FAQ_CATEGORY_LABELS } from "../../faq/schemas/firestore";
 import type { FAQCategory } from "../../faq/types";
+import { getBrandName } from "../../../core/brand-resolver";
 
 /**
  * Matches the draft this form actually holds, and the payload it actually
@@ -252,7 +253,7 @@ export function AdminFaqEditorView({
             value={String(v.question ?? "")}
             onChange={(val) => onChange({ question: val })}
             required
-            placeholder="e.g. How does bidding work on LetItRip?"
+            placeholder={`e.g. How does bidding work on ${getBrandName()}?`}
             error={errors.question}
           />
           <Input

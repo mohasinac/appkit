@@ -5,6 +5,7 @@ import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
+import { getBrandName } from "../../../core/brand-resolver";
 export function AdminTeamGuideView() {
   const PERMISSION_GROUPS = [
     { name: "content_manager", desc: "Blog, FAQs, Events, Carousel, Sections, Ads, Newsletter read + write." },
@@ -27,7 +28,7 @@ export function AdminTeamGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Team &amp; Permissions</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">How roles, permissions, and employee accounts work on LetItRip.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">How roles, permissions, and employee accounts work on {getBrandName()}.</Text>
       </Section>
 
       {[

@@ -7,6 +7,7 @@ import { Heading, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-[var(--appkit-space-6)]";
 const CLS_WARN_HEAD = "font-semibold text-amber-800 dark:text-amber-300 mb-1";
@@ -123,10 +124,10 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
             </Text>
           </Row>
           <Heading color="inverse" level={1} className="mb-2" mdSize="3xl" size="2xl" weight="bold">
-            LetItRip Internal Guide
+            {getBrandName()} Internal Guide
           </Heading>
           <Text color="inverse-muted" size="base">
-            Everything you need to operate and manage LetItRip — India&apos;s largest collectibles marketplace.
+            Everything you need to operate and manage {getBrandName()} — India&apos;s largest collectibles marketplace.
           </Text>
         </Div>
       </Section>

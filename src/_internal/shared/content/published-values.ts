@@ -42,6 +42,7 @@
  * deadline or the claim windows even though both appear in published copy.
  */
 import { SITE_CONFIG } from "../../../core/site-config";
+import { getBrandName, getBrandDomain } from "../../../core/brand-resolver";
 import { OBLIGATION_POLICIES } from "../../../features/obligations/constants/policies";
 import {
   POINTS_EARN_PERCENT,
@@ -133,7 +134,8 @@ export type PublishedValueKey =
    * `audit-ssr-in-appkit` Rule 3 exists to prevent: a consumer of appkit would
    * have published OUR company's name on their own disclaimers.
    */
-  | "siteName";
+  | "siteName"
+  | "siteDomain";
 
 export type PublishedValues = Record<PublishedValueKey, string>;
 
@@ -289,12 +291,23 @@ export function resolvePublishedValues(
     refundBusinessDaysMax: "7",
 
     /*
-     * `SITE_CONFIG.brand.name` is appkit's own neutral default ("App") until a
-     * consumer overrides it, which is exactly the right failure mode here: a
-     * fork that forgets to configure its brand publishes a visibly generic
-     * disclaimer rather than silently attributing its legal statements to us.
+     * Admin setting first, then the brand the consumer INJECTED at boot.
+     *
+     * 🛑 Was `SITE_CONFIG.brand.name`, and the reasoning given for that was
+     * right about the failure mode — "a fork that forgets to configure its
+     * brand publishes a visibly generic disclaimer rather than silently
+     * attributing its legal statements to us" — but wrong about the mechanism:
+     * `SITE_CONFIG` is a FROZEN const, and the only thing that can override it
+     * (`createSiteConfig`) has **zero callers**. So the override it described
+     * did not exist, and a consumer with a configured brand still published
+     * "App" in its own legal text whenever `siteSettings.siteName` was unset.
+     *
+     * `getBrandName()` keeps the same safe default ("Site") and adds the
+     * injection path that was missing.
      */
-    siteName: settings?.siteName ?? SITE_CONFIG.brand.name,
+    siteName: settings?.siteName ?? getBrandName(),
+    /** Bare host, for addresses quoted in published copy. */
+    siteDomain: getBrandDomain(),
   };
 }
 

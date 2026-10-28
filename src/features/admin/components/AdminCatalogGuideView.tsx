@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { getBrandName } from "../../../core/brand-resolver";
 
 const CLS_CODE = "text-[length:var(--appkit-text-xs)] bg-amber-100 dark:bg-amber-900/30 px-[var(--appkit-space-1)] rounded";
 
@@ -20,7 +21,7 @@ export function AdminCatalogGuideView() {
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Catalog</Heading>
-        <Text className="text-[var(--appkit-color-text-muted)]">Products, categories, brands, and reviews — how the LetItRip catalog is structured and managed.</Text>
+        <Text className="text-[var(--appkit-color-text-muted)]">Products, categories, brands, and reviews — how the {getBrandName()} catalog is structured and managed.</Text>
       </Section>
 
       {[
