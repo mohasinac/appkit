@@ -1,5 +1,6 @@
 export * from "./auth-error";
 export * from "./date.formatter";
+export * from "./partial-date";
 export * from "./number.formatter";
 export * from "./string.formatter";
 export * from "./type.converter";
