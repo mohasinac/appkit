@@ -878,8 +878,6 @@ export { isValidEmail } from "./validation/email.validator";
 // isValidEmailDomain - Shared export for is valid email domain.
 export { isValidEmailDomain } from "./validation/email.validator";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// isValidIndianPincode - Shared export for is valid indian pincode.
-export { isValidIndianPincode } from "./validation/phone.validator";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // isValidMobile - Shared export for is valid mobile.
 export { isValidMobile } from "./validation/phone.validator";

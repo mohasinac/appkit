@@ -46,6 +46,20 @@ export function isValidMobile(phone: string, phonePrefix?: string): boolean {
   return cleaned.length >= 10 && cleaned.length <= 15;
 }
 
-export function isValidIndianPincode(pincode: string): boolean {
-  return /^\d{6}$/.test(pincode.trim());
-}
+/*
+ * 🛑 `isValidIndianPincode` was REMOVED in A6c. It hardcoded `/^\d{6}$/` — one
+ * country's postcode shape in a library meant to be jurisdiction-neutral — and
+ * had **zero callers**: the only reference anywhere was its own re-export from
+ * `index.ts`, so it was dead code on appkit's public surface.
+ *
+ * `constants/geo/countries.ts` is the live answer and a better one: 26 countries
+ * as DATA (`postalPattern`, `postalLabel`, `hasStates`, `dialCode`) behind
+ * `isValidPostalCode` / `postalPatternFor` / `postalLabelFor`, with 17 reader
+ * files. Its own header records the bug this function's shape causes —
+ * "a Canadian address was being held to `/^\d{6}$/`".
+ *
+ * That table is also why A6's proposed `IAddressValidationProvider` was not
+ * built: the AK2 row describing appkit as doing "pincode-only India validation"
+ * predates `countries.ts` and is stale. Postcode rules are a 26-row table, not
+ * 26 provider implementations.
+ */
