@@ -88,7 +88,11 @@
       "types": "./dist/providers/email-resend/index.d.ts",
       "import": "./dist/providers/email-resend/index.js"
     },
-    "./providers/storage-firebase": {
+    "./providers/tax-india-gst": {
+   "types": "./dist/providers/tax-india-gst/index.d.ts",
+   "import": "./dist/providers/tax-india-gst/index.js"
+  },
+  "./providers/storage-firebase": {
       "types": "./dist/providers/storage-firebase/index.d.ts",
       "import": "./dist/providers/storage-firebase/index.js"
     },

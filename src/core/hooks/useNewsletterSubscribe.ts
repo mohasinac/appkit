@@ -38,11 +38,19 @@
  * mechanism is shared and the JSX stays at each call site, where the
  * differences actually live.
  *
+ * 🛑 `<FormErrorSummary>` is rendered by the CALLER, not here — this is a hook
+ * and renders nothing. Both consumers (`HomepageNewsletterForm`,
+ * `FooterNewsletterSlot`) mount it beside their own `<Form shellCtx={…}>`,
+ * which is the only place it can go: the summary reads the shell context this
+ * hook creates and the caller provides.
+ *
  * @tag domain:newsletter
  * @tag layer:client
  * @tag access:client
  * @tag sideEffects:network
  */
+// audit-form-error-summary-ok: a hook renders nothing; both call sites mount
+// <FormErrorSummary> beside their own <Form shellCtx={…}> — see the header.
 import { useCallback, useState } from "react";
 import { useApiMutation } from "../../client/api/useApiMutation";
 import { apiClient } from "../../http/ApiClient";
@@ -97,6 +105,13 @@ export function useNewsletterSubscribe({
 
   const mutation = useApiMutation({
     errorMessage,
+    /*
+     * The server sends per-field `issues` and `surfaceError` knows how to
+     * apply them — but only when the caller supplies a sink. Without this the
+     * paths are parsed off the wire and discarded, and the user sees one
+     * generic sentence with no indication of which field.
+     */
+    setFieldError: form.setFieldError,
     mutationFn: (payload: { email: string }) =>
       apiClient.post(endpoint, { ...payload, source }),
     onSuccess: () => {

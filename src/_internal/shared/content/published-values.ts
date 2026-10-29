@@ -41,7 +41,6 @@
  * somebody has to remember — and it is why there is no literal for the offer
  * deadline or the claim windows even though both appear in published copy.
  */
-import { SITE_CONFIG } from "../../../core/site-config";
 import { getBrandName, getBrandDomain } from "../../../core/brand-resolver";
 import { OBLIGATION_POLICIES } from "../../../features/obligations/constants/policies";
 import {
@@ -151,7 +150,7 @@ export type PublishedValues = Record<PublishedValueKey, string>;
 export interface PublishedValueSettings {
   /**
    * The operator's display name, for the disclaimers that name who is making
-   * the statement. Falls back to `SITE_CONFIG.brand.name`.
+   * the statement. Falls back to the injected brand (`getBrandName()`).
    */
   siteName?: string;
   platformFeeMax?: number;
@@ -330,8 +329,18 @@ export function resolvePublishedCopy(
   });
 }
 
-/** `₹10`, `₹1,499.50` — no trailing `.00` on a whole rupee figure. */
+/**
+ * `₹10`, `₹1,499.50` — no trailing `.00` on a whole figure.
+ *
+ * 🛑 A `const whole = Number.isInteger(amount)` sat here unused after the A2
+ * conversion, and an unused local is worth opening rather than deleting: in
+ * this codebase a discarded value has three times turned out to be a dropped
+ * one (a lost delivery snapshot, two blank seller tiles, a full page reload).
+ *
+ * Checked — this one is genuinely dead. `formatMoney` runs exactly that test
+ * internally (`Number.isInteger(amount) ? 0 : 2`), which is what this function
+ * used to do by hand before delegating. Nothing is lost by removing it.
+ */
 function formatRupees(amount: number): string {
-  const whole = Number.isInteger(amount);
   return formatMoney(amount);
 }
