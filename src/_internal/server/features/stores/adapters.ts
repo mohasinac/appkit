@@ -193,9 +193,19 @@ export const PRIVATE_STORE_FIELDS = [
    * what, which is commercial terms (same reason `customCommissionRate` is
    * below), and it has no reader on any public store surface.
    */
-  "whatsappNotifySubscribed",
+  /*
+   * 🛑 `whatsappNotifySubscribed` was listed TWICE in this array, and
+   * `whatsappConfig` was listed although `StoreDocument` says of it
+   * "🛑 whatsappConfig IS GONE AND MUST NOT COME BACK" — so this list named a
+   * field that does not exist and double-counted one that does.
+   *
+   * Both were invisible to `audit-public-projection-parity`, which checks that
+   * every SCHEMA field appears in exactly one list but not the reverse: it
+   * never asks whether a listed name is real, or listed once. An exemption
+   * list is a claim nobody checks unless something checks it (Root Cause
+   * #106) — the duplicate half is enforced now; see that audit's R5.
+   */
   "updatedAt", // bookkeeping; no public reader
-  "whatsappConfig", // Meta access token + WABA/catalog ids — secret
   "adminNotes", // schema comment: never shown to the owner or the public
   // Admin decisions with actor UIDs and suspension reasons. The store OWNER
   // sees this on their own admin surfaces; an anonymous visitor to /stores has

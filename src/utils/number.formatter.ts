@@ -24,9 +24,9 @@ import {
  *
  * `Intl.NumberFormat` with `style: "currency"` forces the currency's standard
  * fraction digits, so every whole amount becomes `₹1,000.00`. Rewriting 71
- * strings to add `.00` to prices, offers and refunds that have no paise is a
- * user-visible copy change dressed up as a refactor. This shows paise only when
- * they exist: `₹1,000` and `₹1,000.50`.
+ * strings to add `.00` to prices, offers and refunds that are whole amounts is
+ * a user-visible copy change dressed up as a refactor. This shows the
+ * fractional part only when there is one: `₹1,000` and `₹1,000.50`.
  *
  * `formatCurrency` keeps its job — the ISO-correct, locale-placed rendering for
  * tabular and formal surfaces (invoices, statements). Use that where the form
@@ -40,7 +40,7 @@ export function formatMoney(amount: number, locale?: string): string {
    * That first draft was wrong and `published-values.ts` caught it: with a
    * floor of 0, `1499.5` renders "₹1,499.5", a money figure with one decimal
    * place. The rule money actually wants is "no trailing .00 on a whole
-   * amount, but always both places when there are paise" — which is exactly
+   * amount, but always both places when there is a fractional part" — exactly
    * what the `formatRupees` this replaced encoded as
    * `minimumFractionDigits: Number.isInteger(amount) ? 0 : 2`, and what its own
    * docstring stated as `₹10`, `₹1,499.50`.

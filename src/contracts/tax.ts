@@ -53,7 +53,7 @@ export interface TaxComponent {
   label: string;
   /** Percentage applied, e.g. `9` for half of an 18% intra-state GST. */
   rate: number;
-  /** Money, in major units (rupees, not paise). */
+  /** Money, in MAJOR currency units — `1.50`, never a minor-unit `150`. */
   amount: number;
 }
 
