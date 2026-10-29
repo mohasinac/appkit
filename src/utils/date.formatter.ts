@@ -233,3 +233,31 @@ export function formatCustomDate(
   const options = formatOptions[format] || formatOptions.medium;
   return dateObj.toLocaleDateString(getDefaultLocale(), options);
 }
+
+/**
+ * Render a `YYYY-MM` period as "October 2026".
+ *
+ * Lifted from the consumer's `src/lib/format/inr.ts` (A7), where five
+ * ad-booking surfaces shared it.
+ *
+ * 🛑 `timeZone: "UTC"` is load-bearing and is NOT a default worth overriding.
+ * The period is a calendar month with no time in it, so constructing it as UTC
+ * midnight and formatting in the viewer's zone renders the PREVIOUS month for
+ * anyone west of UTC. India is UTC+5:30, so the bug is invisible to everyone
+ * testing it there — which is why the original carried this same note.
+ *
+ * 🛑 The locale was a hardcoded `"en-IN"` in the consumer copy. It now comes
+ * from the market profile, which is the one thing about that helper that was
+ * genuinely consumer-specific.
+ *
+ * Returns the input unchanged when it is not a parseable `YYYY-MM`, rather than
+ * rendering "Invalid Date" into a billing table.
+ */
+export function formatMonthLabel(period: string, locale?: string): string {
+  const [y, m] = period.split("-").map(Number);
+  if (!Number.isFinite(y) || !Number.isFinite(m) || m < 1 || m > 12) return period;
+  return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString(
+    locale ?? getDefaultLocale(),
+    { month: "long", year: "numeric", timeZone: "UTC" },
+  );
+}

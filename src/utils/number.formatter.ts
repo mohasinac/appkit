@@ -177,3 +177,32 @@ export function parseFormattedNumber(str: string): number {
   const num = parseFloat(result);
   return isNegative ? -Math.abs(num) : num;
 }
+
+/**
+ * Whole currency units — no fractional digits — with locale grouping.
+ *
+ * `₹1,500` for 1499.50. Lifted from the consumer's `src/lib/format/inr.ts`
+ * (A5b/A7), where six `/user/*` and ad-booking pages had carried byte-identical
+ * private copies before it was consolidated there.
+ *
+ * ## 🛑 This is NOT `formatMoney`, and must not be collapsed into it
+ *
+ * `maximumFractionDigits: 0` is the whole point: this ROUNDS, so 1499.50
+ * renders `₹1,500`. `formatMoney` keeps the fractional part when there is one.
+ * Both are
+ * correct for their own surfaces — this one is for figures where the fraction
+ * is noise (a monthly ad spend, an order total in a summary row), and the
+ * surfaces using it show booking and order totals, so a change in rounding is
+ * a change in a number a buyer reads.
+ *
+ * Converging the two is a product decision about displayed money, not a
+ * de-duplication. The consumer's copy carried that warning for exactly this
+ * reason and it travels with the function.
+ */
+export function formatWholeMoney(amount: number, locale?: string): string {
+  return new Intl.NumberFormat(locale ?? getDefaultLocale(), {
+    style: "currency",
+    currency: getDefaultCurrency(),
+    maximumFractionDigits: 0,
+  }).format(amount);
+}

@@ -92,6 +92,10 @@
    "types": "./dist/providers/tax-india-gst/index.d.ts",
    "import": "./dist/providers/tax-india-gst/index.js"
   },
+  "./providers/shipping-shiprocket": {
+   "types": "./dist/providers/shipping-shiprocket/index.d.ts",
+   "import": "./dist/providers/shipping-shiprocket/index.js"
+  },
   "./providers/storage-firebase": {
       "types": "./dist/providers/storage-firebase/index.d.ts",
       "import": "./dist/providers/storage-firebase/index.js"
