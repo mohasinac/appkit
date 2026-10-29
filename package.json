@@ -322,6 +322,7 @@
   },
   "files": [
     "dist",
+    "PROVIDERS.md",
     "tsconfig.base.json",
     "scripts/sieve-audit.mjs",
     "scripts/audit-violations.mjs",
