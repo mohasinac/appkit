@@ -264,6 +264,18 @@ export {
 // `.listByType("bundle", opts)` / `.findById(id)` directly.
 
 // S4: checkout actions
+//
+// `assertPaymentMethodAllowed` is exported for the SAME reason as
+// `CHECKOUT_PAYMENT_METHODS` above it and the money helpers further down this
+// file: `/api/payment/create-order` is the consumer's gateway capture route,
+// and every rule that route needs has had to be exported here after the route
+// was found missing it. `auction.rule.ts` / `prize-draw.rule.ts` have declared
+// `blockedPaymentMethods: ["online", ...]` since 2026-10-28 — Indian payment
+// aggregators prohibit settling auctions/lotteries through a standard
+// e-commerce MID, and the penalty is the whole merchant account frozen — but
+// the enforcer was only ever wired into the COD/manual path
+// (`createCheckoutOrderAction`). The gateway path that actually creates a
+// Razorpay/PhonePe order had no gate at all.
 export {
   createCheckoutOrderAction,
   attachPaymentAction,
@@ -273,6 +285,7 @@ export {
   formatShippingAddress,
   CHECKOUT_DEFAULT_COMMISSIONS,
   CHECKOUT_PAYMENT_METHODS,
+  assertPaymentMethodAllowed,
   type CreateCheckoutOrderInput,
   type VerifyAndPlaceGatewayOrderInput,
   type CheckoutOrderResult,

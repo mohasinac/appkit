@@ -460,7 +460,7 @@ export class ShiprocketShippingProvider extends IShippingProvider {
    * would block every order on a transient network blip. A `0` here is a real
    * decision to skip; an unreadable balance is not.
    */
-  async getWalletBalance(): Promise<WalletBalance> {
+  override async getWalletBalance(): Promise<WalletBalance> {
     try {
       const out = await this.call(
         "/account/details/wallet-balance",

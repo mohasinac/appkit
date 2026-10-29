@@ -18,3 +18,4 @@ export {
   CHECKOUT_PAYMENT_METHODS,
   type CheckoutPaymentMethod,
 } from "../../../shared/features/checkout/config";
+export { assertPaymentMethodAllowed } from "../../../shared/checkout/rules";
