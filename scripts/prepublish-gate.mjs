@@ -37,7 +37,7 @@ if (process.env.SKIP_HOOKS === "1") {
 
 const consumerRoot = path.resolve(import.meta.dirname, "..", "..");
 /*
- * 🛑 fast-gate, NOT `run-audits.mjs --all`. Same 242 audits, but fast-gate runs
+ * 🛑 fast-gate, NOT `run-audits.mjs --all`. Same 273 audits, but fast-gate runs
  * them through a worker pool at `cpus-2` — ~110s against ~7 minutes sequential.
  * A publish gate that costs seven minutes is one people start bypassing, which
  * defeats the point of adding it. fast-gate also prints its own denominator, so
