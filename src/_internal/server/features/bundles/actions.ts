@@ -60,9 +60,9 @@ export async function addBundleToCartAction(
   // prorate GST across them.
   //
   // Every member is ONE unit per copy. `BundleItemDetail` has no quantity field
-  // — its only per-member number is `drawCount` (prize-draw entries), and
+  // — its only per-member number is `drawCount` (random-lots entries), and
   // treating that as a stock quantity would silently change how much a
-  // prize-draw member decrements, which the stock fan-out has never done.
+  // random-lots member decrements, which the stock fan-out has never done.
   const memberIds = bundle.bundleProductIds ?? [];
   const memberDocs = await Promise.all(
     memberIds.map((id) =>

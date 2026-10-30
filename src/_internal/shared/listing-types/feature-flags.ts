@@ -194,7 +194,7 @@ const ALL_LISTING_TYPES_MAP: Record<ListingType, true> = {
   spares: true,
   auction: true,
   "pre-order": true,
-  "prize-draw": true,
+  "random-lots": true,
   classified: true,
   "digital-code": true,
   live: true,

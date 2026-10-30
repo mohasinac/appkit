@@ -163,7 +163,7 @@ const LISTING_TYPE_LABEL: Record<string, string> = {
   standard: "Standard sale",
   auction: "Auction",
   "pre-order": "Pre-order",
-  "prize-draw": "Prize draw",
+  "random-lots": "Random lots",
   classified: "Classified",
   "digital-code": "Digital code",
   live: "Live item",

@@ -23,7 +23,7 @@ import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants
 import { AvailabilityTabs } from "./AvailabilityTabs";
 import type { ListingType } from "../types";
 
-const PRIZE_DRAW_LISTING_TYPES: readonly ListingType[] = ["prize-draw"];
+const PRIZE_DRAW_LISTING_TYPES: readonly ListingType[] = ["random-lots"];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -110,7 +110,7 @@ export function PrizeDrawsIndexListing({
     sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     availability,
   };
 
@@ -139,7 +139,7 @@ export function PrizeDrawsIndexListing({
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder="Search prize draws..."
+        searchPlaceholder="Search random lots..."
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
@@ -194,7 +194,7 @@ export function PrizeDrawsIndexListing({
           </Grid>
         ) : filteredDraws.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
-            No prize draws found.
+            No random lots found.
           </Text>
         ) : (
           <Grid cols="cards" gap="md">

@@ -83,7 +83,7 @@ export function PrizeDrawEntryActions({
 
   const handleEnter = useCallback(() => {
     if (closed) return;
-    requireAuth(ACTION_ID.ENTER_PRIZE_DRAW, () => setConsentOpen(true));
+    requireAuth(ACTION_ID.ENTER_RANDOM_LOTS, () => setConsentOpen(true));
   }, [closed, requireAuth]);
 
   const handleConfirm = useCallback(async () => {
@@ -153,7 +153,7 @@ export function PrizeDrawEntryActions({
       ) : null}
 
       <Button
-        action={closed ? undefined : ACTIONS.PRIZE_DRAW["buy-now"]}
+        action={closed ? undefined : ACTIONS.RANDOM_LOTS["buy-now"]}
         variant="primary"
         size="md"
         className="w-full"
@@ -189,7 +189,7 @@ export function PrizeDrawEntryActions({
 
       <NonRefundableConsentModal
         open={consentOpen}
-        listingType="prize-draw"
+        listingType="random-lots"
         itemTitle={title}
         priceLabel={formatCurrency(pricePerEntry, currency)}
         onCancel={() => setConsentOpen(false)}

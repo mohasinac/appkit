@@ -44,7 +44,7 @@ export type ActionResource =
   | "PRODUCT"
   | "AUCTION"
   | "PRE_ORDER"
-  | "PRIZE_DRAW"
+  | "RANDOM_LOTS"
   // "CLASSIFIED" and "LIVE" were removed 2026-08-31 — both buckets held a
   // single consumerless action naming the deleted conversations feature.
   | "DIGITAL_CODE"
@@ -340,7 +340,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Add to cart",
       description: "Add a standard listing to the buyer's cart.",
       kind: "primary",
-      listingTypeScope: ["standard", "pre-order", "prize-draw", "digital-code", "live"],
+      listingTypeScope: ["standard", "pre-order", "random-lots", "digital-code", "live"],
     },
     "buy-now": {
       iconKey: "cart",
@@ -484,30 +484,30 @@ export const ACTIONS: ActionTree = {
       },
     },
   },
-  PRIZE_DRAW: {
+  RANDOM_LOTS: {
     "buy-now": {
       iconKey: "cart",
-      id: "prize-draw.buy-now",
+      id: "random-lots.buy-now",
       label: "Buy now",
-      description: "Purchase a prize-draw entry directly (buyout — skips cart, goes to checkout).",
+      description: "Purchase a random-lots entry directly (buyout — skips cart, goes to checkout).",
       kind: "primary",
-      listingTypeScope: ["prize-draw"],
+      listingTypeScope: ["random-lots"],
     },
     "enter-draw": {
       iconKey: "confirm",
-      id: "prize-draw.enter-draw",
+      id: "random-lots.enter-draw",
       label: "Enter draw",
-      description: "Purchase an entry into the prize draw.",
+      description: "Purchase an entry into the random lots draw.",
       kind: "secondary",
-      listingTypeScope: ["prize-draw"],
+      listingTypeScope: ["random-lots"],
     },
     "reveal-code": {
       iconKey: "view",
-      id: "prize-draw.reveal-code",
+      id: "random-lots.reveal-code",
       label: "Reveal code",
-      description: "Reveal the buyer's prize-draw redemption code.",
+      description: "Reveal the buyer's random-lots redemption code.",
       kind: "primary",
-      listingTypeScope: ["prize-draw"],
+      listingTypeScope: ["random-lots"],
     },
   },
   /*
@@ -2855,7 +2855,7 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["admin"],
     },
-    // ── Feature & prize-draw management ────────────────────────────────────
+    // ── Feature & random-lots management ────────────────────────────────────
     "delete-feature": {
       iconKey: "delete",
       id: "admin.delete-feature",
@@ -2873,15 +2873,15 @@ export const ACTIONS: ActionTree = {
     },
     "delete-prize-draw": {
       iconKey: "delete",
-      id: "admin.delete-prize-draw",
-      label: "Delete Prize Draws",
-      ariaLabel: "Delete selected prize draws",
-      description: "Permanently delete the selected prize draw listings.",
+      id: "admin.delete-random-lots",
+      label: "Delete Random Lots",
+      ariaLabel: "Delete selected random lots",
+      description: "Permanently delete the selected random-lots listings.",
       kind: "danger",
       permissions: ["admin"],
       confirmation: {
-        title: "Delete these prize draws?",
-        body: "The selected prize draw listings will be permanently removed. This action cannot be undone.",
+        title: "Delete these random lots?",
+        body: "The selected random-lots listings will be permanently removed. This action cannot be undone.",
         confirmLabel: "Delete",
         confirmKind: "danger",
       },

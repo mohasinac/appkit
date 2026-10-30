@@ -261,7 +261,7 @@ const {
   itemRequestsSeedData, storeGoogleConfigSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
   productsStandardSeedData, productsBeybladeXSeedData, productsAuctionsSeedData, productsPreordersSeedData,
-  productsPrizeDrawsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
+  productsRandomLotsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
   productsArtSeedData, productsStickersSeedData, productsSparesSeedData,
   productsCatalogueSeedData,
   FRANCHISE_BY_CATEGORY_ROOT,
@@ -668,7 +668,7 @@ const REAL_PRODUCTS = realListingsOnly([
     // least one genuinely purchasable product. See the file's own header.
     ...(productsBeybladeXSeedData || []),
     ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
-    ...(productsPrizeDrawsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
+    ...(productsRandomLotsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never
     // spread here — so 13 fixtures had NEVER reached the database, /art and
     // /stickers were permanently empty, and listingType=art|stickers returned 0.

@@ -3,7 +3,7 @@
  *
  * 🛑 NINE SOURCES, not fifteen. The redirect page maps 15 `SearchResourceType`
  * values, but nine of them are LISTING TYPES inside `products` — auctions,
- * pre-orders, prize-draws, classified, digital-codes, live, art, bundles. One
+ * pre-orders, random-lots, classified, digital-codes, live, art, bundles. One
  * `products` query covers all of them, and a per-type query would be nine
  * fan-outs returning overlapping rows from one collection.
  *

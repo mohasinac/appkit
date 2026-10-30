@@ -40,7 +40,7 @@ export interface ReviewDocument extends BaseDocument {
 
   productId: string;
   productTitle: string;
-  /** Denormalized from the product at review-creation time — drives the correct detail-page link (e.g. prize-draw items link to /prize-draws/[slug], not /products/[slug]). */
+  /** Denormalized from the product at review-creation time — drives the correct detail-page link (e.g. random-lots items link to /random-lots/[slug], not /products/[slug]). */
   listingType?: ListingType;
   storeId?: string;
   storeName?: string;

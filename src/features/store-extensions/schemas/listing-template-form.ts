@@ -60,7 +60,7 @@ const LISTING_TEMPLATE_TYPE_LABEL: Record<ListingTemplateType, string> = {
   standard: "Standard",
   auction: "Auction",
   "pre-order": "Pre-order",
-  "prize-draw": "Prize draw",
+  "random-lots": "Random lots",
   bundle: "Bundle",
   classified: "Classified",
   "digital-code": "Digital code",

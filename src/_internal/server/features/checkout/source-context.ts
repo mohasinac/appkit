@@ -145,9 +145,9 @@ export async function buildOrderSourceContext(
       };
     }
 
-    if (orderType === "prize-draw") {
+    if (orderType === "random-lots") {
       return {
-        path: "prize-draw",
+        path: "random-lots",
         prizeDrawProductId: item.productId,
         pricePerEntry: product.pricePerEntry ?? product.price,
         entryCount: item.quantity,

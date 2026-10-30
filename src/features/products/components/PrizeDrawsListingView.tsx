@@ -13,7 +13,7 @@ import { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
 
 type SearchParams = Record<string, string | string[]>;
 
-const LISTING_TYPES = ["prize-draw"] as const;
+const LISTING_TYPES = ["random-lots"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
@@ -22,7 +22,7 @@ export interface PrizeDrawsListingViewProps {
 }
 
 /**
- * Public listing page (SB4-F). Server-fetches published prize-draw products,
+ * Public listing page (SB4-F). Server-fetches published random-lots products,
  * hydrates the client `PrizeDrawsIndexListing` which renders the filter
  * toolbar + collage-thumb grid. URL params: `?storeId=…&prizeRevealStatus=…`.
  *

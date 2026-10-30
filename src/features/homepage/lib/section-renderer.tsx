@@ -795,7 +795,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
     },
   },
 
-  "prize-draws": {
+  "random-lots": {
     surfaces: ["homepage", "category", "brand"],
     render: ({ config }) => {
       const cfg = config as PrizeDrawsSectionConfig;

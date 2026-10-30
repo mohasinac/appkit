@@ -82,7 +82,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Mumbai", locality: "Andheri West", pincode: "400058" },
@@ -130,7 +130,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Bengaluru", locality: "Koramangala", pincode: "560034" },
@@ -180,7 +180,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Pune", locality: "Kothrud", pincode: "411038" },
@@ -229,7 +229,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "New Delhi", locality: "Rajouri Garden", pincode: "110027" },
@@ -281,7 +281,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Chennai", locality: "T. Nagar", pincode: "600017" },
@@ -334,7 +334,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Hyderabad", locality: "Banjara Hills", pincode: "500034" },
@@ -384,7 +384,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Mumbai", locality: "Powai", pincode: "400076" },
@@ -431,7 +431,7 @@ const _rawproductsClassifiedsSeedData: Partial<ProductDocument>[] = [
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     listingType: "classified" as const,
-    storeId: "store-letitrip-official",
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     classified: {
       meetupArea: { city: "Mumbai", locality: "Dadar", pincode: "400014" },

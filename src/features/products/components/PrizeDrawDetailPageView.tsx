@@ -112,16 +112,16 @@ export async function PrizeDrawDetailPageView({
             <Stack align="start" gap="md" className="text-left">
               <Heading
                 level={1} size="2xl" weight="semibold" color="primary">
-                Prize Draw Not Found
+                Random Lot Not Found
               </Heading>
               <Text color="muted">
-                The prize draw you are looking for may have been removed.
+                The random lot you are looking for may have been removed.
               </Text>
               <Link
-                href={String(ROUTES.PUBLIC.PRIZE_DRAWS)}
+                href={String(ROUTES.PUBLIC.RANDOM_LOTS)}
                 className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
-                Browse Prize Draws
+                Browse Random Lots
               </Link>
             </Stack>
           </Container>
@@ -132,7 +132,7 @@ export async function PrizeDrawDetailPageView({
 
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
-  const title = String(p.title ?? p.name ?? "Prize Draw");
+  const title = String(p.title ?? p.name ?? "Random Lot");
   const slug = typeof p.slug === "string" ? p.slug : String(p.id ?? "");
 
   const items = stripIsWon(p.prizeDrawItems as PrizeDrawItem[] | undefined);
@@ -197,7 +197,7 @@ export async function PrizeDrawDetailPageView({
     <Main>
       <HistoryTracker
         productId={String(p.id ?? p.slug ?? "")}
-        productType="prize-draw"
+        productType="random-lots"
         snapshot={{
           title,
           thumb,
@@ -218,10 +218,10 @@ export async function PrizeDrawDetailPageView({
             </Link>
             <Span aria-hidden>/</Span>
             <Link
-              href={String(ROUTES.PUBLIC.PRIZE_DRAWS)}
+              href={String(ROUTES.PUBLIC.RANDOM_LOTS)}
               className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
-              Prize Draws
+              Random Lots
             </Link>
             <Span aria-hidden>/</Span>
             <Span className="truncate max-w-[200px]" color="muted">
@@ -355,7 +355,7 @@ export async function PrizeDrawDetailPageView({
                 * In the sidebar, beside the entry CTA, for rule 1: the
                 * decision is made here, not on a terms page.
               */}
-              <Disclaimer id="prize-draw" />
+              <Disclaimer id="random-lots" />
             </Stack>
           )}
           renderTabs={() => (

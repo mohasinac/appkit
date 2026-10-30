@@ -15,7 +15,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  * 🛑 THE GATEWAY IS PROHIBITED HERE — `online` joined this list 2026-10-28,
  * and `cash` left it.
  *
- * A prize draw is a game of chance, which is on the prohibited-merchant lists
+ * A random-lots draw is a game of chance, which is on the prohibited-merchant lists
  * Indian payment gateways inherit from the card networks — the same lists that
  * carry lotteries and auctions. Routing entry payments through a standard
  * e-commerce MID is a terms breach, and the penalty is the merchant account
@@ -50,11 +50,11 @@ const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", "
  * than abandon the entry.
  */
 const PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE =
-  "Prize-draw entries are paid by direct bank/UPI transfer or cash on pickup — card and online payment are not available for prize draws.";
+  "Random-lots entries are paid by direct bank/UPI transfer or cash on pickup — card and online payment are not available for random lots.";
 
 export const prizeDrawRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
-  orderType: "prize-draw",
+  orderType: "random-lots",
   nonRefundable: true,
   canMergeWithSameProduct: false,
   maxLinesPerOrder: PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
@@ -62,10 +62,10 @@ export const prizeDrawRule: ListingCheckoutRule = {
   blockedPaymentMethods: PRIZE_DRAW_BLOCKED_PAYMENT_METHODS,
   blockedPaymentMessage: PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE,
 
-  splitKey: (item: CartItemDocument) => `prize-draw:${item.itemId}`,
+  splitKey: (item: CartItemDocument) => `random-lots:${item.itemId}`,
 
   /**
-   * Slice a high-quantity prize-draw entry into chunks of
+   * Slice a high-quantity random-lots entry into chunks of
    * PRIZE_DRAW_MAX_REVEALS_PER_ORDER so each resulting order has at most
    * that many reveal slots.  Buying 7 entries → [3, 3, 1].
    */
@@ -105,7 +105,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
      * the gate reads, so the wording is unchanged.
      */
     for (const { item, product } of pairs) {
-      if (product.listingType !== "prize-draw") continue;
+      if (product.listingType !== "random-lots") continue;
       const max = product.prizeMaxEntries ?? 0;
       if (max <= 0) continue;
       const current = product.prizeCurrentEntries ?? 0;
@@ -121,14 +121,14 @@ export const prizeDrawRule: ListingCheckoutRule = {
   },
 
   stockDecrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
-    if (product.listingType !== "prize-draw") return {};
+    if (product.listingType !== "random-lots") return {};
     return {
       prizeCurrentEntries: (product.prizeCurrentEntries ?? 0) + quantity,
     };
   },
 
   stockIncrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
-    if (product.listingType !== "prize-draw") return {};
+    if (product.listingType !== "random-lots") return {};
     return {
       prizeCurrentEntries: Math.max(0, (product.prizeCurrentEntries ?? 0) - quantity),
     };
@@ -139,7 +139,7 @@ export const prizeDrawRule: ListingCheckoutRule = {
     product: ProductDocument,
   ): OrderItemInput => ({
     ...line,
-    listingType: "prize-draw",
+    listingType: "random-lots",
     prizeRevealStatus:
       product.prizeRevealStatus === "open" ? "open" : "pending",
   }),

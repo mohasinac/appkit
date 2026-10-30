@@ -215,7 +215,7 @@ export const PRODUCT_FIELDS = {
     STANDARD: "standard",
     AUCTION: "auction",
     PRE_ORDER: "pre-order",
-    PRIZE_DRAW: "prize-draw",
+    RANDOM_LOTS: "random-lots",
     CLASSIFIED: "classified",
     DIGITAL_CODE: "digital-code",
     LIVE: "live",

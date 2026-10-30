@@ -96,7 +96,7 @@ function productTargets(id: string | undefined, hints?: RevalidateHints): string
      * types are deliberately OUT of the general catalogue
      * (`inGeneralCatalogue: false`) and are reachable only at their own browse
      * route, so a bulk invalidation that marks `/products` leaves `/auctions`,
-     * `/pre-orders`, `/prize-draws`, `/art`, `/stickers` and `/spares` serving
+     * `/pre-orders`, `/random-lots`, `/art`, `/stickers` and `/spares` serving
      * rows that no longer exist.
      */
     for (const p of PLUGINS) if (p.browseRoute) out.push(String(p.browseRoute));

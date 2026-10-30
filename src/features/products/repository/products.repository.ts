@@ -96,7 +96,7 @@ const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.
 const SIEVE_CLAUSE_LT_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
 const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
-const SIEVE_CLAUSE_LT_PRIZE_DRAW = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRIZE_DRAW}`;
+const SIEVE_CLAUSE_LT_PRIZE_DRAW = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.RANDOM_LOTS}`;
 const SIEVE_CLAUSE_LT_CLASSIFIED = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.CLASSIFIED}`;
 const SIEVE_CLAUSE_LT_DIGITAL_CODE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.DIGITAL_CODE}`;
 const SIEVE_CLAUSE_LT_LIVE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.LIVE}`;
@@ -110,7 +110,7 @@ type ProductListingKind =
   | "standard"
   | "auction"
   | "pre-order"
-  | "prize-draw"
+  | "random-lots"
   | "classified"
   | "digital-code"
   | "live"
@@ -120,13 +120,14 @@ type ProductListingKind =
   // Legacy aliases — see `LISTING_KIND_ALIAS_MAP` below.
   | "preorder"
   | "product"
-  | "prizedraw";
+  | "prizedraw"
+  | "prize-draw";
 
 const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   standard: LISTING_TYPE_VALUES.STANDARD,
   auction: LISTING_TYPE_VALUES.AUCTION,
   "pre-order": LISTING_TYPE_VALUES.PRE_ORDER,
-  "prize-draw": LISTING_TYPE_VALUES.PRIZE_DRAW,
+  "random-lots": LISTING_TYPE_VALUES.RANDOM_LOTS,
   classified: LISTING_TYPE_VALUES.CLASSIFIED,
   "digital-code": LISTING_TYPE_VALUES.DIGITAL_CODE,
   live: LISTING_TYPE_VALUES.LIVE,
@@ -150,7 +151,11 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   // Legacy → canonical.
   product: LISTING_TYPE_VALUES.STANDARD,
   preorder: LISTING_TYPE_VALUES.PRE_ORDER,
-  prizedraw: LISTING_TYPE_VALUES.PRIZE_DRAW,
+  prizedraw: LISTING_TYPE_VALUES.RANDOM_LOTS,
+  // "prize-draw" is the pre-rename canonical spelling — kept as an alias so
+  // any missed literal (or a stored legacy value) still resolves rather than
+  // silently dropping the listingType clause (Root Cause #58).
+  "prize-draw": LISTING_TYPE_VALUES.RANDOM_LOTS,
 };
 
 const LISTING_KIND_ACCEPTED = new Set<string>(
@@ -1860,6 +1865,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      *   scope==publicProducts   →  status==published,listingType==standard
      *   scope==publicAuctions   →  status==published,listingType==auction
      *   scope==publicPreorders  →  status==published,listingType==pre-order
+     *   scope==publicRandomLots →  status==published,listingType==random-lots
+     *                              ("publicPrizeDraws" kept as an alias)
      *   scope==published        →  status==published
      */
     scope: (value, operator) => {
@@ -1871,6 +1878,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_AUCTION].join(",");
         case "publicPreorders":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
+        case "publicRandomLots":
         case "publicPrizeDraws":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PRIZE_DRAW].join(",");
         case "publicClassifieds":

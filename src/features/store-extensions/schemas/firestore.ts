@@ -256,7 +256,7 @@ export const LISTING_TEMPLATE_TYPES = [
   "standard",
   "auction",
   "pre-order",
-  "prize-draw",
+  "random-lots",
   "bundle",
   "classified",
   "digital-code",

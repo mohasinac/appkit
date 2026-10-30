@@ -2076,7 +2076,7 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPreordersSeedData - Seed data for pre-order product listings.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsPrizeDrawsSeedData - Seed data for prize-draw product listings (SB5-E).
+// productsRandomLotsSeedData - Seed data for random-lots product listings (SB5-E).
 // productsClassifiedsSeedData - Seed data for classified product listings (SB-UNI-I).
 // productsDigitalCodesSeedData - Seed data for digital-code product listings (SB-UNI-J).
 // productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
@@ -6898,24 +6898,24 @@ export { PlaceBidForm } from "./features/products/components/PlaceBidForm";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PreOrderDetailView - Component for pre order detail view.
 export { PreOrderDetailView } from "./features/products/components/PreOrderDetailView";
-// [SERVER-RSC]-Public listing for prize-draw products (SB4-F).
+// [SERVER-RSC]-Public listing for random-lots products (SB4-F).
 export type { PrizeDrawsListingViewProps } from "./features/products/components/PrizeDrawsListingView";
-// [CLIENT]-Client toolbar+grid for prize draws (SB4-F).
+// [CLIENT]-Client toolbar+grid for random lots (SB4-F).
 export { PrizeDrawsIndexListing } from "./features/products/components/PrizeDrawsIndexListing";
 export type { PrizeDrawsIndexListingProps } from "./features/products/components/PrizeDrawsIndexListing";
-// [CLIENT]-Marketplace card for prize draws (SB4-F).
+// [CLIENT]-Marketplace card for random lots (SB4-F).
 export { MarketplacePrizeDrawCard } from "./features/products/components/MarketplacePrizeDrawCard";
 export type {
  MarketplacePrizeDrawCardProps,
  MarketplacePrizeDrawCardData,
  MarketplacePrizeDrawCardLabels,
 } from "./features/products/index";
-// [SERVER-RSC]-Public detail page for a prize-draw product (SB4-G).
+// [SERVER-RSC]-Public detail page for a random-lots product (SB4-G).
 export type { PrizeDrawDetailPageViewProps } from "./features/products/components/PrizeDrawDetailPageView";
-// [CLIENT]-Buy panel client for prize-draw detail (consent + add-to-cart) (SB4-G).
+// [CLIENT]-Buy panel client for random-lots detail (consent + add-to-cart) (SB4-G).
 export { PrizeDrawEntryActions } from "./features/products/components/PrizeDrawEntryActions";
 export type { PrizeDrawEntryActionsProps } from "./features/products/components/PrizeDrawEntryActions";
-// [CLIENT]-Theatrical reveal-mode prize-draw modal (SB4-I) — call POST /api/prize-draws/[id]/reveal and animate to the winning slot.
+// [CLIENT]-Theatrical reveal-mode random-lots modal (SB4-I) — fully-automatic reveal, animates to the winning slot.
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
 export type { PrizeRevealModalProps, PrizeRevealResult } from "./features/products/components/PrizeRevealModal";
 export { PrizeDrawWinnerMappingView } from "./features/products/components/PrizeDrawWinnerMappingView";

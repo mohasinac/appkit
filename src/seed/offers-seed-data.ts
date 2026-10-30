@@ -50,5 +50,82 @@ import { withOfferSearchTxt } from "./_helpers/search-txt-wrappers";
  */
 import type { OfferPlain } from "../features/seller/schemas/firestore";
 
-export const offersSeedData: Partial<OfferPlain>[] = [
-].map(withOfferSearchTxt);
+/*
+ * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+ * confirmation for this audit sweep.
+ */
+const NOW = new Date();
+const daysFromNow = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
+const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+const _rawOffersSeedData: Partial<OfferPlain>[] = [
+  {
+    id: "offer-valkyrie-pending",
+    productId: "product-beyblade-burst-valkyrie",
+    productTitle: "Beyblade Burst B-34 Victory Valkyrie Boost Variable",
+    buyerUid: "user-meera-bey",
+    buyerName: "Meera Blader",
+    buyerEmail: "meera.blader@gmail.com",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    offerAmount: 800,
+    listedPrice: 999,
+    currency: "INR",
+    status: "pending",
+    expiresAt: daysFromNow(2),
+  },
+  {
+    id: "offer-xtreme-stadium-accepted",
+    productId: "beyblade-x-xtreme-stadium-bx-10-copy",
+    productTitle: "Beyblade X Xtreme Stadium (BX-10) (Copy)",
+    buyerUid: "user-rohit-collector",
+    buyerName: "Rohit Collector",
+    buyerEmail: "rohit.collect@gmail.com",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    offerAmount: 4000,
+    listedPrice: 4500,
+    lockedPrice: 4000,
+    currency: "INR",
+    status: "accepted",
+    expiresAt: daysFromNow(3),
+    acceptedAt: daysAgo(1),
+    checkoutDeadline: daysFromNow(2),
+  },
+  {
+    id: "offer-regalia-genesis-countered",
+    productId: "product-beyblade-burst-regalia-genesis",
+    productTitle: "Beyblade Burst Xeno Xcalibur Magnet Loop",
+    buyerUid: "user-ananya-collector",
+    buyerName: "Ananya Patel",
+    buyerEmail: "ananya.patel@gmail.com",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    offerAmount: 1000,
+    listedPrice: 1399,
+    counterAmount: 1200,
+    currency: "INR",
+    status: "countered",
+    expiresAt: daysFromNow(2),
+    respondedAt: daysAgo(1),
+  },
+  {
+    id: "offer-valtryek-declined",
+    productId: "product-beyblade-burst-valtryek-v3-sold-out",
+    productTitle: "Beyblade Burst God Valkyrie 6Vortex Reboot (Sold Out)",
+    buyerUid: "user-meera-bey",
+    buyerName: "Meera Blader",
+    buyerEmail: "meera.blader@gmail.com",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    offerAmount: 500,
+    listedPrice: 899,
+    currency: "INR",
+    status: "declined",
+    expiresAt: daysAgo(1),
+    respondedAt: daysAgo(2),
+    sellerNote: "Too low for an already-discounted sold-out item.",
+  },
+];
+
+export const offersSeedData = _rawOffersSeedData.map(withOfferSearchTxt);

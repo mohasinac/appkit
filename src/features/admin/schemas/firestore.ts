@@ -1421,7 +1421,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       art: false,
       stickers: false,
       auction: false,
-      "prize-draw": false,
+      "random-lots": false,
       classified: false,
       "digital-code": false,
       live: false,

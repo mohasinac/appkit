@@ -30,7 +30,7 @@ export interface PrizeDrawsSectionProps {
 export async function PrizeDrawsSection({
   config,
 }: PrizeDrawsSectionProps) {
-  const title = config.title ?? "Prize Draws";
+  const title = config.title ?? "Random Lots";
   const subtitle =
     config.subtitle ?? "Enter for a chance to win rare collectibles";
 
@@ -38,7 +38,7 @@ export async function PrizeDrawsSection({
   const showAll = revealStatus === "all";
 
   const result = await listPublicProducts({
-    listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.PRIZE_DRAW],
+    listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.RANDOM_LOTS],
     storeId: config.storeId,
     // "all" means the admin deliberately wants closed draws too — an archive
     // strip — so neither the status filter nor the availability scope applies.

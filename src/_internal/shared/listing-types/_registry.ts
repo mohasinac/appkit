@@ -25,7 +25,7 @@
 import * as standard from "./standard/config";
 import * as auction from "./auction/config";
 import * as preOrder from "./pre-order/config";
-import * as prizeDraw from "./prize-draw/config";
+import * as randomLots from "./random-lots/config";
 // SB-UNI-F 2026-05-13 — Phase 2 union extension.
 import * as classified from "./classified/config";
 import * as digitalCode from "./digital-code/config";
@@ -210,7 +210,7 @@ export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   standard: standard.config,
   auction: auction.config,
   "pre-order": preOrder.config,
-  "prize-draw": prizeDraw.config,
+  "random-lots": randomLots.config,
   classified: classified.config,
   "digital-code": digitalCode.config,
   live: live.config,

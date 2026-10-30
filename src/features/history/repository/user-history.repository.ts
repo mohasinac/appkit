@@ -19,7 +19,9 @@ import {
   HISTORY_MAX,
 } from "../../../constants/limits";
 
-export type HistoryProductType = "product" | "auction" | "preorder" | "prize-draw";
+// "prize-draw" kept as a back-compat read alias for history rows written
+// before the random-lots rename — new writes always use "random-lots".
+export type HistoryProductType = "product" | "auction" | "preorder" | "random-lots" | "prize-draw";
 
 export interface HistoryItemSnapshot {
   title?: string;

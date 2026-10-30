@@ -131,7 +131,7 @@ export type ClaimedCouponSource =
   | "promo"
   | "spin"
   | "raffle"
-  | "prize-draw";
+  | "random-lots";
 
 export interface ClaimedCouponSnapshot {
   name: string;

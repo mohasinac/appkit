@@ -27,7 +27,7 @@ import { storesSeedData } from "./stores-seed-data";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 import { productsAuctionsSeedData } from "./products-auctions-seed-data";
 import { productsPreordersSeedData } from "./products-preorders-seed-data";
-import { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";
+import { productsRandomLotsSeedData } from "./products-random-lots-seed-data";
 import { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
 import { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
 import { productsLiveItemsSeedData } from "./products-live-items-seed-data";
@@ -109,7 +109,7 @@ const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
   spares: "spares",
   auction: "auction",
   "pre-order": "preorder",
-  "prize-draw": "prize-draw",
+  "random-lots": "random-lots",
   classified: "classified",
   "digital-code": "digital-code",
   live: "live",
@@ -136,7 +136,7 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsStandardSeedData),
       ...asArr(productsAuctionsSeedData),
       ...asArr(productsPreordersSeedData),
-      ...asArr(productsPrizeDrawsSeedData),
+      ...asArr(productsRandomLotsSeedData),
       ...asArr(productsClassifiedsSeedData),
       ...asArr(productsDigitalCodesSeedData),
       ...asArr(productsLiveItemsSeedData),

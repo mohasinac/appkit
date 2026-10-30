@@ -42,7 +42,7 @@ export function assertStatusTransition(from: string, to: string): void {
 }
 
 /**
- * Anti-scam guard — once a prize draw has at least one paid entry, the
+ * Anti-scam guard — once a random lots draw has at least one paid entry, the
  * seller can no longer take it down (unpublish/archive/delete). Prevents a
  * seller from dodging shipment of an expensive won prize by pulling the
  * listing after the fact.
@@ -51,10 +51,10 @@ export function assertPrizeDrawNotLocked(
   product: Pick<ProductDocument, "listingType" | "prizeCurrentEntries">,
   action: string,
 ): void {
-  if ((product.listingType ?? "standard") !== "prize-draw") return;
+  if ((product.listingType ?? "standard") !== "random-lots") return;
   if ((product.prizeCurrentEntries ?? 0) <= 0) return;
   throw new ValidationError(
-    `This prize draw has active entries and cannot be ${action} — buyers have already purchased tickets. The draw must run its course.`,
+    `This random lots draw has active entries and cannot be ${action} — buyers have already purchased tickets. The draw must run its course.`,
   );
 }
 

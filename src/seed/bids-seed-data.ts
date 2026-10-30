@@ -80,28 +80,83 @@ function withBidDefaults(b: Partial<BidPlain>): Partial<BidPlain> {
 }
 
 /*
- * 🛑 EMPTIED 2026-10-22. Live holds no bids.
- *
- * This literal was NOT a list of rows — it was a list of `...buildLadder({…})`
- * SPREADS, each expanding one auction into a ladder of three to five bids,
- * for 34 in total.
- *
- * That is the third generative shape the first prune could not see, and the
- * one that fooled the static check most completely: `--source-ids` looks for
- * `id:` on top-level array elements, and a spread of a function call has no
- * `id` to find. It reported ONE row (the single hand-written literal) against
- * the loader's 34.
- *
- * 🛑 `buildLadder` and `BIDDER_NAMES` GO TOO, and this comment originally said
- * the opposite — that they were "kept, ready for the day auction fixtures are
- * wanted in a scratch project". Caught before committing: with no caller they
- * are dead code that fails the unused-vars rule, and keeping a generator for a
- * future that may not come is the speculative-infra pattern this project has a
- * standing rule against. They are one `git show` away if ever wanted, and the
- * ladder's real merit — deriving every amount, status and date from its inputs
- * with no `Math.random()` (Root Cause #25) — is recorded here rather than in
- * an unreferenced function.
+ * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+ * confirmation — reverses the 2026-10-22 prune for this specific audit
+ * sweep's need to exercise bid/order/review flows end to end locally. Every
+ * id is deterministic (derived from the product id, never `Math.random()` —
+ * Root Cause #25) and FKs point at real seeded auction products, whose
+ * `bidCount`/`currentBid` fields these ladders are built to match, so the
+ * denormalized counters on the product docs and this collection agree.
  */
-const _rawBidsSeedData: Partial<BidPlain>[] = [];
+const BIDDERS = ["user-meera-bey", "user-rohit-collector", "user-ananya-collector"];
+const BIDDER_NAMES: Record<string, string> = {
+  "user-meera-bey": "Meera Blader",
+  "user-rohit-collector": "Rohit Collector",
+  "user-ananya-collector": "Ananya Patel",
+};
+
+function buildLadder(
+  productId: string,
+  productTitle: string,
+  startPrice: number,
+  finalBid: number,
+  count: number,
+  winningStatus: "active" | "won",
+): Partial<BidPlain>[] {
+  const step = (finalBid - startPrice) / count;
+  const now = new Date();
+  const rows: Partial<BidPlain>[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const amount = Math.round(startPrice + step * (i + 1));
+    const bidder = BIDDERS[i % BIDDERS.length];
+    const isLast = i === count - 1;
+    rows.push({
+      id: `bid-${productId}-${i + 1}`,
+      productId,
+      productTitle,
+      userId: bidder,
+      userName: BIDDER_NAMES[bidder],
+      bidAmount: amount,
+      status: isLast ? winningStatus : "outbid",
+      bidDate: new Date(now.getTime() - (count - i) * 3_600_000),
+    });
+  }
+  return rows;
+}
+
+const _rawBidsSeedData: Partial<BidPlain>[] = [
+  ...buildLadder(
+    "auction-beyblade-burst-cho-z-achilles",
+    "Beyblade Burst B-100 Cho-Z Achilles",
+    1199,
+    1650,
+    2,
+    "active",
+  ),
+  ...buildLadder(
+    "auction-beyblade-burst-spriggan-requiem-bought-out",
+    "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
+    2499,
+    3100,
+    4,
+    "won",
+  ),
+  ...buildLadder(
+    "auction-beyblade-burst-xcalius-passed-bin",
+    "Beyblade Burst Xcalius X2 (bidding passed Buy It Now)",
+    700,
+    1650,
+    7,
+    "active",
+  ),
+  ...buildLadder(
+    "auction-beyblade-metal-diablo-nemesis",
+    "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
+    3499,
+    6200,
+    6,
+    "won",
+  ),
+];
 
 export const bidsSeedData = _rawBidsSeedData.map(withBidDefaults) as BidPlain[];

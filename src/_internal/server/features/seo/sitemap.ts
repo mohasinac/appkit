@@ -177,7 +177,7 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.SHIPPING_POLICY), "yearly", 0.3),
     page(String(ROUTES.PUBLIC.PRE_ORDERS), "daily", 0.7),
     page(String(ROUTES.PUBLIC.BUNDLES), "weekly", 0.6),
-    page(String(ROUTES.PUBLIC.PRIZE_DRAWS), "daily", 0.7),
+    page(String(ROUTES.PUBLIC.RANDOM_LOTS), "daily", 0.7),
     /*
      * 🛑 `/classified`, `/digital-codes` and `/live` are NOT listed, and must
      * not be re-added. All three index pages were reduced to redirect stubs
@@ -283,7 +283,7 @@ const fetchPreOrderUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "pre-order", (slug) => ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug), "pre-order");
 
 const fetchPrizeDrawUrls = (baseUrl: string) =>
-  fetchListingTypeUrls(baseUrl, "prize-draw", (slug) => ROUTES.PUBLIC.PRIZE_DRAW_DETAIL(slug), "prize-draw");
+  fetchListingTypeUrls(baseUrl, "random-lots", (slug) => ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(slug), "random-lots");
 
 const fetchClassifiedUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "classified", (slug) => ROUTES.PUBLIC.CLASSIFIED_DETAIL(slug), "classified");

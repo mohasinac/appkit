@@ -14,7 +14,7 @@ export interface AssignPrizeDrawWinnerResult {
 }
 
 /**
- * The single place a prize-draw winner is ever picked. Called by every
+ * The single place a random-lots winner is ever picked. Called by every
  * trigger point (payment-confirmed for "instant" mode, sellout-detection,
  * and the expiry sweep for "scheduled" mode) — never call the underlying
  * transaction logic anywhere else.
@@ -31,7 +31,7 @@ export async function assignPrizeDrawWinner(
   // four readers — see the header of `assignSpinPrize.ts`. This one was the
   // worst-shaped of them: it returned `kind: "not_eligible"`, which every
   // caller treats as "this order does not win anything", so with the env var
-  // unset a paid prize-draw entry was silently recorded as a non-winner.
+  // unset a paid random-lots entry was silently recorded as a non-winner.
   const { orderId, productId } = args;
   const orderRef = ctx.db.collection(ORDER_COLLECTION).doc(orderId);
   const productRef = ctx.db.collection(PRODUCT_COLLECTION).doc(productId);
@@ -96,8 +96,12 @@ export async function assignPrizeDrawWinner(
     };
 
     const orderItems = Array.isArray(order.items) ? [...order.items] : [];
+    // "prize-draw" kept as a back-compat match for order items written
+    // before the random-lots rename.
     const revealedItems = orderItems.map((it) =>
-      it.listingType === "prize-draw" ? { ...it, prizeRevealStatus: "revealed" as const } : it,
+      it.listingType === "random-lots" || (it.listingType as string) === "prize-draw"
+        ? { ...it, prizeRevealStatus: "revealed" as const }
+        : it,
     );
 
     tx.update(orderRef, {

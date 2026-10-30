@@ -7,7 +7,7 @@ import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsInde
 
 type SearchParams = Record<string, string | string[]>;
 
-const LISTING_TYPES = ["prize-draw"] as const;
+const LISTING_TYPES = ["random-lots"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 

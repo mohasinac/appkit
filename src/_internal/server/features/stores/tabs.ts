@@ -76,7 +76,7 @@ const STORE_LISTING_HREF: Record<
   products: (slug) => String(ROUTES.PUBLIC.STORE_PRODUCTS(slug)),
   auctions: (slug) => String(ROUTES.PUBLIC.STORE_AUCTIONS(slug)),
   "pre-orders": (slug) => String(ROUTES.PUBLIC.STORE_PRE_ORDERS(slug)),
-  "prize-draws": (slug) => String(ROUTES.PUBLIC.STORE_PRIZE_DRAWS(slug)),
+  "random-lots": (slug) => String(ROUTES.PUBLIC.STORE_RANDOM_LOTS(slug)),
   bundles: (slug) => String(ROUTES.PUBLIC.STORE_BUNDLES(slug)),
   classifieds: (slug) => String(ROUTES.PUBLIC.STORE_CLASSIFIEDS(slug)),
   "digital-codes": (slug) => String(ROUTES.PUBLIC.STORE_DIGITAL_CODES(slug)),

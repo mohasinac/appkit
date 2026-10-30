@@ -6,7 +6,7 @@ import type { OrderDocument } from "../../../../features/orders/schemas/firestor
 
 const PRODUCT_COLLECTION = "products";
 const ORDER_COLLECTION = "orders";
-const PRIZE_DRAW_LISTING_TYPE = "prize-draw";
+const PRIZE_DRAW_LISTING_TYPE = "random-lots";
 
 /**
  * "Scheduled" reveal mode, expiry half. Fires once a draw's

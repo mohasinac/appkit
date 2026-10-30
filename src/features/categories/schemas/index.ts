@@ -48,7 +48,7 @@ export const bundleQueryRuleSchema = z.discriminatedUnion("type", [
       categorySlug: z.string().optional(),
       brandSlug: z.string().optional(),
       tags: z.array(z.string()).optional(),
-      listingType: z.enum(["standard", "pre-order", "prize-draw"]).optional(),
+      listingType: z.enum(["standard", "pre-order", "random-lots"]).optional(),
     }),
     orderBy: z.enum(["price-asc", "price-desc", "createdAt-desc"]).optional(),
     limit: z.number().int().positive(),

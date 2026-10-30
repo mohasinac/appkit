@@ -80,7 +80,7 @@ export const isStandardListing = (
 
 export const isPrizeDrawListing = (
   input?: { listingType?: ListingType },
-): boolean => normalizeListingType(input) === "prize-draw";
+): boolean => normalizeListingType(input) === "random-lots";
 
 // SB-UNI-F 2026-05-13 — Phase 2 union extension predicates.
 export const isClassifiedListing = (

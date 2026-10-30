@@ -56,13 +56,13 @@ export interface MarketplacePrizeDrawCardProps {
 }
 
 const DEFAULT_LABELS: Required<MarketplacePrizeDrawCardLabels> = {
-  prizeDrawBadge: "Prize draw",
+  prizeDrawBadge: "Random Lots",
   pendingBadge: "Reveal pending",
   openBadge: "Reveal open",
   closedBadge: "Draw closed",
   entriesRemainingLabel: (remaining, max) => `${remaining}/${max} entries left`,
   pricePerEntryLabel: "per entry",
-  enterDraw: ACTIONS.PRIZE_DRAW["enter-draw"].label,
+  enterDraw: ACTIONS.RANDOM_LOTS["enter-draw"].label,
 };
 
 function statusVariant(status?: "pending" | "open" | "closed") {
@@ -99,7 +99,7 @@ function resolveHref(
 ) {
   if (href) return href;
   if (hrefBuilder) return hrefBuilder(product);
-  return ROUTES.PUBLIC.PRIZE_DRAW_DETAIL(product.slug ?? product.id);
+  return ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(product.slug ?? product.id);
 }
 
 function formatCountdown(target: string | Date | undefined): string | null {

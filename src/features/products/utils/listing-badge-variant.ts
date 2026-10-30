@@ -31,7 +31,7 @@ export const LISTING_BADGE_VARIANT: Record<ListingType, ListingBadgeVariant> = {
   spares: "primary",
   auction: "warning",
   "pre-order": "secondary",
-  "prize-draw": "primary",
+  "random-lots": "primary",
   classified: "secondary",
   "digital-code": "success",
   live: "danger",

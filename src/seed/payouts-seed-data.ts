@@ -28,4 +28,45 @@ const _CURRENCY = getDefaultCurrency();
 
 import type { PayoutPlain } from "../features/payments/schemas";
 
-export const payoutsSeedData: Partial<PayoutPlain>[] = [];
+const NOW = new Date();
+const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+/*
+ * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+ * confirmation for this audit sweep. `orderIds` point at the orders written
+ * in `orders-seed-data.ts` (also re-populated the same session).
+ */
+export const payoutsSeedData: Partial<PayoutPlain>[] = [
+  {
+    id: "payout-test-payout-1",
+    payeeType: "store",
+    storeId: "store-beyblade-arena",
+    sellerName: "Beyblade Arena",
+    sellerEmail: "tyson@beybladearena.in",
+    amount: 2500,
+    grossAmount: 2625,
+    platformFee: 125,
+    platformFeeRate: 5,
+    currency: "INR",
+    status: "pending",
+    paymentMethod: "bank_transfer",
+    orderIds: ["order-test-standard-001"],
+    createdAt: daysAgo(2),
+  },
+  {
+    id: "payout-test-payout-2",
+    payeeType: "store",
+    storeId: "store-letitrip-official",
+    sellerName: "LetItRip Official",
+    sellerEmail: "store@letitrip.in",
+    amount: 4250,
+    grossAmount: 4500,
+    platformFee: 250,
+    platformFeeRate: 5,
+    currency: "INR",
+    status: "processing",
+    paymentMethod: "upi",
+    orderIds: ["order-test-offer-accepted-001"],
+    createdAt: daysAgo(5),
+  },
+];

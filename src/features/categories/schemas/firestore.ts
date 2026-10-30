@@ -49,7 +49,7 @@ export type BundleQueryRule =
         brandSlug?: string;
         tags?: string[];
         /** Eligible listing types that may appear in a dynamic bundle. */
-        listingType?: "standard" | "pre-order" | "prize-draw";
+        listingType?: "standard" | "pre-order" | "random-lots";
       };
       orderBy?: "price-asc" | "price-desc" | "createdAt-desc";
       limit: number;
@@ -58,7 +58,7 @@ export type BundleQueryRule =
 /**
  * Per-member metadata stored alongside `bundleProductIds`.
  * `drawCount` — only meaningful when the member product has
- * sieveFilter("listingType", SIEVE_OP.EQ, "= "prize-draw""). Represents how many draw entries
+ * sieveFilter("listingType", SIEVE_OP.EQ, "= "random-lots""). Represents how many draw entries
  * the buyer receives for that product when they purchase the bundle
  * (e.g. drawCount=5 means 5 raffle entries, not 5 copies of the draw).
  */

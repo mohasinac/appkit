@@ -29,7 +29,7 @@ const cartItemBaseSchema = z.object({
     "standard",
     "auction",
     "pre-order",
-    "prize-draw",
+    "random-lots",
     "classified",
     "digital-code",
     "live",

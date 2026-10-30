@@ -188,9 +188,9 @@ function contentFor(ctx: OrderSourceContext, currency?: string): ProvenanceConte
         ],
       };
 
-    case "prize-draw":
+    case "random-lots":
       return {
-        title: "Prize draw entry",
+        title: "Random lots entry",
         tone: "info",
         summary:
           ctx.revealMode === "instant"

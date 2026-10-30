@@ -22,7 +22,7 @@ import { Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 // SB-UNI-E 2026-05-13 — "bundle" dropped (bundle UI deleted in SB-UNI-V; bundles
 // are now a category discriminator). Prize draws remain the only consumer.
-export type NonRefundableListingType = "prize-draw";
+export type NonRefundableListingType = "random-lots";
 
 export interface NonRefundableConsentModalProps {
   /** Modal visibility — controlled by the parent. */
@@ -50,10 +50,10 @@ const COPY: Record<
   NonRefundableListingType,
   { heading: string; bullets: string[]; cta: string; consent: string }
 > = {
-  "prize-draw": {
+  "random-lots": {
     heading: "Entry fee is non-refundable",
     bullets: [
-      "Your entry is locked the moment payment confirms. Prize draws use a public on-chain RNG — no entries can be voided after the reveal window opens.",
+      "Your entry is locked the moment payment confirms. Random lots use a public on-chain RNG — no entries can be voided after the reveal window opens.",
       "If the prize pool is exhausted (every prize already won), your entry is automatically refunded.",
       "If you miss the reveal deadline after winning, the prize is auto-forfeited and your entry fee is NOT returned.",
     ],

@@ -52,7 +52,7 @@ export type ProductFeatureProductType =
   | "product"
   | "auction"
   | "preorder"
-  | "prize-draw"
+  | "random-lots"
   | "classified"
   | "digital-code"
   | "live"

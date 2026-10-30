@@ -68,7 +68,7 @@ const PRIZE_REVEAL_MODE_OPTIONS: { value: "instant" | "scheduled"; label: string
 // ListingType uses the canonical SB1-G spellings ("standard", "pre-order");
 // ProductFeatureProductType predates it with legacy spellings for 2 values.
 // Replaces the old 2-case ternary that silently mapped every other type
-// (classified/digital-code/live/prize-draw/art/stickers) to "product".
+// (classified/digital-code/live/random-lots/art/stickers) to "product".
 const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeatureProductType> = {
   standard: "product",
   /*
@@ -81,7 +81,7 @@ const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeaturePr
   spares: "product",
   auction: "auction",
   "pre-order": "preorder",
-  "prize-draw": "prize-draw",
+  "random-lots": "random-lots",
   classified: "classified",
   "digital-code": "digital-code",
   live: "live",
@@ -984,18 +984,18 @@ export function ProductForm({
         </>
       )}
 
-      {/* ── Prize-Draw section (SB4-C) ── */}
-      {listingTypeFlags["prize-draw"] && (
+      {/* ── Random Lots section (SB4-C) ── */}
+      {listingTypeFlags["random-lots"] && (
         <>
           <Heading level={4} className="mt-4">
-            Prize Draw Settings
+            Random Lots Settings
           </Heading>
 
           <Checkbox
-            label="This is a prize-draw listing"
+            label="This is a random-lots listing"
             checked={isPrizeDrawListing(product)}
             onChange={(e) =>
-              update({ listingType: e.target.checked ? "prize-draw" : "standard" })
+              update({ listingType: e.target.checked ? "random-lots" : "standard" })
             }
             disabled={
               isReadonly ||
@@ -1019,11 +1019,11 @@ export function ProductForm({
             <Alert variant="error" title="Listing locked">
               At least one prize has been revealed for this draw — the listing
               and its fields are now frozen. To rerun a similar draw, clone it
-              into a new prize-draw listing.
+              into a new random-lots listing.
             </Alert>
           ) : null}
           <Alert variant="warning" title="Non-refundable">
-            Prize-draw entries are non-refundable once purchased. Buyers see
+            Random-lots entries are non-refundable once purchased. Buyers see
             and must accept this notice before paying.
           </Alert>
 

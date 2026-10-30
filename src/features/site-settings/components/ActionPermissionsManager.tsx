@@ -37,7 +37,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   "reserve-now": "Pre-order CTA",
   "cancel-reservation": "Pre-order CTA",
   "checkout": "Checkout",
-  "enter-prize-draw": "Prize Draw",
+  "enter-random-lots": "Random Lots",
   "enter-raffle": "Raffle",
   "report-listing": "Moderation",
   "follow-store": "Social",

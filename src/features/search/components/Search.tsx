@@ -36,7 +36,7 @@ export type SearchResourceType =
   | "products"
   | "auctions"
   | "pre-orders"
-  | "prize-draws"
+  | "random-lots"
   | "bundles"
   | "classified"
   | "digital-codes"

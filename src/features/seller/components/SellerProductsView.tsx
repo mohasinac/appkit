@@ -545,8 +545,8 @@ export function SellerProductsView({
         ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
         : row.listingKind === "pre-order"
           ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
-          : row.listingKind === "prize-draw"
-            ? String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))
+          : row.listingKind === "random-lots"
+            ? String(ROUTES.STORE.RANDOM_LOTS_EDIT(row.id))
             : String(ROUTES.STORE.PRODUCTS_EDIT(row.id));
     void dispatch({ type: "NAVIGATE", href });
   };

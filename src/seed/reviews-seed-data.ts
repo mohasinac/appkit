@@ -57,7 +57,107 @@ import { withReviewSearchTxt } from "./_helpers/search-txt-wrappers";
  * push one product to 19 reviews so pagination was exercisable; that case can
  * only report "could not test" until fixtures live in a scratch project.
  */
-const _rawReviewsSeedData: Partial<ReviewPlain>[] = [];
+/*
+ * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+ * confirmation for this audit sweep. Deterministic ids, real product/store
+ * FKs — no `orderId` linkage (that field is documented optional precisely
+ * because pre-existing reviews have none).
+ */
+const NOW = new Date();
+const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+const _rawReviewsSeedData: Partial<ReviewPlain>[] = [
+  {
+    id: "review-cho-z-achilles-1",
+    createdAt: daysAgo(6),
+    productId: "product-beyblade-burst-valkyrie",
+    productTitle: "Beyblade Burst B-34 Victory Valkyrie Boost Variable",
+    listingType: "standard",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    userId: "user-meera-bey",
+    userName: "Meera Blader",
+    rating: 5,
+    title: "Exactly as described",
+    comment: "Arrived sealed and well-packed. Spins true out of the box — matches the photos.",
+    status: "approved",
+    helpfulCount: 3,
+    reportCount: 0,
+    verified: true,
+  },
+  {
+    id: "review-valtryek-1",
+    createdAt: daysAgo(4),
+    productId: "product-beyblade-burst-valtryek-v3-sold-out",
+    productTitle: "Beyblade Burst God Valkyrie 6Vortex Reboot (Sold Out)",
+    listingType: "standard",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    userId: "user-rohit-collector",
+    userName: "Rohit Collector",
+    rating: 4,
+    title: "Good condition, slightly delayed shipping",
+    comment: "Product itself is great, authenticity checked out. Shipping took a couple of days longer than quoted.",
+    status: "approved",
+    helpfulCount: 1,
+    reportCount: 0,
+    verified: true,
+  },
+  {
+    id: "review-spryzen-video-demo-1",
+    createdAt: daysAgo(3),
+    productId: "product-beyblade-burst-spryzen-video-demo",
+    productTitle: "Beyblade Burst B-97 Spryzen S2 (Video Demo, Wikimedia)",
+    listingType: "standard",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    userId: "user-ananya-collector",
+    userName: "Ananya Patel",
+    rating: 5,
+    title: "Great for beginners",
+    comment: "Bought this for my nephew, he loves it. The video demo on the listing was genuinely useful before buying.",
+    status: "approved",
+    helpfulCount: 2,
+    reportCount: 0,
+    verified: false,
+  },
+  {
+    id: "review-regalia-genesis-1",
+    createdAt: daysAgo(2),
+    productId: "product-beyblade-burst-regalia-genesis",
+    productTitle: "Beyblade Burst Xeno Xcalibur Magnet Loop",
+    listingType: "standard",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    userId: "user-meera-bey",
+    userName: "Meera Blader",
+    rating: 3,
+    title: "Decent but overpriced for what it is",
+    comment: "Build quality is fine, just feels like a lot for a magnet-loop reissue. Would wait for a sale next time.",
+    status: "approved",
+    helpfulCount: 0,
+    reportCount: 0,
+    verified: true,
+  },
+  {
+    id: "review-xtreme-stadium-1",
+    createdAt: daysAgo(1),
+    productId: "beyblade-x-xtreme-stadium-bx-10-copy",
+    productTitle: "Beyblade X Xtreme Stadium (BX-10) (Copy)",
+    listingType: "standard",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    userId: "user-rohit-collector",
+    userName: "Rohit Collector",
+    rating: 5,
+    title: "Pending moderation example",
+    comment: "Flagged here deliberately so the admin moderation queue has a real row to approve or reject.",
+    status: "pending",
+    helpfulCount: 0,
+    reportCount: 0,
+    verified: true,
+  },
+];
 
 export const reviewsSeedData = (_rawReviewsSeedData as ReviewPlain[]).map(
   withReviewSearchTxt,

@@ -30,7 +30,7 @@ import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope"
 import type { ListingType } from "../../products/types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
-const PRIZE_DRAW_TYPES: readonly ListingType[] = ["prize-draw"];
+const PRIZE_DRAW_TYPES: readonly ListingType[] = ["random-lots"];
 
 const STATUS_VARIANT: Record<
   string,
@@ -59,7 +59,7 @@ interface AdminProductsResponse {
 const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
   {
     key: "primary",
-    header: "Prize Draw",
+    header: "Random Lot",
     render: (row) => (
       <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="semibold">
@@ -130,22 +130,22 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
 
   const config: ListingViewConfig<AdminProductsResponse, PrizeDrawAdminRow> = {
     portal: "admin",
-    title: "Prize Draws",
+    title: "Random Lots",
     search: {
-      placeholder: "Search prize draws by name, brand or tag…",
+      placeholder: "Search random lots by name, brand or tag…",
       /*
        * 🛑 "or store" was a promise the corpus cannot keep.
        * `buildProductSearchTxt` indexes title, description, brand, brandSlug,
        * category names, tags, features, condition and card/grading details —
        * and NO store name or id. Typing a seller's name returned an empty list
-       * that reads as "this seller runs no prize draws".
+       * that reads as "this seller runs no random lots".
        */
       fields: ["title", "description", "brand", "categoryNames", "tags", "features"],
     },
-    emptyLabel: "No prize draws found",
+    emptyLabel: "No random lots found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),
-    queryKey: ["admin", "prize-draws", "listing"],
+    queryKey: ["admin", "random-lots", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
     sortOptions: [
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -158,8 +158,8 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       toRecordArray(response.items).map((item, index) => {
         const priceRaw = typeof item.price === "number" ? item.price : 0;
         return {
-          id: toStringValue(item.id, `prize-draw-${index}`),
-          primary: toStringValue(item.title ?? item.name, "Untitled prize draw"),
+          id: toStringValue(item.id, `random-lots-${index}`),
+          primary: toStringValue(item.title ?? item.name, "Untitled random lot"),
           secondary: toStringValue(item.sellerName, ""),
           storeName: toStringValue(item.sellerName ?? item.storeId, "Unknown store"),
           status: toStringValue(item.status, "draft"),
@@ -175,23 +175,23 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) => {
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
-      return [sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "prize-draw"), status]
+      return [sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "random-lots"), status]
         .filter(Boolean)
         .join(",");
     },
     buildExtraParams: () => scope.extraParams,
     renderAboveContent: scope.renderAboveContent,
-    rowHrefTemplate: String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT("{id}")),
+    rowHrefTemplate: String(ROUTES.ADMIN.RANDOM_LOTS_EDIT("{id}")),
     /*
-     * A prize draw IS a product (`listingType: "prize-draw"`), so it is created
+     * Random lots IS a product (`listingType: "random-lots"`), so it is created
      * in the product editor like every other type — there is deliberately no
-     * `PRIZE_DRAWS_NEW` admin route, and inventing one would be a second create
+     * `RANDOM_LOTS_NEW` admin route, and inventing one would be a second create
      * path for the same document. `?listingType=` preselects the type so the
      * row an admin creates from here actually appears here.
      */
     primaryAction: {
-      label: "Add Prize Draw",
-      href: `${String(ROUTES.ADMIN.PRODUCTS_NEW)}?${PRODUCT_FIELDS.LISTING_TYPE}=prize-draw`,
+      label: "Add Random Lot",
+      href: `${String(ROUTES.ADMIN.PRODUCTS_NEW)}?${PRODUCT_FIELDS.LISTING_TYPE}=random-lots`,
     },
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
@@ -204,12 +204,12 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     renderRowActions: (row) => (
       <Row gap="xs">
         <Button variant="ghost" size="sm" asChild>
-          <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">
+          <TextLink href={String(ROUTES.ADMIN.RANDOM_LOTS_EDIT(row.id))} aria-label="Edit">
             <Pencil className="w-4 h-4" />
           </TextLink>
         </Button>
         <Button variant="ghost" size="sm" asChild>
-          <TextLink href={String(ROUTES.ADMIN.PRIZE_DRAWS_ENTRIES(row.id))} aria-label="View entries">
+          <TextLink href={String(ROUTES.ADMIN.RANDOM_LOTS_ENTRIES(row.id))} aria-label="View entries">
             <ListChecks className="w-4 h-4" />
           </TextLink>
         </Button>

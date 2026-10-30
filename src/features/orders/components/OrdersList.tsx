@@ -42,10 +42,12 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
   const statusColor =
     STATUS_COLORS[order.orderStatus] ?? "bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text-muted)]";
 
-  // SB8-F — count unrevealed prize-draw entries to surface a "reveals pending" badge.
+  // SB8-F — count unrevealed random-lots entries to surface a "reveals pending" badge.
+  // "prize-draw" kept as a back-compat match for order items written before
+  // the random-lots rename.
   const unrevealedPrizeDraws = order.items.filter(
     (it) =>
-      it.listingType === "prize-draw" &&
+      (it.listingType === "random-lots" || (it.listingType as string) === "prize-draw") &&
       it.prizeRevealStatus !== undefined &&
       it.prizeRevealStatus !== "revealed",
   );

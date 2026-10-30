@@ -1,17 +1,17 @@
 /*
- * WHY: Real (non-tester-sandbox) prize-draw listings so testers and shoppers can exercise
+ * WHY: Real (non-tester-sandbox) random-lots listings so testers and shoppers can exercise
  *      both automatic-reveal modes ("instant" and "scheduled") against permanent catalog
  *      content, not just the disposable 7-day tester sandbox item. Previously an empty
  *      stub — "out of scope for the minimal Beyblade-focused demo catalog" — now populated
  *      with two platform-run mystery-box draws, on-theme for the spinning-tops catalog.
- * WHAT: Exports 7 prize-draw listings (classic reveal mode) run by the platform's own
+ * WHAT: Exports 7 random-lots listings (classic reveal mode) run by the platform's own
  *       store, letitrip-official — one "instant" mode (4 prizes), one "scheduled" mode
  *       (2 prizes, small pool for easy manual sellout testing).
  *
  * EXPORTS:
- *   productsPrizeDrawsSeedData — Array of 7 Partial<ProductDocument> with listingType:"prize-draw"
+ *   productsRandomLotsSeedData — Array of 7 Partial<ProductDocument> with listingType:"random-lots"
  *
- * @tag domain:products,prize-draws
+ * @tag domain:products,random-lots
  * @tag layer:seed
  * @tag pattern:none
  * @tag access:server-only
@@ -27,12 +27,12 @@ import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
-const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
+const _rawproductsRandomLotsSeedData: Partial<ProductDocument>[] = [
   {
-    id: "prizedraw-beyblade-mystery-box",
+    id: "randomlots-beyblade-mystery-box",
     isLot: true,
-    slug: "prizedraw-beyblade-mystery-box",
-    title: "Beyblade Mystery Box — Prize Draw",
+    slug: "randomlots-beyblade-mystery-box",
+    title: "Beyblade Mystery Box — Random Lots",
     description: "Buy an entry for ₹99 and reveal your prize instantly — win anything from a rare limited-edition Beyblade down to a spare launcher grip. 4 prizes available, revealed on a first-come basis.",
     /*
      * 🛑 Re-filed in B5, and it files at the ROOT on purpose. Its own
@@ -54,11 +54,11 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 4,
     availableQuantity: 4,
     isSold: false,
-    mainImage: seedPhoto("prizedraw-image-beyblade-mystery-box-1-20260101", 900, 900),
-    images: seedGallery(seedPhoto("prizedraw-image-beyblade-mystery-box-1-20260101", 900, 900)),
+    mainImage: seedPhoto("randomlots-image-beyblade-mystery-box-1-20260101", 900, 900),
+    images: seedGallery(seedPhoto("randomlots-image-beyblade-mystery-box-1-20260101", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     prizeDrawMode: "reveal" as const,
@@ -71,33 +71,33 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-05-08"),
     prizeRevealStatus: "open" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Limited-Edition Gold Dranzer S", description: "Rare gold-finish collector's edition.", images: [seedPhoto("prizedraw-item-beyblade-1-20260101", 600, 600)], condition: "new", estimatedValue: 3499, isWon: false },
-      { itemNumber: 2, title: "Beyblade X Starter Set", description: "Full starter set with stadium.", images: [seedPhoto("prizedraw-item-beyblade-2-20260101", 600, 600)], condition: "new", estimatedValue: 1999, isWon: false },
-      { itemNumber: 3, title: "Spare Parts Bundle", description: "Assorted spare tips, rings, and drivers.", images: [seedPhoto("prizedraw-item-beyblade-3-20260101", 600, 600)], condition: "new", estimatedValue: 399, isWon: false },
-      { itemNumber: 4, title: "Spare Launcher Grip", description: "Standard replacement launcher grip.", images: [seedPhoto("prizedraw-item-beyblade-4-20260101", 600, 600)], condition: "new", estimatedValue: 149, isWon: false },
+      { itemNumber: 1, title: "Limited-Edition Gold Dranzer S", description: "Rare gold-finish collector's edition.", images: [seedPhoto("randomlots-item-beyblade-1-20260101", 600, 600)], condition: "new", estimatedValue: 3499, isWon: false },
+      { itemNumber: 2, title: "Beyblade X Starter Set", description: "Full starter set with stadium.", images: [seedPhoto("randomlots-item-beyblade-2-20260101", 600, 600)], condition: "new", estimatedValue: 1999, isWon: false },
+      { itemNumber: 3, title: "Spare Parts Bundle", description: "Assorted spare tips, rings, and drivers.", images: [seedPhoto("randomlots-item-beyblade-3-20260101", 600, 600)], condition: "new", estimatedValue: 399, isWon: false },
+      { itemNumber: 4, title: "Spare Launcher Grip", description: "Standard replacement launcher grip.", images: [seedPhoto("randomlots-item-beyblade-4-20260101", 600, 600)], condition: "new", estimatedValue: 149, isWon: false },
     ],
     customFields: [],
     customSections: [],
     featured: false,
     isPromoted: true,
     isOnSale: false,
-    tags: ["prize-draw", "mystery-box"],
+    tags: ["random-lots", "mystery-box"],
     createdAt: new Date("2026-05-01"),
     updatedAt: new Date("2026-05-01"),
     searchTxt: buildSearchTxt([
-      "Beyblade Mystery Box — Prize Draw",
+      "Beyblade Mystery Box — Random Lots",
       "Buy an entry and reveal your prize instantly.",
       "Beyblade",
       "brand-beyblade",
       ["Spinning Tops"],
-      ["prize-draw", "mystery-box"],
+      ["random-lots", "mystery-box"],
     ]),
   } as unknown as Partial<ProductDocument>,
   {
-    id: "prizedraw-beyblade-scheduled-demo",
+    id: "randomlots-beyblade-scheduled-demo",
     isLot: true,
-    slug: "prizedraw-beyblade-scheduled-demo",
-    title: "Beyblade Champion's Draw — Prize Draw",
+    slug: "randomlots-beyblade-scheduled-demo",
+    title: "Beyblade Champion's Draw — Random Lots",
     description: "Two entries, two prizes — the winners are revealed automatically the moment the draw closes (3 days) or sells out, whichever comes first.",
     /*
      * Re-filed in B5 from the removed `battle-gear` stadium chain. Both its
@@ -114,11 +114,11 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 2,
     availableQuantity: 2,
     isSold: false,
-    mainImage: seedPhoto("prizedraw-image-beyblade-scheduled-1-20260101", 900, 900),
-    images: seedGallery(seedPhoto("prizedraw-image-beyblade-scheduled-1-20260101", 900, 900)),
+    mainImage: seedPhoto("randomlots-image-beyblade-scheduled-1-20260101", 900, 900),
+    images: seedGallery(seedPhoto("randomlots-image-beyblade-scheduled-1-20260101", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     prizeDrawMode: "reveal" as const,
@@ -131,33 +131,33 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-05-04"),
     prizeRevealStatus: "open" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Beyblade X Champion Set", description: "Tournament-grade champion set.", images: [seedPhoto("prizedraw-item-beyblade-scheduled-1-20260101", 600, 600)], condition: "new", estimatedValue: 2499, isWon: false },
-      { itemNumber: 2, title: "Spare Tip Multipack", description: "Assorted performance tips.", images: [seedPhoto("prizedraw-item-beyblade-scheduled-2-20260101", 600, 600)], condition: "new", estimatedValue: 299, isWon: false },
+      { itemNumber: 1, title: "Beyblade X Champion Set", description: "Tournament-grade champion set.", images: [seedPhoto("randomlots-item-beyblade-scheduled-1-20260101", 600, 600)], condition: "new", estimatedValue: 2499, isWon: false },
+      { itemNumber: 2, title: "Spare Tip Multipack", description: "Assorted performance tips.", images: [seedPhoto("randomlots-item-beyblade-scheduled-2-20260101", 600, 600)], condition: "new", estimatedValue: 299, isWon: false },
     ],
     customFields: [],
     customSections: [],
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    tags: ["prize-draw", "mystery-box"],
+    tags: ["random-lots", "mystery-box"],
     createdAt: new Date("2026-05-01"),
     updatedAt: new Date("2026-05-01"),
     searchTxt: buildSearchTxt([
-      "Beyblade Champion's Draw — Prize Draw",
+      "Beyblade Champion's Draw — Random Lots",
       "Two entries, two prizes, revealed automatically at close or sellout.",
       "Beyblade",
       "brand-beyblade",
       ["Spinning Tops"],
-      ["prize-draw", "mystery-box"],
+      ["random-lots", "mystery-box"],
     ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- Partially sold: prizeCurrentEntries > 0, main seed never exercised this before ---
   {
-    id: "prizedraw-beyblade-x-legendary-vault",
+    id: "randomlots-beyblade-x-legendary-vault",
     isLot: true,
-    slug: "prizedraw-beyblade-x-legendary-vault",
-    title: "Beyblade X Legendary Vault — Prize Draw",
+    slug: "randomlots-beyblade-x-legendary-vault",
+    title: "Beyblade X Legendary Vault — Random Lots",
     description: "6 entries, 6 prizes ranging from a legendary chase top to spare parts — over half the draw is already sold, don't miss the remaining slots.",
     categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
     categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
@@ -168,14 +168,14 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 6,
     availableQuantity: 2,
     isSold: false,
-    mainImage: seedPhoto("prizedraw-image-beyblade-x-legendary-vault-1-20260815", 900, 900),
+    mainImage: seedPhoto("randomlots-image-beyblade-x-legendary-vault-1-20260815", 900, 900),
     images: seedGallery(
-      seedPhoto("prizedraw-image-beyblade-x-legendary-vault-1-20260815", 900, 900),
-      seedPhoto("prizedraw-image-beyblade-x-legendary-vault-2-20260815", 900, 900),
+      seedPhoto("randomlots-image-beyblade-x-legendary-vault-1-20260815", 900, 900),
+      seedPhoto("randomlots-image-beyblade-x-legendary-vault-2-20260815", 900, 900),
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     prizeDrawMode: "reveal" as const,
@@ -188,36 +188,36 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-08-25"),
     prizeRevealStatus: "open" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Legendary Wizard Fafnir (Chase Top)", description: "The grand-prize chase top for this draw.", images: [seedPhoto("prizedraw-item-legendary-vault-1-20260815", 600, 600), seedPhoto("prizedraw-item-legendary-vault-1b-20260815", 600, 600)], condition: "new", estimatedValue: 4999, isWon: false },
-      { itemNumber: 2, title: "Beyblade X Starter Set", description: "Full starter set with launcher.", images: [seedPhoto("prizedraw-item-legendary-vault-2-20260815", 600, 600)], condition: "new", estimatedValue: 1299, isWon: false },
-      { itemNumber: 3, title: "Xtreme Gear Stadium", description: "Official X-format battle stadium.", images: [seedPhoto("prizedraw-item-legendary-vault-3-20260815", 600, 600)], condition: "new", estimatedValue: 999, isWon: false },
-      { itemNumber: 4, title: "Ratchet & Bit Multipack", description: "Assorted performance ratchets and bits.", images: [seedPhoto("prizedraw-item-legendary-vault-4-20260815", 600, 600)], condition: "new", estimatedValue: 599, isWon: false },
-      { itemNumber: 5, title: "Carry Case", description: "6-slot hard-shell carry case.", images: [seedPhoto("prizedraw-item-legendary-vault-5-20260815", 600, 600)], condition: "new", estimatedValue: 349, isWon: false },
-      { itemNumber: 6, title: "Spare Launcher Grip", description: "Standard replacement launcher grip.", images: [seedPhoto("prizedraw-item-legendary-vault-6-20260815", 600, 600)], condition: "new", estimatedValue: 149, isWon: false },
+      { itemNumber: 1, title: "Legendary Wizard Fafnir (Chase Top)", description: "The grand-prize chase top for this draw.", images: [seedPhoto("randomlots-item-legendary-vault-1-20260815", 600, 600), seedPhoto("randomlots-item-legendary-vault-1b-20260815", 600, 600)], condition: "new", estimatedValue: 4999, isWon: false },
+      { itemNumber: 2, title: "Beyblade X Starter Set", description: "Full starter set with launcher.", images: [seedPhoto("randomlots-item-legendary-vault-2-20260815", 600, 600)], condition: "new", estimatedValue: 1299, isWon: false },
+      { itemNumber: 3, title: "Xtreme Gear Stadium", description: "Official X-format battle stadium.", images: [seedPhoto("randomlots-item-legendary-vault-3-20260815", 600, 600)], condition: "new", estimatedValue: 999, isWon: false },
+      { itemNumber: 4, title: "Ratchet & Bit Multipack", description: "Assorted performance ratchets and bits.", images: [seedPhoto("randomlots-item-legendary-vault-4-20260815", 600, 600)], condition: "new", estimatedValue: 599, isWon: false },
+      { itemNumber: 5, title: "Carry Case", description: "6-slot hard-shell carry case.", images: [seedPhoto("randomlots-item-legendary-vault-5-20260815", 600, 600)], condition: "new", estimatedValue: 349, isWon: false },
+      { itemNumber: 6, title: "Spare Launcher Grip", description: "Standard replacement launcher grip.", images: [seedPhoto("randomlots-item-legendary-vault-6-20260815", 600, 600)], condition: "new", estimatedValue: 149, isWon: false },
     ],
     customFields: [],
     customSections: [],
     featured: true,
     isPromoted: true,
     isOnSale: false,
-    tags: ["prize-draw", "mystery-box", "chase-top"],
+    tags: ["random-lots", "mystery-box", "chase-top"],
     createdAt: new Date("2026-08-15"),
     updatedAt: new Date("2026-08-19"),
     searchTxt: buildSearchTxt([
-      "Beyblade X Legendary Vault — Prize Draw",
+      "Beyblade X Legendary Vault — Random Lots",
       "6 entries, 6 prizes, over half already sold.",
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade X", "Spinning Tops"],
-      ["prize-draw", "mystery-box", "chase-top"],
+      ["random-lots", "mystery-box", "chase-top"],
     ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- Closed + revealed: real winners, isWon:true — permanent-catalog example (previously only in tester sandbox) ---
   {
-    id: "prizedraw-beyblade-metal-closed-revealed",
+    id: "randomlots-beyblade-metal-closed-revealed",
     isLot: true,
-    slug: "prizedraw-beyblade-metal-closed-revealed",
+    slug: "randomlots-beyblade-metal-closed-revealed",
     title: "Metal Fight Mystery Draw — Ended (Revealed)",
     description: "This draw has closed and every prize has been revealed to its winner. Browse the results below.",
     categorySlugs: ["category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
@@ -229,11 +229,11 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 3,
     availableQuantity: 0,
     isSold: true,
-    mainImage: seedPhoto("prizedraw-image-beyblade-metal-closed-1-20260805", 900, 900),
-    images: seedGallery(seedPhoto("prizedraw-image-beyblade-metal-closed-1-20260805", 900, 900)),
+    mainImage: seedPhoto("randomlots-image-beyblade-metal-closed-1-20260805", 900, 900),
+    images: seedGallery(seedPhoto("randomlots-image-beyblade-metal-closed-1-20260805", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     prizeDrawMode: "reveal" as const,
@@ -246,16 +246,16 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-08-12"),
     prizeRevealStatus: "closed" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Lightning L-Drago 100HF/S", description: "Metal Fury era attack top.", images: [seedPhoto("prizedraw-item-metal-closed-1-20260805", 600, 600)], condition: "new", estimatedValue: 2299, isWon: true, wonByOrderId: "order-1-20260812-a1b2c3" },
-      { itemNumber: 2, title: "Storm Pegasus 105RF", description: "Metal Fusion era attack top.", images: [seedPhoto("prizedraw-item-metal-closed-2-20260805", 600, 600)], condition: "new", estimatedValue: 1299, isWon: true, wonByOrderId: "order-1-20260812-d4e5f6" },
-      { itemNumber: 3, title: "Spare Parts Bundle", description: "Assorted spare tips and rings.", images: [seedPhoto("prizedraw-item-metal-closed-3-20260805", 600, 600)], condition: "new", estimatedValue: 399, isWon: true, wonByOrderId: "order-1-20260812-g7h8i9" },
+      { itemNumber: 1, title: "Lightning L-Drago 100HF/S", description: "Metal Fury era attack top.", images: [seedPhoto("randomlots-item-metal-closed-1-20260805", 600, 600)], condition: "new", estimatedValue: 2299, isWon: true, wonByOrderId: "order-1-20260812-a1b2c3" },
+      { itemNumber: 2, title: "Storm Pegasus 105RF", description: "Metal Fusion era attack top.", images: [seedPhoto("randomlots-item-metal-closed-2-20260805", 600, 600)], condition: "new", estimatedValue: 1299, isWon: true, wonByOrderId: "order-1-20260812-d4e5f6" },
+      { itemNumber: 3, title: "Spare Parts Bundle", description: "Assorted spare tips and rings.", images: [seedPhoto("randomlots-item-metal-closed-3-20260805", 600, 600)], condition: "new", estimatedValue: 399, isWon: true, wonByOrderId: "order-1-20260812-g7h8i9" },
     ],
     customFields: [],
     customSections: [],
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    tags: ["prize-draw", "mystery-box"],
+    tags: ["random-lots", "mystery-box"],
     createdAt: new Date("2026-08-05"),
     updatedAt: new Date("2026-08-12"),
     searchTxt: buildSearchTxt([
@@ -264,15 +264,15 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       "Takara-Tomy",
       "brand-takara-tomy",
       ["Beyblade Metal Fight", "Spinning Tops"],
-      ["prize-draw", "mystery-box"],
+      ["random-lots", "mystery-box"],
     ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- Nearly sold out, scheduled reveal ---
   {
-    id: "prizedraw-beyblade-burst-collectors-draw",
+    id: "randomlots-beyblade-burst-collectors-draw",
     isLot: true,
-    slug: "prizedraw-beyblade-burst-collectors-draw",
+    slug: "randomlots-beyblade-burst-collectors-draw",
     title: "Beyblade Burst Collector's Draw — Almost Sold Out",
     description: "Only 1 entry left — 4 of 5 slots are already claimed for this Burst-generation collector's draw. Winners revealed the moment the draw closes.",
     categorySlugs: ["category-burst-cho-z","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
@@ -284,14 +284,14 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 5,
     availableQuantity: 1,
     isSold: false,
-    mainImage: seedPhoto("prizedraw-image-beyblade-burst-collectors-1-20260817", 900, 900),
+    mainImage: seedPhoto("randomlots-image-beyblade-burst-collectors-1-20260817", 900, 900),
     images: seedGallery(
-      seedPhoto("prizedraw-image-beyblade-burst-collectors-1-20260817", 900, 900),
-      seedPhoto("prizedraw-image-beyblade-burst-collectors-2-20260817", 900, 900),
+      seedPhoto("randomlots-image-beyblade-burst-collectors-1-20260817", 900, 900),
+      seedPhoto("randomlots-image-beyblade-burst-collectors-2-20260817", 900, 900),
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     prizeDrawMode: "reveal" as const,
@@ -304,18 +304,18 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-08-21"),
     prizeRevealStatus: "open" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Cho-Z Achilles.Ow.Zn'", description: "Super Zeta stamina-type top.", images: [seedPhoto("prizedraw-item-burst-collectors-1-20260817", 600, 600)], condition: "new", estimatedValue: 1799, isWon: false },
-      { itemNumber: 2, title: "Regalia Genesis.Zt", description: "Attack-type top with switch launcher compatibility.", images: [seedPhoto("prizedraw-item-burst-collectors-2-20260817", 600, 600)], condition: "new", estimatedValue: 1399, isWon: false },
-      { itemNumber: 3, title: "Union Achilles Cover Change", description: "Stamina-type with cover-change layer.", images: [seedPhoto("prizedraw-item-burst-collectors-3-20260817", 600, 600)], condition: "new", estimatedValue: 1099, isWon: false },
-      { itemNumber: 4, title: "Beystadium Attack Type", description: "Compact battle stadium.", images: [seedPhoto("prizedraw-item-burst-collectors-4-20260817", 600, 600)], condition: "new", estimatedValue: 699, isWon: false },
-      { itemNumber: 5, title: "Spare Driver Multipack", description: "Assorted performance drivers.", images: [seedPhoto("prizedraw-item-burst-collectors-5-20260817", 600, 600)], condition: "new", estimatedValue: 349, isWon: false },
+      { itemNumber: 1, title: "Cho-Z Achilles.Ow.Zn'", description: "Super Zeta stamina-type top.", images: [seedPhoto("randomlots-item-burst-collectors-1-20260817", 600, 600)], condition: "new", estimatedValue: 1799, isWon: false },
+      { itemNumber: 2, title: "Regalia Genesis.Zt", description: "Attack-type top with switch launcher compatibility.", images: [seedPhoto("randomlots-item-burst-collectors-2-20260817", 600, 600)], condition: "new", estimatedValue: 1399, isWon: false },
+      { itemNumber: 3, title: "Union Achilles Cover Change", description: "Stamina-type with cover-change layer.", images: [seedPhoto("randomlots-item-burst-collectors-3-20260817", 600, 600)], condition: "new", estimatedValue: 1099, isWon: false },
+      { itemNumber: 4, title: "Beystadium Attack Type", description: "Compact battle stadium.", images: [seedPhoto("randomlots-item-burst-collectors-4-20260817", 600, 600)], condition: "new", estimatedValue: 699, isWon: false },
+      { itemNumber: 5, title: "Spare Driver Multipack", description: "Assorted performance drivers.", images: [seedPhoto("randomlots-item-burst-collectors-5-20260817", 600, 600)], condition: "new", estimatedValue: 349, isWon: false },
     ],
     customFields: [],
     customSections: [],
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    tags: ["prize-draw", "mystery-box"],
+    tags: ["random-lots", "mystery-box"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-19"),
     searchTxt: buildSearchTxt([
@@ -324,15 +324,15 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Burst", "Spinning Tops"],
-      ["prize-draw", "mystery-box"],
+      ["random-lots", "mystery-box"],
     ]),
   } as unknown as Partial<ProductDocument>,
 
   // --- High-value vintage vault, multi-image collage per prize ---
   {
-    id: "prizedraw-beyblade-original-vintage-vault",
-    slug: "prizedraw-beyblade-original-vintage-vault",
-    title: "Beyblade Original Vintage Vault — Prize Draw",
+    id: "randomlots-beyblade-original-vintage-vault",
+    slug: "randomlots-beyblade-original-vintage-vault",
+    title: "Beyblade Original Vintage Vault — Random Lots",
     description: "A high-value original-series vault — 3 entries, each prize photographed from multiple angles so you know exactly what you might win.",
     categorySlugs: ["category-original-plastic-gen","category-original-tops","category-beyblade-original","category-spinning-tops"],
     categoryNames: ["Plastic Generation","Original Tops","Beyblade Original","Spinning Tops"],
@@ -343,14 +343,14 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 3,
     availableQuantity: 3,
     isSold: false,
-    mainImage: seedPhoto("prizedraw-image-beyblade-original-vault-1-20260818", 900, 900),
+    mainImage: seedPhoto("randomlots-image-beyblade-original-vault-1-20260818", 900, 900),
     images: seedGallery(
-      seedPhoto("prizedraw-image-beyblade-original-vault-1-20260818", 900, 900),
-      seedPhoto("prizedraw-image-beyblade-original-vault-2-20260818", 900, 900),
+      seedPhoto("randomlots-image-beyblade-original-vault-1-20260818", 900, 900),
+      seedPhoto("randomlots-image-beyblade-original-vault-2-20260818", 900, 900),
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
+    listingType: "random-lots" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     prizeDrawMode: "reveal" as const,
@@ -363,37 +363,37 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-09-01"),
     prizeRevealStatus: "open" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Sealed Dragoon Storm (Grail Piece)", description: "Sealed, unopened — the rarest prize in this vault.", images: [seedPhoto("prizedraw-item-original-vault-1a-20260818", 600, 600), seedPhoto("prizedraw-item-original-vault-1b-20260818", 600, 600), seedPhoto("prizedraw-item-original-vault-1c-20260818", 600, 600)], condition: "new", estimatedValue: 5999, isWon: false },
-      { itemNumber: 2, title: "Seaborg 2000 (Defense)", description: "Rare original-series defense-type top.", images: [seedPhoto("prizedraw-item-original-vault-2a-20260818", 600, 600), seedPhoto("prizedraw-item-original-vault-2b-20260818", 600, 600)], condition: "good", estimatedValue: 3499, isWon: false },
-      { itemNumber: 3, title: "Original-Series Launcher Set", description: "Complete launcher + ripcord set.", images: [seedPhoto("prizedraw-item-original-vault-3-20260818", 600, 600)], condition: "new", estimatedValue: 599, isWon: false },
+      { itemNumber: 1, title: "Sealed Dragoon Storm (Grail Piece)", description: "Sealed, unopened — the rarest prize in this vault.", images: [seedPhoto("randomlots-item-original-vault-1a-20260818", 600, 600), seedPhoto("randomlots-item-original-vault-1b-20260818", 600, 600), seedPhoto("randomlots-item-original-vault-1c-20260818", 600, 600)], condition: "new", estimatedValue: 5999, isWon: false },
+      { itemNumber: 2, title: "Seaborg 2000 (Defense)", description: "Rare original-series defense-type top.", images: [seedPhoto("randomlots-item-original-vault-2a-20260818", 600, 600), seedPhoto("randomlots-item-original-vault-2b-20260818", 600, 600)], condition: "good", estimatedValue: 3499, isWon: false },
+      { itemNumber: 3, title: "Original-Series Launcher Set", description: "Complete launcher + ripcord set.", images: [seedPhoto("randomlots-item-original-vault-3-20260818", 600, 600)], condition: "new", estimatedValue: 599, isWon: false },
     ],
     customFields: [{ key: "Authenticity Verified", type: "boolean", value: "true" }],
     customSections: [],
     featured: true,
     isPromoted: false,
     isOnSale: false,
-    tags: ["prize-draw", "mystery-box", "vintage-collectible"],
+    tags: ["random-lots", "mystery-box", "vintage-collectible"],
     createdAt: new Date("2026-08-18"),
     updatedAt: new Date("2026-08-18"),
     searchTxt: buildSearchTxt([
-      "Beyblade Original Vintage Vault — Prize Draw",
+      "Beyblade Original Vintage Vault — Random Lots",
       "High-value original-series vault, multi-angle photos per prize.",
       "Beyblade",
       "brand-beyblade",
       ["Beyblade Original", "Spinning Tops"],
-      ["prize-draw", "mystery-box", "vintage-collectible"],
+      ["random-lots", "mystery-box", "vintage-collectible"],
     ]),
   } as unknown as Partial<ProductDocument>,
   {
     // Closed, but with slots still unsold and `isSold: false`.
     //
-    // This is the fixture that proves the prize-draw branch reads
+    // This is the fixture that proves the random-lots branch reads
     // `prizeRevealStatus`. The other closed draw has availableQuantity 0 AND
     // isSold true, so it is caught by the shared base check and would still
     // look correct even if the type-specific rule were deleted.
-    id: "prizedraw-beyblade-x-vault-closed-pending-reveal",
+    id: "randomlots-beyblade-x-vault-closed-pending-reveal",
     isLot: true,
-    slug: "prizedraw-beyblade-x-vault-closed-pending-reveal",
+    slug: "randomlots-beyblade-x-vault-closed-pending-reveal",
     title: "Beyblade X Vault Draw — Closed Early",
     description: "The seller closed this draw before every slot sold. Remaining entries were refunded; no further entries are accepted.",
     categorySlugs: ["category-x-basic","category-x-tops","category-beyblade-x","category-spinning-tops"],
@@ -405,12 +405,12 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     stockQuantity: 5,
     availableQuantity: 3,
     isSold: false,
-    mainImage: seedPhoto("prizedraw-image-beyblade-x-vault-closed-1-20260824", 900, 900),
-    images: seedGallery(seedPhoto("prizedraw-image-beyblade-x-vault-closed-1-20260824", 900, 900)),
+    mainImage: seedPhoto("randomlots-image-beyblade-x-vault-closed-1-20260824", 900, 900),
+    images: seedGallery(seedPhoto("randomlots-image-beyblade-x-vault-closed-1-20260824", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "prize-draw" as const,
-    storeId: "store-letitrip-official",
+    listingType: "random-lots" as const,
+    storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     prizeDrawMode: "reveal" as const,
     prizeRevealMode: "instant" as const,
@@ -422,15 +422,15 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     prizeRevealWindowEnd: new Date("2026-08-24"),
     prizeRevealStatus: "closed" as const,
     prizeDrawItems: [
-      { itemNumber: 1, title: "Dran Sword 3-60F", description: "Beyblade X starter attack top.", images: [seedPhoto("prizedraw-item-x-vault-1-20260824", 600, 600)], condition: "new", estimatedValue: 1499, isWon: false },
-      { itemNumber: 2, title: "Hells Scythe 4-60T", description: "Beyblade X defence top.", images: [seedPhoto("prizedraw-item-x-vault-2-20260824", 600, 600)], condition: "new", estimatedValue: 1499, isWon: false },
+      { itemNumber: 1, title: "Dran Sword 3-60F", description: "Beyblade X starter attack top.", images: [seedPhoto("randomlots-item-x-vault-1-20260824", 600, 600)], condition: "new", estimatedValue: 1499, isWon: false },
+      { itemNumber: 2, title: "Hells Scythe 4-60T", description: "Beyblade X defence top.", images: [seedPhoto("randomlots-item-x-vault-2-20260824", 600, 600)], condition: "new", estimatedValue: 1499, isWon: false },
     ],
     customFields: [],
     customSections: [],
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    tags: ["prize-draw"],
+    tags: ["random-lots"],
     createdAt: new Date("2026-08-17"),
     updatedAt: new Date("2026-08-24"),
   },
@@ -441,5 +441,5 @@ const _rawproductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
  * the bottom of the array cannot ship without it — which is exactly how the
  * sold/depleted fixture in this file ended up unsearchable.
  */
-export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] =
-  _rawproductsPrizeDrawsSeedData.map(withProductSearchTxt).map(withFinalSale).map(withDerivedCategoryNames);
+export const productsRandomLotsSeedData: Partial<ProductDocument>[] =
+  _rawproductsRandomLotsSeedData.map(withProductSearchTxt).map(withFinalSale).map(withDerivedCategoryNames);

@@ -215,25 +215,21 @@ export const usersSeedData: Partial<UserPlain>[] = [
     phoneVerified: true,
     displayName: "Mock User 6",
     photoURL: seedPhoto("user-avatar-tyson-granger-20260101", 400, 400),
-    role: USER_FIELDS.ROLE_VALUES.USER,
+    /*
+     * 🛑 RE-LINKED 2026-10-30, with the owner's confirmation, as part of
+     * restoring `store-beyblade-arena` in `stores-seed-data.ts`. The dangling
+     * FK this comment used to describe was the reason `/store/*` under this
+     * identity 404'd when tested earlier in this same audit sweep — it is
+     * why `TESTER_SELLER_EMAIL` pointed at an account with no real seller
+     * role. `role: "seller"` is what `isSellerUser()`/`RoleGuard` actually
+     * check; `storeId`/`storeSlug`/`storeStatus` match the restored store.
+     */
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
+    storeId: "store-beyblade-arena",
+    storeSlug: "store-beyblade-arena",
+    storeStatus: "approved",
     emailVerified: true,
     disabled: false,
-    /*
-     * 🛑 NO `storeSlug` / `storeStatus`. This persona carried
-     * `storeSlug: "store-beyblade-arena"` with `storeStatus: "approved"` after the
-     * 2026-10-21 store prune deleted that store — a dangling FK of exactly
-     * the kind Root Cause #26 is about, in the file the prune did not
-     * revisit.
-     *
-     * It is not cosmetic: `becomeSeller` and every seller gate read
-     * `storeStatus`, so this persona presented as an approved seller whose
-     * store does not exist. The dashboard resolves the store by slug and
-     * finds nothing, which reads as a broken dashboard rather than as bad
-     * fixture data.
-     *
-     * `publicProfile.storeName` stays — it is display copy on the person's
-     * own profile, not a reference to a row.
-     */
     publicProfile: {
       isPublic: true,
       showEmail: false,

@@ -45,7 +45,7 @@ export const ORDER_LANE_ALL = "" as const;
 /**
  * 🛑 A `Record<OrderType, string>`, deliberately. Omitting a lane does not
  * compile, which is the whole point — the buyer's list shipped with four tabs
- * for five lanes, so pre-order and prize-draw orders were reachable only by
+ * for five lanes, so pre-order and random-lots orders were reachable only by
  * landing on "All" and scrolling.
  */
 export const ORDER_LANE_LABELS: Record<OrderType, string> = {
@@ -53,7 +53,7 @@ export const ORDER_LANE_LABELS: Record<OrderType, string> = {
   auction: "Auction wins",
   offer: "Offer wins",
   preorder: "Pre-orders",
-  "prize-draw": "Prize draws",
+  "random-lots": "Random lots",
 };
 
 /**
@@ -69,7 +69,7 @@ const LANE_ORDER: readonly OrderType[] = [
   "auction",
   "offer",
   "preorder",
-  "prize-draw",
+  "random-lots",
 ];
 
 /**

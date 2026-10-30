@@ -32,7 +32,32 @@
 import type { SupportTicketPlain } from "../features/support/schemas/firestore";
 import { buildSearchTxt } from "../utils/search-txt";
 
-const supportTicketRecords: Partial<SupportTicketPlain>[] = [];
+/*
+ * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+ * confirmation for this audit sweep.
+ */
+const supportTicketRecords: Partial<SupportTicketPlain>[] = [
+  {
+    id: "support-ticket-order-not-shipped",
+    userId: "user-meera-bey",
+    userEmail: "meera.blader@gmail.com",
+    userDisplayName: "Meera Blader",
+    category: "order_issue",
+    subject: "Order has not shipped",
+    description: "Order has not shipped. Please advise.",
+    status: "open",
+  },
+  {
+    id: "support-ticket-test-request-1",
+    userId: "user-rohit-collector",
+    userEmail: "rohit.collect@gmail.com",
+    userDisplayName: "Rohit Collector",
+    category: "general",
+    subject: "Test Request 1",
+    description: "Flagged for the admin reports queue — audit fixture.",
+    status: "open",
+  },
+];
 
 /**
  * Derive `searchTxt` for every record from its own subject.

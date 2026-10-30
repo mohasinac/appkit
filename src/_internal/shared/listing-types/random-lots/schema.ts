@@ -1,7 +1,7 @@
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
 export function isPrizeDrawProduct(doc: ProductDocument): boolean {
-  return doc.listingType === "prize-draw";
+  return doc.listingType === "random-lots";
 }
 
 // True when entries are still accepted (reveal window has not started, slots not exhausted).

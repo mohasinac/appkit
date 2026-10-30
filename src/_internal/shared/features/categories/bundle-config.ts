@@ -23,14 +23,14 @@ export const BUNDLES_FEATURED_LIMIT = 12 as const;
  * Listing types that may be added to a bundle.
  *   - standard — regular product
  *   - pre-order — pre-order product
- *   - prize-draw — added as N draws/entries (see BundleItemDetail.drawCount)
+ *   - random-lots — added as N draws/entries (see BundleItemDetail.drawCount)
  *
  * Auctions and bundles themselves are never eligible.
  */
 export const BUNDLE_ELIGIBLE_LISTING_TYPES = [
   "standard",
   "pre-order",
-  "prize-draw",
+  "random-lots",
 ] as const;
 
 export type BundleEligibleListingType =

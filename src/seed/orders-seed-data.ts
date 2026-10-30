@@ -74,7 +74,115 @@ function orderItemImage(productId: string): string {
   return seedPhoto(`order-item-${productId}`, 300, 300);
 }
 
+const NOW = new Date();
+const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+/*
+ * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+ * confirmation — reverses the 2026-10-22 prune for this audit sweep's need
+ * to exercise cart/checkout/order-detail/returns/payout flows end to end
+ * locally. Five orders, one per acquisition/status shape, not the full
+ * historical 50 — enough to make every /user/orders tab and /admin/orders
+ * status filter non-empty.
+ */
 const _rawOrdersSeedData: Partial<OrderPlain>[] = [
+  {
+    id: "order-test-standard-001",
+    productId: "product-beyblade-burst-valkyrie",
+    productTitle: "Beyblade Burst B-34 Victory Valkyrie Boost Variable",
+    userId: "user-meera-bey",
+    userName: "Meera Blader",
+    userEmail: "meera.blader@gmail.com",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    orderType: "standard",
+    quantity: 1,
+    unitPrice: 999,
+    totalPrice: 999,
+    currency: "INR",
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "cod",
+    createdAt: daysAgo(10),
+  },
+  {
+    id: "order-test-auction-win-001",
+    productId: "auction-beyblade-burst-cho-z-achilles",
+    productTitle: "Beyblade Burst B-100 Cho-Z Achilles",
+    userId: "user-rohit-collector",
+    userName: "Rohit Collector",
+    userEmail: "rohit.collect@gmail.com",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    orderType: "auction",
+    quantity: 1,
+    unitPrice: 1650,
+    totalPrice: 1650,
+    currency: "INR",
+    status: "confirmed",
+    paymentStatus: "paid",
+    paymentMethod: "upi_manual",
+    createdAt: daysAgo(3),
+  },
+  {
+    id: "order-test-offer-accepted-001",
+    productId: "beyblade-x-xtreme-stadium-bx-10-copy",
+    productTitle: "Beyblade X Xtreme Stadium (BX-10) (Copy)",
+    userId: "user-rohit-collector",
+    userName: "Rohit Collector",
+    userEmail: "rohit.collect@gmail.com",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    orderType: "offer",
+    quantity: 1,
+    unitPrice: 4000,
+    totalPrice: 4000,
+    currency: "INR",
+    status: "shipped",
+    paymentStatus: "paid",
+    paymentMethod: "upi_manual",
+    trackingNumber: "TEST-TRACK-001",
+    createdAt: daysAgo(5),
+  },
+  {
+    id: "order-test-preorder-001",
+    productId: "preorder-beyblade-x-bx-08-wave",
+    productTitle: "Beyblade X BX-08 Wave",
+    userId: "user-ananya-collector",
+    userName: "Ananya Patel",
+    userEmail: "ananya.patel@gmail.com",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    orderType: "preorder",
+    quantity: 1,
+    unitPrice: 799,
+    totalPrice: 799,
+    currency: "INR",
+    status: "pending",
+    paymentStatus: "paid",
+    paymentMethod: "cod",
+    createdAt: daysAgo(1),
+  },
+  {
+    id: "order-test-return-requested-001",
+    productId: "product-beyblade-burst-valtryek-v3-sold-out",
+    productTitle: "Beyblade Burst God Valkyrie 6Vortex Reboot (Sold Out)",
+    userId: "user-meera-bey",
+    userName: "Meera Blader",
+    userEmail: "meera.blader@gmail.com",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    orderType: "standard",
+    quantity: 1,
+    unitPrice: 899,
+    totalPrice: 899,
+    currency: "INR",
+    status: "return_requested",
+    paymentStatus: "paid",
+    paymentMethod: "cod",
+    cancellationReason: "Item not as described.",
+    createdAt: daysAgo(15),
+  },
 ];
 
 // Removed 2026-10-22: two cash/UPI manual-payment demo fixtures
@@ -140,20 +248,6 @@ function withOrderImages(input: Partial<OrderPlain>): Partial<OrderPlain> {
   };
 }
 
-/*
- * 🛑 EMPTIED 2026-10-22. Live holds no seedable orders, and the owner's
- * decision is that live is canonical.
- *
- * It used to spread four sources — two hand-written cash/UPI fixtures, six
- * `acquisitionOrders`, and `[..._raw, ...expandedOrders].slice(0, 42)` — for
- * 44 rows. The `.slice()` is the detail worth keeping: it capped the count
- * while the LOOP that filled `expandedOrders` ran to 50 regardless, so the
- * published number came from neither the array literals nor the loop bound
- * alone. No static read of this file could have told you it was 44.
- *
- * The pipeline stays: `withOrderImages` and `withOrderSearchTxt` are the
- * reason a fixture cannot ship without items[] or tokens, and mapping an
- * empty array costs nothing.
- */
-export const ordersSeedData = [
-].map(withOrderImages).map(withOrderSearchTxt) as OrderPlain[];
+export const ordersSeedData = _rawOrdersSeedData
+  .map(withOrderImages)
+  .map(withOrderSearchTxt) as OrderPlain[];

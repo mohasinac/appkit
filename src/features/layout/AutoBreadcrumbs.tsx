@@ -42,7 +42,7 @@ const DEFAULT_PATH_LABELS: Record<string, string> = {
    */
   faqs: "FAQs",
   "pre-orders": "Pre-Orders",
-  "prize-draws": "Prize Draws",
+  "random-lots": "Random Lots",
   "digital-codes": "Digital Codes",
   beys: "Beyblades",
   parts: "Parts",

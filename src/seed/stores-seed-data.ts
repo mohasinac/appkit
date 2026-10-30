@@ -27,6 +27,7 @@ import type { StoreDocument } from "../features/stores/schemas";
 import { withStoreSearchTxt } from "./_helpers/search-txt-wrappers";
 import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
+import { seedPhoto } from "./_helpers/media";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -183,7 +184,98 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     ] as StoreCapability[],
     createdAt: daysAgo(400),
     updatedAt: daysAgo(1),
-  },];
+  },
+
+  /*
+   * 🛑 RE-POPULATED 2026-10-30 as EXPLICIT TEST DATA, with the owner's
+   * confirmation for this audit sweep — a genuine second seller/store beside
+   * the platform's own, for exercising the "normal seller" identity through
+   * /store/*. Restored verbatim from the pre-2026-10-21-prune fixture
+   * (`git show bc7357db^:src/seed/stores-seed-data.ts`), including the two
+   * status-variant stores (pending/suspended) so the admin status chips and
+   * seller-approval queue are not empty either.
+   */
+  {
+    id: "store-beyblade-arena",
+    storeSlug: "store-beyblade-arena",
+    ownerId: "user-tyson-blader",
+    storeName: "Beyblade Arena",
+    storeDescription:
+      "Everything Beyblade — X, Burst, Metal Fight, and vintage original series. Takara-Tomy authentic stock, tournament-grade stadiums, launchers, and rare limited editions.",
+    storeCategory: "category-spinning-tops",
+    storeLogoURL: seedPhoto("store-logo-beyblade-arena-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-beyblade-arena-20260101", 1600, 400),
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
+    bio: "Beyblade champion turned seller. Importing authentic Takara-Tomy Beyblades directly from Japan. Let It Rip!",
+    location: "Chennai, Tamil Nadu, India",
+    socialLinks: { instagram: "https://instagram.com/beybladearena.in" },
+    returnPolicy: "7-day returns on sealed items. No returns on used/battled Beyblades.",
+    shippingPolicy: "Free shipping above ₹599. All items shipped in protective bubble wrap.",
+    shippingConfig: {
+      defaultProviderId: "provider-beyblade-standard",
+      providers: [
+        { providerId: "provider-beyblade-standard", label: "Standard", type: "custom" as const, fee: { flat: 45, freeAbove: 599 }, etaDaysMin: 3, etaDaysMax: 6, requiresAwbUpload: true },
+      ],
+    },
+    isPublic: true,
+    isVacationMode: false,
+    emiEnabled: true,
+    isVerified: true,
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 6, averageRating: 4.8 },
+    capabilities: ["host_auctions", "host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(150),
+    updatedAt: daysAgo(4),
+  },
+  {
+    id: "store-blader-bazaar",
+    storeSlug: "store-blader-bazaar",
+    ownerId: "user-meera-bey",
+    storeName: "Blader Bazaar",
+    storeDescription:
+      "Applied to sell refurbished Burst-era tops and spare parts. Awaiting review — not yet visible to buyers.",
+    storeCategory: "category-beyblade-burst",
+    storeLogoURL: seedPhoto("store-logo-blader-bazaar-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-blader-bazaar-20260101", 1600, 400),
+    status: STORE_FIELDS.STATUS_VALUES.PENDING,
+    bio: "Refurbishing and reselling Burst-era tops and parts.",
+    location: "Pune, Maharashtra, India",
+    returnPolicy: "7-day returns once approved.",
+    shippingPolicy: "Standard courier, dispatch within 48 hours.",
+    isPublic: false,
+    isVacationMode: false,
+    isVerified: false,
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 0, averageRating: 0 },
+    capabilities: ["suggest_brands", "create_coupons"] as StoreCapability[],
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(4),
+  },
+  {
+    id: "store-vintage-vault-co",
+    storeSlug: "store-vintage-vault-co",
+    ownerId: "user-sneha-vintage",
+    storeName: "Vintage Vault Co.",
+    storeDescription:
+      "Vintage original-series specialist. Currently suspended pending a listing-authenticity review.",
+    storeCategory: "category-beyblade-original",
+    storeLogoURL: seedPhoto("store-logo-vintage-vault-20260101", 400, 400),
+    storeBannerURL: seedPhoto("store-banner-vintage-vault-20260101", 1600, 400),
+    status: STORE_FIELDS.STATUS_VALUES.SUSPENDED,
+    suspensionReason:
+      "Three listings flagged as possible reproductions; suspended while authenticity documentation is reviewed.",
+    adminNotes: "Owner responsive. Re-review once COAs are supplied.",
+    bio: "Original-series collector turned seller.",
+    location: "Kolkata, West Bengal, India",
+    returnPolicy: "14-day returns on sealed items.",
+    shippingPolicy: "Insured courier only.",
+    isPublic: false,
+    isVacationMode: false,
+    isVerified: false,
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 0, averageRating: 0 },
+    capabilities: ["suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(220),
+    updatedAt: daysAgo(9),
+  },
+];
 
 /**
  * Tokens derived here, not per record — see _helpers/search-txt-wrappers.ts for

@@ -22,7 +22,7 @@ import { isPubliclyVisible } from "../../../shared/listing-types/availability";
 // no way to notice.
 //
 // One gate here covers SIX detail routes — auction, classified, digital-code,
-// live, pre-order, prize-draw — which is why it belongs in the factory rather
+// live, pre-order, random-lots — which is why it belongs in the factory rather
 // than in each page.
 //
 // `isPubliclyVisible` is the same predicate every public LIST query uses, and it

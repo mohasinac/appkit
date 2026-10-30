@@ -150,9 +150,9 @@ export const cartsSeedData: CartDocument[] = [
       },
       {
         itemId: "cartitem-admin-mystery-box",
-        productId: "prizedraw-beyblade-mystery-box",
+        productId: "randomlots-beyblade-mystery-box",
         productTitle: "Beyblade Mystery Box",
-        productImage: seedPhoto("prizedraw-image-mystery-box-1-20260101", 600, 600),
+        productImage: seedPhoto("randomlots-image-mystery-box-1-20260101", 600, 600),
         price: 499,
         currency: _CURRENCY,
         quantity: 1,

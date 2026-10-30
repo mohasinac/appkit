@@ -36,7 +36,7 @@ export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   standard: standardRule,
   auction: auctionRule,
   "pre-order": preOrderRule,
-  "prize-draw": prizeDrawRule,
+  "random-lots": prizeDrawRule,
   classified: classifiedRule,
   "digital-code": digitalCodeRule,
   live: liveRule,

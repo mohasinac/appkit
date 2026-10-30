@@ -13,7 +13,7 @@ export const PRODUCT_FEATURE_PRODUCT_TYPE_ENUM = z.enum([
   "product",
   "auction",
   "preorder",
-  "prize-draw",
+  "random-lots",
   "classified",
   "digital-code",
   "live",

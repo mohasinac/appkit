@@ -33,8 +33,8 @@
 export type DisclaimerId =
   /** Naming a person a scammer. The highest-exposure entry in this file. */
   | "scam-registry"
-  /** Prize draws and the lottery — state-specific gaming law. */
-  | "prize-draw"
+  /** Random lots and the lottery — state-specific gaming law. */
+  | "random-lots"
   /** Collectibles shown with historical prices. */
   | "not-investment-advice"
   /** The realised-price index. */
@@ -134,15 +134,15 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
    * legally is skill versus chance. The entry names the exclusions rather than
    * claiming a position we cannot defend in every state.
    */
-  "prize-draw": {
-    heading: "Prize draw terms",
+  "random-lots": {
+    heading: "Random lots terms",
     body:
       "Entry requires a purchase and is void where prohibited by local law. Residents of states that " +
-      "restrict prize draws or games of chance are not eligible, and an entry from such a state will be " +
+      "restrict random-lots draws or games of chance are not eligible, and an entry from such a state will be " +
       "refunded rather than drawn. Prizes are as described on the listing, are not transferable and cannot " +
       "be exchanged for cash. The draw is run by {{siteName}} and is not affiliated with any government lottery.",
     tone: "warning",
-    surfaces: ["PrizeDrawDetailPageView", "/prize-draws", "/lottery", "PrizeRevealModal"],
+    surfaces: ["PrizeDrawDetailPageView", "/random-lots", "/lottery", "PrizeRevealModal"],
   },
 
   /*

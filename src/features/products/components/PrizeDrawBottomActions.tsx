@@ -15,7 +15,7 @@ export function PrizeDrawBottomActions({
 }: PrizeDrawBottomActionsProps) {
   return (
     <ListingBottomActions
-      listingType="prize-draw"
+      listingType="random-lots"
       anchorId="prize-draw-buy-bar"
       price={pricePerEntry}
       currency={currency}

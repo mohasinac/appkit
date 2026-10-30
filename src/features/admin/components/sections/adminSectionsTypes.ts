@@ -14,7 +14,7 @@ const LABEL_VERIFIED_SELLERS = "Verified Sellers";
  * from it — a second declaration shadowing the real `SectionType` in
  * `features/homepage/schemas/firestore.ts`, which is how the two came to
  * disagree with the create route (Recurrent Root Cause #36's shape, one union
- * over). The route's own copy was missing `featured-bundles`, `prize-draws`,
+ * over). The route's own copy was missing `featured-bundles`, `random-lots`,
  * `event-raffles` and `collection-cards`, so choosing any of those four in this
  * dropdown produced a 400 on save — four of twenty-five section types could be
  * configured in full and never created.
@@ -48,7 +48,7 @@ const SECTION_TYPE_PRESENCE: Record<CanonicalSectionType, true> = {
   "custom-cards": true,
   "google-reviews": true,
   "featured-bundles": true,
-  "prize-draws": true,
+  "random-lots": true,
   "event-raffles": true,
   "collection-cards": true,
   // Promoted out of the orphan-component set 2026-10-19. Offered here because
@@ -808,7 +808,7 @@ export const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "custom-cards",
   "google-reviews",
   "featured-bundles",
-  "prize-draws",
+  "random-lots",
   "event-raffles",
   "collection-cards",
 ];

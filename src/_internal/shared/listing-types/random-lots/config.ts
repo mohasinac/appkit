@@ -8,23 +8,23 @@ import {
   PRIZE_DRAW_PUBLIC_SORT_OPTIONS,
 } from "../../../../features/products/constants/sieve";
 
-export const LISTING_TYPE = "prize-draw" as const;
-export const capability = LISTING_TYPE_CAPABILITIES["prize-draw"];
+export const LISTING_TYPE = "random-lots" as const;
+export const capability = LISTING_TYPE_CAPABILITIES["random-lots"];
 export const config = {
   listingType: LISTING_TYPE,
-  slugPrefix: "prizedraw-",
+  slugPrefix: "randomlots-",
   cartLine: "single-product" as const,
-  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.PRIZE_DRAW_DETAIL(idOrSlug)),
-  badge: { label: "Prize Draw", className: "bg-primary text-white" },
+  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(idOrSlug)),
+  badge: { label: "Random Lots", className: "bg-primary text-white" },
   priceLabel: "Price (₹)",
-  typeLabel: "Prize Draw",
+  typeLabel: "Random Lots",
   showsStockQuantity: false,
 
-  tabSlug: "prize-draws",
-  pluralLabel: "Prize Draws",
-  chipLabel: "Prize Draws",
-  browseRoute: String(ROUTES.PUBLIC.PRIZE_DRAWS),
-  // /prize-draws is in MAIN_NAV_ITEMS. Entry-based pricing reads wrong beside
+  tabSlug: "random-lots",
+  pluralLabel: "Random Lots",
+  chipLabel: "Random Lots",
+  browseRoute: String(ROUTES.PUBLIC.RANDOM_LOTS),
+  // /random-lots is in MAIN_NAV_ITEMS. Entry-based pricing reads wrong beside
   // ordinary unit prices in the general grid.
   inGeneralCatalogue: false,
   // sells ENTRIES at a fixed price; a group line would blur what was entered

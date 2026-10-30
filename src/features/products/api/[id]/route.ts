@@ -176,7 +176,7 @@ export const PATCH = createRouteHandler<
       );
     }
 
-    // SB4 — once any prize in a prize-draw listing has been won, the listing
+    // SB4 — once any prize in a random-lots listing has been won, the listing
     // is frozen. Sellers can no longer edit it; admins inherit the same lock
     // (anything they need to change should go through a new listing or a
     // dedicated remediation script).
@@ -184,15 +184,18 @@ export const PATCH = createRouteHandler<
       (product as { prizeDrawItems?: { isWon?: boolean }[] }).prizeDrawItems ??
       [];
     const anyPrizeWon = prizeItems.some((it) => it?.isWon);
+    // "prize-draw" kept as a back-compat match for listings written before
+    // the random-lots rename.
+    const listingTypeValue = (product as { listingType?: string }).listingType;
     if (
-      (product as { listingType?: string }).listingType === "prize-draw" &&
+      (listingTypeValue === "random-lots" || listingTypeValue === "prize-draw") &&
       anyPrizeWon
     ) {
       return NextResponse.json(
         {
           success: false,
           error:
-            "This prize-draw listing is locked because at least one prize has been revealed. Clone it into a new listing if you want to rerun the draw.",
+            "This random-lots listing is locked because at least one prize has been revealed. Clone it into a new listing if you want to rerun the draw.",
         },
         { status: 409 },
       );

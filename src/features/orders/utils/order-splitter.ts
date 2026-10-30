@@ -6,7 +6,7 @@ export type OrderType =
   | "preorder"
   | "auction"
   | "offer"
-  | "prize-draw";
+  | "random-lots";
 
 export interface OrderGroup<T> {
   items: T[];

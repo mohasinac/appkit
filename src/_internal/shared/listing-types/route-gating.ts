@@ -149,7 +149,7 @@ export function closedSurfaceContext(
  * ## What it still does NOT match
  *
  * Editorial pages that merely carry a name in the path — `/help/auctions`,
- * `/how-auctions-work`, `/seller-guide/prize-draws`. None starts with
+ * `/how-auctions-work`, `/seller-guide/random-lots`. None starts with
  * `/auctions`, so the `/`-delimited boundary excludes them for free, and that
  * is correct: an explainer about auctions is honest reading when auctions are
  * off.

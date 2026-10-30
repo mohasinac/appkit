@@ -13,7 +13,9 @@ const DEFAULT_GUEST_HISTORY_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_history`
   : "guest_history";
 
-export type GuestHistoryType = "product" | "auction" | "preorder" | "prize-draw";
+// "prize-draw" kept as a back-compat read alias for localStorage history
+// written before the random-lots rename — new writes always use "random-lots".
+export type GuestHistoryType = "product" | "auction" | "preorder" | "random-lots" | "prize-draw";
 
 export interface GuestHistoryItem {
   productId: string;
