@@ -20,6 +20,29 @@ function formatRelative(at: Date | string): string {
   return `${days}d ago`;
 }
 
+/**
+ * Label for the OTHER side of a conversation, derived from THEIR role —
+ * never "my own role inverted". A binary `participantRoles[selfId] ===
+ * "seller" ? "Buyer" : "Seller"` silently mislabels the third shape: a buyer
+ * in a buyer<->assistant thread (A2) has `participantRoles[selfId] ===
+ * "buyer"`, which is `!== "seller"`, so the old ternary fell through to
+ * "Seller" — wrong on every assistant conversation in the inbox.
+ */
+function otherParticipantLabel(conversation: ConversationDocument, selfId: string): string {
+  const otherId = conversation.participantIds.find((id) => id !== selfId);
+  const role = otherId ? conversation.participantRoles[otherId] : undefined;
+  switch (role) {
+    case "seller":
+      return "Seller";
+    case "buyer":
+      return "Buyer";
+    case "assistant":
+      return "Assistant";
+    default:
+      return "Seller";
+  }
+}
+
 function ConversationRow({ conversation, selfId }: { conversation: ConversationDocument; selfId: string }) {
   const unread = conversation.unread[selfId] ?? 0;
   return (
@@ -37,7 +60,7 @@ function ConversationRow({ conversation, selfId }: { conversation: ConversationD
         <Stack gap="xs" className="flex-1 min-w-0">
           <Row gap="sm" justify="between">
             <Text weight={unread > 0 ? "semibold" : "normal"} className="truncate">
-              {conversation.participantRoles[selfId] === "seller" ? "Buyer" : "Seller"}
+              {otherParticipantLabel(conversation, selfId)}
             </Text>
             {conversation.lastMessageAt && (
               <Span size="xs" color="muted">

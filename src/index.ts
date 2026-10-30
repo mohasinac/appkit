@@ -10122,6 +10122,9 @@ export type {
   MessageDocument,
   MessageProductRef,
 } from "./features/messages/schemas/firestore";
+// ASSISTANT_PARTICIPANT_ID - the synthetic "other side" of a buyer<->assistant
+// conversation. A value, not a type, so it needs its own export statement.
+export { ASSISTANT_PARTICIPANT_ID } from "./features/messages/schemas/firestore";
 
 // The platform's statutory identity, injected at boot from appkit.config.js's
 // `business` block via the consumer's providers.config.ts. See the module

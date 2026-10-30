@@ -19,8 +19,26 @@ import type { BaseDocument } from "../../../_internal/shared/types/base-document
 export const CONVERSATIONS_COLLECTION = "conversations" as const;
 export const MESSAGES_SUBCOLLECTION = "messages" as const;
 
+/**
+ * The synthetic participant id for the customer-assistant conversation shape
+ * (buyer <-> assistant). Not a real `users` document — `createBetween` /
+ * `findBetween` on `conversationsRepository` are pure id operations with no
+ * lookup against the `users` collection, so a synthetic id works unchanged.
+ * Same pattern as the existing `chat_event_${id}` synthetic uid used for RTDB
+ * token minting; this one is a single fixed constant rather than per-event,
+ * because every buyer's assistant thread shares the same "other side".
+ */
+export const ASSISTANT_PARTICIPANT_ID = "assistant" as const;
+
 export type ConversationStatus = "active" | "archived";
-export type ParticipantRole = "buyer" | "seller";
+/**
+ * "assistant" widens the original two-human shape (buyer <-> seller) to
+ * buyer <-> assistant — same two-participant invariant, just naming who the
+ * other side is. `assertParticipant` / `otherParticipant` / `sendMessage` in
+ * `actions.ts` are id-based and need no change for this to work; only
+ * `openConversationWithAssistant` (new) builds a conversation that uses it.
+ */
+export type ParticipantRole = "buyer" | "seller" | "assistant";
 
 export interface ConversationLastMessage {
   /** Truncated preview — the full body lives only on the message document. */

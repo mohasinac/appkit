@@ -2128,6 +2128,7 @@ export {
 export {
   createOrOpenConversation,
   openConversationWithSeller,
+  openConversationWithAssistant,
   listConversationsForUser,
   listMessagesForConversation,
   sendMessage,
