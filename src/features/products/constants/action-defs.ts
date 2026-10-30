@@ -174,7 +174,7 @@ export const ACTION_META: Record<ActionId, ActionMeta> = {
   [ACTION_ID.REMOVE_COUPON]:        { id: ACTION_ID.REMOVE_COUPON,        label: regLabel("CHECKOUT","remove-coupon","Remove"),               variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to manage coupons."                   },
   [ACTION_ID.ENTER_RANDOM_LOTS]:     { id: ACTION_ID.ENTER_RANDOM_LOTS,     label: regLabel("RANDOM_LOTS","enter-draw","Enter Draw"),           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a random lots draw."               },
   // ── Inline literals: no registry counterpart yet (orphan IDs — add to ACTIONS in a follow-up sweep) ─
-  [ACTION_ID.ENTER_RAFFLE]:         { id: ACTION_ID.ENTER_RAFFLE,         label: "Enter Raffle",         variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a raffle."                   },
+  [ACTION_ID.ENTER_RAFFLE]:         { id: ACTION_ID.ENTER_RAFFLE,         label: "Enter Giveaway",       variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a giveaway."                 },
   [ACTION_ID.REPORT_LISTING]:       { id: ACTION_ID.REPORT_LISTING,       label: "Report Listing",       variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to report a listing."                 },
   [ACTION_ID.FOLLOW_STORE]:         { id: ACTION_ID.FOLLOW_STORE,         label: regLabel("STORE","follow","Follow Store"),         variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to follow a store."                   },
   // ── Reviews & social ──────────────────────────────────────────────────────

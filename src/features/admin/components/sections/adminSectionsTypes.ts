@@ -756,8 +756,8 @@ export const DEFAULT_FEATURED_BUNDLES_BUILDER: FeaturedBundlesBuilderState = {
 };
 
 export const DEFAULT_RANDOM_LOTS_BUILDER: RandomLotsBuilderState = {
-  title: "Prize Draws",
-  subtitle: "Enter for a chance to win rare collectibles",
+  title: "Random Lots",
+  subtitle: "Every lot ships a real item — which one is the surprise",
   maxItems: 6,
   storeId: "",
   revealStatus: "all",

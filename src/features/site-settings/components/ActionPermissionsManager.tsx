@@ -22,6 +22,13 @@ export interface ActionPermissionsManagerProps {
   onUpdate: (actionId: string, enabled: boolean) => Promise<void>;
 }
 
+/**
+ * Named once because it is BOTH a value in `CATEGORY_LABELS` and a key in
+ * `CATEGORY_COLORS` — two maps that must agree exactly, or the group renders
+ * with no colour and no error.
+ */
+const COLLECTOR_DROP_CTA = "Collector Drop CTA";
+
 const CATEGORY_LABELS: Record<string, string> = {
   "buy-now": "Public CTA",
   "add-to-cart": "Public CTA",
@@ -30,15 +37,17 @@ const CATEGORY_LABELS: Record<string, string> = {
   "make-offer": "Public CTA",
   "share": "Public CTA",
   "compare": "Public CTA",
-  "place-bid": "Collector Drop CTA",
-  "buy-now-collectorDrop": "Collector Drop CTA",
-  "watch-collectorDrop": "Collector Drop CTA",
-  "unwatch-collectorDrop": "Collector Drop CTA",
+  "place-bid": COLLECTOR_DROP_CTA,
+  "buy-now-collectorDrop": COLLECTOR_DROP_CTA,
+  "watch-collectorDrop": COLLECTOR_DROP_CTA,
+  "unwatch-collectorDrop": COLLECTOR_DROP_CTA,
   "reserve-now": "Pre-order CTA",
   "cancel-reservation": "Pre-order CTA",
   "checkout": "Checkout",
   "enter-random-lots": "Random Lots",
-  "enter-raffle": "Raffle",
+  // 🛑 The KEY is the action id and is persisted in
+  // `siteSettings.actionPermissions`; only the display VALUE is renamed.
+  "enter-raffle": "Giveaway",
   "report-listing": "Moderation",
   "follow-store": "Social",
   "write-review": "Reviews",
@@ -60,11 +69,15 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Public CTA": "bg-info-surface text-info dark:bg-info-surface dark:text-info",
-  "Collector Drop CTA": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+  [COLLECTOR_DROP_CTA]: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
   "Pre-order CTA": "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300",
   "Checkout": "bg-success-surface text-success dark:bg-success-surface dark:text-success",
-  "Prize Draw": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
-  "Raffle": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
+  // 🛑 These keys are the VALUES of CATEGORY_LABELS above, not action ids —
+  // they must be renamed in lockstep or the group falls through to the grey
+  // "Account" colour with no error (Root Cause #33). "Prize Draw" and
+  // "Raffle" were left here when the labels became "Random Lots"/"Giveaway".
+  "Random Lots": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
+  "Giveaway": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Moderation": "bg-error-surface text-error dark:bg-error-surface dark:text-error",
   "Social": "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300",
   "Reviews": "bg-success-surface text-success dark:bg-success-surface dark:text-success",

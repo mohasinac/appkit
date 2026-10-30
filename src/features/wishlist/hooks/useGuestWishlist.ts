@@ -9,6 +9,7 @@ import {
   getGuestWishlistByType,
   GUEST_WISHLIST_CHANGE_EVENT,
   type GuestWishlistItem,
+  type GuestWishlistItemType,
 } from "../utils/guest-wishlist";
 
 /**
@@ -38,7 +39,7 @@ export function useGuestWishlist() {
   const add = useCallback(
     (
       itemId: string,
-      type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+      type: GuestWishlistItemType,
       snapshot?: { title?: string; image?: string },
     ) => {
       const updated = addToGuestWishlist(itemId, type, snapshot);
@@ -50,7 +51,7 @@ export function useGuestWishlist() {
   const remove = useCallback(
     (
       itemId: string,
-      type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+      type: GuestWishlistItemType,
     ) => {
       const updated = removeFromGuestWishlist(itemId, type);
       setItems(updated);
@@ -61,7 +62,7 @@ export function useGuestWishlist() {
   const isInWishlist = useCallback(
     (
       itemId: string,
-      type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+      type: GuestWishlistItemType,
     ) => {
       return isInGuestWishlist(itemId, type);
     },

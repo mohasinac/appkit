@@ -15,9 +15,30 @@ function dispatchGuestWishlistChange(): void {
   window.dispatchEvent(new Event(GUEST_WISHLIST_CHANGE_EVENT));
 }
 
+/**
+ * What a guest may wishlist.
+ *
+ * 🛑 Named, not inlined. It was spelled out at four call sites in this file
+ * alone, so adding a listing type meant finding all four — and the rename that
+ * introduced "collector-drop" had to touch every one. One declaration means a
+ * tenth member is a single edit and `tsc` finds every consumer.
+ */
+export type GuestWishlistItemType =
+  | "product"
+  | "collector-drop"
+  | "preorder"
+  | "category"
+  | "store"
+  | "classified"
+  | "digital-code"
+  | "live"
+  /* Pre-rename spelling, kept so a guest wishlist saved before the rename
+   * still deserialises from localStorage. */
+  | "auction";
+
 export interface GuestWishlistItem {
   itemId: string;
-  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction";
+  type: GuestWishlistItemType;
   title?: string;
   image?: string;
   addedAt?: string;
@@ -64,7 +85,7 @@ export function getGuestWishlistItems(
 
 export function addToGuestWishlist(
   itemId: string,
-  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+  type: GuestWishlistItemType,
   snapshot?: { title?: string; image?: string },
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
@@ -94,7 +115,7 @@ export function addToGuestWishlist(
 
 export function removeFromGuestWishlist(
   itemId: string,
-  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+  type: GuestWishlistItemType,
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): GuestWishlistItem[] {
@@ -107,7 +128,7 @@ export function removeFromGuestWishlist(
 
 export function isInGuestWishlist(
   itemId: string,
-  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+  type: GuestWishlistItemType,
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): boolean {
@@ -131,7 +152,7 @@ export function getGuestWishlistCount(
 }
 
 export function getGuestWishlistByType(
-  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
+  type: GuestWishlistItemType,
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): GuestWishlistItem[] {
