@@ -96,7 +96,7 @@ const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.
 const SIEVE_CLAUSE_LT_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
 const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
-const SIEVE_CLAUSE_LT_PRIZE_DRAW = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.RANDOM_LOTS}`;
+const SIEVE_CLAUSE_LT_RANDOM_LOTS = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.RANDOM_LOTS}`;
 const SIEVE_CLAUSE_LT_CLASSIFIED = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.CLASSIFIED}`;
 const SIEVE_CLAUSE_LT_DIGITAL_CODE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.DIGITAL_CODE}`;
 const SIEVE_CLAUSE_LT_LIVE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.LIVE}`;
@@ -1731,7 +1731,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     prizeRevealWindowEnd: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealStatus: { canFilter: true, canSort: false },
     prizeDrawMode: { canFilter: true, canSort: false },
-    // Prize-draw entry price. PrizeDrawsListingView emits min/max filters on
+    // Prize-draw entry price. RandomLotsListingView emits min/max filters on
     // this field; without an entry here sievejs dropped both clauses silently.
     pricePerEntry: { canFilter: true, canSort: true },
     prizeCurrentEntries: { canFilter: true, canSort: true },
@@ -1880,7 +1880,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
         case "publicRandomLots":
         case "publicPrizeDraws":
-          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PRIZE_DRAW].join(",");
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_RANDOM_LOTS].join(",");
         case "publicClassifieds":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_CLASSIFIED].join(",");
         case "publicDigitalCodes":

@@ -3,7 +3,7 @@
 /**
  * BundleCollage — collage grid of bundle member products with lightbox support.
  *
- * Mirrors PrizeDrawCollage's visual style. Clicking any cell opens a
+ * Mirrors RandomLotsCollage's visual style. Clicking any cell opens a
  * full-screen lightbox starting at that product and cycling circularly.
  * Each cell also keeps a "Visit product" link accessible as the keyboard
  * action so the lightbox does not break product discovery.

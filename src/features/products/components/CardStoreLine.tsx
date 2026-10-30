@@ -5,7 +5,7 @@
  *
  * One implementation because there are six card variants that need it and only
  * ONE of them rendered it: `ProductCard` had this block inline while
- * `ProductListRow`, `MarketplacePreorderCard`, `MarketplacePrizeDrawCard`,
+ * `ProductListRow`, `MarketplacePreorderCard`, `MarketplaceRandomLotCard`,
  * `PreorderCard` and `MarketplaceAuctionCard` showed no seller at all, even
  * when the data was right there on the item. Six copies of a three-line block
  * is six chances for the fallback rule and the muted tone to drift.

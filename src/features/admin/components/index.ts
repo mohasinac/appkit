@@ -41,9 +41,9 @@ export { AdminBrandEditorView } from "./AdminBrandEditorView";
 export type { AdminBrandEditorViewProps } from "./AdminBrandEditorView";
 export { AdminAddressEditorView } from "./AdminAddressEditorView";
 export type { AdminAddressEditorViewProps } from "./AdminAddressEditorView";
-// SB4-E 2026-05-14 — admin prize draws listing view.
-export { AdminPrizeDrawsView } from "./AdminPrizeDrawsView";
-export type { AdminPrizeDrawsViewProps } from "./AdminPrizeDrawsView";
+// SB4-E 2026-05-14 — admin random-lots listing view.
+export { AdminRandomLotsView } from "./AdminRandomLotsView";
+export type { AdminRandomLotsViewProps } from "./AdminRandomLotsView";
 // W1-29 2026-05-23 — admin listing views for orphaned listing types (classified/digital-codes/live).
 export { AdminClassifiedView } from "./AdminClassifiedView";
 export type { AdminClassifiedViewProps } from "./AdminClassifiedView";

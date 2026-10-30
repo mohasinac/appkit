@@ -14,9 +14,9 @@
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { productRepository } from "../../../../features/products/repository/products.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
-import { assertPrizeDrawOpen } from "./service";
+import { assertRandomLotsOpen } from "./service";
 
-export async function enterPrizeDrawAction(input: unknown): Promise<ActionResult<unknown>> {
+export async function enterRandomLotsAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
     const { prizeDrawId } = input as { prizeDrawId: string };
@@ -25,7 +25,7 @@ export async function enterPrizeDrawAction(input: unknown): Promise<ActionResult
     const product = await productRepository.findByIdOrSlug(prizeDrawId);
     if (!product) throw new Error("Prize draw not found.");
 
-    assertPrizeDrawOpen(product);
+    assertRandomLotsOpen(product);
 
     // Increment the entry count — server-side only, not exposed to the client adapter.
     await productRepository.update(prizeDrawId, {

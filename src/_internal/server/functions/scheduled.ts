@@ -25,7 +25,7 @@ import {
   paymentReviewAutoApproveHandler,
   pendingOrderTimeoutHandler,
   positionsReconcileHandler,
-  prizeDrawExpiryRevealHandler,
+  randomLotsExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
   sellerStandingRollupHandler,
@@ -566,11 +566,18 @@ export const testDataCleanup = defineFunction({
 // Do not reinstate it without also deciding who owns fixture state; two owners is the
 // bug it caused. See tester/scripts/lifecycle.mjs.
 
-export const prizeDrawExpiryReveal = defineFunction({
+export const randomLotsExpiryReveal = defineFunction({
+  /*
+   * 🛑 `name` intentionally retains the old "prizeDraw" spelling. `bindAllFromRegistry`
+   * keys `module.exports` off `def.name`, so this string IS the deployed Cloud Function
+   * name and the Cloud Scheduler job behind it — renaming it would orphan both and
+   * create duplicates. Only the exported const, handler symbol and module path moved
+   * to the random-lots spelling.
+   */
   name: "prizeDrawExpiryReveal",
-  description: "Assign winners for outstanding paid orders on scheduled-mode prize draws past their expiry, then close them (every 5 minutes).",
+  description: "Assign winners for outstanding paid orders on scheduled-mode random lots past their expiry, then close them (every 5 minutes).",
   trigger: { kind: "schedule", cron: EVERY_5_MIN },
-  handler: prizeDrawExpiryRevealHandler,
+  handler: randomLotsExpiryRevealHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -640,7 +647,7 @@ export const SCHEDULED_FUNCTIONS = [
   mediaTmpCleanup,
   draftPrune,
   testDataCleanup,
-  prizeDrawExpiryReveal,
+  randomLotsExpiryReveal,
   bundleStockSync,
   emiInstallmentReminder,
   catalogueImageStalenessReminder,

@@ -2,17 +2,17 @@
 
 import { ListingBottomActions } from "./ListingBottomActions";
 
-export interface PrizeDrawBottomActionsProps {
+export interface RandomLotsBottomActionsProps {
   pricePerEntry: number;
   currency: string;
   closed: boolean;
 }
 
-export function PrizeDrawBottomActions({
+export function RandomLotsBottomActions({
   pricePerEntry,
   currency,
   closed,
-}: PrizeDrawBottomActionsProps) {
+}: RandomLotsBottomActionsProps) {
   return (
     <ListingBottomActions
       listingType="random-lots"

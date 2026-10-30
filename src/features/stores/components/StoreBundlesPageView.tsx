@@ -16,7 +16,7 @@ export interface StoreBundlesPageViewProps {
  * SB-UNI-D + V: bundles are categoryType:"bundle" rows on the categories
  * collection, scoped to the seller via `createdByStoreId`. Server-fetches
  * the seller's active bundle categories and hands them to
- * `CategoryBundlesListing`. Mirrors the StorePrizeDrawsPageView pattern.
+ * `CategoryBundlesListing`. Mirrors the StoreRandomLotsPageView pattern.
  */
 export async function StoreBundlesPageView({
   storeSlug,

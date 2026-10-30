@@ -1,12 +1,12 @@
 import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
 import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
-import { assignPrizeDrawWinner } from "./prizeDrawAssignWinner";
+import { assignRandomLotsWinner } from "./randomLotsAssignWinner";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 
 const ORDER_COLLECTION = "orders";
 
-export interface PrizeDrawStockSnapshot {
+export interface RandomLotsStockSnapshot {
   listingType?: string;
   prizeDrawMode?: string;
   prizeRevealMode?: string;
@@ -15,13 +15,13 @@ export interface PrizeDrawStockSnapshot {
   prizeCurrentEntries?: number;
 }
 
-export interface HandlePrizeDrawSoldOutInput {
+export interface HandleRandomLotsSoldOutInput {
   productId: string;
-  before: PrizeDrawStockSnapshot | null;
-  after: PrizeDrawStockSnapshot | null;
+  before: RandomLotsStockSnapshot | null;
+  after: RandomLotsStockSnapshot | null;
 }
 
-function isSoldOut(doc: PrizeDrawStockSnapshot | null): boolean {
+function isSoldOut(doc: RandomLotsStockSnapshot | null): boolean {
   if (!doc) return false;
   const max = doc.prizeMaxEntries ?? 0;
   if (max <= 0) return false;
@@ -30,13 +30,13 @@ function isSoldOut(doc: PrizeDrawStockSnapshot | null): boolean {
 
 /**
  * "Scheduled" reveal mode, sellout half — the other trigger condition besides
- * expiry (prizeDrawExpiryReveal.ts). Fires the instant a scheduled-mode draw's
+ * expiry (randomLotsExpiryReveal.ts). Fires the instant a scheduled-mode draw's
  * last entry sells, so buyers don't have to wait for the expiry sweep once
  * every ticket is gone. Assigns a winner to every paid, unrevealed order for
  * the draw, then closes it.
  */
-export async function handlePrizeDrawSoldOut(
-  input: HandlePrizeDrawSoldOutInput,
+export async function handleRandomLotsSoldOut(
+  input: HandleRandomLotsSoldOutInput,
   ctx: JobContext,
 ): Promise<void> {
   // `FEATURE_PRIZE_DRAWS` gate deleted 2026-10-19 — see `assignSpinPrize.ts`.
@@ -67,7 +67,7 @@ export async function handlePrizeDrawSoldOut(
     const order = orderDoc.data() as Pick<OrderDocument, "prizeWon">;
     if (order.prizeWon) continue;
     try {
-      const result = await assignPrizeDrawWinner(ctx, { orderId: orderDoc.id, productId });
+      const result = await assignRandomLotsWinner(ctx, { orderId: orderDoc.id, productId });
       if (result.kind === "revealed") revealed++;
     } catch (err) {
       void normalizeError(err);

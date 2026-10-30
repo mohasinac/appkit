@@ -45,13 +45,13 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
   // SB8-F — count unrevealed random-lots entries to surface a "reveals pending" badge.
   // "prize-draw" kept as a back-compat match for order items written before
   // the random-lots rename.
-  const unrevealedPrizeDraws = order.items.filter(
+  const unrevealedRandomLots = order.items.filter(
     (it) =>
       (it.listingType === "random-lots" || (it.listingType as string) === "prize-draw") &&
       it.prizeRevealStatus !== undefined &&
       it.prizeRevealStatus !== "revealed",
   );
-  const revealsRemaining = unrevealedPrizeDraws.length;
+  const revealsRemaining = unrevealedRandomLots.length;
 
   return (
     <Div padding="5" 

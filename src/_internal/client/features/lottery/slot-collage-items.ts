@@ -1,5 +1,5 @@
 /**
- * Map lottery slots onto the shape `PrizeDrawCollage` renders.
+ * Map lottery slots onto the shape `RandomLotsCollage` renders.
  *
  * Shared by all three lottery surfaces (event lottery detail, prize-draw-mode
  * lottery detail, and any future one) so the "which slots get a tile" rule
@@ -11,7 +11,7 @@
  * below it is still the complete, authoritative slot map.
  */
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
-import type { CollagePrizeItem } from "../../../../features/products/components/PrizeDrawCollage";
+import type { CollagePrizeItem } from "../../../../features/products/components/RandomLotsCollage";
 
 export function slotsToCollageItems(
   slots: readonly ClientLotterySlot[],

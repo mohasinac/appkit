@@ -303,7 +303,7 @@ export type { QuickFormDrawerProps, QuickFieldDef } from "./features/shell/Quick
 export type { ItemRequestCreateValues } from "./features/store-extensions/schemas/item-request-create-form";
 export type { ReportCreateValues } from "./features/store-extensions/schemas/report-create-form";
 export type { LotteryConfigWriteInput } from "./features/lottery/schemas/config-write";
-export { PrizeDrawLotteryDetailView } from "./_internal/client/features/lottery/PrizeDrawLotteryDetailView";
+export { RandomLotsLotteryDetailView } from "./_internal/client/features/lottery/RandomLotsLotteryDetailView";
 export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.
@@ -538,7 +538,7 @@ export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/
 export { AdminDashboardView } from "./features/admin/components/AdminDashboardView";
 export { AdminAnalyticsView } from "./features/admin/components/AdminAnalyticsView";
 export { AdminPageViewsReportView } from "./features/admin/components/analytics/AdminPageViewsReportView";
-export { AdminPrizeDrawsView } from "./features/admin/components/AdminPrizeDrawsView";
+export { AdminRandomLotsView } from "./features/admin/components/AdminRandomLotsView";
 export { AdminCarouselView } from "./features/admin/components/AdminCarouselView";
 export { AdminSublistingCategoriesView } from "./features/admin/components/AdminSublistingCategoriesView";
 export { AdminFulfillmentView } from "./features/admin/components/AdminFulfillmentView";
@@ -547,7 +547,7 @@ export { DataListingView } from "./features/admin/components/DataListingView";
 export { useAdminListingData, toRecordArray, toStringValue, toRelativeDate } from "./features/admin/hooks/useAdminListingData";
 export type { AdminDashboardViewProps } from "./features/admin/components/AdminDashboardView";
 export type { AdminAnalyticsViewProps, AdminAnalyticsViewLabels } from "./features/admin/components/AdminAnalyticsView";
-export type { AdminPrizeDrawsViewProps } from "./features/admin/components/AdminPrizeDrawsView";
+export type { AdminRandomLotsViewProps } from "./features/admin/components/AdminRandomLotsView";
 export type { AdminCarouselViewProps } from "./features/admin/components/AdminCarouselView";
 export type { AdminFulfillmentViewProps } from "./features/admin/components/AdminFulfillmentView";
 export type { AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/components/DataListingView";
@@ -797,8 +797,8 @@ export {
   PREORDER_SORT_OPTIONS,
   PREORDER_PUBLIC_SORT_OPTIONS,
   BUNDLE_SORT_OPTIONS,
-  PRIZE_DRAW_SORT_OPTIONS,
-  PRIZE_DRAW_PUBLIC_SORT_OPTIONS,
+  RANDOM_LOTS_SORT_OPTIONS,
+  RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
 } from "./features/products/constants/sieve";
 // Derived from the listing-type plugin registry — see the note in index.ts.
 export {
@@ -1045,7 +1045,7 @@ export {
   isAuctionListing,
   isPreOrderListing,
   isStandardListing,
-  isPrizeDrawListing,
+  isRandomLotListing,
   isClassifiedListing,
   isDigitalCodeListing,
   isLiveListing,

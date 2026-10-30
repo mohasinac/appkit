@@ -8,7 +8,7 @@ import type { OrderDocument } from "../../../../features/orders/schemas/firestor
 const PRODUCT_COLLECTION = "products";
 const ORDER_COLLECTION = "orders";
 
-export interface AssignPrizeDrawWinnerResult {
+export interface AssignRandomLotsWinnerResult {
   kind: "revealed" | "already_revealed" | "pool_exhausted" | "not_eligible";
   prizeWon?: OrderDocument["prizeWon"];
 }
@@ -23,10 +23,10 @@ export interface AssignPrizeDrawWinnerResult {
  * buyers are shown a public GitHub source link for (product.prizeGithubFileUrl)
  * — do not change the selection algorithm.
  */
-export async function assignPrizeDrawWinner(
+export async function assignRandomLotsWinner(
   ctx: JobContext,
   args: { orderId: string; productId: string },
-): Promise<AssignPrizeDrawWinnerResult> {
+): Promise<AssignRandomLotsWinnerResult> {
   // The `FEATURE_PRIZE_DRAWS` gate here was deleted 2026-10-19 with the other
   // four readers — see the header of `assignSpinPrize.ts`. This one was the
   // worst-shaped of them: it returned `kind: "not_eligible"`, which every

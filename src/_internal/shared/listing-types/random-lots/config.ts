@@ -4,8 +4,8 @@ import { ROUTES } from "../../../../next/routing/route-map";
 import { TABLE_KEYS } from "../../../../constants/table-keys";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import {
-  PRIZE_DRAW_SORT_OPTIONS,
-  PRIZE_DRAW_PUBLIC_SORT_OPTIONS,
+  RANDOM_LOTS_SORT_OPTIONS,
+  RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
 } from "../../../../features/products/constants/sieve";
 
 export const LISTING_TYPE = "random-lots" as const;
@@ -29,7 +29,7 @@ export const config = {
   inGeneralCatalogue: false,
   // sells ENTRIES at a fixed price; a group line would blur what was entered
   canJoinProductGroup: false,
-  iconKey: "prizeDraw" as const,
+  iconKey: "randomLots" as const,
   hideDefault: "closed" as const,
   // `prizeRevealStatus`, NOT remaining entries: a draw can close with slots
   // unsold (the seller ends it early, or the reveal window lapses), and it can
@@ -46,7 +46,7 @@ export const config = {
     },
     { field: PRODUCT_FIELDS.AVAILABLE_QUANTITY, op: "eq" as const, value: 0 },
   ],
-  sortOptions: PRIZE_DRAW_SORT_OPTIONS,
-  publicSortOptions: PRIZE_DRAW_PUBLIC_SORT_OPTIONS,
+  sortOptions: RANDOM_LOTS_SORT_OPTIONS,
+  publicSortOptions: RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
   extraFacetKeys: [TABLE_KEYS.PRIZE_REVEAL_STATUS] as readonly string[],
 };

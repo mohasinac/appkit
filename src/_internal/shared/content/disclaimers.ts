@@ -142,7 +142,7 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
       "refunded rather than drawn. Prizes are as described on the listing, are not transferable and cannot " +
       "be exchanged for cash. The draw is run by {{siteName}} and is not affiliated with any government lottery.",
     tone: "warning",
-    surfaces: ["PrizeDrawDetailPageView", "/random-lots", "/lottery", "PrizeRevealModal"],
+    surfaces: ["RandomLotsDetailPageView", "/random-lots", "/lottery", "PrizeRevealModal"],
   },
 
   /*

@@ -22,7 +22,7 @@ import { isMultiMemberLine } from "../line-members";
 import { standardRule } from "./standard.rule";
 import { auctionRule } from "./auction.rule";
 import { preOrderRule } from "./preorder.rule";
-import { prizeDrawRule } from "./prize-draw.rule";
+import { randomLotsRule } from "./random-lots.rule";
 import { offerRule } from "./offer.rule";
 import { bundleRule } from "./bundle.rule";
 import { classifiedRule } from "./classified.rule";
@@ -36,7 +36,7 @@ export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   standard: standardRule,
   auction: auctionRule,
   "pre-order": preOrderRule,
-  "random-lots": prizeDrawRule,
+  "random-lots": randomLotsRule,
   classified: classifiedRule,
   "digital-code": digitalCodeRule,
   live: liveRule,

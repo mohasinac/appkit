@@ -28,7 +28,7 @@ import { CART_LANE, laneOf } from "../../../_internal/shared/checkout/lanes";
  * The split key and order type are both derived from the checkout rule
  * registry so new listing types need no changes here.
  *
- * Prize-draw items with qty > PRIZE_DRAW_MAX_REVEALS_PER_ORDER are first
+ * Prize-draw items with qty > RANDOM_LOTS_MAX_REVEALS_PER_ORDER are first
  * expanded into virtual single-batch items (via `rule.splitMultipleOrders`),
  * then each batch lands in its own order group.
  *

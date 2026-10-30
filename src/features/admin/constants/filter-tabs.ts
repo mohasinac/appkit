@@ -342,7 +342,7 @@ export const SELLER_PRE_ORDER_STATUS_TABS = [
  *  fix as SELLER_AUCTION_STATUS_TABS — "ended" is derived from
  *  `prizeRevealWindowEnd` vs now (handled by the "Show closed" toolbar
  *  toggle), no stored "cancelled" state exists. */
-export const SELLER_PRIZE_DRAW_STATUS_TABS = [
+export const SELLER_RANDOM_LOTS_STATUS_TABS = [
   ALL_TAB,
   { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },

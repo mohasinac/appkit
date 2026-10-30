@@ -49,10 +49,10 @@ import {
   WelcomeBuilderState,
   WhatsAppBuilderState,
   FeaturedBundlesBuilderState,
-  PrizeDrawsBuilderState,
+  RandomLotsBuilderState,
   EventRafflesBuilderState,
   DEFAULT_FEATURED_BUNDLES_BUILDER,
-  DEFAULT_PRIZE_DRAWS_BUILDER,
+  DEFAULT_RANDOM_LOTS_BUILDER,
   DEFAULT_EVENT_RAFFLES_BUILDER,
   CollectionCardsBuilderState,
   CollectionCardsEntryBuilderState,
@@ -844,7 +844,7 @@ export function parseFeaturedBundlesBuilder(config: JsonObjectWithUndefined): Fe
   };
 }
 
-export function buildPrizeDrawsConfig(builder: PrizeDrawsBuilderState): JsonObjectWithUndefined {
+export function buildRandomLotsConfig(builder: RandomLotsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -856,15 +856,15 @@ export function buildPrizeDrawsConfig(builder: PrizeDrawsBuilderState): JsonObje
   };
 }
 
-export function parsePrizeDrawsBuilder(config: JsonObjectWithUndefined): PrizeDrawsBuilderState {
+export function parseRandomLotsBuilder(config: JsonObjectWithUndefined): RandomLotsBuilderState {
   return {
-    title: toStringValue(config.title, DEFAULT_PRIZE_DRAWS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle, DEFAULT_PRIZE_DRAWS_BUILDER.subtitle),
-    maxItems: toNumberValue(config.maxItems, DEFAULT_PRIZE_DRAWS_BUILDER.maxItems),
+    title: toStringValue(config.title, DEFAULT_RANDOM_LOTS_BUILDER.title),
+    subtitle: toStringValue(config.subtitle, DEFAULT_RANDOM_LOTS_BUILDER.subtitle),
+    maxItems: toNumberValue(config.maxItems, DEFAULT_RANDOM_LOTS_BUILDER.maxItems),
     storeId: toStringValue(config.storeId),
-    revealStatus: toStringValue(config.revealStatus, DEFAULT_PRIZE_DRAWS_BUILDER.revealStatus) as PrizeDrawsBuilderState["revealStatus"],
-    showCountdown: toBooleanValue(config.showCountdown, DEFAULT_PRIZE_DRAWS_BUILDER.showCountdown),
-    showEntriesRemaining: toBooleanValue(config.showEntriesRemaining, DEFAULT_PRIZE_DRAWS_BUILDER.showEntriesRemaining),
+    revealStatus: toStringValue(config.revealStatus, DEFAULT_RANDOM_LOTS_BUILDER.revealStatus) as RandomLotsBuilderState["revealStatus"],
+    showCountdown: toBooleanValue(config.showCountdown, DEFAULT_RANDOM_LOTS_BUILDER.showCountdown),
+    showEntriesRemaining: toBooleanValue(config.showEntriesRemaining, DEFAULT_RANDOM_LOTS_BUILDER.showEntriesRemaining),
   };
 }
 

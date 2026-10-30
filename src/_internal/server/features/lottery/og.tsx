@@ -23,7 +23,7 @@
  *
  * "6 of 200 slots left" is a fact about availability rather than a disclosed
  * amount, and it is the half of the card that earns the click — exactly the
- * line `renderPrizeDrawOg` draws for "Free entry".
+ * line `renderRandomLotsOg` draws for "Free entry".
  */
 
 import type { ReactElement } from "react";

@@ -9,7 +9,7 @@ import {
   parsePublicProductParams,
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
-import { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
+import { RandomLotsIndexListing } from "./RandomLotsIndexListing";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -17,28 +17,28 @@ const LISTING_TYPES = ["random-lots"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
-export interface PrizeDrawsListingViewProps {
+export interface RandomLotsListingViewProps {
   searchParams?: SearchParams;
 }
 
 /**
  * Public listing page (SB4-F). Server-fetches published random-lots products,
- * hydrates the client `PrizeDrawsIndexListing` which renders the filter
+ * hydrates the client `RandomLotsIndexListing` which renders the filter
  * toolbar + collage-thumb grid. URL params: `?storeId=…&prizeRevealStatus=…`.
  *
  * Per the public-buyer contract, the product adapter strips `isWon` from
  * `prizeDrawItems[]` server-side; the cards never reveal which prizes are
- * already gone (matches `PrizeDrawCollage`'s `hideWonState` prop).
+ * already gone (matches `RandomLotsCollage`'s `hideWonState` prop).
  */
-export async function PrizeDrawsListingView({
+export async function RandomLotsListingView({
   searchParams = {},
-}: PrizeDrawsListingViewProps) {
+}: RandomLotsListingViewProps) {
   // Routed through the shared query (2026-08-21). The hand-rolled builder this
   // replaces had its own Root Cause #30 divergence: it applied the price range
   // to `pricePerEntry`, while the client's refetch sends minPrice/maxPrice,
   // which the shared query applies to `price`. Both fields carry the same
   // value today, so the split was invisible — until one of them drifted.
-  // `price` wins because it is also what PRIZE_DRAW_SORT_OPTIONS sorts by for
+  // `price` wins because it is also what RANDOM_LOTS_SORT_OPTIONS sorts by for
   // "Entry: Low to High".
   const result = await listPublicProducts(
     parsePublicProductParams(searchParams, {
@@ -65,7 +65,7 @@ export async function PrizeDrawsListingView({
             proof on GitHub.
           </Text>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <PrizeDrawsIndexListing initialData={result ?? undefined} />
+          <RandomLotsIndexListing initialData={result ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

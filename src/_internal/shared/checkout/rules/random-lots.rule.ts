@@ -8,7 +8,7 @@ import type {
   OrderItemInput,
 } from "./types";
 import { DEFAULT_LISTING_RULE } from "./_defaults";
-import { PRIZE_DRAW_MAX_REVEALS_PER_ORDER } from "./_limits";
+import { RANDOM_LOTS_MAX_REVEALS_PER_ORDER } from "./_limits";
 import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 
 /**
@@ -37,7 +37,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  *
  * `admin_bypass` stays usable for QA regardless.
  */
-const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", "cod", "emi"];
+const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", "cod", "emi"];
 
 /**
  * The refusal, kept VERBATIM when this check moved out of `preflightChecks`
@@ -49,33 +49,33 @@ const PRIZE_DRAW_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", "
  * reason is the thing a buyer needs in order to pick a different method rather
  * than abandon the entry.
  */
-const PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE =
+const RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE =
   "Random-lots entries are paid by direct bank/UPI transfer or cash on pickup — card and online payment are not available for random lots.";
 
-export const prizeDrawRule: ListingCheckoutRule = {
+export const randomLotsRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
   orderType: "random-lots",
   nonRefundable: true,
   canMergeWithSameProduct: false,
-  maxLinesPerOrder: PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
+  maxLinesPerOrder: RANDOM_LOTS_MAX_REVEALS_PER_ORDER,
   refundPolicy: { full: false, partial: false, partialGranularity: "none" },
-  blockedPaymentMethods: PRIZE_DRAW_BLOCKED_PAYMENT_METHODS,
-  blockedPaymentMessage: PRIZE_DRAW_BLOCKED_PAYMENT_MESSAGE,
+  blockedPaymentMethods: RANDOM_LOTS_BLOCKED_PAYMENT_METHODS,
+  blockedPaymentMessage: RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE,
 
   splitKey: (item: CartItemDocument) => `random-lots:${item.itemId}`,
 
   /**
    * Slice a high-quantity random-lots entry into chunks of
-   * PRIZE_DRAW_MAX_REVEALS_PER_ORDER so each resulting order has at most
+   * RANDOM_LOTS_MAX_REVEALS_PER_ORDER so each resulting order has at most
    * that many reveal slots.  Buying 7 entries → [3, 3, 1].
    */
   splitMultipleOrders: (item: CartItemDocument): CartItemDocument[] => {
-    if (item.quantity <= PRIZE_DRAW_MAX_REVEALS_PER_ORDER) return [item];
+    if (item.quantity <= RANDOM_LOTS_MAX_REVEALS_PER_ORDER) return [item];
     const chunks: CartItemDocument[] = [];
     let remaining = item.quantity;
     let batchIndex = 0;
     while (remaining > 0) {
-      const batchQty = Math.min(remaining, PRIZE_DRAW_MAX_REVEALS_PER_ORDER);
+      const batchQty = Math.min(remaining, RANDOM_LOTS_MAX_REVEALS_PER_ORDER);
       chunks.push({
         ...item,
         quantity: batchQty,

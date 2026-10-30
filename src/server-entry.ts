@@ -31,8 +31,8 @@ export { PreOrderDetailPageView } from "./features/pre-orders/index";
 export { AuctionDetailPageView } from "./features/auctions/index";
 export { AuctionsListView } from "./features/auctions/components/AuctionsListView";
 export { BundlesListView } from "./features/categories/components/BundlesListView";
-export { PrizeDrawsListingView } from "./features/products/components/PrizeDrawsListingView";
-export { PrizeDrawDetailPageView } from "./features/products/components/PrizeDrawDetailPageView";
+export { RandomLotsListingView } from "./features/products/components/RandomLotsListingView";
+export { RandomLotsDetailPageView } from "./features/products/components/RandomLotsDetailPageView";
 export { ProductDetailPageView } from "./features/products/components/ProductDetailPageView";
 export { ProductsIndexPageView } from "./features/products/components/ProductsIndexPageView";
 export { ClassifiedDetailPageView } from "./features/classified/components/ClassifiedDetailPageView";
@@ -47,7 +47,7 @@ export { StoreDetailLayoutView } from "./features/stores/components/StoreDetailL
 export { StoreProductsPageView } from "./features/stores/components/StoreProductsPageView";
 export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";
 export { StorePreOrdersPageView } from "./features/stores/components/StorePreOrdersPageView";
-export { StorePrizeDrawsPageView } from "./features/stores/components/StorePrizeDrawsPageView";
+export { StoreRandomLotsPageView } from "./features/stores/components/StoreRandomLotsPageView";
 export { StoreBundlesPageView } from "./features/stores/components/StoreBundlesPageView";
 export { StoreClassifiedsPageView } from "./features/stores/components/StoreClassifiedsPageView";
 export { StoreSparesPageView } from "./features/stores/components/StoreSparesPageView";
@@ -269,7 +269,7 @@ export {
 // `CHECKOUT_PAYMENT_METHODS` above it and the money helpers further down this
 // file: `/api/payment/create-order` is the consumer's gateway capture route,
 // and every rule that route needs has had to be exported here after the route
-// was found missing it. `auction.rule.ts` / `prize-draw.rule.ts` have declared
+// was found missing it. `auction.rule.ts` / `random-lots.rule.ts` have declared
 // `blockedPaymentMethods: ["online", ...]` since 2026-10-28 — Indian payment
 // aggregators prohibit settling auctions/lotteries through a standard
 // e-commerce MID, and the penalty is the whole merchant account frozen — but

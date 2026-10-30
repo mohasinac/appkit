@@ -27,8 +27,8 @@ import type { JsonValue } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
 import { ProductStatusValues } from "../../products/schemas";
 import {
-  assertPrizeDrawNotLocked,
-  assertPrizeDrawWonItemsImmutable,
+  assertRandomLotsNotLocked,
+  assertRandomLotsWonItemsImmutable,
   assertAuctionTermsMutable,
 } from "../../../_internal/server/features/products/service";
 import { orderRepository } from "../../orders/repository/orders.repository";
@@ -1016,9 +1016,9 @@ export async function sellerUpdateProduct(
     input.status !== "published" &&
     existing.status === "published"
   ) {
-    assertPrizeDrawNotLocked(existing, "unpublished or archived");
+    assertRandomLotsNotLocked(existing, "unpublished or archived");
   }
-  assertPrizeDrawWonItemsImmutable(existing, input.prizeDrawItems);
+  assertRandomLotsWonItemsImmutable(existing, input.prizeDrawItems);
   assertAuctionTermsMutable(existing, input);
   const finalizedData = await finalizeProductMediaReferences(input);
   const updated = await productRepository.updateProduct(
@@ -1042,7 +1042,7 @@ export async function sellerDeleteProduct(
     if (!store || existing.storeId !== store.id)
       throw new AuthorizationError("You do not own this product");
   }
-  assertPrizeDrawNotLocked(existing, "deleted");
+  assertRandomLotsNotLocked(existing, "deleted");
   await productRepository.delete(productId);
   serverLogger.info("sellerDeleteProduct", { userId, productId });
 }

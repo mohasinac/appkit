@@ -23,7 +23,7 @@
  *    winner write sat outside any transaction, so two concurrent admin clicks
  *    both saw no winner and both wrote — two winners for one prize. The
  *    check-and-write is now inside `runTransaction`, following the sibling
- *    core `prizeDrawAssignWinner`.
+ *    core `randomLotsAssignWinner`.
  *
  * 3. **The winner was never told.** A winner was recorded and the only way to
  *    find out was to revisit the event page.
@@ -158,7 +158,7 @@ export async function runTriggerEventRaffle(
    * raffle claims 1,892 entries) and a Firestore transaction holds locks for
    * everything it reads — so reading the pool inside would make a draw scale
    * its lock footprint with entrant count. The same split as
-   * `prizeDrawAssignWinner`: read the candidates normally, then do the
+   * `randomLotsAssignWinner`: read the candidates normally, then do the
    * check-and-write transactionally.
    *
    * 🛑 `reviewStatus == "approved"`, NOT `status == "CONFIRMED"`. See this
@@ -336,7 +336,7 @@ export async function runTriggerEventRaffle(
    * fails must not roll back a recorded draw (the draw is irreversible and
    * re-running it would pick a different winner), and a send inside the
    * transaction would be retried on every abort. Same shape as
-   * `prizeDrawAssignWinner`.
+   * `randomLotsAssignWinner`.
    */
   if (drawn.userId) {
     try {

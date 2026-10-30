@@ -425,7 +425,7 @@ export interface FeaturedBundlesBuilderState {
   showSavingsBadge: boolean;
 }
 
-export interface PrizeDrawsBuilderState {
+export interface RandomLotsBuilderState {
   title: string;
   subtitle: string;
   maxItems: number;
@@ -754,7 +754,7 @@ export const DEFAULT_FEATURED_BUNDLES_BUILDER: FeaturedBundlesBuilderState = {
   showSavingsBadge: true,
 };
 
-export const DEFAULT_PRIZE_DRAWS_BUILDER: PrizeDrawsBuilderState = {
+export const DEFAULT_RANDOM_LOTS_BUILDER: RandomLotsBuilderState = {
   title: "Prize Draws",
   subtitle: "Enter for a chance to win rare collectibles",
   maxItems: 6,

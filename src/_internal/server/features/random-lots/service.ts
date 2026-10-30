@@ -2,7 +2,7 @@ import type { ProductDocument } from "../../../../features/products/schemas/fire
 import { ValidationError, CapacityError, ExpiredError } from "../../../shared/errors/index";
 
 /** Assert the random lots draw is accepting entries (published, reveal not started, slots not exhausted). */
-export function assertPrizeDrawOpen(product: ProductDocument): void {
+export function assertRandomLotsOpen(product: ProductDocument): void {
   if (product.listingType !== "random-lots") {
     throw new ValidationError("Not a random lots listing.");
   }

@@ -7,7 +7,7 @@ import type { ReactElement } from "react";
 import { renderOgLayout } from "../seo/og-layout";
 import { resolveOgImageUrl } from "../seo/og";
 
-export interface PrizeDrawOgData {
+export interface RandomLotsOgData {
   title: string;
   pricePerEntryLabel?: string | null;
   imageUrl?: string | null;
@@ -15,7 +15,7 @@ export interface PrizeDrawOgData {
   entriesLabel?: string | null;
 }
 
-interface PrizeDrawDocLike {
+interface RandomLotsDocLike {
   title?: string | null;
   name?: string | null;
   pricePerEntry?: number | null;
@@ -28,8 +28,8 @@ interface PrizeDrawDocLike {
   prizeCurrentEntries?: number | null;
 }
 
-export function renderPrizeDrawOg(
-  doc: PrizeDrawDocLike | null | undefined,
+export function renderRandomLotsOg(
+  doc: RandomLotsDocLike | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const entryPrice = doc?.pricePerEntry ?? doc?.price ?? null;
@@ -47,7 +47,7 @@ export function renderPrizeDrawOg(
       ? `${Math.max(0, max - current).toLocaleString("en-IN")} of ${max.toLocaleString("en-IN")} entries left`
       : null;
 
-  return renderPrizeDrawOgImage(
+  return renderRandomLotsOgImage(
     {
       title: doc?.title ?? doc?.name ?? "Prize Draw",
       pricePerEntryLabel,
@@ -61,14 +61,14 @@ export function renderPrizeDrawOg(
   );
 }
 
-const REVEAL_BADGE_TEXT: Record<NonNullable<PrizeDrawOgData["revealStatus"]>, string> = {
+const REVEAL_BADGE_TEXT: Record<NonNullable<RandomLotsOgData["revealStatus"]>, string> = {
   pending: "Reveal pending",
   open: "Reveal open",
   closed: "Reveal closed",
 };
 
-export function renderPrizeDrawOgImage(
-  data: PrizeDrawOgData,
+export function renderRandomLotsOgImage(
+  data: RandomLotsOgData,
   siteName: string,
 ): ReactElement {
   const badges = [

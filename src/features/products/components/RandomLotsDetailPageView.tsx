@@ -19,11 +19,11 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { PreOrderDetailView } from "./PreOrderDetailView";
-import { PrizeDrawBottomActions } from "./PrizeDrawBottomActions";
+import { RandomLotsBottomActions } from "./RandomLotsBottomActions";
 import { ProductTabsShell } from "./ProductTabsShell";
 import { ShareButton } from "./ShareButton";
-import { PrizeDrawCollage } from "./PrizeDrawCollage";
-import { PrizeDrawEntryActions } from "./PrizeDrawEntryActions";
+import { RandomLotsCollage } from "./RandomLotsCollage";
+import { RandomLotsEntryActions } from "./RandomLotsEntryActions";
 import type {
   PrizeDrawItem,
   ProductDocument,
@@ -36,14 +36,14 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 
-export interface PrizeDrawDetailPageViewProps {
+export interface RandomLotsDetailPageViewProps {
   id: string;
   /**
    * Pre-fetched product document from the page's server data layer.
    * When provided, the internal repository call is skipped — deduplicating
    * the fetch with generateMetadata() via React.cache().
    */
-  initialPrizeDraw?: ProductDocument | null;
+  initialRandomLot?: ProductDocument | null;
   /**
    * Authenticated buyer's uid. When set, the view server-fetches the
    * buyer's existing-entry count for this draw and renders the SB6-D
@@ -85,20 +85,20 @@ function stripIsWon(items: PrizeDrawItem[] | undefined): PrizeDrawItem[] {
  * Public prize-draw detail page (SB4-G).
  *
  * Server-fetches the prize-draw product, strips `isWon` from each item before
- * passing it to `PrizeDrawCollage` so public buyers stay unspoiled, and
- * delegates the buy-bar to the client `PrizeDrawEntryActions` which surfaces
+ * passing it to `RandomLotsCollage` so public buyers stay unspoiled, and
+ * delegates the buy-bar to the client `RandomLotsEntryActions` which surfaces
  * the `NonRefundableConsentModal` before any add-to-cart happens.
  *
  * Reuses the `PreOrderDetailView` (grid-2) shell for layout parity.
  */
-export async function PrizeDrawDetailPageView({
+export async function RandomLotsDetailPageView({
   id,
-  initialPrizeDraw,
+  initialRandomLot,
   currentUserId,
-}: PrizeDrawDetailPageViewProps) {
+}: RandomLotsDetailPageViewProps) {
   const product =
-    initialPrizeDraw !== undefined
-      ? initialPrizeDraw ?? undefined
+    initialRandomLot !== undefined
+      ? initialRandomLot ?? undefined
       // The prize draw IS this page's subject — a read failure must surface
       // rather than become the same `undefined` a removed listing produces,
       // which the "Not Found" branch below already handles.
@@ -233,7 +233,7 @@ export async function PrizeDrawDetailPageView({
 
         <PreOrderDetailView
           renderGallery={() => (
-            <PrizeDrawCollage items={items} hideWonState />
+            <RandomLotsCollage items={items} hideWonState />
           )}
           renderInfo={() => (
             <Stack gap="md">
@@ -375,7 +375,7 @@ export async function PrizeDrawDetailPageView({
             <Div padding="5" 
               id="prize-draw-buy-bar" border="subtle" surface="muted" rounded="xl"
             >
-              <PrizeDrawEntryActions
+              <RandomLotsEntryActions
                 productId={String(product.id)}
                 productSlug={slug}
                 title={title}
@@ -415,7 +415,7 @@ export async function PrizeDrawDetailPageView({
         />
 
         {/* Mobile actions registered via useBottomActions() */}
-        <PrizeDrawBottomActions
+        <RandomLotsBottomActions
           pricePerEntry={pricePerEntry}
           currency={currency}
           closed={revealStatus === "closed" || remaining === 0}

@@ -30,7 +30,7 @@ import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope"
 import type { ListingType } from "../../products/types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
-const PRIZE_DRAW_TYPES: readonly ListingType[] = ["random-lots"];
+const RANDOM_LOTS_TYPES: readonly ListingType[] = ["random-lots"];
 
 const STATUS_VARIANT: Record<
   string,
@@ -45,7 +45,7 @@ const STATUS_VARIANT: Record<
   cancelled: "danger",
 };
 
-interface PrizeDrawAdminRow extends AdminListingScaffoldRow {
+interface RandomLotsAdminRow extends AdminListingScaffoldRow {
   entryFee: string;
   drawDate: string;
   storeName: string;
@@ -56,7 +56,7 @@ interface AdminProductsResponse {
   total?: number;
 }
 
-const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
+const RANDOM_LOTS_COLUMNS: AdminTableColumn<RandomLotsAdminRow>[] = [
   {
     key: "primary",
     header: "Random Lot",
@@ -103,21 +103,21 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
   },
 ];
 
-export type AdminPrizeDrawsViewProps = ListingLayoutProps;
+export type AdminRandomLotsViewProps = ListingLayoutProps;
 
-export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewProps) {
+export function AdminRandomLotsView({ children, ...props }: AdminRandomLotsViewProps) {
   /*
    * 🛑 Before the early return, not after.
    *
    * This hook used to sit BELOW the `React.Children.count` branch, so the
    * component called a different number of hooks depending on whether it was
    * given children — a rules-of-hooks violation that React only reports once
-   * the branch actually flips at runtime. The page renders `<AdminPrizeDrawsView />`
+   * the branch actually flips at runtime. The page renders `<AdminRandomLotsView />`
    * with no children, so the violating path was the one always taken and the
    * bug stayed latent. `SellerPreOrdersView` had the identical shape and was
    * deleted in the same commit for being unreachable.
    */
-  const scope = useAvailabilityScope(PRIZE_DRAW_TYPES);
+  const scope = useAvailabilityScope(RANDOM_LOTS_TYPES);
 
   if (React.Children.count(children) > 0) {
     return (
@@ -128,7 +128,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
   }
 
 
-  const config: ListingViewConfig<AdminProductsResponse, PrizeDrawAdminRow> = {
+  const config: ListingViewConfig<AdminProductsResponse, RandomLotsAdminRow> = {
     portal: "admin",
     title: "Random Lots",
     search: {
@@ -153,7 +153,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       { value: "title", label: "Title A–Z" },
       { value: "prizeRevealWindowEnd", label: "Draw Date Soon" },
     ],
-    columns: PRIZE_DRAW_COLUMNS,
+    columns: RANDOM_LOTS_COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const priceRaw = typeof item.price === "number" ? item.price : 0;
@@ -195,7 +195,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
     },
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
-      ADMIN_BULK_ACTIONS.prizeDraws.map((id) => ({
+      ADMIN_BULK_ACTIONS.randomLots.map((id) => ({
         id,
         label: ROW_ACTION_META[id].label,
         destructive: ROW_ACTION_META[id].destructive,

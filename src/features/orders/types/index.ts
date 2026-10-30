@@ -428,7 +428,7 @@ export interface Order {
   /**
    * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the winner has
    * been automatically assigned to this order (on payment confirmation,
-   * draw expiry, or sellout — see assignPrizeDrawWinner); drives the
+   * draw expiry, or sellout — see assignRandomLotsWinner); drives the
    * PrizeRevealModal's "won" display on the order-detail page.
    */
   prizeWon?: { itemNumber: number; title: string; images: string[]; wonAt: string };

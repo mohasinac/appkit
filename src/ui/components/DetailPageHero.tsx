@@ -27,7 +27,7 @@ export interface DetailPageHeroProps {
 
 /**
  * `DetailPageHero` — the top hero region shared by every listing detail page
- * (Product, Auction, PreOrder, Bundle, PrizeDraw). Renders a 2-column layout:
+ * (Product, Auction, PreOrder, Bundle, RandomLots). Renders a 2-column layout:
  * media on the left (~40%), title + meta + description + actions on the right.
  *
  * Slots stay open so domain-specific badges, price components, and CTAs flow

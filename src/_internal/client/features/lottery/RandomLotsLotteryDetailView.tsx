@@ -11,7 +11,7 @@ import { MediaImage } from "../../../../features/media/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
-import { PrizeDrawCollage } from "../../../../features/products/components/PrizeDrawCollage";
+import { RandomLotsCollage } from "../../../../features/products/components/RandomLotsCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
@@ -25,7 +25,7 @@ interface ClientProduct {
   lotteryConfig?: ClientLotteryConfig;
 }
 
-interface PrizeDrawLotteryDetailViewProps {
+interface RandomLotsLotteryDetailViewProps {
   product: ClientProduct;
   user?: { uid: string; displayName?: string | null } | null;
   currentEntry?: { userLotteryNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
@@ -35,11 +35,11 @@ interface PrizeDrawLotteryDetailViewProps {
  * Prize-draw product detail view for lottery mode.
  * Same flow as LotteryDetailView but sourced from a product.
  */
-export function PrizeDrawLotteryDetailView({
+export function RandomLotsLotteryDetailView({
   product,
   user,
   currentEntry,
-}: PrizeDrawLotteryDetailViewProps) {
+}: RandomLotsLotteryDetailViewProps) {
   const [pulledEntry, setPulledEntry] = useState<{
     userLotteryNumber: number;
     assignedPrizeSlotNumber: number;
@@ -95,7 +95,7 @@ export function PrizeDrawLotteryDetailView({
           {prizeItems.length > 0 ? (
             <Stack gap="sm">
               <Heading level={2} size="xl" weight="semibold">Prizes</Heading>
-              <PrizeDrawCollage items={prizeItems} wonLabel="Claimed" />
+              <RandomLotsCollage items={prizeItems} wonLabel="Claimed" />
             </Stack>
           ) : null}
 

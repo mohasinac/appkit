@@ -6,7 +6,7 @@
  * The homepage renders ~26 independently-fetched sections. Before this existed,
  * a throw inside ANY one of them propagated to `[locale]/error.tsx` and replaced
  * the entire page with "Something went wrong" — which is exactly what one bad
- * import in `PrizeDrawsSection` did in production on 2026-08-26.
+ * import in `RandomLotsSection` did in production on 2026-08-26.
  *
  * A section is not load-bearing for the page. Losing one should cost that strip
  * and nothing else, so the fallback renders NOTHING: a visitor sees a homepage

@@ -1,10 +1,10 @@
 import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
-import { assignPrizeDrawWinner } from "./prizeDrawAssignWinner";
+import { assignRandomLotsWinner } from "./randomLotsAssignWinner";
 
 const PRODUCT_COLLECTION = "products";
 
-export interface PrizeDrawOrderSnapshot {
+export interface RandomLotsOrderSnapshot {
   paymentStatus?: string;
   prizeDrawProductId?: string;
   items?: Array<{ listingType?: string }>;
@@ -17,8 +17,8 @@ export interface PrizeDrawOrderSnapshot {
  * bank/UPI payments are confirmed later by the seller/admin; Razorpay
  * confirms near-instantly but still goes through this same status flip).
  */
-export async function handlePrizeDrawPaymentConfirmed(
-  input: { orderId: string; order: PrizeDrawOrderSnapshot },
+export async function handleRandomLotsPaymentConfirmed(
+  input: { orderId: string; order: RandomLotsOrderSnapshot },
   ctx: JobContext,
 ): Promise<void> {
   const { orderId, order } = input;
@@ -38,5 +38,5 @@ export async function handlePrizeDrawPaymentConfirmed(
   }
   if (!product || product.prizeRevealMode !== "instant") return;
 
-  await assignPrizeDrawWinner(ctx, { orderId, productId: order.prizeDrawProductId });
+  await assignRandomLotsWinner(ctx, { orderId, productId: order.prizeDrawProductId });
 }

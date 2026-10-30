@@ -20,10 +20,10 @@ import { MediaImage } from "../../media/MediaImage";
 import { CardStoreLine } from "./CardStoreLine";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
-export type MarketplacePrizeDrawCardData = ProductItem;
+export type MarketplaceRandomLotCardData = ProductItem;
 
-export interface MarketplacePrizeDrawCardLabels {
-  prizeDrawBadge?: string;
+export interface MarketplaceRandomLotCardLabels {
+  randomLotBadge?: string;
   pendingBadge?: string;
   openBadge?: string;
   closedBadge?: string;
@@ -32,17 +32,17 @@ export interface MarketplacePrizeDrawCardLabels {
   enterDraw?: string;
 }
 
-export interface MarketplacePrizeDrawCardProps {
-  product: MarketplacePrizeDrawCardData;
+export interface MarketplaceRandomLotCardProps {
+  product: MarketplaceRandomLotCardData;
   className?: string;
   variant?: "grid" | "list";
   selectable?: boolean;
   isSelected?: boolean;
   onSelect?: (id: string, selected: boolean) => void;
   href?: string;
-  hrefBuilder?: (product: MarketplacePrizeDrawCardData) => string;
+  hrefBuilder?: (product: MarketplaceRandomLotCardData) => string;
   onNavigate?: (href: string) => void;
-  labels?: MarketplacePrizeDrawCardLabels;
+  labels?: MarketplaceRandomLotCardLabels;
   /**
    * Owner-only pencil / clone / bin. Pass `<OwnerQuickActions>`; it renders
    * nothing for a visitor who does not own the record.
@@ -55,8 +55,8 @@ export interface MarketplacePrizeDrawCardProps {
   renderOwnerActions?: () => React.ReactNode;
 }
 
-const DEFAULT_LABELS: Required<MarketplacePrizeDrawCardLabels> = {
-  prizeDrawBadge: "Random Lots",
+const DEFAULT_LABELS: Required<MarketplaceRandomLotCardLabels> = {
+  randomLotBadge: "Random Lots",
   pendingBadge: "Reveal pending",
   openBadge: "Reveal open",
   closedBadge: "Draw closed",
@@ -79,7 +79,7 @@ function statusVariant(status?: "pending" | "open" | "closed") {
 
 function statusLabel(
   status: "pending" | "open" | "closed" | undefined,
-  labels: Required<MarketplacePrizeDrawCardLabels>,
+  labels: Required<MarketplaceRandomLotCardLabels>,
 ) {
   switch (status) {
     case "open":
@@ -93,9 +93,9 @@ function statusLabel(
 }
 
 function resolveHref(
-  product: MarketplacePrizeDrawCardData,
+  product: MarketplaceRandomLotCardData,
   href?: string,
-  hrefBuilder?: (product: MarketplacePrizeDrawCardData) => string,
+  hrefBuilder?: (product: MarketplaceRandomLotCardData) => string,
 ) {
   if (href) return href;
   if (hrefBuilder) return hrefBuilder(product);
@@ -115,7 +115,7 @@ function formatCountdown(target: string | Date | undefined): string | null {
   return `${hours}h ${minutes}m`;
 }
 
-export function MarketplacePrizeDrawCard({
+export function MarketplaceRandomLotCard({
   product,
   className = "",
   variant = "grid",
@@ -127,7 +127,7 @@ export function MarketplacePrizeDrawCard({
   onNavigate,
   labels,
   renderOwnerActions,
-}: MarketplacePrizeDrawCardProps) {
+}: MarketplaceRandomLotCardProps) {
   const router = useRouter();
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   const detailHref = resolveHref(product, href, hrefBuilder);
@@ -198,7 +198,7 @@ export function MarketplacePrizeDrawCard({
 
         <Stack className="absolute right-2 top-2" align="end" gap="xs">
           <Span size="xs" weight="medium" className={CLS_PRIZE_PILL}>
-            {mergedLabels.prizeDrawBadge}
+            {mergedLabels.randomLotBadge}
           </Span>
           <Span layout="inline-flex" 
             size="xs"

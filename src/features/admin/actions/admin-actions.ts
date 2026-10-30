@@ -26,8 +26,8 @@ import type { PayoutDocument, PayoutUpdateInput } from "../../payments/schemas/f
 import type { UserAdminUpdateInput, UserDocument } from "../../auth/schemas/firestore";
 import type { ProductAdminUpdateInput, ProductCreateInput, ProductDocument, ProductImage } from "../../products/schemas/firestore";
 import {
-  assertPrizeDrawNotLocked,
-  assertPrizeDrawWonItemsImmutable,
+  assertRandomLotsNotLocked,
+  assertRandomLotsWonItemsImmutable,
 } from "../../../_internal/server/features/products/service";
 import { resolveStoreFields } from "../../../_internal/server/features/stores/denormalize";
 import { recordAdminAction } from "../../../_internal/server/features/audit-log/actions";
@@ -327,9 +327,9 @@ export async function adminUpdateProduct(
     throw new NotFoundError("Product not found");
   }
   if (input.status && input.status !== "published" && existing.status === "published") {
-    assertPrizeDrawNotLocked(existing, "unpublished or archived");
+    assertRandomLotsNotLocked(existing, "unpublished or archived");
   }
-  assertPrizeDrawWonItemsImmutable(existing, input.prizeDrawItems);
+  assertRandomLotsWonItemsImmutable(existing, input.prizeDrawItems);
 
   const finalized = { ...input } as typeof input & {
     mainImage?: string;
@@ -417,7 +417,7 @@ export async function adminDeleteProduct(
   if (!existing) {
     throw new NotFoundError("Product not found");
   }
-  assertPrizeDrawNotLocked(existing, "deleted");
+  assertRandomLotsNotLocked(existing, "deleted");
 
   await productRepository.delete(id);
 

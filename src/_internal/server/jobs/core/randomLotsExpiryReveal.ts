@@ -1,12 +1,12 @@
 import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
 import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
-import { assignPrizeDrawWinner } from "./prizeDrawAssignWinner";
+import { assignRandomLotsWinner } from "./randomLotsAssignWinner";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 
 const PRODUCT_COLLECTION = "products";
 const ORDER_COLLECTION = "orders";
-const PRIZE_DRAW_LISTING_TYPE = "random-lots";
+const RANDOM_LOTS_LISTING_TYPE = "random-lots";
 
 /**
  * "Scheduled" reveal mode, expiry half. Fires once a draw's
@@ -15,18 +15,18 @@ const PRIZE_DRAW_LISTING_TYPE = "random-lots";
  * order simply stay unrevealed / with the seller — that's expected on a
  * partial sellout, not an error.
  *
- * The sellout half of "scheduled" mode lives in prizeDrawSoldOutReveal.ts —
+ * The sellout half of "scheduled" mode lives in randomLotsSoldOutReveal.ts —
  * whichever fires first (expiry here, or a full sellout there) closes the
  * draw; this sweep naturally no-ops afterward since the product is already
  * "closed".
  */
-export async function runPrizeDrawExpiryReveal(ctx: JobContext): Promise<void> {
+export async function runRandomLotsExpiryReveal(ctx: JobContext): Promise<void> {
   // `FEATURE_PRIZE_DRAWS` gate deleted 2026-10-19 — see `assignSpinPrize.ts`.
   ctx.logger.info("Prize-draw expiry reveal sweep starting");
 
   const snap = await ctx.db
     .collection(PRODUCT_COLLECTION)
-    .where(PRODUCT_FIELDS.LISTING_TYPE, "==", PRIZE_DRAW_LISTING_TYPE)
+    .where(PRODUCT_FIELDS.LISTING_TYPE, "==", RANDOM_LOTS_LISTING_TYPE)
     .where(PRODUCT_FIELDS.PRIZE_REVEAL_STATUS, "==", PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.OPEN)
     .where(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_END, "<=", ctx.now)
     .limit(100)
@@ -57,7 +57,7 @@ export async function runPrizeDrawExpiryReveal(ctx: JobContext): Promise<void> {
       const order = orderDoc.data() as Pick<OrderDocument, "prizeWon">;
       if (order.prizeWon) continue;
       try {
-        const result = await assignPrizeDrawWinner(ctx, {
+        const result = await assignRandomLotsWinner(ctx, {
           orderId: orderDoc.id,
           productId: doc.id,
         });

@@ -7,7 +7,7 @@ import type { ListingType } from "../../products/types/index";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
-import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
+import { RandomLotsIndexListing } from "../../products/components/RandomLotsIndexListing";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { CategoryStoresListing } from "./CategoryStoresListing";
 import {
@@ -198,7 +198,7 @@ export function CategoryDetailTabs({
         <PreOrdersIndexListing categorySlug={categorySlug} />
       )}
       {activeTab === pluginFor("random-lots").tabSlug && (
-        <PrizeDrawsIndexListing categorySlug={categorySlug} />
+        <RandomLotsIndexListing categorySlug={categorySlug} />
       )}
       {activeTab === "bundles" && (
         <CategoryBundlesListing initialBundles={initialBundles} />

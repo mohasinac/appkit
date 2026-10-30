@@ -185,7 +185,7 @@ export function assertPaymentMethodAllowed(
  * said it by naming a payment method, because that is what EMI was. Once EMI
  * became an order-level opt-in, that declaration needed a second reader, not
  * a second declaration: a rule stated twice is a rule that drifts (Root Cause
- * #61), and `prizeDrawRule`'s entry would otherwise have gone inert the day
+ * #61), and `randomLotsRule`'s entry would otherwise have gone inert the day
  * the tender disappeared.
  *
  * `blockedPaymentMessage` is reused verbatim for the same reason the gate

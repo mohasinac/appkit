@@ -282,7 +282,7 @@ async function fetchListingTypeUrls(
 const fetchPreOrderUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "pre-order", (slug) => ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug), "pre-order");
 
-const fetchPrizeDrawUrls = (baseUrl: string) =>
+const fetchRandomLotsUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "random-lots", (slug) => ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(slug), "random-lots");
 
 const fetchClassifiedUrls = (baseUrl: string) =>
@@ -727,7 +727,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     blogUrls,
     auctionUrls,
     preOrderUrls,
-    prizeDrawUrls,
+    randomLotsUrls,
     classifiedUrls,
     digitalCodeUrls,
     liveUrls,
@@ -746,7 +746,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchBlogPostUrls(baseUrl),
     fetchAuctionUrls(baseUrl),
     fetchPreOrderUrls(baseUrl),
-    fetchPrizeDrawUrls(baseUrl),
+    fetchRandomLotsUrls(baseUrl),
     fetchClassifiedUrls(baseUrl),
     fetchDigitalCodeUrls(baseUrl),
     fetchLiveUrls(baseUrl),
@@ -776,7 +776,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     product: productUrls.length,
     auction: auctionUrls.length,
     preOrder: preOrderUrls.length,
-    prizeDraw: prizeDrawUrls.length,
+    randomLots: randomLotsUrls.length,
     classified: classifiedUrls.length,
     digitalCode: digitalCodeUrls.length,
     live: liveUrls.length,
@@ -881,7 +881,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...productUrls,
     ...auctionUrls,
     ...preOrderUrls,
-    ...prizeDrawUrls,
+    ...randomLotsUrls,
     ...classifiedUrls,
     ...digitalCodeUrls,
     ...liveUrls,

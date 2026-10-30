@@ -27,8 +27,8 @@ import {
   onShipmentDeletedHandler,
   onCatalogueSubmittedForApprovalHandler,
   onJobCreatedHandler,
-  onPrizeDrawPaymentConfirmedHandler,
-  prizeDrawSoldOutRevealHandler,
+  onRandomLotsPaymentConfirmedHandler,
+  randomLotsSoldOutRevealHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -66,19 +66,28 @@ export const onProductStockChange = defineFunction({
   options: { region: REGION },
 });
 
-export const onPrizeDrawPaymentConfirmed = defineFunction({
+export const onRandomLotsPaymentConfirmed = defineFunction({
+  /*
+   * 🛑 `name` intentionally retains the old "PrizeDraw" spelling. `bindAllFromRegistry`
+   * keys `module.exports` off `def.name`, so this string IS the deployed Cloud Function
+   * name — renaming it would orphan the live function and create a second one beside it.
+   * The exported const, the handler symbol and the module path were renamed to
+   * random-lots; only this identifier is frozen.
+   */
   name: "onPrizeDrawPaymentConfirmed",
-  description: "Instant-mode prize-draw winner assignment the moment an order's payment is confirmed.",
+  description: "Instant-mode random-lots winner assignment the moment an order's payment is confirmed.",
   trigger: { kind: "documentUpdated", pathPattern: "orders/{orderId}" },
-  handler: onPrizeDrawPaymentConfirmedHandler,
+  handler: onRandomLotsPaymentConfirmedHandler,
   options: { region: REGION },
 });
 
-export const prizeDrawSoldOutReveal = defineFunction({
+export const randomLotsSoldOutReveal = defineFunction({
+  // 🛑 `name` intentionally retains the old "prizeDraw" spelling — it is the DEPLOYED
+  // Cloud Function name (see `onRandomLotsPaymentConfirmed` above for the full reason).
   name: "prizeDrawSoldOutReveal",
-  description: "Assign winners for all outstanding prize-draw orders the moment a scheduled-mode draw sells out.",
+  description: "Assign winners for all outstanding random-lots orders the moment a scheduled-mode draw sells out.",
   trigger: { kind: "documentWritten", pathPattern: "products/{productId}" },
-  handler: prizeDrawSoldOutRevealHandler,
+  handler: randomLotsSoldOutRevealHandler,
   options: { region: REGION },
 });
 
@@ -230,8 +239,8 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onOrderStatusChange,
   onProductWrite,
   onProductStockChange,
-  onPrizeDrawPaymentConfirmed,
-  prizeDrawSoldOutReveal,
+  onRandomLotsPaymentConfirmed,
+  randomLotsSoldOutReveal,
   onReviewWrite,
   onCategoryWrite,
   onSiteSettingsWrite,

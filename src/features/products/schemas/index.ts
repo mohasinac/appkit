@@ -4,8 +4,8 @@ import { mediaFieldSchema } from "../../media/types/index";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import type { ListingType } from "../types/index";
 import {
-  PRIZE_DRAW_DURATION_DAYS_MIN,
-  PRIZE_DRAW_DURATION_DAYS_MAX,
+  RANDOM_LOTS_DURATION_DAYS_MIN,
+  RANDOM_LOTS_DURATION_DAYS_MAX,
 } from "../../../_internal/shared/checkout/rules/_limits";
 
 // --- Sub-schemas --------------------------------------------------------------
@@ -145,8 +145,8 @@ export const productItemSchema = z.object({
   prizeDrawDurationDays: z
     .number()
     .int()
-    .min(PRIZE_DRAW_DURATION_DAYS_MIN)
-    .max(PRIZE_DRAW_DURATION_DAYS_MAX)
+    .min(RANDOM_LOTS_DURATION_DAYS_MIN)
+    .max(RANDOM_LOTS_DURATION_DAYS_MAX)
     .optional(),
   prizeRevealMode: z.enum(["instant", "scheduled"]).optional(),
   prizeGithubFileUrl: z.string().url().optional(),

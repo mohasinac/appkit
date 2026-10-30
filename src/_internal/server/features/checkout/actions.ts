@@ -2225,7 +2225,7 @@ export async function createCheckoutOrderAction(
    * 🛑 The second axis needs its own assertion, and omitting it would have
    * been a silent regression of a rule that already exists.
    *
-   * `prizeDrawRule.blockedPaymentMethods` lists `"emi"` because winner
+   * `randomLotsRule.blockedPaymentMethods` lists `"emi"` because winner
    * assignment waits on confirmed payment. Once EMI stopped being a tender,
    * that entry stopped matching anything — the gate above would see
    * `upi_manual` (explicitly ALLOWED for prize draws) and wave through an

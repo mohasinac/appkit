@@ -1154,7 +1154,7 @@ export {
 } from "./_internal/server/features/raffle/actions";
 /*
  * [SERVER-ONLY] The ONE reason → {status, code} map for the two event
- * prize-draw cores, shared by both API routes and both Firebase handlers.
+ * random-lots cores, shared by both API routes and both Firebase handlers.
  * Four hand-written copies disagreed before this (Root Cause #85).
  */
 export {
@@ -2070,13 +2070,13 @@ export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/ser
 
 // ── Classified listing — data + adapters + metadata + OG ─────────────────────
 export { getClassifiedForDetail } from "./_internal/server/features/classified/data";
-// OG-coverage-followup 2026-05-23 — prize-draws OG renderer.
+// OG-coverage-followup 2026-05-23 — random-lots OG renderer.
 export {
-  getPrizeDrawForDetail,
-  renderPrizeDrawOg,
-  renderPrizeDrawOgImage,
-  type PrizeDrawOgData,
-} from "./_internal/server/features/prize-draws/index";
+  getRandomLotForDetail,
+  renderRandomLotsOg,
+  renderRandomLotsOgImage,
+  type RandomLotsOgData,
+} from "./_internal/server/features/random-lots/index";
 // OG-coverage-followup 2026-05-23 — item-requests OG renderer.
 export {
   getItemRequestForDetail,

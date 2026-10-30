@@ -738,7 +738,7 @@ export const PRODUCT_ENDPOINTS = {
 
 // ---------------------------------------------------------------------------
 // Prize Draws — no client-callable endpoints. Reveal is fully automatic
-// (assignPrizeDrawWinner, triggered by payment confirmation / sellout /
+// (assignRandomLotsWinner, triggered by payment confirmation / sellout /
 // expiry) — there is no buyer-facing reveal action to call anymore.
 // ---------------------------------------------------------------------------
 

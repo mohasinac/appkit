@@ -49,7 +49,7 @@ import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
 // categoryType:"bundle" rows on the categories collection.
 import { FeaturedBundlesSection } from "../components/FeaturedBundlesSection";
 import { HomepageSectionBoundary } from "../components/HomepageSectionBoundary";
-import { PrizeDrawsSection } from "../../products/components/PrizeDrawsSection";
+import { RandomLotsSection } from "../../products/components/RandomLotsSection";
 import { EventRafflesSection } from "../../events/components/EventRafflesSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
 import { HowItWorksSection, type HowItWorksStep } from "../components/HowItWorksSection";
@@ -83,7 +83,7 @@ import type {
   CustomCardsSectionConfig,
   GoogleReviewsSectionConfig,
   FeaturedBundlesSectionConfig,
-  PrizeDrawsSectionConfig,
+  RandomLotsSectionConfig,
   EventRafflesSectionConfig,
   CollectionCardsSectionConfig,
   HowItWorksSectionConfig,
@@ -798,8 +798,8 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
   "random-lots": {
     surfaces: ["homepage", "category", "brand"],
     render: ({ config }) => {
-      const cfg = config as PrizeDrawsSectionConfig;
-      return <PrizeDrawsSection config={cfg ?? {}} />;
+      const cfg = config as RandomLotsSectionConfig;
+      return <RandomLotsSection config={cfg ?? {}} />;
     },
   },
 

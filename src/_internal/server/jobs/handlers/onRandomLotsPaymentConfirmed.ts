@@ -1,12 +1,12 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
 import {
-  handlePrizeDrawPaymentConfirmed,
-  type PrizeDrawOrderSnapshot,
-} from "../core/onPrizeDrawPaymentConfirmed";
+  handleRandomLotsPaymentConfirmed,
+  type RandomLotsOrderSnapshot,
+} from "../core/onRandomLotsPaymentConfirmed";
 
-export const onPrizeDrawPaymentConfirmedHandler: FirestoreTriggerHandler<
-  PrizeDrawOrderSnapshot,
-  PrizeDrawOrderSnapshot
+export const onRandomLotsPaymentConfirmedHandler: FirestoreTriggerHandler<
+  RandomLotsOrderSnapshot,
+  RandomLotsOrderSnapshot
 > = async (event, ctx) => {
   const before = event.before;
   const after = event.after;
@@ -14,7 +14,7 @@ export const onPrizeDrawPaymentConfirmedHandler: FirestoreTriggerHandler<
   // Only act on the paid transition — avoids re-firing on every other order write.
   if (before?.paymentStatus === "paid" || after.paymentStatus !== "paid") return;
 
-  await handlePrizeDrawPaymentConfirmed(
+  await handleRandomLotsPaymentConfirmed(
     { orderId: event.params.orderId, order: after },
     ctx,
   );

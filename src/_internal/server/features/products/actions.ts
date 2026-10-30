@@ -19,8 +19,8 @@ import { productInputSchema, productUpdateSchema, auctionInputSchema, preOrderIn
 import {
   assertProductOwnership,
   assertStatusTransition,
-  assertPrizeDrawNotLocked,
-  assertPrizeDrawWonItemsImmutable,
+  assertRandomLotsNotLocked,
+  assertRandomLotsWonItemsImmutable,
 } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
 import { NotFoundError } from "../../../../errors";
@@ -103,7 +103,7 @@ export async function updateProductAction(productId: string, input: unknown): Pr
       const product = await assertProductOwnership(productId, user.uid);
       const parsed = productUpdateSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
-      assertPrizeDrawWonItemsImmutable(product, (parsed.data as { prizeDrawItems?: PrizeDrawItem[] }).prizeDrawItems);
+      assertRandomLotsWonItemsImmutable(product, (parsed.data as { prizeDrawItems?: PrizeDrawItem[] }).prizeDrawItems);
       return productRepository.update(productId, parsed.data as any);
   });
 }
@@ -112,7 +112,7 @@ export async function deleteProductAction(productId: string): Promise<ActionResu
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
       const product = await assertProductOwnership(productId, user.uid);
-      assertPrizeDrawNotLocked(product, "deleted");
+      assertRandomLotsNotLocked(product, "deleted");
       return productRepository.delete(productId);
   });
 }
@@ -125,7 +125,7 @@ export async function setProductStatusAction(input: unknown): Promise<ActionResu
       const product = await assertProductOwnership(parsed.data.productId, user.uid);
       assertStatusTransition(product.status, parsed.data.status);
       if (parsed.data.status !== "published") {
-        assertPrizeDrawNotLocked(product, "unpublished or archived");
+        assertRandomLotsNotLocked(product, "unpublished or archived");
       }
 
       // SB-UNI-O — live listings must be admin-verified before a seller can publish them.

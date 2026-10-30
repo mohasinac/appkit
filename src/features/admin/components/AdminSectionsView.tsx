@@ -73,12 +73,12 @@ import {
   DEFAULT_CUSTOM_CARDS_BUILDER,
   DEFAULT_GOOGLE_REVIEWS_BUILDER,
   DEFAULT_FEATURED_BUNDLES_BUILDER,
-  DEFAULT_PRIZE_DRAWS_BUILDER,
+  DEFAULT_RANDOM_LOTS_BUILDER,
   DEFAULT_EVENT_RAFFLES_BUILDER,
   DEFAULT_COLLECTION_CARDS_BUILDER,
 } from "./sections/adminSectionsTypes";
-import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, PrizeDrawsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
-import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildPrizeDrawsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parsePrizeDrawsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
+import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, RandomLotsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
+import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildRandomLotsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parseRandomLotsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { getBrandName } from "../../../core/brand-resolver";
 
@@ -189,7 +189,7 @@ function SectionEditorPanel({
   const [customCardsBuilder, setCustomCardsBuilder] = React.useState<CustomCardsBuilderState>(DEFAULT_CUSTOM_CARDS_BUILDER);
   const [googleReviewsBuilder, setGoogleReviewsBuilder] = React.useState<GoogleReviewsBuilderState>(DEFAULT_GOOGLE_REVIEWS_BUILDER);
   const [featuredBundlesBuilder, setFeaturedBundlesBuilder] = React.useState<FeaturedBundlesBuilderState>(DEFAULT_FEATURED_BUNDLES_BUILDER);
-  const [prizeDrawsBuilder, setPrizeDrawsBuilder] = React.useState<PrizeDrawsBuilderState>(DEFAULT_PRIZE_DRAWS_BUILDER);
+  const [randomLotsBuilder, setRandomLotsBuilder] = React.useState<RandomLotsBuilderState>(DEFAULT_RANDOM_LOTS_BUILDER);
   const [eventRafflesBuilder, setEventRafflesBuilder] = React.useState<EventRafflesBuilderState>(DEFAULT_EVENT_RAFFLES_BUILDER);
   const [collectionCardsBuilder, setCollectionCardsBuilder] = React.useState<CollectionCardsBuilderState>(DEFAULT_COLLECTION_CARDS_BUILDER);
   const toast = useToast();
@@ -251,7 +251,7 @@ function SectionEditorPanel({
       case "custom-cards": return buildCustomCardsConfig(customCardsBuilder);
       case "google-reviews": return buildGoogleReviewsConfig(googleReviewsBuilder);
       case "featured-bundles": return buildFeaturedBundlesConfig(featuredBundlesBuilder);
-      case "random-lots": return buildPrizeDrawsConfig(prizeDrawsBuilder);
+      case "random-lots": return buildRandomLotsConfig(randomLotsBuilder);
       case "event-raffles": return buildEventRafflesConfig(eventRafflesBuilder);
       case "collection-cards": return buildCollectionCardsConfig(collectionCardsBuilder);
       default: return null;
@@ -280,7 +280,7 @@ function SectionEditorPanel({
     customCardsBuilder,
     googleReviewsBuilder,
     featuredBundlesBuilder,
-    prizeDrawsBuilder,
+    randomLotsBuilder,
     eventRafflesBuilder,
     collectionCardsBuilder,
   ]);
@@ -395,7 +395,7 @@ function SectionEditorPanel({
       case "custom-cards": setCustomCardsBuilder(parseCustomCardsBuilder(selectedConfig)); break;
       case "google-reviews": setGoogleReviewsBuilder(parseGoogleReviewsBuilder(selectedConfig)); break;
       case "featured-bundles": setFeaturedBundlesBuilder(parseFeaturedBundlesBuilder(selectedConfig)); break;
-      case "random-lots": setPrizeDrawsBuilder(parsePrizeDrawsBuilder(selectedConfig)); break;
+      case "random-lots": setRandomLotsBuilder(parseRandomLotsBuilder(selectedConfig)); break;
       case "event-raffles": setEventRafflesBuilder(parseEventRafflesBuilder(selectedConfig)); break;
       case "collection-cards": setCollectionCardsBuilder(parseCollectionCardsBuilder(selectedConfig)); break;
     }
@@ -450,7 +450,7 @@ function SectionEditorPanel({
       case "custom-cards": setCustomCardsBuilder(pick(DEFAULT_CUSTOM_CARDS_BUILDER)); break;
       case "google-reviews": setGoogleReviewsBuilder(pick(DEFAULT_GOOGLE_REVIEWS_BUILDER)); break;
       case "featured-bundles": setFeaturedBundlesBuilder(pick(DEFAULT_FEATURED_BUNDLES_BUILDER)); break;
-      case "random-lots": setPrizeDrawsBuilder(pick(DEFAULT_PRIZE_DRAWS_BUILDER)); break;
+      case "random-lots": setRandomLotsBuilder(pick(DEFAULT_RANDOM_LOTS_BUILDER)); break;
       case "event-raffles": setEventRafflesBuilder(pick(DEFAULT_EVENT_RAFFLES_BUILDER)); break;
       case "collection-cards": setCollectionCardsBuilder(pick(DEFAULT_COLLECTION_CARDS_BUILDER)); break;
     }
@@ -2035,7 +2035,7 @@ function SectionEditorPanel({
     );
   }
 
-  function renderPrizeDrawsBuilder(): React.ReactNode {
+  function renderRandomLotsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">
@@ -2043,14 +2043,14 @@ function SectionEditorPanel({
         </Text>
         <Input
           label="Section title"
-          value={prizeDrawsBuilder.title}
-          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          value={randomLotsBuilder.title}
+          onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, title: e.target.value }))}
           placeholder="Random Lots"
         />
         <Input
           label="Subtitle"
-          value={prizeDrawsBuilder.subtitle}
-          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
+          value={randomLotsBuilder.subtitle}
+          onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
           placeholder="Enter for a chance to win rare collectibles"
         />
         <Input
@@ -2058,9 +2058,9 @@ function SectionEditorPanel({
           type="number"
           min={1}
           max={12}
-          value={String(prizeDrawsBuilder.maxItems)}
+          value={String(randomLotsBuilder.maxItems)}
           onChange={(e) =>
-            setPrizeDrawsBuilder((prev) => ({
+            setRandomLotsBuilder((prev) => ({
               ...prev,
               maxItems: Math.max(1, Math.min(12, Number(e.target.value) || 6)),
             }))
@@ -2068,15 +2068,15 @@ function SectionEditorPanel({
         />
         <Input
           label="Filter by store (storeId)"
-          value={prizeDrawsBuilder.storeId}
-          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, storeId: e.target.value }))}
+          value={randomLotsBuilder.storeId}
+          onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, storeId: e.target.value }))}
           placeholder="Leave blank for all stores"
         />
         <Select
           label="Reveal status"
-          value={prizeDrawsBuilder.revealStatus}
+          value={randomLotsBuilder.revealStatus}
           onValueChange={(value) =>
-            setPrizeDrawsBuilder((prev) => ({ ...prev, revealStatus: value as PrizeDrawsBuilderState["revealStatus"] }))
+            setRandomLotsBuilder((prev) => ({ ...prev, revealStatus: value as RandomLotsBuilderState["revealStatus"] }))
           }
           options={[
             { label: "All (pending + open)", value: "all" },
@@ -2085,14 +2085,14 @@ function SectionEditorPanel({
           ]}
         />
         <Checkbox
-          checked={prizeDrawsBuilder.showCountdown}
+          checked={randomLotsBuilder.showCountdown}
           label="Show countdown to reveal window"
-          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, showCountdown: e.target.checked }))}
+          onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, showCountdown: e.target.checked }))}
         />
         <Checkbox
-          checked={prizeDrawsBuilder.showEntriesRemaining}
+          checked={randomLotsBuilder.showEntriesRemaining}
           label="Show entries-remaining bar"
-          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, showEntriesRemaining: e.target.checked }))}
+          onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, showEntriesRemaining: e.target.checked }))}
         />
         <Text size="xs" color="muted">
           Random-lots listing type is added with the random-lots feature; until then this section renders an empty state.
@@ -2437,7 +2437,7 @@ function SectionEditorPanel({
       case "custom-cards": return renderCustomCardsBuilder();
       case "google-reviews": return renderGoogleReviewsBuilder();
       case "featured-bundles": return renderFeaturedBundlesBuilder();
-      case "random-lots": return renderPrizeDrawsBuilder();
+      case "random-lots": return renderRandomLotsBuilder();
       case "event-raffles": return renderEventRafflesBuilder();
       case "collection-cards": return renderCollectionCardsBuilder();
       default: return null;

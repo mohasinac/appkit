@@ -183,7 +183,7 @@ export const ICONS = {
    * lucide — so a type earns a new entry only when nothing already means it.
    */
   preOrder: CalendarClock,
-  prizeDraw: Gift,
+  randomLots: Gift,
   digitalCode: KeyRound,
   art: Palette,
   stickers: Sticker,

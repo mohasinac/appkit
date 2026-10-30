@@ -12,7 +12,7 @@ import { useOptionalSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
-import { PrizeDrawCollage } from "../../../../features/products/components/PrizeDrawCollage";
+import { RandomLotsCollage } from "../../../../features/products/components/RandomLotsCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 
@@ -129,7 +129,7 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
               <Heading level={2} size="xl" weight="semibold">
                 Prizes
               </Heading>
-              <PrizeDrawCollage items={prizeItems} wonLabel="Claimed" />
+              <RandomLotsCollage items={prizeItems} wonLabel="Claimed" />
             </Stack>
           ) : null}
 

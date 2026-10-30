@@ -4,7 +4,7 @@
  * PrizeRevealModal (SB4-I, redesigned for fully-automatic reveal)
  *
  * Displays a prize-draw order's reveal state. Reveal is no longer a buyer
- * action — the winner is assigned automatically by assignPrizeDrawWinner(),
+ * action — the winner is assigned automatically by assignRandomLotsWinner(),
  * either the moment payment is confirmed ("instant" mode) or by a scheduled
  * Firebase Function at draw expiry/sellout ("scheduled" mode). This modal is
  * a pure display: "pending" (no result yet) or "won" (order.prizeWon is set).
@@ -17,7 +17,7 @@ import { Modal } from "../../../ui/components/Modal";
 import { PricesOnly } from "../../../ui/components/GatedPrice";
 import { Stack } from "../../../ui/components/Layout";
 import { MediaImage } from "../../media/MediaImage";
-import { PrizeDrawCollage } from "./PrizeDrawCollage";
+import { RandomLotsCollage } from "./RandomLotsCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
 import { getBrandName } from "../../../core/brand-resolver";
 
@@ -64,7 +64,7 @@ export function PrizeRevealModal({
   return (
     <Modal isOpen={open} onClose={onClose} title="Prize Reveal" size="lg">
       <Stack gap="md">
-        <PrizeDrawCollage items={items} hideWonState />
+        <RandomLotsCollage items={items} hideWonState />
 
         {!winner ? (
           // audit-content-alignment-ok: informational reveal-status panel, not marketing content

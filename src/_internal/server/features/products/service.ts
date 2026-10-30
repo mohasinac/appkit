@@ -47,7 +47,7 @@ export function assertStatusTransition(from: string, to: string): void {
  * seller from dodging shipment of an expensive won prize by pulling the
  * listing after the fact.
  */
-export function assertPrizeDrawNotLocked(
+export function assertRandomLotsNotLocked(
   product: Pick<ProductDocument, "listingType" | "prizeCurrentEntries">,
   action: string,
 ): void {
@@ -61,11 +61,11 @@ export function assertPrizeDrawNotLocked(
 /**
  * Anti-scam guard — once a prize item has been won, its title/images/
  * description/condition/estimatedValue become immutable server-side (the
- * client editor already locks this visually via PrizeDrawItemsEditor's
+ * client editor already locks this visually via RandomLotsItemsEditor's
  * `locked` state, but that's UI-only — this is the enforcement). Prevents a
  * seller from swapping in a cheaper item after a buyer has already won.
  */
-export function assertPrizeDrawWonItemsImmutable(
+export function assertRandomLotsWonItemsImmutable(
   currentProduct: Pick<ProductDocument, "prizeDrawItems">,
   input: unknown,
 ): void {

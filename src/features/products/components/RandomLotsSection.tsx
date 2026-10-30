@@ -7,14 +7,14 @@ import { Container, Grid, Stack } from "../../../ui/components/Layout";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { ROUTES } from "../../../next/routing/route-map";
-import type { PrizeDrawsSectionConfig } from "../../homepage/schemas/firestore";
+import type { RandomLotsSectionConfig } from "../../homepage/schemas/firestore";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
 import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-names";
 import type { ProductDocument } from "../schemas";
 import { InteractiveProductCard } from "./InteractiveProductCard";
 
-export interface PrizeDrawsSectionProps {
-  config: PrizeDrawsSectionConfig;
+export interface RandomLotsSectionProps {
+  config: RandomLotsSectionConfig;
 }
 
 /**
@@ -27,9 +27,9 @@ export interface PrizeDrawsSectionProps {
  * which is why a closed, already-revealed draw sat on the homepage advertising
  * entries nobody could buy.
  */
-export async function PrizeDrawsSection({
+export async function RandomLotsSection({
   config,
-}: PrizeDrawsSectionProps) {
+}: RandomLotsSectionProps) {
   const title = config.title ?? "Random Lots";
   const subtitle =
     config.subtitle ?? "Enter for a chance to win rare collectibles";

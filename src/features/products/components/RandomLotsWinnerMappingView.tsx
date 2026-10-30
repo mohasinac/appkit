@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * PrizeDrawWinnerMappingView
+ * RandomLotsWinnerMappingView
  *
  * Read-only item→order mapping for a classic reveal-mode prize draw. Shown
  * only to admin and the owning seller (never publicly) so they know which
@@ -21,7 +21,7 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { MediaImage } from "../../media/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 
-export interface PrizeDrawWinnerMappingRow {
+export interface RandomLotsWinnerMappingRow {
   itemNumber: number;
   title: string;
   image?: string;
@@ -29,18 +29,18 @@ export interface PrizeDrawWinnerMappingRow {
   wonByOrderId?: string;
 }
 
-export interface PrizeDrawWinnerMappingViewProps {
+export interface RandomLotsWinnerMappingViewProps {
   title?: string;
-  items: PrizeDrawWinnerMappingRow[];
+  items: RandomLotsWinnerMappingRow[];
   isAdmin: boolean;
 }
 
-export function PrizeDrawWinnerMappingView({
+export function RandomLotsWinnerMappingView({
   title = "Prize Draw — Winner Mapping",
   items,
   isAdmin,
-}: PrizeDrawWinnerMappingViewProps) {
-  const columns: DataTableColumn<PrizeDrawWinnerMappingRow>[] = [
+}: RandomLotsWinnerMappingViewProps) {
+  const columns: DataTableColumn<RandomLotsWinnerMappingRow>[] = [
     {
       key: "itemNumber",
       header: "Item",
@@ -106,4 +106,4 @@ export function PrizeDrawWinnerMappingView({
   );
 }
 
-export default PrizeDrawWinnerMappingView;
+export default RandomLotsWinnerMappingView;

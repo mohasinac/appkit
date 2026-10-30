@@ -77,7 +77,7 @@ export const PADDING_MAP = {
   inline: "px-[var(--appkit-space-4)] py-[var(--appkit-space-3)]",
   inlineSm: "px-[var(--appkit-space-3)] py-[var(--appkit-space-2)]",
   inlineLg: "px-[var(--appkit-space-6)] py-[var(--appkit-space-4)]",
-  /** Tiny pill chip — `px-1.5 py-0.5`. Used by Bundle/PrizeDraw badge labels. */
+  /** Tiny pill chip — `px-1.5 py-0.5`. Used by Bundle/RandomLots badge labels. */
   "chip-2xs": "px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)]",
   // Vertical-only presets — the variant-catalogue codemod migrates raw
   // `py-N` / `py-N md:py-M` className tokens into these names.

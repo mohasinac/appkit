@@ -15,21 +15,21 @@ import { Select } from "../../../ui/components/Select";
 import { StickyToolbar } from "../../../ui/components/StickyToolbar";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
-import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
+import { MarketplaceRandomLotCard } from "./MarketplaceRandomLotCard";
 import { ProductFilters } from "./ProductFilters";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
-import { PRIZE_DRAW_SORT_OPTIONS } from "../constants/sieve";
+import { RANDOM_LOTS_SORT_OPTIONS } from "../constants/sieve";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { AvailabilityTabs } from "./AvailabilityTabs";
 import type { ListingType } from "../types";
 
-const PRIZE_DRAW_LISTING_TYPES: readonly ListingType[] = ["random-lots"];
+const RANDOM_LOTS_LISTING_TYPES: readonly ListingType[] = ["random-lots"];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
 
-const DEFAULT_SORT = PRIZE_DRAW_SORT_OPTIONS[0].value;
+const DEFAULT_SORT = RANDOM_LOTS_SORT_OPTIONS[0].value;
 
 const FILTER_KEYS = [
   TABLE_KEYS.CATEGORY,
@@ -40,7 +40,7 @@ const FILTER_KEYS = [
   TABLE_KEYS.PRIZE_REVEAL_STATUS,
 ];
 
-export interface PrizeDrawsIndexListingProps {
+export interface RandomLotsIndexListingProps {
   initialData?: any;
   categorySlug?: string;
   brandName?: string;
@@ -48,12 +48,12 @@ export interface PrizeDrawsIndexListingProps {
   storeId?: string;
 }
 
-export function PrizeDrawsIndexListing({
+export function RandomLotsIndexListing({
   initialData,
   categorySlug,
   brandName,
   storeId: forcedStoreId,
-}: PrizeDrawsIndexListingProps) {
+}: RandomLotsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { canSeePrices } = useCanSeePrices();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
@@ -144,7 +144,7 @@ export function PrizeDrawsIndexListing({
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={withoutPriceSorts(PRIZE_DRAW_SORT_OPTIONS, canSeePrices)}
+        sortOptions={withoutPriceSorts(RANDOM_LOTS_SORT_OPTIONS, canSeePrices)}
         onSortChange={(v) => {
           table.set(TABLE_KEYS.SORT, v);
         }}
@@ -160,7 +160,7 @@ export function PrizeDrawsIndexListing({
 
       {/* ── Availability scope — Available / Ended / All ────────────────── */}
       <Div padding="y-sm">
-        <AvailabilityTabs types={PRIZE_DRAW_LISTING_TYPES} />
+        <AvailabilityTabs types={RANDOM_LOTS_LISTING_TYPES} />
       </Div>
 
       {totalPages > 1 && (
@@ -199,7 +199,7 @@ export function PrizeDrawsIndexListing({
         ) : (
           <Grid cols="cards" gap="md">
             {filteredDraws.map((product: any) => (
-              <MarketplacePrizeDrawCard
+              <MarketplaceRandomLotCard
                 key={product.id}
                 product={product}
                 variant={view}

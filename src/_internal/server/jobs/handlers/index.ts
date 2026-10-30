@@ -65,14 +65,14 @@ export {
 } from "./listingProcessor";
 
 // SB1-L (S7-PrizeDraws) — bundle sync, event raffles, and spin-the-wheel.
-// Prize-draw reveal itself was redesigned to a fully-automatic model — see
-// prizeDrawAssignWinner.ts (shared core), onPrizeDrawPaymentConfirmed
-// (instant mode), prizeDrawSoldOutReveal (scheduled mode, sellout half), and
-// prizeDrawExpiryReveal (scheduled mode, expiry half) below.
+// Random-lots reveal itself was redesigned to a fully-automatic model — see
+// randomLotsAssignWinner.ts (shared core), onRandomLotsPaymentConfirmed
+// (instant mode), randomLotsSoldOutReveal (scheduled mode, sellout half), and
+// randomLotsExpiryReveal (scheduled mode, expiry half) below.
 export { bundleStockSyncHandler } from "./bundleStockSync";
-export { onPrizeDrawPaymentConfirmedHandler } from "./onPrizeDrawPaymentConfirmed";
-export { prizeDrawSoldOutRevealHandler } from "./prizeDrawSoldOutReveal";
-export { prizeDrawExpiryRevealHandler } from "./prizeDrawExpiryReveal";
+export { onRandomLotsPaymentConfirmedHandler } from "./onRandomLotsPaymentConfirmed";
+export { randomLotsSoldOutRevealHandler } from "./randomLotsSoldOutReveal";
+export { randomLotsExpiryRevealHandler } from "./randomLotsExpiryReveal";
 // SB-UNI-V — Firestore onWrite trigger for product stock changes (recomputes
 // bundleStockStatus on categoryType:"bundle" rows + activeMemberCount on
 // groupedListings).

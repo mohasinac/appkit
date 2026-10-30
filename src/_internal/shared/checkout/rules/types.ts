@@ -75,7 +75,7 @@ export interface ListingCheckoutRule {
   canMergeWithSameProduct: boolean;
   /**
    * Maximum reveal-entries per order. Prize-draw sets this to
-   * PRIZE_DRAW_MAX_REVEALS_PER_ORDER (3) — an entry qty of 7 becomes [3,3,1].
+   * RANDOM_LOTS_MAX_REVEALS_PER_ORDER (3) — an entry qty of 7 becomes [3,3,1].
    * Infinity for all other types.
    */
   maxLinesPerOrder: number;
@@ -110,7 +110,7 @@ export interface ListingCheckoutRule {
   /**
    * Slice a single cart item into N virtual items when qty > maxLinesPerOrder.
    * Returns [item] for most types.  Prize-draw overrides to chunk the quantity
-   * into batches of PRIZE_DRAW_MAX_REVEALS_PER_ORDER.
+   * into batches of RANDOM_LOTS_MAX_REVEALS_PER_ORDER.
    */
   splitMultipleOrders(item: CartItemDocument): CartItemDocument[];
 

@@ -832,7 +832,7 @@ export interface FeaturedBundlesSectionConfig {
   viewMoreLabel?: string;
 }
 
-export interface PrizeDrawsSectionConfig {
+export interface RandomLotsSectionConfig {
   title?: string;
   subtitle?: string;
   maxItems?: number;
@@ -996,7 +996,7 @@ export type SectionConfig =
   | CustomCardsSectionConfig
   | GoogleReviewsSectionConfig
   | FeaturedBundlesSectionConfig
-  | PrizeDrawsSectionConfig
+  | RandomLotsSectionConfig
   | EventRafflesSectionConfig
   | CollectionCardsSectionConfig
   /*

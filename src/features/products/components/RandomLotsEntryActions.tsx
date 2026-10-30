@@ -19,7 +19,7 @@ import { ACTION_ID } from "../constants/action-defs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { toUserMessage } from "../../../errors/error-display-map";
 
-export interface PrizeDrawEntryActionsProps {
+export interface RandomLotsEntryActionsProps {
   productId: string;
   productSlug?: string;
   title: string;
@@ -45,13 +45,13 @@ export interface PrizeDrawEntryActionsProps {
  * checkout of whatever was already in their basket, with no entry in it.
  * Buying an entry was impossible.
  *
- * 🛑 MULTI-ENTRY NEEDED NO SERVER WORK. `prizeDrawRule.splitMultipleOrders`
- * already chunks a quantity into batches of PRIZE_DRAW_MAX_REVEALS_PER_ORDER
+ * 🛑 MULTI-ENTRY NEEDED NO SERVER WORK. `randomLotsRule.splitMultipleOrders`
+ * already chunks a quantity into batches of RANDOM_LOTS_MAX_REVEALS_PER_ORDER
  * (7 entries → [3,3,1]), `enforceMaxPerUserForCart` already caps per buyer, and
  * the rule's preflight already checks `prizeMaxEntries`. The whole server half
  * was written and unreachable because the client never sent a quantity.
  */
-export function PrizeDrawEntryActions({
+export function RandomLotsEntryActions({
   productId,
   title,
   pricePerEntry,
@@ -59,7 +59,7 @@ export function PrizeDrawEntryActions({
   remainingEntries,
   revealStatus,
   prizeGithubFileUrl,
-}: PrizeDrawEntryActionsProps) {
+}: RandomLotsEntryActionsProps) {
   const router = useRouter();
   const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
     useAuthGate();

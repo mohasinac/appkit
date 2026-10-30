@@ -23,43 +23,43 @@ export type {
   NonRefundableConsentModalProps,
   NonRefundableListingType,
 } from "./NonRefundableConsentModal";
-export { PrizeDrawItemsEditor } from "./PrizeDrawItemsEditor";
-export type { PrizeDrawItemsEditorProps } from "./PrizeDrawItemsEditor";
-export { PrizeDrawCollage } from "./PrizeDrawCollage";
-export type { PrizeDrawCollageProps } from "./PrizeDrawCollage";
+export { RandomLotsItemsEditor } from "./RandomLotsItemsEditor";
+export type { RandomLotsItemsEditorProps } from "./RandomLotsItemsEditor";
+export { RandomLotsCollage } from "./RandomLotsCollage";
+export type { RandomLotsCollageProps } from "./RandomLotsCollage";
 export { PrizeRevealModal } from "./PrizeRevealModal";
 export type {
   PrizeRevealModalProps,
   PrizeRevealResult,
 } from "./PrizeRevealModal";
-export { PrizeDrawWinnerMappingView } from "./PrizeDrawWinnerMappingView";
+export { RandomLotsWinnerMappingView } from "./RandomLotsWinnerMappingView";
 export type {
-  PrizeDrawWinnerMappingViewProps,
-  PrizeDrawWinnerMappingRow,
-} from "./PrizeDrawWinnerMappingView";
-export { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
+  RandomLotsWinnerMappingViewProps,
+  RandomLotsWinnerMappingRow,
+} from "./RandomLotsWinnerMappingView";
+export { MarketplaceRandomLotCard } from "./MarketplaceRandomLotCard";
 export type {
-  MarketplacePrizeDrawCardProps,
-  MarketplacePrizeDrawCardData,
-  MarketplacePrizeDrawCardLabels,
-} from "./MarketplacePrizeDrawCard";
+  MarketplaceRandomLotCardProps,
+  MarketplaceRandomLotCardData,
+  MarketplaceRandomLotCardLabels,
+} from "./MarketplaceRandomLotCard";
 export { MarketplaceBundleCard } from "./MarketplaceBundleCard";
 export type {
   MarketplaceBundleCardProps,
   MarketplaceBundleCardData,
   MarketplaceBundleCardLabels,
 } from "./MarketplaceBundleCard";
-export { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
-export type { PrizeDrawsIndexListingProps } from "./PrizeDrawsIndexListing";
+export { RandomLotsIndexListing } from "./RandomLotsIndexListing";
+export type { RandomLotsIndexListingProps } from "./RandomLotsIndexListing";
 export { AvailabilityTabs } from "./AvailabilityTabs";
 export type { AvailabilityTabsProps } from "./AvailabilityTabs";
-// PrizeDrawsListingView + PrizeDrawDetailPageView are server components that
+// RandomLotsListingView + RandomLotsDetailPageView are server components that
 // import productRepository (→ firebase-admin). Re-exporting them from this
 // client-mixed barrel pulls firebase-admin into client bundles via webpack/
 // Turbopack tree-shaking gaps (see CLAUDE.md "appkit Export Rules"). Consume
 // them directly from their file paths via the appkit main index instead.
-export { PrizeDrawEntryActions } from "./PrizeDrawEntryActions";
-export type { PrizeDrawEntryActionsProps } from "./PrizeDrawEntryActions";
+export { RandomLotsEntryActions } from "./RandomLotsEntryActions";
+export type { RandomLotsEntryActionsProps } from "./RandomLotsEntryActions";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
@@ -111,8 +111,8 @@ export { SublistingCarouselSection } from "./SublistingCarouselSection";
 export { ShowGroupSection } from "./ShowGroupSection";
 export { GroupSettingsPanel } from "./GroupSettingsPanel";
 export type { GroupSettingsPanelProps } from "./GroupSettingsPanel";
-export { PrizeDrawsSection } from "./PrizeDrawsSection";
-export type { PrizeDrawsSectionProps } from "./PrizeDrawsSection";
+export { RandomLotsSection } from "./RandomLotsSection";
+export type { RandomLotsSectionProps } from "./RandomLotsSection";
 export { CompareOverlay } from "./CompareOverlay";
 export type {
   CompareOverlayProps,

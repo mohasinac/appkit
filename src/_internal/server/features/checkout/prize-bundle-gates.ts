@@ -2,7 +2,7 @@
  * maxPerUser gate for the checkout pipeline (SB6-C).
  *
  * `enforcePrizePoolCap` was removed in S-SBUNI-RULES (2026-05-13) — the
- * equivalent check now lives in `prizeDrawRule.preflightChecks` in the rule
+ * equivalent check now lives in `randomLotsRule.preflightChecks` in the rule
  * registry and is invoked via `runSyncPreflight`. `computePrizeRevealDeadline`
  * (SB8-A) was removed with the buyer-claim-deadline mechanic — reveal is now
  * fully automatic, there's nothing left for a buyer to "claim" before a

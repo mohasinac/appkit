@@ -3,7 +3,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
-import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
+import { RandomLotsIndexListing } from "../../products/components/RandomLotsIndexListing";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -11,12 +11,12 @@ const LISTING_TYPES = ["random-lots"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
-export interface StorePrizeDrawsPageViewProps {
+export interface StoreRandomLotsPageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
 }
 
-export async function StorePrizeDrawsPageView({ storeSlug, searchParams }: StorePrizeDrawsPageViewProps) {
+export async function StoreRandomLotsPageView({ storeSlug, searchParams }: StoreRandomLotsPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, unknown> | null)?.id;
   if (typeof storeId !== "string" || !storeId) return null;
@@ -30,5 +30,5 @@ export async function StorePrizeDrawsPageView({ storeSlug, searchParams }: Store
     sorts: DEFAULT_SORT,
   });
 
-  return <PrizeDrawsIndexListing storeId={storeId} initialData={result ?? undefined} />;
+  return <RandomLotsIndexListing storeId={storeId} initialData={result ?? undefined} />;
 }
