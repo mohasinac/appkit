@@ -175,7 +175,7 @@ interface CouponCardProps {
    */
   hideClaim?: boolean;
   /** Source enum forwarded to /api/user/coupons/claim for analytics. */
-  claimSource?: "manual" | "promo" | "spin" | "raffle" | "random-lots";
+  claimSource?: "manual" | "promo" | "spin" | "giveaway" | "random-lots";
 }
 
 export function CouponCard({

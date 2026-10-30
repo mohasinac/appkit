@@ -36,6 +36,7 @@ import {
   COMMON_FIELDS,
 } from "../../../../constants/field-names";
 import { resolveDate } from "../../../../utils";
+import { normalizeEventType } from "../../../../features/events/types/index";
 import { resolveEventRef } from "./_event-ref";
 import { EVENT_DRAW_REASON } from "./event-draw-reasons";
 
@@ -61,7 +62,7 @@ export interface AssignSpinPrizeResult {
 interface SpinPrize {
   id: string;
   /**
-   * Absent means ACTIVE — matching `SpinWheelView`'s own
+   * Absent means ACTIVE — matching `BonusSpinView`'s own
    * `prizes.filter(p => p.isActive !== false)`. The two gates used to
    * disagree: the client hid an inactive prize while this core summed every
    * prize's weight regardless, so a wheel whose prizes were all inactive
@@ -73,7 +74,7 @@ interface SpinPrize {
    * editor and its Zod schema both call it `label`, not `title` — an
    * earlier version of this file used `title` here, which never matched
    * any real document and left `AssignSpinPrizeResult.spinPrizeTitle`
-   * permanently undefined; the client never noticed because SpinWheelView
+   * permanently undefined; the client never noticed because BonusSpinView
    * resolves the won prize's label from its own already-loaded prizes
    * array instead of this field). */
   label: string;
@@ -147,7 +148,12 @@ export async function runAssignSpinPrize(
    * answered 200 and awarded a prize. A redirect is navigation, not a
    * precondition.
    */
-  if (event.type && event.type !== EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL) {
+  // 🛑 `normalizeEventType`, not a bare `!==`: pre-2026-10-31 documents still
+  // hold `spin_wheel`, and refusing them would break every seeded spin event.
+  if (
+    event.type &&
+    normalizeEventType(event.type) !== EVENT_FIELDS.TYPE_VALUES.BONUS_SPIN
+  ) {
     return { eventId, userId, reason: EVENT_DRAW_REASON.NOT_A_SPIN_WHEEL };
   }
   const endsAt = resolveDate(event.endsAt);

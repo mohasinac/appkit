@@ -11,7 +11,9 @@
  *   · `api/events/[id]/spin/route.ts`       — had `feature_disabled`, no `not_active`
  *   · `jobs/handlers/assignSpinPrize.ts`    — `identity_required` → 400 (route said 401),
  *                                             no `feature_disabled` branch at all
- *   · `api/admin/events/[id]/trigger-raffle/route.ts` — EVERYTHING → 409
+ *   · `api/admin/events/[id]/trigger-giveaway/route.ts` — EVERYTHING → 409
+ *     (that segment was `trigger-raffle` when this was written; renamed
+ *      2026-10-31 with the `giveaway` EventType)
  *   · `jobs/handlers/triggerEventRaffle.ts` — only 404 / 422
  *
  * Root Cause #85 ("a handler reachable by two entry points with different

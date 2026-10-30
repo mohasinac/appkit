@@ -40,6 +40,7 @@ import type { JobContext } from "../runtime/types";
 import { normalizeError } from "../../../../errors/normalize";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { EVENT_ENTRY_FIELDS, EVENT_FIELDS } from "../../../../constants/field-names";
+import { normalizeEventType } from "../../../../features/events/types/index";
 import { EVENT_ENTRY_PII_FIELDS, maskPii } from "../../../../security";
 import { resolveEventRef } from "./_event-ref";
 import { EVENT_DRAW_REASON } from "./event-draw-reasons";
@@ -116,11 +117,17 @@ export async function runTriggerEventRaffle(
   /*
    * Nothing checked that this event HAS a raffle, so the runner would happily
    * draw a winner on a poll or a sale and write `raffleWinnerUserId` onto it.
-   * `hasRaffle` is the bolt-on flag; `type === "raffle"` is the dedicated
-   * event type. Either qualifies — a raffle-typed event with the flag unset is
-   * a seeding omission, not a reason to refuse a legitimate draw.
+   * `hasRaffle` is the bolt-on flag; `type === "giveaway"` is the dedicated
+   * event type. Either qualifies — a giveaway-typed event with the flag unset
+   * is a seeding omission, not a reason to refuse a legitimate draw.
+   *
+   * 🛑 `normalizeEventType`, not a bare `!==`: pre-2026-10-31 documents still
+   * hold `raffle`. `hasRaffle` stays — it is a persisted field, not a type.
    */
-  if (event.hasRaffle !== true && event.type !== EVENT_FIELDS.TYPE_VALUES.RAFFLE) {
+  if (
+    event.hasRaffle !== true &&
+    normalizeEventType(event.type) !== EVENT_FIELDS.TYPE_VALUES.GIVEAWAY
+  ) {
     return { eventId, raffleEntryCount: 0, reason: EVENT_DRAW_REASON.NOT_A_RAFFLE };
   }
 

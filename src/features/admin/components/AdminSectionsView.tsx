@@ -2133,15 +2133,15 @@ function SectionEditorPanel({
           }
         />
         <Select
-          label="Raffle type"
+          label="Event type"
           value={eventRafflesBuilder.raffleType}
           onValueChange={(value) =>
             setEventRafflesBuilder((prev) => ({ ...prev, raffleType: value as EventRafflesBuilderState["raffleType"] }))
           }
           options={[
-            { label: "All raffles", value: "all" },
-            { label: "Raffle only", value: "raffle" },
-            { label: "Spin wheel only", value: "spin_wheel" },
+            { label: "All", value: "all" },
+            { label: "Giveaway only", value: "giveaway" },
+            { label: "Bonus Spin only", value: "bonus-spin" },
           ]}
         />
         <Checkbox

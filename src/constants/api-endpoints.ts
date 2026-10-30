@@ -279,7 +279,11 @@ export const ADMIN_ENDPOINTS = {
   EVENT_ENTRY_BY_ID: (eventId: string, entryId: string) =>
     `/api/admin/events/${eventId}/entries/${entryId}`,
   // SB9-D — admin manual raffle trigger
-  EVENT_TRIGGER_RAFFLE: (id: string) => `/api/admin/events/${id}/trigger-raffle`,
+  // Route segment renamed 2026-10-31 with the `giveaway` EventType. There is
+  // deliberately no alias for the old path: it is an admin-only POST with one
+  // caller (`AdminEventEditorView`), both shipped together, so nothing
+  // external can be holding the old URL.
+  EVENT_TRIGGER_GIVEAWAY: (id: string) => `/api/admin/events/${id}/trigger-giveaway`,
   COUPONS: "/api/admin/coupons",
   COUPON_BY_ID: (id: string) => `/api/admin/coupons/${id}`,
   SECTIONS: "/api/admin/sections",

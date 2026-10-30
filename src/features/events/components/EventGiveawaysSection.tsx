@@ -17,7 +17,7 @@ import type { EventItem } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { EVENT_FIELDS } from "../../../constants/field-names";
 
-export interface EventRafflesSectionProps {
+export interface EventGiveawaysSectionProps {
   config: EventRafflesSectionConfig;
 }
 
@@ -27,8 +27,8 @@ export interface EventRafflesSectionProps {
  * rather than written as literals so a rename of either type is a compile
  * error here instead of a clause that matches nothing.
  */
-const EVENT_TYPE_RAFFLE = EVENT_FIELDS.TYPE_VALUES.RAFFLE;
-const EVENT_TYPE_SPIN_WHEEL = EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL;
+const EVENT_TYPE_GIVEAWAY = EVENT_FIELDS.TYPE_VALUES.GIVEAWAY;
+const EVENT_TYPE_BONUS_SPIN = EVENT_FIELDS.TYPE_VALUES.BONUS_SPIN;
 
 /**
  * Renders a live-raffle/spin-wheel strip on the homepage.
@@ -48,28 +48,34 @@ const EVENT_TYPE_SPIN_WHEEL = EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL;
  *
  * ## Why `type`, and why one query
  *
- * `config.raffleType` is already `"raffle" | "spin_wheel" | "all"` — the config
- * has always spoken the `type` vocabulary and already answers "both belong
- * here", so the title is truthful and `type` is the honest field to match.
+ * `config.raffleType` is already `"giveaway" | "bonus-spin" | "all"` — the
+ * config has always spoken the `type` vocabulary and already answers "both
+ * belong here", so the title is truthful and `type` is the honest field to
+ * match.
+ *
+ * 🛑 So despite its NAME, `config.raffleType` holds `EventType` values, NOT
+ * `RaffleType` values — which is why it was renamed on 2026-10-31 while
+ * `EventDocument.raffleType` (the real `RaffleType` field) was not. The field
+ * name here stays: it is persisted inside a `homepageSections` config blob.
  * `type` IS in `SIEVE_FIELDS` and is indexed `(type, status, startsAt DESC)`,
  * so this needs no new composite index.
  *
  * 🛑 The `"all"` case is a PIPE-joined value, not `sieveMultiEq`. Sieve parses
  * `type==a|b` as one OR-group, and the Firebase adapter upgrades a same-field
  * OR-group of equalities into a single Firestore `in` query. `sieveMultiEq`
- * comma-joins instead, and a comma is an AND: `type==raffle,type==spin_wheel`
- * is two equalities on one field, which no document can satisfy (Root
- * Cause #59).
+ * comma-joins instead, and a comma is an AND:
+ * `type==giveaway,type==bonus-spin` is two equalities on one field, which no
+ * document can satisfy (Root Cause #59).
  *
  * Accepted limitation, deliberately: `hasRaffle` is an optional bolt-on that
  * *could* sit on a `sale` event, and such an event would not appear here. No
  * seeded event is shaped that way — all three `hasRaffle: true` rows are
- * already `type: "raffle"` — and a sale with a side raffle belongs in the sale
+ * already `type: "giveaway"` — and a sale with a side giveaway belongs in the sale
  * strip. If that changes, the fix is a second clause, not a wider title.
  */
-export async function EventRafflesSection({
+export async function EventGiveawaysSection({
   config,
-}: EventRafflesSectionProps) {
+}: EventGiveawaysSectionProps) {
   const title = config.title ?? "Live Raffles & Spin Wheels";
   const subtitle =
     config.subtitle ?? "Participate in community events and win prizes";
@@ -83,7 +89,7 @@ export async function EventRafflesSection({
       ? sieveFilter(
           EVENT_FIELDS.TYPE,
           SIEVE_OP.EQ,
-          `${EVENT_TYPE_RAFFLE}|${EVENT_TYPE_SPIN_WHEEL}`,
+          `${EVENT_TYPE_GIVEAWAY}|${EVENT_TYPE_BONUS_SPIN}`,
         )
       : sieveFilter(EVENT_FIELDS.TYPE, SIEVE_OP.EQ, raffleType);
 
@@ -107,7 +113,7 @@ export async function EventRafflesSection({
     // Loud on purpose: a swallowed failure here is indistinguishable from "no
     // active raffles", which is how this section stayed invisible in production
     // without anyone noticing (Root Cause #59).
-    serverLogger.error("EventRafflesSection query failed", {
+    serverLogger.error("EventGiveawaysSection query failed", {
       error: _err instanceof Error ? _err.message : String(_err),
     });
     events = [];

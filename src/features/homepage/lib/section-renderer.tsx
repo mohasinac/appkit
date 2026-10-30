@@ -50,7 +50,7 @@ import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
 import { FeaturedBundlesSection } from "../components/FeaturedBundlesSection";
 import { HomepageSectionBoundary } from "../components/HomepageSectionBoundary";
 import { RandomLotsSection } from "../../products/components/RandomLotsSection";
-import { EventRafflesSection } from "../../events/components/EventRafflesSection";
+import { EventGiveawaysSection } from "../../events/components/EventGiveawaysSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
 import { HowItWorksSection, type HowItWorksStep } from "../components/HowItWorksSection";
 import { TestimonialsCarousel } from "../components/TestimonialsCarousel";
@@ -807,7 +807,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
     surfaces: ["homepage"],
     render: ({ config }) => {
       const cfg = config as EventRafflesSectionConfig;
-      return <EventRafflesSection config={cfg ?? {}} />;
+      return <EventGiveawaysSection config={cfg ?? {}} />;
     },
   },
 

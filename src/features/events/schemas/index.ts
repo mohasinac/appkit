@@ -15,15 +15,26 @@ const eventCoverImageSchema = z
 
 // --- Sub-schemas --------------------------------------------------------------
 
+/**
+ * 🛑 WRITE enum — the current spellings only. The three chance-based types
+ * were renamed 2026-10-31 (`raffle` -> `giveaway`, `spin_wheel` ->
+ * `bonus-spin`, `lottery` -> `random-draw`).
+ *
+ * Deliberately does NOT accept the legacy spellings: a form or API caller
+ * sending `raffle` today is using a stale client, and a 400 says so. Stored
+ * documents that still hold them are handled on the READ side by
+ * `normalizeEventType`, and rewritten by
+ * `appkit/scripts/migrate-collector-drop-rename.mjs`.
+ */
 export const eventTypeSchema = z.enum([
   "sale",
   "offer",
   "poll",
   "survey",
   "feedback",
-  "raffle",
-  "spin_wheel",
-  "lottery",
+  "giveaway",
+  "bonus-spin",
+  "random-draw",
 ]);
 
 export const eventStatusSchema = z.enum(["draft", "active", "paused", "ended", "cancelled"]);
@@ -145,6 +156,8 @@ export const eventItemSchema = z.object({
   couponIds: attachedCouponIdsSchema,
   // Raffle fields
   hasRaffle: z.boolean().optional(),
+  // 🛑 `RaffleType`, NOT `EventType`. Its `spin_wheel` is the draw MECHANISM
+  // and was deliberately left alone when the EventType became `bonus-spin`.
   raffleType: z.enum(["top_n_scorers", "top_n_participants", "open_raffle", "spin_wheel"]).optional(),
   raffleTopN: z.number().optional(),
   rafflePrize: z.string().optional(),

@@ -21,6 +21,12 @@
  * Their 14 `eventLikes` went with them (a like pointing at a deleted event is
  * the dangling FK of Root Cause #26). The keeper's 9 likes are untouched.
  *
+ * 🛑 The three chance-based event types were RENAMED on 2026-10-31 —
+ * `raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` ->
+ * `random-draw`. The historical accounts below deliberately keep the OLD
+ * spellings: the rows they describe were written and deleted under those
+ * names, and rewriting them would falsify the record.
+ *
  * 🛑 CONSEQUENCE, recorded rather than rediscovered — this re-opens exactly
  * the gap the 2026-10-21 prune noted and the 2026-10-24 addition closed:
  * `sale`, `poll`, `spin_wheel` and `raffle` have NO fixture again, so the
@@ -309,9 +315,13 @@ const _raweventsSeedData: EventDocument[] = [
           mediaSlug: COVER.raffle,
           eyebrow: "Free to enter",
           title: "Signed Dranzer G",
-          description: "One raffle, one winner, drawn 1 December.",
+          description: "One giveaway, one winner, drawn 1 December.",
+          // 🛑 `href` KEPT at the old slug. A slug is a live public URL and
+          // this file's own header argues against renaming one "to buy a
+          // tidier string"; the 2026-10-31 EventType rename changed the enum,
+          // not any event's identity.
           href: "/events/signed-dranzer-raffle",
-          buttonText: "Enter the raffle",
+          buttonText: "Enter the giveaway",
         },
         {
           zone: 6,

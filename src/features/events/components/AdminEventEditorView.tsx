@@ -80,10 +80,10 @@ const CLS_RAFFLE_BODY = "text-warning dark:text-warning";
 /*
  * DERIVED. This was a hand-written 7-entry array and `EVENT_TYPE_LABELS`
  * — a `Record<EventType, string>` sitting one import away — already held the
- * same labels for all 8. It was missing `lottery`, and `allowedTypes` filters
- * AGAINST this list, so passing `"lottery"` in still could not surface it:
- * lottery events had no create path in the UI at all and could only come from
- * `npm run seed`.
+ * same labels for all 8. It was missing the random-draw type, and
+ * `allowedTypes` filters AGAINST this list, so passing it in still could not
+ * surface it: random-draw events had no create path in the UI at all and could
+ * only come from `npm run seed`.
  *
  * Deriving from the Record means a new EventType cannot be omitted here
  * without failing to compile (Root Cause #61).
@@ -93,8 +93,13 @@ const EVENT_TYPE_OPTIONS = ALL_EVENT_TYPES.map((value) => ({
   label: EVENT_TYPE_LABELS[value],
 }));
 
+/**
+ * 🛑 `RaffleType` — the draw MECHANISM. Deliberately NOT renamed with the
+ * `EventType` union on 2026-10-31; `spin_wheel` here is a persisted
+ * `raffleType` value, not the event type that became `bonus-spin`.
+ */
 const RAFFLE_TYPE_OPTIONS = [
-  { label: "Open raffle (all confirmed entries)", value: "open_raffle" },
+  { label: "Open draw (all confirmed entries)", value: "open_raffle" },
   { label: "Top N scorers", value: "top_n_scorers" },
   { label: "Top N earliest participants", value: "top_n_participants" },
   { label: "Spin wheel", value: "spin_wheel" },
@@ -361,11 +366,17 @@ function buildEventTypeConfig(draft: EventDraft): JsonObjectWithUndefined {
 }
 
 function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
-  const isRaffleType = draft.type === "raffle" || draft.type === "spin_wheel";
+  // 🛑 TWO AXES, one word. `draft.type` is an `EventType` and was renamed on
+  // 2026-10-31 (`raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`).
+  // `raffleType` is a `RaffleType` — the draw MECHANISM — and its
+  // `"spin_wheel"` member was deliberately NOT renamed. So the CONDITION
+  // below reads the new spelling while the VALUE it assigns keeps the old one;
+  // that asymmetry is correct, not a missed replacement.
+  const isRaffleType = draft.type === "giveaway" || draft.type === "bonus-spin";
   const fields: JsonObjectWithUndefined = {};
   if (!draft.hasRaffle && !isRaffleType) return fields;
   fields.hasRaffle = true;
-  fields.raffleType = isRaffleType && draft.type === "spin_wheel" ? "spin_wheel" : draft.raffleType;
+  fields.raffleType = isRaffleType && draft.type === "bonus-spin" ? "spin_wheel" : draft.raffleType;
   if (Number(draft.raffleTopN) > 0) fields.raffleTopN = Number(draft.raffleTopN);
   if (draft.rafflePrize) fields.rafflePrize = draft.rafflePrize;
   /*
@@ -390,7 +401,8 @@ function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
    */
   fields.rafflePrizeCouponIds = draft.rafflePrizeCouponIds;
   if (draft.rafflePrizeProductIds.length > 0) fields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
-  if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
+  // `draft.raffleType` = RaffleType (NOT renamed) · `draft.type` = EventType.
+  if (draft.raffleType === "spin_wheel" || draft.type === "bonus-spin") {
     fields.spinPrizes = draft.spinPrizes as unknown as JsonObjectWithUndefined[];
     if (Number(draft.spinMaxPerUser) > 0) fields.spinMaxPerUser = Number(draft.spinMaxPerUser);
     if (draft.spinWindowStart) fields.spinWindowStart = toISOString(draft.spinWindowStart);
@@ -582,7 +594,7 @@ export function AdminEventEditorView({
   const [triggerMessage, setTriggerMessage] = React.useState<string | null>(null);
   // Root translator (no namespace) — `toUserMessage` passes fully-qualified
   // `errors.codes.*` keys and resolves them itself. Same precedent as
-  // `PlaceBidFormClient` and `SpinWheelView`.
+  // `PlaceBidFormClient` and `BonusSpinView`.
   const t = useTranslations();
   const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
   const [raffleEntryCount, setRaffleEntryCount] = React.useState<number | null>(null);
@@ -669,18 +681,18 @@ export function AdminEventEditorView({
     },
   });
 
-  // --- raffle trigger ---
-  const triggerRaffleMutation = useApiMutation({
+  // --- giveaway draw trigger ---
+  const triggerGiveawayMutation = useApiMutation({
     mutationFn: async () => {
       if (!eventId) throw new Error("Save the event before triggering");
       return apiClient.post<{ data: { raffleWinnerDisplayName?: string; raffleEntryCount?: number } }>(
-        ADMIN_ENDPOINTS.EVENT_TRIGGER_RAFFLE(eventId),
+        ADMIN_ENDPOINTS.EVENT_TRIGGER_GIVEAWAY(eventId),
         {},
       );
     },
     onSuccess: (res) => {
       const data = (res as any).data ?? res;
-      setTriggerMessage(data?.raffleWinnerDisplayName ? `Winner: ${data.raffleWinnerDisplayName}` : "Raffle triggered.");
+      setTriggerMessage(data?.raffleWinnerDisplayName ? `Winner: ${data.raffleWinnerDisplayName}` : "Giveaway draw triggered.");
       if (data?.raffleWinnerDisplayName) setRaffleWinnerName(data.raffleWinnerDisplayName);
       if (typeof data?.raffleEntryCount === "number") setRaffleEntryCount(data.raffleEntryCount);
     },
@@ -940,28 +952,30 @@ export function AdminEventEditorView({
     },
     {
       id: "raffle",
-      label: "Raffle / Spin",
+      label: "Giveaway / Spin",
       fields: ["hasRaffle", "raffleType", "raffleTopN", "rafflePrize", "rafflePrizeCouponIds", "rafflePrizeProductIds", "spinPrizes", "spinMaxPerUser", "spinWindowStart", "spinWindowEnd"],
       render: ({ values, onChange, errors }) => {
-        const isRaffleType = values.type === "raffle" || values.type === "spin_wheel";
+        // 🛑 `values.type` is an `EventType` (renamed 2026-10-31);
+        // `values.raffleType` is a `RaffleType` whose `"spin_wheel"` was NOT.
+        const isRaffleType = values.type === "giveaway" || values.type === "bonus-spin";
         const showRaffleConfig = isRaffleType || values.hasRaffle;
-        const isSpinMode = values.type === "spin_wheel" || values.raffleType === "spin_wheel";
+        const isSpinMode = values.type === "bonus-spin" || values.raffleType === "spin_wheel";
         return (
           <Stack gap="md">
-            <Heading level={3} className="mb-2">Raffle &amp; Spin Wheel</Heading>
+            <Heading level={3} className="mb-2">Giveaway &amp; Bonus Spin</Heading>
             {!isRaffleType && (
-              <Toggle checked={values.hasRaffle} onChange={(v) => onChange({ hasRaffle: v })} label="Attach a raffle to this event" />
+              <Toggle checked={values.hasRaffle} onChange={(v) => onChange({ hasRaffle: v })} label="Attach a giveaway draw to this event" />
             )}
             {!isRaffleType && !values.hasRaffle && (
               <Text size="sm" color="muted">
-                Enable the toggle above to attach a raffle draw to this event. Not applicable for this event type by default.
+                Enable the toggle above to attach a giveaway draw to this event. Not applicable for this event type by default.
               </Text>
             )}
             {showRaffleConfig && (
               <Stack gap="md" rounded="xl" border="default" padding="md">
                 <Grid cols={2} gap="sm">
-                  <Select label="Raffle type"
-                  error={errors.raffleType} value={values.type === "spin_wheel" ? "spin_wheel" : values.raffleType} options={RAFFLE_TYPE_OPTIONS} onChange={(e) => onChange({ raffleType: e.target.value as RaffleType })} disabled={values.type === "spin_wheel"} />
+                  <Select label="Draw mechanism"
+                  error={errors.raffleType} value={values.type === "bonus-spin" ? "spin_wheel" : values.raffleType} options={RAFFLE_TYPE_OPTIONS} onChange={(e) => onChange({ raffleType: e.target.value as RaffleType })} disabled={values.type === "bonus-spin"} />
                   <Input label="Top N (for top-N raffle types)"
                   error={errors.raffleTopN} type="number" value={values.raffleTopN} onChange={(e) => onChange({ raffleTopN: e.target.value })} placeholder="10" />
                 </Grid>
@@ -1020,10 +1034,10 @@ export function AdminEventEditorView({
                         type="button"
                         action={ACTIONS.EVENT["draw-raffle-winner"]}
                         size="sm"
-                        onClick={() => triggerRaffleMutation.mutate()}
-                        disabled={triggerRaffleMutation.isPending || Boolean(raffleWinnerName)}
+                        onClick={() => triggerGiveawayMutation.mutate()}
+                        disabled={triggerGiveawayMutation.isPending || Boolean(raffleWinnerName)}
                       >
-                        {triggerRaffleMutation.isPending ? "Triggering…" : raffleWinnerName ? "Already triggered" : "Trigger Raffle Now"}
+                        {triggerGiveawayMutation.isPending ? "Triggering…" : raffleWinnerName ? "Already triggered" : "Draw Giveaway Winner"}
                       </Button>
                     </Row>
                     {raffleEntryCount !== null && <Text size="xs" className={CLS_RAFFLE_BODY}>Pool size: {raffleEntryCount}</Text>}

@@ -552,7 +552,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    *
    * WHY IT WENT: the rail advertised five promotions that do not exist. Only
    * the Diwali offer is a real event; the other four — a Beyblade X launch
-   * week, a Burst clearance weekend, a spin wheel and a signed-Dranzer raffle
+   * week, a Burst clearance weekend, a bonus spin and a signed-Dranzer giveaway
    * — are fabricated seed fixtures that a previous session authored and then
    * promoted to the homepage. A visitor could click "View details →" on any of
    * them and read a full, confident description of something nobody is running.
@@ -617,19 +617,22 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     /*
      * 🛑 DISABLED, and here `enabled: false` is the ONLY lock there is.
      *
-     * Raffles and spin wheels are EVENT types, not listing types and not
+     * Giveaways and bonus spins are EVENT types, not listing types and not
      * category types, so no Site Settings toggle reaches them and
      * `HOMEPAGE_SECTION_LISTING_TYPE` has nothing to map them to. The same gap
-     * put Lotteries, Bundles and Promotions in the footer's hand-written hidden
-     * block (src/constants/navigation.tsx) — a per-document flag is the whole
-     * mechanism for this one, which is exactly why it is spelled out.
+     * put Random Draws, Bundles and Promotions in the footer's hand-written
+     * hidden block (src/constants/navigation.tsx) — a per-document flag is the
+     * whole mechanism for this one, which is exactly why it is spelled out.
      */
     order: 14,
     enabled: false,
     config: {
-      title: "Raffles & Spin Wheels",
+      title: "Giveaways & Bonus Spins",
       subtitle: "Enter for free and see if the odds are with you.",
       maxItems: 6,
+      // 🛑 `raffleType` holds EVENT types despite its name, but `"all"` is
+      // not one of them and is unaffected by the 2026-10-31 rename. The two
+      // real values are `giveaway` and `bonus-spin`.
       raffleType: "all",
       showEntryCount: true,
       showCountdown: true,

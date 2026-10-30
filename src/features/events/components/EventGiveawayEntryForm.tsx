@@ -14,7 +14,7 @@ const __P = {
   p6: "p-[var(--appkit-space-6)]",
 } as const;
 
-export interface EventRaffleEntryFormProps {
+export interface EventGiveawayEntryFormProps {
   /** Raffle prize label rendered prominently above the form. */
   prizeLabel?: string;
   /** Raffle type — drives the helper copy. */
@@ -32,12 +32,12 @@ export interface EventRaffleEntryFormProps {
 }
 
 /**
- * `EventRaffleEntryForm` — W1-18 — fills the gap noted in the plan ("Raffle
+ * `EventGiveawayEntryForm` — W1-18 — fills the gap noted in the plan ("Raffle
  * entry form (71 LOC stub) — no entry form"). Renders the prize hero,
  * eligibility status, an optional message field, and a submit button. Server
  * action wiring stays with the caller via the `onSubmit` prop.
  */
-export function EventRaffleEntryForm({
+export function EventGiveawayEntryForm({
   prizeLabel,
   raffleType = "open_raffle",
   topN,
@@ -45,7 +45,7 @@ export function EventRaffleEntryForm({
   maxEntriesPerUser = 1,
   submitted = false,
   onSubmit,
-}: EventRaffleEntryFormProps) {
+}: EventGiveawayEntryFormProps) {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const overLimit = userEntryCount >= maxEntriesPerUser;

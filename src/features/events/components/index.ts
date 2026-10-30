@@ -34,16 +34,16 @@ export { EventBanner } from "./EventBanner";
 export type { EventBannerProps } from "./EventBanner";
 export { EventPollWidget } from "./EventPollWidget";
 export type { } from "./EventPollWidget";
-export { EventRafflesSection } from "./EventRafflesSection";
-export type { EventRafflesSectionProps } from "./EventRafflesSection";
-export { EventRaffleWinnerView } from "./EventRaffleWinnerView";
-export type { EventRaffleWinnerViewProps } from "./EventRaffleWinnerView";
-export { SpinWheelView } from "./SpinWheelView";
-export type { SpinWheelViewProps } from "./SpinWheelView";
+export { EventGiveawaysSection } from "./EventGiveawaysSection";
+export type { EventGiveawaysSectionProps } from "./EventGiveawaysSection";
+export { EventGiveawayWinnerView } from "./EventGiveawayWinnerView";
+export type { EventGiveawayWinnerViewProps } from "./EventGiveawayWinnerView";
+export { BonusSpinView } from "./BonusSpinView";
+export type { BonusSpinViewProps } from "./BonusSpinView";
 
 // W1-18: Event participation flows (raffle entry / sale banner / offer coupon)
-export { EventRaffleEntryForm } from "./EventRaffleEntryForm";
-export type { EventRaffleEntryFormProps } from "./EventRaffleEntryForm";
+export { EventGiveawayEntryForm } from "./EventGiveawayEntryForm";
+export type { EventGiveawayEntryFormProps } from "./EventGiveawayEntryForm";
 export { EventSaleBanner } from "./EventSaleBanner";
 export type { EventSaleBannerProps } from "./EventSaleBanner";
 export { EventOfferCard } from "./EventOfferCard";

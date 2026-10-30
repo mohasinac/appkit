@@ -30,7 +30,7 @@ export interface RaffleWinnerEvent {
   rafflePrizeCouponCodes?: string[];
 }
 
-export interface EventRaffleWinnerViewProps {
+export interface EventGiveawayWinnerViewProps {
   event: RaffleWinnerEvent;
   /** When true (= page resolver matched the viewer to raffleWinnerUserId), show the Claim CTA. */
   currentUserIsWinner?: boolean;
@@ -49,7 +49,7 @@ const CLS_PANEL = "rounded-2xl border border-warning bg-warning-surface/60 dark:
 const CLS_LABEL = "text-[length:var(--appkit-text-xs)] uppercase tracking-wide text-warning dark:text-warning";
 const CLS_WINNER_NAME = "mt-1 text-[length:var(--appkit-text-2xl)] font-bold text-warning dark:text-warning";
 
-const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>> = {
+const DEFAULT_LABELS: Required<NonNullable<EventGiveawayWinnerViewProps["labels"]>> = {
   heading: "Raffle Winner",
   winnerLabel: "Winner",
   prizeLabel: "Prize",
@@ -59,7 +59,7 @@ const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>
   anonymous: "Anonymous participant",
 };
 
-export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: EventRaffleWinnerViewProps) {
+export function EventGiveawayWinnerView({ event, currentUserIsWinner, labels }: EventGiveawayWinnerViewProps) {
   const l = { ...DEFAULT_LABELS, ...(labels ?? {}) };
 
   /*
@@ -134,7 +134,7 @@ export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: Ev
                 <ClaimCouponButton
                   key={code}
                   couponCode={code}
-                  source="raffle"
+                  source="giveaway"
                   size="sm"
                 />
               ))}

@@ -14,6 +14,7 @@
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { eventRepository, productRepository, orderRepository } from "../../../../repositories";
+import { normalizeEventType } from "../../../../features/events/types/index";
 import { serverLogger } from "../../../../monitoring";
 import { lotteryEntryRepository } from "../../../../features/lottery/repository/lottery-entry.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
@@ -75,8 +76,11 @@ export async function submitLotteryPullAction(
     let lotteryConfig: LotteryConfig;
     if (data.sourceType === "event") {
       const event = await eventRepository.findById(sourceId);
-      if (!event || event.type !== "lottery") {
-        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Lottery event not found or not of type lottery.");
+      // 🛑 `normalizeEventType`, not `===`: documents written before the
+      // 2026-10-31 rename still hold `type: "lottery"`, and a bare equality
+      // would reject every one of them as "not found".
+      if (!event || normalizeEventType(event.type) !== "random-draw") {
+        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Random draw event not found or not of type random-draw.");
       }
       if (event.status !== "active") {
         throw new LotteryError("LOTTERY_WINDOW_CLOSED", "This lottery is not currently active.");
@@ -399,7 +403,7 @@ export async function createLotteryEventAction(
 
     return eventRepository.createEvent({
         ...(rawData as object),
-        type: "lottery",
+        type: "random-draw",
         lotteryConfig: { ...lotteryConfig, slots: withWeights },
         createdBy: user.uid,
         status: (rawData.status as string) ?? "draft",

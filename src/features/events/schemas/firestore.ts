@@ -416,10 +416,13 @@ export const EVENT_FIELDS = {
     CANCELLED: "cancelled" as EventStatus,
   },
   /**
-   * Every `EventType`. `LOTTERY` was missing until 2026-08-24, which is why
-   * `events-seed-data.ts` — which imports EVENT_FIELDS from HERE, not from
-   * `constants/field-names.ts` — had to write `type: "lottery"` as a raw string
-   * literal while every other row used this map.
+   * Every `EventType`. The random-draw entry was missing until 2026-08-24,
+   * which is why `events-seed-data.ts` — which imports EVENT_FIELDS from
+   * HERE, not from `constants/field-names.ts` — had to write the type as a raw
+   * string literal while every other row used this map.
+   *
+   * Renamed 2026-10-31: `RAFFLE` -> `GIVEAWAY`, `SPIN_WHEEL` -> `BONUS_SPIN`,
+   * `LOTTERY` -> `RANDOM_DRAW`.
    *
    * NB. there are two `EVENT_FIELDS` constants (this one and the one in
    * `constants/field-names.ts`) and they drifted independently. Same shape as
@@ -432,9 +435,9 @@ export const EVENT_FIELDS = {
     POLL: "poll" as EventType,
     SURVEY: "survey" as EventType,
     FEEDBACK: "feedback" as EventType,
-    RAFFLE: "raffle" as EventType,
-    SPIN_WHEEL: "spin_wheel" as EventType,
-    LOTTERY: "lottery" as EventType,
+    GIVEAWAY: "giveaway" as EventType,
+    BONUS_SPIN: "bonus-spin" as EventType,
+    RANDOM_DRAW: "random-draw" as EventType,
   },
   STATS: {
     TOTAL_ENTRIES: "stats.totalEntries",
@@ -515,9 +518,11 @@ export const eventQueryHelpers = {
   byStatus: (status: EventStatus) => ["status", "==", status] as const,
   upcoming: (date: Date) => ["startsAt", ">", date] as const,
   past: (date: Date) => ["endsAt", "<", date] as const,
-  // SB9 raffle/spin helpers
-  raffles: () => ["type", "==", "raffle" as EventType] as const,
-  spinWheels: () => ["type", "==", "spin_wheel" as EventType] as const,
+  // SB9 giveaway/spin helpers. 🛑 These match the CURRENT spellings only —
+  // a document still holding `raffle`/`spin_wheel` is invisible to them until
+  // the rename migration has run.
+  giveaways: () => ["type", "==", "giveaway" as EventType] as const,
+  bonusSpins: () => ["type", "==", "bonus-spin" as EventType] as const,
   withRaffle: () => ["hasRaffle", "==", true] as const,
   raffleNotYetDrawn: () => ["raffleWinnerUserId", "==", null] as const,
 } as const;

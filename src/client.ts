@@ -1429,8 +1429,8 @@ export type { AdminOrderEditorViewProps } from "./features/admin/components/Admi
 export type { NavItemData } from "./features/admin/components/AdminNavEditorView";
 export { PageLoader } from "./ui/components/PageLoader";
 export { ADMIN_CHECKOUT_BYPASS_FLAG_KEY } from "./features/admin/schemas/firestore";
-export { SpinWheelView } from "./features/events/components/SpinWheelView";
-export { EventRaffleEntryForm } from "./features/events/components/EventRaffleEntryForm";
+export { BonusSpinView } from "./features/events/components/BonusSpinView";
+export { EventGiveawayEntryForm } from "./features/events/components/EventGiveawayEntryForm";
 export { Card, CardBody } from "./ui/components/Card";
 export {
   SellerCouponsView,

@@ -10,9 +10,44 @@ export type EventType =
   | "poll"
   | "survey"
   | "feedback"
-  | "raffle"
-  | "spin_wheel"
-  | "lottery";
+  | "giveaway"
+  | "bonus-spin"
+  | "random-draw";
+
+/**
+ * Pre-2026-10-31 spellings of the three chance-based types, kept as READ
+ * aliases only. Nothing may write them.
+ *
+ * `raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` ->
+ * `random-draw`. Renamed for payment-aggregator merchant-screening optics;
+ * `raffle` in particular is free-to-enter and never touches a payment
+ * provider, so its rename is pure terminology.
+ *
+ * 🛑 `appkit/scripts/migrate-collector-drop-rename.mjs` rewrites the stored
+ * `events.type` values. Until it has been RUN against a project, documents
+ * still hold the old spelling — so `normalizeEventType` is what every read
+ * path must go through, and these entries must not be deleted on the
+ * assumption the migration happened.
+ */
+const LEGACY_EVENT_TYPE_ALIASES: Record<string, EventType> = {
+  raffle: "giveaway",
+  spin_wheel: "bonus-spin",
+  lottery: "random-draw",
+};
+
+/**
+ * Map a stored or inbound `type` onto the current union, tolerating the three
+ * legacy spellings. Returns `undefined` for anything it does not recognise —
+ * never a plausible default, because mislabelling a giveaway as an offer is
+ * worse than admitting we do not know (same rule as `eventTypeMeta`).
+ */
+export function normalizeEventType(
+  type: string | undefined | null,
+): EventType | undefined {
+  if (!type) return undefined;
+  if (type in ALL_EVENT_TYPES_MAP) return type as EventType;
+  return LEGACY_EVENT_TYPE_ALIASES[type];
+}
 
 /**
  * Every event type, in canonical iteration order — the single array every
@@ -24,8 +59,12 @@ export type EventType =
  * enumerations of this union and all three had drifted — the admin chips
  * offered `contest`/`giveaway`/`flash-sale` (values `EventType` never had, so
  * they matched zero rows) while omitting five real types, the public filter
- * omitted `lottery`, and `EVENT_FIELDS.TYPE_VALUES` omitted it too. Same shape
- * as `ALL_LISTING_TYPES_MAP`; same reason (Root Cause #61).
+ * omitted the random-draw type, and `EVENT_FIELDS.TYPE_VALUES` omitted it too.
+ * Same shape as `ALL_LISTING_TYPES_MAP`; same reason (Root Cause #61).
+ *
+ * 🛑 Note the historical account above: `giveaway` was once an INVENTED chip
+ * value matching zero rows. It is a real member of the union now. Do not read
+ * that paragraph as evidence the value is still fictional.
  */
 const ALL_EVENT_TYPES_MAP: Record<EventType, true> = {
   sale: true,
@@ -33,9 +72,9 @@ const ALL_EVENT_TYPES_MAP: Record<EventType, true> = {
   poll: true,
   survey: true,
   feedback: true,
-  raffle: true,
-  spin_wheel: true,
-  lottery: true,
+  giveaway: true,
+  "bonus-spin": true,
+  "random-draw": true,
 };
 
 export const ALL_EVENT_TYPES = Object.keys(ALL_EVENT_TYPES_MAP) as EventType[];
@@ -52,11 +91,20 @@ export const EVENT_TYPE_LABELS: Record<EventType, string> = {
   poll: "Poll",
   survey: "Survey",
   feedback: "Feedback",
-  raffle: "Raffle",
-  spin_wheel: "Spin the Wheel",
-  lottery: "Lottery",
+  giveaway: "Giveaway",
+  "bonus-spin": "Bonus Spin",
+  "random-draw": "Random Draw",
 };
 
+/**
+ * The DRAW MECHANISM a giveaway event uses — a different axis from
+ * `EventType`, and deliberately NOT renamed alongside it on 2026-10-31.
+ *
+ * 🛑 Its `"spin_wheel"` member is NOT the `EventType` member that became
+ * `"bonus-spin"`. They sat three lines apart and used the same word, so every
+ * `spin_wheel` match has to be classified before it is touched. The field
+ * `raffleType` is persisted and also stays.
+ */
 export type RaffleType =
   | "top_n_scorers"
   | "top_n_participants"
@@ -81,7 +129,7 @@ export interface SpinPrize {
 /**
  * A spin prize as a VIEW may see it: what it is, not what it is worth.
  *
- * 🛑 This exists because `SpinWheelView.prizes` was typed `SpinPrize[]`, which
+ * 🛑 This exists because `BonusSpinView.prizes` was typed `SpinPrize[]`, which
  * made `weight` and `couponId` REQUIRED of every caller — so handing the public
  * wheel the full stored prize, odds included, was the only way to satisfy the
  * compiler. The participate page duly cast the stored array straight into a
@@ -235,7 +283,16 @@ export interface EventItem {
   spinWindowEnd?: string;
   /** Per-event admin toggle — unauthenticated visitors may participate when true. */
   allowGuestParticipation?: boolean;
-  /** Lottery config — slots have price/weight stripped for client consumption. */
+  /**
+   * Slot config for a `random-draw` event — slots have price/weight stripped
+   * for client consumption.
+   *
+   * 🛑 The FIELD stays `lotteryConfig` even though the event type is now
+   * `random-draw`: it is persisted, it is shared with the product-level
+   * `prizeDrawMode: "lottery"` axis, and `lotteryConfigWriteSchema` /
+   * `mergeLotteryConfig` are its only legal writers (CLAUDE.md § "Lottery
+   * Config Writes").
+   */
   lotteryConfig?: ClientLotteryConfig;
   stats: {
     totalEntries: number;
@@ -297,7 +354,7 @@ export interface PollResultEntry {
 }
 
 /**
- * One row of the public "Last 10 Spin Results" feed for a spin_wheel event.
+ * One row of the public "Last 10 Spin Results" feed for a `bonus-spin` event.
  * `userDisplayName` is undefined for guest spins (`isGuest: true`) — callers
  * should render a generic "Guest" label in that case, never a raw hash.
  */

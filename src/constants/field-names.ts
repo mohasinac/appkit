@@ -204,6 +204,15 @@ export const PRODUCT_FIELDS = {
     SCHEDULED: "scheduled",
   },
 
+  /**
+   * 🛑 PRODUCT-level draw mode for the `random-lots` listing type — a
+   * DIFFERENT axis from the event-level `EventType`, which lost its
+   * `"lottery"` member on 2026-10-31 (it is `"random-draw"` now).
+   *
+   * `LOTTERY: "lottery"` here is persisted on `products` and stays. See
+   * CLAUDE.md § "Lottery Config Writes"; `lotteryConfig`,
+   * `lotteryConfigWriteSchema` and `mergeLotteryConfig` stay with it.
+   */
   PRIZE_DRAW_MODE_VALUES: {
     REVEAL: "reveal",
     LOTTERY: "lottery",
@@ -514,9 +523,12 @@ export const EVENT_FIELDS = {
   },
 
   /**
-   * Mirrors the `EventType` union. `LOTTERY` was missing until 2026-08-24,
-   * which is why `events-seed-data.ts` had to write `type: "lottery"` as a raw
-   * string literal while every other row used this map.
+   * Mirrors the `EventType` union. The random-draw entry was missing until
+   * 2026-08-24, which is why `events-seed-data.ts` had to write the type as a
+   * raw string literal while every other row used this map.
+   *
+   * Renamed 2026-10-31: `RAFFLE` -> `GIVEAWAY`, `SPIN_WHEEL` -> `BONUS_SPIN`,
+   * `LOTTERY` -> `RANDOM_DRAW`.
    */
   TYPE_VALUES: {
     SALE: "sale",
@@ -524,11 +536,17 @@ export const EVENT_FIELDS = {
     POLL: "poll",
     SURVEY: "survey",
     FEEDBACK: "feedback",
-    RAFFLE: "raffle",
-    SPIN_WHEEL: "spin_wheel",
-    LOTTERY: "lottery",
+    GIVEAWAY: "giveaway",
+    BONUS_SPIN: "bonus-spin",
+    RANDOM_DRAW: "random-draw",
   },
 
+  /**
+   * 🛑 `RaffleType` — the draw MECHANISM, a different axis from `EventType`
+   * and deliberately NOT renamed on 2026-10-31. `SPIN_WHEEL: "spin_wheel"`
+   * here is NOT the event type that became `bonus-spin`; `raffleType` is a
+   * persisted field.
+   */
   RAFFLE_TYPE_VALUES: {
     OPEN_RAFFLE: "open_raffle",
     TOP_N_SCORERS: "top_n_scorers",

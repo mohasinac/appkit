@@ -15,7 +15,7 @@ function httpError(message: string, status: number, code: string): Error {
 
 /**
  * Statuses come from `reasonToHttp`, shared with
- * `POST /api/admin/events/[id]/trigger-raffle`.
+ * `POST /api/admin/events/[id]/trigger-giveaway`.
  *
  * The hand-written chain this replaces knew two reasons (404 / 422) while the
  * route mapped everything to 409 — so the same refusal had two different

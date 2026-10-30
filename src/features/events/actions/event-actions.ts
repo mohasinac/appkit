@@ -36,6 +36,7 @@ import type {
   EventEntryDocument,
 } from "../schemas";
 import type { EventStatus } from "../types";
+import { normalizeEventType } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { sortPinnedFirst } from "../utils/sort-pinned";
 
@@ -330,7 +331,7 @@ export async function getEventLeaderboard(
 
 /**
  * Last N spins that actually won a prize, most recent first — powers the
- * public "Last 10 Spin Results" tab on spin_wheel events. Joins each entry's
+ * public "Last 10 Spin Results" tab on `bonus-spin` events. Joins each entry's
  * `spinPrizeId` against the event's `spinPrizes` config for a human label
  * (the entries repository has no access to the events collection, mirroring
  * `getEventPollResults`' join pattern above) and marks guest spins so the
@@ -341,7 +342,8 @@ export async function getEventSpinResults(
   limit = 10,
 ): Promise<import("../types").SpinResultEntry[]> {
   const event = await eventRepository.findByIdOrSlug(eventId);
-  if (!event || event.type !== "spin_wheel") return [];
+  // 🛑 `normalizeEventType`: pre-2026-10-31 documents still hold `spin_wheel`.
+  if (!event || normalizeEventType(event.type) !== "bonus-spin") return [];
 
   const prizeTitleById = new Map(
     (event.spinPrizes ?? []).map((p) => [p.id, p.label]),
@@ -404,7 +406,8 @@ export async function getUserSpinResultsForEvent(
   userId: string,
 ): Promise<import("../types").SpinResultEntry[]> {
   const event = await eventRepository.findByIdOrSlug(eventId);
-  if (!event || event.type !== "spin_wheel") return [];
+  // 🛑 `normalizeEventType`: pre-2026-10-31 documents still hold `spin_wheel`.
+  if (!event || normalizeEventType(event.type) !== "bonus-spin") return [];
 
   const prizeTitleById = new Map(
     (event.spinPrizes ?? []).map((p) => [p.id, p.label]),
@@ -575,15 +578,20 @@ export async function enterEvent(
   // `allowGuestParticipation` override is applied. Anonymous feedback is a
   // distinct opt-in concept (the event itself declares no identity is ever
   // collected) so it stays open regardless of the guest-participation flag.
+  // 🛑 Resolved through `normalizeEventType` ONCE for this whole function:
+  // pre-2026-10-31 documents still hold `raffle`/`spin_wheel`, and a bare
+  // equality here would hand every one of them FREE GUEST ACCESS — the exact
+  // hole the per-type list had before the flag was introduced.
+  const eventType = normalizeEventType(event.type);
   const perTypeRequiresLogin =
     event.type === "poll" ||
     event.type === "survey" ||
     (event.type === "feedback" && !(event.feedbackConfig as any)?.anonymous) ||
-    event.type === "raffle" ||
-    event.type === "spin_wheel";
+    eventType === "giveaway" ||
+    eventType === "bonus-spin";
 
   // Every event type that reaches enterEvent() is now gated by the single
-  // admin-controlled flag — raffle/spin_wheel no longer get accidental free
+  // admin-controlled flag — giveaway/bonus-spin no longer get accidental free
   // guest access just because they were absent from the old per-type list.
   const requiresLogin = !event.allowGuestParticipation && perTypeRequiresLogin;
 
@@ -664,7 +672,7 @@ export async function enterEvent(
    * duplicate entry is a direct and quantifiable unfairness, had none. The
    * client-side guard was inert in two independent ways: `submissionCount` is
    * `useState(0)` that is never hydrated from the server, so a reload resets
-   * it; and `maxEntriesPerUser` was not passed to `EventRaffleEntryForm` at
+   * it; and `maxEntriesPerUser` was not passed to `EventGiveawayEntryForm` at
    * all, so it defaulted to 1 while nothing enforced it.
    *
    * The limit is `RAFFLE_MAX_ENTRIES_PER_USER`, shared with the form that
@@ -675,7 +683,7 @@ export async function enterEvent(
    * Reuses the same `countUserEntries` as the survey and poll paths, so the
    * read cost and the `(eventId, userId)` index it needs are already proven.
    */
-  if (user && event.type === "raffle") {
+  if (user && eventType === "giveaway") {
     const priorEntries = await eventEntryRepository.countUserEntries(
       resolvedEventId,
       user.uid,
@@ -734,7 +742,7 @@ export async function enterEvent(
   const autoApprove =
     event.type === "poll" ||
     event.type === "feedback" ||
-    event.type === "raffle" ||
+    eventType === "giveaway" ||
     (event.type === "survey" &&
       !(event.surveyConfig as any)?.entryReviewRequired);
 

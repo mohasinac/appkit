@@ -315,18 +315,22 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   },
   {
     id: "faq-prize-draws-how-they-work",
-    question: "How do prize draws and spin wheels work?",
-    answer: html(`<p>LetItRip runs community prize draws tied to events. Enter eligible events for a chance to win rare collectibles. Some events feature a spin wheel — spin for instant prizes like discount coupons or free shipping. Winners are selected using cryptographically random selection. Check the Events page for active draws.</p>`),
+    question: "How do prize draws and bonus spins work?",
+    answer: html(`<p>LetItRip runs community prize draws tied to events. Enter eligible events for a chance to win rare collectibles. Some events feature a bonus spin — spin for instant prizes like discount coupons or free shipping. Winners are selected using cryptographically random selection. Check the Events page for active draws.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
     isPinned: false,
     order: 10,
     priority: 5,
-    tags: ["prize-draw", "spin-wheel", "events", "raffle"],
+    // 🛑 `raffle` / `spin-wheel` KEPT as SEARCH SYNONYMS alongside the new
+    // terms, same precedent as the collector-drop rename: a tag exists to
+    // catch what a user types, and people will keep typing both.
+    tags: ["prize-draw", "bonus-spin", "spin-wheel", "events", "giveaway", "raffle"],
     relatedFAQs: ["faq-community-events"],
     stats: makeStats(1100, 55),
-    seo: { slug: "faq-prize-draws-how-they-work", metaTitle: "Prize Draws & Spin Wheels", metaDescription: "Enter prize draws and spin wheels to win rare collectibles on LetItRip." },
+    // `seo.slug` KEPT — it is a live public URL.
+    seo: { slug: "faq-prize-draws-how-they-work", metaTitle: "Prize Draws & Bonus Spins", metaDescription: "Enter prize draws and bonus spins to win rare collectibles on LetItRip." },
     isActive: false,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(20),
@@ -1254,17 +1258,18 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-community-events",
     question: "What community events does LetItRip run?",
-    answer: html(`<p>LetItRip runs regular community events: <strong>Polls</strong> (vote on upcoming features), <strong>Sales</strong> (platform-wide discount events), <strong>Raffles</strong> (win rare collectibles), <strong>Spin Wheels</strong> (instant coupon prizes), and <strong>Surveys</strong> (share feedback, earn rewards). Check the Events page for current and upcoming events.</p>`),
+    answer: html(`<p>LetItRip runs regular community events: <strong>Polls</strong> (vote on upcoming features), <strong>Sales</strong> (platform-wide discount events), <strong>Giveaways</strong> (win rare collectibles), <strong>Bonus Spins</strong> (instant coupon prizes), and <strong>Surveys</strong> (share feedback, earn rewards). Check the Events page for current and upcoming events.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
     isPinned: false,
     order: 55,
     priority: 6,
-    tags: ["events", "community", "raffle", "poll", "spin-wheel"],
+    // Old spellings kept as search synonyms — see the sibling FAQ above.
+    tags: ["events", "community", "giveaway", "raffle", "poll", "bonus-spin", "spin-wheel"],
     relatedFAQs: ["faq-prize-draws-how-they-work"],
     stats: makeStats(1400, 70),
-    seo: { slug: "faq-community-events", metaTitle: "Community Events on LetItRip", metaDescription: "Polls, raffles, spin wheels, and sales events on LetItRip." },
+    seo: { slug: "faq-community-events", metaTitle: "Community Events on LetItRip", metaDescription: "Polls, giveaways, bonus spins, and sales events on LetItRip." },
     isActive: false,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(40),

@@ -1,5 +1,5 @@
 /*
- * WHY: `EventRaffleEntryForm` rendered `<Form>` with no schema, so a raffle
+ * WHY: `EventGiveawayEntryForm` rendered `<Form>` with no schema, so a raffle
  *      entry's message was unbounded — and it is rendered back on a public
  *      leaderboard.
  *
@@ -18,7 +18,7 @@
  * @tag layer:schema
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:EventRaffleEntryForm
+ * @tag consumers:EventGiveawayEntryForm
  * @tag sideEffects:none
  */
 

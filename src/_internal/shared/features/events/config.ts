@@ -12,7 +12,7 @@ export const EVENT_DESCRIPTION_MAX_LENGTH = 5000;
  * `EventDocument` has no `raffleConfig` at all.
  *
  * 🛑 Shared deliberately, by BOTH `enterEvent`'s server-side dedupe and the
- * `EventRaffleEntryForm` prop that renders "you've used all N entry slots".
+ * `EventGiveawayEntryForm` prop that renders "you've used all N entry slots".
  * Two mirrored literals is the shape that made this bug survive: the form
  * already defaulted to 1 and displayed that sentence, while the server
  * enforced nothing, so the UI claimed a limit that did not exist.

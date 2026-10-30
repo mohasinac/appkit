@@ -18,14 +18,22 @@ import {
 export type EventFilterVariant = "admin" | "seller" | "public";
 
 /**
- * `sale` -> `eventTypeSale`, `spin_wheel` -> `eventTypeSpinWheel`.
+ * `sale` -> `eventTypeSale`, `bonus-spin` -> `eventTypeBonusSpin`.
  *
  * Derived rather than a lookup map so a new union member cannot be silently
  * label-less; a missing i18n key surfaces as the key itself, which is loud.
+ *
+ * 🛑 Splits on `_` AND `-`. It split on `_` alone until 2026-10-31, which was
+ * fine while every multi-word value was snake_case — but `spin_wheel` became
+ * `bonus-spin` and `lottery` became `random-draw`, and the old split produced
+ * `eventTypeBonus-spin`: a key no `messages/en.json` holds, so both new
+ * facets would have rendered their own raw key as the label. Same split as
+ * `humaniseEventType`, for the same reason.
  */
 function pascal(value: string): string {
   return value
-    .split("_")
+    .split(/[_-]+/)
+    .filter(Boolean)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("");
 }
@@ -112,9 +120,9 @@ export function EventFilters({
   const t = useTranslations("filters");
 
   // Derived from the unions, not hand-listed. The previous literals were
-  // missing `lottery` (type) and `cancelled` (admin status) — a facet that
-  // doesn't exist can never be selected, so those events were unfilterable
-  // (Root Cause #61).
+  // missing the random-draw type and `cancelled` (admin status) — a facet
+  // that doesn't exist can never be selected, so those events were
+  // unfilterable (Root Cause #61).
   const typeOptions = ALL_EVENT_TYPES.map((value) => ({
     value,
     label: t(eventTypeLabelKey(value)),

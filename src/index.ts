@@ -5060,7 +5060,7 @@ export { EVENTS_COLLECTION } from "./features/events/schemas/firestore";
  * [SHARED] RAFFLE_MAX_ENTRIES_PER_USER — one entry per person in a raffle.
  *
  * Public because the consumer's participate page must hand the SAME number to
- * `EventRaffleEntryForm` that `enterEvent` enforces server-side. Two mirrored
+ * `EventGiveawayEntryForm` that `enterEvent` enforces server-side. Two mirrored
  * literals is the shape that caused the bug: the form already said "you've
  * used all 1 entry slot" while the server enforced nothing at all.
  */
@@ -5136,15 +5136,15 @@ export { EventPollWidget } from "./features/events/components/EventPollWidget";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventStatusBadge - Component for event status badge.
 export { EventStatusBadge } from "./features/events/components/EventStatusBadge";
-// EventRaffleWinnerView - Public-facing winner card for an event raffle.
-export { EventRaffleWinnerView } from "./features/events/components/EventRaffleWinnerView";
-export type { EventRaffleWinnerViewProps } from "./features/events/components/EventRaffleWinnerView";
-// SpinWheelView - Spin-the-wheel client component for spin-wheel events.
-export { SpinWheelView } from "./features/events/components/SpinWheelView";
-export type { SpinWheelViewProps } from "./features/events/components/SpinWheelView";
-// EventRaffleEntryForm - Raffle entry form (prize hero + eligibility + optional message).
-export { EventRaffleEntryForm } from "./features/events/components/EventRaffleEntryForm";
-export type { EventRaffleEntryFormProps } from "./features/events/components/EventRaffleEntryForm";
+// EventGiveawayWinnerView - Public-facing winner card for a `giveaway` event's draw.
+export { EventGiveawayWinnerView } from "./features/events/components/EventGiveawayWinnerView";
+export type { EventGiveawayWinnerViewProps } from "./features/events/components/EventGiveawayWinnerView";
+// BonusSpinView - Spin-the-wheel client component for `bonus-spin` events.
+export { BonusSpinView } from "./features/events/components/BonusSpinView";
+export type { BonusSpinViewProps } from "./features/events/components/BonusSpinView";
+// EventGiveawayEntryForm - Giveaway entry form (prize hero + eligibility + optional message).
+export { EventGiveawayEntryForm } from "./features/events/components/EventGiveawayEntryForm";
+export type { EventGiveawayEntryFormProps } from "./features/events/components/EventGiveawayEntryForm";
 // EventOfferCard - Coupon code display + copy-to-clipboard for offer events.
 export { EventOfferCard } from "./features/events/components/EventOfferCard";
 export type { EventOfferCardProps } from "./features/events/components/EventOfferCard";
@@ -5295,6 +5295,14 @@ export type { EventType } from "./features/events/types/index";
 // silently short list. Exported because consumers were hand-writing their own
 // copies and drifting (Root Cause #61).
 export { ALL_EVENT_TYPES, ALL_EVENT_STATUSES } from "./features/events/types/index";
+// normalizeEventType - maps a stored or inbound event `type` onto the current
+// union, tolerating the three pre-2026-10-31 spellings (`raffle` ->
+// `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` -> `random-draw`).
+// Returns undefined for anything unrecognised, never a plausible default.
+// 🛑 Every READ-side comparison must go through this: documents written before
+// the rename migration still hold the old values, and a bare `===` silently
+// treats each one as "not that type".
+export { normalizeEventType } from "./features/events/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // EventUpdateInput - Type contract for event update input.
 export type { EventUpdateInput } from "./features/events/schemas/firestore";

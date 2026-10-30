@@ -254,7 +254,7 @@ export const claimedCouponSourceSchema = z.enum([
   "manual",
   "promo",
   "spin",
-  "raffle",
+  "giveaway",
   "random-lots",
 ]);
 

@@ -842,6 +842,15 @@ export interface RandomLotsSectionConfig {
   showEntriesRemaining?: boolean;
 }
 
+/**
+ * 🛑 Deliberately still named `EventRaffles…` after the 2026-10-31 EventType
+ * rename: it is the config for the homepage section whose PERSISTED
+ * discriminator is `type: "event-raffles"` (see `homepage-sections-seed-data`
+ * and `section-renderer`). The component it feeds was renamed to
+ * `EventGiveawaysSection`; this type mirrors the stored value, not the
+ * component. Renaming it without migrating that discriminator would leave the
+ * name describing something no document holds.
+ */
 export interface EventRafflesSectionConfig {
   title?: string;
   subtitle?: string;
@@ -849,10 +858,17 @@ export interface EventRafflesSectionConfig {
   /**
    * Which prize-event types the strip spans. The two concrete values are
    * `EventType` members, matched against the `type` field — see
-   * `EventRafflesSection` for why `hasRaffle` was the wrong field and what it
+   * `EventGiveawaysSection` for why `hasRaffle` was the wrong field and what it
    * silently did instead.
    */
-  raffleType?: "raffle" | "spin_wheel" | "all";
+  /**
+   * 🛑 Holds `EventType` values despite the name — `EventGiveawaysSection`
+   * feeds it straight into `sieveFilter(EVENT_FIELDS.TYPE, EQ, ...)`. Renamed
+   * 2026-10-31 with the union (`raffle` -> `giveaway`, `spin_wheel` ->
+   * `bonus-spin`); the real `RaffleType` axis was NOT renamed. The FIELD name
+   * stays — it is persisted inside a `homepageSections` config blob.
+   */
+  raffleType?: "giveaway" | "bonus-spin" | "all";
   showEntryCount?: boolean; // NO-RENDERER: EventCard has no entry-count prop; adding one touches every EventCard consumer and is its own change.
   showCountdown?: boolean; // NO-RENDERER: EventCard has no countdown prop; same reason as showEntryCount.
 }

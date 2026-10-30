@@ -126,11 +126,19 @@ export type CouponUsageDocument = {
 // wallet page is a single indexed query; soft-delete preserves history.
 
 export type ClaimedCouponStatus = "active" | "expired" | "used";
+/**
+ * How a coupon landed in a user's wallet. PERSISTED on `claimedCoupons`.
+ *
+ * `raffle` -> `giveaway` on 2026-10-31 with the `EventType` rename; the
+ * migration script rewrites stored rows. 🛑 `spin` is NOT renamed — it is the
+ * bare spin-prize source (`assignSpinPrize`), not the `spin_wheel` event type
+ * that became `bonus-spin`.
+ */
 export type ClaimedCouponSource =
   | "manual"
   | "promo"
   | "spin"
-  | "raffle"
+  | "giveaway"
   | "random-lots";
 
 export interface ClaimedCouponSnapshot {

@@ -439,7 +439,8 @@ export interface EventRafflesBuilderState {
   title: string;
   subtitle: string;
   maxItems: number;
-  raffleType: "raffle" | "spin_wheel" | "all";
+  /** 🛑 `EventType` values, not `RaffleType` — see `EventGiveawaysSection`. */
+  raffleType: "giveaway" | "bonus-spin" | "all";
   showEntryCount: boolean;
   showCountdown: boolean;
 }

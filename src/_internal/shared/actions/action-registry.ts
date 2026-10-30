@@ -1620,7 +1620,7 @@ export const ACTIONS: ActionTree = {
     /*
      * The raffle draw. Added 2026-10-19 — before this there was NO control to
      * draw a raffle anywhere in the product: the endpoint and its
-     * `ADMIN_ENDPOINTS.EVENT_TRIGGER_RAFFLE` constant existed with zero
+     * `ADMIN_ENDPOINTS.EVENT_TRIGGER_GIVEAWAY` constant existed with zero
      * callers, and the tester case whose step 3 reads "trigger the raffle
      * draw" was literally unexecutable.
      *

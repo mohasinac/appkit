@@ -25,7 +25,7 @@ const CLS_PRIZE_BODY = "mt-2 text-[length:var(--appkit-text-sm)] text-success da
 // audit-content-alignment-ok: self-contained circular spin-wheel game widget, all text centered under the wheel by design
 const CLS_ERROR_TEXT = "text-[length:var(--appkit-text-sm)] text-error dark:text-error text-center";
 
-export interface SpinWheelViewProps {
+export interface BonusSpinViewProps {
   eventId: string;
   prizes: DisplaySpinPrize[];
   alreadyUsed?: boolean;
@@ -51,7 +51,7 @@ export interface SpinWheelViewProps {
   };
 }
 
-const DEFAULT_LABELS: Required<NonNullable<SpinWheelViewProps["labels"]>> = {
+const DEFAULT_LABELS: Required<NonNullable<BonusSpinViewProps["labels"]>> = {
   heading: "Spin the Wheel",
   spinButton: "Spin",
   spinningButton: "Spinning…",
@@ -63,7 +63,7 @@ const DEFAULT_LABELS: Required<NonNullable<SpinWheelViewProps["labels"]>> = {
 };
 
 
-export function SpinWheelView({
+export function BonusSpinView({
   eventId,
   prizes,
   alreadyUsed,
@@ -73,7 +73,7 @@ export function SpinWheelView({
   windowEnd,
   onSpin,
   labels,
-}: SpinWheelViewProps) {
+}: BonusSpinViewProps) {
   const l = { ...DEFAULT_LABELS, ...(labels ?? {}) };
   const activePrizes = useMemo(
     () => prizes.filter((p) => p.isActive !== false),

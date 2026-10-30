@@ -15,7 +15,7 @@
  *   - `spinPrizes[]`         — per-prize `weight` (again, the odds) and
  *     `couponId` (an internal coupon document id).
  *
- * `SpinWheelView` reads `id`, `label` and `isActive` and nothing else, so
+ * `BonusSpinView` reads `id`, `label` and `isActive` and nothing else, so
  * dropping the other two costs the client nothing. The prize a spin actually
  * wins is resolved server-side in `assignSpinPrize` and returned as a coupon
  * CODE on the entry, never as the coupon's document id.

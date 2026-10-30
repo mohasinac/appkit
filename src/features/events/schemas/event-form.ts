@@ -86,7 +86,7 @@ export const eventDraftSchema = z.object({
     section: "settings", order: 4, row: "full", kind: "list",
   }),
   rafflePrizeCouponIds: annotate(attachedCouponIdsSchema, {
-    section: "raffle", sectionLabel: "Raffle & Spin Wheel", order: 5, row: "full", kind: "list",
+    section: "raffle", sectionLabel: "Giveaway & Bonus Spin", order: 5, row: "full", kind: "list",
   }),
   /*
    * Whether this event is published to the homepage hero rail.

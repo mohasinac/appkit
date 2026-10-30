@@ -1,7 +1,20 @@
 #!/usr/bin/env node
 /**
- * migrate-collector-drop-rename — drain every PRE-RENAME `auction` spelling
- * out of Firestore, across all ten collections that carry one.
+ * migrate-collector-drop-rename — drain every PRE-RENAME spelling of the
+ * payment-aggregator-optics renames out of Firestore.
+ *
+ * Two sub-migrations now live here, 18 tasks in total:
+ *
+ *   B (2026-10-30) `auction` -> `collector-drop`, 15 tasks.
+ *   C (2026-10-31) the three chance-based `EventType` values — `raffle` ->
+ *     `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` -> `random-draw` —
+ *     3 tasks (`events`, `claimedCoupons`, `homepageSections`). See the
+ *     § SUB-MIGRATION C banner in TASKS for the three same-word things that
+ *     are deliberately NOT migrated.
+ *
+ * One script rather than two because the mechanics are identical and a second
+ * runner is a second set of credential handling, batching and dry-run
+ * defaults to get right. `--only` restricts to named tasks either way.
  *
  * ── WHY THIS IS A SIBLING OF migrate-listing-type-value.mjs, NOT A FLAG ────
  *
@@ -66,7 +79,7 @@
  *
  * Exit: 0 = success, 1 = errors during run, 2 = misconfiguration.
  *
- * @tag domain:products,orders,cart,categories,promotions,notifications,support,auth,stores
+ * @tag domain:products,orders,cart,categories,promotions,notifications,support,auth,stores,events,homepage
  * @tag layer:script
  * @tag access:node-only
  * @tag sideEffects:firestore-write
@@ -102,6 +115,8 @@ const TASK_NAMES = [
   "products", "orders", "carts", "bids", "categories", "categoryCounts",
   "priceIndex", "coupons", "notifications", "supportTickets", "users",
   "stores", "history", "wishlists", "siteSettings",
+  // Sub-migration C (2026-10-31) — the three chance-based EventType values.
+  "events", "claimedCoupons", "homepageSections",
 ];
 if (ONLY) {
   const unknown = ONLY.filter((n) => !TASK_NAMES.includes(n));
@@ -113,6 +128,41 @@ if (ONLY) {
 }
 
 const BATCH_LIMIT = 500; // Firestore write-batch hard ceiling
+
+/**
+ * Sub-migration C — the three chance-based `EventType` values, 2026-10-31.
+ * Declared once so the `events` and `homepageSections` tasks cannot drift
+ * apart: both rewrite the same union, one as a scalar and one nested inside a
+ * section config.
+ *
+ * 🛑 This map is keyed by the OLD value and must never gain an entry for a
+ * value that is not an `EventType`. In particular `spin_wheel` appears in the
+ * unrelated `RaffleType` union and `lottery` in the unrelated product-level
+ * `prizeDrawMode` — neither is migrated. See the § SUB-MIGRATION C banner on
+ * the tasks below.
+ */
+const EVENT_TYPE_RENAMES = {
+  raffle: "giveaway",
+  spin_wheel: "bonus-spin",
+  lottery: "random-draw",
+};
+
+/**
+ * Own-property lookup into `EVENT_TYPE_RENAMES`, returning `undefined` for
+ * anything unmapped.
+ *
+ * 🛑 NOT a bare `EVENT_TYPE_RENAMES[value]`. A stored `type` is arbitrary
+ * Firestore data, so a document holding `"constructor"` or `"toString"` would
+ * walk the prototype chain, yield a FUNCTION, pass a truthiness test, and get
+ * written back into Firestore as the document's new `type`. Vanishingly
+ * unlikely and trivially avoided.
+ */
+function renamedEventType(value) {
+  if (typeof value !== "string") return undefined;
+  return Object.hasOwn(EVENT_TYPE_RENAMES, value)
+    ? EVENT_TYPE_RENAMES[value]
+    : undefined;
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -416,6 +466,95 @@ const TASKS = [
       }
       renameField(p, d, "commissions.auctionListingFee", "commissions.collectorDropListingFee");
       return Object.keys(p).length ? p : null;
+    },
+  },
+
+  // =========================================================================
+  // SUB-MIGRATION C — the three chance-based `EventType` values, 2026-10-31.
+  //
+  //   raffle     -> giveaway
+  //   spin_wheel -> bonus-spin
+  //   lottery    -> random-draw
+  //
+  // Same aggregator-screening rationale as the `auction` -> `collector-drop`
+  // rename above. Folded in here rather than given its own script because the
+  // mechanics are identical and one runner is one thing to get right.
+  //
+  // 🛑 THREE THINGS ARE DELIBERATELY NOT MIGRATED, and each uses one of these
+  // same words. Scope every match before adding a task:
+  //
+  //   1. `products.prizeDrawMode: "reveal" | "lottery"` — the PRODUCT-level
+  //      draw mode for the `random-lots` listing type. A different axis from
+  //      the event-level type; `lotteryConfig`, `lotteryConfigWriteSchema` and
+  //      `mergeLotteryConfig` stay with it (CLAUDE.md § "Lottery Config
+  //      Writes"). There is no `products` task below for exactly this reason.
+  //   2. `events.raffleType: "open_raffle" | "top_n_scorers" |
+  //      "top_n_participants" | "spin_wheel"` — the draw MECHANISM. Its
+  //      `spin_wheel` is NOT the event type that became `bonus-spin`. The
+  //      `events` task below touches `type` ONLY.
+  //   3. `events.hasRaffle` / `rafflePrize*` / `raffleWinner*` /
+  //      `raffleTopN` / `raffleEntryCount` / `raffleTriggeredAt` /
+  //      `raffleGithubFunctionUrl`, and `eventEntries.raffleEligible` —
+  //      persisted FIELD names, read under those names everywhere. No field
+  //      renames in this sub-migration at all.
+  //
+  // Unlike the `auction` half, the code side DOES carry a read-side alias:
+  // `normalizeEventType` (`features/events/types/index.ts`) maps all three old
+  // spellings onto the new union, and every read path goes through it. So the
+  // site works before this runs; the script exists so Firestore eventually
+  // agrees with the schema, and so the aliases can one day be deleted.
+  // =========================================================================
+  {
+    name: "events",
+    collection: "events",
+    select: ["type"],
+    /*
+     * 🛑 `type` ONLY. `raffleType` is a different union and `hasRaffle` /
+     * `raffleWinner*` are persisted field names — see note 2 and 3 above.
+     * Widening this `select` is how the wrong one gets rewritten.
+     */
+    patch(d) {
+      const next = renamedEventType(d.type);
+      return next ? { type: next } : null;
+    },
+  },
+  {
+    name: "claimedCoupons",
+    collection: "claimedCoupons",
+    select: ["source"],
+    /*
+     * How a coupon reached a user's wallet. `ClaimedCouponSource` dropped
+     * `"raffle"` for `"giveaway"`, and the Zod enum is a WRITE gate with no
+     * legacy member — so a stored `raffle` is a value the schema no longer
+     * admits.
+     *
+     * 🛑 `"spin"` is NOT touched. It is the bare spin-prize source written by
+     * `assignSpinPrize`, not the `spin_wheel` event type that became
+     * `bonus-spin`, and it is still a live member of the union.
+     */
+    patch(d) {
+      if (d.source !== "raffle") return null;
+      return { source: "giveaway" };
+    },
+  },
+  {
+    name: "homepageSections",
+    collection: "homepageSections",
+    select: ["config"],
+    /*
+     * `config.raffleType` on the `event-raffles` section.
+     *
+     * 🛑 Despite its NAME this holds `EventType` values, not `RaffleType`
+     * ones — `EventGiveawaysSection` feeds it straight into
+     * `sieveFilter(EVENT_FIELDS.TYPE, EQ, ...)`. That is why it IS migrated
+     * while `events.raffleType` is not. The field name and the section's own
+     * `type: "event-raffles"` discriminator both stay.
+     *
+     * `"all"` is the third legal value and is unaffected.
+     */
+    patch(d) {
+      const next = renamedEventType(d.config?.raffleType);
+      return next ? { "config.raffleType": next } : null;
     },
   },
 ];
