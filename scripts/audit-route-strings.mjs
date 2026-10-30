@@ -6,7 +6,7 @@
  * `"/user/wishlist"` directly to `router.push`, `router.replace`, `<Link href>`,
  * `redirect`, or `permanentRedirect` instead of `ROUTES.ADMIN.PRODUCTS` etc.
  *
- * Public marketing paths (`/auctions`, `/products`, `/blog`, etc.) are NOT
+ * Public marketing paths (`/collector-drops`, `/products`, `/blog`, etc.) are NOT
  * flagged — they often appear inline as Link href and the cost of churning
  * them all is high. Dashboard segments are the higher-leverage target.
  *

@@ -13,13 +13,13 @@
  * `MarketplaceHomepageView` already drops whole SECTIONS whose type maps to a
  * disabled listing type (`HOMEPAGE_SECTION_LISTING_TYPE`). That gate is keyed
  * on `SectionType`, so it can only see sections that ARE a listing type — the
- * auctions rail, the pre-orders rail.
+ * collector drops rail, the pre-orders rail.
  *
  * A carousel is one section of type `carousel` whatever it contains, and what
- * it contains is free-text authored content. With `auction: false` live, the
- * hero still shipped a "Live auctions — place a bid before the timer runs out"
+ * it contains is free-text authored content. With `collector drop: false` live, the
+ * hero still shipped a "Live collector drops — place a bid before the timer runs out"
  * card and a full-screen "Win it at your price" slide, both linking to
- * `/auctions`, which renders nothing. The section gate could not see either:
+ * `/collector-drops`, which renders nothing. The section gate could not see either:
  * the only thing identifying them is where they point.
  *
  * ## Deliberately link-based, not keyword-based
@@ -35,7 +35,7 @@
  * the survivors is NOT done here: the zone grid is a fixed `repeat(3, 1fr)`,
  * so there is no arrangement of two cards that fills it, and silently moving
  * an admin's card is a worse surprise than the gap. The seeded hero therefore
- * replaces its auction card with a real enabled type rather than relying on
+ * replaces its collector drop card with a real enabled type rather than relying on
  * this filter to tidy up after it — this is the safety net for content an
  * admin authors later, where the gap is a visible prompt to go and fix it.
  */
@@ -76,7 +76,7 @@ function isCardDisabled(
  * A slide is dropped when the thing it is ABOUT is disabled — its overlay CTA
  * or its own whole-slide link.
  *
- * Both are checked because they are set independently: the seeded auction
+ * Both are checked because they are set independently: the seeded collector drop
  * slide carries `overlay.button.link` AND `link.url`, while a slide can
  * legitimately have only one.
  */

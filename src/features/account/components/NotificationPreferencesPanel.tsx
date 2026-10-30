@@ -25,7 +25,7 @@ interface SiteSettingsShape {
 
 const TYPE_ROWS: { key: keyof NotificationTypePrefs; label: string; description: string }[] = [
   { key: "orderUpdates", label: "Order updates",    description: "Placed, shipped, delivered, cancelled, refunded" },
-  { key: "bids",         label: "Auction bids",     description: "Outbid alerts and auction win/loss" },
+  { key: "bids",         label: "Collector Drop bids",     description: "Outbid alerts and collector drop win/loss" },
   { key: "offers",       label: "Offers",           description: "New offers received, counter-offers, responses" },
   { key: "reviews",      label: "Reviews",          description: "Review approved, seller reply" },
   { key: "messages",     label: "Messages",         description: "New buyer-seller chat messages" },

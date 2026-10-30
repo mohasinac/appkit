@@ -49,8 +49,8 @@ export type DisclaimerId =
   | "live-items"
   /** Pre-orders. */
   | "pre-order"
-  /** Auctions. */
-  | "auction-binding"
+  /** Collector Drops. */
+  | "collectordrop-binding"
   /** EMI. */
   | "emi"
   /** Delivery estimates. */
@@ -240,13 +240,13 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
     surfaces: ["PreOrderDetailPageView", "/pre-orders"],
   },
 
-  "auction-binding": {
+  "collectordrop-binding": {
     body:
       "A bid is a binding offer to buy at that price and cannot be withdrawn. If the reserve price is not " +
       "met the item does not sell, even if yours was the highest bid. Winning starts a payment window — " +
       "miss it and the win is forfeited.",
     tone: "warning",
-    surfaces: ["PlaceBidForm", "AuctionDetailPageView", "/auctions"],
+    surfaces: ["PlaceBidForm", "CollectorDropDetailPageView", "/collector-drops"],
   },
 
   "emi": {

@@ -1,6 +1,6 @@
 /*
  * WHY: The three homepage listing hooks each hand-wrote a pre-URL-encoded
- *      `filters=` Sieve string — `listingType%3D%3Dauction%2Cstatus%3D%3D…`.
+ *      `filters=` Sieve string — `listingType%3D%3Dcollector-drop%2Cstatus%3D%3D…`.
  *      Unreadable, unreviewable, and each one silently omitted any liveness
  *      bound, so all three showed sold-out / ended / closed rows. Worse, they
  *      run AFTER the SSR paint and replace it, so a fix to the server half
@@ -16,7 +16,7 @@
  * @tag layer:hook
  * @tag pattern:none
  * @tag access:client
- * @tag consumers:useFeaturedAuctions,useFeaturedPreOrders,useFeaturedProducts
+ * @tag consumers:useFeaturedCollectorDrops,useFeaturedPreOrders,useFeaturedProducts
  * @tag sideEffects:none
  */
 

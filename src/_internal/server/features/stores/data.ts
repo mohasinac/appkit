@@ -20,7 +20,7 @@ export const getStoreForDetail = cache(
 
 // Collapse of three near-identical 14-line functions via factory — export names unchanged.
 export const listStoreProductsInitial  = makeGetStoreListingsInitial("standard",  STORES_PRODUCTS_PAGE_SIZE);
-export const listStoreAuctionsInitial  = makeGetStoreListingsInitial("auction",   STORES_PRODUCTS_PAGE_SIZE);
+export const listStoreCollectorDropsInitial  = makeGetStoreListingsInitial("collector-drop",   STORES_PRODUCTS_PAGE_SIZE);
 export const listStorePreOrdersInitial = makeGetStoreListingsInitial("pre-order", STORES_PRODUCTS_PAGE_SIZE);
 
 /** Stores for sitemap generation. */

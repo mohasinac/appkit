@@ -108,7 +108,7 @@ export interface AdminFaqEditorViewProps
  * 🛑 DERIVED FROM THE REAL UNION. NEVER HAND-WRITE THIS LIST AGAIN.
  *
  * Until 2026-10-02 this was six hand-written options — shipping / returns /
- * payments / auctions / pre-orders / general — and FIVE of them were values no
+ * payments / collector drops / pre-orders / general — and FIVE of them were values no
  * reader in the product understands. `FAQCategory` is orders_payment |
  * shipping_delivery | returns_refunds | product_information | account_security |
  * technical_support | general | scam_awareness, so only `general` overlapped.

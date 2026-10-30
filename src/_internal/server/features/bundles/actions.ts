@@ -52,7 +52,7 @@ export async function addBundleToCartAction(
   // Bundles bypass `addItemToCart`'s capability gate deliberately (a bundle's
   // `listingType: "standard"` is a lie told to satisfy it — `bundleRule` is
   // `cartEligible: false`). The LANE gate is not optional though, and this path
-  // silently skipped it: a buyer with an unpaid auction win could keep shopping
+  // silently skipped it: a buyer with an unpaid collector drop win could keep shopping
   // by adding bundles.
   await assertCanAddNewItems(userId);
 

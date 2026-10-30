@@ -219,6 +219,7 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
       const data = doc.data();
       const rawListingType = data.listingType;
       const listingType: SitemapProduct["listingType"] =
+        rawListingType === "collector-drop" ||
         rawListingType === "auction" ||
         rawListingType === "pre-order" ||
         rawListingType === "random-lots"
@@ -256,7 +257,7 @@ export interface RelatedItemsResult {
 
 /**
  * Excludes the current product, anything not publicly visible, and anything
- * no longer available — ended auctions, closed prize-draws, filled pre-orders,
+ * no longer available — ended collector drops, closed prize-draws, filled pre-orders,
  * depleted code pools, sold-out stock.
  *
  * This used to be a private `isValidRelatedItem` here, and it was the only
@@ -287,10 +288,10 @@ function toRelatedItems(
         isPubliclyVisible(r) &&
         /*
          * 🛑 A DISABLED listing type must not appear here. Related items are
-         * pure DISCOVERY — unlike a won auction sitting in the cart, nothing
+         * pure DISCOVERY — unlike a won collector drop sitting in the cart, nothing
          * here is an obligation the buyer already holds, so there is no reason
          * to surface a type the admin has switched off. Without this an
-         * auction card rendered on every related carousel with auctions
+         * collector drop card rendered on every related carousel with collector drops
          * disabled, and it was reachable by clicking it.
          */
         isListingTypeEnabled(

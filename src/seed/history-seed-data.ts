@@ -24,7 +24,7 @@
 
 export interface HistoryItemSeed {
   productId: string;
-  productType: "product" | "auction" | "preorder";
+  productType: "product" | "collector-drop" | "preorder";
   viewedAt: Date;
 }
 
@@ -56,14 +56,14 @@ export const historySeedData: HistorySeedDocument[] = [
   makeDoc("user-yugi-muto", [
     { productId: "product-beyblade-original-dranzer-s", productType: "product", viewedAt: hoursAgo(1) },
     { productId: "product-beyblade-original-driger-v", productType: "product", viewedAt: hoursAgo(2) },
-    { productId: "auction-beyblade-original-dragoon-storm", productType: "auction", viewedAt: hoursAgo(4) },
+    { productId: "collectordrop-beyblade-original-dragoon-storm", productType: "collector-drop", viewedAt: hoursAgo(4) },
     { productId: "product-beyblade-metal-flame-sagittario", productType: "product", viewedAt: hoursAgo(6) },
     { productId: "product-beyblade-burst-valkyrie", productType: "product", viewedAt: hoursAgo(8) },
     { productId: "classified-beyblade-stadium-set", productType: "product", viewedAt: hoursAgo(12) },
     { productId: "product-beyblade-metal-storm-pegasus", productType: "product", viewedAt: hoursAgo(18) },
     { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", viewedAt: daysAgo(1) },
     { productId: "digitalcode-beyblade-x-app-starter-pack", productType: "product", viewedAt: daysAgo(1) },
-    { productId: "auction-beyblade-metal-lightning-l-drago", productType: "auction", viewedAt: daysAgo(2) },
+    { productId: "collectordrop-beyblade-metal-lightning-l-drago", productType: "collector-drop", viewedAt: daysAgo(2) },
     { productId: "randomlots-beyblade-mystery-box", productType: "preorder", viewedAt: daysAgo(2) },
     { productId: "product-beyblade-burst-regalia-genesis", productType: "product", viewedAt: daysAgo(3) },
     { productId: "product-beyblade-x-wizard-arrow", productType: "product", viewedAt: daysAgo(4) },
@@ -75,13 +75,13 @@ export const historySeedData: HistorySeedDocument[] = [
   // Admin: 10 recently viewed — browsing Beyblade Arena to review inventory
   makeDoc("user-admin-letitrip", [
     { productId: "product-beyblade-metal-storm-pegasus", productType: "product", viewedAt: hoursAgo(1) },
-    { productId: "auction-beyblade-original-dragoon-storm", productType: "auction", viewedAt: hoursAgo(3) },
+    { productId: "collectordrop-beyblade-original-dragoon-storm", productType: "collector-drop", viewedAt: hoursAgo(3) },
     { productId: "product-beyblade-x-knife-shinobi", productType: "product", viewedAt: hoursAgo(6) },
     { productId: "product-beyblade-burst-valkyrie", productType: "product", viewedAt: hoursAgo(12) },
     { productId: "randomlots-beyblade-mystery-box", productType: "preorder", viewedAt: daysAgo(1) },
     { productId: "product-beyblade-metal-flame-sagittario", productType: "product", viewedAt: daysAgo(1) },
     { productId: "product-beyblade-x-wizard-arrow", productType: "product", viewedAt: daysAgo(2) },
-    { productId: "auction-beyblade-metal-lightning-l-drago", productType: "auction", viewedAt: daysAgo(3) },
+    { productId: "collectordrop-beyblade-metal-lightning-l-drago", productType: "collector-drop", viewedAt: daysAgo(3) },
     { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", viewedAt: daysAgo(4) },
     { productId: "product-beyblade-original-dranzer-s", productType: "product", viewedAt: daysAgo(5) },
   ]),

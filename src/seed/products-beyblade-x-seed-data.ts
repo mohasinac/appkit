@@ -68,7 +68,7 @@ const BRAND = "Takara-Tomy";
  * `searchTxt` is the ONLY field the public product search queries. A row
  * without it is not ranked lower — it is absent. Measured on production
  * before this fix: 12 of the 14 real listings had no `searchTxt` at all, and
- * the only two that did were the auction and the pre-order, whose own files
+ * the only two that did were the collector drop and the pre-order, whose own files
  * already applied a tokeniser. So `?q=aero` returned 1 of the 3 AeroPegasus
  * products and `?q=beyblade` returned 2 of 14, while a nonsense control
  * correctly returned 0 — the search was working perfectly against an index

@@ -46,7 +46,7 @@ import { categoriesRepository } from "../features/categories/repository/categori
 import { productRepository } from "../features/products/repository/products.repository";
 import { orderRepository } from "../features/orders/repository/orders.repository";
 import { reviewRepository } from "../features/reviews/repository/reviews.repository";
-import { bidRepository } from "../features/auctions/repository/bid.repository";
+import { bidRepository } from "../features/collector-drops/repository/bid.repository";
 import { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
 import { notificationRepository } from "../features/admin/repository/notification.repository";
 import { carouselRepository } from "../features/homepage/repository/carousel.repository";

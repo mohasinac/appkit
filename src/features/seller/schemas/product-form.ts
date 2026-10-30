@@ -99,15 +99,15 @@ export const productDraftSchema = z
      */
     sku: z.string().max(64).optional(),
 
-    // Auction
+    // Collector Drop
     startingBid: z.number().optional(),
     reservePrice: z.number().optional(),
     buyNowPrice: z.number().optional(),
     minBidIncrement: z.number().optional(),
-    auctionEndDate: z.string().optional(),
-    auctionShippingPaidBy: z.enum(["winner", "seller"]).optional(),
+    collectorDropEndDate: z.string().optional(),
+    collectorDropShippingPaidBy: z.enum(["winner", "seller"]).optional(),
     autoExtendable: z.boolean().optional(),
-    auctionExtensionMinutes: z.number().optional(),
+    collectorDropExtensionMinutes: z.number().optional(),
 
     // Pre-order
     preOrderDeliveryDate: z.string().optional(),

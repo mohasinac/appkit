@@ -2,7 +2,7 @@
 // Cron syntax accepts both Firebase shorthand and standard cron expressions.
 
 import {
-  auctionSettlementHandler,
+  collectorDropSettlementHandler,
   autoPayoutEligibilityHandler,
   bundleStockSyncHandler,
   cartPruneHandler,
@@ -44,11 +44,23 @@ import { defineFunction } from "./define";
 const REGION = "asia-south1";
 const EVERY_5_MIN = "every 5 minutes";
 
-export const auctionSettlement = defineFunction({
-  name: "auctionSettlement",
-  description: "Settle expired auctions every 15 minutes and notify winners.",
+/**
+ * 🛑 RENAMED from `auctionSettlement` in the collector-drop rename.
+ *
+ * `bindAllFromRegistry` does `out[def.name] = bindOne(def)`, so `name` IS the
+ * deployed Lambda key — renaming it DEPLOYS A NEW FUNCTION rather than moving
+ * the old one. **After the next `firebase deploy --only functions`, the old
+ * `auctionSettlement` function must be DELETED from the Firebase project by
+ * hand** (`firebase functions:delete auctionSettlement --region asia-south1`).
+ * Until it is, it keeps running on its own Cloud Scheduler job every 15
+ * minutes, settling the same collector drops a second time — two settlers for
+ * one collection, plus a second Scheduler job's standing cost.
+ */
+export const collectorDropSettlement = defineFunction({
+  name: "collectorDropSettlement",
+  description: "Settle expired collector drops every 15 minutes and notify winners.",
   trigger: { kind: "schedule", cron: "every 15 minutes", timeZone: "UTC" },
-  handler: auctionSettlementHandler,
+  handler: collectorDropSettlementHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -475,7 +487,7 @@ export const boxRollupReconcile = defineFunction({
 
 export const positionsReconcile = defineFunction({
   name: "positionsReconcile",
-  description: "Reconcile bid/auction positions (daily 03:30 UTC).",
+  description: "Reconcile bid/collector drop positions (daily 03:30 UTC).",
   trigger: { kind: "schedule", cron: "30 3 * * *", timeZone: "UTC" },
   handler: positionsReconcileHandler,
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
@@ -562,7 +574,7 @@ export const testDataCleanup = defineFunction({
 // REMOVED. The tester runner now owns fixture state — it seeds a known catalog at the
 // start of a run and wipes at the end — so a background job independently rewriting
 // those same documents was redundant and, worse, raced a run in progress: it reset
-// currentBid and recomputed auctionEndDate underneath a test that was mid-assertion.
+// currentBid and recomputed collectorDropEndDate underneath a test that was mid-assertion.
 // Do not reinstate it without also deciding who owns fixture state; two owners is the
 // bug it caused. See tester/scripts/lifecycle.mjs.
 
@@ -606,7 +618,7 @@ export const catalogueImageStalenessReminder = defineFunction({
 });
 
 export const SCHEDULED_FUNCTIONS = [
-  auctionSettlement,
+  collectorDropSettlement,
   pendingOrderTimeout,
   paymentWindowTimeout,
   hardBanReinstatement,

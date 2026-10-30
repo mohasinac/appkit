@@ -67,8 +67,8 @@ export type { FAQPageViewProps } from "./components/FAQPageView";
 export { HelpPageView } from "./components/HelpPageView";
 export type { HelpPageViewProps } from "./components/HelpPageView";
 
-export { HowAuctionsWorkView } from "./components/HowAuctionsWorkView";
-export type { HowAuctionsWorkViewProps } from "./components/HowAuctionsWorkView";
+export { HowCollectorDropsWorkView } from "./components/HowCollectorDropsWorkView";
+export type { HowCollectorDropsWorkViewProps } from "./components/HowCollectorDropsWorkView";
 
 export { HowPayoutsWorkView } from "./components/HowPayoutsWorkView";
 export type { HowPayoutsWorkViewProps } from "./components/HowPayoutsWorkView";

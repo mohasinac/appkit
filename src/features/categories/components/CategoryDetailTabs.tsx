@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 import { AvailabilityScopeHint } from "../../products/components/AvailabilityScopeHint";
 import type { ListingType } from "../../products/types/index";
 import { CategoryProductsListing } from "./CategoryProductsListing";
-import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
+import { CollectorDropsIndexListing } from "../../products/components/CollectorDropsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
 import { RandomLotsIndexListing } from "../../products/components/RandomLotsIndexListing";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
@@ -66,7 +66,7 @@ const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
   [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
   /*
    * Spares render generically — there is nothing type-specific to show beyond
-   * a product grid, unlike an auction (countdown, bid history) or a prize draw
+   * a product grid, unlike a collector drop (countdown, bid history) or a prize draw
    * (entries remaining).
    *
    * 🛑 This map is hand-written and a missing entry is a tab you can CLICK that
@@ -100,7 +100,7 @@ export interface CategoryDetailTabsProps {
    * it falls back to `counts`, i.e. the pre-split behaviour.
    */
   totals?: Record<string, number | undefined>;
-  /** Enabled listing types (e.g. ["standard","auction","pre-order"]). When omitted, all tabs shown. */
+  /** Enabled listing types (e.g. ["standard","collector-drop","pre-order"]). When omitted, all tabs shown. */
   enabledListingTypes?: string[];
   /** Enabled category types (e.g. ["category","brand","bundle"]). When omitted, all tabs shown. */
   enabledCategoryTypes?: string[];
@@ -191,8 +191,8 @@ export function CategoryDetailTabs({
           initialData={activeTab === pluginFor("standard").tabSlug ? initialProductsData : undefined}
         />
       )}
-      {activeTab === pluginFor("auction").tabSlug && (
-        <AuctionsIndexListing categorySlug={categorySlug} />
+      {activeTab === pluginFor("collector-drop").tabSlug && (
+        <CollectorDropsIndexListing categorySlug={categorySlug} />
       )}
       {activeTab === pluginFor("pre-order").tabSlug && (
         <PreOrdersIndexListing categorySlug={categorySlug} />

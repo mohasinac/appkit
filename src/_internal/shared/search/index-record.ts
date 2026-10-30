@@ -87,7 +87,7 @@ export const REC_FACETS = 4;
 /**
  * `[typeIdx, title, detail, slug, facets?]`
  *
- * `facets` is a compact pipe-joined string (`"lt:auction|br:takara-tomy"`) and
+ * `facets` is a compact pipe-joined string (`"lt:collector drop|br:takara-tomy"`) and
  * is absent rather than empty when a record has none — an omitted trailing
  * element costs two bytes, `""` costs four, times 3,730.
  */

@@ -22,7 +22,7 @@ export interface SellerCreateCouponInput {
   name: string;
   description: string;
   type: "percentage" | "fixed" | "free_shipping" | "buy_x_get_y";
-  applicableToAuctions: boolean;
+  applicableToCollectorDrops: boolean;
   discount: {
     value: number;
     maxDiscount?: number;
@@ -48,7 +48,7 @@ export interface SellerCreateCouponInput {
 }
 
 export type SellerUpdateCouponInput = Partial<
-  Omit<SellerCreateCouponInput, "sellerCode" | "applicableToAuctions">
+  Omit<SellerCreateCouponInput, "sellerCode" | "applicableToCollectorDrops">
 >;
 
 // --- Create ----------------------------------------------------------------
@@ -63,7 +63,7 @@ export async function sellerCreateCoupon(
       "Your store must be active before you can create coupons.",
     );
 
-  const { sellerCode, applicableToAuctions, ...rest } = input;
+  const { sellerCode, applicableToCollectorDrops, ...rest } = input;
   const fullCode = buildSellerCouponCode(store.storeSlug, sellerCode);
 
   const existing = await couponsRepository.getCouponByCode(fullCode);
@@ -77,7 +77,7 @@ export async function sellerCreateCoupon(
     code: fullCode,
     scope: "seller",
     storeId: store.id,
-    applicableToAuctions,
+    applicableToCollectorDrops,
     createdBy: userId,
     validity: {
       ...rest.validity,

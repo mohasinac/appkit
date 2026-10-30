@@ -20,8 +20,8 @@ import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
 //
-// Six paths, not five. `OrderType` has only `"auction"`, which cannot tell a
-// won auction from a bought-out one — yet the two differ in what set the
+// Six paths, not five. `OrderType` has only `"collector-drop"`, which cannot tell a
+// won collector drop from a bought-out one — yet the two differ in what set the
 // price: one is the highest bid at close, the other is a fixed buyout price
 // that beat the standing bid. BOTH involve real bids (a buyout writes its own
 // `BidDocument`), so neither is distinguishable by bid count either. Hence a
@@ -36,17 +36,17 @@ export interface OrderSourceStandard {
   listPrice: number;
 }
 
-export interface OrderSourceAuctionWon {
-  path: "auction-won";
-  auctionId: string;
+export interface OrderSourceCollectorDropWon {
+  path: "collector-drop-won";
+  collectorDropId: string;
   bidId: string;
   winningBidAmount: number;
-  /** Bids placed across the whole auction — the "against N bidders" figure. */
+  /** Bids placed across the whole collector drop — the "against N bidders" figure. */
   bidCount: number;
   startingBid: number;
   reservePrice?: number;
   reserveMet: boolean;
-  auctionEndedAt: Date;
+  collectorDropEndedAt: Date;
   /** Second-highest bid, when there was one. */
   runnerUpAmount?: number;
 }
@@ -56,8 +56,8 @@ export interface OrderSourceAuctionWon {
  *
  * An earlier draft of this type asserted "zero bids BY DEFINITION, because
  * buy-now is only valid while `!bidsHaveStarted`". That gate no longer
- * exists: `buyNowAuction` places an actual `BidDocument` (`isBuyout: true`)
- * plus a 1h locked cart line and leaves the auction **live**, and Buy Now is
+ * exists: `buyNowCollectorDrop` places an actual `BidDocument` (`isBuyout: true`)
+ * plus a 1h locked cart line and leaves the collector drop **live**, and Buy Now is
  * offered whenever `buyNowPrice` still beats the standing bid. Recording
  * `bidCount: 0` would bake a falsehood into an immutable audit record.
  *
@@ -67,11 +67,11 @@ export interface OrderSourceAuctionWon {
  *
  * An unpaid buyout lapses to **`cancelled`**, not `forfeited`, and the seller
  * is deliberately not notified: nothing was ever sold. That makes its
- * timeline materially different from a lapsed auction win.
+ * timeline materially different from a lapsed collector drop win.
  */
-export interface OrderSourceAuctionBuyNow {
-  path: "auction-buy-now";
-  auctionId: string;
+export interface OrderSourceCollectorDropBuyNow {
+  path: "collector-drop-buy-now";
+  collectorDropId: string;
   /** The buyout bid itself — a buyout IS a bid. */
   bidId: string;
   buyNowPrice: number;
@@ -81,9 +81,9 @@ export interface OrderSourceAuctionBuyNow {
   /** Active non-buyout bids at buyout time. NOT always zero. */
   bidCount: number;
   boughtAt: Date;
-  /** `min(now + AUCTION_BUYOUT_WINDOW_MS, auctionEndDate)`. */
+  /** `min(now + COLLECTOR_DROP_BUYOUT_WINDOW_MS, collectorDropEndDate)`. */
   checkoutDeadline: Date;
-  auctionEndDate?: Date;
+  collectorDropEndDate?: Date;
 }
 
 export interface OrderSourceOfferAccepted {
@@ -125,8 +125,8 @@ export interface OrderSourceRandomLots {
 
 export type OrderSourceContext =
   | OrderSourceStandard
-  | OrderSourceAuctionWon
-  | OrderSourceAuctionBuyNow
+  | OrderSourceCollectorDropWon
+  | OrderSourceCollectorDropBuyNow
   | OrderSourceOfferAccepted
   | OrderSourcePreOrder
   | OrderSourceRandomLots;
@@ -559,13 +559,13 @@ export interface OrderDocument extends BaseDocument {
   items?: OrderDocumentItem[];
   orderType?: OrderType;
   /**
-   * True when this `orderType: "auction"` order came from Buy Now rather than
+   * True when this `orderType: "collector-drop"` order came from Buy Now rather than
    * from winning the bidding.
    *
    * Not a new `orderType` value on purpose — the /user/orders tabs key on
-   * `orderType`, and a buyout IS an auction order from the buyer's point of
+   * `orderType`, and a buyout IS a collector drop order from the buyer's point of
    * view. What it changes is the ADMIN review window: a buyout is settled in a
-   * one-hour scramble against a still-live auction, so `paymentReviewAutoApprove`
+   * one-hour scramble against a still-live collector drop, so `paymentReviewAutoApprove`
    * gives an admin a full day to verify its proof instead of the usual couple of
    * hours before auto-approving.
    */
@@ -1317,12 +1317,12 @@ export interface OrderDocument extends BaseDocument {
    * How the buyer acquired the right to buy, written ONCE at creation.
    *
    * A discriminated union rather than optional fields, because `orderType`
-   * cannot distinguish an auction that was WON from one that was BOUGHT OUT
-   * — both are `"auction"` — and `winningBidAmount`/`bidCount` are
+   * cannot distinguish a collector drop that was WON from one that was BOUGHT OUT
+   * — both are `"collector-drop"` — and `winningBidAmount`/`bidCount` are
    * meaningless on a buy-now, where there are zero bids by definition.
    *
-   * Never recomputed: a settled auction's numbers must not move when the
-   * auction document is later archived or the product is re-priced.
+   * Never recomputed: a settled collector drop's numbers must not move when the
+   * collector drop document is later archived or the product is re-priced.
    */
   sourceContext?: OrderSourceContext;
 
@@ -1691,7 +1691,7 @@ export const ORDER_UPDATABLE_FIELDS = ["notes", "shippingAddress"] as const;
  * was dropped before the order existed is not part of the order's history.
  *
  * **Acquisition is NOT tracked here either** — how the buyer got the right to
- * buy (auction won, offer accepted, bought out) is written once to
+ * buy (collector drop won, offer accepted, bought out) is written once to
  * `sourceContext` at creation. It never changes, so it is not a timeline
  * event.
  *

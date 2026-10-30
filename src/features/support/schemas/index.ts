@@ -15,7 +15,7 @@ export const ticketCategorySchema = z.enum([
   "listing_dispute",
   "scam_report",
   "refund_request",
-  "auction_dispute",
+  "collector_drop_dispute",
   "general",
   "store_change_request",
   "order_modification_request",

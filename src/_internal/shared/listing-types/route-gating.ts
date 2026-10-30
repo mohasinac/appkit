@@ -10,9 +10,9 @@
  * destination by URL and never mentions a listing type at all: a carousel
  * slide's overlay button, a card's CTA, a promo-grid tile.
  *
- * Measured 2026-10-20 with `auction: false` live: the homepage hero carousel
- * still shipped a "Live auctions / Place a bid before the timer runs out"
- * CARD linking to `/auctions`, and a whole `slide-beyblade-auction` slide
+ * Measured 2026-10-20 with `collector drop: false` live: the homepage hero carousel
+ * still shipped a "Live collector drops / Place a bid before the timer runs out"
+ * CARD linking to `/collector-drops`, and a whole `slide-beyblade-collectorDrop` slide
  * whose overlay read "Win it at your price". Both are authored content, so no
  * type-keyed gate could see them — the only thing that identifies them is
  * where they point.
@@ -26,7 +26,7 @@
  * disagreeing about what a gate matches is a defect this codebase keeps paying
  * for, and the only safe number of descriptions is one.
  *
- * Store tabs (`/stores/{slug}/auctions`) are out of scope — those are resolved
+ * Store tabs (`/stores/{slug}/collector-drops`) are out of scope — those are resolved
  * by `resolveStoreTabs`, which owns its own visibility, and a second owner is
  * how a mirror drifts (Root Cause #42).
  */
@@ -76,7 +76,7 @@ const TYPES_BY_BROWSE_ROUTE: ReadonlyMap<string, readonly ListingType[]> = (() =
  * route, and a caller must not filter them out.
  *
  * 🛑 The locale prefix is stripped. `ROUTES` values are unprefixed
- * (`/auctions`) and `next-intl` adds `/en` at navigation time, but an admin
+ * (`/collector-drops`) and `next-intl` adds `/en` at navigation time, but an admin
  * pasting a URL out of the address bar stores the prefixed form — so a
  * comparison against the raw value matches the seed and misses the hand-typed
  * one, which is the half most likely to be wrong.
@@ -85,9 +85,9 @@ function normalisePath(href: string | undefined | null): string {
   if (typeof href !== "string") return "";
   const trimmed = href.trim();
   if (!trimmed || !trimmed.startsWith("/")) return "";
-  // Drop query + hash: `/auctions?sort=ending` is still /auctions.
+  // Drop query + hash: `/collector-drops?sort=ending` is still /collector-drops.
   const path = trimmed.split(/[?#]/)[0] ?? "";
-  // `/en/auctions` → `/auctions`. Two-letter segment only, so a real route
+  // `/en/collector-drops` → `/collector-drops`. Two-letter segment only, so a real route
   // whose first segment is short (there are none today, but `/ar` would be a
   // plausible future one) is the only thing this could over-match — and it
   // would have to collide with a locale code to do it.
@@ -148,10 +148,10 @@ export function closedSurfaceContext(
  *
  * ## What it still does NOT match
  *
- * Editorial pages that merely carry a name in the path — `/help/auctions`,
- * `/how-auctions-work`, `/seller-guide/random-lots`. None starts with
- * `/auctions`, so the `/`-delimited boundary excludes them for free, and that
- * is correct: an explainer about auctions is honest reading when auctions are
+ * Editorial pages that merely carry a name in the path — `/help/collector-drops`,
+ * `/how-collector-drops-work`, `/seller-guide/random-lots`. None starts with
+ * `/collector-drops`, so the `/`-delimited boundary excludes them for free, and that
+ * is correct: an explainer about collector drops is honest reading when collector drops are
  * off.
  *
  * Fails OPEN on anything it cannot classify — an unknown path, an external

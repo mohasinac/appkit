@@ -21,7 +21,7 @@ export const getStoreBySlug = cache((slug: string) =>
 
 export interface StoreDetailLayoutViewProps {
   storeSlug: string;
-  /** The current active tab value: "products" | "auctions" | "reviews" | "about" */
+  /** The current active tab value: "products" | "collector-drops" | "reviews" | "about" */
   activeTab: string;
   children: ReactNode;
   /**

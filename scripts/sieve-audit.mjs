@@ -58,7 +58,7 @@ const SEED = {
     "category-model-kits",
     "category-vintage-rare",
   ],
-  faqCategories: ["Shipping", "Returns", "Payments", "Auctions", "Pre-orders"],
+  faqCategories: ["Shipping", "Returns", "Payments", "Collector Drops", "Pre-orders"],
   couponCodes: ["WELCOME10", "POKEMON25", "FREESHIP999", "BLADER20", "VIP2026"],
   searchTerms: { products: "pokemon", blog: "pokemon", events: "tournament", stores: "pokemon" },
   // sample IDs known to exist (used by detail/nested probes)
@@ -201,7 +201,7 @@ async function suiteProducts() {
   const sDesc = await baseline("products", path, { ps: 5, s: "-price" });
   expectDifferent("products", "sort price asc vs desc", sAsc.ex.ids, sDesc.ex.ids, sDesc.url, "sort=-price");
 
-  const fAuc = await baseline("products", path, { ps: 5, f: "listingType==auction" });
+  const fAuc = await baseline("products", path, { ps: 5, f: "listingType==collector-drop" });
   const fNon = await baseline("products", path, { ps: 5, f: "listingType==standard" });
   expectDifferent("products", "filter listingType", fAuc.ex.ids, fNon.ex.ids, fNon.url, "listingType toggle");
 
@@ -339,25 +339,25 @@ async function suitePreOrders() {
   expectDifferent("pre-orders", "sort price asc vs desc", sAsc.ex.ids, sDesc.ex.ids, sDesc.url, "sort=-price");
 }
 
-async function suiteAuctions() {
-  // No /api/auctions route exists at the moment — check that the listing-equivalent
+async function suiteCollectorDrops() {
+  // No /api/collector-drops route exists at the moment — check that the listing-equivalent
   // works through /api/products with listingType filter, AND probe the explicit path.
-  const explicit = await baseline("auctions", "/api/auctions", { ps: 5 });
+  const explicit = await baseline("collector-drops", "/api/collector-drops", { ps: 5 });
   const looksLikeHtml = explicit.res.isHtml || (explicit.res.contentType || "").includes("text/html");
   record({
-    collection: "auctions",
-    name: "/api/auctions returns JSON (not page HTML)",
+    collection: "collector-drops",
+    name: "/api/collector-drops returns JSON (not page HTML)",
     pass: !looksLikeHtml && explicit.res.status === 200 && explicit.ex.items.length >= 0,
     url: explicit.url,
     detail: looksLikeHtml ? "App Router served HTML page — no API route" : `status=${explicit.res.status} items=${explicit.ex.items.length}`,
   });
 
   // Fallback: products filtered by listingType (SB1-G Phase 4).
-  const proxied = await baseline("auctions", "/api/products", { ps: 5, f: "listingType==auction" });
+  const proxied = await baseline("collector-drops", "/api/products", { ps: 5, f: "listingType==collector-drop" });
   record({
-    collection: "auctions",
-    name: "products?f=listingType==auction returns auctions",
-    pass: proxied.res.status === 200 && proxied.ex.items.length > 0 && proxied.ex.items.every((it) => it.listingType === "auction" || String(it.id || "").startsWith("auction-")),
+    collection: "collector-drops",
+    name: "products?f=listingType==collector-drop returns collector drops",
+    pass: proxied.res.status === 200 && proxied.ex.items.length > 0 && proxied.ex.items.every((it) => it.listingType === "collector-drop" || String(it.id || "").startsWith("collectordrop-")),
     url: proxied.url,
     detail: `items=${proxied.ex.items.length}`,
   });
@@ -377,8 +377,8 @@ async function suiteNested() {
   const reviews = await baseline("nested:stores", `/api/stores/${slug}/reviews`, { ps: 5 });
   record({ collection: "nested:stores", name: `${slug}/reviews`, pass: reviews.res.status === 200, url: reviews.url, detail: `status=${reviews.res.status}` });
 
-  const auctions = await baseline("nested:stores", `/api/stores/${slug}/auctions`, { ps: 5 });
-  record({ collection: "nested:stores", name: `${slug}/auctions`, pass: auctions.res.status === 200, url: auctions.url, detail: `status=${auctions.res.status}` });
+  const collectorDrops = await baseline("nested:stores", `/api/stores/${slug}/collector-drops`, { ps: 5 });
+  record({ collection: "nested:stores", name: `${slug}/collector-drops`, pass: collectorDrops.res.status === 200, url: collectorDrops.url, detail: `status=${collectorDrops.res.status}` });
 }
 
 async function suiteAuthGates() {
@@ -437,7 +437,7 @@ async function main() {
   await runSuite("events", suiteEvents);
   await runSuite("faqs", suiteFaqs);
   await runSuite("pre-orders", suitePreOrders);
-  await runSuite("auctions", suiteAuctions);
+  await runSuite("collector-drops", suiteCollectorDrops);
   await runSuite("search", suiteSearch);
   await runSuite("nested:stores", suiteNested);
   await runSuite("auth-gates", suiteAuthGates);

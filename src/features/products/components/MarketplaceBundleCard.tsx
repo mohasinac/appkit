@@ -295,7 +295,7 @@ export function MarketplaceBundleCard({
       Across the five card types this toolbar appeared in FIVE different
       places — `top-14` on the product grid (on the photograph), `top-2`
       here and on the prize draw (on the badges), `bottom-2` on the pre-order
-      and auction (on top of their own CTA button). Each was chosen by
+      and collector drop (on top of their own CTA button). Each was chosen by
       elimination against that one card's overlays, so each landed somewhere
       different and none of them read as a toolbar.
 

@@ -44,7 +44,7 @@ export interface ListingCheckoutRule {
   /** Can this listing type be purchased at all? */
   purchaseable: boolean;
   /**
-   * Can this item sit in the shopping cart?  False for auctions (bid-only),
+   * Can this item sit in the shopping cart?  False for collector drops (bid-only),
    * classified (chat-only), live (pending jurisdiction gate), bundles
    * (direct-checkout-only via CategoryCheckoutRule).
    */
@@ -69,7 +69,7 @@ export interface ListingCheckoutRule {
   nonRefundable: boolean;
   /**
    * When false the checkout pipeline issues one order per cart line (even when
-   * multiple lines share the same product).  Auctions and offers set this to
+   * multiple lines share the same product).  Collector Drops and offers set this to
    * false so each lock is its own order.
    */
   canMergeWithSameProduct: boolean;

@@ -111,7 +111,7 @@ export interface CartOp {
 export interface WishlistOp {
   op: WishlistOpKind;
   itemId: string;
-  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live";
+  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction";
   title?: string;
   image?: string;
   ts: number;

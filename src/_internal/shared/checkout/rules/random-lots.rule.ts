@@ -17,7 +17,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  *
  * A random-lots draw is a game of chance, which is on the prohibited-merchant lists
  * Indian payment gateways inherit from the card networks — the same lists that
- * carry lotteries and auctions. Routing entry payments through a standard
+ * carry lotteries and collector drops. Routing entry payments through a standard
  * e-commerce MID is a terms breach, and the penalty is the merchant account
  * frozen with the settlement balance held, not a declined charge. One category
  * can cost every other category its ability to take money.

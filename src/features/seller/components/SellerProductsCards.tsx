@@ -44,7 +44,7 @@ export interface SellerProductsCardsProps<TRow extends SellerProductsCardsRowSha
 }
 
 function buildHref(row: SellerProductsCardsRowShape): string {
-  if (row.listingKind === "auction") return `/auctions/${row.id}`;
+  if (row.listingKind === "collector-drop") return `/collector-drops/${row.id}`;
   if (row.listingKind === "pre-order") return `/pre-orders/${row.id}`;
   return `/products/${row.id}`;
 }

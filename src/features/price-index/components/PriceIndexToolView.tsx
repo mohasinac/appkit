@@ -161,7 +161,7 @@ const CONDITION_LABEL: Record<string, string> = {
 
 const LISTING_TYPE_LABEL: Record<string, string> = {
   standard: "Standard sale",
-  auction: "Auction",
+  "collector-drop": "Collector Drop",
   "pre-order": "Pre-order",
   "random-lots": "Random lots",
   classified: "Classified",

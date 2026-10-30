@@ -29,7 +29,7 @@ const GUIDE_CARDS: GuideCard[] = [
   {
     Icon: Package,
     title: "Listings",
-    description: "Add products, auctions, and pre-orders. Learn condition grades, media tips, and pricing.",
+    description: "Add products, collector drops, and pre-orders. Learn condition grades, media tips, and pricing.",
     href: String(ROUTES.STORE.GUIDE_LISTINGS),
   },
   {
@@ -53,7 +53,7 @@ const GUIDE_CARDS: GuideCard[] = [
   {
     Icon: Shield,
     title: "Capabilities",
-    description: "Admin-granted feature flags — auctions, pre-orders, lower commissions, and more.",
+    description: "Admin-granted feature flags — collector drops, pre-orders, lower commissions, and more.",
     href: String(ROUTES.STORE.GUIDE_CAPABILITIES),
   },
     {

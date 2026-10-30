@@ -155,7 +155,7 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     // rather than as a lever: priority is unchanged and neither page loses
     // indexability. 2026-09-14, Vercel usage reduction.
     page(String(ROUTES.PUBLIC.PRODUCTS), "daily", 0.9),
-    page(String(ROUTES.PUBLIC.AUCTIONS), "daily", 0.9),
+    page(String(ROUTES.PUBLIC.COLLECTOR_DROPS), "daily", 0.9),
     page(String(ROUTES.PUBLIC.CATEGORIES), "weekly", 0.8),
     page(String(ROUTES.PUBLIC.BRANDS), "weekly", 0.7),
     page(String(ROUTES.BLOG.LIST), "daily", 0.7),
@@ -204,7 +204,7 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
      */
     page(String(ROUTES.PUBLIC.SPARES), "daily", 0.6),
     page(String(ROUTES.PUBLIC.FEES), "monthly", 0.4),
-    page(String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK), "monthly", 0.4),
+    page(String(ROUTES.PUBLIC.HOW_COLLECTOR_DROPS_WORK), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_PRE_ORDERS_WORK), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_OFFERS_WORK), "monthly", 0.4),
     page(String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS), "monthly", 0.4),
@@ -294,13 +294,13 @@ const fetchDigitalCodeUrls = (baseUrl: string) =>
 const fetchLiveUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "live", (slug) => ROUTES.PUBLIC.LIVE_DETAIL(slug), "live");
 
-async function fetchAuctionUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
+async function fetchCollectorDropUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
     const db = getAdminDb();
     const snap = await db
       .collection(PRODUCT_COLLECTION)
       .where(PRODUCT_STATUS, "==", PRODUCT_STATUS_PUBLISHED)
-      .where("listingType", "==", "auction")
+      .where("listingType", "==", "collector-drop")
       .select(PRODUCT_SLUG, PRODUCT_UPDATED_AT, TEST_DATA_FIELD)
       .limit(2000)
       .get();
@@ -310,7 +310,7 @@ async function fetchAuctionUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
         const data = doc.data();
         const slug = (data[PRODUCT_SLUG] as string | undefined) ?? doc.id;
         return {
-          url: `${baseUrl}${ROUTES.PUBLIC.AUCTION_DETAIL(slug)}`,
+          url: `${baseUrl}${ROUTES.PUBLIC.COLLECTOR_DROP_DETAIL(slug)}`,
           lastModified: (data[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ?? new Date(),
           changeFrequency: "daily" as const,
           priority: 0.8,
@@ -318,7 +318,7 @@ async function fetchAuctionUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
       });
   } catch (err) {
     void normalizeError(err);
-    return sitemapSectionFailed("auction", err);
+    return sitemapSectionFailed("collector-drop", err);
   }
 }
 
@@ -449,12 +449,12 @@ async function fetchCategoryTypeUrls(
  */
 interface CategoryMetricsShape {
   totalProductCount?: number;
-  totalAuctionCount?: number;
+  totalCollectorDropCount?: number;
 }
 
 /** A rollup of zero, or no rollup at all, means nothing to show. */
 function hasStock(metrics: CategoryMetricsShape | undefined): boolean {
-  return (metrics?.totalProductCount ?? 0) + (metrics?.totalAuctionCount ?? 0) > 0;
+  return (metrics?.totalProductCount ?? 0) + (metrics?.totalCollectorDropCount ?? 0) > 0;
 }
 
 async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
@@ -487,7 +487,7 @@ async function fetchCategoryUrls(baseUrl: string): Promise<MetadataRoute.Sitemap
           return false;
         }
         const metrics = data[CATEGORY_FIELDS.METRICS] as CategoryMetricsShape | undefined;
-        if (metrics?.totalProductCount === undefined && metrics?.totalAuctionCount === undefined) {
+        if (metrics?.totalProductCount === undefined && metrics?.totalCollectorDropCount === undefined) {
           uncounted++;
         }
         return data[CATEGORY_FIELDS.TIER] === 0 || hasStock(metrics);
@@ -725,7 +725,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     groupedListingUrls,
     eventUrls,
     blogUrls,
-    auctionUrls,
+    collectorDropUrls,
     preOrderUrls,
     randomLotsUrls,
     classifiedUrls,
@@ -744,7 +744,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchGroupedListingUrls(baseUrl),
     fetchEventUrls(baseUrl),
     fetchBlogPostUrls(baseUrl),
-    fetchAuctionUrls(baseUrl),
+    fetchCollectorDropUrls(baseUrl),
     fetchPreOrderUrls(baseUrl),
     fetchRandomLotsUrls(baseUrl),
     fetchClassifiedUrls(baseUrl),
@@ -774,7 +774,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     group: groupedListingUrls.length,
     blog: blogUrls.length,
     product: productUrls.length,
-    auction: auctionUrls.length,
+    collectorDrop: collectorDropUrls.length,
     preOrder: preOrderUrls.length,
     randomLots: randomLotsUrls.length,
     classified: classifiedUrls.length,
@@ -818,7 +818,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
 
   /*
    * The same treatment for a listing-type surface that is switched off or
-   * measured as holding nothing — `/auctions`, `/art`, `/spares`, …
+   * measured as holding nothing — `/collector-drops`, `/art`, `/spares`, …
    *
    * 🛑 BROWSE ROUTES ONLY, matched on the exact path. Detail URLs are NOT
    * dropped here and that is deliberate: art, stickers, spares and standard
@@ -879,7 +879,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...groupedListingUrls,
     ...blogUrls,
     ...productUrls,
-    ...auctionUrls,
+    ...collectorDropUrls,
     ...preOrderUrls,
     ...randomLotsUrls,
     ...classifiedUrls,

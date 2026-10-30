@@ -132,7 +132,7 @@ const PLATFORM: FeatureInput[] = [
   { slug: "condition-used", label: "Pre-owned", description: "Previously owned and sold as pictured. Condition is graded on the listing.", icon: "history", group: "condition", category: "condition", aliases: ["Used", "Second-hand", "Preowned"] },
   { slug: "featured", label: "Featured", description: "Highlighted by the platform across browse and homepage surfaces.", icon: "star", group: "commercial", category: "platform", tone: "primary" },
   { slug: "promoted", label: "Promoted", description: "A paid promotion placement by the seller.", icon: "megaphone", group: "commercial", category: "platform", tone: "secondary" },
-  { slug: "auction-winner-badge", label: "Auction Win", description: "Acquired by winning an auction on LetItRip.", icon: "gavel", group: "commercial", category: "auction", types: ["auction"] },
+  { slug: "collectordrop-winner-badge", label: "Collector Drop Win", description: "Acquired by winning a collector drop on LetItRip.", icon: "gavel", group: "commercial", category: "collector-drop", types: ["collector-drop"] },
   { slug: "shipping-paid-by-seller", label: "Seller Pays Shipping", description: "The seller covers shipping on this listing.", icon: "package", group: "commercial", category: "shipping", tone: "primary", aliases: ["Seller paid shipping"] },
   { slug: "preorder-confirmed", label: "Pre-order Confirmed", description: "Stock is allocated and the release date is confirmed by the seller.", icon: "calendar-check", group: "release", category: "preorder", types: ["preorder"] },
 ];

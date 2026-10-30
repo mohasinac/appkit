@@ -12,7 +12,7 @@
  * Why this exists (2026-10-10): `GET /api/categories` returned `result.data`
  * raw — the whole document — on an unauthenticated, hour-edge-cached route.
  * That published `createdBy` (a uid), `createdByStoreId`, `createdByStoreName`
- * and, worst, `metrics.productIds[]` / `metrics.auctionIds[]`: two UNBOUNDED
+ * and, worst, `metrics.productIds[]` / `metrics.collectorDropIds[]`: two UNBOUNDED
  * arrays that grow with the catalogue. `CategoryInlineSelect` calls that route
  * with `pageSize=200` on every seller-form open, so the payload scaled with
  * both the number of categories and the number of products in each.
@@ -215,7 +215,7 @@ export const PRIVATE_CATEGORY_FIELDS = [
 /**
  * Rollup counters only.
  *
- * 🛑 `metrics.productIds[]` and `metrics.auctionIds[]` are deliberately
+ * 🛑 `metrics.productIds[]` and `metrics.collectorDropIds[]` are deliberately
  * dropped. They are unbounded arrays — one entry per product in the category
  * — and they were the bulk of the raw payload. Nothing client-side reads them
  * that a query cannot answer, and a category page already fetches its own
@@ -224,9 +224,9 @@ export const PRIVATE_CATEGORY_FIELDS = [
 function toPublicMetrics(m: CategoryDocument["metrics"] | undefined) {
   return {
     productCount: m?.productCount ?? 0,
-    auctionCount: m?.auctionCount ?? 0,
+    collectorDropCount: m?.collectorDropCount ?? 0,
     totalProductCount: m?.totalProductCount ?? 0,
-    totalAuctionCount: m?.totalAuctionCount ?? 0,
+    totalCollectorDropCount: m?.totalCollectorDropCount ?? 0,
     totalItemCount: m?.totalItemCount ?? 0,
   };
 }

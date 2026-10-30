@@ -30,7 +30,7 @@ export interface DetailPageTabsProps {
 }
 
 /**
- * `DetailPageTabs` — tab shell used by Product, Auction and Event detail
+ * `DetailPageTabs` — tab shell used by Product, Collector Drop and Event detail
  * pages. Renders an accessible trigger strip + a single visible panel.
  * Animation and URL sync are intentionally not baked in so consumers can
  * wire those via the standard `useUrlTable` / `usePanelUrlSync` hooks.

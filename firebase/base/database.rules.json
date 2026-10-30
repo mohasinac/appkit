@@ -35,7 +35,7 @@
     ".read": false,
     ".write": false,
 
-    "auction-bids": {
+    "collector-drop-bids": {
       "$productId": {
         // Server-relayed bid feed. NOT client-readable.
         //
@@ -43,7 +43,7 @@
         // useRealtimeBids uses the unauthenticated public RTDB instance". That
         // was false: useRealtimeBids opens an EventSource against
         // /api/realtime/bids/{id}, which reads through the Admin SDK and
-        // bypasses these rules entirely. No client-SDK reader of auction-bids
+        // bypasses these rules entirely. No client-SDK reader of collector-drop-bids
         // exists anywhere in the codebase.
         //
         // So the grant was dead AND leaking: $productId is a public URL segment,

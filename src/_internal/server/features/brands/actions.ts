@@ -108,10 +108,10 @@ export async function createBrandAction(input: unknown): Promise<ActionResult<un
         metrics: {
           productCount: 0,
           productIds: [],
-          auctionCount: 0,
-          auctionIds: [],
+          collectorDropCount: 0,
+          collectorDropIds: [],
           totalProductCount: 0,
-          totalAuctionCount: 0,
+          totalCollectorDropCount: 0,
           totalItemCount: 0,
           lastUpdated: new Date(),
         },

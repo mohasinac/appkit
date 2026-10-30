@@ -15,7 +15,7 @@ import { wrapAction, type ActionResult } from "../../../shared/types/action-resu
 import { productRepository } from "../../../../features/products/repository/products.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { isAdminUser } from "../../../../features/auth/role-predicates";
-import { productInputSchema, productUpdateSchema, auctionInputSchema, preOrderInputSchema, setFeaturedSchema, setStatusSchema } from "../../../shared/features/products/schema";
+import { productInputSchema, productUpdateSchema, collectorDropInputSchema, preOrderInputSchema, setFeaturedSchema, setStatusSchema } from "../../../shared/features/products/schema";
 import {
   assertProductOwnership,
   assertStatusTransition,
@@ -67,16 +67,16 @@ export async function createProductAction(input: unknown): Promise<ActionResult<
   });
 }
 
-export async function createAuctionAction(input: unknown): Promise<ActionResult<unknown>> {
+export async function createCollectorDropAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["seller", "admin"]);
-      const parsed = auctionInputSchema.safeParse(input);
+      const parsed = collectorDropInputSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
       return productRepository.create({
         ...(parsed.data as any),
         ...(await sellerStoreFields(user.uid)),
         status: "draft",
-        listingType: "auction",
+        listingType: "collector-drop",
         featured: false,
       } as any);
   });

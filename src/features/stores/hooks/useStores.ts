@@ -5,7 +5,7 @@ import type {
   StoreListParams,
   StoreDetail,
   StoreProductsResponse,
-  StoreAuctionsResponse,
+  StoreCollectorDropsResponse,
   StoreReviewsData,
 } from "../types";
 import { STORE_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -98,21 +98,21 @@ export function useStoreProducts(
   };
 }
 
-export function useStoreAuctions(
+export function useStoreCollectorDrops(
   storeSlug: string,
   params?: string,
   opts?: { enabled?: boolean; endpoint?: string },
 ) {
-  const endpoint = opts?.endpoint ?? `${STORE_ENDPOINTS.AUCTIONS(storeSlug)}${params ? `?${params}` : ""}`;
-  const { data, isLoading, error, refetch } = useQuery<StoreAuctionsResponse>({
-    queryKey: ["store-auctions", storeSlug, params ?? ""],
+  const endpoint = opts?.endpoint ?? `${STORE_ENDPOINTS.COLLECTOR_DROPS(storeSlug)}${params ? `?${params}` : ""}`;
+  const { data, isLoading, error, refetch } = useQuery<StoreCollectorDropsResponse>({
+    queryKey: ["store-collectorDrops", storeSlug, params ?? ""],
     queryFn: () =>
-      apiClient.get<StoreAuctionsResponse>(endpoint),
+      apiClient.get<StoreCollectorDropsResponse>(endpoint),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
   return {
-    auctions: data?.items ?? [],
+    collectorDrops: data?.items ?? [],
     total: data?.total ?? 0,
     totalPages: data?.totalPages ?? 0,
     isLoading,

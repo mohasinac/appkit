@@ -45,11 +45,11 @@ export interface WishlistHeartButtonProps {
  *
  * WHY: there were seven render sites using THREE different glyph technologies —
  * an inline `<svg>` (product grid card), lucide `<Heart>` at two different sizes
- * (auction card list vs grid), and the text characters `♥`/`♡` (product list
+ * (collector drop card list vs grid), and the text characters `♥`/`♡` (product list
  * row, both pre-order card layouts, and baked into the detail page's label
  * strings). Text glyphs cannot be sized by `w-*`/`h-*` at all and fall back to a
  * platform font, which is literally the "the wishlist icon is very small"
- * report. The auction card's lucide heart was 14px inside a `md` Button whose
+ * report. The collector drop card's lucide heart was 14px inside a `md` Button whose
  * min-height is ~44px, so the largest tap target carried the smallest glyph.
  *
  * Built on `IconButton`, not `Button`: `.appkit-button--sm` sets

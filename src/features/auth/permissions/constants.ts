@@ -285,7 +285,7 @@ export type BannedAction =
   | "write_reviews" // cannot submit product reviews
   | "write_blog_comments" // cannot comment on blog posts (future)
   | "join_events" // cannot register for events/tournaments
-  | "place_bids" // cannot bid on auctions
+  | "place_bids" // cannot bid on collectorDrops
   | "create_listings" // seller cannot create new listings
   | "send_messages" // cannot send direct messages
   | "create_support_tickets" // cannot open new support tickets
@@ -316,7 +316,7 @@ export type EmployeeGroup =
   | "support_agent"
   | "store_onboarding"
   | "trust_and_safety"
-  | "auction_monitor"
+  | "collector_drop_monitor"
   | "scam_moderator"
   | "maintenance_employee"
   | "custom";
@@ -563,7 +563,7 @@ export const PERMISSION_GROUPS: Record<
     "admin:scammers:verify",
   ],
 
-  auction_monitor: [
+  collector_drop_monitor: [
     "admin:dashboard:view",
     "admin:bids:read",
     "admin:bids:write",
@@ -708,13 +708,13 @@ export type StoreCapability =
   // Listing & Catalog
   | "advanced_listing_types" // can create the seven advanced listing types (see _internal/shared/listing-types/tiers.ts)
   /*
-   * 🛑 `host_auctions` no longer gates anything. `auction` is a BASIC listing
+   * 🛑 `host_collector_drops` no longer gates anything. `collector drop` is a BASIC listing
    * type as of the advanced-types split, so the check was removed rather than
    * inverted. The string stays declared so existing store documents carrying
    * it remain valid against `storeFirestoreSchema` — removing a union member
    * would make every such document fail validation on its next write.
    */
-  | "host_auctions" // legacy, no longer checked — auction is basic
+  | "host_collector_drops" // legacy, no longer checked — collector drop is basic
   | "host_preorders" // legacy per-type grant; still honoured for pre-order
   | "create_categories" // can request new categories (goes to admin)
   | "suggest_brands" // can suggest new brands (default on)
@@ -754,7 +754,7 @@ export type StoreCapability =
  */
 const STORE_CAPABILITY_MAP: Record<StoreCapability, true> = {
   advanced_listing_types: true,
-  host_auctions: true,
+  host_collector_drops: true,
   host_preorders: true,
   create_categories: true,
   suggest_brands: true,

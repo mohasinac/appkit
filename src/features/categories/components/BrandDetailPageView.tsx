@@ -153,13 +153,13 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   const counts: ListingTabCounts = {
     ...tabCounts.available,
     products: tabCounts.available.products ?? brand?.metrics?.productCount ?? 0,
-    auctions: tabCounts.available.auctions ?? brand?.metrics?.auctionCount ?? 0,
+    collectorDrops: tabCounts.available.collectorDrops ?? brand?.metrics?.collectorDropCount ?? 0,
     bundles: brandBundles.length,
   };
   const totals: ListingTabCounts = {
     ...tabCounts.total,
     products: tabCounts.total.products ?? brand?.metrics?.productCount ?? 0,
-    auctions: tabCounts.total.auctions ?? brand?.metrics?.auctionCount ?? 0,
+    collectorDrops: tabCounts.total.collectorDrops ?? brand?.metrics?.collectorDropCount ?? 0,
     bundles: brandBundles.length,
   };
 
@@ -339,9 +339,9 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 {counts.products!.toLocaleString()} {counts.products === 1 ? "product" : "products"}
               </Span>
             )}
-            {(counts.auctions ?? 0) > 0 && (
+            {(counts.collectorDrops ?? 0) > 0 && (
               <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {counts.auctions!.toLocaleString()} {counts.auctions === 1 ? "auction" : "auctions"}
+                {counts.collectorDrops!.toLocaleString()} {counts.collectorDrops === 1 ? "collector drop" : "collector drops"}
               </Span>
             )}
             {(counts["pre-orders"] ?? 0) > 0 && (
@@ -421,7 +421,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
       <CategoryHighlightsAndFaqSection highlights={brand?.highlights} faqs={brand?.faqs} />
 
-      {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}
+      {/* ── Tabs: Products / Collector Drops / Pre-Orders ──────────────────────── */}
       <Section padding="y-lg">
         <Container size="xl">
           {brandName ? (

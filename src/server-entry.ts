@@ -28,8 +28,8 @@ export { EventsListPageView } from "./features/events/components/EventsListPageV
 export { MarketplaceHomepageView } from "./features/homepage/index";
 export { PreOrdersListView } from "./features/pre-orders/index";
 export { PreOrderDetailPageView } from "./features/pre-orders/index";
-export { AuctionDetailPageView } from "./features/auctions/index";
-export { AuctionsListView } from "./features/auctions/components/AuctionsListView";
+export { CollectorDropDetailPageView } from "./features/collector-drops/index";
+export { CollectorDropsListView } from "./features/collector-drops/components/CollectorDropsListView";
 export { BundlesListView } from "./features/categories/components/BundlesListView";
 export { RandomLotsListingView } from "./features/products/components/RandomLotsListingView";
 export { RandomLotsDetailPageView } from "./features/products/components/RandomLotsDetailPageView";
@@ -45,7 +45,7 @@ export { ReviewDetailPageView } from "./features/reviews/components/ReviewDetail
 export { StoresIndexPageView } from "./features/stores/components/StoresIndexPageView";
 export { StoreDetailLayoutView } from "./features/stores/components/StoreDetailLayoutView";
 export { StoreProductsPageView } from "./features/stores/components/StoreProductsPageView";
-export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";
+export { StoreCollectorDropsPageView } from "./features/stores/components/StoreCollectorDropsPageView";
 export { StorePreOrdersPageView } from "./features/stores/components/StorePreOrdersPageView";
 export { StoreRandomLotsPageView } from "./features/stores/components/StoreRandomLotsPageView";
 export { StoreBundlesPageView } from "./features/stores/components/StoreBundlesPageView";
@@ -74,11 +74,11 @@ export {
   type PublicProductQuery,
 } from "./_internal/server/features/products/index";
 
-// S3: auctions data layer — deduped via React.cache()
+// S3: collector drops data layer — deduped via React.cache()
 export {
-  getAuctionForDetail,
-  getProductFeaturesForAuction,
-} from "./_internal/server/features/auctions/index";
+  getCollectorDropForDetail,
+  getProductFeaturesForCollectorDrop,
+} from "./_internal/server/features/collector-drops/index";
 
 // S3: pre-orders data layer — deduped via React.cache()
 export {
@@ -122,7 +122,7 @@ export {
 // S2–S3: products full layer (data + actions)
 export {
   createProductAction,
-  createAuctionAction,
+  createCollectorDropAction,
   createPreOrderAction,
   updateProductAction,
   deleteProductAction,
@@ -130,8 +130,8 @@ export {
   setProductFeaturedAction,
 } from "./_internal/server/features/products/index";
 
-// S3: auctions actions
-export { placeBidAction as placeBidServerAction } from "./_internal/server/features/auctions/index";
+// S3: collector drops actions
+export { placeBidAction as placeBidServerAction } from "./_internal/server/features/collector-drops/index";
 
 // S3: pre-orders actions
 export { reservePreOrderAction } from "./_internal/server/features/pre-orders/index";
@@ -269,9 +269,9 @@ export {
 // `CHECKOUT_PAYMENT_METHODS` above it and the money helpers further down this
 // file: `/api/payment/create-order` is the consumer's gateway capture route,
 // and every rule that route needs has had to be exported here after the route
-// was found missing it. `auction.rule.ts` / `random-lots.rule.ts` have declared
+// was found missing it. `collector-drop.rule.ts` / `random-lots.rule.ts` have declared
 // `blockedPaymentMethods: ["online", ...]` since 2026-10-28 — Indian payment
-// aggregators prohibit settling auctions/lotteries through a standard
+// aggregators prohibit settling collector drops/lotteries through a standard
 // e-commerce MID, and the penalty is the whole merchant account frozen — but
 // the enforcer was only ever wired into the COD/manual path
 // (`createCheckoutOrderAction`). The gateway path that actually creates a
@@ -386,7 +386,7 @@ export { getSublistingCategoryForDetail } from "./_internal/server/features/subl
 export {
   getStoreForDetail,
   listStoreProductsInitial,
-  listStoreAuctionsInitial,
+  listStoreCollectorDropsInitial,
   listStorePreOrdersInitial,
   listSitemapStores,
   STORES_PAGE_SIZE,
@@ -423,7 +423,7 @@ export * as scamsServer from "./_internal/server/features/scams/index";
 // `_internal/shared/errors/index`, which defines same-named but structurally
 // unrelated classes (extends `AppkitError extends Error`, not `AppError`) used
 // internally by a handful of `_internal/shared/features/*` error subclasses
-// (AuctionEndedError, EventEndedError, CouponExpiredError, WishlistCapError).
+// (CollectorDropEndedError, EventEndedError, CouponExpiredError, WishlistCapError).
 // Re-exporting the _internal set here as the package's public "." names meant
 // every `throw new ValidationError(...)` at a consumer call site (importing
 // from bare `@mohasinac/appkit`) constructed an instance `mapToHttpError`'s
@@ -472,7 +472,7 @@ export type { Responsive, Breakpoint, SemanticColor } from "./_internal/shared/t
 //   - renderXOgImage(data, siteName)  — low-level primitive: takes a pre-mapped data shape.
 //                             Use only when overriding the default field extraction.
 export { renderProductOg, renderProductOgImage, type ProductOgData, type OgOptions } from "./_internal/server/features/products/og";
-export { renderAuctionOg, renderAuctionOgImage, type AuctionOgData } from "./_internal/server/features/auctions/og";
+export { renderCollectorDropOg, renderCollectorDropOgImage, type CollectorDropOgData } from "./_internal/server/features/collector-drops/og";
 export { renderPreOrderOg, renderPreOrderOgImage, type PreOrderOgData } from "./_internal/server/features/pre-orders/og";
 export { renderStoreOg, renderStoreOgImage, type StoreOgData } from "./_internal/server/features/stores/og";
 export { renderBrandOg, renderBrandOgImage, type BrandOgData } from "./_internal/server/features/brands/og";

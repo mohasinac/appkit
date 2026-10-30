@@ -31,7 +31,7 @@
  *   `OfferDocument==accepted`  an agreement, not a sale. `paid` is the sale
  *   `product.currentBid`       a display mirror a pending buyout never writes
  *
- * Won auctions and accepted offers arrive through the same field via
+ * Won collector drops and accepted offers arrive through the same field via
  * `lockedPrice`, so one field covers all six acquisition paths and
  * `sourceContext` labels each for free.
  *
@@ -70,7 +70,7 @@ const PRODUCT_SCAN_LIMIT = 5000;
 interface SaleSample {
   amount: number;
   at: Date;
-  via: "standard" | "auction" | "offer";
+  via: "standard" | "collector-drop" | "offer";
   /**
    * The condition this unit was in when it sold, or `undefined` when nothing
    * recorded it.
@@ -127,12 +127,13 @@ function toDate(v: Date | string | undefined): Date | null {
  * Which acquisition path produced this sale.
  *
  * `sourceContext.path` is the richer signal — it distinguishes a settled
- * auction win from a buy-now, which `orderType` cannot (both are `"auction"`).
+ * collector drop win from a buy-now, which `orderType` cannot (both are `"collector-drop"`).
  * Falls back to `orderType`, then to `standard`.
  */
 function pathOf(order: OrderLike): SaleSample["via"] {
   const p = order.sourceContext?.path ?? order.orderType;
-  if (p === "auction-won" || p === "auction-buy-now" || p === "auction") return "auction";
+  if (p === "collector-drop-won" || p === "collector-drop-buy-now" || p === "auction")
+    return "collector-drop";
   if (p === "offer-accepted" || p === "offer") return "offer";
   return "standard";
 }

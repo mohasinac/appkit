@@ -1,9 +1,9 @@
 /*
- * WHY: Every time-bound tester fixture — auction end dates, coupon validity, event
+ * WHY: Every time-bound tester fixture — collector drop end dates, coupon validity, event
  *      start/end, prize-draw reveal windows, offer expiry, lottery draw windows —
  *      must open and close INSIDE one testing session. Hand-written offsets like
  *      `Date.now() + 2 * 60 * 60 * 1000` cannot do that: they bake in a duration
- *      nobody can shorten, so a case reading "watch the auction actually end" is
+ *      nobody can shorten, so a case reading "watch the collector drop actually end" is
  *      untestable without sitting there for two hours.
  *
  *      This file is the one knob. Fixtures express WHEN as a fraction of the run
@@ -12,7 +12,7 @@
  * WHAT: windowMinutes() / windowOffset(fraction) / windowAgo(fraction).
  *
  * 🛑 The default is 180 minutes ON PURPOSE — it reproduces the pre-existing 1h/2h/3h
- *    auction stagger exactly (fractions 1/3, 2/3, 1), so an ordinary `appkit-seed load`
+ *    collector drop stagger exactly (fractions 1/3, 2/3, 1), so an ordinary `appkit-seed load`
  *    behaves as it always has. Only the automated runner shortens it. Changing this
  *    default silently re-times every fixture for human testers too.
  *
@@ -24,7 +24,7 @@
  * @tag sideEffects:none
  */
 
-/** Reproduces the historical 1h/2h/3h auction stagger when nothing overrides it. */
+/** Reproduces the historical 1h/2h/3h collector drop stagger when nothing overrides it. */
 export const DEFAULT_TESTER_WINDOW_MINUTES = 180;
 
 /** Below this nothing is observable — a page load alone can outlast it. */

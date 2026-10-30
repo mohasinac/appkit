@@ -9,12 +9,12 @@ import { Span } from "../../../ui/components/Typography";
 import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
-import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
+import { buildBidDetailFields, bidStatusBadge } from "../../collector-drops/components/bid-detail-fields";
 import { FieldSelect } from "../../../ui/forms";
-import { AuctionBidsTable } from "../../auctions/components/AuctionBidsTable";
+import { CollectorDropBidsTable } from "../../collector-drops/components/CollectorDropBidsTable";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
-import type { BidDocument } from "../../auctions/schemas/firestore";
+import type { BidDocument } from "../../collector-drops/schemas/firestore";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 
 const SORT_OPTIONS = [
@@ -39,17 +39,17 @@ interface UserBidsResponse {
 
 export function UserBidsView() {
   // A bid could be seen in this list and never opened — no row click, no row
-  // action, no detail page. The "Browse auctions" link in the empty state is
+  // action, no detail page. The "Browse collector drops" link in the empty state is
   // not an affordance: it is not row-scoped, and it only shows when there are
   // no bids at all.
   const [detail, setDetail] = useState<BidDocument | null>(null);
-  const auctionsEnabled = useListingTypeFlags().auction;
+  const collectorDropsEnabled = useListingTypeFlags()["collector-drop"];
 
   const config: ListingViewConfig<UserBidsResponse, BidDocument> = {
     portal: "user",
     title: "My Bids",
     search: {
-      placeholder: "Search by auction title…",
+      placeholder: "Search by collector drop title…",
       // `/api/user/bids` filters in memory: `(b.productTitle ?? "").includes(q)`.
       // The bid document carries no other text.
       fields: ["productTitle"],
@@ -84,7 +84,7 @@ export function UserBidsView() {
         );
       }
       return (
-        <AuctionBidsTable
+        <CollectorDropBidsTable
           bids={rows}
           portal="buyer"
           onRowClick={(bid) => setDetail(bid)}
@@ -95,14 +95,14 @@ export function UserBidsView() {
             <Span>
               You haven&apos;t placed any bids yet.
               {/* The CTA follows the listing type, not the page. A buyer's
-                  past bids outlive auctions being switched off, so the page
+                  past bids outlive collector drops being switched off, so the page
                   stays; inviting them to browse a catalogue the site no
                   longer offers would be a dead end. */}
-              {auctionsEnabled && (
+              {collectorDropsEnabled && (
                 <>
                   {" "}
-                  <TextLink href={String(ROUTES.PUBLIC.AUCTIONS)}>
-                    Browse auctions
+                  <TextLink href={String(ROUTES.PUBLIC.COLLECTOR_DROPS)}>
+                    Browse collector drops
                   </TextLink>
                 </>
               )}
@@ -132,8 +132,8 @@ export function UserBidsView() {
               <TextLink href={String(ROUTES.USER.BID_DETAIL(detail.id))}>
                 Open full page →
               </TextLink>
-              <TextLink href={String(ROUTES.PUBLIC.AUCTION_DETAIL(detail.productId))}>
-                View auction →
+              <TextLink href={String(ROUTES.PUBLIC.COLLECTOR_DROP_DETAIL(detail.productId))}>
+                View collector drop →
               </TextLink>
             </>
           ) : undefined

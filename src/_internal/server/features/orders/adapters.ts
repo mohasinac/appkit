@@ -175,7 +175,7 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     address,
     orderStatus: doc.status,
     paymentStatus: doc.paymentStatus,
-    // Which checkout lane produced this order (standard / auction / offer /
+    // Which checkout lane produced this order (standard / collector drop / offer /
     // preorder / random-lots). Drives the lane tabs on /user/orders. Absent on
     // orders written before `orderType` existed — every reader must treat a
     // missing value as "standard" rather than filtering it out.

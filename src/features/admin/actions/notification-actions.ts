@@ -266,10 +266,10 @@ export async function sendNotification(
    * the siteSettings read and before the user-prefs read — is what makes the
    * expensive fan-outs free:
    *
-   *   `auctionSettlement` sends `bid_lost` to up to 50 losing bidders in
-   *   parallel per auction. Each of those calls would otherwise pay TWO
+   *   `collectorDropSettlement` sends `bid_lost` to up to 50 losing bidders in
+   *   parallel per collector drop. Each of those calls would otherwise pay TWO
    *   Firestore reads (settings + user doc) to arrive at "skipped". That is
-   *   100 reads per auction to send nothing, and every expired auction settles
+   *   100 reads per collector drop to send nothing, and every expired collector drop settles
    *   concurrently.
    *
    * Returning here costs zero reads, and it is also what lets the daily send
@@ -352,7 +352,7 @@ export async function sendNotification(
     order_placed: "orderUpdates", order_confirmed: "orderUpdates",
     order_shipped: "orderUpdates", order_delivered: "orderUpdates",
     order_cancelled: "orderUpdates",
-    bid_placed: "bids", bid_outbid: "bids", bid_won: "bids", bid_lost: "bids", auction_ended: "bids",
+    bid_placed: "bids", bid_outbid: "bids", bid_won: "bids", bid_lost: "bids", collector_drop_ended: "bids",
     review_approved: "reviews", review_replied: "reviews",
     promotion: "promotions",
     system: "system", welcome: "system", account_action: "system",

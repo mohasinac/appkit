@@ -8,6 +8,9 @@ import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../.
 
 export const orderListingTypeSchema = z.enum([
   "standard",
+  "collector-drop",
+  // Pre-rename spelling, accepted so an order written before the
+  // collector-drop rename still validates on update.
   "auction",
   "pre-order",
   "random-lots",

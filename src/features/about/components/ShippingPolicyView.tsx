@@ -57,7 +57,7 @@ export async function ShippingPolicyView({
     { title: t("standardTitle"), text: t("standardText") },
     { title: t("expressTitle"), text: t("expressText") },
     { title: t("freeShippingTitle"), text: t("freeShippingText") },
-    { title: t("auctionShippingTitle"), text: t("auctionShippingText") },
+    { title: t("collectorDropShippingTitle"), text: t("collectorDropShippingText") },
     { title: t("trackingTitle"), text: t("trackingText") },
     { title: t("internationalTitle"), text: t("internationalText") },
     { title: t("damagedTitle"), text: t("damagedText") },

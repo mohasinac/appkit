@@ -39,7 +39,7 @@ const ASPECT_CLASS: Record<NonNullable<DetailPageGalleryProps["aspect"]>, string
 };
 
 /**
- * `DetailPageGallery` — main image + thumbnail strip used by Product, Auction
+ * `DetailPageGallery` — main image + thumbnail strip used by Product, Collector Drop
  * and PreOrder detail pages. Lightweight presentational component — domain
  * logic (zoom, hover-preview, image-cycling-on-tap) is opt-in by the consumer
  * via overlays.

@@ -70,7 +70,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
    * derived from the other, so they could not be kept in step by anything.
    * Every client-side fetch therefore arrived with a sort the server could not
    * see and fell back to `-createdAt`, while the dropdown displayed the sort
-   * the user had picked. Measured: `?sorts=auctionEndDate` returned byte-identical
+   * the user had picked. Measured: `?sorts=collectorDropEndDate` returned byte-identical
    * row order to sending no sort at all.
    *
    * "We have shared constants and it still broke" is exactly this: the

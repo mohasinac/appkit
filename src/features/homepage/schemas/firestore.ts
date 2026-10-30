@@ -373,7 +373,7 @@ export interface ProductsSectionConfig {
  * Each string corresponds to a repository query in live-stats.ts.
  */
 export type LiveStatPreset =
-  | "total_listings"     // all products (standard + auction + pre-order)
+  | "total_listings"     // all products (standard + collector drop + pre-order)
   | "verified_sellers"   // total stores
   | "total_buyers"       // users with role "user"
   | "platform_rating"    // average rating across all approved reviews
@@ -437,16 +437,16 @@ export interface StatsSectionConfig {
 }
 
 /**
- * The count fields here were declared as LITERAL types (`maxAuctions: 18`,
+ * The count fields here were declared as LITERAL types (`maxCollectorDrops: 18`,
  * `rows: 2`, …), which made them unconfigurable by construction — an admin
  * setting 12 was a type error, and the pre-order config already contradicted
  * its own literals in the seed. They are plain optional numbers now that the
  * renderer actually forwards them.
  */
-export interface AuctionsSectionConfig {
+export interface CollectorDropsSectionConfig {
   title: string;
   subtitle?: string;
-  maxAuctions?: number;
+  maxCollectorDrops?: number;
   rows?: number;
   itemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
   mobileItemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
@@ -708,7 +708,7 @@ export interface PreOrdersSectionConfig {
   title: string;
   subtitle?: string;
   maxItems?: number;
-  // Same literal-type problem as the auctions config — and the seed already
+  // Same literal-type problem as the collector drops config — and the seed already
   // contradicted these with itemsPerRow: 4 / mobileItemsPerRow: 2.
   rows?: number;
   itemsPerRow?: number; // NO-RENDERER: SectionCarousel uses a fixed perView preset
@@ -782,7 +782,7 @@ export interface CustomCardsSectionConfig {
 
 export type CollectionCardType =
   | "products"
-  | "auctions"
+  | "collector-drops"
   | "pre-orders"
   | "stores"
   | "events"
@@ -950,7 +950,7 @@ export type SectionType =
   | "brands"
   | "products"
   | "pre-orders"
-  | "auctions"
+  | "collector-drops"
   | "banner"
   | "features"
   | "reviews"
@@ -981,7 +981,7 @@ export type SectionConfig =
   | BrandsSectionConfig
   | ProductsSectionConfig
   | PreOrdersSectionConfig
-  | AuctionsSectionConfig
+  | CollectorDropsSectionConfig
   | BannerSectionConfig
   | FeaturesSectionConfig
   | ReviewsSectionConfig
@@ -1077,7 +1077,7 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   brands: 2,
   products: 4,
   "pre-orders": 5,
-  auctions: 6,
+  "collector-drops": 6,
   banner: 4,
   features: 7,
   reviews: 8,

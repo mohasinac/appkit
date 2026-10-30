@@ -53,7 +53,7 @@ async function resolveStoreName(storeId: string, candidate: string | undefined):
 }
 
 /**
- * Lane gate. While a higher-obligation lane (a won auction, then an accepted
+ * Lane gate. While a higher-obligation lane (a won collector drop, then an accepted
  * offer) is outstanding, no NEW shopping may be added — otherwise the buyer can
  * keep deferring something they already committed to by piling more into the
  * cart. Enforced on the server, not only in the UI: the UI hint is a courtesy,
@@ -63,7 +63,7 @@ async function resolveStoreName(storeId: string, candidate: string | undefined):
  * `addItemToCart` and therefore covered exactly one of the four ways a line can
  * be created — `addBundleToCartAction` and `POST /api/cart` both call
  * `cartRepository.addItem` directly and so bypassed it entirely, letting a buyer
- * with an unpaid auction win keep shopping.
+ * with an unpaid collector drop win keep shopping.
  *
  * Returns the loaded cart so the caller doesn't pay a second read.
  */
@@ -72,8 +72,8 @@ export async function assertCanAddNewItems(userId: string): Promise<CartDocument
   if (!canAddNewItems(cart.items ?? [])) {
     const blocking = activeLane(cart.items ?? []);
     throw new ValidationError(
-      blocking === CART_LANE.AUCTION
-        ? "Settle your won auction first — you can add other items once it's paid for."
+      blocking === CART_LANE.COLLECTOR_DROP
+        ? "Settle your won collector drop first — you can add other items once it's paid for."
         : "Complete your accepted offer first — you can add other items once it's paid for.",
       { code: CART_LANE_BLOCKED },
     );
@@ -397,11 +397,11 @@ async function resolveGroupTitle(
 }
 
 /**
- * Won-auction lines are non-removable and fixed-quantity — the buyer committed
+ * Won-collector-drop lines are non-removable and fixed-quantity — the buyer committed
  * to the purchase by bidding, and letting them delete it would turn every
- * auction into a free option. That's already enforced one layer down:
+ * collector drop into a free option. That's already enforced one layer down:
  * `cartRepository.updateItem` / `removeItem` both reject a `locked` line, and
- * auction settlement is the only writer that sets `locked: true`. Accepted
+ * collector drop settlement is the only writer that sets `locked: true`. Accepted
  * offers deliberately do NOT set it — declining to buy is the buyer's right,
  * and the offer simply lapses at its `checkoutDeadline`.
  */

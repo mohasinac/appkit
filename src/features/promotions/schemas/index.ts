@@ -92,7 +92,7 @@ export const couponFirestoreSchema = z.object({
   type: couponTypeEnumSchema,
   scope: z.enum(["admin", "seller"]),
   storeId: z.string().optional(),
-  applicableToAuctions: z.boolean().optional(),
+  applicableToCollectorDrops: z.boolean().optional(),
   discount: discountConfigSchema,
   bxgy: bxgyConfigSchema.optional(),
   tiers: z.array(tieredDiscountSchema).optional(),

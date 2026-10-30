@@ -41,7 +41,16 @@ interface BrowsedFile {
 const PREFIX_OPTIONS = [
   { value: "", label: "All" },
   { value: "products/", label: "Products" },
-  { value: "auctions/", label: "Auctions" },
+  /*
+   * 🛑 BOUNDARY OF THE COLLECTOR-DROP RENAME. `auctions/` is a Storage path
+   * prefix naming REAL BYTES already in the bucket, and this option is a
+   * BROWSE FILTER over them — not an upload destination (uploads go
+   * `tmp/` → permanent via /api/media/sign + /finalize, named by
+   * `generateMediaFilename`, and nothing in the codebase writes this prefix).
+   * Renaming the value would make the filter match zero objects. Moving the
+   * objects needs a Storage copy+delete migration, which is its own change.
+   */
+  { value: "auctions/", label: "Collector Drops" },
   { value: "preorders/", label: "Pre-orders" },
   { value: "stores/", label: "Stores" },
   { value: "blog/", label: "Blog" },

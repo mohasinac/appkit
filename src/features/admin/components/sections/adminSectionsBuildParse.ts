@@ -1,5 +1,5 @@
 import {
-  AuctionsBuilderState,
+  CollectorDropsBuilderState,
   BannerBuilderState,
   BlogBuilderState,
   BrandsBuilderState,
@@ -7,7 +7,7 @@ import {
   CategoriesBuilderState,
   CustomCardsBuilderState,
   CustomCardsCardBuilderEntry,
-  DEFAULT_AUCTIONS_BUILDER,
+  DEFAULT_COLLECTOR_DROPS_BUILDER,
   DEFAULT_BANNER_BUILDER,
   DEFAULT_BLOG_BUILDER,
   DEFAULT_BRANDS_BUILDER,
@@ -123,12 +123,12 @@ export function buildProductsConfig(builder: ProductsBuilderState): JsonObjectWi
   };
 }
 
-export function buildAuctionsConfig(builder: AuctionsBuilderState): JsonObjectWithUndefined {
+export function buildCollectorDropsConfig(builder: CollectorDropsBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title,
     viewMoreLabel: builder.viewMoreLabel || undefined,
     subtitle: builder.subtitle || undefined,
-    maxAuctions: builder.maxItems,
+    maxCollectorDrops: builder.maxItems,
     maxCount: builder.maxCount,
     sortBy: builder.sortBy,
     filterByCategory: builder.filterByCategory || undefined,
@@ -273,25 +273,25 @@ export function parseProductsBuilder(config: JsonObjectWithUndefined): ProductsB
   };
 }
 
-export function parseAuctionsBuilder(config: JsonObjectWithUndefined): AuctionsBuilderState {
+export function parseCollectorDropsBuilder(config: JsonObjectWithUndefined): CollectorDropsBuilderState {
   const filters = (config.filters ?? {}) as JsonObjectWithUndefined;
   const resources = (config.resources ?? {}) as JsonObjectWithUndefined;
-  const maxCount = toNumberValue(config.maxCount, DEFAULT_AUCTIONS_BUILDER.maxCount);
+  const maxCount = toNumberValue(config.maxCount, DEFAULT_COLLECTOR_DROPS_BUILDER.maxCount);
   return {
-    title: toStringValue(config.title, DEFAULT_AUCTIONS_BUILDER.title),
+    title: toStringValue(config.title, DEFAULT_COLLECTOR_DROPS_BUILDER.title),
     viewMoreLabel: toStringValue(config.viewMoreLabel),
     subtitle: toStringValue(config.subtitle),
-    maxItems: toNumberValue(config.maxAuctions, DEFAULT_AUCTIONS_BUILDER.maxItems),
-    status: toStringValue(filters.status, DEFAULT_AUCTIONS_BUILDER.status) as AuctionsBuilderState["status"],
-    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_AUCTIONS_BUILDER.sortBy) as ResourceSortBy,
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_AUCTIONS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_AUCTIONS_BUILDER.scrollInterval),
-    resourceMode: toStringValue(resources.mode, DEFAULT_AUCTIONS_BUILDER.resourceMode) as ResourceMode,
+    maxItems: toNumberValue(config.maxCollectorDrops, DEFAULT_COLLECTOR_DROPS_BUILDER.maxItems),
+    status: toStringValue(filters.status, DEFAULT_COLLECTOR_DROPS_BUILDER.status) as CollectorDropsBuilderState["status"],
+    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_COLLECTOR_DROPS_BUILDER.sortBy) as ResourceSortBy,
+    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_COLLECTOR_DROPS_BUILDER.autoScroll),
+    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_COLLECTOR_DROPS_BUILDER.scrollInterval),
+    resourceMode: toStringValue(resources.mode, DEFAULT_COLLECTOR_DROPS_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
     filterByCategory: toStringValue(config.filterByCategory),
     maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, DEFAULT_AUCTIONS_BUILDER.loop),
+    loop: toBooleanValue(config.loop, DEFAULT_COLLECTOR_DROPS_BUILDER.loop),
   };
 }
 
@@ -892,7 +892,7 @@ export function parseEventRafflesBuilder(config: JsonObjectWithUndefined): Event
 
 const COLLECTION_CARD_ENTRY_TYPES: readonly CollectionCardEntryType[] = [
   "products",
-  "auctions",
+  "collector-drops",
   "pre-orders",
   "stores",
   "events",

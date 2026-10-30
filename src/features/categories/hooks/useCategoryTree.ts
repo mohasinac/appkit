@@ -30,7 +30,7 @@ export function useCategoryTree(opts?: { enabled?: boolean }) {
        * alone and `dfs(null)` emits tier-0 only.
        *
        * Measured against production data before this fix: the category
-       * facet on /products, /auctions, /pre-orders and /prize-draws showed
+       * facet on /products, /collector-drops, /pre-orders and /prize-draws showed
        * **11 options instead of 47** — and 9 of those 11 were not categories
        * at all. It listed "Takara-Tomy", "Hasbro", "Burst Battlers Pack" and
        * "X-Series Starter Set", because brand and bundle rows live in the

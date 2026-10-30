@@ -30,10 +30,10 @@ const CATEGORY_LABELS: Record<string, string> = {
   "make-offer": "Public CTA",
   "share": "Public CTA",
   "compare": "Public CTA",
-  "place-bid": "Auction CTA",
-  "buy-now-auction": "Auction CTA",
-  "watch-auction": "Auction CTA",
-  "unwatch-auction": "Auction CTA",
+  "place-bid": "Collector Drop CTA",
+  "buy-now-collectorDrop": "Collector Drop CTA",
+  "watch-collectorDrop": "Collector Drop CTA",
+  "unwatch-collectorDrop": "Collector Drop CTA",
   "reserve-now": "Pre-order CTA",
   "cancel-reservation": "Pre-order CTA",
   "checkout": "Checkout",
@@ -60,7 +60,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   "Public CTA": "bg-info-surface text-info dark:bg-info-surface dark:text-info",
-  "Auction CTA": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+  "Collector Drop CTA": "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
   "Pre-order CTA": "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300",
   "Checkout": "bg-success-surface text-success dark:bg-success-surface dark:text-success",
   "Prize Draw": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",

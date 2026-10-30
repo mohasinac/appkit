@@ -62,8 +62,8 @@ export const NOTIFICATION_FIXTURES = {
     id: "notification-2",
     userId: "buyer-user-1",
     type: "bid_won",
-    title: "You won the auction!",
-    body: "Congratulations! You won the auction for Product 1.",
-    link: "/auctions/auction-1",
+    title: "You won the collector drop!",
+    body: "Congratulations! You won the collector drop for Product 1.",
+    link: "/collector-drops/collectordrop-1",
   }),
 };

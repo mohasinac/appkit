@@ -177,7 +177,7 @@ export const ICONS = {
    * `ListingTypePlugin.iconKey` so a type chip can carry a leading visual.
    *
    * 🛑 Four of the nine reuse an existing verb rather than minting a new icon:
-   * `standard` is `order` (Package), `auction` is `bid` (Gavel), `classified`
+   * `standard` is `order` (Package), `collector drop` is `bid` (Gavel), `classified`
    * is `deals` (Tag), `live` is the only animal glyph here. This registry's
    * header is explicit that it is deliberately small and not a re-export of
    * lucide — so a type earns a new entry only when nothing already means it.

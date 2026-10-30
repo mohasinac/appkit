@@ -30,7 +30,7 @@ const productConditionSchema = z.enum([
 // linked-product type a main item can be turned into via the link route.
 const listingTypeSchema = z.enum([
   "standard",
-  "auction",
+  "collector-drop",
   "pre-order",
   "random-lots",
   "classified",

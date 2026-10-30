@@ -199,15 +199,15 @@ export interface SellerProductDraft {
   seoDescription?: string;
   /** S-STORE-3-B — 3rd-party hosted video URL. Queues moderation on save. */
   externalVideoUrl?: string;
-  // Auction
+  // Collector Drop
   startingBid?: number;
   reservePrice?: number;
   buyNowPrice?: number;
   minBidIncrement?: number;
-  auctionEndDate?: string;
-  auctionShippingPaidBy?: "winner" | "seller";
+  collectorDropEndDate?: string;
+  collectorDropShippingPaidBy?: "winner" | "seller";
   autoExtendable?: boolean;
-  auctionExtensionMinutes?: number;
+  collectorDropExtensionMinutes?: number;
   // Pre-order
   preOrderDeliveryDate?: string;
   preOrderDepositPercent?: number;
@@ -1057,9 +1057,9 @@ function StepMedia({
   );
 }
 
-// ── Step 3: Auction Settings ───────────────────────────────────────────────
+// ── Step 3: Collector Drop Settings ───────────────────────────────────────────────
 
-function StepAuctionSettings({
+function StepCollectorDropSettings({
   values,
   onChange,
 }: {
@@ -1082,11 +1082,11 @@ function StepAuctionSettings({
           placeholder="100"
         />
         <FormField
-          name="auctionEndDate"
-          label="Auction End Date & Time"
+          name="collectorDropEndDate"
+          label="Collector Drop End Date & Time"
           type="datetime-local"
-          value={values.auctionEndDate ?? ""}
-          onChange={(v) => onChange({ auctionEndDate: v })}
+          value={values.collectorDropEndDate ?? ""}
+          onChange={(v) => onChange({ collectorDropEndDate: v })}
         />
       </FormGroup>
       <FormGroup columns={2}>
@@ -1106,7 +1106,7 @@ function StepAuctionSettings({
           value={toRupeesString(values.buyNowPrice)}
           onChange={(v) => onChange({ buyNowPrice: v ? fromRupeesString(v) : undefined })}
           placeholder="0"
-          helpText="Allows instant purchase before auction ends"
+          helpText="Allows instant purchase before collector drop ends"
         />
       </FormGroup>
       <FormField
@@ -1119,11 +1119,11 @@ function StepAuctionSettings({
         helpText="Optional — can only raise the platform's tiered minimum for this listing, never lower it. Leave blank to use the tier as-is."
       />
       <FormField
-        name="auctionShippingPaidBy"
+        name="collectorDropShippingPaidBy"
         label="Shipping paid by"
         type="select"
-        value={values.auctionShippingPaidBy ?? "winner"}
-        onChange={(v) => onChange({ auctionShippingPaidBy: v as "winner" | "seller" })}
+        value={values.collectorDropShippingPaidBy ?? "winner"}
+        onChange={(v) => onChange({ collectorDropShippingPaidBy: v as "winner" | "seller" })}
         options={[
           { value: "winner", label: "Winner pays shipping" },
           { value: "seller", label: "Seller includes shipping" },
@@ -1132,15 +1132,15 @@ function StepAuctionSettings({
       <Toggle
         checked={!!values.autoExtendable}
         onChange={(checked) => onChange({ autoExtendable: checked })}
-        label="Auto-extend auction if bid placed in final minutes"
+        label="Auto-extend collector drop if bid placed in final minutes"
       />
       {values.autoExtendable && (
         <FormField
-          name="auctionExtensionMinutes"
+          name="collectorDropExtensionMinutes"
           label="Extension period (minutes)"
           type="number"
-          value={String(values.auctionExtensionMinutes ?? 5)}
-          onChange={(v) => onChange({ auctionExtensionMinutes: Number(v) || 5 })}
+          value={String(values.collectorDropExtensionMinutes ?? 5)}
+          onChange={(v) => onChange({ collectorDropExtensionMinutes: Number(v) || 5 })}
           placeholder="5"
         />
       )}
@@ -1498,7 +1498,7 @@ function StepPrintMetaSettings({
  * that caused it and `<FormErrorSummary>` can offer a jump link to it.
  *
  * Kept beside the sections rather than folded into `sellerProductSchema`
- * because they are per-LISTING-TYPE: a starting bid is required for an auction
+ * because they are per-LISTING-TYPE: a starting bid is required for a collector drop
  * and meaningless for a sticker sheet, and a single whole-form schema would
  * have to branch on type for every one of them.
  */
@@ -1512,9 +1512,9 @@ const sectionSchemas = {
     mainImage: z.string().min(1, "A main image is required"),
   }).passthrough(),
 
-  auction: z.object({
+  collectorDrop: z.object({
     startingBid: z.coerce.number({ invalid_type_error: "Starting bid is required" }).positive("Starting bid must be greater than zero"),
-    auctionEndDate: z.string().min(1, "Auction end date is required"),
+    collectorDropEndDate: z.string().min(1, "Collector Drop end date is required"),
   }).passthrough(),
 
   preorder: z.object({
@@ -1540,13 +1540,13 @@ interface TypeSpecificSectionDef extends SectionDef<SellerProductDraft> {
 }
 
 const TYPE_SPECIFIC_SECTIONS: Partial<Record<ProductListingMode, TypeSpecificSectionDef>> = {
-  auction: {
-    id: "auction",
-    label: "Auction Settings",
+  "collector-drop": {
+    id: "collector-drop",
+    label: "Collector Drop Settings",
     render: ({ values, onChange }) => (
-      <StepAuctionSettings values={values} onChange={onChange} />
+      <StepCollectorDropSettings values={values} onChange={onChange} />
     ),
-    schema: sectionSchemas.auction,
+    schema: sectionSchemas.collectorDrop,
   },
   "pre-order": {
     id: "preorder",

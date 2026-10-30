@@ -49,6 +49,18 @@ const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
 /**
  * Repository for coupon management
  */
+/**
+ * Is this cart line a collector drop?
+ *
+ * Inlined rather than importing `isCollectorDropListing` from the products
+ * feature — no repository in this codebase imports another feature's modules
+ * (the Turbopack import-chain trap, Root Cause #6/#18). Accepts the pre-rename
+ * "auction" spelling a stored cart line may still carry (Root Cause #58).
+ */
+function isCollectorDropLine(item: { listingType?: string }): boolean {
+  return item.listingType === "collector-drop" || item.listingType === "auction";
+}
+
 export class CouponsRepository extends BaseRepository<CouponDocument> {
   constructor() {
     super(COUPONS_COLLECTION);
@@ -555,10 +567,10 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
    * - Admin coupons apply to all non-pre-order items that satisfy product/
    *   category restrictions.
    * - Seller coupons apply only to non-pre-order items from that seller.
-   * - If `applicableToAuctions` is true, only auction items from that seller
+   * - If `applicableToCollectorDrops` is true, only collector drop items from that seller
    *   are eligible; regular (fixed-price) items from the same store are
    *   excluded.
-   * - If `applicableToAuctions` is false/undefined, only non-auction items
+   * - If `applicableToCollectorDrops` is false/undefined, only non-collectorDrop items
    *   from that seller are eligible.
    *
    * @returns An object that mirrors `validateCoupon` but also includes
@@ -603,7 +615,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     const { coupon } = check;
 
     // Determine eligible items — no blanket exclusion by product type.
-    // Coupon flags (applicableToAuctions) decide type eligibility below.
+    // Coupon flags (applicableToCollectorDrops) decide type eligibility below.
     let eligible = [...cartItems];
 
     const scope = coupon.scope ?? "admin";
@@ -614,13 +626,13 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     }
 
     // Apply product-type filter based on the coupon's own flag:
-    //   true       → auction-only coupon
-    //   false      → explicitly excludes auctions (still allows pre-orders + standard)
+    //   true       → collector-drop-only coupon
+    //   false      → explicitly excludes collector drops (still allows pre-orders + standard)
     //   undefined  → no restriction; applies to every listing type
-    if (coupon.applicableToAuctions === true) {
-      eligible = eligible.filter((item) => item.listingType === "auction");
-    } else if (coupon.applicableToAuctions === false) {
-      eligible = eligible.filter((item) => item.listingType !== "auction");
+    if (coupon.applicableToCollectorDrops === true) {
+      eligible = eligible.filter((item) => isCollectorDropLine(item));
+    } else if (coupon.applicableToCollectorDrops === false) {
+      eligible = eligible.filter((item) => !isCollectorDropLine(item));
     }
 
     // Apply product/category restrictions from the coupon itself
@@ -674,8 +686,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         valid: false,
         coupon,
         message:
-          coupon.applicableToAuctions === true
-            ? "This coupon only applies to auction items"
+          coupon.applicableToCollectorDrops === true
+            ? "This coupon only applies to collector drop items"
             : needsCategories
               ? "This coupon does not apply to any of the categories in your cart"
               : scope === "seller"

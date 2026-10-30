@@ -53,7 +53,7 @@ const DEFAULT_PATH_LABELS: Record<string, string> = {
   sellers: "Sellers",
   events: "Events",
   reviews: "Reviews",
-  auctions: "Auctions",
+  collectorDrops: "Collector Drops",
   promotions: "Promotions",
   classified: "Classified",
   live: "Live Items",
@@ -116,12 +116,12 @@ export interface AutoBreadcrumbsProps {
  * 🛑 CORRECTED 2026-10-21 — this read "Every detail page in this app renders
  * its own trail with real titles, which is why dropping the crumb loses
  * nothing", and that is FALSE. Measured across five detail views: only
- * `ProductDetailPageView` renders one. `AuctionDetailPageView`,
+ * `ProductDetailPageView` renders one. `CollectorDropDetailPageView`,
  * `StoreDetailLayoutView`, `BlogPostView` and `BrandDetailPageView` render
  * NONE, so on those four the shortened trail above is the only breadcrumb
  * there is.
  *
- * That does not change the decision — a trail ending at `Home / Auctions` is
+ * That does not change the decision — a trail ending at `Home / Collector Drops` is
  * still correct, and title-casing an id produced
  * `Product beyblade x xtreme stadium bx 10`, which was not. But the
  * justification matters, because the false version invites the obvious next
@@ -233,7 +233,7 @@ export function AutoBreadcrumbs({
    *
    * 🛑 The suppression is keyed on being INSIDE A DASHBOARD, never on "is a
    * detail route". A previous version of this file claimed every detail page
-   * renders its own trail; measured, only 1 of 5 does — auction, store, blog
+   * renders its own trail; measured, only 1 of 5 does — collector drop, store, blog
    * and brand render none, so a detail-route rule would have stripped the
    * breadcrumb from four public pages that have nothing else. A dashboard has
    * a sidebar and an h1; a public detail page has neither.

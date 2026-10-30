@@ -17,7 +17,7 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
   }
 
   // NOTE: no early return here. This job sweeps three distinct things and the
-  // other two (accepted-past-deadline offers, unpaid auction wins) must still
+  // other two (accepted-past-deadline offers, unpaid collector drop wins) must still
   // run when there happen to be no expired pending/countered offers.
   if (expiredOffers.length === 0) {
     ctx.logger.info("No expired pending/countered offers found");
@@ -56,7 +56,7 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
   }
 
   await expireAcceptedPastCheckoutDeadline(ctx);
-  await lapseUnpaidAuctionWins(ctx);
+  await lapseUnpaidCollectorDropWins(ctx);
 
   ctx.logger.info("Offer expiry complete", {
     processed: expired.length,
@@ -123,7 +123,7 @@ async function expireAcceptedPastCheckoutDeadline(ctx: JobContext): Promise<void
 }
 
 /**
- * An auction line the buyer never paid for. TWO different situations, and the
+ * A collector drop line the buyer never paid for. TWO different situations, and the
  * difference matters to both parties.
  *
  * Folded into this job rather than given its own scheduled function: all of
@@ -131,19 +131,19 @@ async function expireAcceptedPastCheckoutDeadline(ctx: JobContext): Promise<void
  * cadence, and Cloud Scheduler bills per registered job (see CLAUDE.md's
  * Firebase budget table — 27 jobs is already an accepted, documented cost).
  *
- * **A settled win** (`!isBuyout`) is a finished auction the buyer committed to
+ * **A settled win** (`!isBuyout`) is a finished collector drop the buyer committed to
  * by bidding. The listing is NOT silently relisted — that is a seller decision
  * (relist, approach the runner-up, or ban the non-payer) — so the line is
  * cleared, the bid is `forfeited`, and both sides are told.
  *
- * **A buyout hold** (`isBuyout`) never won anything. `buyNowAuction` left the
- * auction completely untouched, so there is no sale to reverse and nothing for
+ * **A buyout hold** (`isBuyout`) never won anything. `buyNowCollectorDrop` left the
+ * collector drop completely untouched, so there is no sale to reverse and nothing for
  * the seller to decide: the line is cleared, the bid is `cancelled`, and only
  * the buyer hears about it. This is what makes flipping nothing on the product
  * at claim time pay off — the old buy-now marked the listing sold immediately,
- * so an abandoned buyout permanently killed an auction that still had time left.
+ * so an abandoned buyout permanently killed a collector drop that still had time left.
  */
-async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
+async function lapseUnpaidCollectorDropWins(ctx: JobContext): Promise<void> {
   let stale;
   try {
     stale = await cartRepository.findExpiredLockedLines(ctx.now);
@@ -153,9 +153,9 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
     return;
   }
 
-  const allAuctionLines = stale.filter(({ item }) => item.bidId && item.isAuctionWin);
-  const buyoutHolds = allAuctionLines.filter(({ item }) => item.isBuyout === true);
-  const auctionLines = allAuctionLines.filter(({ item }) => item.isBuyout !== true);
+  const allCollectorDropLines = stale.filter(({ item }) => item.bidId && item.isCollectorDropWin);
+  const buyoutHolds = allCollectorDropLines.filter(({ item }) => item.isBuyout === true);
+  const collectorDropLines = allCollectorDropLines.filter(({ item }) => item.isBuyout !== true);
 
   if (buyoutHolds.length > 0) {
     ctx.logger.info(`Found ${buyoutHolds.length} expired Buy Now hold(s)`);
@@ -169,11 +169,11 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
         });
         await sendNotification({
           userId,
-          type: "auction_ended",
+          type: "collector_drop_ended",
           priority: "normal",
           title: BID_MESSAGES.BUY_NOW_LAPSED_TITLE,
           message: BID_MESSAGES.BUY_NOW_LAPSED_MESSAGE(item.productTitle),
-          relatedId: item.auctionId ?? item.productId,
+          relatedId: item.collectorDropId ?? item.productId,
           relatedType: "product",
         });
       } catch (err) {
@@ -185,8 +185,8 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
     }
   }
 
-  if (auctionLines.length === 0) return;
-  ctx.logger.info(`Found ${auctionLines.length} unpaid auction win(s) past deadline`);
+  if (collectorDropLines.length === 0) return;
+  ctx.logger.info(`Found ${collectorDropLines.length} unpaid collector drop win(s) past deadline`);
 
   /**
    * Tell the seller their item is unsold again so they can relist it or approach
@@ -198,7 +198,7 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
    * a notification failure must not roll that back or abort the sweep.
    */
   async function notifySellerOfForfeitedWin(
-    item: (typeof auctionLines)[number]["item"],
+    item: (typeof collectorDropLines)[number]["item"],
     jobCtx: JobContext,
   ): Promise<void> {
     try {
@@ -206,11 +206,11 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
       if (!store?.ownerId) return;
       await sendNotification({
         userId: store.ownerId,
-        type: "auction_ended",
+        type: "collector_drop_ended",
         priority: "normal",
-        title: "Auction win forfeited — item unsold",
+        title: "Collector Drop win forfeited — item unsold",
         message: `The winning bidder for "${item.productTitle}" did not pay within the deadline, so the win was forfeited. You can relist the item or approach the next highest bidder.`,
-        relatedId: item.auctionId ?? item.productId,
+        relatedId: item.collectorDropId ?? item.productId,
         relatedType: "product",
       });
     } catch (sellerErr) {
@@ -221,7 +221,7 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
     }
   }
 
-  for (const { userId, item } of auctionLines) {
+  for (const { userId, item } of collectorDropLines) {
     try {
       await cartRepository.removeItemsByBidId(userId, item.bidId!);
       await bidRepository.markForfeited(item.bidId!, {
@@ -231,18 +231,18 @@ async function lapseUnpaidAuctionWins(ctx: JobContext): Promise<void> {
       });
       await sendNotification({
         userId,
-        type: "auction_ended",
+        type: "collector_drop_ended",
         priority: "high",
-        title: "Auction win forfeited",
+        title: "Collector Drop win forfeited",
         message: `You didn't complete payment for "${item.productTitle}" in time, so the win has been forfeited. Repeated non-payment can restrict your account.`,
-        relatedId: item.auctionId ?? item.productId,
+        relatedId: item.collectorDropId ?? item.productId,
         relatedType: "product",
       });
 
       await notifySellerOfForfeitedWin(item, ctx);
     } catch (err) {
       void normalizeError(err);
-      ctx.logger.warn(`Failed to lapse auction win ${item.bidId}`, {
+      ctx.logger.warn(`Failed to lapse collector drop win ${item.bidId}`, {
         error: err instanceof Error ? err.message : String(err),
       });
     }

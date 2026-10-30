@@ -63,7 +63,7 @@ export interface BottomNavbarUser {
    */
   stats?: {
     totalOrders?: number;
-    auctionsWon?: number;
+    collectorDropsWon?: number;
     reviewsCount?: number;
   } | null;
 }
@@ -245,7 +245,7 @@ export function BottomNavbar({
     // bar, it's just no longer duplicated in the bottom tab bar).
     const visibleItems = navItems.slice(0, cartHref ? 3 : 4);
     const isSlotActive = (item: BottomNavItem) => {
-      // 🛑 A child's page counts. "Products" stands for /auctions and /bundles
+      // 🛑 A child's page counts. "Products" stands for /collector-drops and /bundles
       // too now, so matching its own href alone would leave the bar marking
       // nothing on most of the pages that slot represents.
       const hrefs = [item.href, ...(item.children ?? []).map((c) => c.href)];

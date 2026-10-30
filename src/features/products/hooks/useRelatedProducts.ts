@@ -8,7 +8,7 @@ import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 type RelatedProductsResponse = ProductListResponse;
 
 /**
- * Fetch related products in the same category. SB1-G — `isAuction` legacy
+ * Fetch related products in the same category. SB1-G — `isCollectorDrop` legacy
  * boolean translates to the canonical `listingType` clause; new callers can
  * pass the union directly via the same parameter slot in a follow-up.
  */
@@ -16,10 +16,10 @@ export function useRelatedProducts(
   category: string,
   excludeId: string,
   limit = 8,
-  isAuction = false,
+  isCollectorDrop = false,
 ) {
-  const listingTypeClause = isAuction
-    ? sieveFilter("listingType", SIEVE_OP.EQ, "auction")
+  const listingTypeClause = isCollectorDrop
+    ? sieveFilter("listingType", SIEVE_OP.EQ, "collector-drop")
     : sieveFilter("listingType", SIEVE_OP.EQ, "standard");
   const params = new URLSearchParams({
     filters: sieveAnd(
@@ -32,7 +32,7 @@ export function useRelatedProducts(
   });
 
   return useQuery<RelatedProductsResponse>({
-    queryKey: ["related-products", category, excludeId, String(isAuction)],
+    queryKey: ["related-products", category, excludeId, String(isCollectorDrop)],
     queryFn: () =>
       apiClient.get<RelatedProductsResponse>(
         `${PRODUCT_ENDPOINTS.LIST}?${params.toString()}`,

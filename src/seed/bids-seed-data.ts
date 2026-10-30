@@ -1,5 +1,5 @@
 /*
- * WHY: Auction bid fixtures. Production has none, so this is empty.
+ * WHY: Collector Drop bid fixtures. Production has none, so this is empty.
  * WHAT: Empty. The export and its `withBidDefaults` pipeline are kept so
  * `seed/index.ts` and `seed-cli`'s import still resolve.
  *
@@ -13,10 +13,10 @@
  * raised with the owner before the deletion and accepted.
  *
  * EXPORTS:
- *   bidsSeedData — Array of bid documents, one set per seeded auction, counts matching
- *                  each auction's bidCount field
+ *   bidsSeedData — Array of bid documents, one set per seeded collector drop, counts matching
+ *                  each collector drop's bidCount field
  *
- * @tag domain:auctions,bids
+ * @tag domain:collector drops,bids
  * @tag layer:seed
  * @tag pattern:none
  * @tag access:server-only
@@ -28,7 +28,7 @@
  * `BidPlain`: these fixtures hold real plaintext and `seed-cli` encrypts
  * `userEmail` on write, so the document type would claim they are ciphertext.
  */
-import type { BidPlain } from "../features/auctions/schemas/firestore";
+import type { BidPlain } from "../features/collector-drops/schemas/firestore";
 import { buildBidSearchTxt } from "../utils/search-txt-builders";
 
 const NOW = new Date();
@@ -50,7 +50,7 @@ const BIDDER_EMAILS: Record<string, string> = {
 function withBidDefaults(b: Partial<BidPlain>): Partial<BidPlain> {
   return {
     ...b,
-    productTitle: b.productTitle as string ?? (b.productId as string ?? "").replace(/^auction-/, "").replace(/-/g, " "),
+    productTitle: b.productTitle as string ?? (b.productId as string ?? "").replace(/^collectordrop-/, "").replace(/-/g, " "),
     userEmail: b.userEmail as string ?? BIDDER_EMAILS[b.userId as string] ?? "",
     currency: "INR",
     isWinning: b.status === "active" || b.status === "won",
@@ -73,7 +73,7 @@ function withBidDefaults(b: Partial<BidPlain>): Partial<BidPlain> {
     searchTxt: buildBidSearchTxt({
       productTitle:
         (b.productTitle as string) ??
-        ((b.productId as string) ?? "").replace(/^auction-/, "").replace(/-/g, " "),
+        ((b.productId as string) ?? "").replace(/^collectordrop-/, "").replace(/-/g, " "),
       userName: b.userName as string | undefined,
     }),
   } as Partial<BidPlain>;
@@ -84,7 +84,7 @@ function withBidDefaults(b: Partial<BidPlain>): Partial<BidPlain> {
  * confirmation — reverses the 2026-10-22 prune for this specific audit
  * sweep's need to exercise bid/order/review flows end to end locally. Every
  * id is deterministic (derived from the product id, never `Math.random()` —
- * Root Cause #25) and FKs point at real seeded auction products, whose
+ * Root Cause #25) and FKs point at real seeded collector drop products, whose
  * `bidCount`/`currentBid` fields these ladders are built to match, so the
  * denormalized counters on the product docs and this collection agree.
  */
@@ -126,7 +126,7 @@ function buildLadder(
 
 const _rawBidsSeedData: Partial<BidPlain>[] = [
   ...buildLadder(
-    "auction-beyblade-burst-cho-z-achilles",
+    "collectordrop-beyblade-burst-cho-z-achilles",
     "Beyblade Burst B-100 Cho-Z Achilles",
     1199,
     1650,
@@ -134,7 +134,7 @@ const _rawBidsSeedData: Partial<BidPlain>[] = [
     "active",
   ),
   ...buildLadder(
-    "auction-beyblade-burst-spriggan-requiem-bought-out",
+    "collectordrop-beyblade-burst-spriggan-requiem-bought-out",
     "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
     2499,
     3100,
@@ -142,7 +142,7 @@ const _rawBidsSeedData: Partial<BidPlain>[] = [
     "won",
   ),
   ...buildLadder(
-    "auction-beyblade-burst-xcalius-passed-bin",
+    "collectordrop-beyblade-burst-xcalius-passed-bin",
     "Beyblade Burst Xcalius X2 (bidding passed Buy It Now)",
     700,
     1650,
@@ -150,7 +150,7 @@ const _rawBidsSeedData: Partial<BidPlain>[] = [
     "active",
   ),
   ...buildLadder(
-    "auction-beyblade-metal-diablo-nemesis",
+    "collectordrop-beyblade-metal-diablo-nemesis",
     "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
     3499,
     6200,

@@ -1,8 +1,8 @@
 /*
  * WHY: A cart can hold three kinds of line with three different obligations — a
- *      won auction (you owe it), an accepted offer (you negotiated it, at a
+ *      won collector drop (you owe it), an accepted offer (you negotiated it, at a
  *      locked price, on a deadline), and ordinary shopping. Mixing them into one
- *      total lets a buyer settle a ₹200 sticker while a ₹30,000 auction win they
+ *      total lets a buyer settle a ₹200 sticker while a ₹30,000 collector drop win they
  *      already committed to sits unpaid, and makes every total ambiguous.
  * WHAT: The lane model — a derived (never stored) partition of the cart, with a
  *       strict priority order. Exactly one lane is checkout-able at a time: the
@@ -28,7 +28,7 @@
 import { ROUTES } from "../../../next/routing/route-map";
 
 export const CART_LANE = {
-  AUCTION: "auction",
+  COLLECTOR_DROP: "collector-drop",
   OFFER: "offer",
   STANDARD: "standard",
 } as const;
@@ -36,18 +36,18 @@ export const CART_LANE = {
 export type CartLane = (typeof CART_LANE)[keyof typeof CART_LANE];
 
 /**
- * Highest obligation first. An auction win is a completed sale the buyer already
+ * Highest obligation first. A collector drop win is a completed sale the buyer already
  * committed to by bidding; an accepted offer is a price the seller has held for
  * them on a clock; ordinary cart items carry no commitment at all.
  */
 export const CART_LANE_PRIORITY: readonly CartLane[] = [
-  CART_LANE.AUCTION,
+  CART_LANE.COLLECTOR_DROP,
   CART_LANE.OFFER,
   CART_LANE.STANDARD,
 ];
 
 export const CART_LANE_LABELS: Record<CartLane, string> = {
-  auction: "Auction wins",
+  "collector-drop": "Collector Drop wins",
   offer: "Accepted offers",
   standard: "Cart",
 };
@@ -56,75 +56,75 @@ export const CART_LANE_LABELS: Record<CartLane, string> = {
  * How long a locked line survives before it lapses, per lane.
  *
  * Lives here, with the lane model, because the deadline is a property OF the
- * lane — and because `AUCTION_CHECKOUT_WINDOW_MS` was previously declared twice
- * (`auctionSettlement.ts` and `bid-actions.ts`, i.e. the settlement path and the
+ * lane — and because `COLLECTOR_DROP_CHECKOUT_WINDOW_MS` was previously declared twice
+ * (`collectorDropSettlement.ts` and `bid-actions.ts`, i.e. the settlement path and the
  * Buy-Now path) with no link between them: changing one would silently give the
  * same kind of win two different deadlines depending on how it was won.
  *
  * The two windows are equal today but mean different things, so they stay
  * separate names rather than one shared constant:
- *  - **auction** — payment is MANDATORY. You bid, you won, you owe it. Past the
+ *  - **collector-drop** — payment is MANDATORY. You bid, you won, you owe it. Past the
  *    deadline the bid is forfeited and the buyer is warned that repeated
  *    non-payment restricts their account.
  *  - **offer** — payment is OPTIONAL. Declining to buy at your own offer price
  *    is the buyer's right; the offer simply lapses with no penalty.
  */
-export const LANE_CHECKOUT_WINDOW_MS: Record<"auction" | "offer", number> = {
+export const LANE_CHECKOUT_WINDOW_MS: Record<"collector-drop" | "offer", number> = {
   /** 2 days. Mandatory — enforced by the expiry sweep, which forfeits the bid. */
-  auction: 48 * 60 * 60 * 1000,
+  "collector-drop": 48 * 60 * 60 * 1000,
   /** 2 days. Optional — lapses quietly, no penalty. */
   offer: 48 * 60 * 60 * 1000,
 };
 
 /** 2 days, in hours — for buyer-facing copy ("pay within 48 hours"). */
-export const LANE_CHECKOUT_WINDOW_HOURS: Record<"auction" | "offer", number> = {
-  auction: LANE_CHECKOUT_WINDOW_MS.auction / (60 * 60 * 1000),
+export const LANE_CHECKOUT_WINDOW_HOURS: Record<"collector-drop" | "offer", number> = {
+  "collector-drop": LANE_CHECKOUT_WINDOW_MS["collector-drop"] / (60 * 60 * 1000),
   offer: LANE_CHECKOUT_WINDOW_MS.offer / (60 * 60 * 1000),
 };
 
 /**
  * A BUYOUT hold is a third window, deliberately much shorter than the two above,
- * even though it lands in the same auction lane.
+ * even though it lands in the same collector drop lane.
  *
- * A settled win (`LANE_CHECKOUT_WINDOW_MS.auction`) is a finished auction: the
+ * A settled win (`LANE_CHECKOUT_WINDOW_MS["collector-drop"]`) is a finished collector drop: the
  * clock already ran, nobody else is waiting, and 48 hours costs no one anything.
- * A buyout is the opposite — the auction is still live and still taking bids
+ * A buyout is the opposite — the collector drop is still live and still taking bids
  * while the hold exists, so a long window would let one buyer sit on a listing
  * they may never pay for. One hour, and the hold is additionally clamped to the
- * auction's own end time by `buyNowAuction` (see `AUCTION_BUYOUT_WINDOW_MS`
- * callers): a buyout that hasn't been paid for by the time the auction ends
- * fails, because by then the auction has settled to whoever actually won it.
+ * collector drop's own end time by `buyNowCollectorDrop` (see `COLLECTOR_DROP_BUYOUT_WINDOW_MS`
+ * callers): a buyout that hasn't been paid for by the time the collector drop ends
+ * fails, because by then the collector drop has settled to whoever actually won it.
  */
-export const AUCTION_BUYOUT_WINDOW_MS = 60 * 60 * 1000;
+export const COLLECTOR_DROP_BUYOUT_WINDOW_MS = 60 * 60 * 1000;
 
 /** 1 hour, in minutes — for buyer-facing copy ("pay within 60 minutes"). */
-export const AUCTION_BUYOUT_WINDOW_MINUTES = AUCTION_BUYOUT_WINDOW_MS / (60 * 1000);
+export const COLLECTOR_DROP_BUYOUT_WINDOW_MINUTES = COLLECTOR_DROP_BUYOUT_WINDOW_MS / (60 * 1000);
 
 /**
- * Deep link that drops a buyer straight into the auction lane at checkout.
+ * Deep link that drops a buyer straight into the collector drop lane at checkout.
  *
  * Declared once here, with the lane it selects, because it was previously a
- * const in `auctionSettlement.ts` AND an inline template literal in
+ * const in `collectorDropSettlement.ts` AND an inline template literal in
  * `bid-actions.ts` — the same two-copies problem `LANE_CHECKOUT_WINDOW_MS` was
  * extracted to fix, one layer up.
  */
-export const AUCTION_CHECKOUT_URL = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.AUCTION}`;
+export const COLLECTOR_DROP_CHECKOUT_URL = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.COLLECTOR_DROP}`;
 
 /** The two lanes whose price is fixed outside the listing. */
 export function isLockedLane(lane: CartLane): boolean {
-  return lane === CART_LANE.AUCTION || lane === CART_LANE.OFFER;
+  return lane === CART_LANE.COLLECTOR_DROP || lane === CART_LANE.OFFER;
 }
 
 /** Minimal shape this module needs — works on cart documents and client rows alike. */
 export interface LaneAssignable {
-  isAuctionWin?: boolean;
+  isCollectorDropWin?: boolean;
   isOffer?: boolean;
   offerId?: string;
   bidId?: string;
 }
 
 export function laneOf(item: LaneAssignable): CartLane {
-  if (item.isAuctionWin || item.bidId) return CART_LANE.AUCTION;
+  if (item.isCollectorDropWin || item.bidId) return CART_LANE.COLLECTOR_DROP;
   if (item.isOffer || item.offerId) return CART_LANE.OFFER;
   return CART_LANE.STANDARD;
 }
@@ -137,7 +137,7 @@ export function laneItems<T extends LaneAssignable>(
 }
 
 export function laneCounts(items: readonly LaneAssignable[]): Record<CartLane, number> {
-  const counts: Record<CartLane, number> = { auction: 0, offer: 0, standard: 0 };
+  const counts: Record<CartLane, number> = { "collector-drop": 0, offer: 0, standard: 0 };
   for (const item of items) counts[laneOf(item)] += 1;
   return counts;
 }
@@ -165,16 +165,16 @@ export function isLaneCheckoutable(
  * whole cart against its own active lane — so every off-lane line was a
  * violation and the throw was unconditional. The consequence was total: a cart
  * holding more than ONE lane could not be checked out by any UI path, with
- * `CHECKOUT_LANE_BLOCKED` and "Settle your 1 won auction first" returned for
+ * `CHECKOUT_LANE_BLOCKED` and "Settle your 1 won collector drop first" returned for
  * the very lane the buyer was already settling.
  *
  * Multi-lane carts are not an edge case — they are what the lane model
- * produces. `auctionSettlement` pushes a won auction straight into the cart
+ * produces. `collectorDropSettlement` pushes a won collector drop straight into the cart
  * whatever is already sitting in it, and `assertCanAddNewItems` only blocks
  * ADDING while a higher lane is pending; it never clears what was there first.
- * So any buyer who had anything in their cart when they won an auction was
+ * So any buyer who had anything in their cart when they won a collector drop was
  * locked out of checkout entirely. That is Root Cause #60's symptom returning
- * by a different mechanism — the auction winner who cannot pay.
+ * by a different mechanism — the collector drop winner who cannot pay.
  *
  * Returning the active lane also makes the server agree with what the buyer is
  * looking at: the cart page scopes its lines, its totals and its CTA to that
@@ -209,8 +209,8 @@ export function defaultCheckoutItems<T extends LaneAssignable>(
  * `cart.items` — every lane — while settle created orders for the active lane
  * only. And multi-lane carts are not an edge case: `defaultCheckoutItems`' own
  * docstring above says they "are what the lane model produces", because
- * `auctionSettlement` pushes a won auction into whatever is already in the
- * cart. So a buyer with a won auction and ordinary items in the cart was
+ * `collectorDropSettlement` pushes a won collector drop into whatever is already in the
+ * cart. So a buyer with a won collector drop and ordinary items in the cart was
  * charged for both and received orders for one.
  *
  * ## The rule
@@ -251,9 +251,9 @@ export function laneBlockReason(
   const counts = laneCounts(items);
   if (counts[lane] === 0) return "There's nothing in this tab yet.";
 
-  if (active === CART_LANE.AUCTION) {
-    const n = counts.auction;
-    return `Settle your ${n} won auction${n === 1 ? "" : "s"} first — auction wins are already committed purchases.`;
+  if (active === CART_LANE.COLLECTOR_DROP) {
+    const n = counts["collector-drop"];
+    return `Settle your ${n} won collector drop${n === 1 ? "" : "s"} first — collector drop wins are already committed purchases.`;
   }
   if (active === CART_LANE.OFFER) {
     const n = counts.offer;

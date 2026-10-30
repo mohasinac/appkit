@@ -17,7 +17,7 @@ function dispatchGuestWishlistChange(): void {
 
 export interface GuestWishlistItem {
   itemId: string;
-  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live";
+  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction";
   title?: string;
   image?: string;
   addedAt?: string;
@@ -64,7 +64,7 @@ export function getGuestWishlistItems(
 
 export function addToGuestWishlist(
   itemId: string,
-  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
   snapshot?: { title?: string; image?: string },
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
@@ -94,7 +94,7 @@ export function addToGuestWishlist(
 
 export function removeFromGuestWishlist(
   itemId: string,
-  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): GuestWishlistItem[] {
@@ -107,7 +107,7 @@ export function removeFromGuestWishlist(
 
 export function isInGuestWishlist(
   itemId: string,
-  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): boolean {
@@ -131,7 +131,7 @@ export function getGuestWishlistCount(
 }
 
 export function getGuestWishlistByType(
-  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+  type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): GuestWishlistItem[] {

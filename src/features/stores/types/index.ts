@@ -113,7 +113,7 @@ export interface StoreDetail extends StoreListItem {
   vacationMessage?: string;
 }
 
-// --- Store product / auction items (minimal shape for display) ---------------
+// --- Store product / collector drop items (minimal shape for display) ---------------
 
 export interface StoreProductItem {
   id: string;
@@ -133,9 +133,9 @@ export interface StoreProductItem {
   availableQuantity?: number;
 }
 
-export interface StoreAuctionItem extends Omit<StoreProductItem, "listingType"> {
-  listingType: "auction";
-  auctionEndDate: string;
+export interface StoreCollectorDropItem extends Omit<StoreProductItem, "listingType"> {
+  listingType: "collector-drop";
+  collectorDropEndDate: string;
   startingBid: number;
   bidCount: number;
 }
@@ -171,10 +171,10 @@ export interface StoreListParams {
   rating?: string;
 }
 
-// --- Store auctions response --------------------------------------------------
+// --- Store collector drops response --------------------------------------------------
 
-export interface StoreAuctionsResponse {
-  items: StoreAuctionItem[];
+export interface StoreCollectorDropsResponse {
+  items: StoreCollectorDropItem[];
   total: number;
   page: number;
   pageSize: number;

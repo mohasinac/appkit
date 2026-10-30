@@ -29,7 +29,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
-import { parseSelectedListingTypes } from "../../products/utils/listing-type";
+import { parseSelectedListingTypes, isCollectorDropListing } from "../../products/utils/listing-type";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { formatMoney } from "../../../utils/number.formatter";
@@ -326,19 +326,19 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       toRecordArray(response.items).map((item, index) => {
         const id = toStringValue(item.id, `product-${index}`);
         rawByIdRef.current[id] = item;
-        // Auction listings lost their reserve/bid/end-date summary when this
+        // Collector Drop listings lost their reserve/bid/end-date summary when this
         // view was consolidated onto the shared Products listing — restore
         // it into `secondary` instead of seller/SKU, which admins reviewing
-        // an auction care about far less than bid activity.
-        const auctionSecondary =
-          item.listingType === "auction"
+        // a collector drop care about far less than bid activity.
+        const collectorDropSecondary =
+          isCollectorDropListing(item)
             ? [
                 typeof item.reservePrice === "number"
                   ? `Reserve ${formatMoney(item.reservePrice)}`
                   : null,
                 `${typeof item.bidCount === "number" ? item.bidCount : 0} bids`,
-                item.auctionEndDate
-                  ? `Ends ${new Date(item.auctionEndDate as string).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}`
+                item.collectorDropEndDate
+                  ? `Ends ${new Date(item.collectorDropEndDate as string).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}`
                   : null,
               ]
                 .filter(Boolean)
@@ -377,7 +377,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
            * tells an admin nothing except that we asked.
            */
           secondary:
-            auctionSecondary ||
+            collectorDropSecondary ||
             [
               toStringValue(item.storeName, "No store"),
               typeof item.price === "number"
@@ -417,7 +417,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
 
       // Three drawer chips (Sold / Ended / Closed) used to live here, each
       // emitting its own clause and each guarded by an `onlyType` check
-      // because `auctionEndDate` and `prizeRevealWindowEnd` do not exist on
+      // because `collectorDropEndDate` and `prizeRevealWindowEnd` do not exist on
       // the other seven types. That guard meant the ended/closed filters
       // silently did nothing on any mixed selection. The scope param replaces
       // all three, and resolves the per-type meaning server-side — so it works
@@ -523,7 +523,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
           onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
         />
         {/* Multi-select: an admin reviewing the queue usually wants two or
-            three types at once (e.g. auctions + prize draws), which the old
+            three types at once (e.g. collector drops + prize draws), which the old
             single-select chips made impossible. */}
         <FilterChipGroup
           multiple

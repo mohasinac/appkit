@@ -3,8 +3,8 @@
  *      the buyer earned the right to buy it at that price. `orderType` has five
  *      values and cannot even separate "won at ₹4,200 against 11 bids" from
  *      "bought out at ₹6,000 while the standing bid was ₹3,800" — both land as
- *      `orderType: "auction"`. Everything else was recoverable only by reading
- *      the auction or offer document, which is mutable and eventually archived.
+ *      `orderType: "collector-drop"`. Everything else was recoverable only by reading
+ *      the collector drop or offer document, which is mutable and eventually archived.
  * WHAT: `buildOrderSourceContext()` — the ONE builder for `OrderSourceContext`,
  *       called by both order-creation paths (manual/COD and PhonePe).
  *
@@ -20,14 +20,14 @@
  *
  * These numbers describe a moment. `product.price` moves, `currentBid` is a
  * mirror that a pending buyout deliberately never writes to, and a settled
- * auction is eventually archived. Recomputing later would silently rewrite
+ * collector drop is eventually archived. Recomputing later would silently rewrite
  * history, so nothing outside order creation may write this field.
  *
  * ## Read cost
  *
  * Standard, pre-order and prize-draw cost **zero** extra reads — everything
- * comes from the product already in hand. Only the auction and offer lanes pay:
- * one `findByProductSorted` for auctions (bid count, winner, runner-up, the
+ * comes from the product already in hand. Only the collector drop and offer lanes pay:
+ * one `findByProductSorted` for collector drops (bid count, winner, runner-up, the
  * standing bid — all four from one query) and one `findById` for offers. Since
  * a checkout is single-lane by construction, a standard cart never pays either.
  *
@@ -53,7 +53,7 @@ import type { CartItemDocument } from "../../../../features/cart/schemas/firesto
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { OrderSourceContext } from "../../../../features/orders/schemas/firestore";
 import type { OrderType } from "../../../../features/orders/utils/order-splitter";
-import { bidRepository } from "../../../../features/auctions/repository/bid.repository";
+import { bidRepository } from "../../../../features/collector-drops/repository/bid.repository";
 import { offerRepository } from "../../../../features/seller/repository/offer.repository";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
@@ -94,22 +94,22 @@ export async function buildOrderSourceContext(
     if (item.bidId) {
       const bids = await bidRepository.findByProductSorted(item.productId);
       const rivals = competitiveBids(bids);
-      const auctionId = item.auctionId ?? item.productId;
+      const collectorDropId = item.collectorDropId ?? item.productId;
 
       if (item.isBuyout) {
         return {
-          path: "auction-buy-now",
-          auctionId,
+          path: "collector-drop-buy-now",
+          collectorDropId,
           bidId: item.bidId,
           buyNowPrice: item.lockedPrice ?? product.buyNowPrice ?? item.price,
           listPrice: product.price,
           // From the bids, not `product.currentBid` — a pending buyout never
-          // writes that mirror, so reading it would understate the auction.
+          // writes that mirror, so reading it would understate the collector drop.
           standingBidAtBuyout: rivals[0]?.bidAmount ?? 0,
           bidCount: rivals.length,
           boughtAt: new Date(),
           checkoutDeadline: item.checkoutDeadline ?? new Date(),
-          auctionEndDate: product.auctionEndDate,
+          collectorDropEndDate: product.collectorDropEndDate,
         };
       }
 
@@ -117,8 +117,8 @@ export async function buildOrderSourceContext(
       const winningAmount = winning?.bidAmount ?? item.lockedPrice ?? item.price;
       const reserve = product.reservePrice;
       return {
-        path: "auction-won",
-        auctionId,
+        path: "collector-drop-won",
+        collectorDropId,
         bidId: item.bidId,
         winningBidAmount: winningAmount,
         bidCount: rivals.length,
@@ -126,7 +126,7 @@ export async function buildOrderSourceContext(
         reservePrice: reserve,
         // No reserve set means the reserve cannot fail, so it is met.
         reserveMet: reserve == null ? true : winningAmount >= reserve,
-        auctionEndedAt: product.auctionEndDate ?? new Date(),
+        collectorDropEndedAt: product.collectorDropEndDate ?? new Date(),
         runnerUpAmount: rivals.find((b) => b.id !== item.bidId)?.bidAmount,
       };
     }

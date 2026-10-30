@@ -56,11 +56,11 @@ export async function getUserSessions(userId: string) {
  * it rather than read off `users/{uid}.stats`.
  *
  * 🛑 `users/{uid}.stats.*` HAS NO WRITER. Measured 2026-10-23: every occurrence
- * of `stats.totalOrders` / `auctionsWon` / `itemsSold` / `reviewsCount` across
+ * of `stats.totalOrders` / `collectorDropsWon` / `itemsSold` / `reviewsCount` across
  * both repos is a READ, and the only `stats.itemsSold` write in the codebase is
  * `StoreRepository`'s, on the STORE document. So the stored numbers are
  * whatever `users-seed-data.ts` hardcoded — the admin persona ships
- * `{ totalOrders: 20, auctionsWon: 2, itemsSold: 200 }` — and a real signup gets
+ * `{ totalOrders: 20, collectorDropsWon: 2, itemsSold: 200 }` — and a real signup gets
  * `DEFAULT_USER_DATA.stats`, all zeros, which stay zero after twenty orders.
  *
  * A number nobody maintains is worse than no number: it is indistinguishable
@@ -83,8 +83,8 @@ export async function getUserSessions(userId: string) {
 export interface BuyerActivityStats {
   /** Orders this account placed, all lanes. */
   totalOrders?: number;
-  /** Orders that came from winning (or buying out) an auction. */
-  auctionsWon?: number;
+  /** Orders that came from winning (or buying out) a collector drop. */
+  collectorDropsWon?: number;
   /** Reviews this account WROTE — the set `/user/reviews` lists. */
   reviewsCount?: number;
 }
@@ -98,15 +98,15 @@ export const getBuyerActivityStats = cache(async function getBuyerActivityStats(
   uid: string,
 ): Promise<BuyerActivityStats> {
   const route = "profile:buyer-activity-stats";
-  const [totalOrders, auctionsWon, reviewsCount] = await Promise.all([
+  const [totalOrders, collectorDropsWon, reviewsCount] = await Promise.all([
     safeRead(() => orderRepository.countForUser(uid), {
       route,
       key: "orders:total",
       fallback: undefined as number | undefined,
     }),
-    safeRead(() => orderRepository.countForUser(uid, "auction"), {
+    safeRead(() => orderRepository.countForUser(uid, "collector-drop"), {
       route,
-      key: "orders:auction",
+      key: "orders:collector-drop",
       fallback: undefined as number | undefined,
     }),
     safeRead(() => reviewRepository.countByUser(uid), {
@@ -115,7 +115,7 @@ export const getBuyerActivityStats = cache(async function getBuyerActivityStats(
       fallback: undefined as number | undefined,
     }),
   ]);
-  return { totalOrders, auctionsWon, reviewsCount };
+  return { totalOrders, collectorDropsWon, reviewsCount };
 });
 
 /**

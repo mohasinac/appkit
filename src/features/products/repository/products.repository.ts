@@ -93,7 +93,7 @@ const LISTING_TYPE_VALUES = PRODUCT_FIELDS.LISTING_TYPE_VALUES;
 // clauses with single-field `listingType==X` clauses now that every doc
 // carries the discriminator.
 const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.PUBLISHED}`;
-const SIEVE_CLAUSE_LT_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
+const SIEVE_CLAUSE_LT_COLLECTOR_DROP = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.COLLECTOR_DROP}`;
 const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
 const SIEVE_CLAUSE_LT_RANDOM_LOTS = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.RANDOM_LOTS}`;
@@ -108,7 +108,7 @@ const SIEVE_CLAUSE_LT_LIVE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VAL
 // reaching Firestore.
 type ProductListingKind =
   | "standard"
-  | "auction"
+  | "collector-drop"
   | "pre-order"
   | "random-lots"
   | "classified"
@@ -121,11 +121,12 @@ type ProductListingKind =
   | "preorder"
   | "product"
   | "prizedraw"
-  | "prize-draw";
+  | "prize-draw"
+  | "auction";
 
 const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   standard: LISTING_TYPE_VALUES.STANDARD,
-  auction: LISTING_TYPE_VALUES.AUCTION,
+  "collector-drop": LISTING_TYPE_VALUES.COLLECTOR_DROP,
   "pre-order": LISTING_TYPE_VALUES.PRE_ORDER,
   "random-lots": LISTING_TYPE_VALUES.RANDOM_LOTS,
   classified: LISTING_TYPE_VALUES.CLASSIFIED,
@@ -156,6 +157,9 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   // any missed literal (or a stored legacy value) still resolves rather than
   // silently dropping the listingType clause (Root Cause #58).
   "prize-draw": LISTING_TYPE_VALUES.RANDOM_LOTS,
+  // "auction" is the pre-rename canonical spelling of `collector-drop` — kept
+  // as an alias for the same reason as "prize-draw" above.
+  auction: LISTING_TYPE_VALUES.COLLECTOR_DROP,
 };
 
 const LISTING_KIND_ACCEPTED = new Set<string>(
@@ -1260,10 +1264,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       .map((s) => this.mapDoc<ProductDocument>(s));
   }
 
-  async findAuctions(): Promise<ProductDocument[]> {
+  async findCollectorDrops(): Promise<ProductDocument[]> {
     return this.findBy(
       PRODUCT_FIELDS.LISTING_TYPE,
-      LISTING_TYPE_VALUES.AUCTION,
+      LISTING_TYPE_VALUES.COLLECTOR_DROP,
     );
   }
 
@@ -1726,7 +1730,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     sublistingCategoryId: { canFilter: true, canSort: false },
     createdAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     updatedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
-    auctionEndDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
+    collectorDropEndDate: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealWindowStart: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealWindowEnd: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealStatus: { canFilter: true, canSort: false },
@@ -1795,7 +1799,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   };
 
   /**
-   * Virtual filter aliases — callers can pass `f=listingType==auction` for
+   * Virtual filter aliases — callers can pass `f=listingType==collector-drop` for
    * the canonical listing-kind discriminator. The Sieve adapter expands the
    * alias into real clauses before reaching Firestore.
    *
@@ -1806,10 +1810,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     /**
      * Canonical listing-kind alias (SB1-G).
      *
-     *   listingType==auction   →  listingType==auction
+     *   listingType==collector-drop   →  listingType==collector-drop
      *   listingType==preorder  →  listingType==pre-order  (normalises spelling)
      *   listingType==product   →  listingType==standard   (canonical token)
-     *   listingType!=auction   →  listingType!=auction
+     *   listingType!=collector-drop   →  listingType!=collector-drop
      *
      * The alias is kept (instead of letting raw `listingType==X` through) so
      * the public Sieve API still accepts the legacy `preorder` / `product`
@@ -1817,7 +1821,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      */
     listingType: (value, operator) => {
       if (operator !== "==" && operator !== "!=") return "";
-      // Accept both canonical tokens (`standard`, `auction`, `pre-order`,
+      // Accept both canonical tokens (`standard`, `collector drop`, `pre-order`,
       // `prize-draw`, `art`, `stickers`, …) and legacy aliases (`product`,
       // `preorder`, `prizedraw`). `LISTING_KIND_ACCEPTED` is the single source
       // of truth — keep it in sync with `LISTING_KIND_ALIAS_MAP`.
@@ -1863,7 +1867,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * combination most public pages use.
      *
      *   scope==publicProducts   →  status==published,listingType==standard
-     *   scope==publicAuctions   →  status==published,listingType==auction
+     *   scope==publicCollectorDrops →  status==published,listingType==collector-drop
+     *                              ("publicCollectorDrops" kept as an alias)
      *   scope==publicPreorders  →  status==published,listingType==pre-order
      *   scope==publicRandomLots →  status==published,listingType==random-lots
      *                              ("publicPrizeDraws" kept as an alias)
@@ -1874,8 +1879,9 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       switch (value) {
         case "publicProducts":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_STANDARD].join(",");
-        case "publicAuctions":
-          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_AUCTION].join(",");
+        case "publicCollectorDrops":
+        case "publicCollectorDrops":
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_COLLECTOR_DROP].join(",");
         case "publicPreorders":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
         case "publicRandomLots":
@@ -2196,18 +2202,18 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
    */
 
   /**
-   * Cloud Functions: find published auctions whose end date has already passed.
-   * Used by the auction settlement job to finalize expired auctions.
+   * Cloud Functions: find published collector drops whose end date has already passed.
+   * Used by the collector drop settlement job to finalize expired collector drops.
    */
-  async getExpiredAuctions(
+  async getExpiredCollectorDrops(
     now: Date,
   ): Promise<
     Array<{ id: string; ref: DocumentReference; data: ProductDocument }>
   > {
     const snap = await this.db
       .collection(this.collection)
-      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.AUCTION)
-      .where(PRODUCT_FIELDS.AUCTION_END_DATE, "<", now)
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.COLLECTOR_DROP)
+      .where(PRODUCT_FIELDS.COLLECTOR_DROP_END_DATE, "<", now)
       .where(PRODUCT_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
       .limit(500)
       .get();

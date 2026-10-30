@@ -4,10 +4,10 @@
 
 import {
   generateProductId,
-  generateAuctionId,
+  generateCollectorDropId,
   generatePreOrderId,
   type GenerateProductIdInput,
-  type GenerateAuctionIdInput,
+  type GenerateCollectorDropIdInput,
   type GeneratePreOrderIdInput,
 } from "../../../utils/id-generators";
 import type { ProductStatus, ListingType, ProductImage } from "../types";
@@ -571,7 +571,7 @@ export interface ProductDocument extends BaseDocument {
   insurance?: boolean;
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
-  auctionEndDate?: Date;
+  collectorDropEndDate?: Date;
   startingBid?: number;
   currentBid?: number;
   bidCount?: number;
@@ -580,19 +580,19 @@ export interface ProductDocument extends BaseDocument {
   buyNowPrice?: number;
   minBidIncrement?: number;
   autoExtendable?: boolean;
-  auctionExtensionMinutes?: number;
-  auctionOriginalEndDate?: Date;
-  auctionShippingPaidBy?: "seller" | "winner";
+  collectorDropExtensionMinutes?: number;
+  collectorDropOriginalEndDate?: Date;
+  collectorDropShippingPaidBy?: "seller" | "winner";
   /**
    * True once anybody has bid. Written by `placeBid`, never reset.
    *
    * It no longer gates Buy Now. The original SB-UNI-H design copied eBay's rule
    * — BIN vanishes the moment the first bid lands — which in practice hid the
-   * button on nearly every real auction (3 of 4 seeded BIN fixtures had it
+   * button on nearly every real collector drop (3 of 4 seeded BIN fixtures had it
    * hidden), while the PDP went on advertising the BIN *price* right above the
    * missing button. Availability is now `buyNowPrice > currentBid`, via
    * `isBuyNowAvailable()`; this field survives as a plain filterable fact about
-   * the auction.
+   * the collector drop.
    *
    * (A `buyItNowPrice` field used to sit alongside this one, documented as THE
    * BIN price while every consumer actually read `buyNowPrice` above. Deleted
@@ -600,7 +600,7 @@ export interface ProductDocument extends BaseDocument {
    */
   bidsHaveStarted?: boolean;
   // SB-UNI-G 2026-05-13 — TCGPlayer-style grading + card metadata.
-  // Applies to listingType:"standard" + "auction". Composite indices
+  // Applies to listingType:"standard" + "collector-drop". Composite indices
   // (grading.service, grading.grade desc, createdAt desc) + (card.setName,
   // card.cardNumber, status) deployed alongside this schema add.
   grading?: ProductGrading;
@@ -651,7 +651,7 @@ export interface ProductDocument extends BaseDocument {
    * zero, so a made-to-order listing does NOT destroy itself on its first
    * sale. `buildStockUpdatePayload` writes `availableQuantity` and the rule's
    * `stockDecrementExtras` and nothing else; the only two writers of
-   * `isSold: true` in the whole tree are auction settlement and the auction
+   * `isSold: true` in the whole tree are collector drop settlement and the collector drop
    * buyout, both of which are selling a unique lot and are correct to do it.
    * If a future "mark sold out automatically" feature is added, it must skip
    * made-to-order rows or every one of them dies on its first order.
@@ -810,7 +810,7 @@ export interface ProductDocument extends BaseDocument {
 
   // ── SB1 (S19 / S22 Phase 4 2026-05-12) — canonical listing-kind discriminator
   /**
-   * Required since Phase 4 dropped the legacy `isAuction` / `isPreOrder`
+   * Required since Phase 4 dropped the legacy `isCollectorDrop` / `isPreOrder`
    * booleans. Every product document carries this — queries route through
    * `where("listingType", "==", X)` against the `listingType+...` composite
    * indexes in `appkit/firebase/base/firestore.indexes.json`.
@@ -1061,7 +1061,7 @@ export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
   tags: [],
   availableQuantity: 0,
   // SB1-G Phase 4 — listingType is the canonical discriminator. Defaults to
-  // "standard"; the editor flips it when the seller chooses auction or pre-order.
+  // "standard"; the editor flips it when the seller chooses collector drop or pre-order.
   listingType: "standard",
   isPromoted: false,
   isOnSale: false,
@@ -1071,8 +1071,8 @@ export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
   insurance: false,
   shippingPaidBy: "buyer",
   autoExtendable: false,
-  auctionExtensionMinutes: 5,
-  auctionShippingPaidBy: "winner",
+  collectorDropExtensionMinutes: 5,
+  collectorDropShippingPaidBy: "winner",
 };
 
 export const PRODUCT_PUBLIC_FIELDS = [
@@ -1147,7 +1147,7 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "mouldVariant",
   "assembledFrom",
   "listingType",
-  "auctionEndDate",
+  "collectorDropEndDate",
   "startingBid",
   "currentBid",
   "bidCount",
@@ -1155,8 +1155,8 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "buyNowPrice",
   "minBidIncrement",
   "autoExtendable",
-  "auctionExtensionMinutes",
-  "auctionShippingPaidBy",
+  "collectorDropExtensionMinutes",
+  "collectorDropShippingPaidBy",
   // SB-UNI-H 2026-05-13 — eBay hybrid BIN.
   "bidsHaveStarted",
   // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata.
@@ -1275,8 +1275,8 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "insurance",
   "shippingPaidBy",
   "autoExtendable",
-  "auctionExtensionMinutes",
-  "auctionShippingPaidBy",
+  "collectorDropExtensionMinutes",
+  "collectorDropShippingPaidBy",
   "reservePrice",
   "buyNowPrice",
   "minBidIncrement",
@@ -1352,7 +1352,7 @@ export type ProductCreateInput = Omit<
   | "availableQuantity"
   | "bidCount"
   | "currentBid"
-  | "auctionOriginalEndDate"
+  | "collectorDropOriginalEndDate"
 >;
 
 export type ProductUpdateInput = Partial<
@@ -1425,7 +1425,7 @@ export const productQueryHelpers = {
   featured: () => ["featured", "==", true] as const,
   published: () => ["status", "==", "published"] as const,
   available: () => ["availableQuantity", ">", 0] as const,
-  auctions: () => ["listingType", "==", "auction"] as const,
+  collectorDrops: () => ["listingType", "==", "collector-drop"] as const,
   preOrders: () => ["listingType", "==", "pre-order"] as const,
   randomLots: () => ["listingType", "==", "random-lots"] as const,
   standardListings: () => ["listingType", "==", "standard"] as const,
@@ -1434,7 +1434,7 @@ export const productQueryHelpers = {
   digitalCodes: () => ["listingType", "==", "digital-code"] as const,
   liveItems: () => ["listingType", "==", "live"] as const,
   promoted: () => ["isPromoted", "==", true] as const,
-  activeAuction: (date: Date) => ["auctionEndDate", ">=", date] as const,
+  activeCollectorDrop: (date: Date) => ["collectorDropEndDate", ">=", date] as const,
 } as const;
 
 export function createProductId(
@@ -1443,10 +1443,10 @@ export function createProductId(
   return generateProductId(input as GenerateProductIdInput);
 }
 
-export function createAuctionId(
-  input: Omit<GenerateAuctionIdInput, "count"> & { count?: number },
+export function createCollectorDropId(
+  input: Omit<GenerateCollectorDropIdInput, "count"> & { count?: number },
 ): string {
-  return generateAuctionId(input as GenerateAuctionIdInput);
+  return generateCollectorDropId(input as GenerateCollectorDropIdInput);
 }
 
 export function createPreOrderId(

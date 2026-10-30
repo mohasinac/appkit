@@ -36,7 +36,7 @@ export function renderProductOg(doc: ProductDocLike | null | undefined, opts: Og
 export function renderProductOgImage(data: ProductOgData, siteName: string): ReactElement {
   // 🛑 No money in the accent slot. An OG image is a PUBLIC image URL anyone can
   // fetch directly, with the amount burned into the pixels — no gate reaches it,
-  // and no paywall markup describes it. The auction and pre-order OGs already
+  // and no paywall markup describes it. The collector drop and pre-order OGs already
   // use a non-money accent (end date / release date); this matches them.
   return renderOgLayout({
     title: data.title,

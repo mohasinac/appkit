@@ -1217,7 +1217,7 @@ export const LISTING_TYPE_HAS_COMPOSITION: Record<
   boolean
 > = {
   standard: true,
-  auction: true,
+  "collector-drop": true,
   /*
    * 🛑 FALSE, and this is the one entry worth arguing for.
    *

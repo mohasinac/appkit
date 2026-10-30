@@ -34,7 +34,7 @@
  * its own page would have rendered rows, which is the correctness property
  * that matters here and the reason this is not a bespoke `count()` query.
  *
- * It inherits that function's time-dependence: an auction becomes unavailable
+ * It inherits that function's time-dependence: a collector drop becomes unavailable
  * by the clock with no product write, so a type whose last row just ended stays
  * "non-empty" until the next recompute. Erring toward VISIBLE is the right
  * direction for this feature — showing an empty list is a cosmetic problem,

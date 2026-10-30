@@ -97,10 +97,10 @@ export interface CategoryDocumentDisplay extends CategoryDisplay {
 export interface CategoryDocumentMetrics {
   productCount: number;
   productIds: string[];
-  auctionCount: number;
-  auctionIds: string[];
+  collectorDropCount: number;
+  collectorDropIds: string[];
   totalProductCount: number;
-  totalAuctionCount: number;
+  totalCollectorDropCount: number;
   totalItemCount: number;
   lastUpdated: Date;
 }
@@ -374,10 +374,10 @@ export const DEFAULT_CATEGORY_DATA: Partial<CategoryDocument> = {
   metrics: {
     productCount: 0,
     productIds: [],
-    auctionCount: 0,
-    auctionIds: [],
+    collectorDropCount: 0,
+    collectorDropIds: [],
     totalProductCount: 0,
-    totalAuctionCount: 0,
+    totalCollectorDropCount: 0,
     totalItemCount: 0,
     lastUpdated: new Date(),
   },
@@ -402,7 +402,7 @@ export const CATEGORIES_PUBLIC_FIELDS = [
   "subtreeSize",
   "isLeaf",
   "metrics.totalProductCount",
-  "metrics.totalAuctionCount",
+  "metrics.totalCollectorDropCount",
   "metrics.totalItemCount",
   "isFeatured",
   "featuredPriority",
@@ -592,10 +592,10 @@ export const CATEGORY_FIELDS = {
   METRIC: {
     PRODUCT_COUNT: "metrics.productCount",
     PRODUCT_IDS: "metrics.productIds",
-    AUCTION_COUNT: "metrics.auctionCount",
-    AUCTION_IDS: "metrics.auctionIds",
+    COLLECTOR_DROP_COUNT: "metrics.collectorDropCount",
+    COLLECTOR_DROP_IDS: "metrics.collectorDropIds",
     TOTAL_PRODUCT_COUNT: "metrics.totalProductCount",
-    TOTAL_AUCTION_COUNT: "metrics.totalAuctionCount",
+    TOTAL_COLLECTOR_DROP_COUNT: "metrics.totalCollectorDropCount",
     TOTAL_ITEM_COUNT: "metrics.totalItemCount",
     LAST_UPDATED: "metrics.lastUpdated",
   },

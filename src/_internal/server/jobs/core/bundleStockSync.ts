@@ -64,7 +64,7 @@ async function sweepBundleMembers(
 }
 
 export async function runBundleStockSync(ctx: JobContext): Promise<void> {
-  // `FEATURE_BUNDLES` gate deleted 2026-10-19 — see `auctionSettlement.ts` for
+  // `FEATURE_BUNDLES` gate deleted 2026-10-19 — see `collectorDropSettlement.ts` for
   // why these survived the 2026-08-29 flag retirement. Unset in
   // `functions/.env.letitrip-in-app`, so this scheduled sweep had never run.
   ctx.logger.info("Bundle stock sync starting (SB-UNI-V categories)");

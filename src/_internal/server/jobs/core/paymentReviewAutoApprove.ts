@@ -10,7 +10,7 @@ const AUTO_APPROVE_HOURS = 2;
  * Buyout orders get a full day of admin review instead of two hours.
  *
  * A Buy Now purchase is settled in a one-hour scramble against a still-live
- * auction, and the amounts involved are whole-listing rather than incremental —
+ * collector drop, and the amounts involved are whole-listing rather than incremental —
  * so an admin should get a proper working day to look at the proof before the
  * safety net fires, rather than a window that can elapse overnight.
  */

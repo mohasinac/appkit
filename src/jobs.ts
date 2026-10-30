@@ -31,7 +31,7 @@ export {
   pageViewPruneHandler,
   dailyDataCleanupHandler,
   cleanupRtdbEventsHandler,
-  auctionSettlementHandler,
+  collectorDropSettlementHandler,
   autoPayoutEligibilityHandler,
   countersReconcileHandler,
   onOrderCreateHandler,

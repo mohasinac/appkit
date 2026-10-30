@@ -74,7 +74,7 @@ const STORE_LISTING_HREF: Record<
   (slug: string) => string
 > = {
   products: (slug) => String(ROUTES.PUBLIC.STORE_PRODUCTS(slug)),
-  auctions: (slug) => String(ROUTES.PUBLIC.STORE_AUCTIONS(slug)),
+  collectorDrops: (slug) => String(ROUTES.PUBLIC.STORE_COLLECTOR_DROPS(slug)),
   "pre-orders": (slug) => String(ROUTES.PUBLIC.STORE_PRE_ORDERS(slug)),
   "random-lots": (slug) => String(ROUTES.PUBLIC.STORE_RANDOM_LOTS(slug)),
   bundles: (slug) => String(ROUTES.PUBLIC.STORE_BUNDLES(slug)),

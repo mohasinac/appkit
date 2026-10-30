@@ -23,7 +23,7 @@ interface CustomSectionTab {
 /**
  * `customSections` → `ProductTabsShell`'s `customTabs` prop, in one place.
  *
- * Six detail views (`ProductDetailPageView`, `AuctionDetailPageView`,
+ * Six detail views (`ProductDetailPageView`, `CollectorDropDetailPageView`,
  * `PreOrderDetailPageView`, `ClassifiedDetailPageView`,
  * `DigitalCodeDetailPageView`, `LiveItemDetailPageView`) had this EXACT
  * five-line block — the same `Array.isArray` guard and the same `.map` —

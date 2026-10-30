@@ -260,7 +260,7 @@ const {
   storeCategoriesSeedData, listingTemplatesSeedData, moderationQueueSeedData, reportsSeedData,
   itemRequestsSeedData, storeGoogleConfigSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
-  productsStandardSeedData, productsBeybladeXSeedData, productsAuctionsSeedData, productsPreordersSeedData,
+  productsStandardSeedData, productsBeybladeXSeedData, productsCollectorDropsSeedData, productsPreordersSeedData,
   productsRandomLotsSeedData, productsClassifiedsSeedData, productsDigitalCodesSeedData, productsLiveItemsSeedData,
   productsArtSeedData, productsStickersSeedData, productsSparesSeedData,
   productsCatalogueSeedData,
@@ -483,7 +483,7 @@ const COLLECTION_MAP = {
  *
  * The fixtures stay in their files on purpose: they are the only coverage
  * several features have (every `preOrderProductionStatus` value, a sold-out
- * reservation, a depleted digital-code pool, an ended-unsold auction), and
+ * reservation, a depleted digital-code pool, an ended-unsold collector drop), and
  * the tester checklist deep-links to them by id. Deleting them would silently
  * remove that coverage. Not LOADING them is the part that was wanted.
  *
@@ -667,7 +667,7 @@ const REAL_PRODUCTS = realListingsOnly([
     // added 2026-10-19 for PhonePe merchant registration, which requires at
     // least one genuinely purchasable product. See the file's own header.
     ...(productsBeybladeXSeedData || []),
-    ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || []),
+    ...(productsCollectorDropsSeedData || []), ...(productsPreordersSeedData || []),
     ...(productsRandomLotsSeedData || []), ...(productsClassifiedsSeedData || []), ...(productsDigitalCodesSeedData || []), ...(productsLiveItemsSeedData || []),
     // art + stickers were written, exported from the seed barrel, and then never
     // spread here — so 13 fixtures had NEVER reached the database, /art and
@@ -1314,8 +1314,8 @@ async function loadGeneric(colName, seed, firestoreCollection, stats) {
     // `id` already carries the project's mandatory slug prefix (blog-, event-,
     // faq-, etc. — see CLAUDE.md's Slug Prefix System). Preferring the bare
     // `slug` field here (as this used to) wrote every blogPosts/events doc
-    // under its unprefixed slug instead, e.g. "auction-feature-launch"
-    // instead of "blog-auction-feature-launch" — found 2026-08-17 auditing
+    // under its unprefixed slug instead, e.g. "collectordrop-feature-launch"
+    // instead of "blog-collectordrop-feature-launch" — found 2026-08-17 auditing
     // real Firestore doc IDs after a full reseed.
     const docId = id ?? docData.slug;
     if (!data.slug) data.slug = docData.slug ?? docId;

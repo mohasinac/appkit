@@ -4,7 +4,7 @@
  * ── 🛑 WHY THIS EXISTS: EIGHT BYTE-IDENTICAL COPIES ────────────────────────
  *
  * This exact `Dl` / `Row` / `Dt` / `Dd` composition was pasted at eight call
- * sites — `ProductDetailPageView`, `AuctionDetailPageView`,
+ * sites — `ProductDetailPageView`, `CollectorDropDetailPageView`,
  * `ClassifiedDetailPageView`, `DigitalCodeDetailPageView`,
  * `LiveItemDetailPageView`, `PreOrderDetailPageView`, `BrandDetailPageView`
  * and `CustomSectionTabContent` — with the same variants and the same

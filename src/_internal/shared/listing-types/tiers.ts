@@ -3,7 +3,7 @@
  *
  * ── The rule ──────────────────────────────────────────────────────────────
  *
- * `standard`, `spares` and `auction` are BASIC — every store can use them.
+ * `standard`, `spares` and `collector drop` are BASIC — every store can use them.
  * The other seven are ADVANCED and need the `advanced_listing_types`
  * capability, because each carries an obligation a new seller has not agreed
  * to yet: a pre-order takes money for stock that does not exist, random lots
@@ -52,7 +52,7 @@ export const ADVANCED_LISTING_TYPE_CAPABILITY = "advanced_listing_types";
 export const LISTING_TYPE_TIER: Record<ListingType, ListingTypeTier> = {
   standard: "basic",
   spares: "basic",
-  auction: "basic",
+  "collector-drop": "basic",
   "pre-order": "advanced",
   "random-lots": "advanced",
   classified: "advanced",
@@ -71,7 +71,7 @@ export const LISTING_TYPE_TIER: Record<ListingType, ListingTypeTier> = {
  * access from a seller who had been using it, and a permission that disappears
  * on deploy is indistinguishable from a bug.
  *
- * `host_auctions` deliberately has NO entry: `auction` is basic now, so the
+ * `host_collector_drops` deliberately has NO entry: `collector drop` is basic now, so the
  * check is gone. The capability string stays declared in the union so existing
  * store documents carrying it remain valid — it simply no longer gates
  * anything.

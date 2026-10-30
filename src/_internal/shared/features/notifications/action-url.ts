@@ -194,7 +194,7 @@ export const TYPE_AUDIENCE: Record<NotificationType, NotificationAudience> = {
   review_replied: "buyer",
   catalogue_images_stale: "buyer",
   // Seller-facing.
-  auction_ended: "seller", // "your auction closed with no winner"
+  collector_drop_ended: "seller", // "your collector drop closed with no winner"
   offer_received: "seller",
   review_approved: "seller",
   // Account-level, which lives in the user portal for everyone.

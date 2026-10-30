@@ -23,8 +23,8 @@ import type { ProductDocument } from "../../features/products/schemas";
 export const RETURNABLE_FIXTURE_IDS: ReadonlySet<string> = new Set([
   // standard
   "product-beyblade-burst-valkyrie",
-  // auction
-  "auction-beyblade-x-shark-edge",
+  // collector drop
+  "collectordrop-beyblade-x-shark-edge",
   // pre-order
   "preorder-beyblade-x-bx-09-glide-ring",
   // random-lots

@@ -392,7 +392,7 @@ export function AdminProductEditorView({
                               groupRequiredMemberIds: p.groupRequiredMemberIds,
                               groupDiscountPercent: p.groupDiscountPercent,
                             }}
-                            isAuction={modeFromProduct(p) === "auction"}
+                            isCollectorDrop={modeFromProduct(p) === "collector-drop"}
                             storeProductsEndpoint={ADMIN_ENDPOINTS.PRODUCTS}
                             onGroupChanged={() => productQuery.refetch()}
                           />

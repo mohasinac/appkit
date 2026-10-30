@@ -125,6 +125,16 @@ export const mediaAssetsEditorialSeedData: Partial<MediaAssetDocument>[] = [
     contextType: "blog-image",
   },
   {
+    /*
+     * 🛑 BOUNDARY OF THE COLLECTOR-DROP RENAME, deliberately left as-is.
+     * The id IS the `/media/{shortId}` slug and `storagePath` names REAL
+     * BYTES already in Storage; the proxy resolves one to the other. Renaming
+     * either without a Storage copy breaks the image, and `/media/{shortId}`
+     * is served `immutable` so a changed key is a NEW key anyway (Root Cause
+     * #107). The fetch manifests in `scripts/lib/editorial-image-manifest.mjs`
+     * and `scripts/fetch-vertical-item-images.mjs` key on this same id and are
+     * frozen with it.
+     */
     id: "blog-cover-auction-launch",
     storagePath: "media/editorial/blog-cover-auction-launch.webp",
     uploadedBy: "user-admin-letitrip",

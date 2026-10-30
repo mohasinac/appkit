@@ -25,7 +25,7 @@ export const carouselsSeedData: CarouselDocument[] = [
     status: "active",
     slideIds: [
       "slide-hero-homepage",
-      "slide-beyblade-auction",
+      "slide-beyblade-collectorDrop",
       "slide-beyblade-collection-hunt",
       "slide-preorders-open",
       // Was "slide-psa-graded", which has never existed in

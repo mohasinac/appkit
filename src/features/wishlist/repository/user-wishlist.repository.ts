@@ -27,7 +27,7 @@ export interface WishlistItemSnapshot {
 
 export interface UserWishlistItem {
   productId: string;
-  productType?: "product" | "auction" | "preorder";
+  productType?: "product" | "collector-drop" | "preorder" | /* pre-rename */ "auction";
   addedAt: Date;
   priceAtAdd?: number;
   productSnapshot?: WishlistItemSnapshot;

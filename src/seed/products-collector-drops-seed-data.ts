@@ -1,0 +1,522 @@
+/*
+ * WHY: Seeds a Beyblade collector drop catalog with real state variety — the original 2-fixture
+ *      file only ever exercised "active, bids already started" collector drops, so features like
+ *      Buy-Now-before-first-bid, reserve-not-met, and a closed/won collector drop with a real
+ *      winner were structurally impossible to test against permanent data (see CLAUDE.md
+ *      Recurrent Root Cause Pattern for seed-data blandness sweep, 2026-08-20 session).
+ *      Also fixes a real field-name bug: the two original fixtures set `buyItNowPrice`
+ *      (a distinct, no-bids-yet-only BIN field) but CollectorDropDetailPageView.tsx reads
+ *      `buyNowPrice` — so neither collector drop's Buy Now button/price ever rendered.
+ * WHAT: Exports 10 collector drop products with listingType:"collector-drop" — 2 original fixtures
+ *       (field-bug fixed, specs/tags added) + 6 more: a Buy-Now-only collector drop (zero bids,
+ *       bidsHaveStarted:false), a reserve-not-met collector drop, a closed/won collector drop with a
+ *       winning bidder, and 3 more active collector drops with varied end dates/bid activity —
+ *       plus 1 real AeroPegasus 3-70A collector drop added 2026-10-19, starting bid ₹0.
+ *
+ * EXPORTS:
+ *   productsCollectorDropsSeedData — Array of 10 collector drop products with listingType:"collector-drop"
+ *
+ * @tag domain:collector drops,products
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts
+ * @tag sideEffects:none
+ */
+
+import { ProductDocument, ProductSpecification } from "../features/products/schemas/firestore";
+import { PRODUCT_FIELDS } from "../constants/field-names";
+import { buildSearchTxt } from "../utils/search-txt";
+import { seedPhoto, seedGallery } from "./_helpers/media";
+import { withFinalSale } from "./_helpers/final-sale-fixtures";
+import { withDerivedCategoryNames } from "./_helpers/category-names";
+
+function withTokens(p: Partial<ProductDocument>): Partial<ProductDocument> {
+  return {
+    tags: [],
+    featured: false,
+    price: p.startingBid ?? 0,
+    stockQuantity: 1,
+    availableQuantity: p.isSold ? 0 : 1,
+    ...p,
+    searchTxt: buildSearchTxt([
+      p.title, p.description, p.brand, p.brandSlug,
+      p.categoryNames, p.tags, p.features, p.condition,
+      p.specifications?.map((s) => `${s.name} ${s.value}`),
+    ]),
+  };
+}
+
+const DRANZER_SPECS: ProductSpecification[] = [
+  { name: "Spin Direction", value: "Right (Right-Spin)" },
+  { name: "Type", value: "Attack" },
+  { name: "Weight", value: "32.9", unit: "g" },
+];
+
+const _rawProductsCollectorDropsSeedData: Partial<ProductDocument>[] = [
+  // --- Original 2 fixtures — buyNowPrice field-name bug fixed + specs/tags added ---
+  {
+    id: "collectordrop-beyblade-original-dragoon-storm",
+    slug: "collectordrop-beyblade-original-dragoon-storm",
+    title: "Beyblade Original — Dragoon Storm (Rare Sealed)",
+    description: "Sealed, unopened Dragoon Storm from the original 1999-2003 series. A grail piece for original-generation collectors.",
+    categorySlugs: ["category-dragoon-storm","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Plastic Generation","Original Tops","Beyblade Original","Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    startingBid: 2999,
+    buyNowPrice: 5999,
+    currentBid: 3499,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+    bidCount: 3,
+    bidsHaveStarted: true,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-original-dragoon-storm-1-20260101", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-original-dragoon-storm-1-20260101", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-original-dragoon-storm-2-20260101", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-original-dragoon-storm-3-20260101", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["vintage-collectible", "sealed"],
+    specifications: DRANZER_SPECS,
+    customFields: [{ key: "Sealed / Unopened", type: "boolean", value: "true" }],
+    // Added 2026-08-21 — an authenticity/unboxing video makes narrative sense
+    // on a rare sealed grail piece, and gives the collector drop detail page's
+    // gallery a fixture beyond the standard-product-only video-demo cluster
+    // (products-standard-seed-data.ts). YouTube-sourced, same as that file's
+    // Metal Fight fixture — exercises getYouTubeVideoId()'s iframe-embed path
+    // on a non-standard listing type.
+    video: {
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      thumbnailUrl: seedPhoto("collectordrop-video-thumb-beyblade-original-dragoon-storm-20260821", 800, 450),
+      duration: 212,
+    },
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-05-18"),
+    updatedAt: new Date("2026-05-21"),
+  },
+  {
+    id: "collectordrop-beyblade-metal-lightning-l-drago",
+    slug: "collectordrop-beyblade-metal-lightning-l-drago",
+    title: "Metal Fight Beyblade BB-99 Lightning L-Drago",
+    description: "Lightning L-Drago 100HF/S, a highly sought-after Metal Fury era top in excellent condition.",
+    categorySlugs: ["category-lightning-l-drago-100hf","category-metal-fusion","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categoryNames: ["Metal Masters","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 1999,
+    buyNowPrice: 4499,
+    currentBid: 3199,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000),
+    bidCount: 13,
+    bidsHaveStarted: true,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-metal-lightning-l-drago-1-20260101", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-metal-lightning-l-drago-1-20260101", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-metal-lightning-l-drago-2-20260101", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-metal-lightning-l-drago-3-20260101", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
+    tags: ["attack-type", "tournament-grade"],
+    specifications: [
+      { name: "Spin Direction", value: "Left (Left-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "54.3", unit: "g" },
+      { name: "Track & Bottom", value: "100 / HF/S (Hole Flat/Spike)" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-05-19"),
+    updatedAt: new Date("2026-05-22"),
+  },
+
+  // --- The clean buyout fixture: BIN price well above the standing bid ---
+  // (It also happens to have zero bids, but that is no longer WHY Buy Now is
+  //  offered — the `bidsHaveStarted` gate was dropped 2026-08-24. What matters
+  //  now is `buyNowPrice > currentBid`, which holds here 1299 > 799.)
+  {
+    id: "collectordrop-beyblade-x-shark-edge",
+    slug: "collectordrop-beyblade-x-shark-edge",
+    title: "Beyblade X BX-04 Shark Edge (Buy It Now Available)",
+    description: "Shark Edge 3-60GF straight from a fresh case pull. Grab it at the Buy It Now price before the clock runs, or start the bidding.",
+    categorySlugs: ["category-sharkedge-3-60lf","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 799,
+    buyNowPrice: 1299,
+    currentBid: 799,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+    bidCount: 0,
+    bidsHaveStarted: false,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-x-shark-edge-1-20260814", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-x-shark-edge-1-20260814", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-x-shark-edge-2-20260814", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["balance-type", "starter-set"],
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "37.2", unit: "g" },
+      { name: "Blade / Ratchet / Bit", value: "Shark Edge / 3-60 / Glide Flat" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-14"),
+    updatedAt: new Date("2026-08-14"),
+  },
+
+  // --- NEGATIVE CONTROL: bidding has passed the buy-now price ---
+  // Buy Now must be offered NOWHERE for this listing — not the button on the
+  // detail page, not the advertised price above it, not the Buyout chip on the
+  // card. Before the 2026-08-24 rework those three sites used three different
+  // conditions, so this state was unreachable as a test case.
+  {
+    id: "collectordrop-beyblade-burst-xcalius-passed-bin",
+    slug: "collectordrop-beyblade-burst-xcalius-passed-bin",
+    title: "Beyblade Burst Xcalius X2 (bidding passed Buy It Now)",
+    description: "Xcalius X2 attack type. The Buy It Now price has already been overtaken by live bidding, so only bidding remains.",
+    categorySlugs: ["category-xcalius-x2-1iron","category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Cho-Z","Burst Tops","Beyblade Burst","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 700,
+    buyNowPrice: 1400,
+    currentBid: 1650,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+    bidCount: 7,
+    bidsHaveStarted: true,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-burst-xcalius-1-20260824", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-burst-xcalius-1-20260824", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-burst-xcalius-2-20260824", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["attack-type", "burst"],
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "33.8", unit: "g" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-24"),
+    updatedAt: new Date("2026-08-24"),
+  },
+
+  // --- Reserve not met: currentBid sits below reservePrice ---
+  {
+    id: "collectordrop-beyblade-original-seaborg",
+    slug: "collectordrop-beyblade-original-seaborg",
+    title: "Beyblade Original — Seaborg 2000 (Reserve Collector Drop)",
+    description: "Rare Seaborg 2000 defense-type top from the original series. Reserve price set by the seller — current bids haven't met it yet.",
+    /*
+     * Was filed at `category-original-hms` — the Heavy Metal System line, a
+     * DIFFERENT generation from the one its own copy names ("from the original
+     * series"). Seaborg 2000 is the Spin Gear System release the canonical
+     * corpus carries as "Seaborg 2", which is its leaf.
+     */
+    categorySlugs: ["category-seaborg-2","category-original-spin-gear","category-original-tops","category-beyblade-original","category-spinning-tops"],
+    categoryNames: ["Heavy Metal System","Original Tops","Beyblade Original","Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    startingBid: 1499,
+    reservePrice: 4000,
+    currentBid: 2200,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+    bidCount: 4,
+    bidsHaveStarted: true,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-original-seaborg-1-20260814", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-original-seaborg-1-20260814", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-original-seaborg-2-20260814", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
+    tags: ["defense-type", "vintage-collectible"],
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Defense" },
+      { name: "Weight", value: "35.6", unit: "g" },
+    ],
+    customFields: [{ key: "Reserve Disclosed", type: "boolean", value: "false" }],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-13"),
+    updatedAt: new Date("2026-08-19"),
+  },
+
+  // --- Closed/won: ended in the past, leadingBidderId set, isSold true ---
+  {
+    id: "collectordrop-beyblade-metal-diablo-nemesis",
+    slug: "collectordrop-beyblade-metal-diablo-nemesis",
+    title: "Metal Fight Beyblade BB-122 Diablo Nemesis (Ended — Sold)",
+    description: "Diablo Nemesis XF, the final boss top of Metal Fight Beyblade Zero-G. Collector Drop closed with a winning bidder.",
+    categorySlugs: ["category-diablo-nemesis-x-d","category-metal-fury-4d","category-metal-tops","category-beyblade-metal","category-spinning-tops"],
+    categoryNames: ["Metal Fury (4D)","Metal Fight Tops","Beyblade Metal Fight","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 3499,
+    currentBid: 6200,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    bidCount: 6,
+    bidsHaveStarted: true,
+    leadingBidderId: "user-rohit-collector",
+    isSold: true,
+    mainImage: seedPhoto("collectordrop-image-beyblade-metal-diablo-nemesis-1-20260810", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-metal-diablo-nemesis-1-20260810", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-metal-diablo-nemesis-2-20260810", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-metal-diablo-nemesis-3-20260810", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
+    tags: ["attack-type", "tournament-grade"],
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Attack" },
+      { name: "Weight", value: "58.9", unit: "g" },
+      { name: "Track & Bottom", value: "XF (Xtreme Fusion)" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-01"),
+    updatedAt: new Date("2026-08-10"),
+  },
+
+  // --- Closed by BUY NOW: ended early, a real buyout bid won it ---
+  // Nothing in the seed demonstrated a buyout before W2, so the only fixture
+  // for `sourceContext.path === "collector-drop-buy-now"` would have been a dangling
+  // FK. A buyout is a REAL bid (`isBuyout: true`), so `bidCount` counts the
+  // competitive ladder AND the buyout that ended it — 3 + 1 here.
+  {
+    id: "collectordrop-beyblade-burst-spriggan-requiem-bought-out",
+    slug: "collectordrop-beyblade-burst-spriggan-requiem-bought-out",
+    title: "Beyblade Burst B-128 Spriggan Requiem (Ended — Bought Out)",
+    description:
+      "Spriggan Requiem, the dual-spin legend of Burst Super Z. Bidding had reached ₹3,100 when a buyer took the ₹4,999 Buy Now price and ended the collector drop early.",
+    categorySlugs: ["category-spriggan-requiem-0-zeta","category-burst-cho-z","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Burst Tops","Beyblade Burst","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 2499,
+    currentBid: 3100,
+    buyNowPrice: 4999,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
+    bidCount: 4,
+    bidsHaveStarted: true,
+    leadingBidderId: "user-seto-kaiba",
+    isSold: true,
+    mainImage: seedPhoto("collectordrop-image-beyblade-burst-spriggan-requiem-1-20260810", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-burst-spriggan-requiem-1-20260810", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-burst-spriggan-requiem-2-20260810", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
+    tags: ["balance-type", "dual-spin"],
+    specifications: [
+      { name: "Spin Direction", value: "Dual (Left / Right)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "51.2", unit: "g" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-01"),
+    updatedAt: new Date("2026-08-20"),
+  },
+
+  // --- Additional active collector drops, varied end dates + bid activity ---
+  {
+    id: "collectordrop-beyblade-burst-cho-z-achilles",
+    slug: "collectordrop-beyblade-burst-cho-z-achilles",
+    title: "Beyblade Burst B-100 Cho-Z Achilles",
+    description: "Cho-Z Achilles.Ow.Zn', a Super Zeta stamina-type top from the Cho-Z generation, in excellent spinning condition.",
+    categorySlugs: ["category-cho-z-achilles-00-dimension","category-burst-cho-z","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Superking","Burst Tops","Beyblade Burst","Spinning Tops"],
+    brandSlug: "brand-beyblade",
+    brand: "Beyblade",
+    startingBid: 1199,
+    buyNowPrice: 2499,
+    currentBid: 1650,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+    bidCount: 2,
+    bidsHaveStarted: true,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-burst-cho-z-achilles-1-20260815", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-burst-cho-z-achilles-1-20260815", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-burst-cho-z-achilles-2-20260815", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.GOOD,
+    tags: ["stamina-type"],
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Stamina" },
+      { name: "Weight", value: "29.8", unit: "g" },
+      { name: "Layer / Disc / Driver", value: "Cho-Z Achilles / .Ow / Zn'" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-15"),
+    updatedAt: new Date("2026-08-18"),
+  },
+  {
+    id: "collectordrop-beyblade-x-wizard-fafnir",
+    slug: "collectordrop-beyblade-x-wizard-fafnir",
+    title: "Beyblade X UX-03 WizardRod 5-70DB (Long-Running Collector Drop)",
+    description: "WizardRod 5-70DB from the Unique Line, one week left on the clock — a rare Beyblade X chase top with active bidding.",
+    categorySlugs: ["category-wizardrod-5-70db","category-x-unique-ux","category-x-tops","category-beyblade-x","category-spinning-tops"],
+    categoryNames: ["Basic Line","Beyblade X Tops","Beyblade X","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 999,
+    currentBid: 1450,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    bidCount: 3,
+    bidsHaveStarted: true,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-beyblade-x-wizard-fafnir-1-20260816", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-beyblade-x-wizard-fafnir-1-20260816", 900, 900),
+      seedPhoto("collectordrop-image-beyblade-x-wizard-fafnir-2-20260816", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["balance-type"],
+    specifications: [
+      { name: "Spin Direction", value: "Right (Right-Spin)" },
+      { name: "Type", value: "Balance" },
+      { name: "Weight", value: "38.4", unit: "g" },
+      { name: "Blade / Ratchet / Bit", value: "Wizard Fafnir / 4-60 / Flat" },
+    ],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-16"),
+    updatedAt: new Date("2026-08-19"),
+  },
+];
+
+// 🛑 EVERY wrapper is applied to the WHOLE array at the end, never to the
+// spread. It used to wrap only the spread, so the ended-unsold fixture appended
+// after it shipped with no searchTxt — the one row that proves the collector drop
+// availability branch works, invisible to search.
+//
+// `listingType` was the SAME BUG, one field over, and survived that fix: it
+// stayed inside the spread while `withTokens` was lifted out, so the appended
+// fixture reached Firestore with no `listingType` at all. Measured 2026-10-14 —
+// 9 of the 10 seeded collector drops carried it and this one did not. A missing
+// `listingType` is invisible to inspection (`normalizeListingType` defaults it
+// to "standard" in memory) and fatal to every query, because a Firestore
+// equality cannot match an absent field: `where("listingType","==","auction")`
+// skipped it, so the fixture never appeared on /collector-drops and the "Ended" tab it
+// exists to prove had nothing to show. Root Cause #101.
+//
+// Anything added to this pipeline goes AFTER the `]`, applied to all rows.
+export const productsCollectorDropsSeedData: Partial<ProductDocument>[] = [
+  ..._rawProductsCollectorDropsSeedData,
+  {
+    // Ended with NO winner — reserve never met, zero bids.
+    //
+    // Deliberately `isSold: false` with stock still on the document: this is
+    // the fixture that proves the collector drop branch reads `collectorDropEndDate`
+    // rather than falling through to the shared isSold/quantity checks. The
+    // other ended collector drop (diablo-nemesis) is sold AND ended, so it passes
+    // the base check and exercises nothing type-specific.
+    id: "collectordrop-beyblade-burst-lord-spryzen-ended-unsold",
+    slug: "collectordrop-beyblade-burst-lord-spryzen-ended-unsold",
+    title: "Beyblade Burst Storm Spriggan Knuckle Unite (Ended — Reserve Not Met)",
+    description: "Collector Drop closed without meeting its reserve, so no winner was declared. Relisting soon.",
+    categorySlugs: ["category-storm-spriggan-knuckle-unite","category-burst-classic","category-burst-tops","category-beyblade-burst","category-spinning-tops"],
+    categoryNames: ["Burst Classic","Burst Tops","Beyblade Burst","Spinning Tops"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 1999,
+    currentBid: 1999,
+    reservePrice: 3500,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000),
+    bidCount: 0,
+    bidsHaveStarted: false,
+    isSold: false,
+    mainImage: seedPhoto("collectordrop-image-lord-spryzen-ended-1-20260824", 900, 900),
+    images: seedGallery(
+      seedPhoto("collectordrop-image-lord-spryzen-ended-1-20260824", 900, 900),
+    ),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.LIKE_NEW,
+    tags: ["stamina-type"],
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
+    createdAt: new Date("2026-08-10"),
+    updatedAt: new Date("2026-08-24"),
+  },
+
+  /*
+   * Added 2026-10-19 — real AeroPegasus 3-70A, new in box, started at ₹0 per
+   * explicit request. Under `store-letitrip-official`, matching the other
+   * real Beyblade X listings added the same day
+   * (`products-beyblade-x-seed-data.ts`) rather than `store-beyblade-arena`,
+   * which the rest of this file uses — this is real content, not a curated
+   * demo fixture, so it belongs to the real store.
+   */
+  {
+    id: "collectordrop-beyblade-x-aeropegasus-3-70a-nib",
+    slug: "collectordrop-beyblade-x-aeropegasus-3-70a-nib",
+    title: "Beyblade X AeroPegasus 3-70A (NIB) — Collector Drop",
+    description:
+      "AeroPegasus 3-70A, new in box — the Rare Bey Get Battle mobile-app prize colourway. Starting bid ₹0; this is the same real top also listed at a fixed price under 'Beyblade X AeroPegasus 3-70A', offered here as a collector drop instead.",
+    categorySlugs: ["category-aeropegasus-3-70a"],
+    brandSlug: "brand-takara-tomy",
+    brand: "Takara-Tomy",
+    startingBid: 0,
+    currentBid: 0,
+    currency: "INR",
+    collectorDropEndDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    bidCount: 0,
+    bidsHaveStarted: false,
+    isSold: false,
+    mainImage: "/media/product-aeropegasus-3-70a-image",
+    images: seedGallery("/media/product-aeropegasus-3-70a-image"),
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    tags: ["attack-type", "rare-bey", "prize-exclusive"],
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
+    createdAt: new Date("2026-10-19"),
+    updatedAt: new Date("2026-10-19"),
+    /*
+     * 🛑 Real content, so `permanent` — the `products` collection defaults to
+     * `test` and `appkit-seed purge` deletes everything resolving `test`.
+     * Every OTHER row in this file is a demo fixture and correctly keeps the
+     * default; this one is a genuine listing and must survive a purge.
+     */
+    seedPurpose: "permanent" as const,
+  },
+]
+  .map((a) => ({ ...a, listingType: PRODUCT_FIELDS.LISTING_TYPE_VALUES.COLLECTOR_DROP }))
+  .map(withTokens)
+  .map(withFinalSale)
+  .map(withDerivedCategoryNames);

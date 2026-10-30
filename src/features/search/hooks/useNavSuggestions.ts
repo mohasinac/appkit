@@ -7,7 +7,7 @@ export interface NavSuggestionRecord {
   objectID: string;
   type: "page" | "category" | "blog" | "event" | "product";
   /**
-   * The real index type key (`auction`, `part`, `faq`, `scammer`, …) when the
+   * The real index type key (`collector drop`, `part`, `faq`, `scammer`, …) when the
    * row came from the local search artifact, which spans 21 types.
    *
    * 🛑 `type` above stays a 5-value union on purpose. It is what the
@@ -30,7 +30,7 @@ const SUGGESTIONS_ENDPOINT = SEARCH_ENDPOINTS.SUGGESTIONS;
  * /api/search/suggestions only understands the 4 content categories it can
  * actually produce typeahead rows for (singular: product/category/blog/event)
  * — it has no dedicated suggestion category for the other 10 SearchResourceType
- * values (auctions, stores, brands, …). Map the ones it does support; for
+ * values (collector drops, stores, brands, …). Map the ones it does support; for
  * everything else, omit `type` entirely so the endpoint returns its
  * unfiltered "all" set rather than zero results. Previously this sent the
  * plural resource-type value verbatim (e.g. "products", the search bar's

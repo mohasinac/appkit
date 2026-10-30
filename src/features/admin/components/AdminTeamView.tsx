@@ -43,7 +43,8 @@ const GROUP_TABS: readonly AdminFilterTab[] = [
   { id: "support_agent", label: "Agent" },
   { id: "store_onboarding", label: "Onboarding" },
   { id: "trust_and_safety", label: "T&S" },
-  { id: "auction_monitor", label: "Auctions" },
+  // 🛑 `collector_drop_monitor` is a stored team-role value — frozen.
+  { id: "collector_drop_monitor", label: "Collector Drops" },
   { id: "scam_moderator", label: "Scams" },
   { id: "custom", label: "Custom" },
 ];

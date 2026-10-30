@@ -25,7 +25,7 @@ export const BUNDLES_FEATURED_LIMIT = 12 as const;
  *   - pre-order — pre-order product
  *   - random-lots — added as N draws/entries (see BundleItemDetail.drawCount)
  *
- * Auctions and bundles themselves are never eligible.
+ * Collector Drops and bundles themselves are never eligible.
  */
 export const BUNDLE_ELIGIBLE_LISTING_TYPES = [
   "standard",

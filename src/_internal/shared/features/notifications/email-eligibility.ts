@@ -23,11 +23,11 @@
  * Resend's free tier is 100 emails/day, and three call sites could exhaust it
  * on their own:
  *
- *   · `auctionSettlement` sends `bid_lost` to every losing bidder, up to 50 in
- *     PARALLEL per auction, and settles all expired auctions concurrently —
- *     two auctions is the whole day;
+ *   · `collectorDropSettlement` sends `bid_lost` to every losing bidder, up to 50 in
+ *     PARALLEL per collector drop, and settles all expired collector drops concurrently —
+ *     two collector drops is the whole day;
  *   · `onScamReportCreate` fanned out one send per employee, up to 100;
- *   · `bid_outbid` is one email per bid per bidder on a live auction.
+ *   · `bid_outbid` is one email per bid per bidder on a live collector drop.
  *
  * The gate runs FIRST in `sendNotification`'s channel conjunctions — before the
  * settings read, before the budget counter — so those 50 sends now exit with
@@ -72,7 +72,7 @@ export const EMAIL_ELIGIBLE_TYPES: Record<NotificationType, boolean> = {
   offer_counter_accepted: true,
 
   // Won, and on a clock: the winner forfeits the lot if they miss the payment
-  // deadline. This is the one auction type that survives, and it survives
+  // deadline. This is the one collector drop type that survives, and it survives
   // BECAUSE of the deadline — not because winning is nice to hear about.
   bid_won: true,
 
@@ -91,14 +91,14 @@ export const EMAIL_ELIGIBLE_TYPES: Record<NotificationType, boolean> = {
 
   // ── Bell only. ────────────────────────────────────────────────────────────
 
-  // The three auction fan-outs. `bid_lost` is up to 50 parallel sends per
-  // settled auction; `bid_outbid` is one per bid per bidder; `bid_placed`
-  // pings the seller on every single bid. All three are visible on the auction
+  // The three collector drop fan-outs. `bid_lost` is up to 50 parallel sends per
+  // settled collector drop; `bid_outbid` is one per bid per bidder; `bid_placed`
+  // pings the seller on every single bid. All three are visible on the collector drop
   // page and in the bell, and none of them is a deadline.
   bid_lost: false,
   bid_outbid: false,
   bid_placed: false,
-  auction_ended: false,
+  collector_drop_ended: false,
 
   // Marketing. The likeliest way to get the sending domain flagged, and the
   // first thing a recipient marks as spam — which damages deliverability for

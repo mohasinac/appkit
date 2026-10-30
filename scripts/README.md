@@ -153,16 +153,16 @@ itself crashed.
 
 | Collection | Checks |
 |---|---|
-| `products` | base • `ps=1` honored • `p=2` differs from `p=1` • sort `price` vs `-price` • filter `isAuction` true/false • filter `brandSlug` / `categorySlug` / `storeId` • `q=pokemon` |
+| `products` | base • `ps=1` honored • `p=2` differs from `p=1` • sort `price` vs `-price` • filter `isCollectorDrop` true/false • filter `brandSlug` / `categorySlug` / `storeId` • `q=pokemon` |
 | `categories` | base • `ps=1` returns exactly 1 item • sort `name` vs `-name` • filter `tier==1` vs `tier==3` • filter `isFeatured==true` |
 | `stores` | base • `ps=1` honored • sort `storeName` vs `-storeName` • filter `isVerified` true/false • `q=pokemon` |
 | `blog` | base • `ps=1` returns exactly 1 post • sort `title` vs `-title` • filter `isFeatured==true` • filter `category==Authentication` • `q=pokemon` |
 | `events` | base • sort `startsAt` vs `-startsAt` • filter `status==ACTIVE` vs `ENDED` • filter `type==TOURNAMENT` • `q=tournament` |
 | `faqs` | base • `ps=1` returns exactly 1 FAQ • filter `isPinned==true` • filter `category==Shipping` • filter `showOnHomepage==true` |
 | `pre-orders` | base • `ps=1` honored • sort `price` vs `-price` |
-| `auctions` | `/api/auctions` returns JSON (not the HTML fallback) • `/api/products?f=isAuction==true` returns auctions |
+| `collector drops` | `/api/collector drops` returns JSON (not the HTML fallback) • `/api/products?f=isCollectorDrop==true` returns collector drops |
 | `search` | `/api/search?q=pokemon` returns results |
-| `nested:stores` | `/api/stores/{slug}/products`, `/reviews`, `/auctions` |
+| `nested:stores` | `/api/stores/{slug}/products`, `/reviews`, `/collector drops` |
 | `auth-gates` | 21 routes under `/api/admin/*`, `/api/store/*`, `/api/user/*`, `/api/notifications` must all return `401`/`403` anonymously. A `200` with a `data` payload is flagged as a leak. |
 
 ### Reference data

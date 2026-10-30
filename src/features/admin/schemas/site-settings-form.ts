@@ -181,7 +181,7 @@ export const siteSettingsFormSchema = z
       .passthrough()
       .optional(),
 
-    auctionConfig: z
+    collectorDropConfig: z
       .object({
         minBidIncrement: money("Minimum bid increment"),
         extensionMinutes: z.coerce.number().int().min(0).max(1440).optional(),

@@ -44,13 +44,13 @@ export type ProductFeatureCategory =
   | "seller"
   | "condition"
   | "platform"
-  | "auction"
+  | "collector-drop"
   | "preorder"
   | "custom";
 
 export type ProductFeatureProductType =
   | "product"
-  | "auction"
+  | "collector-drop"
   | "preorder"
   | "random-lots"
   | "classified"
@@ -74,7 +74,7 @@ export function isFeatureIconPath(icon: string): boolean {
  * The vocabulary's namespace.
  *
  * 🛑 NOT the same axis as `category` above, which groups features by the
- * SURFACE that shows them (shipping/seller/platform/auction/preorder) and is
+ * SURFACE that shows them (shipping/seller/platform/collector drop/preorder) and is
  * what drives badge placement. `group` namespaces what a feature MEANS, and
  * drives the filter drawer: one facet section per group, rather than one flat
  * 60-value checkbox list.

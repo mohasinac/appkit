@@ -9,7 +9,7 @@ import type { JsonValue } from "@mohasinac/appkit";
  * ## Why an HTTP call and not `revalidatePath()`
  *
  * `revalidatePath` only exists inside the Next.js runtime. The writers that
- * matter most do NOT run there: a checkout stock decrement, auction settlement,
+ * matter most do NOT run there: a checkout stock decrement, collector drop settlement,
  * the nightly reconcilers and every `appkit-seed` write all execute in Cloud
  * Functions or a CLI. A Firestore trigger is the one place that observes all of
  * them, and the only way it can reach Next's cache is over the network.
@@ -44,7 +44,7 @@ const CACHE_RELEVANT_PRODUCT_FIELDS = [
   "brand",
   "storeId",
   "listingType",
-  "auctionEndDate",
+  "collectorDropEndDate",
   "currentBid",
   "buyNowPrice",
   "isFeatured",

@@ -43,7 +43,7 @@ const LISTING_TYPES = [
     idealUseCase: "Collectibles with a clear market value",
   },
   {
-    type: "Auction",
+    type: "Collector Drop",
     pricing: "Starts at reserve/starting bid; buyers compete",
     buyerFlow: "Place bid → wait for end time → winner pays within 48 h",
     requiredFields: "Reserve price · starting bid · end date/time",
@@ -59,7 +59,7 @@ const LISTING_TYPES = [
 ] as const;
 
 function ListingTypesTable() {
-  const HEADERS = ["", "Standard Product", "Auction", "Pre-order"];
+  const HEADERS = ["", "Standard Product", "Collector Drop", "Pre-order"];
   const ROWS = [
     { label: "Pricing model", keys: ["pricing"] },
     { label: "Buyer flow", keys: ["buyerFlow"] },
@@ -167,9 +167,9 @@ function StandardWalkthrough() {
   );
 }
 
-// -- Section 3: Auction walkthrough --------------------------------------------
+// -- Section 3: Collector Drop walkthrough --------------------------------------------
 
-function AuctionWalkthrough() {
+function CollectorDropWalkthrough() {
   return (
     <Stack textSize="sm" className="text-[var(--appkit-color-text-muted)]" gap="md">
       <Div>
@@ -208,15 +208,15 @@ function AuctionWalkthrough() {
         </Div>
       </Div>
       <Div>
-        <Text className={SUBHEADING}>Auction end</Text>
+        <Text className={SUBHEADING}>Collector Drop end</Text>
         <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>Winner receives an email and has 48 hours to complete payment.</Li>
           <Li className={LIST_DISC}>If payment is not completed within 48 hours, the order is auto-cancelled.</Li>
-          <Li className={LIST_DISC}>The next-highest bidder may be offered the item (if enabled in your auction settings).</Li>
+          <Li className={LIST_DISC}>The next-highest bidder may be offered the item (if enabled in your collectorDrop settings).</Li>
         </Ul>
       </Div>
       <Div>
-        <Text className={SUBHEADING}>Editing a live auction</Text>
+        <Text className={SUBHEADING}>Editing a live collector drop</Text>
         <Text className="leading-relaxed">
           Once a bid has been placed, you cannot change the reserve price or starting bid.
           You can edit the title, description, and images at any time.
@@ -272,14 +272,14 @@ DRAFT ────────────────────────�
  │ │
  └──────────────────────────────────────► ARCHIVED
 
-PUBLISHED ──► (buyer places bid / buys) ──► SOLD (auction only)
+PUBLISHED ──► (buyer places bid / buys) ──► SOLD (collector drop only)
 `;
 
 const STATUS_NOTES = [
   { status: "DRAFT", note: "Visible only to you. Does not appear in search or browse." },
   { status: "PUBLISHED", note: "Live in search, browse, and featured sections if promoted." },
   { status: "ARCHIVED", note: "Hidden from all public views. Can be re-published later." },
-  { status: "SOLD", note: "Auction only — marked when the winning bid is confirmed paid." },
+  { status: "SOLD", note: "Collector Drop only — marked when the winning bid is confirmed paid." },
 ];
 
 function StatusLifecycle() {
@@ -297,7 +297,7 @@ function StatusLifecycle() {
         ))}
       </Stack>
       <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-        Live auctions with at least one bid cannot be taken to ARCHIVED until the auction ends.
+        Live collector drops with at least one bid cannot be taken to ARCHIVED until the collector drop ends.
       </Text>
     </Stack>
   );
@@ -333,7 +333,7 @@ const MISTAKES = [
   "Listing a pre-order without a confirmed supplier. If supply falls through, you will face cancellations, refunds, and a rating hit.",
   "Leaving condition blank or writing 'good condition' without a numeric grade. Buyers cannot compare listings fairly.",
   "Uploading blurry or overexposed photos. Listings with poor images receive fewer bids and lower conversion.",
-  "Not setting isAuction: false on standard products. If a product is not an auction, it must have listingType: 'standard' — mixed signals confuse buyers.",
+  "Not setting isCollectorDrop: false on standard products. If a product is not a collector drop, it must have listingType: 'standard' — mixed signals confuse buyers.",
   "Setting an unrealistic deposit percentage. A 5% deposit gives buyers little skin in the game; 20–30% is standard for collectibles.",
   "Forgetting to configure shipping before publishing. Orders without a shipping method cannot be fulfilled.",
 ];
@@ -379,7 +379,7 @@ export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
           Listings Guide
         </Heading>
         <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
-          Products, auctions, and pre-orders — create and manage your listings.
+          Products, collector drops, and pre-orders — create and manage your listings.
         </Text>
       </Div>
 
@@ -392,8 +392,8 @@ export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
         <StandardWalkthrough />
       </GuideSection>
 
-      <GuideSection title="3. Auction walkthrough">
-        <AuctionWalkthrough />
+      <GuideSection title="3. Collector Drop walkthrough">
+        <CollectorDropWalkthrough />
       </GuideSection>
 
       <GuideSection title="4. Pre-order walkthrough">

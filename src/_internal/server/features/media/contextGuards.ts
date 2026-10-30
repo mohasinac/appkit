@@ -60,14 +60,14 @@ export const CONTEXT_LIMITS = {
    * its 5th image as index 6, so the last slot of every product form was
    * rejected by the signed-URL endpoint.
    *
-   * FLAT across listing types — auctions and pre-orders are products with
+   * FLAT across listing types — collector drops and pre-orders are products with
    * different sale mechanics, not products that deserve fewer photos.
    */
   PRODUCT_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
   PRODUCT_VIDEO_MAX: PRODUCT_MAX_VIDEOS,
   REVIEW_IMAGE_MAX: 5,
   REVIEW_VIDEO_MAX: 1,
-  AUCTION_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
+  COLLECTOR_DROP_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
   PREORDER_IMAGE_MAX: PRODUCT_IMAGE_INDEX_MAX,
   EVENT_COVER_MAX: 1,
   EVENT_IMAGE_MAX: 10,
@@ -227,12 +227,12 @@ function applyMediaContextGuardsInner({
     };
   }
 
-  if (ctx.type === "auction-image") {
+  if (ctx.type === "collectordrop-image") {
     const idx = ctx.index ?? 1;
     const err = indexGuard(
       idx,
-      CONTEXT_LIMITS.AUCTION_IMAGE_MAX,
-      "Auction image index exceeds max allowed",
+      CONTEXT_LIMITS.COLLECTOR_DROP_IMAGE_MAX,
+      "Collector Drop image index exceeds max allowed",
     );
     if (err) return err;
   }

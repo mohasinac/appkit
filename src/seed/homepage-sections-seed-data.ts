@@ -13,7 +13,7 @@
  * directly under pre-orders; carousel/trust/categories each took one step
  * down to keep the range contiguous.
  *
- * 🛑 Four of those five were disabled on 2026-10-20 — auctions (3),
+ * 🛑 Four of those five were disabled on 2026-10-20 — collector drops (3),
  * featured-bundles (9), event-raffles (13) and prize-draws (14) — each with its
  * own note on the switch that did it. A disabled row KEEPS its order slot, so
  * the range stays contiguous and re-enabling one puts it back where it was
@@ -52,13 +52,13 @@
  * section type with a renderer and zero seeded rows is the same class of gap,
  * just silent rather than colliding.
  *
- * ORDER: hero → SHOP (products, auctions, pre-orders) → carousel → trust →
+ * ORDER: hero → SHOP (products, collector drops, pre-orders) → carousel → trust →
  * orient (categories, systems matrix) → shop cont. (bundles) → supply
  * (stores) → social proof (reviews) → engage (events, raffles, prize draws) →
  * editorial (blog) → convert (seller banner, newsletter) → reassure (stats,
  * security, community, FAQ, brands).
  *
- * 🛑 Products (2), auctions (3) and pre-orders (4) were lifted above the
+ * 🛑 Products (2), collector drops (3) and pre-orders (4) were lifted above the
  * carousel on 2026-10-20 at the owner's request — real merchandise directly
  * under the hero, promotions below it. That OVERRIDES the research arrangement
  * this header used to describe (trust → orient → shop), so do not "restore"
@@ -120,15 +120,15 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       /*
-       * 🛑 NO AUCTIONS IN THE HERO, and nothing else that the site does not
+       * 🛑 NO COLLECTOR_DROPS IN THE HERO, and nothing else that the site does not
        * currently do.
        *
-       * The h1 read "Buy, Sell & Auction Collectibles" and the second CTA sent
-       * visitors to /auctions — which `listings.listingTypes.auction: false`
+       * The h1 read "Buy, Sell & Collector Drop Collectibles" and the second CTA sent
+       * visitors to /collector-drops — which `listings.listingTypes.collector-drop: false`
        * now switches off (2026-10-20). The first screen of the site is the
        * worst place to advertise a type whose browse page returns nothing.
        *
-       * The description lost "bid in live auctions" for the same reason, and
+       * The description lost "bid in live collector drops" for the same reason, and
        * "escrow-backed payments" because that claim was withdrawn from the
        * seller guide and the Become-a-Seller copy on the same day.
        *
@@ -159,7 +159,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       ctaText: "Start Shopping",
       ctaLink: String(ROUTES.PUBLIC.PRODUCTS),
       /*
-       * 🛑 NOT "Explore Categories" → `/categories`. Same rule as the auctions
+       * 🛑 NOT "Explore Categories" → `/categories`. Same rule as the collector drops
        * note above, one surface over: `listings.browsePages.categories` has
        * been `false` since 2026-10-24, so that CTA sent the visitor from the
        * first screen of the site straight into a closed section — and it was
@@ -273,7 +273,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ---- 2–4, 9. Shop --------------------------------------------------------
-  // Products (2), auctions (3) and pre-orders (4) sit directly under the hero,
+  // Products (2), collector drops (3) and pre-orders (4) sit directly under the hero,
   // ABOVE the carousel — a merchandising-first top of page, asked for
   // 2026-10-20. Bundles (9) stay below the orientation band.
   //
@@ -297,7 +297,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
        * Safe against the `<= 12` rule above: SSR still supplies 12 via
        * getFeatured*(12) and this renders 8 of them, so it can never under-fill.
        * The 4-row over-fetch is deliberate — `getFeaturedProducts(12)` is shared
-       * with the auctions and pre-orders rails, so narrowing it to match would
+       * with the collector drops and pre-orders rails, so narrowing it to match would
        * couple three sections' counts to one fetch.
        */
       maxItems: 8,
@@ -314,26 +314,26 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   /*
    * 🛑 DISABLED, NOT DELETED — and the `order: 3` slot is held.
    *
-   * `listings.listingTypes.auction: false` already stops this rail rendering
+   * `listings.listingTypes.collector-drop: false` already stops this rail rendering
    * (HOMEPAGE_SECTION_LISTING_TYPE in MarketplaceHomepageView), so `enabled:
    * false` is the second of two locks, not the only one. It is worth having
    * because it is the one an ADMIN sees: a section listed as enabled in the
    * homepage builder, silently filtered out at render, reads as a bug in the
    * builder. Both switches say the same thing now.
    *
-   * The copy and the "⚡ LIVE AUCTIONS" pill stay exactly as they were, so
+   * The copy and the "⚡ LIVE COLLECTOR_DROPS" pill stay exactly as they were, so
    * re-enabling the type and this flag restores the rail intact.
    */
   {
-    id: "section-live-auctions",
-    type: "auctions",
+    id: "section-live-collectorDrops",
+    type: "collector-drops",
     order: 3,
     enabled: false,
     config: {
-      title: "Live Auctions",
+      title: "Live Collector Drops",
       subtitle: "Bidding open now — place yours before the timer runs out.",
-      maxAuctions: 12,
-      viewMoreLabel: "View all auctions →",
+      maxCollectorDrops: 12,
+      viewMoreLabel: "View all collector drops →",
       rows: 1,
       autoScroll: false,
       scrollInterval: 5000,
@@ -367,7 +367,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    *
    * It was disabled 2026-10-20 together with
    * `listings.categoryTypes.bundle: false` — the same two-lock arrangement as
-   * the auctions rail above. Five real bundles now exist with resolvable
+   * the collector drops rail above. Five real bundles now exist with resolvable
    * member mosaics, including the 10%-off prize-bey trio, so the rail has
    * genuine content.
    *
@@ -426,7 +426,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    * 🛑 THE COPY IS SIZED TO THE REAL CATALOGUE (measured 2026-10-21: stickers
    * 2 published, spares 1, art 0, bundles 4). No tile says "hundreds of" or
    * "every part" — a tile promising a catalogue the page cannot show is the
-   * dead-end-CTA defect that removed the hero's auctions card. The seed holds
+   * dead-end-CTA defect that removed the hero's collector drops card. The seed holds
    * 6 more spares and 6 more stickers, but all sit on `store-beyblade-arena`,
    * which does not exist in live Firestore; widening these rails means
    * seeding that store, not loosening the words.
@@ -642,7 +642,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     id: "section-prize-draws",
     type: "random-lots",
     // Disabled 2026-10-20 with `listings.listingTypes.random-lots: false` — the
-    // same two-lock arrangement as the auctions rail.
+    // same two-lock arrangement as the collector drops rail.
     order: 15,
     enabled: false,
     config: {
@@ -734,7 +734,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     config: {
       title: "Get new listings first",
       description:
-        "One email a week: fresh drops, auctions closing soon, and price cuts on your saved categories.",
+        "One email a week: fresh drops, collector drops closing soon, and price cuts on your saved categories.",
       privacyText: "We never share your address. Unsubscribe in one click.",
       privacyLink: String(ROUTES.PUBLIC.PRIVACY),
     },
@@ -855,7 +855,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: false,
     config: {
       title: "Join the community",
-      description: "Deal alerts, auction reminders, and early access to drops.",
+      description: "Deal alerts, collector drop reminders, and early access to drops.",
       /* 🛑 The line that used to sit here — "Keep this link verbatim — a
          tester-checklist case asserts it" — was FALSE and is deleted. Verified:
          zero hits for `chat.whatsapp.com` anywhere under
@@ -886,10 +886,10 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
        */
       groupLink: undefined,
       /*
-       * 🛑 NO AUCTION PROMISE. A benefits list is a list of promises, and
-       * "Reminders when auctions you watch are closing" could not be kept —
-       * auctions are switched off at `listings.listingTypes.auction: false`,
-       * the rail is disabled and the hero's auctions card was removed for the
+       * 🛑 NO COLLECTOR_DROP PROMISE. A benefits list is a list of promises, and
+       * "Reminders when collector drops you watch are closing" could not be kept —
+       * collector drops are switched off at `listings.listingTypes.collector-drop: false`,
+       * the rail is disabled and the hero's collector drops card was removed for the
        * same reason. Replaced with restock pings, which the catalogue can
        * actually do.
        */
@@ -1173,7 +1173,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    * the 1,237 generated catalogue products were deleted, these three entry
    * types would still resolve to real, populated rows: 1,185 categories, 28
    * brand rows, 5 stores, all seeded independently of the product catalogue.
-   * A `"products"` or `"auctions"` entry here would be the opposite — a card
+   * A `"products"` or `"collector-drops"` entry here would be the opposite — a card
    * that goes empty the moment the catalogue does, on a section whose entire
    * point is to always have something to show.
    */
@@ -1228,7 +1228,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
    * is the one genuine differentiator the carousel already leads with, quoted
    * from the same policy.
    *
-   * 🛑 NO BIDDING STEP. `listings.listingTypes.auction` is false, so a step
+   * 🛑 NO BIDDING STEP. `listings.listingTypes.collector-drop` is false, so a step
    * telling visitors to place a bid would route them to a browse page with
    * nothing in it.
    *

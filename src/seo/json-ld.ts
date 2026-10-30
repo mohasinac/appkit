@@ -57,7 +57,7 @@ function absoluteUrl(value: unknown, base: string = SITE_URL): string | undefine
    * caller type-checked, and then `ProductImage[]` replaced `string[]` on the
    * product document — so `images.map(absoluteUrl)` received OBJECTS, `?.trim`
    * was not a function, and the throw escaped into the RSC render and 500'd
-   * `/[locale]/products/[slug]` and `/[locale]/auctions/[id]`: **72 recorded
+   * `/[locale]/products/[slug]` and `/[locale]/collector-drops/[id]`: **72 recorded
    * failures**, the whole page lost to a decorative metadata field.
    *
    * A declared parameter type is a compile-time claim about CALLERS. It is
@@ -119,17 +119,17 @@ export interface ProductJsonLdInput {
   sellerName?: string;
   category?: string;
   status?: string;
-  auctionEndDate?: Date;
+  collectorDropEndDate?: Date;
   /** Canonical discriminator (SB1-G Phase 4). */
   listingType?: ListingType;
   /**
-   * The path this listing actually lives at, e.g. `/auctions/{slug}`.
+   * The path this listing actually lives at, e.g. `/collector-drops/{slug}`.
    *
-   * 🛑 Both builders hardcoded `/products/${slug}`, so an auction's own
+   * 🛑 Both builders hardcoded `/products/${slug}`, so a collector drop's own
    * structured data advertised its offer — and its `url` — at a path that
    * belongs to a different listing type. Measured live: the block on
-   * `/auctions/auction-beyblade-metal-lightning-l-drago` carried
-   * `offers.url: ".../products/auction-beyblade-metal-lightning-l-drago"`,
+   * `/collector-drops/collectordrop-beyblade-metal-lightning-l-drago` carried
+   * `offers.url: ".../products/collectordrop-beyblade-metal-lightning-l-drago"`,
    * and that URL served a full standard product page with Buy Now and Add to
    * Cart and no bid controls at all. So the one consumer that reads this field
    * — a crawler — was sent to the wrong page, and told it was canonical there.
@@ -546,18 +546,18 @@ export function searchBoxJsonLd(opts?: SiteIdentityOptions): Record<string, Json
   };
 }
 
-export function auctionJsonLd(
-  auction: ProductJsonLdInput,
+export function collectorDropJsonLd(
+  collectorDrop: ProductJsonLdInput,
 ): Record<string, JsonLdValue> {
-  // An auction lives at /auctions/{slug} — see `detailPath`'s note.
-  const url = `${SITE_URL}${auction.detailPath ?? `/auctions/${auction.slug}`}`;
-  const base = productJsonLd(auction);
+  // A collector drop lives at /collector-drops/{slug} — see `detailPath`'s note.
+  const url = `${SITE_URL}${collectorDrop.detailPath ?? `/collector-drops/${collectorDrop.slug}`}`;
+  const base = productJsonLd(collectorDrop);
   return {
     ...base,
     "@type": ["Product", "Offer"],
     url,
-    ...(auction.auctionEndDate && {
-      availabilityEnds: auction.auctionEndDate.toISOString(),
+    ...(collectorDrop.collectorDropEndDate && {
+      availabilityEnds: collectorDrop.collectorDropEndDate.toISOString(),
     }),
   };
 }

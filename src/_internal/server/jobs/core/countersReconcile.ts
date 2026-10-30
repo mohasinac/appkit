@@ -18,9 +18,9 @@ const PAGE_SIZE = 500;
 
 interface Tally {
   productIds: string[];
-  auctionIds: string[];
+  collectorDropIds: string[];
   totalProducts: number;
-  totalAuctions: number;
+  totalCollectorDrops: number;
   /*
    * G3b — the per-listing-type and lot counters that back `categoryCounts`.
    *
@@ -38,24 +38,24 @@ interface Tally {
 
 const emptyTally = (): Tally => ({
   productIds: [],
-  auctionIds: [],
+  collectorDropIds: [],
   totalProducts: 0,
-  totalAuctions: 0,
+  totalCollectorDrops: 0,
   own: {},
   total: {},
   lotsOwn: 0,
   lotsTotal: 0,
 });
 
-/** Filed DIRECTLY under this row — `metrics.productCount` / `auctionCount`. */
+/** Filed DIRECTLY under this row — `metrics.productCount` / `collectorDropCount`. */
 function countOwn(
   t: Tally,
   productId: string,
-  isAuction: boolean,
+  isCollectorDrop: boolean,
   listingType: string,
   isLot: boolean,
 ): void {
-  if (isAuction) t.auctionIds.push(productId);
+  if (isCollectorDrop) t.collectorDropIds.push(productId);
   else t.productIds.push(productId);
   // G3b: lots are counted SEPARATELY from singles, which is what lets a leaf's
   // own count mean one thing wherever a lot is filed.
@@ -63,15 +63,15 @@ function countOwn(
   else t.own[listingType] = (t.own[listingType] ?? 0) + 1;
 }
 
-/** This row or any ancestor — `metrics.totalProductCount` / `totalAuctionCount`. */
+/** This row or any ancestor — `metrics.totalProductCount` / `totalCollectorDropCount`. */
 function countRollup(
   t: Tally | undefined,
-  isAuction: boolean,
+  isCollectorDrop: boolean,
   listingType: string,
   isLot: boolean,
 ): void {
   if (!t) return;
-  if (isAuction) t.totalAuctions++;
+  if (isCollectorDrop) t.totalCollectorDrops++;
   else t.totalProducts++;
   if (isLot) t.lotsTotal++;
   else t.total[listingType] = (t.total[listingType] ?? 0) + 1;
@@ -113,7 +113,7 @@ interface ProductTallyRow {
   // Availability inputs, consumed only via `isListingRowAvailable()`. Declared
   // so it is visible that this row is read for more than taxonomy.
   //
-  // `auctionEndDate` is deliberately NOT listed: on a raw snapshot it is a
+  // `collectorDropEndDate` is deliberately NOT listed: on a raw snapshot it is a
   // Firestore `Timestamp`, and typing it here as `Date | string` would be a
   // lie while `unknown` is just a dodge. `AvailabilityRow` is
   // `Record<string, FirestoreValue>`, so the predicate reads it — and every
@@ -140,8 +140,8 @@ function tallyProduct(
   tallies: Map<string, Tally>,
   parentsOf: Map<string, string[]>,
 ): boolean {
-  const isAuction =
-    data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+  const isCollectorDrop =
+    data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.COLLECTOR_DROP;
   // G3b. Default to "standard" for a row written before `listingType` was
   // required — the same default `describeCountable` applies, so the nightly
   // and the incremental value land on the same key rather than on two.
@@ -191,11 +191,11 @@ function tallyProduct(
       unknown = true;
       continue;
     }
-    countOwn(tallies.get(own)!, productId, isAuction, listingType, isLot);
+    countOwn(tallies.get(own)!, productId, isCollectorDrop, listingType, isLot);
     for (const id of [own, ...(parentsOf.get(own) ?? [])]) {
       if (rolledUp.has(id)) continue;
       rolledUp.add(id);
-      countRollup(tallies.get(id), isAuction, listingType, isLot);
+      countRollup(tallies.get(id), isCollectorDrop, listingType, isLot);
     }
   }
 
@@ -210,8 +210,8 @@ function tallyProduct(
   // nightly and incremental values cannot disagree here.
   const countedByChain = rolledUp;
   if (data.brandSlug && !countedByChain.has(data.brandSlug) && tallies.has(data.brandSlug)) {
-    countOwn(tallies.get(data.brandSlug)!, productId, isAuction, listingType, isLot);
-    countRollup(tallies.get(data.brandSlug), isAuction, listingType, isLot);
+    countOwn(tallies.get(data.brandSlug)!, productId, isCollectorDrop, listingType, isLot);
+    countRollup(tallies.get(data.brandSlug), isCollectorDrop, listingType, isLot);
   }
   return unknown;
 }
@@ -305,7 +305,7 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
    *
    * 🛑 Read rather than blind-written. Writing only when `metrics` drifts would
    * leave a counts document wrong forever in the narrow case where the
-   * product/auction aggregate happens to be right while a per-type split or a
+   * product/collector drop aggregate happens to be right while a per-type split or a
    * lot count is not — and that case is precisely what an incremental counter
    * gets wrong, so it is the one the audit must see.
    *
@@ -368,9 +368,9 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
 
     const same =
       (m.productCount ?? 0) === t.productIds.length &&
-      (m.auctionCount ?? 0) === t.auctionIds.length &&
+      (m.collectorDropCount ?? 0) === t.collectorDropIds.length &&
       (m.totalProductCount ?? 0) === t.totalProducts &&
-      (m.totalAuctionCount ?? 0) === t.totalAuctions;
+      (m.totalCollectorDropCount ?? 0) === t.totalCollectorDrops;
     // Skipping no-op writes keeps a 65-row nightly pass near-free against the
     // 20k/day write budget — and makes `drifted` a real signal rather than a
     // count of how many rows exist. A non-zero `drifted` on a quiet day means
@@ -380,11 +380,11 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
     try {
       await categoriesRepository.setMetrics(doc.id, {
         productCount: t.productIds.length,
-        auctionCount: t.auctionIds.length,
+        collectorDropCount: t.collectorDropIds.length,
         totalProductCount: t.totalProducts,
-        totalAuctionCount: t.totalAuctions,
+        totalCollectorDropCount: t.totalCollectorDrops,
         productIds: t.productIds,
-        auctionIds: t.auctionIds,
+        collectorDropIds: t.collectorDropIds,
       });
       written++;
     } catch (err) {

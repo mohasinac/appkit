@@ -40,7 +40,7 @@ interface FeatureFlagSnapshot {
  * distinction is what stops it becoming a duplicate control:
  *
  *   `listingTypes`  — what the marketplace SELLS (is there such a thing as an
- *                     auction here?)
+ *                     collector drop here?)
  *   `categoryTypes` — what a taxonomy ROW may be (may a category row be a
  *                     brand?)
  *   `browsePages`   — whether a public ENTRY POINT is open (is there a /brands
@@ -192,7 +192,7 @@ export function isCategoryTypeEnabled(
 const ALL_LISTING_TYPES_MAP: Record<ListingType, true> = {
   standard: true,
   spares: true,
-  auction: true,
+  "collector-drop": true,
   "pre-order": true,
   "random-lots": true,
   classified: true,

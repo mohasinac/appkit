@@ -19,8 +19,8 @@ export const manifest: FeatureManifest = {
       exports: { default: "StoreProductsView" },
     },
     {
-      segment: "[locale]/stores/[storeSlug]/auctions",
-      exports: { default: "StoreAuctionsView" },
+      segment: "[locale]/stores/[storeSlug]/collector-drops",
+      exports: { default: "StoreCollectorDropsView" },
     },
     {
       segment: "[locale]/stores/[storeSlug]/reviews",
@@ -35,7 +35,7 @@ export const manifest: FeatureManifest = {
     { segment: "api/stores", methods: ["GET"] },
     { segment: "api/stores/[storeSlug]", methods: ["GET"] },
     { segment: "api/stores/[storeSlug]/products", methods: ["GET"] },
-    { segment: "api/stores/[storeSlug]/auctions", methods: ["GET"] },
+    { segment: "api/stores/[storeSlug]/collector-drops", methods: ["GET"] },
     { segment: "api/stores/[storeSlug]/reviews", methods: ["GET"] },
   ],
 };

@@ -78,7 +78,7 @@ export interface CouponDocument extends BaseDocument {
   scope: "admin" | "seller";
   /** For seller-scoped coupons: the storeId (= storeSlug = store.id) of the issuing store */
   storeId?: string;
-  applicableToAuctions?: boolean;
+  applicableToCollectorDrops?: boolean;
   discount: DiscountConfig;
   bxgy?: BXGYConfig;
   tiers?: TieredDiscount[];
@@ -280,7 +280,7 @@ export type CouponUpdateInput = Partial<
     | "usage"
     | "validity"
     | "restrictions"
-    | "applicableToAuctions"
+    | "applicableToCollectorDrops"
   >
 >;
 

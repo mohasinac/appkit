@@ -1,7 +1,7 @@
 /*
- * WHY: Some listings must not be bought with a pay-later method. An auction win
+ * WHY: Some listings must not be bought with a pay-later method. A collector drop win
  *      or a bundle is a committed sale — a buyer who never pays on delivery
- *      costs the seller the lot, and for a unique auction lot there is no
+ *      costs the seller the lot, and for a unique collector drop lot there is no
  *      second-highest bidder to fall back on once it is marked sold. The rule
  *      registry has a field for this (`blockedPaymentMethods`) and nothing
  *      reachable enforced it for every line.

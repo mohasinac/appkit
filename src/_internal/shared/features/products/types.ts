@@ -49,7 +49,7 @@ export interface ProductDetailInitial {
   condition?: string;
   /** Canonical listing-kind discriminator (SB1-G — Phase 4 dropped legacy booleans). */
   listingType?: ListingType;
-  auctionEndDate?: string;
+  collectorDropEndDate?: string;
   startingBid?: number;
   currentBid?: number;
   bidCount?: number;

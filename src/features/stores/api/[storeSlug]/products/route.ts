@@ -8,7 +8,7 @@ import { normalizeError } from "../../../../../errors/normalize";
  * export { storeProductsGET as GET } from "@mohasinac/feat-stores";
  * ```
  *
- * Returns published non-auction products for a store, paginated.
+ * Returns published non-collectorDrop products for a store, paginated.
  * Query params: sorts, page, pageSize, filters (extra Sieve filter string).
  *
  * Requires `db` registered in providers.config via `registerProviders()`.

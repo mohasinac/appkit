@@ -2,13 +2,13 @@
 /**
  * audit-listing-type-reads.mjs — consumer property-access for removed booleans.
  *
- * SB1-G Phase 4 (2026-05-12) removed the `isAuction` / `isPreOrder` / `isPreorder`
+ * SB1-G Phase 4 (2026-05-12) removed the `isCollectorDrop` / `isPreOrder` / `isPreorder`
  * boolean fields from ProductDocument. The existing `audit-repository-fields.mjs`
  * scans Sieve filter strings inside repositories; this audit closes the consumer
- * gap — view / action / component code that reads `product.isAuction` etc. now
+ * gap — view / action / component code that reads `product.isCollectorDrop` etc. now
  * silently evaluates `undefined`.
  *
- * Fix: use `isAuctionListing(p)` / `isPreOrderListing(p)` / `normalizeListingType(p)`
+ * Fix: use `isCollectorDropListing(p)` / `isPreOrderListing(p)` / `normalizeListingType(p)`
  * from `@mohasinac/appkit`.
  *
  * Exits 0 clean / 1 on any unwhitelisted match.
@@ -40,11 +40,11 @@ const SUPPRESS_RE = /\/\/\s*audit-listing-type-reads-ok\b/;
 // the comparison, so the intent stays visible.
 const BASELINE = 0;
 
-// `\b` on the right is deliberate: it must NOT match `isAuctionWin`, the cart
-// line's "this line came from a won auction" flag. That is a different field on
+// `\b` on the right is deliberate: it must NOT match `isCollectorDropWin`, the cart
+// line's "this line came from a won collector drop" flag. That is a different field on
 // a different document with a different meaning — the removed booleans this
 // audit guards were on ProductDocument.
-const RE = /\.(isAuction|isPreOrder|isPreorder)(?!Win)\b/g;
+const RE = /\.(isCollectorDrop|isPreOrder|isPreorder)(?!Win)\b/g;
 
 function walk(dir, files = []) {
   let entries;
@@ -94,8 +94,8 @@ if (violations.length <= BASELINE) {
 }
 
 const out = [`audit-listing-type-reads: ${violations.length} consumer read(s) of removed boolean fields .\n`];
-out.push("Fix: import { isAuctionListing, isPreOrderListing, normalizeListingType } from '@mohasinac/appkit'");
-out.push("       const auction = isAuctionListing(product);   // replaces product.isAuction\n");
+out.push("Fix: import { isCollectorDropListing, isPreOrderListing, normalizeListingType } from '@mohasinac/appkit'");
+out.push("       const collectorDrop = isCollectorDropListing(product);   // replaces product.isCollectorDrop\n");
 for (const v of violations) {
   out.push(`  ${v.file}:${v.line}  .${v.field}`);
   out.push(`    ${v.text}`);

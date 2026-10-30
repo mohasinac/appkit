@@ -133,7 +133,7 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   "adSettings", // providerCredentials + unpublished ad inventory; /api/ads serves the filtered public view
   "integrations", // analytics/tag IDs are injected server-side into markup, not fetched by the client
   "platformLimits", // server-enforced caps; no client reader
-  "auctionConfig", // read by AuctionDetailPageView, a Server Component doing its own settings read
+  "collectorDropConfig", // read by CollectorDropDetailPageView, a Server Component doing its own settings read
   "siteName", // delivered as an SSR prop / rendered server-side
   "tagline", // admin chrome only
   "motto", // rendered server-side
@@ -161,7 +161,7 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   /*
    * The WhatsApp catalogue feed kill switch. Read ONLY by
    * `/whatsapp/{storeSlug}/feed.csv`, which is a server route doing its own
-   * settings read — the same shape as `auctionConfig` above.
+   * settings read — the same shape as `collectorDropConfig` above.
    *
    * 🛑 Deliberately NOT public, unlike its sibling `search`. That one is public
    * because its reader is a GUEST's search box, so a server-only flag could not

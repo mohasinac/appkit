@@ -41,7 +41,7 @@ import type { SectionType } from "../schemas/firestore";
  * map always renders.
  */
 const HOMEPAGE_SECTION_LISTING_TYPE: Partial<Record<SectionType, ListingType>> = {
-  auctions: "auction",
+  "collector-drops": "collector-drop",
   "pre-orders": "pre-order",
   "random-lots": "random-lots",
 };
@@ -118,7 +118,7 @@ const HOMEPAGE_SECTION_ROUTE: Partial<Record<SectionType, string>> = {
   reviews: String(ROUTES.PUBLIC.REVIEWS),
   "featured-bundles": String(ROUTES.PUBLIC.BUNDLES),
 };
-import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
+import { getFeaturedProducts, getFeaturedCollectorDrops, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
 import { listFeaturedBundles } from "../../../_internal/server/features/bundles/data";
 import { listStores } from "../../stores/actions/store-query-actions";
@@ -250,11 +250,11 @@ export async function MarketplaceHomepageView({
     : siteSettings?.announcementBar?.link;
 
   // A homepage section must not advertise a listing type the site does not
-  // offer. This gate previously read `featureFlags.{auctions,preOrders,events,
+  // offer. This gate previously read `featureFlags.{collector drops,preOrders,events,
   // blog}`; that group was deleted on 2026-08-29, and only the listing-type
   // half of it had a real successor (`settings.listings.listingTypes`).
   //
-  // So auctions / pre-orders / prize-draws are gated by the same control that
+  // So collector drops / pre-orders / prize-draws are gated by the same control that
   // hides them on every other surface, `featured-bundles` joined them on
   // 2026-10-20 via the category-type half of the same setting, and the
   // `events` / `blog` / `event-raffles` sections stay unconditional — there is
@@ -332,7 +332,7 @@ export async function MarketplaceHomepageView({
 
   const [
     productsResult,
-    auctionsResult,
+    collectorDropsResult,
     preOrdersResult,
     categoriesResult,
     brandsResult,
@@ -347,7 +347,7 @@ export async function MarketplaceHomepageView({
     // returns an empty result. Swallowing here would make a broken query
     // indistinguishable from an empty catalogue (Root Cause #59).
     activeTypes.has("products") ? getFeaturedProducts(12) : null,
-    activeTypes.has("auctions") ? getFeaturedAuctions(12) : null,
+    activeTypes.has("collector-drops") ? getFeaturedCollectorDrops(12) : null,
     activeTypes.has("pre-orders") ? getFeaturedPreOrders(12) : null,
     // `welcome` is a second trigger, not a typo: its hero mosaic is built from
     // these categories' cover images. Gating the fetch on `categories` alone
@@ -400,8 +400,8 @@ export async function MarketplaceHomepageView({
     products: productsResult?.items?.length
       ? (productsResult.items as unknown as ProductItem[])
       : undefined,
-    auctions: auctionsResult?.items?.length
-      ? (auctionsResult.items as unknown as ProductItem[])
+    collectorDrops: collectorDropsResult?.items?.length
+      ? (collectorDropsResult.items as unknown as ProductItem[])
       : undefined,
     preOrders: preOrdersResult?.items?.length
       ? (preOrdersResult.items as unknown as ProductItem[])
@@ -440,11 +440,11 @@ export async function MarketplaceHomepageView({
    * The same "do not advertise what we do not sell" rule the section filter
    * above applies, one level deeper.
    *
-   * `enabledSections` is keyed on `SectionType`, so it can drop the auctions
+   * `enabledSections` is keyed on `SectionType`, so it can drop the collector drops
    * RAIL but is structurally blind to a carousel — a carousel is one section
    * of type `carousel` whatever its slides happen to be about. With
-   * `auction: false` live, the hero still shipped a "Live auctions" card and a
-   * full "Win it at your price" slide, both pointing at `/auctions`.
+   * `collector drop: false` live, the hero still shipped a "Live collector drops" card and a
+   * full "Win it at your price" slide, both pointing at `/collector-drops`.
    *
    * Gated on the LINK rather than the copy: "Win it at your price" names no
    * type, so a keyword scan would miss the worse of the two offenders while

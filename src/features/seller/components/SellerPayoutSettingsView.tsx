@@ -98,7 +98,7 @@ const payoutSettingsDraftSchema = z.object({
   /*
    * Advanced listing types — pre-orders, prize draws, classifieds, digital
    * codes, live items, art and stickers. Everyone can already list
-   * `standard`, `spares` and `auction`.
+   * `standard`, `spares` and `collector drop`.
    *
    * 🛑 Alongside payout settings for the same reason the protections are:
    * each of these carries an obligation, not just a form. A pre-order takes
@@ -726,7 +726,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           */}
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
             Adds pre-orders, prize draws, classifieds, digital codes, live
-            items, art and stickers alongside the products, spares and auctions
+            items, art and stickers alongside the products, spares and collector drops
             you can already list. Each carries its own obligation:{" "}
             <Span weight="semibold">
               a pre-order takes payment for stock you do not have yet, a prize

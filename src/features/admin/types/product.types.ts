@@ -2,7 +2,7 @@
  * Admin-specific product types for product management UI.
  *
  * These types extend/complement the core ProductItem with admin-only fields
- * for managing auctions, pre-orders, stock, pricing, and lifecycle.
+ * for managing collector drops, pre-orders, stock, pricing, and lifecycle.
  */
 
 import type { ListingType } from "../../products/types";
@@ -19,7 +19,7 @@ export type AdminProductDrawerMode = "create" | "edit" | "delete" | null;
  * Admin product form/management type.
  *
  * Combines core product data with admin-specific fields for:
- * - Auction management (starting bid, reserve, auto-extend)
+ * - Collector Drop management (starting bid, reserve, auto-extend)
  * - Pre-order management (delivery date, deposit %)
  * - Promotion and pricing
  * - Stock and shipping
@@ -58,8 +58,8 @@ export interface AdminProduct {
   shippingPaidBy?: "seller" | "buyer";
   /** Canonical listing-kind discriminator (SB1-G Phase 4 â€” booleans removed). */
   listingType?: ListingType;
-  // Auction fields
-  auctionEndDate?: string;
+  // Collector Drop fields
+  collectorDropEndDate?: string;
   startingBid?: number;
   currentBid?: number;
   bidCount?: number;
@@ -67,9 +67,9 @@ export interface AdminProduct {
   buyNowPrice?: number;
   minBidIncrement?: number;
   autoExtendable?: boolean;
-  auctionExtensionMinutes?: number;
-  auctionOriginalEndDate?: string;
-  auctionShippingPaidBy?: "seller" | "winner";
+  collectorDropExtensionMinutes?: number;
+  collectorDropOriginalEndDate?: string;
+  collectorDropShippingPaidBy?: "seller" | "winner";
   // Promotion fields
   isPromoted?: boolean;
   promotionEndDate?: string;

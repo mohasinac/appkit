@@ -380,7 +380,7 @@ export function SellerProductsView({
   const sideTable = useUrlTable({ defaults: { sort: DEFAULT_SORT } });
   const listingKind = ((sideTable.get("listingType") as ListingKind) || "all") as ListingKind;
   // The scope bar spans whichever types the type-dropdown has narrowed to, so
-  // its middle tab reads "Ended" on Auctions and "Sold" on Products.
+  // its middle tab reads "Ended" on Collector Drops and "Sold" on Products.
   const scope = useAvailabilityScope(
     listingKind === "all" ? ALL_LISTING_TYPES : ([listingKind] as readonly ListingType[]),
   );
@@ -541,8 +541,8 @@ export function SellerProductsView({
 
   const handleEdit = (row: ProductRow) => {
     const href =
-      row.listingKind === "auction"
-        ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
+      row.listingKind === "collector-drop"
+        ? String(ROUTES.STORE.COLLECTOR_DROPS_EDIT(row.id))
         : row.listingKind === "pre-order"
           ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
           : row.listingKind === "random-lots"
@@ -700,15 +700,15 @@ export function SellerProductsView({
         // in the seller table (2026-08-21).
         const kind: ListingKind = lt;
         const priceRaw = typeof item.price === "number" ? item.price : 0;
-        const auctionSecondary =
-          kind === "auction"
+        const collectorDropSecondary =
+          kind === "collector-drop"
             ? [
                 typeof item.reservePrice === "number"
                   ? `Reserve ${formatMoney(item.reservePrice)}`
                   : null,
                 `${typeof item.bidCount === "number" ? item.bidCount : 0} bids`,
-                item.auctionEndDate
-                  ? `Ends ${new Date(item.auctionEndDate as string).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}`
+                item.collectorDropEndDate
+                  ? `Ends ${new Date(item.collectorDropEndDate as string).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}`
                   : null,
               ]
                 .filter(Boolean)
@@ -743,9 +743,9 @@ export function SellerProductsView({
          * Those are the two numbers a seller scans for, so price leads.
          * `stockQuantity` was not mapped at all and is added here.
          *
-         * An auction keeps its own summary (reserve / bids / ends) and is not
-         * given a list price: for an auction the meaningful money is the
-         * reserve and the current bid, both already in `auctionSecondary`, and
+         * A collector drop keeps its own summary (reserve / bids / ends) and is not
+         * given a list price: for a collector drop the meaningful money is the
+         * reserve and the current bid, both already in `collectorDropSecondary`, and
          * a "price" beside them would read as a third, competing figure.
          */
         const rowId = toStringValue(item.id, `product-${index}`);
@@ -764,9 +764,9 @@ export function SellerProductsView({
           stockOverride ?? (typeof item.stockQuantity === "number" ? item.stockQuantity : null);
         const stockValue = stockOverride ?? availableRaw ?? stockRaw;
         const priceLabel =
-          kind !== "auction" && priceRaw ? formatMoney(priceRaw) : "";
+          kind !== "collector-drop" && priceRaw ? formatMoney(priceRaw) : "";
         const stockLabel = stockRaw === null ? "" : `${stockRaw} in stock`;
-        const secondaryBase = auctionSecondary || toStringValue(item.condition, "");
+        const secondaryBase = collectorDropSecondary || toStringValue(item.condition, "");
         return {
           id: rowId,
           primary: toStringValue(item.title ?? item.name, "Untitled product"),
@@ -808,8 +808,8 @@ export function SellerProductsView({
       const statusFilter = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined;
       const kindFilter = !state.listingType || state.listingType === "all" ? undefined : sieveFilter("listingType", SIEVE_OP.EQ, state.listingType);
       // The hardcoded `isSold==false` that used to live here is gone: it asked
-      // a narrower question than the rest of the app (an ended auction is not
-      // `isSold`), so the seller dashboard and /auctions disagreed about the
+      // a narrower question than the rest of the app (an ended collector drop is not
+      // `isSold`), so the seller dashboard and /collector-drops disagreed about the
       // same rows. The scope param carries the per-type meaning instead.
       return [statusFilter, kindFilter].filter(Boolean).join(",") || undefined;
     },
@@ -856,8 +856,8 @@ export function SellerProductsView({
       />
     ),
     rowHrefTemplate: (row) =>
-      row.listingKind === "auction"
-        ? `/auctions/${row.id}`
+      row.listingKind === "collector-drop"
+        ? `/collector-drops/${row.id}`
         : row.listingKind === "pre-order"
           ? `/pre-orders/${row.id}`
           : `/products/${row.id}`,

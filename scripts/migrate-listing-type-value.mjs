@@ -27,7 +27,7 @@
  *
  * Takes `--from` / `--to` on the command line rather than hardcoding
  * "prize-draw"/"random-lots", so the same script serves the next rename
- * (e.g. `auction` -> `collector-drop`) without being copied.
+ * (e.g. `collector drop` -> `collector-drop`) without being copied.
  *
  * Talks directly to Firestore via firebase-admin — no dev server, no deploy.
  *

@@ -55,7 +55,7 @@ export function toProductItem(doc: FirestoreDocument): ProductItem {
      *
      * `mainImage` FIRST, gallery as fallback — the seller chose `mainImage`
      * deliberately, and this matches the precedence every other card mapper
-     * uses (e.g. `StoreAuctionsListing`). `productImageUrls` is the one
+     * uses (e.g. `StoreCollectorDropsListing`). `productImageUrls` is the one
      * normaliser and it also accepts the legacy `string[]`.
      */
     mainImage:

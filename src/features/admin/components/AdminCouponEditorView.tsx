@@ -62,7 +62,7 @@ interface Values {
   endDate: string;
   isActive: boolean;
   firstTimeUserOnly: boolean;
-  appliesToAuctions: boolean;
+  appliesToCollectorDrops: boolean;
   /** Spend tiers; replace `discount.value` above a threshold. */
   tiers: CouponTier[];
   applicableProducts: string[];
@@ -100,7 +100,7 @@ interface CouponRecord {
     applicableProducts?: string[];
     applicableCategories?: string[];
   };
-  applicableToAuctions?: boolean;
+  applicableToCollectorDrops?: boolean;
   tiers?: CouponTier[];
 }
 
@@ -118,7 +118,7 @@ interface CouponPayload {
     applicableProducts?: string[];
     applicableCategories?: string[];
   };
-  applicableToAuctions?: boolean;
+  applicableToCollectorDrops?: boolean;
   /**
    * Spend tiers. Replaces `discount.value` once the order total reaches a
    * threshold — see `calculateDiscount`, which is the reader this field
@@ -199,7 +199,7 @@ export function AdminCouponEditorView({
     endDate: "",
     isActive: true,
     firstTimeUserOnly: false,
-    appliesToAuctions: false,
+    appliesToCollectorDrops: false,
     tiers: [],
     applicableProducts: [],
     applicableCategories: [],
@@ -254,7 +254,7 @@ export function AdminCouponEditorView({
       applicableCategories: Array.isArray(c.restrictions?.applicableCategories)
         ? c.restrictions.applicableCategories
         : [],
-      appliesToAuctions: c.applicableToAuctions ?? false,
+      appliesToCollectorDrops: c.applicableToCollectorDrops ?? false,
       tiers: c.tiers ?? [],
     });
   }, [couponQuery.data]);
@@ -315,7 +315,7 @@ export function AdminCouponEditorView({
             applicableCategories: form.applicableCategories,
           }),
         },
-        applicableToAuctions: form.appliesToAuctions,
+        applicableToCollectorDrops: form.appliesToCollectorDrops,
         /*
          * 🛑 Sent even when EMPTY so that clearing the last tier persists —
          * the same reasoning as the brand highlights. A tier with no

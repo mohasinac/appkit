@@ -2,7 +2,7 @@
  * Store Query Domain Actions (appkit)
  *
  * Public and seller-facing read functions for store listings, products,
- * auctions and reviews.  No auth — callers decide whether auth is needed.
+ * collector drops and reviews.  No auth — callers decide whether auth is needed.
  */
 
 import { cache } from "react";
@@ -131,12 +131,12 @@ export async function getStoreProducts(
   });
 }
 
-export async function getStoreAuctions(
+export async function getStoreCollectorDrops(
   storeSlug: string,
   params: StoreContentParams = {},
   viewer?: ViewerLike | null,
 ): Promise<FirebaseSieveResult<ProductDocument>> {
-  const { sorts = "auctionEndDate", page = 1, pageSize = 24, filters } = params;
+  const { sorts = "collectorDropEndDate", page = 1, pageSize = 24, filters } = params;
 
   const storeDoc = await filterSingleTestData(await storeRepository.findBySlug(storeSlug), viewer);
   if (
@@ -150,7 +150,7 @@ export async function getStoreAuctions(
   const filtersArr = [
     sieveFilter("storeId", SIEVE_OP.EQ, storeDoc.id),
     "status==published",
-    sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "auction"),
+    sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "collector-drop"),
   ];
   if (filters) filtersArr.push(filters);
 

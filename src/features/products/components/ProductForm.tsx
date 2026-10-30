@@ -47,7 +47,7 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 import type { ProductItem, ProductStatus } from "../types";
 import {
-  isAuctionListing,
+  isCollectorDropListing,
   isPreOrderListing,
   isRandomLotListing,
   normalizeListingType,
@@ -79,7 +79,7 @@ const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeaturePr
    * i.e. a brand-new type with no features at all, which reads as a bug.
    */
   spares: "product",
-  auction: "auction",
+  "collector-drop": "collector-drop",
   "pre-order": "preorder",
   "random-lots": "random-lots",
   classified: "classified",
@@ -197,7 +197,7 @@ export interface ProductFormProps {
   currencyPrefix?: string;
   /**
    * Render a Group Settings panel (GP2). Only passed when editing an existing
-   * non-auction product. Returns null/undefined to omit.
+   * non-collectorDrop product. Returns null/undefined to omit.
    */
   renderGroupSettings?: (product: ProductFormValue) => React.ReactNode;
   /**
@@ -833,24 +833,24 @@ export function ProductForm({
         </>
       )}
 
-      {listingTypeFlags.auction && (
+      {listingTypeFlags["collector-drop"] && (
         <>
           <Heading level={4} className="mt-4">
-            {t("sectionAuctionSettings")}
+            {t("sectionCollectorDropSettings")}
           </Heading>
 
           <Checkbox
-            label={t("formIsAuction")}
-            checked={isAuctionListing(product)}
+            label={t("formIsCollectorDrop")}
+            checked={isCollectorDropListing(product)}
             onChange={(e) =>
-              update({ listingType: e.target.checked ? "auction" : "standard" })
+              update({ listingType: e.target.checked ? "collector-drop" : "standard" })
             }
             disabled={isReadonly}
           />
         </>
       )}
 
-      {isAuctionListing(product) && (
+      {isCollectorDropListing(product) && (
         <>
           <FormGroup columns={2}>
             <FormField
@@ -863,15 +863,15 @@ export function ProductForm({
               placeholder="0"
             />
             <FormField
-              name="auctionEndDate"
-              label={t("formAuctionEndDate")}
+              name="collectorDropEndDate"
+              label={t("formCollectorDropEndDate")}
               type="datetime-local"
               value={(() => {
-                const d = resolveDate(product.auctionEndDate);
+                const d = resolveDate(product.collectorDropEndDate);
                 if (!d) return "";
                 return d.toISOString().slice(0, 16);
               })()}
-              onChange={(value) => update({ auctionEndDate: value })}
+              onChange={(value) => update({ collectorDropEndDate: value })}
               disabled={isReadonly}
             />
           </FormGroup>
@@ -917,25 +917,25 @@ export function ProductForm({
           />
 
           <FormField
-            name="auctionShippingPaidBy"
-            label={t("formAuctionShippingPaidBy")}
+            name="collectorDropShippingPaidBy"
+            label={t("formCollectorDropShippingPaidBy")}
             type="select"
-            value={product.auctionShippingPaidBy || "winner"}
+            value={product.collectorDropShippingPaidBy || "winner"}
             onChange={(value) =>
               update({
-                auctionShippingPaidBy:
-                  value as ProductItem["auctionShippingPaidBy"],
+                collectorDropShippingPaidBy:
+                  value as ProductItem["collectorDropShippingPaidBy"],
               })
             }
             disabled={isReadonly}
             options={[
-              { value: "winner", label: t("formAuctionShippingPaidByWinner") },
-              { value: "seller", label: t("formAuctionShippingPaidBySeller") },
+              { value: "winner", label: t("formCollectorDropShippingPaidByWinner") },
+              { value: "seller", label: t("formCollectorDropShippingPaidBySeller") },
             ]}
           />
 
           <Text variant="secondary" weight="semibold" className="mt-2">
-            {t("sectionAuctionAdvanced")}
+            {t("sectionCollectorDropAdvanced")}
           </Text>
 
           <Checkbox
@@ -951,16 +951,16 @@ export function ProductForm({
                 {t("formAutoExtendableHelp")}
               </Alert>
               <FormField
-                name="auctionExtensionMinutes"
-                label={t("formAuctionExtensionMinutes")}
+                name="collectorDropExtensionMinutes"
+                label={t("formCollectorDropExtensionMinutes")}
                 type="number"
-                value={String(product.auctionExtensionMinutes ?? 5)}
+                value={String(product.collectorDropExtensionMinutes ?? 5)}
                 onChange={(value) =>
-                  update({ auctionExtensionMinutes: Number(value) || 5 })
+                  update({ collectorDropExtensionMinutes: Number(value) || 5 })
                 }
                 disabled={isReadonly}
                 placeholder="5"
-                helpText={t("formAuctionExtensionMinutesHelp")}
+                helpText={t("formCollectorDropExtensionMinutesHelp")}
               />
             </>
           )}
@@ -1232,16 +1232,16 @@ export function ProductForm({
         allowCreate
       />
 
-      {/* ── Join existing group — create + edit mode, hidden for auctions ── */}
-      {!isAuctionListing(product) && renderGroupJoinField?.({
+      {/* ── Join existing group — create + edit mode, hidden for collector drops ── */}
+      {!isCollectorDropListing(product) && renderGroupJoinField?.({
         label: "Group (optional)",
         value: product.groupId,
         onChange: (id) => update({ groupId: id || undefined }),
         disabled: isReadonly,
       })}
 
-      {/* ── Group Settings (GP2) — edit mode only, hidden for auctions ── */}
-      {!isAuctionListing(product) && renderGroupSettings?.(product)}
+      {/* ── Group Settings (GP2) — edit mode only, hidden for collector drops ── */}
+      {!isCollectorDropListing(product) && renderGroupSettings?.(product)}
 
       {/* ── Feature Badges (FI5) ── */}
       <ProductFeaturesSelector

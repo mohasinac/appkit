@@ -197,7 +197,7 @@ function toRecords(
     /*
      * 🛑 Resolved per DOCUMENT, not per source. `products` holds all nine
      * listing types and each has its own detail route, so a single type index
-     * for the collection would send every auction to /products/{slug} —
+     * for the collection would send every collector drop to /products/{slug} —
      * Root Cause #48, rebuilt.
      */
     const typeKey = typeKeyFor(source, row);

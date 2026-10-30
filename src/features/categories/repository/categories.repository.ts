@@ -68,8 +68,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       canFilter: true,
       canSort: true,
     },
-    "metrics.auctionCount": {
-      path: "metrics.auctionCount",
+    "metrics.collectorDropCount": {
+      path: "metrics.collectorDropCount",
       canFilter: true,
       canSort: true,
     },
@@ -174,10 +174,10 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         metrics: {
           productCount: 0,
           productIds: [],
-          auctionCount: 0,
-          auctionIds: [],
+          collectorDropCount: 0,
+          collectorDropIds: [],
           totalProductCount: 0,
-          totalAuctionCount: 0,
+          totalCollectorDropCount: 0,
           totalItemCount: 0,
           lastUpdated: new Date(),
         },
@@ -698,9 +698,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
      */
     const m = node.metrics ?? ({} as CategoryDocument["metrics"]);
     const dProducts = m?.totalProductCount ?? 0;
-    const dAuctions = m?.totalAuctionCount ?? 0;
+    const dCollectorDrops = m?.totalCollectorDropCount ?? 0;
 
-    if (dProducts !== 0 || dAuctions !== 0) {
+    if (dProducts !== 0 || dCollectorDrops !== 0) {
       const oldChain = node.parentIds;
       const newChain = newParent ? [...newParent.parentIds, newParent.id] : [];
       const net = new Map<string, number>();
@@ -713,8 +713,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
           id,
           data: {
             "metrics.totalProductCount": increment(dProducts * sign),
-            "metrics.totalAuctionCount": increment(dAuctions * sign),
-            "metrics.totalItemCount": increment((dProducts + dAuctions) * sign),
+            "metrics.totalCollectorDropCount": increment(dCollectorDrops * sign),
+            "metrics.totalItemCount": increment((dProducts + dCollectorDrops) * sign),
             "metrics.lastUpdated": now,
             updatedAt: now,
           },
@@ -951,14 +951,14 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     categoryId: string,
     parentIds: string[],
     productDelta: number,
-    auctionDelta: number,
+    collectorDropDelta: number,
     productId?: string,
   ): void {
     this.updateMetricsForAssignmentsInBatch(
       batch,
       [{ id: categoryId, parentIds }],
       productDelta,
-      auctionDelta,
+      collectorDropDelta,
       productId,
     );
   }
@@ -991,7 +991,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     batch: import("firebase-admin/firestore").WriteBatch,
     assignments: Array<{ id: string; parentIds: string[] }>,
     productDelta: number,
-    auctionDelta: number,
+    collectorDropDelta: number,
     productId?: string,
     /** A brand row: flat, so own and rollup move together. */
     brandId?: string | null,
@@ -1024,21 +1024,21 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       const ownTimes = own.get(id) ?? 0;
       const update: FirestoreDocument = {
         "metrics.totalProductCount": increment(productDelta),
-        "metrics.totalAuctionCount": increment(auctionDelta),
-        "metrics.totalItemCount": increment(productDelta + auctionDelta),
+        "metrics.totalCollectorDropCount": increment(collectorDropDelta),
+        "metrics.totalItemCount": increment(productDelta + collectorDropDelta),
         "metrics.lastUpdated": now,
         updatedAt: now,
       };
       if (ownTimes > 0) {
         update["metrics.productCount"] = increment(productDelta * ownTimes);
-        update["metrics.auctionCount"] = increment(auctionDelta * ownTimes);
+        update["metrics.collectorDropCount"] = increment(collectorDropDelta * ownTimes);
         if (productId && productDelta !== 0) {
           update["metrics.productIds"] =
             productDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
         }
-        if (productId && auctionDelta !== 0) {
-          update["metrics.auctionIds"] =
-            auctionDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+        if (productId && collectorDropDelta !== 0) {
+          update["metrics.collectorDropIds"] =
+            collectorDropDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
         }
       }
       batch.update(colRef.doc(id), update);
@@ -1095,13 +1095,13 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     m: {
       /** Items filed DIRECTLY under this category. */
       productCount: number;
-      auctionCount: number;
+      collectorDropCount: number;
       /** Own + every descendant's. Equals the own count on a leaf. */
       totalProductCount: number;
-      totalAuctionCount: number;
+      totalCollectorDropCount: number;
       /** Own only — the ids are used for spot-checking, never for the rollup. */
       productIds: string[];
-      auctionIds: string[];
+      collectorDropIds: string[];
     },
   ): Promise<void> {
     await this.db
@@ -1109,12 +1109,12 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       .doc(categoryId)
       .update({
         "metrics.productCount": m.productCount,
-        "metrics.auctionCount": m.auctionCount,
+        "metrics.collectorDropCount": m.collectorDropCount,
         "metrics.totalProductCount": m.totalProductCount,
-        "metrics.totalAuctionCount": m.totalAuctionCount,
-        "metrics.totalItemCount": m.totalProductCount + m.totalAuctionCount,
+        "metrics.totalCollectorDropCount": m.totalCollectorDropCount,
+        "metrics.totalItemCount": m.totalProductCount + m.totalCollectorDropCount,
         "metrics.productIds": m.productIds,
-        "metrics.auctionIds": m.auctionIds,
+        "metrics.collectorDropIds": m.collectorDropIds,
         "metrics.lastUpdated": new Date(),
         updatedAt: new Date(),
       });

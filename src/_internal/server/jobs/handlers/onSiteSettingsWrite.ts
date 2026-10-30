@@ -12,7 +12,7 @@ import type { JsonValue } from "@mohasinac/appkit";
  * i.e. something on every page of the site. Nothing observed writes to it.
  *
  * Measured against production 2026-10-27, which is what prompted this: with
- * `listings.listingTypes.auction` set to `false` in Firestore, `/auctions` kept
+ * `listings.listingTypes.collector-drop` set to `false` in Firestore, `/collector-drops` kept
  * answering **200** from the CDN with `Age` climbing past its own 60-second
  * `revalidate` window, because no writer ever marked the page stale. The flag
  * was correct and invisible. `revalidateTargetsFor("siteSettings")` returned

@@ -2,7 +2,7 @@
  * Standardised listing-API param reader (Q2 — S12).
  *
  * All public listing routes (/api/products, /api/pre-orders, /api/stores,
- * /api/auctions, and the per-store nested variants) accept short canonical
+ * /api/collector-drops, and the per-store nested variants) accept short canonical
  * names:
  *
  *   f      — filters (Sieve filter string)

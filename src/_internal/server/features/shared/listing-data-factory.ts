@@ -8,7 +8,7 @@ import type { ProductFeatureDocument } from "../../../../features/products/schem
 import { isPubliclyVisible } from "../../../shared/listing-types/availability";
 
 // Returns a React.cache()-wrapped fetch gated on one listing type.
-// The guard prevents cross-type URL collisions (e.g. /auctions/classified-slug returning wrong product).
+// The guard prevents cross-type URL collisions (e.g. /collector-drops/classified-slug returning wrong product).
 //
 // 🛑 THE STATUS GATE IS LOAD-BEARING, AND ITS ABSENCE WAS A LIVE LEAK.
 //
@@ -21,7 +21,7 @@ import { isPubliclyVisible } from "../../../shared/listing-types/availability";
 // URL, and because the admin row updated correctly every time, the moderator had
 // no way to notice.
 //
-// One gate here covers SIX detail routes — auction, classified, digital-code,
+// One gate here covers SIX detail routes — collector drop, classified, digital-code,
 // live, pre-order, random-lots — which is why it belongs in the factory rather
 // than in each page.
 //

@@ -168,7 +168,7 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
       averageRating: 4.8,
     },
     capabilities: [
-      "host_auctions",
+      "host_collector_drops",
       "host_preorders",
       "verified_seller",
       "create_coupons",
@@ -222,7 +222,7 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     emiEnabled: true,
     isVerified: true,
     stats: { totalProducts: 0, itemsSold: 0, totalReviews: 6, averageRating: 4.8 },
-    capabilities: ["host_auctions", "host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
+    capabilities: ["host_collector_drops", "host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
     createdAt: daysAgo(150),
     updatedAt: daysAgo(4),
   },

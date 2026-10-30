@@ -2,7 +2,7 @@
  * D2 Fix 4 — which collections `/search` spans, and how each row becomes a hit.
  *
  * 🛑 NINE SOURCES, not fifteen. The redirect page maps 15 `SearchResourceType`
- * values, but nine of them are LISTING TYPES inside `products` — auctions,
+ * values, but nine of them are LISTING TYPES inside `products` — collector drops,
  * pre-orders, random-lots, classified, digital-codes, live, art, bundles. One
  * `products` query covers all of them, and a per-type query would be nine
  * fan-outs returning overlapping rows from one collection.

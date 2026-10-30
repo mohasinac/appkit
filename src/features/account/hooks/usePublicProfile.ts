@@ -36,7 +36,7 @@ export interface PublicUserProfile {
   };
   stats?: {
     totalOrders?: number;
-    auctionsWon?: number;
+    collectorDropsWon?: number;
     itemsSold?: number;
     reviewsCount?: number;
     rating?: number;

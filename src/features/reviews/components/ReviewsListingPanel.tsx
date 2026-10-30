@@ -81,7 +81,7 @@ export interface ReviewsListingPanelProps {
    * review pages (shareable, SEO route segments read them back).
    *
    * `"local"` keeps that state in the component. Detail pages must use this: `useUrlTable`
-   * calls `router.replace()` on every change, which re-runs the whole product/auction RSC
+   * calls `router.replace()` on every change, which re-runs the whole product/collector drop RSC
    * tree just to turn a page of reviews.
    */
   stateMode?: "url" | "local";

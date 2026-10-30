@@ -145,7 +145,7 @@ export async function PublicProfileView({
   const listingCount = products.length;
   const reviewCount = reviewsAuthored.length + reviewsReceivedAsBuyer.length;
   const itemsSold = stats?.itemsSold ?? 0;
-  const auctionsWon = stats?.auctionsWon ?? 0;
+  const collectorDropsWon = stats?.collectorDropsWon ?? 0;
   const totalOrders = stats?.totalOrders ?? 0;
 
   const storeSlug = profile?.storeSlug;
@@ -153,7 +153,7 @@ export async function PublicProfileView({
   const storeDescription = store?.storeDescription ?? pub?.storeDescription;
 
   const profileHeroCtx = { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page };
-  const statItems = buildProfileStatItems(t, { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller });
+  const statItems = buildProfileStatItems(t, { listingCount, reviewCount, itemsSold, collectorDropsWon, totalOrders, isSeller });
 
   const activeTab = tab === "catalogue" ? "catalogue" : "overview";
 
@@ -221,18 +221,18 @@ type ProfileProduct = any;
  
 type ProfileReview = any;
 
-function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewCount: number; itemsSold: number; auctionsWon: number; totalOrders: number; isSeller: boolean }) {
-  const { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller } = ctx;
+function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewCount: number; itemsSold: number; collectorDropsWon: number; totalOrders: number; isSeller: boolean }) {
+  const { listingCount, reviewCount, itemsSold, collectorDropsWon, totalOrders, isSeller } = ctx;
   return [
     { icon: ShoppingBag, label: t("statListings"), value: String(listingCount) },
     { icon: Star, label: t("statReviews"), value: String(reviewCount) },
     ...(isSeller
       ? [
           { icon: Package, label: t("statSold"), value: String(itemsSold) },
-          { icon: Trophy, label: t("statAuctions"), value: String(auctionsWon) },
+          { icon: Trophy, label: t("statCollectorDrops"), value: String(collectorDropsWon) },
         ]
       : [
-          { icon: Trophy, label: t("statAuctions"), value: String(auctionsWon) },
+          { icon: Trophy, label: t("statCollectorDrops"), value: String(collectorDropsWon) },
           { icon: Package, label: t("statOrders"), value: String(totalOrders) },
         ]),
   ];

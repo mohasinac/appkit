@@ -64,11 +64,11 @@ const EXTRA_WRITABLE_FIELDS = [
   "video",
   "gstRate",
   "hsnCode",
-  // Auction terms. Writable while the listing is still a draft; once a real
+  // Collector Drop terms. Writable while the listing is still a draft; once a real
   // bid exists, `sellerUpdateProduct` refuses them — changing the starting bid
   // or the end date under a live bidder is the one case that must not pass.
   "startingBid",
-  "auctionEndDate",
+  "collectorDropEndDate",
 ] as const;
 
 const declaredKeys = new Set(Object.keys(productBaseShape.shape));
@@ -83,17 +83,17 @@ export const productInputSchema = productBaseShape.extend(extraWritableShape);
 
 export const productUpdateSchema = productInputSchema.partial();
 
-export const auctionInputSchema = productInputSchema.extend({
-  // SB1-G — canonical discriminator. Locked to "auction" via literal.
-  listingType: z.literal("auction"),
+export const collectorDropInputSchema = productInputSchema.extend({
+  // SB1-G — canonical discriminator. Locked to "collector-drop" via literal.
+  listingType: z.literal("collector-drop"),
   startingBid: priceSchema,
   reservePrice: priceSchema.optional(),
   buyNowPrice: priceSchema.optional(),
   minBidIncrement: z.number().min(1).optional(),
-  auctionEndDate: z.string().datetime({ offset: true }),
+  collectorDropEndDate: z.string().datetime({ offset: true }),
   autoExtendable: z.boolean().default(false),
-  auctionExtensionMinutes: z.number().int().min(1).max(30).optional(),
-  auctionShippingPaidBy: z.enum(["seller", "winner"]).optional(),
+  collectorDropExtensionMinutes: z.number().int().min(1).max(30).optional(),
+  collectorDropShippingPaidBy: z.enum(["seller", "winner"]).optional(),
 });
 
 export const preOrderInputSchema = productInputSchema.extend({
@@ -118,5 +118,5 @@ export const setStatusSchema = z.object({
 
 export type ProductInput = z.infer<typeof productInputSchema>;
 export type ProductUpdate = z.infer<typeof productUpdateSchema>;
-export type AuctionInput = z.infer<typeof auctionInputSchema>;
+export type CollectorDropInput = z.infer<typeof collectorDropInputSchema>;
 export type PreOrderInput = z.infer<typeof preOrderInputSchema>;

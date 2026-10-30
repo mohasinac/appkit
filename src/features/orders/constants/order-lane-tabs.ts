@@ -6,8 +6,8 @@
  *
  * The buyer's list had these tabs and the seller's did not. A seller could see
  * every order and could not ask "show me the ones I accepted an offer on" or
- * "show me the auction wins", which is exactly the split that changes how they
- * are handled: an auction win has a forfeit deadline, an accepted offer has an
+ * "show me the collector drop wins", which is exactly the split that changes how they
+ * are handled: a collector drop win has a forfeit deadline, an accepted offer has an
  * agreed price that is not the listing price.
  *
  * Copying the array into the second view would have been the ninth
@@ -50,7 +50,7 @@ export const ORDER_LANE_ALL = "" as const;
  */
 export const ORDER_LANE_LABELS: Record<OrderType, string> = {
   standard: "Normal",
-  auction: "Auction wins",
+  "collector-drop": "Collector Drop wins",
   offer: "Offer wins",
   preorder: "Pre-orders",
   "random-lots": "Random lots",
@@ -61,12 +61,12 @@ export const ORDER_LANE_LABELS: Record<OrderType, string> = {
  *
  * Key order on an object literal is not a contract anyone should rely on for
  * UI ordering, and the intended order is not alphabetical: it mirrors the
- * cart's lane PRIORITY (auction > offer > standard — highest obligation
+ * cart's lane PRIORITY (collector drop > offer > standard — highest obligation
  * first), with the two schedule-driven lanes after them.
  */
 const LANE_ORDER: readonly OrderType[] = [
   "standard",
-  "auction",
+  "collector-drop",
   "offer",
   "preorder",
   "random-lots",

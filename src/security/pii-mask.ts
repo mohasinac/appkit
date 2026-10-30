@@ -144,7 +144,7 @@ export function maskPublicReview<T extends { userName: string }>(review: T): T {
 
 /**
  * Return a copy of a bid document with PII masked for public display
- * (auction product page).
+ * (collector drop product page).
  */
 export function maskPublicBid<T extends { userName: string }>(bid: T): T {
   return { ...bid, userName: maskName(bid.userName) };

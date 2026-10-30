@@ -206,7 +206,7 @@ export function ProductFilters({
             selected={selectedListingTypes}
             onChange={(vals) =>
               // Serialise in the OPTIONS' order, not the order the boxes were
-              // ticked — `auction|art` and `art|auction` are the same result
+              // ticked — `collector drop|art` and `art|collector drop` are the same result
               // set but two different React Query keys and two different URLs.
               table.set(
                 TABLE_KEYS.LISTING_TYPE,

@@ -40,7 +40,7 @@ function resolveMs(endDate: unknown): number {
 /**
  * @example
  * ```tsx
- * const remaining = useCountdown(auction.endsAt);
+ * const remaining = useCountdown(collectorDrop.endsAt);
  * if (!remaining) return <span>Ended</span>;
  * return <span>{remaining.hours}h {remaining.minutes}m {remaining.seconds}s</span>;
  * ```

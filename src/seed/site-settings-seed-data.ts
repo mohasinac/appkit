@@ -16,7 +16,7 @@
 import type { SiteSettingsDocument } from "../features/admin/schemas";
 import { seedExtMedia, seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
-import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../_internal/shared/features/auctions/config";
+import { DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS } from "../_internal/shared/features/collector-drops/config";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -186,7 +186,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   seo: {
     // Kept in step with the hero h1 in homepage-sections-seed-data.ts: the
     // title is what a search result and a browser tab show, so leaving
-    // "Auction" here would have gone on advertising a disabled type from the
+    // "Collector Drop" here would have gone on advertising a disabled type from the
     // one place a visitor sees before the page even loads.
     defaultTitle:
       "LetItRip — Buy & Sell Collectibles | India's Collectibles Marketplace",
@@ -199,7 +199,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       "spinning tops collectibles",
       "model kits india",
       "vintage collectibles",
-      "live auction collectibles",
+      "live collector drop collectibles",
       "pre-order collectibles",
       "verified sellers india",
       "buy sell collectibles online",
@@ -237,7 +237,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     },
     {
       id: "feature_005",
-      name: "Live Auctions",
+      name: "Live Collector Drops",
       description: "Bid on Rare & Collectible Items",
       icon: "🏆",
       enabled: true,
@@ -348,8 +348,8 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
         },
       },
       {
-        id: "ad-listing-sidebar-auction-boost",
-        name: "Sidebar Auction Boost",
+        id: "ad-listing-sidebar-collectordrop-boost",
+        name: "Sidebar Collector Drop Boost",
         provider: "manual",
         status: "active",
         placementIds: ["listing-sidebar-top", "listing-sidebar-bottom"],
@@ -359,11 +359,11 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
         updatedAt: daysAgo(1).toISOString(),
         updatedBy: "user-admin-letitrip",
         creative: {
-          title: "Live Auctions",
-          body: "Rare and collectible items — auctions ending this week.",
-          imageUrl: seedPhoto("ad-listing-sidebar-auction-boost-20260101", 600, 600),
-          ctaLabel: "View Auctions",
-          ctaHref: String(ROUTES.PUBLIC.AUCTIONS),
+          title: "Live Collector Drops",
+          body: "Rare and collectible items — collector drops ending this week.",
+          imageUrl: seedPhoto("ad-listing-sidebar-collectordrop-boost-20260101", 600, 600),
+          ctaLabel: "View Collector Drops",
+          ctaHref: String(ROUTES.PUBLIC.COLLECTOR_DROPS),
         },
       },
       {
@@ -391,30 +391,30 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   },
   // This block was missing entirely until 2026-08-21, and it is the data-layer
   // half of the "+₹1 / +₹5 / +₹10 quick-bid buttons" bug. `DEFAULT_SITE_SETTINGS_DATA`
-  // (features/admin/schemas/firestore.ts) has always carried an `auctionConfig`,
+  // (features/admin/schemas/firestore.ts) has always carried an `collectorDropConfig`,
   // but that object is not what writes Firestore — this seed file is, and it
-  // declared no `auctionConfig` at all. The seed CLI runs the payload through
+  // declared no `collectorDropConfig` at all. The seed CLI runs the payload through
   // `stripUndefined()` and writes with `{ merge: true }`, so an absent key is
   // simply skipped: no `appkit-seed load`, however many times it ran, could ever
-  // create `auctionConfig.bidIncrementTiers`. Every caller then read
-  // `settings.auctionConfig?.bidIncrementTiers ?? []` and resolved the ₹1
+  // create `collectorDropConfig.bidIncrementTiers`. Every caller then read
+  // `settings.collectorDropConfig?.bidIncrementTiers ?? []` and resolved the ₹1
   // last-resort increment. Sourced from the shared constant so the seed, the
   // schema default and the admin editor's initial state cannot drift apart —
   // which is exactly what that constant's docstring already claimed.
-  auctionConfig: {
-    bidIncrementTiers: DEFAULT_AUCTION_BID_INCREMENT_TIERS,
+  collectorDropConfig: {
+    bidIncrementTiers: DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
     autoExtendWindowMinutes: 5,
     settlementGracePeriodHours: 24,
   },
   /*
    * 🛑 There is deliberately NO `gst` block here, and it must stay that way.
    *
-   * It looks like the `auctionConfig` defect one block up — a key the schema
+   * It looks like the `collectorDropConfig` defect one block up — a key the schema
    * default declares and the seed does not, so `appkit-seed load` can never
    * create it — but the two are opposite cases, and seeding this one would be
    * destructive rather than corrective.
    *
-   *   `auctionConfig` was broken BY its absence: every reader resolved
+   *   `collectorDropConfig` was broken BY its absence: every reader resolved
    *   `?? []` and fell back to a ₹1 bid increment, so the feature was
    *   measurably wrong until the key existed.
    *
@@ -476,7 +476,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
      */
     payoutHoldDays: 7,
     minPayoutAmount: 100,
-    auctionListingFee: 0,
+    collectorDropListingFee: 0,
     preOrderListingFee: 0,
     featuredSlotFee: 999,
     promotedSlotFee: 499,
@@ -508,7 +508,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       spares: false,
       art: false,
       stickers: false,
-      auction: false,
+      "collector-drop": false,
       "random-lots": false,
       classified: false,
       "digital-code": false,
@@ -582,7 +582,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.DEVELOPER),
       String(ROUTES.PUBLIC.FEES),
       String(ROUTES.PUBLIC.HELP_SELLER_BADGES),
-      String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK),
+      String(ROUTES.PUBLIC.HOW_COLLECTOR_DROPS_WORK),
       String(ROUTES.PUBLIC.HOW_EMI_WORKS),
       String(ROUTES.PUBLIC.HOW_OFFERS_WORK),
       String(ROUTES.PUBLIC.HOW_PAYOUTS_WORK),

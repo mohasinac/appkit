@@ -27,8 +27,8 @@
  *
  * The six `acquisitionOrders` below exist so every branch of the
  * `OrderSourceContext` union has real data behind it. `orderType` has five
- * values and cannot separate a settled auction win from a buyout — both are
- * "auction" — which is exactly why `sourceContext` keys on its own
+ * values and cannot separate a settled collector drop win from a buyout — both are
+ * "collector-drop" — which is exactly why `sourceContext` keys on its own
  * discriminator.
  *
  * Every FK in a `sourceContext` points at a real seeded document: the winning
@@ -106,15 +106,15 @@ const _rawOrdersSeedData: Partial<OrderPlain>[] = [
     createdAt: daysAgo(10),
   },
   {
-    id: "order-test-auction-win-001",
-    productId: "auction-beyblade-burst-cho-z-achilles",
+    id: "order-test-collectordrop-win-001",
+    productId: "collectordrop-beyblade-burst-cho-z-achilles",
     productTitle: "Beyblade Burst B-100 Cho-Z Achilles",
     userId: "user-rohit-collector",
     userName: "Rohit Collector",
     userEmail: "rohit.collect@gmail.com",
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
-    orderType: "auction",
+    orderType: "collector-drop",
     quantity: 1,
     unitPrice: 1650,
     totalPrice: 1650,

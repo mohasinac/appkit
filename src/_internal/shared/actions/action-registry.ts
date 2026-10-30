@@ -42,7 +42,7 @@ export type ActionKind =
 /** Resource bucket — keyed top-level in the ACTIONS tree. */
 export type ActionResource =
   | "PRODUCT"
-  | "AUCTION"
+  | "COLLECTOR_DROP"
   | "PRE_ORDER"
   | "RANDOM_LOTS"
   // "CLASSIFIED" and "LIVE" were removed 2026-08-31 — both buckets held a
@@ -314,7 +314,7 @@ export const ACTIONS: ActionTree = {
      * Clone — ADMIN ONLY, and no confirmation.
      *
      * `POST /api/store/products/[id]/duplicate` already strips identity,
-     * analytics, auction bid state and group membership, titles the copy
+     * analytics, collector drop bid state and group membership, titles the copy
      * "… (Copy)" and forces `status: "draft"`. So it creates a draft and
      * destroys nothing: a confirm dialog on a non-destructive action trains
      * people to dismiss confirm dialogs.
@@ -415,41 +415,41 @@ export const ACTIONS: ActionTree = {
       listingTypeScope: ["standard", "classified", "art", "stickers"],
     },
   },
-  AUCTION: {
+  COLLECTOR_DROP: {
     "place-bid": {
       iconKey: "bid",
-      id: "auction.place-bid",
+      id: "collectorDrop.place-bid",
       label: "Place bid",
-      description: "Submit a bid on an auction listing.",
+      description: "Submit a bid on a collector drop listing.",
       kind: "primary",
-      listingTypeScope: ["auction"],
+      listingTypeScope: ["collector-drop"],
     },
     "buy-it-now": {
       iconKey: "cart",
-      id: "auction.buy-it-now",
+      id: "collectorDrop.buy-it-now",
       label: "Buy It Now",
       description:
-        "Claim the listing at the buy-now price (SB-UNI-H). Offered while the auction is unsold, before its end date, and while the buy-now price still beats the standing bid. Places a bid at that price plus a 1h locked cart line — the auction stays live until the buyer pays.",
+        "Claim the listing at the buy-now price (SB-UNI-H). Offered while the collector drop is unsold, before its end date, and while the buy-now price still beats the standing bid. Places a bid at that price plus a 1h locked cart line — the collector drop stays live until the buyer pays.",
       kind: "secondary",
-      listingTypeScope: ["auction"],
+      listingTypeScope: ["collector-drop"],
     },
     "watch": {
       iconKey: "view",
-      id: "auction.watch",
-      label: "Watch auction",
-      ariaLabel: "Watch this auction",
-      description: "Subscribe to bid activity and ending-soon alerts for this auction.",
+      id: "collectorDrop.watch",
+      label: "Watch collector drop",
+      ariaLabel: "Watch this collector drop",
+      description: "Subscribe to bid activity and ending-soon alerts for this collector drop.",
       kind: "ghost",
-      listingTypeScope: ["auction"],
+      listingTypeScope: ["collector-drop"],
     },
     "unwatch": {
       iconKey: "hide",
-      id: "auction.unwatch",
+      id: "collectorDrop.unwatch",
       label: "Watching",
-      ariaLabel: "Stop watching this auction",
-      description: "Unsubscribe from bid activity alerts for this auction.",
+      ariaLabel: "Stop watching this collector drop",
+      description: "Unsubscribe from bid activity alerts for this collector drop.",
       kind: "ghost",
-      listingTypeScope: ["auction"],
+      listingTypeScope: ["collector-drop"],
     },
   },
   PRE_ORDER: {
@@ -1871,7 +1871,7 @@ export const ACTIONS: ActionTree = {
       id: "seller.cancel-bid",
       label: "Cancel selected",
       ariaLabel: "Cancel selected bids",
-      description: "Cancel the selected bids from this store's auctions.",
+      description: "Cancel the selected bids from this store's collector drops.",
       kind: "danger",
       permissions: ["seller", "admin"],
       confirmation: {

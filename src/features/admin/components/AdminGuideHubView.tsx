@@ -62,7 +62,7 @@ const GUIDE_CARDS: AdminGuideCard[] = [
   {
     Icon: Settings,
     title: "Site Configuration",
-    description: "Site settings groups, feature flags, integrations, auction config, and legal pages.",
+    description: "Site settings groups, feature flags, integrations, collector drop config, and legal pages.",
     href: String(ROUTES.ADMIN.GUIDE_SITE),
     permission: "admin:site:read",
   },

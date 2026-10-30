@@ -401,23 +401,23 @@ export const ERROR_MESSAGES = {
     FETCH_FAILED: "Failed to load bids",
     CREATE_FAILED: "Failed to place bid",
     NOT_FOUND: "Bid not found",
-    AUCTION_ENDED: "This auction has already ended",
-    AUCTION_NOT_FOUND: "Auction product not found",
-    NOT_AN_AUCTION: "This product is not an auction",
+    COLLECTOR_DROP_ENDED: "This collector drop has already ended",
+    COLLECTOR_DROP_NOT_FOUND: "Collector Drop product not found",
+    NOT_A_COLLECTOR_DROP: "This product is not a collector drop",
     BID_TOO_LOW: "Your bid must be higher than the current bid",
     INCREMENT_TOO_LOW: "Your bid does not meet the minimum increment requirement",
-    OWN_AUCTION: "You cannot bid on your own auction",
+    OWN_COLLECTOR_DROP: "You cannot bid on your own collector drop",
     BUY_NOW_UNAVAILABLE:
       "Buy Now is unavailable — bidding has already passed the Buy Now price",
-    BUY_NOW_NO_PRICE: "This auction does not have a Buy Now price",
+    BUY_NOW_NO_PRICE: "This collector drop does not have a Buy Now price",
     BUYOUT_LAPSED:
-      "Your Buy Now claim expired. Head back to the auction to bid or try again.",
+      "Your Buy Now claim expired. Head back to the collector drop to bid or try again.",
     BUYOUT_OUTBID:
       "Bidding passed the Buy Now price while you were checking out, so this purchase can no longer go through.",
-    AUCTION_ALREADY_SOLD:
-      "Another buyer completed their purchase first, so this auction is already sold.",
-    AUCTION_ENDED_BEFORE_CHECKOUT:
-      "The auction ended before you completed payment, so it went to the winning bidder.",
+    COLLECTOR_DROP_ALREADY_SOLD:
+      "Another buyer completed their purchase first, so this collector drop is already sold.",
+    COLLECTOR_DROP_ENDED_BEFORE_CHECKOUT:
+      "The collector drop ended before you completed payment, so it went to the winning bidder.",
   },
 
   CONTACT: {

@@ -89,9 +89,9 @@ export const NOTIFICATION_EMAIL_TEMPLATES: Record<NotificationType, Notification
 
   bid_placed: { lead: "Your bid has been placed.", cta: "View bids" },
   bid_outbid: { lead: "Someone has outbid you.", cta: "View bids", tone: "danger" },
-  bid_won: { lead: "You won the auction.", cta: "Complete checkout", tone: "success" },
-  bid_lost: { lead: "This auction closed without you.", cta: "View bids" },
-  auction_ended: { lead: "Your auction has ended.", cta: "View auction" },
+  bid_won: { lead: "You won the collector drop.", cta: "Complete checkout", tone: "success" },
+  bid_lost: { lead: "This collector drop closed without you.", cta: "View bids" },
+  collector_drop_ended: { lead: "Your collector drop has ended.", cta: "View collector drop" },
 
   offer_received: { lead: "A buyer has made you an offer.", cta: "Review offer" },
   offer_responded: { lead: "The seller has responded to your offer.", cta: "View offer" },

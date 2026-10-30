@@ -203,7 +203,7 @@ export interface CategoryPriceGuidance {
     source?: string;
   };
   /**
-   * OUR completed sales only, including won auctions and accepted offers.
+   * OUR completed sales only, including won collector drops and accepted offers.
    *
    * Absent until there are some — **never zeroed**. A zero would render as a
    * real figure meaning "things sell here for ₹0", which is worse than silence.
@@ -214,11 +214,11 @@ export interface CategoryPriceGuidance {
     max: number;
     sampleSize: number;
     windowDays: number;
-    byPath?: { standard?: number; auction?: number; offer?: number };
+    byPath?: { standard?: number; "collector-drop"?: number; offer?: number };
   };
   lastSold?: {
     amount: number;
     at: Date;
-    via?: "standard" | "auction" | "offer";
+    via?: "standard" | "collector-drop" | "offer";
   };
 }

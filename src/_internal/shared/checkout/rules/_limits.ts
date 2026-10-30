@@ -43,7 +43,7 @@ export const BUNDLE_MAX_QTY_PER_TX = 1;
  * was a magic number in four places. The cart schemas import it.
  *
  * Its other reader, `ListingCheckoutRule.maxQuantityPerLine`, was DELETED in
- * the same change: that field was set by auction, offer and prize-draw and read
+ * the same change: that field was set by collector drop, offer and prize-draw and read
  * by nothing at all, and it contradicted the feature it appeared to govern —
  * prize-draw set it to 1 while `splitMultipleOrders` right beside it existed
  * only to chunk a quantity of 7 into [3,3,1].

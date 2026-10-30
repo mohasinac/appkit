@@ -1,7 +1,7 @@
 export const BID_ERROR_CODES = {
   PRODUCT_NOT_FOUND: "BID_PRODUCT_NOT_FOUND",
-  NOT_AUCTION: "BID_NOT_AUCTION",
-  AUCTION_ENDED: "BID_AUCTION_ENDED",
+  NOT_COLLECTOR_DROP: "BID_NOT_COLLECTOR_DROP",
+  COLLECTOR_DROP_ENDED: "BID_COLLECTOR_DROP_ENDED",
   TOO_LOW: "BID_AMOUNT_TOO_LOW",
   INCREMENT_VIOLATED: "BID_INCREMENT_TOO_LOW",
   SELF_BID: "BID_SELF_BID",
@@ -9,7 +9,7 @@ export const BID_ERROR_CODES = {
   /**
    * The buyout price is no longer better than the standing bid. Replaced
    * `BUY_NOW_BIDS_STARTED` (deleted 2026-08-24), which fired the instant anyone
-   * bid at all — that eBay rule hid Buy Now on nearly every live auction.
+   * bid at all — that eBay rule hid Buy Now on nearly every live collector drop.
    */
   BUY_NOW_UNAVAILABLE: "BID_BUY_NOW_UNAVAILABLE",
   BUY_NOW_NO_PRICE: "BID_BUY_NOW_NO_PRICE",
@@ -17,10 +17,10 @@ export const BID_ERROR_CODES = {
   BUYOUT_LAPSED: "BID_BUYOUT_LAPSED",
   /** Bidding passed the buyout price while the buyer was in checkout. */
   BUYOUT_OUTBID: "BID_BUYOUT_OUTBID",
-  /** Another buyer's buyout claimed the auction first. */
-  AUCTION_ALREADY_SOLD: "BID_AUCTION_ALREADY_SOLD",
-  /** The auction's clock ran out mid-checkout, so it settled to a real bidder. */
-  AUCTION_ENDED_BEFORE_CHECKOUT: "BID_AUCTION_ENDED_BEFORE_CHECKOUT",
+  /** Another buyer's buyout claimed the collector drop first. */
+  COLLECTOR_DROP_ALREADY_SOLD: "BID_COLLECTOR_DROP_ALREADY_SOLD",
+  /** The collector drop's clock ran out mid-checkout, so it settled to a real bidder. */
+  COLLECTOR_DROP_ENDED_BEFORE_CHECKOUT: "BID_COLLECTOR_DROP_ENDED_BEFORE_CHECKOUT",
 } as const;
 
 /**

@@ -52,7 +52,7 @@ export interface CanSeePricesState {
  * than ripped out, because that is what makes this one boolean a real switch
  * instead of a rewrite. Two things outside this file move with it, and must
  * move back if it is ever flipped:
- *   · `gatedPriceWebPageJsonLd()` — dropped from the product and auction
+ *   · `gatedPriceWebPageJsonLd()` — dropped from the product and collector drop
  *     pages. `isAccessibleForFree: false` over a price anyone can read is a
  *     false declaration to a crawler, which is the exact mismatch the node was
  *     added to prevent, pointed the other way.

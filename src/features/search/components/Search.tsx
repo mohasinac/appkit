@@ -34,7 +34,7 @@ const identityLabel = (typeKey: string) => typeKey;
 
 export type SearchResourceType =
   | "products"
-  | "auctions"
+  | "collector-drops"
   | "pre-orders"
   | "random-lots"
   | "bundles"

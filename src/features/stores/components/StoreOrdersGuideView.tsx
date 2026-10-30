@@ -262,16 +262,16 @@ function ReturnsSection() {
   );
 }
 
-// -- Section 6: Auction orders ------------------------------------------------
+// -- Section 6: Collector Drop orders ------------------------------------------------
 
-function AuctionOrdersSection() {
+function CollectorDropOrdersSection() {
   return (
     <Div className={SECTION_BODY}>
       <Div>
         <Text className={SUBHEADING}>Payment window</Text>
         <Text className="leading-relaxed">
-          Auction winners have <Span weight="bold">48 hours</Span> from auction end to complete payment.
-          You will receive a notification when the auction closes and again when the winner pays.
+          CollectorDrop winners have <Span weight="bold">48 hours</Span> from collectorDrop end to complete payment.
+          You will receive a notification when the collector drop closes and again when the winner pays.
         </Text>
       </Div>
       <Div>
@@ -279,19 +279,19 @@ function AuctionOrdersSection() {
         <Ul spacing="tight" indent="lg">
           <Li className={LIST_DISC}>The order is automatically cancelled after 48 hours.</Li>
           <Li className={LIST_DISC}>You are notified. The winner may receive a bid restriction on their account.</Li>
-          <Li className={LIST_DISC}>If "offer to next bidder" is enabled in your auction settings, the next-highest bidder is contacted automatically.</Li>
+          <Li className={LIST_DISC}>If "offer to next bidder" is enabled in your collectorDrop settings, the next-highest bidder is contacted automatically.</Li>
           <Li className={LIST_DISC}>You can re-list the item immediately.</Li>
         </Ul>
       </Div>
       <Div>
         <Text className={SUBHEADING}>Fulfilment after payment</Text>
         <Text className="leading-relaxed">
-          Once the auction order is paid, it enters PENDING status — the same fulfilment flow as a standard order applies.
+          Once the collector drop order is paid, it enters PENDING status — the same fulfilment flow as a standard order applies.
           Process and ship within your stated dispatch time.
         </Text>
       </Div>
-      <Alert variant="info" title="Auction orders cannot be cancelled by the buyer">
-        Unlike standard orders, auction orders cannot be self-cancelled by the buyer after payment.
+      <Alert variant="info" title="Collector Drop orders cannot be cancelled by the buyer">
+        Unlike standard orders, collector drop orders cannot be self-cancelled by the buyer after payment.
         If a buyer requests a cancel, it requires seller approval. Treat winning bids as binding commitments.
       </Alert>
     </Div>
@@ -358,7 +358,7 @@ export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
           Orders & Fulfilment Guide
         </Heading>
         <Text className="mt-1 text-[var(--appkit-color-text-muted)]" size="sm">
-          Processing orders, shipping, cancellations, returns, and auction orders.
+          Processing orders, shipping, cancellations, returns, and collector drop orders.
         </Text>
       </Div>
 
@@ -383,8 +383,8 @@ export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
         <ReturnsSection />
       </GuideSection>
 
-      <GuideSection title="6. Auction orders">
-        <AuctionOrdersSection />
+      <GuideSection title="6. Collector Drop orders">
+        <CollectorDropOrdersSection />
       </GuideSection>
 
       <GuideSection title="7. Common questions">

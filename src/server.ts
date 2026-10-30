@@ -784,19 +784,19 @@ export { revokeUserSessions } from "./features/admin/actions/admin-actions";
 export { updateSiteSettings } from "./features/admin/actions/site-settings-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // GET - Constant used across modules.
-export { GET } from "./features/auctions/api/route";
+export { GET } from "./features/collector-drops/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // bidsGET - Shared export for bids get.
-export { GET as bidsGET } from "./features/auctions/api/route";
+export { GET as bidsGET } from "./features/collector-drops/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBidById - Helper for get bid by id.
-export { getBidById } from "./features/auctions/actions/bid-actions";
+export { getBidById } from "./features/collector-drops/actions/bid-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listBidsByProduct - Helper for list bids by product.
-export { listBidsByProduct } from "./features/auctions/actions/bid-actions";
+export { listBidsByProduct } from "./features/collector-drops/actions/bid-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // placeBid - Shared export for place bid.
-export { placeBid } from "./features/auctions/actions/bid-actions";
+export { placeBid } from "./features/collector-drops/actions/bid-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT - Constant used across modules.
 export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-value-otp";
@@ -1397,8 +1397,8 @@ export { GET as preOrdersGET } from "./features/pre-orders/api/route";
 // preOrdersPOST - Shared export for pre orders post.
 export { POST as preOrdersPOST } from "./features/pre-orders/api/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getFeaturedAuctions - Helper for get featured auctions.
-export { getFeaturedAuctions } from "./features/products/actions/product-actions";
+// getFeaturedCollectorDrops - Helper for get featured collector drops.
+export { getFeaturedCollectorDrops } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFeaturedPreOrders - Helper for get featured pre orders.
 export { getFeaturedPreOrders } from "./features/products/actions/product-actions";
@@ -1406,8 +1406,8 @@ export { getFeaturedPreOrders } from "./features/products/actions/product-action
 // getFeaturedProducts - Helper for get featured products.
 export { getFeaturedProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getLatestAuctions - Helper for get latest auctions.
-export { getLatestAuctions } from "./features/products/actions/product-actions";
+// getLatestCollectorDrops - Helper for get latest collector drops.
+export { getLatestCollectorDrops } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getLatestPreOrders - Helper for get latest pre orders.
 export { getLatestPreOrders } from "./features/products/actions/product-actions";
@@ -1424,8 +1424,8 @@ export { getRelatedProducts } from "./features/products/actions/product-actions"
 // getStoreStorefrontProducts - Helper for get store storefront products.
 export { getStoreStorefrontProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// listAuctions - Helper for list auctions.
-export { listAuctions } from "./features/products/actions/product-actions";
+// listCollectorDrops - Helper for list collector drops.
+export { listCollectorDrops } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPreOrders - Helper for list pre orders.
 export { listPreOrders } from "./features/products/actions/product-actions";
@@ -1600,8 +1600,8 @@ export { createStoreAddressForSeller } from "./features/stores/actions/store-add
 // deleteStoreAddressForSeller - Helper for delete store address for seller.
 export { deleteStoreAddressForSeller } from "./features/stores/actions/store-address-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getStoreAuctions - Helper for get store auctions.
-export { getStoreAuctions } from "./features/stores/actions/store-query-actions";
+// getStoreCollectorDrops - Helper for get store collector drops.
+export { getStoreCollectorDrops } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreBySlug - Helper for get store by slug.
 export { getStoreBySlug } from "./features/stores/actions/store-query-actions";
@@ -1618,8 +1618,8 @@ export { listStoreAddressesForSeller } from "./features/stores/actions/store-add
 // listStores - Helper for list stores.
 export { listStores } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// storeAuctionsGET - Shared export for store auctions get.
-export { GET as storeAuctionsGET } from "./features/stores/api/[storeSlug]/auctions/route";
+// storeCollectorDropsGET - Shared export for store collector drops get.
+export { GET as storeCollectorDropsGET } from "./features/stores/api/[storeSlug]/collector-drops/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeProductsGET - Shared export for store products get.
 export { GET as storeProductsGET } from "./features/stores/api/[storeSlug]/products/route";
@@ -1751,8 +1751,8 @@ export { generateProductMetadata } from "./seo/metadata";
 export { generateCategoryMetadata } from "./seo/metadata";
 // generateBlogMetadata - Build blog metadata in server contexts.
 export { generateBlogMetadata } from "./seo/metadata";
-// generateAuctionMetadata - Build auction metadata in server contexts.
-export { generateAuctionMetadata } from "./seo/metadata";
+// generateCollectorDropMetadata - Build collector drop metadata in server contexts.
+export { generateCollectorDropMetadata } from "./seo/metadata";
 // generateSearchMetadata - Build search metadata in server contexts.
 export { generateSearchMetadata } from "./seo/metadata";
 // organizationJsonLd - Build organization structured data in server contexts.
@@ -1764,7 +1764,7 @@ export type {
 	ProductSeoInput,
 	CategorySeoInput,
 	BlogSeoInput,
-	AuctionSeoInput,
+	CollectorDropSeoInput,
 } from "./seo/index";
 
 // -- i18n / messages ---------------------------------------------------------
@@ -1856,9 +1856,9 @@ export {
   toPublicGroupMembers,
   type PublicGroupMember,
 } from "./_internal/server/features/products/group-members";
-export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/data";
+export { getCollectorDropForDetail, getProductFeaturesForCollectorDrop } from "./_internal/server/features/collector-drops/data";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/data";
-export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/data";
+export { getStoreForDetail, listStoreProductsInitial, listStoreCollectorDropsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/data";
 export { getDefaultStoreTabPath } from "./_internal/server/features/stores/tabs";
 
 // Public-store allow-list projection — the ONLY sanctioned way a StoreDocument
@@ -1890,7 +1890,7 @@ export { getCategoryForDetail, listRootCategories, listFeaturedCategories, listM
 
 // OG image renderers — high-level (renderXOg) + low-level primitive (renderXOgImage)
 export { renderProductOg, renderProductOgImage, type ProductOgData, type OgOptions } from "./_internal/server/features/products/og";
-export { renderAuctionOg, renderAuctionOgImage, type AuctionOgData } from "./_internal/server/features/auctions/og";
+export { renderCollectorDropOg, renderCollectorDropOgImage, type CollectorDropOgData } from "./_internal/server/features/collector-drops/og";
 export { renderPreOrderOg, renderPreOrderOgImage, type PreOrderOgData } from "./_internal/server/features/pre-orders/og";
 export { renderStoreOg, renderStoreOgImage, type StoreOgData } from "./_internal/server/features/stores/og";
 // The one derivation of a product's denormalized store fields. Exported because

@@ -13,7 +13,7 @@ import { useCanSeePrices } from "../../react/hooks/useCanSeePrices";
 /**
  * 🛑 CONTRACT WITH THE STRUCTURED DATA — do not rename.
  *
- * The Product/Auction JSON-LD declares this exact selector in its paywalled
+ * The Product/Collector Drop JSON-LD declares this exact selector in its paywalled
  * content markup (`hasPart.cssSelector`, see `appkit/src/seo/json-ld.ts`), which
  * is what tells Google the page legitimately carries an `offers.price` that an
  * anonymous visitor cannot see. Rename this and the selector silently matches

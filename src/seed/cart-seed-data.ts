@@ -32,7 +32,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const cartsSeedData: CartDocument[] = [
-  // Rehan's cart: 3 standard items + 1 won-auction (locked) + 1 accepted-offer (locked)
+  // Rehan's cart: 3 standard items + 1 won-collectorDrop (locked) + 1 accepted-offer (locked)
   {
     id: "user-yugi-muto",
     userId: "user-yugi-muto",
@@ -80,27 +80,27 @@ export const cartsSeedData: CartDocument[] = [
         updatedAt: daysAgo(1),
       },
       {
-        itemId: "cartitem-yugi-dragoon-storm-auction-won",
-        productId: "auction-beyblade-original-dragoon-storm",
-        productTitle: "Beyblade Original Dragoon Storm — Won Auction",
-        productImage: seedPhoto("auction-image-dragoon-storm-1-20260101", 600, 600),
+        itemId: "cartitem-yugi-dragoon-storm-collector-drop-won",
+        productId: "collectordrop-beyblade-original-dragoon-storm",
+        productTitle: "Beyblade Original Dragoon Storm — Won Collector Drop",
+        productImage: seedPhoto("collectordrop-image-dragoon-storm-1-20260101", 600, 600),
         price: 3499,
         currency: _CURRENCY,
         quantity: 1,
         storeId: "store-letitrip-official",
         storeName: "Beyblade Arena",
-        listingType: "auction",
+        listingType: "collector-drop",
         /*
-         * 🛑 `isAuctionWin` is what puts this line in the AUCTION lane.
+         * 🛑 `isCollectorDropWin` is what puts this line in the COLLECTOR_DROP lane.
          *
-         * `laneOf()` keys on `isAuctionWin || bidId` — `listingType: "auction"`
+         * `laneOf()` keys on `isCollectorDropWin || bidId` — `listingType: "collector-drop"`
          * and `locked: true` mean nothing to it. Without this flag the line fell
-         * into the STANDARD lane, so the cart's "Won Auctions" tab was empty
-         * while a non-removable auction line sat in the ordinary cart inflating
+         * into the STANDARD lane, so the cart's "Won Collector Drops" tab was empty
+         * while a non-removable collector drop line sat in the ordinary cart inflating
          * its total, and the lane gate never blocked anything. Found by the
          * tester 2026-09-06.
          */
-        isAuctionWin: true,
+        isCollectorDropWin: true,
         locked: true,
         addedAt: daysAgo(1),
         updatedAt: daysAgo(1),

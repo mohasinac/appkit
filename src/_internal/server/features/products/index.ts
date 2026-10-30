@@ -32,7 +32,7 @@ export {
 } from "./service";
 export {
   createProductAction,
-  createAuctionAction,
+  createCollectorDropAction,
   createPreOrderAction,
   updateProductAction,
   deleteProductAction,

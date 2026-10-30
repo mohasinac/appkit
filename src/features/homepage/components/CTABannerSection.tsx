@@ -66,7 +66,7 @@ export function CTABannerSection({
   primaryHref = String(ROUTES.PUBLIC.PRODUCTS),
   secondaryLabel = SECTION_COPY.bannerSecondaryCta,
   // Pairs with SECTION_COPY.bannerSecondaryCta — see the note there for why
-  // this banner must not default to /auctions.
+  // this banner must not default to /collector-drops.
   secondaryHref = String(ROUTES.PUBLIC.CATEGORIES),
   height = "md",
   backgroundImage,

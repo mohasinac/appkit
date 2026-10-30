@@ -89,7 +89,7 @@ export interface AdminOrderEditorViewProps {
    */
   addons?: OrderAddonBadgesOrder;
   /**
-   * How the buyer earned this price — a won auction, a buyout, an agreed
+   * How the buyer earned this price — a won collector drop, a buyout, an agreed
    * offer, a pre-order deposit, prize-draw entries.
    *
    * Support is the surface that needs this most: a buyer disputing "I agreed

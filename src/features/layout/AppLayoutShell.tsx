@@ -263,7 +263,7 @@ function CollapsibleNavGroup({
  *
  * 🛑 Children MUST be in here. `findActiveNavItem` picks the longest prefix
  * match, so leaving them out means a page that is only reachable as a child —
- * /auctions under "Products" — marks nothing at all, the same lost-your-place
+ * /collector-drops under "Products" — marks nothing at all, the same lost-your-place
  * bug the navbar's own comment documents.
  */
 function flattenSidebarLinks(
@@ -678,9 +678,9 @@ function SidebarContent({
    * Defaults to ENABLED while site settings are loading, matching the hook's
    * own contract — hiding the tile on first paint and popping it in a moment
    * later is worse than showing it to the handful of installs that have
-   * auctions switched off.
+   * collector drops switched off.
    */
-  const auctionsEnabled = useListingTypeFlags().isEnabled("auction");
+  const collectorDropsEnabled = useListingTypeFlags().isEnabled("collector-drop");
 
   const labels = {
     sectionTitle: sidebarProfileLabels?.sectionTitle ?? "Profile",
@@ -810,10 +810,10 @@ function SidebarContent({
         * Each stat LINKS to the list it counts — these were four inert `<Div>`s
         * once, which is Root Cause #56's shape at a smaller scale.
         *
-        * "Auctions Won" deep-links to the orders list filtered to the auction
+        * "Collector Drops Won" deep-links to the orders list filtered to the collector drop
         * LANE — not to `/user/bids`, which is open bids rather than won orders.
         * That filter is the `orderType` tab in `UserOrdersView`, so the two
-        * surfaces agree by construction. It is hidden outright when auctions are
+        * surfaces agree by construction. It is hidden outright when collector drops are
         * switched off in Site Settings: a disabled listing type has no browse
         * route, no nav entry and no new orders, so a tile counting it is a dead
         * facet (`brand-rows.ts` trap 3 — worse than absent, because it renders
@@ -837,10 +837,10 @@ function SidebarContent({
               <Text className={CLS_STAT_LABEL}>Reviews</Text>
             </TextLink>
           )}
-          {auctionsEnabled && user.stats.auctionsWon != null && userOrdersHref && (
-            <TextLink href={`${userOrdersHref}?orderType=auction`} variant="none" className={CLS_STAT_BOX}>
-              <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.auctionsWon}</Text>
-              <Text className={CLS_STAT_LABEL}>Auctions Won</Text>
+          {collectorDropsEnabled && user.stats.collectorDropsWon != null && userOrdersHref && (
+            <TextLink href={`${userOrdersHref}?orderType=collector-drop`} variant="none" className={CLS_STAT_BOX}>
+              <Text className="leading-none" color="primary" size="lg" weight="bold">{user.stats.collectorDropsWon}</Text>
+              <Text className={CLS_STAT_LABEL}>Collector Drops Won</Text>
             </TextLink>
           )}
         </Div>
@@ -1018,7 +1018,7 @@ export function AppLayoutShell({
 
   // The shell used to mirror BottomActions' `isVisible` here to pick a margin
   // for <Main>, and a comment warned it had to be kept in sync by hand (it had
-  // already drifted once — `secondaryLabel` was missing, so an auction bar shown
+  // already drifted once — `secondaryLabel` was missing, so a collector drop bar shown
   // by its countdown alone got no clearance). That mirror is gone: BottomChrome
   // measures the real tier and publishes --bottom-chrome-height, and the footer
   // reserves space from that. Nothing needs to guess any more.

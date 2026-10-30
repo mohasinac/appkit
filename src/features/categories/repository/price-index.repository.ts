@@ -36,7 +36,7 @@ import { BaseRepository } from "../../../providers/db-firebase";
 /** Which acquisition path a sale came through. Counts, not amounts. */
 export interface PriceIndexByPath {
   standard?: number;
-  auction?: number;
+  "collector-drop"?: number;
   offer?: number;
 }
 
@@ -129,7 +129,7 @@ export interface PriceIndexBand {
    * behaviour.
    */
   byColourway?: Record<string, PriceIndexConditionBand>;
-  lastSold?: { amount: number; at: Date; via?: "standard" | "auction" | "offer" };
+  lastSold?: { amount: number; at: Date; via?: "standard" | "collector-drop" | "offer" };
 }
 
 /**

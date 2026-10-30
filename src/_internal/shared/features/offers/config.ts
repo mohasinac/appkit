@@ -8,7 +8,7 @@
  *      at a matching percentage the two rounding rules could differ by a rupee —
  *      the button seeding an amount its own submit then bounced.
  * WHAT: One percentage default and one floor function, imported by every gate.
- *       Same discipline as `resolveMinBid` in the auctions config next door.
+ *       Same discipline as `resolveMinBid` in the collector drops config next door.
  *
  * EXPORTS:
  *   DEFAULT_MIN_OFFER_PERCENT, minOfferAmount, isOfferAmountValid,

@@ -139,7 +139,7 @@ function PreOrderInfoSection({
         </Row>
         {/*
           Owner quick-actions. `productId` and `storeId` are threaded in for
-          the same reason as the auction panel: this section is its own
+          the same reason as the collector drop panel: this section is its own
           component, so the product is not in scope, and without the store
           slug the owner branch could never match.
         */}

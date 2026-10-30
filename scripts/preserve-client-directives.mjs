@@ -35,7 +35,7 @@ const clientEntries = [
   "features/seller/index",
   "features/stores/index",
   "features/wishlist/index",
-  "features/auctions/index",
+  "features/collector-drops/index",
   "features/pre-orders/index",
   "features/before-after/index",
   "features/whatsapp-bot/index",

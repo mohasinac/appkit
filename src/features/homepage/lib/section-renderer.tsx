@@ -27,7 +27,7 @@ import { StatsCounterSection } from "../components/StatsCounterSection";
 import { TrustFeaturesSection } from "../components/TrustFeaturesSection";
 import { ShopByCategorySection } from "../components/ShopByCategorySection";
 import { FeaturedProductsSection } from "../components/FeaturedProductsSection";
-import { FeaturedAuctionsSection } from "../components/FeaturedAuctionsSection";
+import { FeaturedCollectorDropsSection } from "../components/FeaturedCollectorDropsSection";
 import { FeaturedPreOrdersSection } from "../components/FeaturedPreOrdersSection";
 import { FeaturedStoresSection } from "../components/FeaturedStoresSection";
 import { EventsSection } from "../components/EventsSection";
@@ -64,7 +64,7 @@ import type {
   StatsSectionConfig,
   CarouselSectionConfig,
   ProductsSectionConfig,
-  AuctionsSectionConfig,
+  CollectorDropsSectionConfig,
   PreOrdersSectionConfig,
   StoresSectionConfig,
   EventsSectionConfig,
@@ -100,7 +100,7 @@ import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 
 export interface SectionData {
   products?: ProductItem[];
-  auctions?: ProductItem[];
+  collectorDrops?: ProductItem[];
   preOrders?: ProductItem[];
   stores?: StoreListItem[];
   categories?: CategoryItem[];
@@ -390,20 +390,20 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
     },
   },
 
-  auctions: {
+  "collector-drops": {
     surfaces: ["homepage", "category", "brand"],
     render: ({ config, sectionData }) => {
-      const cfg = config as AuctionsSectionConfig;
+      const cfg = config as CollectorDropsSectionConfig;
       return (
-        <FeaturedAuctionsSection
-          title={cleanTitle(cfg?.title) || SECTION_TITLE.auctions}
+        <FeaturedCollectorDropsSection
+          title={cleanTitle(cfg?.title) || SECTION_TITLE.collectorDrops}
           description={cfg?.subtitle}
-          viewMoreHref={ROUTES.PUBLIC.AUCTIONS}
-          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.auctions}
+          viewMoreHref={ROUTES.PUBLIC.COLLECTOR_DROPS}
+          viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.collectorDrops}
           filterByBrand={cfg?.filterByBrand}
-          initialItems={sectionData.auctions}
+          initialItems={sectionData.collectorDrops}
           rows={cfg?.rows}
-          maxItems={cfg?.maxAuctions}
+          maxItems={cfg?.maxCollectorDrops}
           autoScroll={cfg?.autoScroll}
           scrollInterval={cfg?.scrollInterval}
           loop={cfg?.loop}

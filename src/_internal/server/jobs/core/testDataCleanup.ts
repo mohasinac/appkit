@@ -96,7 +96,7 @@ export async function runTestDataCleanup(
 
   // Cascade into bids referencing deleted test products — bids hold only a live
   // productId FK with no denormalized snapshot, so leaving them behind after the
-  // product is gone would create meaningless orphaned auction history.
+  // product is gone would create meaningless orphaned collector drop history.
   for (let i = 0; i < deletedProductIds.length; i += BID_CHUNK_SIZE) {
     const chunk = deletedProductIds.slice(i, i + BID_CHUNK_SIZE);
     if (chunk.length === 0) continue;

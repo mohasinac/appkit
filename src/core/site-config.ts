@@ -39,7 +39,7 @@ export const SITE_CONFIG: RuntimeSiteConfig = {
   nav: {
     home: ROUTES.HOME,
     products: ROUTES.PUBLIC.PRODUCTS as string,
-    auctions: ROUTES.PUBLIC.AUCTIONS as string,
+    collectorDrops: ROUTES.PUBLIC.COLLECTOR_DROPS as string,
     preOrders: ROUTES.PUBLIC.PRE_ORDERS as string,
     sellers: ROUTES.PUBLIC.SELLERS as string,
     stores: ROUTES.PUBLIC.STORES as string,

@@ -42,7 +42,7 @@ export interface PricedCartLine {
  *
  * Four cases, in priority order:
  *
- *  1. **A locked price** — an accepted offer or a won auction. `lockedPrice` is
+ *  1. **A locked price** — an accepted offer or a won collector drop. `lockedPrice` is
  *     the negotiated/won amount and it OVERRIDES the current listing price, which
  *     is the whole point of the negotiation. Until 2026-08-21 none of the five
  *     copies of this function looked at `lockedPrice`, so an accepted offer was

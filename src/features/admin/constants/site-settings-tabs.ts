@@ -101,8 +101,8 @@ export const SITE_SETTINGS_TABS = [
     keywords: ["delivery", "postage", "free shipping", "courier", "dispatch"],
   },
   {
-    id: "auction",
-    label: "⑩ Auction",
+    id: "collector-drop",
+    label: "⑩ Collector Drop",
     description: "Bid increments, anti-sniping extension and reserve-price rules.",
     keywords: ["bidding", "increment", "sniping", "reserve price", "extension"],
   },
@@ -152,7 +152,7 @@ export const SITE_SETTINGS_TABS = [
     id: "listings",
     label: "⑱ Listings",
     description: "Which listing types sellers may create, and their defaults.",
-    keywords: ["listing types", "auctions on", "enable", "categories"],
+    keywords: ["listing types", "collector drops on", "enable", "categories"],
   },
 ] as const satisfies readonly SiteSettingsTab[];
 

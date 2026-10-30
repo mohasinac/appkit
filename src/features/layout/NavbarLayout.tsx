@@ -425,7 +425,7 @@ export function NavbarLayout({
   //
   // The sidebars and the mobile drawer were always correct, because they
   // already called this helper — which is why the mobile bottom nav highlighted
-  // "Auctions" on /auctions while the desktop navbar above it highlighted
+  // "Collector Drops" on /collector-drops while the desktop navbar above it highlighted
   // nothing. One algorithm, four surfaces.
   //
   // `findActiveNavItem` prefix-matches (`activeHref.startsWith(`${href}/`)`) and
@@ -433,7 +433,7 @@ export function NavbarLayout({
   // every page and a more specific entry always beats a shorter one.
   //
   // 🛑 CHILDREN COUNT. A dropdown parent links to one page and stands for
-  // several — "Products" owns /auctions, /bundles and the rest — so resolving
+  // several — "Products" owns /collector-drops, /bundles and the rest — so resolving
   // against top-level hrefs alone would mark NOTHING on four of the six pages
   // the parent represents, which is the same lost-your-place bug described
   // above, just one level down. Each child is resolved as a candidate carrying

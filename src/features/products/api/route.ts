@@ -96,8 +96,8 @@ const productMutateSchema = z
  *
  * It used to be an independent copy: its own `buildFilters`, its own
  * `validateSieveFilters`, and its own filter allowlist that omitted
- * `auctionEndDate` / `preOrderDeliveryDate` / `prizeRevealStatus` — so on this
- * path an ended auction could not be filtered out even by a caller that asked
+ * `collectorDropEndDate` / `preOrderDeliveryDate` / `prizeRevealStatus` — so on this
+ * path an ended collector drop could not be filtered out even by a caller that asked
  * for it, and an `inStock=true` became a raw `stockQuantity>0` pushed straight
  * into Firestore, the FAILED_PRECONDITION shape Root Cause #59 documents.
  * Two implementations of one query is the drift itself; there is now one.

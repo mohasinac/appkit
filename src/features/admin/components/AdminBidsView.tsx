@@ -17,7 +17,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BID_STATUS_TABS } from "../constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
-import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
+import { buildBidDetailFields, bidStatusBadge } from "../../collector-drops/components/bid-detail-fields";
 import {
   toRecordArray,
   toRelativeDate,
@@ -206,7 +206,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
         }}
         isDeleting={cancelMutation.isPending}
         title="Cancel this bid?"
-        message="This will mark the bid as cancelled and notify the bidder. The auction will continue with remaining active bids."
+        message="This will mark the bid as cancelled and notify the bidder. The collector drop will continue with remaining active bids."
         confirmText="Cancel bid"
         variant="warning"
       />

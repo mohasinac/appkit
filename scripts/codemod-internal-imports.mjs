@@ -58,7 +58,7 @@ const internalRoots = {
   "features/seller": "features/seller",
   "features/stores": "features/stores",
   "features/wishlist": "features/wishlist",
-  "features/auctions": "features/auctions",
+  "features/collector-drops": "features/collector-drops",
   "features/pre-orders": "features/pre-orders",
   "features/before-after": "features/before-after",
   "features/whatsapp-bot": "features/whatsapp-bot",

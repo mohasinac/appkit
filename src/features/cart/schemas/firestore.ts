@@ -107,8 +107,8 @@ export interface CartItemDocument {
   storeName: string;
   /**
    * Snapshot of the product's listing-kind at add-to-cart time (SB1-G Phase 4).
-   * Drives order-grouping (auctions/pre-orders settle separately from standard
-   * carts) and cart-side UI badges. Replaces the legacy `isAuctionWin`/`isPreOrder`
+   * Drives order-grouping (collector drops/pre-orders settle separately from standard
+   * carts) and cart-side UI badges. Replaces the legacy `isCollectorDropWin`/`isPreOrder`
    * pair on the cart item.
    */
   // SB-UNI-F 2026-05-13 — Phase 2 union extension. Cart capability is
@@ -119,38 +119,38 @@ export interface CartItemDocument {
   isOffer?: boolean;
   offerId?: string;
   /**
-   * True when the line was created by auction settlement for the winning
-   * bidder. Auctions are `canAddToCart: false` for user-initiated adds — this
+   * True when the line was created by collector drop settlement for the winning
+   * bidder. Collector Drops are `canAddToCart: false` for user-initiated adds — this
    * line is written by the settlement job through the repository directly, and
-   * is the ONLY way an auction reaches the cart.
+   * is the ONLY way a collector drop reaches the cart.
    */
-  isAuctionWin?: boolean;
-  /** The auction product this win refers to (= productId, kept explicit). */
-  auctionId?: string;
+  isCollectorDropWin?: boolean;
+  /** The collector drop product this win refers to (= productId, kept explicit). */
+  collectorDropId?: string;
   /** The winning bid, so the resulting order can be linked back to it. */
   bidId?: string;
   /**
-   * True when this auction line came from Buy Now rather than from settlement.
+   * True when this collector drop line came from Buy Now rather than from settlement.
    *
-   * The two are NOT interchangeable even though both sit in the auction lane:
-   *  - a settlement line is a FINISHED auction — the item is already sold, the
+   * The two are NOT interchangeable even though both sit in the collector drop lane:
+   *  - a settlement line is a FINISHED collector drop — the item is already sold, the
    *    buyer owes it, and the 48h window costs nobody anything;
-   *  - a buyout line is a CLAIM on an auction that is still live and still
+   *  - a buyout line is a CLAIM on a collector drop that is still live and still
    *    taking bids. The item is not sold yet; it becomes sold only when
-   *    `claimAuctionForCheckout` commits at order time. Hence the 1h window,
+   *    `claimCollectorDropForCheckout` commits at order time. Hence the 1h window,
    *    and hence a lapse that cancels the bid rather than forfeiting it —
-   *    nothing was won, so nothing is forfeited, and the auction is untouched.
+   *    nothing was won, so nothing is forfeited, and the collector drop is untouched.
    */
   isBuyout?: boolean;
   /** Locked offer/winning-bid price — overrides normal product price at checkout */
   lockedPrice?: number;
   /**
    * When the claim on this locked price lapses. Mirrors the offer's own
-   * `checkoutDeadline`; set to now + 48h for a won auction. The expiry sweep
+   * `checkoutDeadline`; set to now + 48h for a won collector drop. The expiry sweep
    * clears lines past this point.
    */
   checkoutDeadline?: Date;
-  /** When true the item cannot be removed or have its quantity changed. Set on won-auction and accepted-offer items that require mandatory payment. */
+  /** When true the item cannot be removed or have its quantity changed. Set on won-collector-drop and accepted-offer items that require mandatory payment. */
   locked?: boolean;
   /**
    * SB-UNI-4 2026-05-13 — bundle identifier when this cart line represents a
@@ -398,8 +398,8 @@ export const CART_FIELDS = {
     LISTING_TYPE: "listingType",
     IS_OFFER: "isOffer",
     OFFER_ID: "offerId",
-    IS_AUCTION_WIN: "isAuctionWin",
-    AUCTION_ID: "auctionId",
+    IS_COLLECTOR_DROP_WIN: "isCollectorDropWin",
+    COLLECTOR_DROP_ID: "collectorDropId",
     BID_ID: "bidId",
     IS_BUYOUT: "isBuyout",
     LOCKED_PRICE: "lockedPrice",
@@ -449,10 +449,10 @@ export type AddToCartInput = {
   listingType: ListingType;
   isOffer?: boolean;
   offerId?: string;
-  isAuctionWin?: boolean;
-  auctionId?: string;
+  isCollectorDropWin?: boolean;
+  collectorDropId?: string;
   bidId?: string;
-  /** See `CartItemDocument.isBuyout` — a claim on a live auction, not a win. */
+  /** See `CartItemDocument.isBuyout` — a claim on a live collector drop, not a win. */
   isBuyout?: boolean;
   lockedPrice?: number;
   checkoutDeadline?: Date;

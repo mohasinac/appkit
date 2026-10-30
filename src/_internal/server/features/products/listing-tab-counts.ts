@@ -154,7 +154,7 @@ interface UnavailableTally {
    * quietly too high.
    *
    * 🛑 PER TYPE, not one global flag. The equality clauses are index-free
-   * (Firestore merge-joins them), but the auction clause is an inequality and
+   * (Firestore merge-joins them), but the collector drop clause is an inequality and
    * needs a composite index per scope — so under a global flag one missing
    * index would cost accurate badges on all NINE types. Narrow degradation is
    * the difference between a feature that mostly works and one that is inert.
@@ -239,18 +239,18 @@ async function unavailableByType(
        * must be its own field (Root Cause #59) — so that one clause does need
        * an index, which is exactly why `unknown` is tracked per type.
        *
-       * 🛑 THE AUCTION INDEXES ARE NOT DECLARED, deliberately. Until they are,
-       * the auction clause returns FAILED_PRECONDITION, `unknown` gains
-       * `auction`, and that ONE badge falls back to its total — every other
+       * 🛑 THE COLLECTOR_DROP INDEXES ARE NOT DECLARED, deliberately. Until they are,
+       * the collector drop clause returns FAILED_PRECONDITION, `unknown` gains
+       * `collector drop`, and that ONE badge falls back to its total — every other
        * type stays exact. Adding them to
        * `appkit/firebase/base/firestore.indexes.json` is only half the change:
        * an undeployed index file fails `audit-firebase-rules-deployed`, so the
        * three entries below and `npm run firebase -- deploy --only
        * firestore:indexes` belong in the same session.
        *
-       *   products: status ASC, categorySlugs CONTAINS, auctionEndDate DESC
-       *   products: brand  ASC, status ASC,             auctionEndDate DESC
-       *   products: storeId ASC, status ASC,            auctionEndDate DESC
+       *   products: status ASC, categorySlugs CONTAINS, collectorDropEndDate DESC
+       *   products: brand  ASC, status ASC,             collectorDropEndDate DESC
+       *   products: storeId ASC, status ASC,            collectorDropEndDate DESC
        *
        * One per scope the tab bars count in, because `buildScopedQuery` leads
        * with a different equality for each.

@@ -6,10 +6,10 @@
  * `ProductCard` rendered SEVEN independent badges into one absolutely-
  * positioned stack, each unconditionally shown when its own condition held:
  *
- *   -20%  ·  Auction  ·  Bundled  ·  In Set  ·  Taking Offers  ·  Final Sale
+ *   -20%  ·  Collector Drop  ·  Bundled  ·  In Set  ·  Taking Offers  ·  Final Sale
  *   ·  Has Variants
  *
- * None of them knew about the others. A discounted auction that is a bundled
+ * None of them knew about the others. A discounted collector drop that is a bundled
  * set member with offers enabled, final sale and variants renders all seven,
  * stacked top-left, covering the product photograph the card exists to show.
  * Nothing is wrong with any one of those badges; the defect is that nobody
@@ -21,7 +21,7 @@
  * the whole test, and it sorts the seven cleanly:
  *
  *   KEEPS ITS PLACE — changes the decision to click
- *     · listing TYPE: an auction and a pre-order are different transactions
+ *     · listing TYPE: a collector drop and a pre-order are different transactions
  *       with different CTAs. Not knowing is a wasted click.
  *     · DISCOUNT: the single commercial reason to look at this card first.
  *

@@ -1036,8 +1036,8 @@ export { SEO_CONFIG } from "./seo/metadata";
 // aggregateRatingJsonLd - Shared export for aggregate rating json ld.
 export { aggregateRatingJsonLd } from "./seo/json-ld";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// auctionJsonLd - Shared export for auction json ld.
-export { auctionJsonLd } from "./seo/json-ld";
+// collectorDropJsonLd - Shared export for collector drop json ld.
+export { collectorDropJsonLd } from "./seo/json-ld";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // blogPostJsonLd - Shared export for blog post json ld.
 export { blogPostJsonLd } from "./seo/json-ld";
@@ -1060,8 +1060,8 @@ export { faqJsonLd } from "./seo/json-ld";
 // gatedPriceWebPageJsonLd - Shared export for gated price web page json ld.
 export { gatedPriceWebPageJsonLd } from "./seo/json-ld";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// generateAuctionMetadata - Helper for generate auction metadata.
-export { generateAuctionMetadata } from "./seo/metadata";
+// generateCollectorDropMetadata - Helper for generate collector drop metadata.
+export { generateCollectorDropMetadata } from "./seo/metadata";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // generateBlogMetadata - Helper for generate blog metadata.
 export { generateBlogMetadata } from "./seo/metadata";
@@ -1093,8 +1093,8 @@ export { reviewJsonLd } from "./seo/json-ld";
 // searchBoxJsonLd - Shared export for search box json ld.
 export { searchBoxJsonLd } from "./seo/json-ld";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionSeoInput - Type contract for auction seo input.
-export type { AuctionSeoInput } from "./seo/metadata";
+// CollectorDropSeoInput - Type contract for collector drop seo input.
+export type { CollectorDropSeoInput } from "./seo/metadata";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BlogPostJsonLdInput - Type contract for blog post json ld input.
 export type { BlogPostJsonLdInput } from "./seo/json-ld";
@@ -1728,7 +1728,7 @@ export { UserRepository } from "./features/auth/repository/user.repository";
 export { addressesRepository } from "./features/addresses/repository/addresses.repository";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // bidRepository - Shared export for bid repository.
-export { bidRepository } from "./features/auctions/repository/bid.repository";
+export { bidRepository } from "./features/collector-drops/repository/bid.repository";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // blogRepository - Shared export for blog repository.
 export { blogRepository } from "./features/blog/repository/blog.repository";
@@ -2072,7 +2072,7 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // productsBeybladeXSeedData - Real, wiki-verified Beyblade X listings under store-letitrip-official (4 tops, 1 stadium, 1 Product Group of 7).
 // 1,173-node taxonomy has a catalogue in it (967 of 968 leaves were empty).
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsAuctionsSeedData - Seed data for auction product listings.
+// productsCollectorDropsSeedData - Seed data for collector drop product listings.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPreordersSeedData - Seed data for pre-order product listings.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -2770,8 +2770,8 @@ export { FeesView } from "./features/about/components/FeesView";
 // HelpPageView - Component for help page view.
 export { HelpPageView } from "./features/about/components/HelpPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HowAuctionsWorkView - Component for how auctions work view.
-export { HowAuctionsWorkView } from "./features/about/components/HowAuctionsWorkView";
+// HowCollectorDropsWorkView - Component for how collector drops work view.
+export { HowCollectorDropsWorkView } from "./features/about/components/HowCollectorDropsWorkView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HowCheckoutWorksView - Component for how checkout works view.
 export { HowCheckoutWorksView } from "./features/about/components/HowCheckoutWorksView";
@@ -2836,8 +2836,8 @@ export type { FeesViewProps } from "./features/about/components/FeesView";
 // HelpPageViewProps - Type contract for help page view props.
 export type { HelpPageViewProps } from "./features/about/components/HelpPageView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// HowAuctionsWorkViewProps - Type contract for how auctions work view props.
-export type { HowAuctionsWorkViewProps } from "./features/about/components/HowAuctionsWorkView";
+// HowCollectorDropsWorkViewProps - Type contract for how collector drops work view props.
+export type { HowCollectorDropsWorkViewProps } from "./features/about/components/HowCollectorDropsWorkView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowCheckoutWorksViewProps - Type contract for how checkout works view props.
 export type { HowCheckoutWorksViewProps } from "./features/about/components/HowCheckoutWorksView";
@@ -3321,7 +3321,7 @@ export type { AdminRandomLotsViewProps } from "./features/admin/components/Admin
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminProductsView - Component for admin products view.
 export { AdminProductsView } from "./features/admin/components/AdminProductsView";
-// AdminProductEditorView - Component for admin product create/edit form (3-mode: standard/auction/pre-order).
+// AdminProductEditorView - Component for admin product create/edit form (3-mode: standard/collector drop/pre-order).
 export { AdminProductEditorView } from "./features/admin/components/AdminProductEditorView";
 export type { AdminProductEditorViewProps } from "./features/admin/components/AdminProductEditorView";
 // CategoryQuickCreateForm - Lightweight inline create form for categories used in PaginatedSelect.
@@ -3823,167 +3823,167 @@ export type { AdminActor } from "./features/admin/actions/admin-actions";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 
-// ./features/auctions/index
+// ./features/collector-drops/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // BID_COLLECTION - Constant used across modules.
-export { BID_COLLECTION } from "./features/auctions/schemas/firestore";
+export { BID_COLLECTION } from "./features/collector-drops/schemas/firestore";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // BID_INDEXED_FIELDS - Constant used across modules.
-export { BID_INDEXED_FIELDS } from "./features/auctions/schemas/firestore";
+export { BID_INDEXED_FIELDS } from "./features/collector-drops/schemas/firestore";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // BID_PUBLIC_FIELDS - Constant used across modules.
-export { BID_PUBLIC_FIELDS } from "./features/auctions/schemas/firestore";
+export { BID_PUBLIC_FIELDS } from "./features/collector-drops/schemas/firestore";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // BID_UPDATABLE_FIELDS - Constant used across modules.
-export { BID_UPDATABLE_FIELDS } from "./features/auctions/schemas/firestore";
+export { BID_UPDATABLE_FIELDS } from "./features/collector-drops/schemas/firestore";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BidStatusValues - Model for bid status values.
-export { BidStatusValues } from "./features/auctions/schemas/firestore";
+export { BidStatusValues } from "./features/collector-drops/schemas/firestore";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_BID_DATA - Constant used across modules.
-export { DEFAULT_BID_DATA } from "./features/auctions/schemas/firestore";
+export { DEFAULT_BID_DATA } from "./features/collector-drops/schemas/firestore";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AuctionBidsTable - Collapsible auction-grouped bids table for buyer/store/admin portals.
-export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
-export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
-// MarketplaceAuctionCard - Component for marketplace auction card.
-export { MarketplaceAuctionCard } from "./features/auctions/components/MarketplaceAuctionCard";
+// CollectorDropBidsTable - Collapsible collectordrop-grouped bids table for buyer/store/admin portals.
+export { CollectorDropBidsTable } from "./features/collector-drops/components/CollectorDropBidsTable";
+export type { CollectorDropBidsTableProps, CollectorDropWithBids } from "./features/collector-drops/components/CollectorDropBidsTable";
+// MarketplaceCollectorDropCard - Component for marketplace collector drop card.
+export { MarketplaceCollectorDropCard } from "./features/collector-drops/components/MarketplaceCollectorDropCard";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// MarketplaceAuctionGrid - Component for marketplace auction grid.
-export { MarketplaceAuctionGrid } from "./features/auctions/components/MarketplaceAuctionGrid";
+// MarketplaceCollectorDropGrid - Component for marketplace collector drop grid.
+export { MarketplaceCollectorDropGrid } from "./features/collector-drops/components/MarketplaceCollectorDropGrid";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// auctionAdminColumns - Shared export for auction admin columns.
-export { auctionAdminColumns } from "./features/auctions/columns/index";
+// collectorDropAdminColumns - Shared export for collector drop admin columns.
+export { collectorDropAdminColumns } from "./features/collector-drops/columns/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// auctionItemSchema - Model for auction item schema.
-export { auctionItemSchema } from "./features/auctions/schemas/index";
+// collectorDropItemSchema - Model for collector drop item schema.
+export { collectorDropItemSchema } from "./features/collector-drops/schemas/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// auctionListParamsSchema - Model for auction list params schema.
-export { auctionListParamsSchema } from "./features/auctions/schemas/index";
+// collectorDropListParamsSchema - Model for collector drop list params schema.
+export { collectorDropListParamsSchema } from "./features/collector-drops/schemas/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// auctionStatusSchema - Model for auction status schema.
-export { auctionStatusSchema } from "./features/auctions/schemas/index";
+// collectorDropStatusSchema - Model for collector drop status schema.
+export { collectorDropStatusSchema } from "./features/collector-drops/schemas/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // bidAdminColumns - Shared export for bid admin columns.
-export { bidAdminColumns } from "./features/auctions/columns/index";
+export { bidAdminColumns } from "./features/collector-drops/columns/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // bidQueryHelpers - Shared export for bid query helpers.
-export { bidQueryHelpers } from "./features/auctions/schemas/firestore";
+export { bidQueryHelpers } from "./features/collector-drops/schemas/firestore";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // bidRecordSchema - Model for bid record schema.
-export { bidRecordSchema } from "./features/auctions/schemas/index";
+export { bidRecordSchema } from "./features/collector-drops/schemas/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// buildAuctionColumns - Helper for build auction columns.
-export { buildAuctionColumns } from "./features/auctions/columns/index";
+// buildCollectorDropColumns - Helper for build collector drop columns.
+export { buildCollectorDropColumns } from "./features/collector-drops/columns/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // buildBidColumns - Helper for build bid columns.
-export { buildBidColumns } from "./features/auctions/columns/index";
+export { buildBidColumns } from "./features/collector-drops/columns/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // createBidId - Helper for create bid id.
-export { createBidId } from "./features/auctions/schemas/firestore";
+export { createBidId } from "./features/collector-drops/schemas/firestore";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useAuction - React hook for use auction.
-export { useAuction } from "./features/auctions/hooks/useAuctions";
+// useCollectorDrop - React hook for use collector drop.
+export { useCollectorDrop } from "./features/collector-drops/hooks/useCollectorDrops";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useAuctionBids - React hook for use auction bids.
-export { useAuctionBids } from "./features/auctions/hooks/useAuctions";
+// useCollectorDropBids - React hook for use collector drop bids.
+export { useCollectorDropBids } from "./features/collector-drops/hooks/useCollectorDrops";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useAuctionDetail - React hook for use auction detail.
-export { useAuctionDetail } from "./features/auctions/hooks/useAuctions";
+// useCollectorDropDetail - React hook for use collector drop detail.
+export { useCollectorDropDetail } from "./features/collector-drops/hooks/useCollectorDrops";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useAuctions - React hook for use auctions.
-export { useAuctions } from "./features/auctions/hooks/useAuctions";
+// useCollectorDrops - React hook for use collector drops.
+export { useCollectorDrops } from "./features/collector-drops/hooks/useCollectorDrops";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // usePlaceBid - React hook for use place bid.
-export { usePlaceBid } from "./features/auctions/hooks/usePlaceBid";
+export { usePlaceBid } from "./features/collector-drops/hooks/usePlaceBid";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useRealtimeBids - React hook for use realtime bids.
-export { useRealtimeBids } from "./features/auctions/hooks/useRealtimeBids";
+export { useRealtimeBids } from "./features/collector-drops/hooks/useRealtimeBids";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionItem - Type contract for auction item.
-export type { AuctionItem } from "./features/auctions/types/index";
+// CollectorDropItem - Type contract for collector drop item.
+export type { CollectorDropItem } from "./features/collector-drops/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionListParams - Type contract for auction list params.
-export type { AuctionListParams } from "./features/auctions/types/index";
+// CollectorDropListParams - Type contract for collector drop list params.
+export type { CollectorDropListParams } from "./features/collector-drops/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionListResponse - Type contract for auction list response.
-export type { AuctionListResponse } from "./features/auctions/types/index";
+// CollectorDropListResponse - Type contract for collector drop list response.
+export type { CollectorDropListResponse } from "./features/collector-drops/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidAdminUpdateInput - Type contract for bid admin update input.
-export type { BidAdminUpdateInput } from "./features/auctions/schemas/firestore";
+export type { BidAdminUpdateInput } from "./features/collector-drops/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidCreateInput - Type contract for bid create input.
-export type { BidCreateInput } from "./features/auctions/schemas/firestore";
+export type { BidCreateInput } from "./features/collector-drops/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidDocument - Type contract for bid document.
-export type { BidDocument } from "./features/auctions/schemas/firestore";
+export type { BidDocument } from "./features/collector-drops/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidListResponse - Type contract for bid list response.
-export type { BidListResponse } from "./features/auctions/types/index";
+export type { BidListResponse } from "./features/collector-drops/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidRecord - Type contract for bid record.
-export type { BidRecord } from "./features/auctions/types/index";
+export type { BidRecord } from "./features/collector-drops/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidResult - Type contract for bid result.
-export type { BidResult } from "./features/auctions/hooks/usePlaceBid";
+export type { BidResult } from "./features/collector-drops/hooks/usePlaceBid";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidStatus - Type contract for bid status.
-export type { BidStatus } from "./features/auctions/schemas/firestore";
+export type { BidStatus } from "./features/collector-drops/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidUpdateInput - Type contract for bid update input.
-export type { BidUpdateInput } from "./features/auctions/schemas/firestore";
+export type { BidUpdateInput } from "./features/collector-drops/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceAuctionCardData - Type contract for marketplace auction card data.
-export type { MarketplaceAuctionCardData } from "./features/auctions/components/MarketplaceAuctionCard";
+// MarketplaceCollectorDropCardData - Type contract for marketplace collector drop card data.
+export type { MarketplaceCollectorDropCardData } from "./features/collector-drops/components/MarketplaceCollectorDropCard";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceAuctionCardLabels - Type contract for marketplace auction card labels.
-export type { MarketplaceAuctionCardLabels } from "./features/auctions/components/MarketplaceAuctionCard";
+// MarketplaceCollectorDropCardLabels - Type contract for marketplace collector drop card labels.
+export type { MarketplaceCollectorDropCardLabels } from "./features/collector-drops/components/MarketplaceCollectorDropCard";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceAuctionCardProps - Type contract for marketplace auction card props.
-export type { MarketplaceAuctionCardProps } from "./features/auctions/components/MarketplaceAuctionCard";
+// MarketplaceCollectorDropCardProps - Type contract for marketplace collector drop card props.
+export type { MarketplaceCollectorDropCardProps } from "./features/collector-drops/components/MarketplaceCollectorDropCard";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceAuctionGridLabels - Type contract for marketplace auction grid labels.
-export type { MarketplaceAuctionGridLabels } from "./features/auctions/components/MarketplaceAuctionGrid";
+// MarketplaceCollectorDropGridLabels - Type contract for marketplace collector drop grid labels.
+export type { MarketplaceCollectorDropGridLabels } from "./features/collector-drops/components/MarketplaceCollectorDropGrid";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// MarketplaceAuctionGridProps - Type contract for marketplace auction grid props.
-export type { MarketplaceAuctionGridProps } from "./features/auctions/components/MarketplaceAuctionGrid";
+// MarketplaceCollectorDropGridProps - Type contract for marketplace collector drop grid props.
+export type { MarketplaceCollectorDropGridProps } from "./features/collector-drops/components/MarketplaceCollectorDropGrid";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PlaceBidPayload - Type contract for place bid payload.
-export type { PlaceBidPayload } from "./features/auctions/hooks/usePlaceBid";
+export type { PlaceBidPayload } from "./features/collector-drops/hooks/usePlaceBid";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PublicBid - Type contract for public bid.
-export type { PublicBid } from "./features/auctions/types/index";
+export type { PublicBid } from "./features/collector-drops/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // RealtimeBidData - Type contract for realtime bid data.
-export type { RealtimeBidData } from "./features/auctions/hooks/useRealtimeBids";
+export type { RealtimeBidData } from "./features/collector-drops/hooks/useRealtimeBids";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UseRealtimeBidsReturn - Type contract for use realtime bids return.
-export type { UseRealtimeBidsReturn } from "./features/auctions/hooks/useRealtimeBids";
+export type { UseRealtimeBidsReturn } from "./features/collector-drops/hooks/useRealtimeBids";
 
-// ./features/auctions/server
+// ./features/collector-drops/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // GET - Constant used across modules.
-export { GET } from "./features/auctions/api/route";
+export { GET } from "./features/collector-drops/api/route";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // bidsGET - Shared export for bids get.
-export { GET as bidsGET } from "./features/auctions/api/route";
+export { GET as bidsGET } from "./features/collector-drops/api/route";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getBidById - Helper for get bid by id.
-export { getBidById } from "./features/auctions/actions/bid-actions";
+export { getBidById } from "./features/collector-drops/actions/bid-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listBidsByProduct - Helper for list bids by product.
-export { listBidsByProduct } from "./features/auctions/actions/bid-actions";
+export { listBidsByProduct } from "./features/collector-drops/actions/bid-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// placeBid / buyNowAuction - Shared export for bid + buy-now actions.
-export { placeBid, buyNowAuction } from "./features/auctions/actions/bid-actions";
+// placeBid / buyNowCollectorDrop - Shared export for bid + buy-now actions.
+export { placeBid, buyNowCollectorDrop } from "./features/collector-drops/actions/bid-actions";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PlaceBidInput / BuyNowAuctionInput - Type contracts for bid + buy-now input.
-export type { PlaceBidInput, BuyNowAuctionInput, BuyNowAuctionResult } from "./features/auctions/actions/bid-actions";
+// PlaceBidInput / BuyNowCollectorDropInput - Type contracts for bid + buy-now input.
+export type { PlaceBidInput, BuyNowCollectorDropInput, BuyNowCollectorDropResult } from "./features/collector-drops/actions/bid-actions";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PlaceBidResult - Type contract for place bid result.
-export type { PlaceBidResult } from "./features/auctions/actions/bid-actions";
+export type { PlaceBidResult } from "./features/collector-drops/actions/bid-actions";
 
 // ./features/auth/server
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -4995,9 +4995,6 @@ export { CorporateRepository } from "./features/corporate/repository/corporate.r
 // _resetCronRegistry - Shared export for reset cron registry.
 export { _resetCronRegistry } from "./features/cron/registry";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// createAuctionExpiryJob - Helper for create auction expiry job.
-export { createAuctionExpiryJob } from "./features/cron/jobs/auction-expiry.job";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // createCronJob - Helper for create cron job.
 export { createCronJob } from "./features/cron/registry";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -5770,8 +5767,8 @@ export { WhatsAppCommunitySection } from "./features/homepage/components/WhatsAp
 // useBlogArticles - React hook for use blog articles.
 export { useBlogArticles } from "./features/homepage/hooks/useBlogArticles";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useFeaturedAuctions - React hook for use featured auctions.
-export { useFeaturedAuctions } from "./features/homepage/hooks/useFeaturedAuctions";
+// useFeaturedCollectorDrops - React hook for use featured collector drops.
+export { useFeaturedCollectorDrops } from "./features/homepage/hooks/useFeaturedCollectorDrops";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useFeaturedPreOrders - React hook for use featured pre orders.
 export { useFeaturedPreOrders } from "./features/homepage/hooks/useFeaturedPreOrders";
@@ -6816,10 +6813,10 @@ export { POST as preOrdersPOST } from "./features/pre-orders/api/route";
 
 // ./features/products/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AuctionDetailView - Component for auction detail view.
-export { AuctionDetailView } from "./features/products/components/AuctionDetailView";
-// [SERVER-RSC]-Self-fetching detail page view for auctions.
-// [SERVER-RSC]-Self-fetching index page view for auctions.
+// CollectorDropDetailView - Component for collector drop detail view.
+export { CollectorDropDetailView } from "./features/products/components/CollectorDropDetailView";
+// [SERVER-RSC]-Self-fetching detail page view for collector drops.
+// [SERVER-RSC]-Self-fetching index page view for collector drops.
 // [SERVER-RSC]-Self-fetching index page view for `/bundles` (categoryType:"bundle" rows).
 export type { BundlesListViewProps } from "./features/categories/components/BundlesListView";
 
@@ -6973,8 +6970,8 @@ export { RelatedProducts } from "./features/products/components/RelatedProducts"
 // buildProductColumns - Helper for build product columns.
 export { buildProductColumns } from "./features/products/columns/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// createAuctionId - Helper for create auction id.
-export { createAuctionId } from "./features/products/schemas/firestore";
+// createCollectorDropId - Helper for create collector drop id.
+export { createCollectorDropId } from "./features/products/schemas/firestore";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // createPreOrderId - Helper for create pre order id.
 export { createPreOrderId } from "./features/products/schemas/firestore";
@@ -6995,7 +6992,7 @@ export { getProductTableColumns } from "./features/products/columns/productTable
 // SB-UNI-F 2026-05-13 â€" Phase 2 predicates added (classified/digital-code/live).
 export {
  normalizeListingType,
- isAuctionListing,
+ isCollectorDropListing,
  isPreOrderListing,
  isStandardListing,
  isRandomLotListing,
@@ -7240,8 +7237,8 @@ export { useProducts } from "./features/products/hooks/useProducts";
 // useRelatedProducts - React hook for use related products.
 export { useRelatedProducts } from "./features/products/hooks/useRelatedProducts";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionDetailViewProps - Type contract for auction detail view props.
-export type { AuctionDetailViewProps } from "./features/products/components/AuctionDetailView";
+// CollectorDropDetailViewProps - Type contract for collector drop detail view props.
+export type { CollectorDropDetailViewProps } from "./features/products/components/CollectorDropDetailView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidHistoryEntry - Type contract for bid history entry.
 export type { BidHistoryEntry } from "./features/products/components/BidHistory";
@@ -7347,8 +7344,8 @@ export type { RelatedProductsProps } from "./features/products/components/Relate
 
 // ./features/products/server
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getFeaturedAuctions - Helper for get featured auctions.
-export { getFeaturedAuctions } from "./features/products/actions/product-actions";
+// getFeaturedCollectorDrops - Helper for get featured collector drops.
+export { getFeaturedCollectorDrops } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getFeaturedPreOrders - Helper for get featured pre orders.
 export { getFeaturedPreOrders } from "./features/products/actions/product-actions";
@@ -7356,8 +7353,8 @@ export { getFeaturedPreOrders } from "./features/products/actions/product-action
 // getFeaturedProducts - Helper for get featured products.
 export { getFeaturedProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getLatestAuctions - Helper for get latest auctions.
-export { getLatestAuctions } from "./features/products/actions/product-actions";
+// getLatestCollectorDrops - Helper for get latest collector drops.
+export { getLatestCollectorDrops } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getLatestPreOrders - Helper for get latest pre orders.
 export { getLatestPreOrders } from "./features/products/actions/product-actions";
@@ -7374,8 +7371,8 @@ export { getRelatedProducts } from "./features/products/actions/product-actions"
 // getStoreStorefrontProducts - Helper for get store storefront products.
 export { getStoreStorefrontProducts } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// listAuctions - Helper for list auctions.
-export { listAuctions } from "./features/products/actions/product-actions";
+// listCollectorDrops - Helper for list collector drops.
+export { listCollectorDrops } from "./features/products/actions/product-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listPreOrders - Helper for list pre orders.
 export { listPreOrders } from "./features/products/actions/product-actions";
@@ -7877,7 +7874,7 @@ export { SellerCouponsView } from "./features/seller/components/SellerCouponsVie
 export { SellerCouponEditorView } from "./features/seller/components/SellerCouponEditorView";
 export type { SellerCouponEditorViewProps, CouponEditorDraft } from "./features/seller/components/SellerCouponEditorView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerBidsView - Read-only view showing all bids on a seller's auction products.
+// SellerBidsView - Read-only view showing all bids on a seller's collector drop products.
 export { SellerBidsView } from "./features/seller/components/SellerBidsView";
 export type { SellerBidsViewProps } from "./features/seller/components/SellerBidsView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -8352,8 +8349,8 @@ export { StoreAboutView } from "./features/stores/components/StoreAboutView";
 // StoreAddressSelectorCreate - Shared export for store address selector create.
 export { StoreAddressSelectorCreate } from "./features/stores/components/StoreAddressSelectorCreate";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// StoreAuctionsView - Component for store auctions view.
-export { StoreAuctionsView } from "./features/stores/components/StoreAuctionsView";
+// StoreCollectorDropsView - Component for store collector drops view.
+export { StoreCollectorDropsView } from "./features/stores/components/StoreCollectorDropsView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // StoreHeader - Shared export for store header.
 export { StoreHeader } from "./features/stores/components/StoreHeader";
@@ -8374,8 +8371,8 @@ export { StoresIndexListing } from "./features/stores/components/StoresIndexList
 export type { StoresIndexListingProps } from "./features/stores/components/StoresIndexListing";
 export { StoreProductsListing } from "./features/stores/components/StoreProductsListing";
 export type { StoreProductsListingProps } from "./features/stores/components/StoreProductsListing";
-export { StoreAuctionsListing } from "./features/stores/components/StoreAuctionsListing";
-export type { StoreAuctionsListingProps } from "./features/stores/components/StoreAuctionsListing";
+export { StoreCollectorDropsListing } from "./features/stores/components/StoreCollectorDropsListing";
+export type { StoreCollectorDropsListingProps } from "./features/stores/components/StoreCollectorDropsListing";
 export { StoreReviewsListing } from "./features/stores/components/StoreReviewsListing";
 export type { StoreReviewsListingProps } from "./features/stores/components/StoreReviewsListing";
 export { StoreReviewsPageView } from "./features/stores/components/StoreReviewsPageView";
@@ -8409,8 +8406,8 @@ export { AdminTrustGuideView } from "./features/admin/components/AdminTrustGuide
 export { AdminPaymentsGuideView } from "./features/admin/components/AdminPaymentsGuideView";
 // [CLIENT-SSR]-Buyer shopping guide — static view, no firebase-admin.
 export { BuyerShoppingGuideView } from "./features/account/components/BuyerShoppingGuideView";
-// [CLIENT-SSR]-Buyer auctions & pre-orders guide — static view, no firebase-admin.
-export { BuyerAuctionsGuideView } from "./features/account/components/BuyerAuctionsGuideView";
+// [CLIENT-SSR]-Buyer collector drops & pre-orders guide — static view, no firebase-admin.
+export { BuyerCollectorDropsGuideView } from "./features/account/components/BuyerCollectorDropsGuideView";
 // [CLIENT-SSR]-Buyer orders & returns guide — static view, no firebase-admin.
 export { BuyerOrdersGuideView } from "./features/account/components/BuyerOrdersGuideView";
 // [CLIENT-SSR]-Buyer account & safety guide — static view, no firebase-admin.
@@ -8455,8 +8452,8 @@ export { storeListParamsSchema } from "./features/stores/schemas/index";
 // useStoreAddressSelector - React hook for use store address selector.
 export { useStoreAddressSelector } from "./features/stores/hooks/useStoreAddressSelector";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// useStoreAuctions - React hook for use store auctions.
-export { useStoreAuctions } from "./features/stores/hooks/useStores";
+// useStoreCollectorDrops - React hook for use store collector drops.
+export { useStoreCollectorDrops } from "./features/stores/hooks/useStores";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useStoreBySlug - React hook for use store by slug.
 export { useStoreBySlug } from "./features/stores/hooks/useStores";
@@ -8491,14 +8488,14 @@ export type { StoreAddressSelectorCreateProps } from "./features/stores/componen
 // StoreAddressUpdateInput - Type contract for store address update input.
 export type { StoreAddressUpdateInput } from "./features/stores/schemas/firestore";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// StoreAuctionItem - Type contract for store auction item.
-export type { StoreAuctionItem } from "./features/stores/types/index";
+// StoreCollectorDropItem - Type contract for store collector drop item.
+export type { StoreCollectorDropItem } from "./features/stores/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// StoreAuctionsResponse - Type contract for store auctions response.
-export type { StoreAuctionsResponse } from "./features/stores/types/index";
+// StoreCollectorDropsResponse - Type contract for store collector drops response.
+export type { StoreCollectorDropsResponse } from "./features/stores/types/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// StoreAuctionsViewProps - Type contract for store auctions view props.
-export type { StoreAuctionsViewProps } from "./features/stores/components/StoreAuctionsView";
+// StoreCollectorDropsViewProps - Type contract for store collector drops view props.
+export type { StoreCollectorDropsViewProps } from "./features/stores/components/StoreCollectorDropsView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // StoreDetail - Type contract for store detail.
 export type { StoreDetail } from "./features/stores/types/index";
@@ -8548,8 +8545,8 @@ export { createStoreAddressForSeller } from "./features/stores/actions/store-add
 // deleteStoreAddressForSeller - Helper for delete store address for seller.
 export { deleteStoreAddressForSeller } from "./features/stores/actions/store-address-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getStoreAuctions - Helper for get store auctions.
-export { getStoreAuctions } from "./features/stores/actions/store-query-actions";
+// getStoreCollectorDrops - Helper for get store collector drops.
+export { getStoreCollectorDrops } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getStoreBySlug - Helper for get store by slug.
 export { getStoreBySlug } from "./features/stores/actions/store-query-actions";
@@ -8566,8 +8563,8 @@ export { listStoreAddressesForSeller } from "./features/stores/actions/store-add
 // listStores - Helper for list stores.
 export { listStores } from "./features/stores/actions/store-query-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// storeAuctionsGET - Shared export for store auctions get.
-export { GET as storeAuctionsGET } from "./features/stores/api/[storeSlug]/auctions/route";
+// storeCollectorDropsGET - Shared export for store collector drops get.
+export { GET as storeCollectorDropsGET } from "./features/stores/api/[storeSlug]/collector-drops/route";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storeProductsGET - Shared export for store products get.
 export { GET as storeProductsGET } from "./features/stores/api/[storeSlug]/products/route";
@@ -8771,8 +8768,8 @@ export { homepageSectionQueryHelpers } from "./features/homepage/schemas/index";
 // isValidGridPosition - Shared export for is valid grid position.
 export { isValidGridPosition } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionsSectionConfig - Type contract for auctions section config.
-export type { AuctionsSectionConfig } from "./features/homepage/schemas/index";
+// CollectorDropsSectionConfig - Type contract for collector drops section config.
+export type { CollectorDropsSectionConfig } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BannerSectionConfig - Type contract for banner section config.
 export type { BannerSectionConfig } from "./features/homepage/schemas/index";
@@ -8907,7 +8904,7 @@ export { isAuthError } from "./errors/normalize";
 // -- Missing constants ----------------------------------------------------------
 export {
   API_ENDPOINTS, API_ROUTES, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
-  NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, AUCTION_ENDPOINTS,
+  NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, COLLECTOR_DROP_ENDPOINTS,
   BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
   FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, ANALYTICS_ENDPOINTS, MEDIA_ENDPOINTS,
   ORDER_ENDPOINTS, PREORDER_ENDPOINTS, PRODUCT_ENDPOINTS, REVIEW_ENDPOINTS,
@@ -9190,8 +9187,8 @@ export type {
 export {
  STANDARD_SORT_OPTIONS,
  STANDARD_PUBLIC_SORT_OPTIONS,
- AUCTION_SORT_OPTIONS,
- AUCTION_PUBLIC_SORT_OPTIONS,
+ COLLECTOR_DROP_SORT_OPTIONS,
+ COLLECTOR_DROP_PUBLIC_SORT_OPTIONS,
  PREORDER_SORT_OPTIONS,
  PREORDER_PUBLIC_SORT_OPTIONS,
  BUNDLE_SORT_OPTIONS,
@@ -9230,7 +9227,7 @@ export {
  ADMIN_CART_OWNERSHIP_TABS,
  ADMIN_COUPON_TYPE_TABS,
  SELLER_PRODUCT_STATUS_TABS,
- SELLER_AUCTION_STATUS_TABS,
+ SELLER_COLLECTOR_DROP_STATUS_TABS,
  SELLER_ORDER_STATUS_TABS,
  SELLER_OFFER_STATUS_TABS,
  SELLER_BID_STATUS_TABS,
@@ -9483,7 +9480,7 @@ export type { ScammerListResult } from "./features/scams/actions/scam-actions";
 export type { SellerTrustResult, SellerTrustStatus } from "./features/scams/actions/scam-actions";
 
 // --- Shell primitives (UX1/UX2/UX3/UX6) ----------------------------------------
-// [CLIENT] SellerProductShell â€" full-flow create/edit shell for standard, auction, and pre-order listings.
+// [CLIENT] SellerProductShell â€" full-flow create/edit shell for standard, collector drop, and pre-order listings.
 export { SellerProductShell } from "./features/seller/components/SellerProductShell";
 export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } from "./features/seller/components/SellerProductShell";
 // [CLIENT] CategoryInlineSelect â€" searchable category selector with optional inline quick-create.
@@ -9586,8 +9583,8 @@ export type { EntityFormDefinition } from "./features/shell/entity-form";
 // OG image renderers (server-side JSX, used with next/og ImageResponse)
 export { renderProductOgImage } from "./_internal/server/features/products/og";
 export type { ProductOgData } from "./_internal/server/features/products/og";
-export { renderAuctionOgImage } from "./_internal/server/features/auctions/og";
-export type { AuctionOgData } from "./_internal/server/features/auctions/og";
+export { renderCollectorDropOgImage } from "./_internal/server/features/collector-drops/og";
+export type { CollectorDropOgData } from "./_internal/server/features/collector-drops/og";
 export { renderPreOrderOgImage } from "./_internal/server/features/pre-orders/og";
 export type { PreOrderOgData } from "./_internal/server/features/pre-orders/og";
 export { renderStoreOgImage } from "./_internal/server/features/stores/og";
@@ -9867,7 +9864,7 @@ export type {
   NormalizedZodError,
 } from "./errors/normalize";
 
-// Checkout lanes — the derived auction > offer > standard partition of the
+// Checkout lanes — the derived collector drop > offer > standard partition of the
 // cart, and the priority rule that decides which one may be checked out.
 export {
   CART_LANE,

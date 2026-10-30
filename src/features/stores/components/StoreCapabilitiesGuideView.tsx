@@ -59,7 +59,7 @@ const CAPABILITY_GROUPS = [
   {
     group: "Listing & Catalog",
     items: [
-      { cap: "host_auctions", unlocks: "Create auction listings on your store.", defaultOn: false },
+      { cap: "host_collector_drops", unlocks: "Create collector drop listings on your store.", defaultOn: false },
       { cap: "host_preorders", unlocks: "Create pre-order listings with deposit collection.", defaultOn: false },
       { cap: "create_categories", unlocks: "Request new product categories (goes to admin review).", defaultOn: false },
       { cap: "suggest_brands", unlocks: "Suggest new brands for the platform catalogue.", defaultOn: true },
@@ -150,8 +150,8 @@ function CapabilityTable() {
 
 const LOCKED_FEATURES = [
   {
-    cap: "host_auctions",
-    missing: ["Create auction listings", "Set reserve prices and bid increments", "Auto-notify winner at auction end"],
+    cap: "host_collector_drops",
+    missing: ["Create collector drop listings", "Set reserve prices and bid increments", "Auto-notify winner at collector drop end"],
     howToUnlock: `Contact ${getBrandSupportEmail()} with at least 10 delivered orders and 3 months of store activity. Our team reviews within 5 business days.`,
     contractRequired: false,
   },

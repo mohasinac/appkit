@@ -5,17 +5,17 @@
  * can live in appkit without depending on the consumer's functions/ tree.
  */
 
-export const AUCTION_MESSAGES = {
-  WON_TITLE: "You won the auction! 🎉",
+export const COLLECTOR_DROP_MESSAGES = {
+  WON_TITLE: "You won the collector drop! 🎉",
   WON_MESSAGE: (productTitle: string, currency: string, amount: number): string =>
     `Congratulations! You won "${productTitle}" with a bid of ${currency} ${amount}.`,
-  LOST_TITLE: "Auction ended",
+  LOST_TITLE: "Collector Drop ended",
   LOST_MESSAGE: (productTitle: string): string =>
-    `The auction for "${productTitle}" has ended. You were outbid.`,
-  NO_BIDS_LOG: (productId: string): string => `Auction ${productId} ended with no bids`,
-  /** CTA on the winner's notification — links into the auction checkout lane. */
+    `The collector drop for "${productTitle}" has ended. You were outbid.`,
+  NO_BIDS_LOG: (productId: string): string => `Collector Drop ${productId} ended with no bids`,
+  /** CTA on the winner's notification — links into the collector drop checkout lane. */
   WON_ACTION_LABEL: "Pay now",
-  RESERVE_NOT_MET_TITLE: "Auction ended below reserve",
+  RESERVE_NOT_MET_TITLE: "Collector Drop ended below reserve",
   RESERVE_NOT_MET_MESSAGE: (
     productTitle: string,
     currency: string,
@@ -24,7 +24,7 @@ export const AUCTION_MESSAGES = {
   ): string =>
     `"${productTitle}" ended at ${currency} ${highestBid}, below your reserve of ${currency} ${reservePrice}. No winner was declared and the listing was archived.`,
   RESERVE_NOT_MET_BIDDER_MESSAGE: (productTitle: string): string =>
-    `The auction for "${productTitle}" ended without meeting the seller's reserve price, so it did not sell.`,
+    `The collector drop for "${productTitle}" ended without meeting the seller's reserve price, so it did not sell.`,
 };
 
 export const BID_MESSAGES = {
@@ -32,7 +32,7 @@ export const BID_MESSAGES = {
   OUTBID_MESSAGE: (productTitle: string, currency: string, currentBid: number): string =>
     `Someone placed a higher bid on "${productTitle}". Current bid: ${currency} ${currentBid}.`,
 
-  // Buy Now places a HOLD, not a purchase — the auction stays live and other
+  // Buy Now places a HOLD, not a purchase — the collector drop stays live and other
   // buyers can still bid or buy it out, so the copy has to convey urgency
   // without claiming the item is already theirs.
   BUY_NOW_HELD_TITLE: "Complete your Buy Now purchase",
@@ -42,16 +42,16 @@ export const BID_MESSAGES = {
     amount: number,
     minutes: number,
   ): string =>
-    `You've claimed "${productTitle}" at the Buy Now price of ${currency} ${amount}. The auction is still live, so it's yours only once you've paid — complete checkout within ${minutes} minutes.`,
+    `You've claimed "${productTitle}" at the Buy Now price of ${currency} ${amount}. The collector drop is still live, so it's yours only once you've paid — complete checkout within ${minutes} minutes.`,
   BUY_NOW_HELD_ACTION: "Pay now",
 
   BUY_NOW_LAPSED_TITLE: "Buy Now claim expired",
   BUY_NOW_LAPSED_MESSAGE: (productTitle: string): string =>
-    `Your Buy Now claim on "${productTitle}" expired before payment was completed, so it's been released. The auction is still running if you'd like to bid.`,
+    `Your Buy Now claim on "${productTitle}" expired before payment was completed, so it's been released. The collector drop is still running if you'd like to bid.`,
 
-  BUY_NOW_AUCTION_ENDED_TITLE: "Buy Now claim released",
-  BUY_NOW_AUCTION_ENDED_MESSAGE: (productTitle: string): string =>
-    `The auction for "${productTitle}" ended before you completed your Buy Now purchase, so your claim was released and the item went to the winning bidder.`,
+  BUY_NOW_COLLECTOR_DROP_ENDED_TITLE: "Buy Now claim released",
+  BUY_NOW_COLLECTOR_DROP_ENDED_MESSAGE: (productTitle: string): string =>
+    `The collector drop for "${productTitle}" ended before you completed your Buy Now purchase, so your claim was released and the item went to the winning bidder.`,
 };
 
 export const ORDER_MESSAGES = {

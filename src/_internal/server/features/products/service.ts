@@ -1,6 +1,6 @@
 import { productRepository } from "../../../../features/products/repository/products.repository";
 import {
-  isAuctionListing,
+  isCollectorDropListing,
   isPreOrderListing,
 } from "../../../../features/products/utils/listing-type";
 import {
@@ -92,28 +92,28 @@ export function assertRandomLotsWonItemsImmutable(
 }
 
 /**
- * Anti-scam guard — an auction's economic terms (starting bid, reserve, close
+ * Anti-scam guard — a collector drop's economic terms (starting bid, reserve, close
  * time) stop being editable the moment a real bid exists. Moving the goalposts
- * under a live bidder is the one auction edit that must never pass.
+ * under a live bidder is the one collector drop edit that must never pass.
  *
  * 🛑 It compares VALUES, not key presence. The seller editor round-trips the
- * whole draft, so every save resubmits `startingBid` and `auctionEndDate`
- * unchanged — rejecting on presence alone would make a live auction entirely
+ * whole draft, so every save resubmits `startingBid` and `collectorDropEndDate`
+ * unchanged — rejecting on presence alone would make a live collector drop entirely
  * unsaveable, and the seller could no longer fix so much as a typo.
  */
-export function assertAuctionTermsMutable(
+export function assertCollectorDropTermsMutable(
   existing: Pick<
     ProductDocument,
-    "listingType" | "bidsHaveStarted" | "bidCount" | "startingBid" | "reservePrice" | "auctionEndDate"
+    "listingType" | "bidsHaveStarted" | "bidCount" | "startingBid" | "reservePrice" | "collectorDropEndDate"
   >,
   input: unknown,
 ): void {
-  if ((existing.listingType ?? "standard") !== "auction") return;
+  if ((existing.listingType ?? "standard") !== "collector-drop") return;
   const bidding = existing.bidsHaveStarted === true || (existing.bidCount ?? 0) > 0;
   if (!bidding) return;
   if (typeof input !== "object" || input === null) return;
   const patch = input as Partial<
-    Record<"startingBid" | "reservePrice" | "auctionEndDate", string | number | Date | null>
+    Record<"startingBid" | "reservePrice" | "collectorDropEndDate", string | number | Date | null>
   >;
 
   const time = (v: unknown): number | null => {
@@ -128,14 +128,14 @@ export function assertAuctionTermsMutable(
   if ("reservePrice" in patch && patch.reservePrice !== existing.reservePrice)
     changed.push("reserve price");
   if (
-    "auctionEndDate" in patch &&
-    time(patch.auctionEndDate) !== time(existing.auctionEndDate)
+    "collectorDropEndDate" in patch &&
+    time(patch.collectorDropEndDate) !== time(existing.collectorDropEndDate)
   )
     changed.push("end date");
 
   if (changed.length > 0) {
     throw new ValidationError(
-      `Bidding has already started on this auction, so its ${changed.join(" and ")} can no longer be changed. Everything else on the listing is still editable.`,
+      `Bidding has already started on this collector drop, so its ${changed.join(" and ")} can no longer be changed. Everything else on the listing is still editable.`,
     );
   }
 }
@@ -149,9 +149,9 @@ export function assertInStock(product: ProductDocument, quantity = 1): void {
   }
 }
 
-/** Derive effective price (respects currentBid for auctions, base price otherwise). */
+/** Derive effective price (respects currentBid for collector drops, base price otherwise). */
 export function effectivePrice(product: ProductDocument): number {
-  if (isAuctionListing(product) && product.currentBid) return product.currentBid;
+  if (isCollectorDropListing(product) && product.currentBid) return product.currentBid;
   return product.price;
 }
 
@@ -159,10 +159,10 @@ export function effectivePrice(product: ProductDocument): number {
 export function isAvailableForPurchase(product: ProductDocument): boolean {
   if (product.status !== "published") return false;
   if (product.isSold) return false;
-  if (isAuctionListing(product)) {
-    const endDate = product.auctionEndDate instanceof Date
-      ? product.auctionEndDate
-      : product.auctionEndDate ? new Date(product.auctionEndDate as unknown as string) : null;
+  if (isCollectorDropListing(product)) {
+    const endDate = product.collectorDropEndDate instanceof Date
+      ? product.collectorDropEndDate
+      : product.collectorDropEndDate ? new Date(product.collectorDropEndDate as unknown as string) : null;
     return endDate ? endDate.getTime() > Date.now() : false;
   }
   if (isPreOrderListing(product)) return true;

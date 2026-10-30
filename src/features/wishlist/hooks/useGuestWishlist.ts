@@ -38,7 +38,7 @@ export function useGuestWishlist() {
   const add = useCallback(
     (
       itemId: string,
-      type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+      type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
       snapshot?: { title?: string; image?: string },
     ) => {
       const updated = addToGuestWishlist(itemId, type, snapshot);
@@ -50,7 +50,7 @@ export function useGuestWishlist() {
   const remove = useCallback(
     (
       itemId: string,
-      type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+      type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
     ) => {
       const updated = removeFromGuestWishlist(itemId, type);
       setItems(updated);
@@ -61,7 +61,7 @@ export function useGuestWishlist() {
   const isInWishlist = useCallback(
     (
       itemId: string,
-      type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
+      type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction",
     ) => {
       return isInGuestWishlist(itemId, type);
     },
@@ -74,14 +74,14 @@ export function useGuestWishlist() {
   }, []);
 
   const getByType = useCallback(
-    (type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live") => {
+    (type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction") => {
       return getGuestWishlistByType(type);
     },
     [],
   );
 
   const count = items.length;
-  const countByType = (type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live") => {
+  const countByType = (type: "product" | "collector-drop" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live" | /* pre-rename */ "auction") => {
     return items.filter((i) => i.type === type).length;
   };
 

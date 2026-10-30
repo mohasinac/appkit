@@ -968,7 +968,7 @@ function dispatchOrderConfirmationEmails(
 }
 
 // unitPriceFor now lives in _internal/shared/checkout/order-math.ts — one
-// implementation for every money path, so an accepted offer's / won auction's
+// implementation for every money path, so an accepted offer's / won collector drop's
 // lockedPrice can never be honoured by some call sites and ignored by others.
 
 interface OrderGroupContext {
@@ -1773,7 +1773,7 @@ async function createOrderForGroup(
     orderType,
     // How the buyer earned the right to buy at this price. `orderType` cannot
     // answer that — it has five values, and both a settled win and a buyout
-    // are "auction". Written ONCE here and never recomputed: the auction and
+    // are "collector-drop". Written ONCE here and never recomputed: the collector drop and
     // offer documents it summarises are mutable and eventually archived.
     sourceContext,
     /*
@@ -1788,8 +1788,8 @@ async function createOrderForGroup(
         ? { ...selectedShippingQuote, chargedRate: shippingFee }
         : undefined,
     offerId: firstItem.offerId ?? undefined,
-    // Distinguishes a Buy Now purchase from a settled auction win. Both are
-    // orderType "auction"; only this one gets the 24h admin-review window.
+    // Distinguishes a Buy Now purchase from a settled collector drop win. Both are
+    // orderType "collector-drop"; only this one gets the 24h admin-review window.
     isBuyout: firstItem.isBuyout ? true : undefined,
     status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
     paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
@@ -2214,7 +2214,7 @@ export async function createCheckoutOrderAction(
    * every member of every line against this map.
    *
    * 🛑 This ONE call site is complete coverage, and that is worth stating so
-   * nobody adds a second. Only `cod`/`cash`/`emi` are ever blocked (auction,
+   * nobody adds a second. Only `cod`/`cash`/`emi` are ever blocked (collector drop,
    * bundle, prize-draw) and all three arrive here; the Razorpay path is always
    * `"online"`, which no rule blocks — and a throw there would land AFTER
    * capture, taking the buyer's money and then refusing the order. Pre-capture
@@ -3896,12 +3896,12 @@ async function createPhonePeGroupOrder(
     orderType,
     // How the buyer earned the right to buy at this price. `orderType` cannot
     // answer that — it has five values, and both a settled win and a buyout
-    // are "auction". Written ONCE here and never recomputed: the auction and
+    // are "collector-drop". Written ONCE here and never recomputed: the collector drop and
     // offer documents it summarises are mutable and eventually archived.
     sourceContext,
     offerId: firstItem.offerId ?? undefined,
-    // Distinguishes a Buy Now purchase from a settled auction win. Both are
-    // orderType "auction"; only this one gets the 24h admin-review window.
+    // Distinguishes a Buy Now purchase from a settled collector drop win. Both are
+    // orderType "collector-drop"; only this one gets the 24h admin-review window.
     isBuyout: firstItem.isBuyout ? true : undefined,
     status: OrderStatusValues.CONFIRMED,
     paymentStatus: PaymentStatusValues.PAID,

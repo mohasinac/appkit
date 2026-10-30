@@ -3,7 +3,7 @@
  * CompareOverlay â€" BK3
  *
  * Fullscreen comparison overlay triggered by the Compare bulk action on
- * Products / Auctions / Pre-orders listings.
+ * Products / Collector Drops / Pre-orders listings.
  *
  * Layout:
  *  - Desktop (md+): up to COMPARE_MAX_ITEMS columns side-by-side. Left rail
@@ -129,7 +129,7 @@ export interface CompareOverlayProps {
   /** When provided, the overlay fetches /api/products?ids=â€¦ on open. */
   productIds?: string[];
   /** Discriminates which detail-page ROUTE to link to. */
-  productType?: "product" | "auction" | "preorder";
+  productType?: "product" | "collector-drop" | "preorder";
   onClose: () => void;
   /** Called when a column's Remove button is clicked. */
   onRemove?: (id: string) => void;
@@ -154,7 +154,7 @@ export interface CompareOverlayProps {
 /** Index type keys for each `productType` discriminator the overlay accepts. */
 const TYPEAHEAD_TYPES: Record<NonNullable<CompareOverlayProps["productType"]>, readonly string[]> = {
   product: ["standard"],
-  auction: ["auction"],
+  "collector-drop": ["collector-drop"],
   preorder: ["pre-order"],
 };
 
@@ -172,10 +172,10 @@ const COLUMN_CARD_CLASS =
 function detailHref(item: CompareProductLike, type: CompareOverlayProps["productType"]): string {
   const id = item.slug ?? item.id;
   // The caller-supplied `type` hint takes precedence — some compare contexts
-  // (e.g. an auction comparison page) feed items that don't carry their own
+  // (e.g. a collector drop comparison page) feed items that don't carry their own
   // `listingType` field, so the hint is the only signal available.
   const listingType =
-    type === "auction" ? "auction" : type === "preorder" ? "pre-order" : normalizeListingType(item);
+    type === "collector-drop" ? "collector-drop" : type === "preorder" ? "pre-order" : normalizeListingType(item);
   return pluginFor(listingType).detailRoute(id);
 }
 
@@ -462,7 +462,7 @@ export function CompareOverlay({
               /*
                * The LAST path segment, not a type-specific pattern. The
                * three listing types this overlay accepts have three
-               * different detail routes (/products, /auctions,
+               * different detail routes (/products, /collector-drops,
                * /pre-orders), and every one of them ends in the slug — the
                * same thing `productIds` already expects.
                */

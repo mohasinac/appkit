@@ -16,7 +16,7 @@ const __P = {
  *
  * ## 🛑 Why an index page is worth its own route here
  *
- * There are **fourteen** explainers (`/how-auctions-work` … `/fees`, `/gst`,
+ * There are **fourteen** explainers (`/how-collector-drops-work` … `/fees`, `/gst`,
  * `/spot-a-fake`, the two seller guides) and the only way to reach most of them
  * is the footer. A footer link is reachable but it is not a *destination*: it
  * cannot rank, it cannot be linked to from a blog post as "our guides", and it
@@ -48,7 +48,7 @@ export async function GuidesHubView({}: GuidesHubViewProps = {}) {
       heading: t("groupBuyingTitle"),
       blurb: t("groupBuyingBlurb"),
       items: [
-        { href: String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK), label: t("howAuctions"), text: t("howAuctionsText") },
+        { href: String(ROUTES.PUBLIC.HOW_COLLECTOR_DROPS_WORK), label: t("howCollectorDrops"), text: t("howCollectorDropsText") },
         { href: String(ROUTES.PUBLIC.HOW_OFFERS_WORK), label: t("howOffers"), text: t("howOffersText") },
         { href: String(ROUTES.PUBLIC.HOW_PRE_ORDERS_WORK), label: t("howPreOrders"), text: t("howPreOrdersText") },
         { href: String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS), label: t("howCheckout"), text: t("howCheckoutText") },

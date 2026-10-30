@@ -52,11 +52,11 @@ export interface CategoryDisplay {
 
 export interface CategoryMetrics {
   productCount: number;
-  auctionCount?: number;
+  collectorDropCount?: number;
   /** Rollup — this category's own productCount plus every descendant category's, maintained incrementally by onProductWrite. */
   totalProductCount?: number;
-  /** Rollup — same as totalProductCount but for auctions. */
-  totalAuctionCount?: number;
+  /** Rollup — same as totalProductCount but for collector drops. */
+  totalCollectorDropCount?: number;
   totalItemCount: number;
   lastUpdated?: string;
 }
@@ -155,8 +155,8 @@ export interface Category {
   metrics: {
     productCount: number;
     totalProductCount: number;
-    auctionCount: number;
-    totalAuctionCount: number;
+    collectorDropCount: number;
+    totalCollectorDropCount: number;
   };
   children: Category[];
 }

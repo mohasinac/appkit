@@ -58,7 +58,7 @@ const listingTemplateTypeSchema = z.enum(LISTING_TEMPLATE_TYPES);
  */
 const LISTING_TEMPLATE_TYPE_LABEL: Record<ListingTemplateType, string> = {
   standard: "Standard",
-  auction: "Auction",
+  "collector-drop": "Collector Drop",
   "pre-order": "Pre-order",
   "random-lots": "Random lots",
   bundle: "Bundle",

@@ -52,7 +52,7 @@ import {
   RESOURCE_SORT_OPTIONS,
   FAQ_CATEGORY_OPTIONS,
   DEFAULT_PRODUCTS_BUILDER,
-  DEFAULT_AUCTIONS_BUILDER,
+  DEFAULT_COLLECTOR_DROPS_BUILDER,
   DEFAULT_STATS_BUILDER,
   DEFAULT_PRE_ORDERS_BUILDER,
   DEFAULT_STORES_BUILDER,
@@ -77,8 +77,8 @@ import {
   DEFAULT_EVENT_RAFFLES_BUILDER,
   DEFAULT_COLLECTION_CARDS_BUILDER,
 } from "./sections/adminSectionsTypes";
-import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, AuctionsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, RandomLotsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
-import { toStringValue, buildProductsConfig, buildAuctionsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildRandomLotsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseAuctionsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parseRandomLotsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
+import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, ResourceMaxCount, CategoryOption, ReorderItem, ProductsBuilderState, CollectorDropsBuilderState, StatsBuilderState, PreOrdersBuilderState, StoresBuilderState, EventsBuilderState, SocialFeedBuilderState, WelcomeBuilderState, TrustIndicatorsBuilderState, CategoriesBuilderState, BrandsBuilderState, BannerBuilderState, FeaturesBuilderState, ReviewsBuilderState, WhatsAppBuilderState, FAQBuilderState, BlogBuilderState, NewsletterBuilderState, CarouselBuilderState, CustomCardsCardBuilderEntry, CustomCardsBuilderState, GoogleReviewsBuilderState, FeaturedBundlesBuilderState, RandomLotsBuilderState, EventRafflesBuilderState, CollectionCardsBuilderState, CollectionCardEntryType } from "./sections/adminSectionsTypes";
+import { toStringValue, buildProductsConfig, buildCollectorDropsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildRandomLotsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseCollectorDropsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parseRandomLotsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { getBrandName } from "../../../core/brand-resolver";
 
@@ -168,7 +168,7 @@ function SectionEditorPanel({
    */
   const [rawConfigJson, setRawConfigJson] = React.useState("{}");
   const [productsBuilder, setProductsBuilder] = React.useState<ProductsBuilderState>(DEFAULT_PRODUCTS_BUILDER);
-  const [auctionsBuilder, setAuctionsBuilder] = React.useState<AuctionsBuilderState>(DEFAULT_AUCTIONS_BUILDER);
+  const [collectorDropsBuilder, setCollectorDropsBuilder] = React.useState<CollectorDropsBuilderState>(DEFAULT_COLLECTOR_DROPS_BUILDER);
   const [statsBuilder, setStatsBuilder] = React.useState<StatsBuilderState>(DEFAULT_STATS_BUILDER);
   const [preOrdersBuilder, setPreOrdersBuilder] = React.useState<PreOrdersBuilderState>(DEFAULT_PRE_ORDERS_BUILDER);
   const [storesBuilder, setStoresBuilder] = React.useState<StoresBuilderState>(DEFAULT_STORES_BUILDER);
@@ -230,7 +230,7 @@ function SectionEditorPanel({
   const typedConfig = React.useMemo(() => {
     switch (sectionType) {
       case "products": return buildProductsConfig(productsBuilder);
-      case "auctions": return buildAuctionsConfig(auctionsBuilder);
+      case "collector-drops": return buildCollectorDropsConfig(collectorDropsBuilder);
       case "stats": return buildStatsConfig(statsBuilder);
       case "pre-orders": return buildPreOrdersConfig(preOrdersBuilder);
       case "stores": return buildStoresConfig(storesBuilder);
@@ -259,7 +259,7 @@ function SectionEditorPanel({
   }, [
     sectionType,
     productsBuilder,
-    auctionsBuilder,
+    collectorDropsBuilder,
     statsBuilder,
     preOrdersBuilder,
     storesBuilder,
@@ -374,7 +374,7 @@ function SectionEditorPanel({
 
     switch (section.type) {
       case "products": setProductsBuilder(parseProductsBuilder(selectedConfig)); break;
-      case "auctions": setAuctionsBuilder(parseAuctionsBuilder(selectedConfig)); break;
+      case "collector-drops": setCollectorDropsBuilder(parseCollectorDropsBuilder(selectedConfig)); break;
       case "stats": setStatsBuilder(parseStatsBuilder(selectedConfig)); break;
       case "pre-orders": setPreOrdersBuilder(parsePreOrdersBuilder(selectedConfig)); break;
       case "stores": setStoresBuilder(parseStoresBuilder(selectedConfig)); break;
@@ -429,7 +429,7 @@ function SectionEditorPanel({
 
     switch (type) {
       case "products": setProductsBuilder(pick(DEFAULT_PRODUCTS_BUILDER)); break;
-      case "auctions": setAuctionsBuilder(pick(DEFAULT_AUCTIONS_BUILDER)); break;
+      case "collector-drops": setCollectorDropsBuilder(pick(DEFAULT_COLLECTOR_DROPS_BUILDER)); break;
       case "stats": setStatsBuilder(pick(DEFAULT_STATS_BUILDER)); break;
       case "pre-orders": setPreOrdersBuilder(pick(DEFAULT_PRE_ORDERS_BUILDER)); break;
       case "stores": setStoresBuilder(pick(DEFAULT_STORES_BUILDER)); break;
@@ -684,7 +684,7 @@ function SectionEditorPanel({
     );
   }
 
-  function renderAuctionsCategorySelectors(): React.ReactNode {
+  function renderCollectorDropsCategorySelectors(): React.ReactNode {
     return (
       <Stack gap="sm">
         <Text className="tracking-wide" color="muted" size="xs" weight="semibold" transform="uppercase">
@@ -699,10 +699,10 @@ function SectionEditorPanel({
             {categoryOptions.map((category) => (
               <Checkbox
                 key={category.id}
-                checked={auctionsBuilder.selectedCategoryIds.includes(category.id)}
+                checked={collectorDropsBuilder.selectedCategoryIds.includes(category.id)}
                 label={category.name}
                 onChange={(event) =>
-                  setAuctionsBuilder((prev) => ({
+                  setCollectorDropsBuilder((prev) => ({
                     ...prev,
                     selectedCategoryIds: toggleCategorySelection(
                       prev.selectedCategoryIds,
@@ -719,26 +719,26 @@ function SectionEditorPanel({
     );
   }
 
-  function renderAuctionsBuilder(): React.ReactNode {
+  function renderCollectorDropsBuilder(): React.ReactNode {
     return (
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">
-          Auctions Carousel Builder
+          Collector Drops Carousel Builder
         </Text>
 
         <Input
           label="Section title"
-          value={auctionsBuilder.title}
+          value={collectorDropsBuilder.title}
           onChange={(event) =>
-            setAuctionsBuilder((prev) => ({ ...prev, title: event.target.value }))
+            setCollectorDropsBuilder((prev) => ({ ...prev, title: event.target.value }))
           }
         />
 
         <Input
           label={LBL_VIEW_MORE}
-          value={auctionsBuilder.viewMoreLabel}
+          value={collectorDropsBuilder.viewMoreLabel}
           onChange={(event) =>
-            setAuctionsBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
+            setCollectorDropsBuilder((prev) => ({ ...prev, viewMoreLabel: event.target.value }))
           }
           placeholder={PH_VIEW_MORE}
           helperText={HELP_VIEW_MORE}
@@ -746,20 +746,20 @@ function SectionEditorPanel({
 
         <Input
           label="Subtitle"
-          value={auctionsBuilder.subtitle}
+          value={collectorDropsBuilder.subtitle}
           onChange={(event) =>
-            setAuctionsBuilder((prev) => ({ ...prev, subtitle: event.target.value }))
+            setCollectorDropsBuilder((prev) => ({ ...prev, subtitle: event.target.value }))
           }
         />
 
         <Input
-          label="Max auctions"
+          label="Max collector drops"
           type="number"
           min={1}
           max={50}
-          value={String(auctionsBuilder.maxItems)}
+          value={String(collectorDropsBuilder.maxItems)}
           onChange={(event) =>
-            setAuctionsBuilder((prev) => ({
+            setCollectorDropsBuilder((prev) => ({
               ...prev,
               maxItems: Math.max(1, Number(event.target.value) || 1),
             }))
@@ -768,11 +768,11 @@ function SectionEditorPanel({
 
         <Select
           label="Status filter"
-          value={auctionsBuilder.status}
+          value={collectorDropsBuilder.status}
           onValueChange={(value) =>
-            setAuctionsBuilder((prev) => ({
+            setCollectorDropsBuilder((prev) => ({
               ...prev,
-              status: value as AuctionsBuilderState["status"],
+              status: value as CollectorDropsBuilderState["status"],
             }))
           }
           options={[
@@ -785,34 +785,34 @@ function SectionEditorPanel({
 
         <Select
           label="Sort by"
-          value={auctionsBuilder.sortBy}
-          onValueChange={(value) => setAuctionsBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
+          value={collectorDropsBuilder.sortBy}
+          onValueChange={(value) => setCollectorDropsBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
           options={[...RESOURCE_SORT_OPTIONS]}
         />
 
         <Stack gap="xs">
           <Text size="sm" weight="medium">{LBL_FILTER_BY_CATEGORY}</Text>
           <CategoryInlineSelect
-            value={auctionsBuilder.filterByCategory}
-            onChange={(id) => setAuctionsBuilder((prev) => ({ ...prev, filterByCategory: id }))}
+            value={collectorDropsBuilder.filterByCategory}
+            onChange={(id) => setCollectorDropsBuilder((prev) => ({ ...prev, filterByCategory: id }))}
             placeholder={PH_FILTER_BY_CATEGORY}
           />
         </Stack>
 
         <Select
           label={LBL_MAX_ITEMS}
-          value={String(auctionsBuilder.maxCount)}
-          onValueChange={(v) => setAuctionsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
+          value={String(collectorDropsBuilder.maxCount)}
+          onValueChange={(v) => setCollectorDropsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
           options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
         />
 
-        <Checkbox checked={auctionsBuilder.loop} label="Loop carousel" onChange={(e) => setAuctionsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
+        <Checkbox checked={collectorDropsBuilder.loop} label="Loop carousel" onChange={(e) => setCollectorDropsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
 
         <Select
           label="Resource mode"
-          value={auctionsBuilder.resourceMode}
+          value={collectorDropsBuilder.resourceMode}
           onValueChange={(value) =>
-            setAuctionsBuilder((prev) => ({
+            setCollectorDropsBuilder((prev) => ({
               ...prev,
               resourceMode: value as ResourceMode,
             }))
@@ -823,25 +823,25 @@ function SectionEditorPanel({
           ]}
         />
 
-        {renderAuctionsCategorySelectors()}
+        {renderCollectorDropsCategorySelectors()}
 
-        {auctionsBuilder.resourceMode === "manual" ? (
+        {collectorDropsBuilder.resourceMode === "manual" ? (
           <ProductInlineSelect
             scope="admin"
             multiple
-            value={auctionsBuilder.manualResourceIds ? auctionsBuilder.manualResourceIds.split(",").map((s) => s.trim()).filter(Boolean) : []}
+            value={collectorDropsBuilder.manualResourceIds ? collectorDropsBuilder.manualResourceIds.split(",").map((s) => s.trim()).filter(Boolean) : []}
             onChange={(ids) =>
-              setAuctionsBuilder((prev) => ({ ...prev, manualResourceIds: ids.join(",") }))
+              setCollectorDropsBuilder((prev) => ({ ...prev, manualResourceIds: ids.join(",") }))
             }
-            placeholder="Search and select auctions…"
+            placeholder="Search and select collector drops…"
           />
         ) : null}
 
         <Checkbox
-          checked={auctionsBuilder.autoScroll}
+          checked={collectorDropsBuilder.autoScroll}
           label="Auto-scroll"
           onChange={(event) =>
-            setAuctionsBuilder((prev) => ({
+            setCollectorDropsBuilder((prev) => ({
               ...prev,
               autoScroll: event.target.checked,
             }))
@@ -853,9 +853,9 @@ function SectionEditorPanel({
           type="number"
           min={1000}
           step={500}
-          value={String(auctionsBuilder.scrollInterval)}
+          value={String(collectorDropsBuilder.scrollInterval)}
           onChange={(event) =>
-            setAuctionsBuilder((prev) => ({
+            setCollectorDropsBuilder((prev) => ({
               ...prev,
               scrollInterval: Math.max(1000, Number(event.target.value) || 1000),
             }))
@@ -2163,7 +2163,7 @@ function SectionEditorPanel({
 
   const COLLECTION_CARD_TYPE_OPTIONS: { label: string; value: CollectionCardEntryType }[] = [
     { label: "Products", value: "products" },
-    { label: "Auctions", value: "auctions" },
+    { label: "Collector Drops", value: "collector-drops" },
     { label: "Pre-orders", value: "pre-orders" },
     { label: "Stores", value: "stores" },
     { label: "Events", value: "events" },
@@ -2416,7 +2416,7 @@ function SectionEditorPanel({
   function renderTypedBuilder(): React.ReactNode {
     switch (sectionType) {
       case "products": return renderProductsBuilder();
-      case "auctions": return renderAuctionsBuilder();
+      case "collector-drops": return renderCollectorDropsBuilder();
       case "stats": return renderStatsBuilder();
       case "pre-orders": return renderPreOrdersBuilder();
       case "stores": return renderStoresBuilder();

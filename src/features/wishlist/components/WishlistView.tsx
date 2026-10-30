@@ -7,7 +7,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useWishlist } from "../hooks/useWishlist";
 import type { WishlistItem, WishlistResponse } from "../types";
 
-export type WishlistTab = "products" | "auctions" | "categories" | "stores";
+export type WishlistTab = "products" | "collector-drops" | "categories" | "stores";
 
 export interface WishlistViewProps {
   userId?: string;

@@ -56,7 +56,7 @@ export const ADMIN_PRODUCT_STATUS_TABS = [
 export const ADMIN_PRODUCT_LISTING_TYPE_TABS = [
   ALL_TAB,
   { id: "standard", label: "Products" },
-  { id: "auction", label: "Auctions" },
+  { id: "collector-drop", label: "Collector Drops" },
   { id: "pre-order", label: "Pre-orders" },
   { id: "random-lots", label: "Random Lots" },
   { id: "classified", label: "Classifieds" },
@@ -308,17 +308,17 @@ export const SELLER_PRODUCT_STATUS_TABS = [
   { id: "in_review", label: "In Review" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Seller > Auctions — auction-state filter chip set. Real `ProductStatus`
+/** Seller > Collector Drops — collector-drop-state filter chip set. Real `ProductStatus`
  *  has no "active"/"ended"/"cancelled" values. "Active" fixed to
  *  "published". "Ended" and "Cancelled" removed — "ended" is a derived
- *  state (auctionEndDate vs now), not a stored status, and is now handled
- *  by SellerAuctionsView's "Show ended" toolbar toggle; there is no stored
- *  "cancelled" state for auctions at all (an auction that expires with no
+ *  state (collectorDropEndDate vs now), not a stored status, and is now handled
+ *  by SellerCollectorDropsView's "Show ended" toolbar toggle; there is no stored
+ *  "cancelled" state for collector drops at all (a collector drop that expires with no
  *  bids becomes `archived`, indistinguishable in storage from a listing the
  *  seller archived for any other reason — aliasing "Cancelled" to
  *  `status==archived` would be misleading, so it's dropped rather than
  *  reintroduced under a wrong mapping). */
-export const SELLER_AUCTION_STATUS_TABS = [
+export const SELLER_COLLECTOR_DROP_STATUS_TABS = [
   ALL_TAB,
   { id: "published", label: "Active" },
   { id: "draft", label: "Draft" },
@@ -327,7 +327,7 @@ export const SELLER_AUCTION_STATUS_TABS = [
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Pre-orders — pre-order-state filter chip set. Same root cause
- *  and fix as SELLER_AUCTION_STATUS_TABS above — no "active"/"cancelled"
+ *  and fix as SELLER_COLLECTOR_DROP_STATUS_TABS above — no "active"/"cancelled"
  *  status values exist; pre-order cancellation, if tracked, lives in the
  *  separate `preOrderProductionStatus` field, not `status`. */
 export const SELLER_PRE_ORDER_STATUS_TABS = [
@@ -339,7 +339,7 @@ export const SELLER_PRE_ORDER_STATUS_TABS = [
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Seller > Prize Draws — draw-state filter chip set. Same root cause and
- *  fix as SELLER_AUCTION_STATUS_TABS — "ended" is derived from
+ *  fix as SELLER_COLLECTOR_DROP_STATUS_TABS — "ended" is derived from
  *  `prizeRevealWindowEnd` vs now (handled by the "Show closed" toolbar
  *  toggle), no stored "cancelled" state exists. */
 export const SELLER_RANDOM_LOTS_STATUS_TABS = [

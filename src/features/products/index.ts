@@ -12,7 +12,7 @@ export * from "./columns";
 export { manifest } from "./manifest";
 export {
   normalizeListingType,
-  isAuctionListing,
+  isCollectorDropListing,
   isPreOrderListing,
   isStandardListing,
   isRandomLotListing,

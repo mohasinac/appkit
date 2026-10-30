@@ -7,7 +7,7 @@ export const PAGE_VIEW_ENTITY_TYPES = [
   "store",
   "category",
   "homepage",
-  "auction",
+  "collector-drop",
   "review",
   "user-profile",
   "blog",
@@ -22,7 +22,7 @@ export const PAGE_VIEW_ENTITY_TYPES = [
    *  bundle is a priced, all-or-nothing set; a group is pick-as-you-wish. */
   "grouped-listing",
   /**
-   * A public BROWSE page — `/products`, `/auctions`, `/stores`, … — as opposed
+   * A public BROWSE page — `/products`, `/collector-drops`, `/stores`, … — as opposed
    * to one entity's detail page.
    *
    * 🛑 `entityId` must be the bare route name ("products"), NEVER the filtered

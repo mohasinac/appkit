@@ -15,10 +15,10 @@
  * import { scheduler } from "firebase-functions/v2/scheduler";
  * import { pubsub } from "firebase-functions/v2/pubsub";
  * import { wrapScheduled, wrapPubSub } from "@mohasinac/appkit/cron";
- * import { auctionExpiryJob } from "@mohasinac/appkit/cron/jobs/auction-expiry.job";
+ * import { collectorDropExpiryJob } from "@mohasinac/appkit/cron/jobs/collector-drop-expiry.job";
  *
- * export const auctionsExpiry = wrapScheduled(scheduler, auctionExpiryJob);
- * export const auctionExpiryPubSub = wrapPubSub(pubsub, "auctions_expire", auctionExpiryJob.handler);
+ * export const collectorDropsExpiry = wrapScheduled(scheduler, collectorDropExpiryJob);
+ * export const collectorDropExpiryPubSub = wrapPubSub(pubsub, "collector_drops_expire", collectorDropExpiryJob.handler);
  * ```
  */
 

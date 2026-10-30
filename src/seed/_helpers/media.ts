@@ -136,7 +136,7 @@ export function seedPhotoLabel(seed: string): string {
   const cleaned = seed
     .replace(/-\d{8}$/, "")
     .replace(/-\d+$/, "")
-    .replace(/^(?:product|art|sticker|stickers|auction|preorder|prizedraw|classified|digitalcode|live|blog|event|store|user|category|brand|bundle|group|review|ad|carousel|slide)-(?:image|cover|banner|logo|avatar|photo)-/, "")
+    .replace(/^(?:product|art|sticker|stickers|collectordrop|auction|preorder|prizedraw|classified|digitalcode|live|blog|event|store|user|category|brand|bundle|group|review|ad|carousel|slide)-(?:image|cover|banner|logo|avatar|photo)-/, "")
     .replace(/^(?:image|cover|banner|logo|avatar|photo)-/, "")
     .replace(/-/g, " ")
     .trim();

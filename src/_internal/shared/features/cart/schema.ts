@@ -27,7 +27,7 @@ const cartItemBaseSchema = z.object({
    */
   listingType: z.enum([
     "standard",
-    "auction",
+    "collector-drop",
     "pre-order",
     "random-lots",
     "classified",

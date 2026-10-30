@@ -5,12 +5,12 @@
  * Detects two classes of bug in appkit/src/features/<feature>/repository files:
  *
  * 1. DEPRECATED J13 FIELD NAMES (SB1-G Phase 4, 2026-05-12)
- *    The legacy product boolean fields `isPreorder`, `isAuction`, and `isFeatured`
+ *    The legacy product boolean fields `isPreorder`, `isCollectorDrop`, and `isFeatured`
  *    were removed from ProductDocument. Queries that still use them return 0 results
  *    silently — Firestore does not error on an unknown field in a where() clause.
  *    Replacements:
  *      isPreorder==true  → listingType==pre-order
- *      isAuction==true   → listingType==auction
+ *      isCollectorDrop==true   → listingType==collector-drop
  *      isFeatured==true  → featured==true
  *      active==true      → status==published  (product context)
  *
@@ -40,8 +40,8 @@ const DEPRECATED_SIEVE_FIELDS = [
     message: "isPreorder== is removed (J13). Use listingType==pre-order",
   },
   {
-    pattern: /\bisAuction==/,
-    message: "isAuction== is removed (J13). Use listingType==auction",
+    pattern: /\bisCollectorDrop==/,
+    message: "isCollectorDrop== is removed (J13). Use listingType==collector-drop",
   },
   {
     pattern: /\bisFeatured==/,

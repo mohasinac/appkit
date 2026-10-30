@@ -103,7 +103,7 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
    * Tester email pings. Written only for the harness mailbox (see
    * `send-recorder.ts`), so this is normally a no-op — but an unpruned RTDB
    * channel is precisely the thing that quietly accumulates, and the Firebase
-   * budget notes `auction-bids/*` as the one family with no TTL. Do not make it
+   * budget notes `collector-drop-bids/*` as the one family with no TTL. Do not make it
    * the second.
    *
    * The Firestore row is the record and is NOT touched here; this only clears the
@@ -137,7 +137,7 @@ export async function runCleanupRtdbEvents(ctx: JobContext): Promise<void> {
    * Sticker kiss-cut tracer progress channels. One node per run, overwritten
    * in place as the trace advances, so the channel's size is bounded by
    * concurrent runs rather than by history — but only because this prunes it.
-   * `auction-bids/*` is the Firebase budget's one family with no TTL; do not
+   * `collector-drop-bids/*` is the Firebase budget's one family with no TTL; do not
    * make this the second.
    *
    * The run DOCUMENT keeps the durable event log, so removing a node loses

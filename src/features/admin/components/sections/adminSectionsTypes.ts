@@ -32,7 +32,7 @@ const SECTION_TYPE_PRESENCE: Record<CanonicalSectionType, true> = {
   brands: true,
   products: true,
   "pre-orders": true,
-  auctions: true,
+  "collector-drops": true,
   banner: true,
   features: true,
   reviews: true,
@@ -109,7 +109,7 @@ export interface ProductsBuilderState {
   loop: boolean;
 }
 
-export interface AuctionsBuilderState {
+export interface CollectorDropsBuilderState {
   title: string;
   /** Overrides the generic "View all →" link label. */
   viewMoreLabel: string;
@@ -446,7 +446,7 @@ export interface EventRafflesBuilderState {
 
 export type CollectionCardEntryType =
   | "products"
-  | "auctions"
+  | "collector-drops"
   | "pre-orders"
   | "stores"
   | "events"
@@ -494,8 +494,8 @@ export const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   loop: true,
 };
 
-export const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
-  title: "Live Auctions",
+export const DEFAULT_COLLECTOR_DROPS_BUILDER: CollectorDropsBuilderState = {
+  title: "Live Collector Drops",
   viewMoreLabel: "",
   subtitle: "",
   maxItems: 18,
@@ -597,7 +597,7 @@ export const DEFAULT_SOCIAL_FEED_BUILDER: SocialFeedBuilderState = {
 
 export const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
   h1: "India's #1 Collectibles Marketplace",
-  subtitle: "Buy, Sell & Auction Pokémon Cards, Hot Wheels, Action Figures and more",
+  subtitle: "Buy, Sell & Collector Drop Pokémon Cards, Hot Wheels, Action Figures and more",
   description: "",
   showCTA: true,
   ctaText: "Shop Now",
@@ -711,7 +711,7 @@ export const DEFAULT_BLOG_BUILDER: BlogBuilderState = {
 
 export const DEFAULT_NEWSLETTER_BUILDER: NewsletterBuilderState = {
   title: "Stay in the Loop",
-  description: "Get the latest drops, auction alerts, and collector news.",
+  description: "Get the latest drops, collector drop alerts, and collector news.",
   privacyText: "We respect your privacy. Unsubscribe anytime.",
   privacyLink: String(ROUTES.PUBLIC.PRIVACY),
 };
@@ -787,7 +787,7 @@ export const DEFAULT_COLLECTION_CARDS_BUILDER: CollectionCardsBuilderState = {
 
 export const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
-  "auctions",
+  "collector-drops",
   "stats",
   "pre-orders",
   "stores",

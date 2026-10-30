@@ -66,8 +66,8 @@ const SORT_OPTIONS = [
  *
  * 🛑 EMI is not a lane and not a status, which is why it could not join
  * either existing control: `orderType` records how the order was WON
- * (standard / auction / offer) and the scope records where it IS. How it is
- * being PAID is orthogonal to both — an auction win can be on an EMI plan.
+ * (standard / collector drop / offer) and the scope records where it IS. How it is
+ * being PAID is orthogonal to both — a collector drop win can be on an EMI plan.
  *
  * Every id is exactly a stored `OrderDocument.paymentMethod` value, and
  * `paymentMethod` is `canFilter: true` in the orders SIEVE_FIELDS — checked
@@ -192,7 +192,7 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
         .filter(Boolean)
         .join(",") || undefined,
     // The lifecycle scope sits alongside the lane tabs as a second,
-    // independent axis: a buyer can ask "which of my auction wins are still
+    // independent axis: a buyer can ask "which of my collector drop wins are still
     // in flight" without those two questions fighting over one control.
     buildExtraParams: () => orderScope.extraParams,
     renderAboveContent: orderScope.renderAboveContent,

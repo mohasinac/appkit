@@ -57,7 +57,7 @@ export interface FilterChipGroupProps {
   tabs: readonly FilterChipGroupTab[];
   /**
    * Current filter value. Single-select: one id, or `""` for "All".
-   * Multi-select (`multiple`): a pipe-joined set of ids (`"auction|art"`),
+   * Multi-select (`multiple`): a pipe-joined set of ids (`"collector drop|art"`),
    * `""` when nothing is ticked.
    */
   value: string;
@@ -86,7 +86,7 @@ export interface FilterChipGroupProps {
    * Opt-in (default `false`) because most of this component's ~45 call sites
    * supply no counts at all, and because it is only ever correct for a FILTER
    * over existing rows. Never enable it on a picker that CREATES something: a
-   * seller with no auctions yet must still be able to make their first one.
+   * seller with no collector drops yet must still be able to make their first one.
    *
    * A chip whose count is `undefined` is always kept — see `FilterChipGroupTab.count`.
    * The currently-selected chip is also always kept, so an active filter can

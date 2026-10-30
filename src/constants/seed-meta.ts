@@ -72,7 +72,7 @@ export type SeedPurpose =
   /**
    * Clearable test data. **The default**, and what almost everything is.
    *
-   * Users, stores, listings, auctions, orders, bids, reviews, offers, carts,
+   * Users, stores, listings, collector drops, orders, bids, reviews, offers, carts,
    * payouts — everything seeded to exercise a path rather than to be read as
    * content. `appkit-seed purge` removes these and nothing else.
    *

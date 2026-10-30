@@ -506,7 +506,7 @@ const SPINNING_TOPS: CategoryTreeNode = {
       "Every era of Beyblade in one place — Original, Metal Fight, Burst and X",
       "Loose parts, launchers and stadiums shelved per generation, because none of them interchange",
       "Verified sellers, condition-graded listings, and authenticity stated on every one",
-      "Auctions, pre-orders and prize draws alongside straightforward buy-now listings",
+      "Collector Drops, pre-orders and prize draws alongside straightforward buy-now listings",
     ],
     faqs: [
       { question: "What is the difference between the four Beyblade generations?", answer: "Original (1999–2003) started the franchise with ripcord launchers and a four-part plastic system. Metal Fight (2008–2013) added metal-weighted wheels and deep part tuning. Burst (2015–2023) introduced tops that burst apart on hard hits. Beyblade X (2023–) uses the Xtreme Gear system and a stadium rail that accelerates a top along it." },

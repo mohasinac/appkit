@@ -79,7 +79,7 @@ export interface SessionUser {
   publicProfile?: FirestoreDocument;
   /**
    * Buyer activity counts, DERIVED by `/api/user/profile` — orders placed,
-   * auctions won, reviews written. Each is optional and `undefined` means the
+   * collector drops won, reviews written. Each is optional and `undefined` means the
    * count could not be taken, which is NOT the same as zero: render nothing.
    *
    * 🛑 Not the `users/{uid}.stats` document field, which has no writer at all
@@ -91,7 +91,7 @@ export interface SessionUser {
    */
   stats?: {
     totalOrders?: number;
-    auctionsWon?: number;
+    collectorDropsWon?: number;
     reviewsCount?: number;
   };
   metadata?: FirestoreDocument;

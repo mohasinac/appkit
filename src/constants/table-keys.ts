@@ -31,7 +31,7 @@ export const TABLE_KEYS = {
   /**
    * Superseded by AVAILABILITY. Retained ONLY so `readAvailability()` can map
    * bookmarked `?showSold=true` URLs onto `availability=all`, and because the
-   * seller auction/prize-draw dashboards still read them during migration.
+   * seller collector drop/prize-draw dashboards still read them during migration.
    * Never write these from new code.
    */
   SHOW_SOLD: "showSold",
@@ -39,7 +39,7 @@ export const TABLE_KEYS = {
   SHOW_CLOSED: "showClosed",
   FEATURED: "featured",
   IS_FEATURED: "isFeatured",
-  AUCTION_ID: "auctionId",
+  COLLECTOR_DROP_ID: "collectorDropId",
   BIDDER_ID: "bidderId",
   STORE_NAME: "storeName",
   LISTING_TYPE: "listingType",

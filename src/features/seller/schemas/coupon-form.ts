@@ -354,8 +354,8 @@ export const adminCouponFormSchema = couponFormBase
     firstTimeUserOnly: annotate(z.boolean(), {
       section: "scope", order: 3, row: "quarter", label: "First-time users only",
     }),
-    appliesToAuctions: annotate(z.boolean(), {
-      section: "scope", order: 4, row: "quarter", label: "Applies to auctions",
+    appliesToCollectorDrops: annotate(z.boolean(), {
+      section: "scope", order: 4, row: "quarter", label: "Applies to collector drops",
     }),
   })
   .superRefine((v, ctx) => {

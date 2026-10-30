@@ -20,7 +20,7 @@ import type {
  * never emitted by code under our control any more.
  */
 const PUBLISHED_CLAUSE = sieveFilter("status", SIEVE_OP.EQ, "published");
-const AUCTIONS_PUBLISHED = sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "auction"), PUBLISHED_CLAUSE);
+const COLLECTOR_DROPS_PUBLISHED = sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "collector-drop"), PUBLISHED_CLAUSE);
 const PREORDERS_PUBLISHED = sieveAnd(sieveFilter("listingType", SIEVE_OP.EQ, "pre-order"), PUBLISHED_CLAUSE);
 
 export interface ProductListActionParams {
@@ -109,9 +109,9 @@ function toListResult(
  * Featured items for the homepage's generic "Featured Products" strip.
  *
  * Scoped to `GENERIC_PRODUCT_LISTING_TYPES` for the same reason `/products` is:
- * the homepage already has dedicated Live Auctions, Pre-Orders and Prize Draws
+ * the homepage already has dedicated Live Collector Drops, Pre-Orders and Prize Draws
  * sections, so leaving this unscoped put the same item in two strips on one
- * page — and an auction rendered as a generic product card shows Buy-Now chrome
+ * page — and a collector drop rendered as a generic product card shows Buy-Now chrome
  * instead of bid affordances.
  */
 /**
@@ -155,26 +155,26 @@ export async function getFeaturedProducts(
 }
 
 /**
- * The soonest-ending LIVE auctions.
+ * The soonest-ending LIVE collector drops.
  *
- * This used to be `listingType==auction,status==published` sorted
- * `auctionEndDate ASC` with no lower bound — and ascending order front-loads
- * the OLDEST end dates, so the homepage's "Live Auctions" strip led with the
+ * This used to be `listingType==collector-drop,status==published` sorted
+ * `collectorDropEndDate ASC` with no lower bound — and ascending order front-loads
+ * the OLDEST end dates, so the homepage's "Live Collector Drops" strip led with the
  * most-expired lots in the catalogue. Nothing about it was flagged as wrong
- * because an ended auction still renders as a perfectly normal card.
+ * because an ended collector drop still renders as a perfectly normal card.
  *
  * One listing type, sorted by the same field the scope filters on, means
- * `listPublicProducts` pushes `auctionEndDate >= now` into Firestore rather
+ * `listPublicProducts` pushes `collectorDropEndDate >= now` into Firestore rather
  * than filtering a bounded window in memory.
  */
-export async function getFeaturedAuctions(
+export async function getFeaturedCollectorDrops(
   pageSize = 6,
 ): Promise<ProductListResult> {
   return toListResult(
     await listPublicProducts({
-      listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION],
+      listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.COLLECTOR_DROP],
       availability: AVAILABILITY_VALUES.AVAILABLE,
-      sorts: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"),
+      sorts: sortBy(PRODUCT_FIELDS.COLLECTOR_DROP_END_DATE, "ASC"),
       page: 1,
       pageSize,
       windowSize: featuredWindow(pageSize),
@@ -194,23 +194,23 @@ export async function getLatestProducts(
   });
 }
 
-export async function getLatestAuctions(
+export async function getLatestCollectorDrops(
   pageSize = 12,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: AUCTIONS_PUBLISHED,
+    filters: COLLECTOR_DROPS_PUBLISHED,
     sorts: sortBy("createdAt", "DESC"),
     page: 1,
     pageSize,
   });
 }
 
-export async function listAuctions(
+export async function listCollectorDrops(
   params: ProductListActionParams = {},
 ): Promise<ProductListResult> {
-  const { filters, sorts = "auctionEndDate", page = 1, pageSize = 20 } = params;
+  const { filters, sorts = "collectorDropEndDate", page = 1, pageSize = 20 } = params;
   return productRepository.list({
-    filters: filters ? `${AUCTIONS_PUBLISHED},${filters}` : AUCTIONS_PUBLISHED,
+    filters: filters ? `${COLLECTOR_DROPS_PUBLISHED},${filters}` : COLLECTOR_DROPS_PUBLISHED,
     sorts,
     page,
     pageSize,

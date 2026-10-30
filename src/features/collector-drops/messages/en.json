@@ -1,0 +1,18 @@
+{
+  "card": {
+    "currentBid": "Current bid",
+    "startingBid": "Starting bid",
+    "bids": "bids",
+    "placeBid": "Place Bid",
+    "ended": "Collector Drop ended"
+  },
+  "countdown": {
+    "hours": "h",
+    "mins": "m",
+    "secs": "s"
+  },
+  "list": {
+    "title": "Live Collector Drops",
+    "empty": "No collector drops running right now."
+  }
+}

@@ -36,17 +36,17 @@
  *
  * The count is of AVAILABLE rows — `isListingRowAvailable`, the same predicate
  * `countersReconcile` and the listing query use. That predicate is partly
- * TIME-dependent: `auction` is the one type with an inequality clause
- * (`auctionEndDate`), so an auction becomes unavailable by the clock with no
+ * TIME-dependent: `collector drop` is the one type with an inequality clause
+ * (`collectorDropEndDate`), so a collector drop becomes unavailable by the clock with no
  * product write, and no incremental counter can observe that.
  *
- * In practice the window is minutes, not a day: `auctionSettlement` writes
+ * In practice the window is minutes, not a day: `collectorDropSettlement` writes
  * `isSold: true` when it settles, and that write re-evaluates the counter.
  * Every other type's unavailability is write-driven (stock, `isSold`,
  * `digitalCode.codesAvailable`, the prize-draw reveal status).
  *
  * So: instant for every write-driven change, and bounded by the settlement
- * cadence for a just-ended auction. That is strictly better than today, where
+ * cadence for a just-ended collector drop. That is strictly better than today, where
  * every change is up to 24h stale. The nightly reconciler stays as the
  * authority and the audit — its `drifted` counter becomes a real signal that
  * an increment was missed.
@@ -118,7 +118,7 @@ export interface CategoryCountsDocument {
    *
    * Scalars rather than a per-type map: a lot is not type-specific in any way
    * a buyer or a seller filters on, and there is no reader for "lots of
-   * auctions".
+   * collector drops".
    */
   lots: { own: number; total: number };
   updatedAt: Date;

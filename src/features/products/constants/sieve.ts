@@ -10,7 +10,7 @@ export type SortOption = { readonly value: string; readonly label: string };
 
 // ---------------------------------------------------------------------------
 // W2-6 — Base sort options shared by standard / pre-order / bundle / prize-draw.
-// Auctions get their own base (auctionEndDate primary) because the "Ending Soon"
+// Collector Drops get their own base (collectorDropEndDate primary) because the "Ending Soon"
 // dimension dominates browse intent.
 // ---------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ export function withoutPriceSorts(
  * `price` is: "Highest Current Bid" ranks every hidden bid on the page, which
  * is the disclosure the gate exists to prevent. `bidCount` is deliberately
  * ABSENT — the number of bids is not an amount, it is already displayed
- * ungated beside every auction, and hiding it would remove a real signal for
+ * ungated beside every collector drop, and hiding it would remove a real signal for
  * no gain.
  */
 const MONEY_SORT_FIELDS = [
@@ -130,11 +130,11 @@ export const STANDARD_PUBLIC_SORT_OPTIONS = [
 ] as const satisfies readonly SortOption[];
 
 // ---------------------------------------------------------------------------
-// Auctions — auction-specific base puts auctionEndDate primary
+// Collector Drops — collector-drop-specific base puts collectorDropEndDate primary
 // ---------------------------------------------------------------------------
 
-export const AUCTION_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"), label: "Ending Soon" },
+export const COLLECTOR_DROP_SORT_OPTIONS = [
+  { value: sortBy(PRODUCT_FIELDS.COLLECTOR_DROP_END_DATE, "ASC"), label: "Ending Soon" },
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Just Started" },
   { value: sortBy(PRODUCT_FIELDS.CURRENT_BID, "ASC"), label: "Lowest Current Bid" },
   { value: sortBy(PRODUCT_FIELDS.CURRENT_BID), label: "Highest Current Bid" },
@@ -145,13 +145,13 @@ export const AUCTION_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest Listed" },
 ] as const satisfies readonly SortOption[];
 
-export const AUCTION_PUBLIC_SORT_OPTIONS = [
-  AUCTION_SORT_OPTIONS[0],
-  AUCTION_SORT_OPTIONS[1],
-  AUCTION_SORT_OPTIONS[2],
-  AUCTION_SORT_OPTIONS[3],
-  AUCTION_SORT_OPTIONS[5],
-  AUCTION_SORT_OPTIONS[7],
+export const COLLECTOR_DROP_PUBLIC_SORT_OPTIONS = [
+  COLLECTOR_DROP_SORT_OPTIONS[0],
+  COLLECTOR_DROP_SORT_OPTIONS[1],
+  COLLECTOR_DROP_SORT_OPTIONS[2],
+  COLLECTOR_DROP_SORT_OPTIONS[3],
+  COLLECTOR_DROP_SORT_OPTIONS[5],
+  COLLECTOR_DROP_SORT_OPTIONS[7],
 ] as const satisfies readonly SortOption[];
 
 // ---------------------------------------------------------------------------

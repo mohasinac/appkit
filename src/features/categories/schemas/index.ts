@@ -32,10 +32,10 @@ export const categoryDocumentDisplaySchema = z.object({
 export const categoryDocumentMetricsSchema = z.object({
   productCount: z.number().int().nonnegative(),
   productIds: z.array(z.string()),
-  auctionCount: z.number().int().nonnegative(),
-  auctionIds: z.array(z.string()),
+  collectorDropCount: z.number().int().nonnegative(),
+  collectorDropIds: z.array(z.string()),
   totalProductCount: z.number().int().nonnegative(),
-  totalAuctionCount: z.number().int().nonnegative(),
+  totalCollectorDropCount: z.number().int().nonnegative(),
   totalItemCount: z.number().int().nonnegative(),
   lastUpdated: firestoreDateSchema,
 });
@@ -115,7 +115,7 @@ export const categoryPriceGuidanceSchema = z.object({
       byPath: z
         .object({
           standard: z.number().int().nonnegative().optional(),
-          auction: z.number().int().nonnegative().optional(),
+          "collector-drop": z.number().int().nonnegative().optional(),
           offer: z.number().int().nonnegative().optional(),
         })
         .optional(),
@@ -125,7 +125,7 @@ export const categoryPriceGuidanceSchema = z.object({
     .object({
       amount: rupeesSchema,
       at: firestoreDateSchema,
-      via: z.enum(["standard", "auction", "offer"]).optional(),
+      via: z.enum(["standard", "collector-drop", "offer"]).optional(),
     })
     .optional(),
 });

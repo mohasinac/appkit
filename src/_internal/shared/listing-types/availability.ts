@@ -9,7 +9,7 @@
  *      real `ProductStatus` union; and it had no branch for classified / live
  *      / art / stickers. Meanwhile the listing pages expressed the same idea a
  *      fourth way (an `inStock` boolean plus a `dateFrom` cutoff) and the
- *      homepage expressed it not at all — which is why the "Live Auctions"
+ *      homepage expressed it not at all — which is why the "Live Collector Drops"
  *      strip rendered the most-expired lots first.
  *
  * WHAT: The type-agnostic half of the availability predicate. The per-type

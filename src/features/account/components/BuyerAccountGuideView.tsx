@@ -55,8 +55,8 @@ const SECTIONS: AccountSection[] = [
         <Text className={GC.textMuted}>You&apos;ll receive in-app notifications for:</Text>
         <Ul className={GC.listDiscMuted}>
           <Li>Order status changes (Processing, Shipped, Delivered)</Li>
-          <Li>Outbid alerts on auctions you&apos;re participating in</Li>
-          <Li>Auction win notification</Li>
+          <Li>Outbid alerts on collectorDrops you&apos;re participating in</Li>
+          <Li>Collector Drop win notification</Li>
           <Li>Review request after a delivered order</Li>
           <Li>Support ticket replies</Li>
         </Ul>

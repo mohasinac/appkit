@@ -354,13 +354,13 @@ export const ADMIN_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Auctions
+// Collector Drops
 // ---------------------------------------------------------------------------
 
-export const AUCTION_ENDPOINTS = {
-  LIST: "/api/auctions",
-  BY_SLUG: (slug: string) => `/api/auctions/${slug}`,
-  BIDS: (slug: string) => `/api/auctions/${slug}/bids`,
+export const COLLECTOR_DROP_ENDPOINTS = {
+  LIST: "/api/collector-drops",
+  BY_SLUG: (slug: string) => `/api/collector-drops/${slug}`,
+  BIDS: (slug: string) => `/api/collector-drops/${slug}/bids`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -807,7 +807,7 @@ export const SELLER_ENDPOINTS = {
    * arrived, and the buyer's 7-day window runs from that moment.
    */
   ORDER_OPEN_BALANCE: (orderId: string) => `/api/store/orders/${orderId}/open-balance`,
-  AUCTIONS: "/api/store/products",
+  COLLECTOR_DROPS: "/api/store/products",
   COUPONS: "/api/store/coupons",
   COUPON_BY_ID: (id: string) => `/api/store/coupons/${id}`,
   OFFERS: "/api/store/offers",
@@ -894,7 +894,7 @@ export const STORE_ENDPOINTS = {
   LIST: "/api/stores",
   BY_SLUG: (slug: string) => `/api/stores/${slug}`,
   PRODUCTS: (slug: string) => `/api/stores/${slug}/products`,
-  AUCTIONS: (slug: string) => `/api/stores/${slug}/auctions`,
+  COLLECTOR_DROPS: (slug: string) => `/api/stores/${slug}/collector-drops`,
   REVIEWS: (slug: string) => `/api/stores/${slug}/reviews`,
 } as const;
 
@@ -983,7 +983,7 @@ export const API_ENDPOINTS = {
   NOTIFICATIONS: NOTIFICATIONS_ENDPOINTS,
   SITE_SETTINGS: SITE_SETTINGS_ENDPOINTS,
   ADMIN: ADMIN_ENDPOINTS,
-  AUCTIONS: AUCTION_ENDPOINTS,
+  COLLECTOR_DROPS: COLLECTOR_DROP_ENDPOINTS,
   BIDS: BID_ENDPOINTS,
   CART: CART_ENDPOINTS,
   CATEGORIES: CATEGORY_ENDPOINTS,

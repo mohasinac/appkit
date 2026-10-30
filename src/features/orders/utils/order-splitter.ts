@@ -4,7 +4,7 @@
 export type OrderType =
   | "standard"
   | "preorder"
-  | "auction"
+  | "collector-drop"
   | "offer"
   | "random-lots";
 
@@ -18,7 +18,7 @@ import type { ListingType } from "../../products/types/index";
 import {
   getListingRule,
   offerRule,
-  auctionRule,
+  collectorDropRule,
 } from "../../../_internal/shared/checkout/rules";
 import { CART_LANE, laneOf } from "../../../_internal/shared/checkout/lanes";
 
@@ -33,7 +33,7 @@ import { CART_LANE, laneOf } from "../../../_internal/shared/checkout/lanes";
  * then each batch lands in its own order group.
  *
  * SB1-G Phase 4 — keys off the canonical `CartItem.listingType` discriminator
- * instead of the legacy `isAuction` / `isPreOrder` booleans.
+ * instead of the legacy `isCollectorDrop` / `isPreOrder` booleans.
  * S-SBUNI-RULES 2026-05-13 — rule-registry dispatch replaces if/else chain.
  */
 export function splitCartIntoOrderGroups<
@@ -46,16 +46,16 @@ export function splitCartIntoOrderGroups<
     const lt = (item.listingType ?? "standard") as ListingType;
     // Lane first, listing type second. A locked line's obligation — not the
     // product's listing type — decides how it settles: an accepted offer is
-    // always its own order, and a won auction is always its own order even
-    // though `auctionRule` is otherwise unreachable (auctions are
+    // always its own order, and a won collector drop is always its own order even
+    // though `collectorDropRule` is otherwise unreachable (collector drops are
     // `cartEligible: false` for user-initiated adds; the only way one reaches
-    // the cart is auction settlement writing the winner's locked line).
+    // the cart is collector drop settlement writing the winner's locked line).
     const lane = laneOf(item);
     const rule =
       lane === CART_LANE.OFFER
         ? offerRule
-        : lane === CART_LANE.AUCTION
-          ? auctionRule
+        : lane === CART_LANE.COLLECTOR_DROP
+          ? collectorDropRule
           : (getListingRule(lt) ?? getListingRule("standard"));
 
     // Prize-draw (and future types with maxLinesPerOrder < Infinity) may split

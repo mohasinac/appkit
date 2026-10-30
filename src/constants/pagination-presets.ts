@@ -31,7 +31,7 @@ export const FEATURED_LIMITS = {
   blog: 3,
   bundles: 12,
   events: 6,
-  auctions: 8,
+  collectorDrops: 8,
 } as const;
 
 /** Per-resource sitemap node-count limits (URL caps). */
@@ -40,5 +40,5 @@ export const SITEMAP_LIMITS = {
   categories: 200,
   stores: 200,
   blog: 5000,
-  auctions: 5000,
+  collectorDrops: 5000,
 } as const;

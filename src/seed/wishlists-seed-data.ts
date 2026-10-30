@@ -24,7 +24,7 @@
 
 export interface WishlistItemSeed {
   productId: string;
-  productType: "product" | "auction" | "preorder";
+  productType: "product" | "collector-drop" | "preorder";
   addedAt: Date;
 }
 
@@ -57,7 +57,7 @@ export const wishlistsSeedData: WishlistSeedDocument[] = [
   // Admin: 4 items — mix from Beyblade Arena (Admin as buyer)
   makeDoc("user-admin-letitrip", [
     { productId: "product-beyblade-metal-storm-pegasus", productType: "product", addedAt: daysAgo(20) },
-    { productId: "auction-beyblade-original-dragoon-storm", productType: "auction", addedAt: daysAgo(15) },
+    { productId: "collectordrop-beyblade-original-dragoon-storm", productType: "collector-drop", addedAt: daysAgo(15) },
     { productId: "product-beyblade-burst-valkyrie", productType: "product", addedAt: daysAgo(8) },
     { productId: "preorder-beyblade-x-bx-08-wave", productType: "preorder", addedAt: daysAgo(2) },
   ]),

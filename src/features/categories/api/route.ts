@@ -181,7 +181,7 @@ export async function GET(request: Request): Promise<NextResponse> {
      * This was `getRepository<CategoryItem>`, which is a cast-by-generic: the
      * repository returns raw Firestore documents at runtime, so every return
      * site below was handing out `createdBy`, `createdByStoreId` and the
-     * unbounded `metrics.productIds[]`/`auctionIds[]` while tsc believed the
+     * unbounded `metrics.productIds[]`/`collectorDropIds[]` while tsc believed the
      * payload was already projected. Naming the real shape is what makes the
      * missing `toCategoryListItem` calls a compile error instead of a leak.
      */

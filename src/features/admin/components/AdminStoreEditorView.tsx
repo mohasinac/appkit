@@ -124,8 +124,8 @@ const CAPABILITY_META: Record<
     group: CAP_GROUP.LISTINGS,
     label: "Advanced Listing Types (pre-orders, prize draws, classifieds, digital codes, live, art, stickers)",
   },
-  // Legacy: no longer checked anywhere — `auction` is a basic type now.
-  host_auctions: { group: CAP_GROUP.LISTINGS, label: "Host Auctions (legacy — no longer required)" },
+  // Legacy: no longer checked anywhere — `collector drop` is a basic type now.
+  host_collector_drops: { group: CAP_GROUP.LISTINGS, label: "Host Collector Drops (legacy — no longer required)" },
   // Legacy per-type grant, still honoured so existing stores keep access.
   host_preorders: { group: CAP_GROUP.LISTINGS, label: "Host Pre-orders (legacy grant)" },
   create_categories: { group: CAP_GROUP.LISTINGS, label: "Request New Categories" },

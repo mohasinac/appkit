@@ -17,7 +17,7 @@
  * category/brand panels, admin/seller dashboards) offers as a tab bar.
  *
  * DELIBERATELY NOT a Firestore field. "Unavailable" means different things to
- * different listing types — an auction ENDS, a product SELLS OUT, a prize draw
+ * different listing types — a collector drop ENDS, a product SELLS OUT, a prize draw
  * CLOSES, a code pool DEPLETES — so there is no single column to filter on.
  * The per-type meaning lives on each listing-type plugin
  * (`isAvailable` / `unavailableClauses` in `_internal/shared/listing-types/`),
@@ -87,9 +87,9 @@ export const PRODUCT_FIELDS = {
   INSURANCE: "insurance",
   INSURANCE_COST: "insuranceCost",
   SHIPPING_PAID_BY: "shippingPaidBy",
-  // SB1-G — canonical listing-kind discriminator (replaces removed isAuction / isPreOrder booleans)
+  // SB1-G — canonical listing-kind discriminator (replaces removed isCollectorDrop / isPreOrder booleans)
   LISTING_TYPE: "listingType",
-  AUCTION_END_DATE: "auctionEndDate",
+  COLLECTOR_DROP_END_DATE: "collectorDropEndDate",
   STARTING_BID: "startingBid",
   CURRENT_BID: "currentBid",
   BID_COUNT: "bidCount",
@@ -97,9 +97,9 @@ export const PRODUCT_FIELDS = {
   BUY_NOW_PRICE: "buyNowPrice",
   MIN_BID_INCREMENT: "minBidIncrement",
   AUTO_EXTENDABLE: "autoExtendable",
-  AUCTION_EXTENSION_MINUTES: "auctionExtensionMinutes",
-  AUCTION_ORIGINAL_END_DATE: "auctionOriginalEndDate",
-  AUCTION_SHIPPING_PAID_BY: "auctionShippingPaidBy",
+  COLLECTOR_DROP_EXTENSION_MINUTES: "collectorDropExtensionMinutes",
+  COLLECTOR_DROP_ORIGINAL_END_DATE: "collectorDropOriginalEndDate",
+  COLLECTOR_DROP_SHIPPING_PAID_BY: "collectorDropShippingPaidBy",
   PRE_ORDER_DELIVERY_DATE: "preOrderDeliveryDate",
   PRE_ORDER_DEPOSIT_PERCENT: "preOrderDepositPercent",
   PRE_ORDER_DEPOSIT_AMOUNT: "preOrderDepositAmount",
@@ -173,7 +173,7 @@ export const PRODUCT_FIELDS = {
     BUYER: "buyer",
   },
 
-  AUCTION_SHIPPING_PAID_BY_VALUES: {
+  COLLECTOR_DROP_SHIPPING_PAID_BY_VALUES: {
     SELLER: "seller",
     WINNER: "winner",
   },
@@ -213,7 +213,7 @@ export const PRODUCT_FIELDS = {
   DISPLAY_ORDER: "displayOrder",
   LISTING_TYPE_VALUES: {
     STANDARD: "standard",
-    AUCTION: "auction",
+    COLLECTOR_DROP: "collector-drop",
     PRE_ORDER: "pre-order",
     RANDOM_LOTS: "random-lots",
     CLASSIFIED: "classified",
@@ -279,7 +279,7 @@ export const ORDER_FIELDS = {
   BUYER_ID: "buyerId",
   BUNDLE_ID: "bundleId",
   /**
-   * Which checkout LANE produced this order (`standard` / `auction` / `offer`
+   * Which checkout LANE produced this order (`standard` / `collector drop` / `offer`
    * / `preorder` / `prize-draw`) — see § "Checkout Lanes".
    *
    * 🛑 Never filter `orderType == "standard"` in a query. Orders written
@@ -1109,7 +1109,7 @@ export const COUPON_FIELDS = {
   SELLER_ID: "sellerId",
   STORE_ID: "storeId",
   STORE_SLUG: "storeSlug",
-  APPLICABLE_TO_AUCTIONS: "applicableToAuctions",
+  APPLICABLE_TO_COLLECTOR_DROPS: "applicableToCollectorDrops",
   DISCOUNT: "discount",
   BXGY: "bxgy",
   TIERS: "tiers",
@@ -1231,7 +1231,7 @@ export const HOMEPAGE_SECTION_FIELDS = {
     TRUST_INDICATORS: "trust-indicators",
     CATEGORIES: "categories",
     PRODUCTS: "products",
-    AUCTIONS: "auctions",
+    COLLECTOR_DROPS: "collector-drops",
     BANNER: "banner",
     FEATURES: "features",
     REVIEWS: "reviews",

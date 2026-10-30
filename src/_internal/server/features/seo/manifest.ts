@@ -44,9 +44,9 @@ export function buildManifest({ name, shortName, description }: ManifestOptions)
         description: "Browse the latest products",
       },
       {
-        name: "Live Auctions",
-        url: String(ROUTES.PUBLIC.AUCTIONS),
-        description: "Join live auction bidding",
+        name: "Live Collector Drops",
+        url: String(ROUTES.PUBLIC.COLLECTOR_DROPS),
+        description: "Join live collector drop bidding",
       },
       {
         name: "Categories",

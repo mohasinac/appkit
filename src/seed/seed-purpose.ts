@@ -23,7 +23,7 @@
  * **That reasoning was wrong here, and it made the purge a no-op.**
  *
  * This site has never gone live. There are no real customers, no real orders
- * and no real payouts — every user, store, listing, auction, order, bid and
+ * and no real payouts — every user, store, listing, collector drop, order, bid and
  * review in the seed was added TO EXERCISE THE PLATFORM. Classifying them
  * `permanent` means "cannot be cleared", which is precisely the opposite of
  * why the field was asked for.

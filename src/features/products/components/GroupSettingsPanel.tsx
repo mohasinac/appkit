@@ -90,7 +90,7 @@ export interface GroupSettingsPanelProps {
    * be a second source of truth for the same five fields.
    */
   groupRules?: GroupRules;
-  isAuction?: boolean;
+  isCollectorDrop?: boolean;
   storeProductsEndpoint: string;
   onGroupChanged: () => void;
 }
@@ -140,7 +140,7 @@ export function GroupSettingsPanel({
   groupChildSlugs,
   groupTitle,
   groupRules,
-  isAuction,
+  isCollectorDrop,
   storeProductsEndpoint,
   onGroupChanged,
 }: GroupSettingsPanelProps) {
@@ -190,7 +190,7 @@ export function GroupSettingsPanel({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [titleDraft]);
 
-  if (isAuction) return null;
+  if (isCollectorDrop) return null;
 
   const groupEndpoint = `${storeProductsEndpoint}/${productId}/group`;
   const childrenEndpoint = `${groupEndpoint}/children`;
@@ -852,7 +852,7 @@ function AddChildContent({
         <TabsContent value="link">
           <Stack gap="sm" className="mt-4">
             <Text size="xs" color="muted">
-              Search your existing products or pre-orders. Auctions cannot be linked. Select multiple to bulk-link.
+              Search your existing products or pre-orders. Collector Drops cannot be linked. Select multiple to bulk-link.
             </Text>
             <ProductInlineSelect
               scope="store"

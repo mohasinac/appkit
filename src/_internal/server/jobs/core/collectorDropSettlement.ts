@@ -1,0 +1,299 @@
+import {
+  bidRepository,
+  cartRepository,
+  productRepository,
+  storeRepository,
+} from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { normalizeError } from "../../../../errors/normalize";
+import { safeRead } from "../../../../errors/safe-read";
+import type { JobContext } from "../runtime/types";
+import { COLLECTOR_DROP_MESSAGES, BID_MESSAGES } from "../handlers/messages";
+import { ROUTES } from "../../../../next/routing/route-map";
+import { CART_LANE, LANE_CHECKOUT_WINDOW_MS } from "../../../shared/checkout/lanes";
+
+type CollectorDropProductRow = Awaited<
+  ReturnType<typeof productRepository.getExpiredCollectorDrops>
+>[number]["data"];
+
+/**
+ * How long the winner has to pay before the locked cart line lapses. Mirrors
+ * the accepted-offer window so both locked lanes behave the same.
+ */
+// Was a local `48 * 60 * 60 * 1000` here AND an identical one in bid-actions.ts
+// (the Buy-Now path), with nothing linking them — changing one would have given
+// the same kind of win two different deadlines depending on how it was won.
+const COLLECTOR_DROP_CHECKOUT_WINDOW_MS = LANE_CHECKOUT_WINDOW_MS["collector-drop"];
+
+/** Deep link the winner straight into the collector drop checkout lane. */
+const COLLECTOR_DROP_CHECKOUT_URL = `${String(ROUTES.USER.CHECKOUT)}?lane=${CART_LANE.COLLECTOR_DROP}`;
+
+/**
+ * Clear every unpaid Buy Now hold on a collector drop whose clock just ran out.
+ *
+ * This is the user's explicit rule: "if by the time the checkout is not
+ * finished but collector drop timeout ends the buyout should fail as well." The item
+ * goes to whoever actually won the bidding, and the claimants get their carts
+ * back — the line is `locked: true`, so they cannot clear it themselves.
+ *
+ * `cancelled`, never `forfeited`: forfeiture means "won, then defaulted" and
+ * carries a warning about account restrictions. Nobody won anything here, and
+ * losing a race against a clock is not misconduct.
+ *
+ * Best-effort per hold — one failure must not abort settling the collector drop.
+ */
+async function releasePendingBuyouts(
+  ctx: JobContext,
+  product: CollectorDropProductRow,
+  holds: Array<{ id: string; data: { userId: string } }>,
+): Promise<void> {
+  for (const hold of holds) {
+    try {
+      await cartRepository.removeItemsByBidId(hold.data.userId, hold.id);
+      await bidRepository.markCancelled(hold.id, {
+        actor: { role: "system" },
+        trigger: "collectorDropSettlement:lapsedBuyoutHold",
+        reason: "The collector drop ended before this Buy Now claim was paid for.",
+      });
+      await sendNotification({
+        userId: hold.data.userId,
+        type: "collector_drop_ended",
+        priority: "high",
+        title: BID_MESSAGES.BUY_NOW_COLLECTOR_DROP_ENDED_TITLE,
+        message: BID_MESSAGES.BUY_NOW_COLLECTOR_DROP_ENDED_MESSAGE(product.title),
+        relatedId: product.id,
+        relatedType: "product",
+      });
+    } catch (err) {
+      void normalizeError(err);
+      ctx.logger.warn(`Failed to release buyout hold ${hold.id}`, {
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+  ctx.logger.info(`Released ${holds.length} unpaid buyout hold(s) on ${product.id}`);
+}
+
+async function settleCollectorDrop(ctx: JobContext, product: CollectorDropProductRow): Promise<void> {
+  const allActive = await bidRepository.getActiveByProduct(product.id);
+
+  /**
+   * A pending Buy Now claim is `active` and sits at the BIN price, so it would
+   * be `activeBids[0]` and win by default the instant the clock ran out —
+   * handing the item to somebody who explicitly did NOT complete their purchase
+   * in time. A buyout only counts once it has been paid for, at which point
+   * `claimCollectorDropForCheckout` has already marked it `won` and flipped the
+   * product to `isSold`, so this job never sees that collector drop at all.
+   *
+   * The stale holds are released below, after the real winner is decided.
+   */
+  const pendingBuyouts = allActive.filter((e) => e.data.isBuyout === true);
+  const activeBids = allActive.filter((e) => e.data.isBuyout !== true);
+
+  if (pendingBuyouts.length > 0) {
+    await releasePendingBuyouts(ctx, product, pendingBuyouts);
+  }
+
+  if (activeBids.length === 0) {
+    const batch = ctx.db.batch();
+    productRepository.updateStatusInBatch(batch, product.id, "archived");
+    await batch.commit();
+    ctx.logger.info(COLLECTOR_DROP_MESSAGES.NO_BIDS_LOG(product.id));
+    return;
+  }
+
+  const [winnerEntry, ...loserEntries] = activeBids;
+
+  // Reserve price. It exists on the product, is editable by the seller, is
+  // shown in both dashboards, and the buyer guide promises bids below it don't
+  // win — but settlement awarded activeBids[0] unconditionally until
+  // 2026-08-21. A below-reserve collector drop ends with NO winner.
+  const reserve = product.reservePrice;
+  if (typeof reserve === "number" && reserve > 0 && winnerEntry.data.bidAmount < reserve) {
+    const batch = ctx.db.batch();
+    // `data` comes from the same query as `ref`, so the timeline entry is
+    // free even on a collector drop that closed with hundreds of bids (Rule #6).
+    activeBids.forEach(({ ref, data }) =>
+      bidRepository.markLost(batch, ref, { actor: { role: "system" as const }, trigger: "collectorDropSettlement" }, data),
+    );
+    productRepository.updateStatusInBatch(batch, product.id, "archived");
+    await batch.commit();
+
+    const reserveStore = product.storeId
+      ? await safeRead(() => storeRepository.findById(product.storeId!), {
+          route: "job:collectorDropSettlement",
+          key: "collectorDropSettlement.reserveNotMet.store",
+          fallback: null,
+        })
+      : null;
+    if (reserveStore?.ownerId) {
+      await sendNotification({
+        userId: reserveStore.ownerId,
+        type: "collector_drop_ended",
+        priority: "normal",
+        title: COLLECTOR_DROP_MESSAGES.RESERVE_NOT_MET_TITLE,
+        message: COLLECTOR_DROP_MESSAGES.RESERVE_NOT_MET_MESSAGE(
+          product.title,
+          winnerEntry.data.currency,
+          winnerEntry.data.bidAmount,
+          reserve,
+        ),
+        relatedId: product.id,
+        relatedType: "product",
+      });
+    }
+
+    // audit-unguarded-send-ok: `bid_lost` is email-INELIGIBLE — these return at
+    // the eligibility gate having written only the bell row, so they never
+    // reach the budget counter. Same reasoning as the settled-collectorDrop fan-out
+    // below.
+    await Promise.allSettled(
+      activeBids.slice(0, 50).map(({ data: bid }) =>
+        sendNotification({
+          userId: bid.userId,
+          type: "bid_lost",
+          priority: "normal",
+          title: COLLECTOR_DROP_MESSAGES.LOST_TITLE,
+          message: COLLECTOR_DROP_MESSAGES.RESERVE_NOT_MET_BIDDER_MESSAGE(product.title),
+          relatedId: product.id,
+          relatedType: "product",
+        }),
+      ),
+    );
+
+    ctx.logger.info(`Collector Drop ${product.id} ended below reserve — no winner`, {
+      highestBid: winnerEntry.data.bidAmount,
+      reservePrice: reserve,
+    });
+    return;
+  }
+
+  const batch = ctx.db.batch();
+  bidRepository.markWon(batch, winnerEntry.ref, { actor: { role: "system" as const }, trigger: "collectorDropSettlement" }, winnerEntry.data);
+  loserEntries.forEach(({ ref, data }) =>
+    bidRepository.markLost(batch, ref, { actor: { role: "system" as const }, trigger: "collectorDropSettlement" }, data),
+  );
+
+  // Two-axis model: mark as sold without changing publish status.
+  batch.update(ctx.db.collection("products").doc(product.id), {
+    isSold: true,
+    availableQuantity: 0,
+  });
+  await batch.commit();
+
+  // The win becomes a LOCKED CART LINE, not an order.
+  //
+  // Settlement used to call `orderRepository.createFromCollectorDrop`, which wrote a
+  // document that was not an OrderDocument at all — flat productId/userId/
+  // unitPrice, no items[], no buyerId, no paymentMethod, no shippingAddress,
+  // and a Firestore auto-ID instead of the `order-…` semantic id. No orders UI
+  // could render it and the manual-payment panel returned null for it, so an
+  // collector drop winner had literally no way to pay, anywhere in the product.
+  //
+  // Routing the win through the cart instead means the winner goes through the
+  // ONE checkout that already knows how to collect an address, charge a payment
+  // method, run the high-value OTP, split per store and produce a real order.
+  // Collector Drops stay `canAddToCart: false` for user-initiated adds — this writes
+  // through the repository directly, the same deliberate bypass `checkoutOffer`
+  // uses for accepted offers.
+  await cartRepository.addItem(winnerEntry.data.userId, {
+    productId: product.id,
+    productTitle: product.title,
+    productImage: product.mainImage ?? "",
+    price: winnerEntry.data.bidAmount,
+    currency: winnerEntry.data.currency,
+    quantity: 1,
+    storeId: product.storeId,
+    storeName: product.storeName ?? "",
+    listingType: "collector-drop",
+    isCollectorDropWin: true,
+    collectorDropId: product.id,
+    bidId: winnerEntry.data.id,
+    lockedPrice: winnerEntry.data.bidAmount,
+    checkoutDeadline: new Date(ctx.now.getTime() + COLLECTOR_DROP_CHECKOUT_WINDOW_MS),
+    locked: true,
+  });
+
+  await sendNotification({
+    userId: winnerEntry.data.userId,
+    type: "bid_won",
+    priority: "high",
+    title: COLLECTOR_DROP_MESSAGES.WON_TITLE,
+    message: COLLECTOR_DROP_MESSAGES.WON_MESSAGE(
+      product.title,
+      winnerEntry.data.currency,
+      winnerEntry.data.bidAmount,
+    ),
+    relatedId: product.id,
+    relatedType: "product",
+    // Previously the winner's notification linked back to the product page and
+    // carried no CTA — the one place it should never send them.
+    actionUrl: COLLECTOR_DROP_CHECKOUT_URL,
+    actionLabel: COLLECTOR_DROP_MESSAGES.WON_ACTION_LABEL,
+  });
+
+  // audit-unguarded-send-ok: `bid_lost` is email-INELIGIBLE, so every one of
+  // these returns at the eligibility gate in sendNotification having written
+  // only the in-app bell row — it never reaches guardSend or the daily budget
+  // counter, so there is nothing here to contend on. This was THE fan-out that
+  // motivated the whole change (50 concurrent emails per settled collector drop, with
+  // every expired collector drop settling at once); it is now 50 concurrent Firestore
+  // writes to 50 DIFFERENT notification documents, which is what this loop
+  // always was underneath. If `bid_lost` is ever made eligible, this must
+  // become sequential and the counter must be sharded first.
+  await Promise.allSettled(
+    loserEntries.slice(0, 50).map(({ data: bid }) =>
+      sendNotification({
+        userId: bid.userId,
+        type: "bid_lost",
+        priority: "normal",
+        title: COLLECTOR_DROP_MESSAGES.LOST_TITLE,
+        message: COLLECTOR_DROP_MESSAGES.LOST_MESSAGE(product.title),
+        relatedId: product.id,
+        relatedType: "product",
+      }),
+    ),
+  );
+
+  ctx.logger.info(`Settled collector drop ${product.id}`, {
+    winner: winnerEntry.data.userId,
+    winningBid: winnerEntry.data.bidAmount,
+    losersCount: loserEntries.length,
+    bidId: winnerEntry.data.id,
+  });
+}
+
+export async function runCollectorDropSettlement(ctx: JobContext): Promise<void> {
+  /*
+   * 🛑 `FEATURE_COLLECTOR_DROPS` gate DELETED 2026-10-19, and this one was live.
+   *
+   * The flag mechanism was retired on 2026-08-29, but `audit-feature-flags`
+   * only matched `process.env.FEATURE_*` and this read it through
+   * `ctx.env(...)` — so it survived unseen. This is a SCHEDULED Firebase
+   * Function, which reads `functions/.env.<projectId>`, and measured on
+   * 2026-10-19 that file contains exactly one flag: `FEATURE_PAYOUTS=true`.
+   * `FEATURE_COLLECTOR_DROPS` was never set there, so this sweep returned on its
+   * first line on every run — no expired collector drop was ever settled in
+   * production, no winner ever got a cart line, and the only trace was an
+   * `info` log saying it had been skipped.
+   */
+  ctx.logger.info("Starting collector drop settlement sweep");
+
+  const expired = await productRepository.getExpiredCollectorDrops(ctx.now);
+  if (expired.length === 0) {
+    ctx.logger.info("No expired collector drops found");
+    return;
+  }
+
+  ctx.logger.info(`Found ${expired.length} expired collector drop(s) to settle`);
+  const results = await Promise.allSettled(
+    expired.map(({ data }) => settleCollectorDrop(ctx, data)),
+  );
+  const failed = results.filter((r) => r.status === "rejected");
+  if (failed.length > 0) {
+    ctx.logger.error(`${failed.length} collector drop(s) failed to settle`, failed);
+  }
+  ctx.logger.info(
+    `Settlement complete — ${expired.length - failed.length} succeeded, ${failed.length} failed`,
+  );
+}

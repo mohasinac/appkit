@@ -97,7 +97,7 @@ function suggestionTypeFor(typeKey: string): NavSuggestionRecord["type"] {
     case "group":
       return "page";
     default:
-      // Every listing type — product, auction, pre-order, … — plus anything
+      // Every listing type — product, collector drop, pre-order, … — plus anything
       // added to the index later. A listing is the commonest row and the
       // product icon is the right default for an unknown one.
       return "product";

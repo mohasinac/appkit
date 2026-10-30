@@ -8,7 +8,7 @@ import type { AboutContentDocument } from "../../about/schemas/firestore";
  * stays safe in the client bundle (appkit Export Rules). Same reasoning as
  * the ROUTES import in `_internal/shared/listing-types/feature-flags.ts`. */
 import { ROUTES } from "../../../next/routing/route-map";
-import { DEFAULT_AUCTION_BID_INCREMENT_TIERS } from "../../../_internal/shared/features/auctions/config";
+import { DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS } from "../../../_internal/shared/features/collector-drops/config";
 import type { RateChange } from "../../../_internal/shared/features/pricing/rate-registry";
 
 // Flag-key constants. Consumers MUST reference the bypass flag via this
@@ -51,7 +51,7 @@ export const NOTIFICATION_TYPE_VALUES = [
   "bid_outbid",
   "bid_won",
   "bid_lost",
-  "auction_ended",
+  "collector_drop_ended",
   "review_approved",
   "review_replied",
   "product_available",
@@ -771,7 +771,7 @@ export interface SiteSettingsDocument extends BaseDocument {
     payoutHoldDays?: number;
     /** Minimum payout amount in rupees. */
     minPayoutAmount?: number;
-    auctionListingFee?: number;
+    collectorDropListingFee?: number;
     preOrderListingFee?: number;
     featuredSlotFee?: number;
     promotedSlotFee?: number;
@@ -791,8 +791,8 @@ export interface SiteSettingsDocument extends BaseDocument {
     legalName: string;
     address: string;
   };
-  auctionConfig: {
-    /** Ordered ascending by upTo; the last tier's upTo MUST be null (open-ended, "and above"). Drives the tiered minimum bid increment — see resolveMinBidIncrement in _internal/shared/features/auctions/config.ts. */
+  collectorDropConfig: {
+    /** Ordered ascending by upTo; the last tier's upTo MUST be null (open-ended, "and above"). Drives the tiered minimum bid increment — see resolveMinBidIncrement in _internal/shared/features/collector-drops/config.ts. */
     bidIncrementTiers: { upTo: number | null; increment: number }[];
     autoExtendWindowMinutes: number;
     settlementGracePeriodHours: number;
@@ -1359,7 +1359,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     // merely an unread one (D28).
     payoutHoldDays: 7,
     minPayoutAmount: 100,
-    auctionListingFee: 0,
+    collectorDropListingFee: 0,
     preOrderListingFee: 0,
     featuredSlotFee: 999,
     promotedSlotFee: 499,
@@ -1374,8 +1374,8 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     legalName: "",
     address: "",
   },
-  auctionConfig: {
-    bidIncrementTiers: DEFAULT_AUCTION_BID_INCREMENT_TIERS,
+  collectorDropConfig: {
+    bidIncrementTiers: DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
     autoExtendWindowMinutes: 5,
     settlementGracePeriodHours: 24,
   },
@@ -1420,7 +1420,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       spares: false,
       art: false,
       stickers: false,
-      auction: false,
+      "collector-drop": false,
       "random-lots": false,
       classified: false,
       "digital-code": false,
@@ -1482,7 +1482,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.DEVELOPER),
       String(ROUTES.PUBLIC.FEES),
       String(ROUTES.PUBLIC.HELP_SELLER_BADGES),
-      String(ROUTES.PUBLIC.HOW_AUCTIONS_WORK),
+      String(ROUTES.PUBLIC.HOW_COLLECTOR_DROPS_WORK),
       String(ROUTES.PUBLIC.HOW_EMI_WORKS),
       String(ROUTES.PUBLIC.HOW_OFFERS_WORK),
       String(ROUTES.PUBLIC.HOW_PAYOUTS_WORK),

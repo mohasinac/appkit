@@ -137,10 +137,10 @@ export function AdminOrdersGuideView() {
           ),
         },
         {
-          Icon: Gavel, title: "Auction Settlement",
+          Icon: Gavel, title: "Collector Drop Settlement",
           content: (
             <Ul className={GC.listMuted}>
-              <Li>When an auction ends and the winner does not pay within 48 hours: the order auto-cancels and the system notifies the next-highest bidder.</Li>
+              <Li>When a collector drop ends and the winner does not pay within 48 hours: the order auto-cancels and the system notifies the next-highest bidder.</Li>
               <Li>If the auto-cancel system fails (rare), admin can manually cancel from the order detail page and trigger the next-bidder flow via a support action.</Li>
               <Li>Repeat non-paying winners can receive a <Code size="xs" padding="xs" rounded="default" surface="subtle">place_bids</Code> soft ban from the Trust &amp; Safety section.</Li>
             </Ul>

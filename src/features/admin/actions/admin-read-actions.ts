@@ -10,7 +10,7 @@ import { userRepository } from "../../auth/repository/user.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { blogRepository } from "../../blog/repository/blog.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
-import { bidRepository } from "../../auctions/repository/bid.repository";
+import { bidRepository } from "../../collector-drops/repository/bid.repository";
 import { payoutRepository } from "../../payments/repository/payout.repository";
 import { newsletterRepository } from "../../../core/newsletter.repository";
 import { contactSubmissionsRepository } from "../../../core/contact-submissions.repository";
@@ -26,7 +26,7 @@ import type { ProductDocument } from "../../products/schemas/firestore";
 import { ProductStatusValues } from "../../products/schemas";
 import type { BlogPostDocument } from "../../blog/schemas/firestore";
 import type { StoreDocument } from "../../stores/schemas/firestore";
-import type { BidDocument } from "../../auctions/schemas/firestore";
+import type { BidDocument } from "../../collector-drops/schemas/firestore";
 
 export async function getAdminDashboardStats() {
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);

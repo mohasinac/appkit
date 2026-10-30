@@ -66,9 +66,9 @@ export function generateProductId(input: GenerateProductIdInput): string {
   return `product-${slugify(input.name)}-${slugify(input.category)}-${input.condition}-${slugify(input.sellerName)}-${count}`;
 }
 
-// â”€â”€â”€ Auction â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// â”€â”€â”€ Collector Drop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export interface GenerateAuctionIdInput {
+export interface GenerateCollectorDropIdInput {
   name: string;
   category: string;
   condition: "new" | "used" | "refurbished";
@@ -76,10 +76,10 @@ export interface GenerateAuctionIdInput {
   count?: number;
   customId?: string;
 }
-export function generateAuctionId(input: GenerateAuctionIdInput): string {
+export function generateCollectorDropId(input: GenerateCollectorDropIdInput): string {
   if (input.customId?.trim()) return input.customId.trim();
   const count = input.count || 1;
-  return `auction-${slugify(input.name)}-${slugify(input.category)}-${input.condition}-${slugify(input.sellerName)}-${count}`;
+  return `collectordrop-${slugify(input.name)}-${slugify(input.category)}-${input.condition}-${slugify(input.sellerName)}-${count}`;
 }
 
 // â”€â”€â”€ Pre-order â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -404,7 +404,10 @@ export function generateBarcodeFromId(id: string): string {
 
 export function generateQRCodeData(id: string, baseUrl: string): string {
   if (id.startsWith("product-")) return `${baseUrl}/products/${id}`;
-  if (id.startsWith("auction-")) return `${baseUrl}/auctions/${id}`;
+  if (id.startsWith("collectordrop-")) return `${baseUrl}/collector-drops/${id}`;
+  // Pre-rename slug prefix — an id written before the collector-drop rename
+  // still routes to the right page rather than the catch-all below.
+  if (id.startsWith("auction-")) return `${baseUrl}/collector-drops/${id}`;
   if (id.startsWith("category-")) return `${baseUrl}/categories/${id}`;
   if (id.startsWith("store-")) return `${baseUrl}/stores/${id}`;
   if (id.startsWith("event-")) return `${baseUrl}/events/${id}`;
@@ -416,7 +419,7 @@ export function generateQRCodeData(id: string, baseUrl: string): string {
 // Naming patterns (all lowercase, hyphen-separated):
 //   product image  → product-{name}-{category}-{store}-image-{n}.{ext}
 //   product video  → product-{name}-{category}-{store}-video-{n}.{ext}
-//   auction image  → auction-{name}-{category}-{store}-image-{n}.{ext}
+//   collector drop image  → collectordrop-{name}-{category}-{store}-image-{n}.{ext}
 //   preorder image → preorder-{name}-{category}-{store}-image-{n}.{ext}
 //   store logo     → store-{name}-logo.{ext}
 //   store banner   → store-{name}-banner.{ext}
@@ -472,22 +475,22 @@ function generateProductVideoFilename(
   return `product-${name}-${category}-${store}-video-${n}.${ext}`;
 }
 
-export interface GenerateAuctionImageFilenameInput {
+export interface GenerateCollectorDropImageFilenameInput {
   name: string;
   category: string;
   store: string;
   index?: number;
   ext?: string;
 }
-function generateAuctionImageFilename(
-  input: GenerateAuctionImageFilenameInput,
+function generateCollectorDropImageFilename(
+  input: GenerateCollectorDropImageFilenameInput,
 ): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
   const category = slugify(input.category).substring(0, 20).replace(/-+$/, "");
   const store = slugify(input.store).substring(0, 20).replace(/-+$/, "");
   const n = input.index ?? 1;
   const ext = (input.ext ?? "webp").replace(/^\./, "");
-  return `auction-${name}-${category}-${store}-image-${n}.${ext}`;
+  return `collectordrop-${name}-${category}-${store}-image-${n}.${ext}`;
 }
 
 export interface GeneratePreOrderImageFilenameInput {
@@ -688,7 +691,7 @@ export type MediaFilenameContext =
   | ({ type: "product-video" } & GenerateProductVideoFilenameInput)
   | ({ type: "review-image" } & GenerateReviewImageFilenameInput)
   | ({ type: "review-video" } & GenerateReviewVideoFilenameInput)
-  | ({ type: "auction-image" } & GenerateAuctionImageFilenameInput)
+  | ({ type: "collectordrop-image" } & GenerateCollectorDropImageFilenameInput)
   | ({ type: "preorder-image" } & GeneratePreOrderImageFilenameInput)
   | { type: "store-logo"; store: string; ext?: string }
   | { type: "store-banner"; store: string; ext?: string }
@@ -724,8 +727,8 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
       return generateReviewImageFilename(ctx);
     case "review-video":
       return generateReviewVideoFilename(ctx);
-    case "auction-image":
-      return generateAuctionImageFilename(ctx);
+    case "collectordrop-image":
+      return generateCollectorDropImageFilename(ctx);
     case "preorder-image":
       return generatePreOrderImageFilename(ctx);
     case "store-logo":
@@ -821,7 +824,7 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
  * validator anchored on the compound-prefix shape and rejected real output
  * from every generator except invoice/payout-doc/shipping-proof/
  * refund-proof/catalogue-image — causing /api/media/sign to 500 for
- * product/review/auction/preorder/store/brand/blog/event/category/user/
+ * product/review/collector drop/preorder/store/brand/blog/event/category/user/
  * carousel/rich-text uploads. Each pattern below mirrors one generator
  * function's actual output shape. blog-cover/blog-content-image/
  * blog-additional-image all dispatch to the same generator as blog-image
@@ -839,7 +842,7 @@ const MEDIA_FILENAME_PATTERNS: ReadonlyArray<{ context: string; pattern: RegExp 
   { context: "product-video", pattern: new RegExp(`^product-${SLUG_PART}-video-\\d+\\.${EXT_PART}$`) },
   { context: "review-image", pattern: new RegExp(`^review-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
   { context: "review-video", pattern: new RegExp(`^review-${SLUG_PART}-video-1\\.${EXT_PART}$`) },
-  { context: "auction-image", pattern: new RegExp(`^auction-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "collectordrop-image", pattern: new RegExp(`^collectordrop-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
   { context: "preorder-image", pattern: new RegExp(`^preorder-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
   { context: "store-logo", pattern: new RegExp(`^store-${SLUG_PART}-logo\\.${EXT_PART}$`) },
   { context: "store-banner", pattern: new RegExp(`^store-${SLUG_PART}-banner\\.${EXT_PART}$`) },

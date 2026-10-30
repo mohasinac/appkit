@@ -12,9 +12,9 @@ import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
 import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
 import { Span, Text } from "../../../ui/components/Typography";
 import { useToast } from "../../../ui/components/toast-context";
-import { buildBidDetailFields, bidStatusBadge } from "../../auctions/components/bid-detail-fields";
+import { buildBidDetailFields, bidStatusBadge } from "../../collector-drops/components/bid-detail-fields";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
-import type { BidDocument } from "../../auctions/schemas/firestore";
+import type { BidDocument } from "../../collector-drops/schemas/firestore";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -86,7 +86,7 @@ interface BidRow {
 interface SellerBidsResponse {
   items?: JsonArray;
   total?: number;
-  auctions?: { id: string; title: string }[];
+  collectorDrops?: { id: string; title: string }[];
 }
 
 export interface SellerBidsViewProps {
@@ -109,7 +109,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   const columns: AdminTableColumn<BidRow>[] = [
     {
       key: "productTitle",
-      header: "Auction",
+      header: "Collector Drop",
       render: (row) => (
         <Stack gap="none">
           <Text className="line-clamp-1" color="primary" size="sm" weight="medium">{row.productTitle}</Text>
@@ -173,7 +173,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     portal: "seller",
     title: "Bids",
     searchPlaceholder: "Search by bidder name",
-    emptyLabel: "No bids found for your auctions",
+    emptyLabel: "No bids found for your collector drops",
     filterKeys: ["status"],
     defaultSort: DEFAULT_SORT,
     queryKey: ["seller", "bids", "listing"],
@@ -184,7 +184,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     mapRows: (response) =>
       toRecordArray(response.items).map((item, idx) => ({
         id: toStringValue(item.id, `bid-${idx}`),
-        productTitle: toStringValue(item.productTitle, "Unknown auction"),
+        productTitle: toStringValue(item.productTitle, "Unknown collector drop"),
         productId: toStringValue(item.productId, ""),
         userName: toStringValue(item.userName, "—"),
         bidAmount: Number(item.bidAmount ?? 0),
@@ -208,7 +208,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     buildBulkActions: (selection) => [
       buildBulkAction(ACTIONS.SELLER["cancel-bid"], () => void bulkCancel(selection)),
     ] as BulkActionItem[],
-    // Grid/list view groups bids by auction with collapsible sections
+    // Grid/list view groups bids by collector drop with collapsible sections
     // (S-STORE-4-B); table view shows the flat per-bid list via `columns`.
     renderCards: (rows, _view, selection, isLoading) => {
       const groups = new Map<string, { title: string; bids: BidRow[] }>();
@@ -221,7 +221,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       const groupedRows = Array.from(groups.entries()).map(([id, g]) => ({ id, ...g }));
 
       if (groupedRows.length === 0 && !isLoading) {
-        return <Text size="sm" color="muted">No bids found for your auctions.</Text>;
+        return <Text size="sm" color="muted">No bids found for your collector drops.</Text>;
       }
 
       return (

@@ -30,7 +30,7 @@ const SECTIONS: ShoppingSection[] = [
           <Li><Span weight="bold">Brand</Span> — Pokémon Company, Bandai, Hot Wheels, Hasbro, Funko, and more</Li>
           <Li><Span weight="bold">Price range</Span> — set a minimum and maximum in rupees</Li>
           <Li><Span weight="bold">Condition</Span> — grades 1–10 (10 = Gem Mint, 1 = Poor)</Li>
-          <Li><Span weight="bold">Listing type</Span> — Standard / Auction / Pre-order</Li>
+          <Li><Span weight="bold">Listing type</Span> — Standard / Collector Drop / Pre-order</Li>
         </Ul>
         <Text className={`${GC.textMuted} mt-3`}>
           Sort options: Relevance, Price (Low to High), Price (High to Low), Newest First. On mobile, tap the Filter icon to open the filter drawer.
@@ -54,7 +54,7 @@ const SECTIONS: ShoppingSection[] = [
     Icon: ShoppingCart, title: "Cart",
     content: (
       <Ul className={GC.listMuted}>
-        <Li><Span weight="bold" className={GC.textStrong}>Adding items</Span> — click &quot;Add to Cart&quot; on any standard product or pre-order. Auctions have a &quot;Place Bid&quot; flow instead.</Li>
+        <Li><Span weight="bold" className={GC.textStrong}>Adding items</Span> — click &quot;Add to Cart&quot; on any standard product or pre-order. CollectorDrops have a &quot;Place Bid&quot; flow instead.</Li>
         <Li><Span weight="bold" className={GC.textStrong}>Guest cart</Span> — saved in your browser (localStorage); cleared after 30 days of inactivity.</Li>
         <Li><Span weight="bold" className={GC.textStrong}>Logged-in cart</Span> — synced to your account via Firestore; persists across all your devices.</Li>
         <Li><Span weight="bold" className={GC.textStrong}>Item limit</Span> — up to 20 items per cart. Remove items before adding more.</Li>

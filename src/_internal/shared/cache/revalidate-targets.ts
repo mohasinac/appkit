@@ -4,7 +4,7 @@
  * ## Why this exists
  *
  * Detail routes used to carry very short `revalidate` windows — 30s on
- * `auctions/[id]`, 60s on `products/[slug]` — not because anyone wanted that
+ * `collector-drops/[id]`, 60s on `products/[slug]` — not because anyone wanted that
  * freshness, but because **the window was the only freshness mechanism in the
  * app**. Measured 2026-10-09: `revalidatePath` appeared three times in the whole
  * repository, all `revalidatePath("/")`, and `revalidateTag` zero times.
@@ -37,7 +37,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { LISTING_TYPE_REGISTRY } from "../listing-types/_registry";
 
 export interface RevalidateHints {
-  /** `standard` | `auction` | `pre-order` | … — picks the right detail route. */
+  /** `standard` | `collector drop` | `pre-order` | … — picks the right detail route. */
   listingType?: string;
   /** Full ancestor chain; every category page listing this product goes stale. */
   categorySlugs?: string[];
@@ -95,7 +95,7 @@ function productTargets(id: string | undefined, hints?: RevalidateHints): string
      * everything" button. `/products` alone is not "every listing page": five
      * types are deliberately OUT of the general catalogue
      * (`inGeneralCatalogue: false`) and are reachable only at their own browse
-     * route, so a bulk invalidation that marks `/products` leaves `/auctions`,
+     * route, so a bulk invalidation that marks `/products` leaves `/collector-drops`,
      * `/pre-orders`, `/random-lots`, `/art`, `/stickers` and `/spares` serving
      * rows that no longer exist.
      */

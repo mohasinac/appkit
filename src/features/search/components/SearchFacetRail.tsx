@@ -42,8 +42,8 @@ import type { FacetCount } from "../../../_internal/shared/search/to-groups";
  * Short code -> heading.
  *
  * 🛑 `Partial`, and an unknown code is SKIPPED rather than shown raw. The
- * codes are two letters to keep the artifact small (`lt:auction` over
- * `listingType:auction`, ×3,700), which means a new one added on the builder
+ * codes are two letters to keep the artifact small (`lt:collector drop` over
+ * `listingType:collector drop`, ×3,700), which means a new one added on the builder
  * side would otherwise surface to a visitor as a heading reading "sz". A
  * facet nobody can name is not a refinement, and dropping it loses nothing
  * the groups above do not already show.

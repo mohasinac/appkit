@@ -112,7 +112,7 @@ const ENDPOINT_TO_COLLECTION = {
   // of being checked. This was the actual reason the productTitle/endsAt/
   // prizeDrawEndDate field-name bugs across 8 seller views went undetected.
   "SELLER_ENDPOINTS.PRODUCTS":              { collection: "products",            implicit: [] },
-  "SELLER_ENDPOINTS.AUCTIONS":              { collection: "products",            implicit: [] },
+  "SELLER_ENDPOINTS.COLLECTOR_DROPS":              { collection: "products",            implicit: [] },
   "SELLER_ENDPOINTS.COUPONS":               { collection: "coupons",             implicit: [] },
   "SELLER_ENDPOINTS.OFFERS":                { collection: "offers",              implicit: [] },
   "SELLER_ENDPOINTS.PAYOUTS":               { collection: "payouts",             implicit: [] },

@@ -1,6 +1,6 @@
 /**
- * Virtual filter aliases — a clause like `scope==publicAuctions` is expanded
- * into one or more real Sieve clauses (`status==published,listingType==auction`)
+ * Virtual filter aliases — a clause like `scope==publicCollectorDrops` is expanded
+ * into one or more real Sieve clauses (`status==published,listingType==collector-drop`)
  * before the model reaches the underlying Sieve processor.
  *
  * Pure (no firebase-admin or runtime deps) so this module is safe to import

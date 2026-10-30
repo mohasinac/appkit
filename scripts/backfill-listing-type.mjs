@@ -25,14 +25,14 @@
  * leaves + 216 bey-model leaves), written by a generator that is not in git.
  *
  * CLAUDE.md's J13 rule has required the field since SB1-G Phase 4 dropped the
- * legacy `isAuction` / `isPreOrder` booleans. This is the catch-up for rows that
+ * legacy `isCollectorDrop` / `isPreOrder` booleans. This is the catch-up for rows that
  * predate, or were written around, that rule.
  *
  * ── 🛑 WHY "standard" AND NOT A GUESS PER ROW ──────────────────────────────
  *
  * `standard` is the only type whose capability set is "buy it now, nothing
  * special" — which is what a loose part or a used bey IS. Every other value
- * makes a claim the document cannot support: `auction` needs `auctionEndDate`,
+ * makes a claim the document cannot support: `collector drop` needs `collectorDropEndDate`,
  * `pre-order` a release date, `digital-code` a code pool, `classified` a
  * contact method. Inferring a richer type from a title would be inventing a
  * fact about real merchandise.
@@ -51,7 +51,7 @@
  *   node appkit/scripts/backfill-listing-type.mjs --yes --service-account <key.json>
  *
  * Idempotent: a document that already carries any `listingType` is skipped and
- * never overwritten, so a second run writes nothing and a deliberate `auction`
+ * never overwritten, so a second run writes nothing and a deliberate `collector drop`
  * can never be flattened to `standard`.
  *
  * Exit: 0 = success, 1 = errors during run, 2 = misconfiguration.
@@ -87,7 +87,7 @@ const FILL_TYPE = typeof flag("type") === "string" ? flag("type") : "standard";
  */
 const LISTING_TYPES = [
   "standard",
-  "auction",
+  "collector-drop",
   "pre-order",
   "prize-draw",
   "classified",

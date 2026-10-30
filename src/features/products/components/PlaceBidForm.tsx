@@ -15,7 +15,7 @@ export interface PlaceBidFormProps {
   renderError?: () => React.ReactNode;
   /** Render auth gate when user is not logged in */
   renderAuthGate?: () => React.ReactNode;
-  /** Render countdown timer for auction end */
+  /** Render countdown timer for collector drop end */
   renderCountdown?: () => React.ReactNode;
   className?: string;
 }

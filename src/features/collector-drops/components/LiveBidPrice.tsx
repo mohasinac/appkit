@@ -1,0 +1,51 @@
+"use client";
+
+import { GatedPrice } from "../../../ui/components/GatedPrice";
+import { Row } from "../../../ui/components/Layout";
+import { Span } from "../../../ui/components/Typography";
+import { formatCurrency } from "../../../utils/number.formatter";
+import { useLiveCollectorDropBid } from "../hooks/useLiveCollectorDropBid";
+
+export interface LiveBidPriceProps {
+  productId: string;
+  currentBid: number;
+  bidCount: number;
+  currency: string;
+  isEnded: boolean;
+  /** Matches the appkit `<Span size>` scale — pick to match the call site. */
+  priceSize?: "base" | "lg" | "xl" | "2xl";
+  badgeSize?: "xs" | "sm";
+}
+
+/**
+ * LiveBidPrice — the current-bid + bid-count pill, kept live via the
+ * `/collector-drop-bids/{id}` SSE channel. Replaces 3 near-identical static
+ * SSR-only displays on the collector drop detail page (info panel, desktop and
+ * mobile compact bid-summary cards) so every viewer watching the page sees
+ * a new bid the instant it's placed, not just after their own bid or a
+ * page reload.
+ */
+export function LiveBidPrice({
+  productId,
+  currentBid,
+  bidCount,
+  currency,
+  isEnded,
+  priceSize = "xl",
+  badgeSize = "xs",
+}: LiveBidPriceProps) {
+  const live = useLiveCollectorDropBid(productId, currentBid, bidCount, { enabled: !isEnded });
+
+  return (
+    <Row align="center" gap="sm" wrap>
+      <Span weight="bold" className="text-primary-600 dark:text-primary-400" size={priceSize}>
+        <GatedPrice label="Sign in to see the current bid">
+          {formatCurrency(live.currentBid, currency)}
+        </GatedPrice>
+      </Span>
+      <Span size={badgeSize} weight="medium" rounded="full" padding="pill-md" surface="subtle" color="muted">
+        {live.bidCount} {live.bidCount === 1 ? "bid" : "bids"}
+      </Span>
+    </Row>
+  );
+}

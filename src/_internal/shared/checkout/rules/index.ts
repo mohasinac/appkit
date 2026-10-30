@@ -38,7 +38,7 @@ export {
 } from "./_limits";
 // Individual rules — exported for tests and direct access.
 export { standardRule } from "./standard.rule";
-export { auctionRule } from "./auction.rule";
+export { collectorDropRule } from "./collector-drop.rule";
 export { preOrderRule } from "./preorder.rule";
 export { randomLotsRule } from "./random-lots.rule";
 export { offerRule } from "./offer.rule";

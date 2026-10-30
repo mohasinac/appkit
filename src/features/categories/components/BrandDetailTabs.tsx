@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
 import { AvailabilityScopeHint } from "../../products/components/AvailabilityScopeHint";
 import type { ListingType } from "../../products/types/index";
 import { CategoryProductsListing } from "./CategoryProductsListing";
-import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
+import { CollectorDropsIndexListing } from "../../products/components/CollectorDropsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
 import { RandomLotsIndexListing } from "../../products/components/RandomLotsIndexListing";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
@@ -60,7 +60,7 @@ const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
   [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
   /*
    * Spares render generically — a product grid is the whole story, unlike an
-   * auction (countdown, bid history) or a prize draw (entries remaining).
+   * collector drop (countdown, bid history) or a prize draw (entries remaining).
    *
    * 🛑 Hand-written map; a missing entry is a tab you can CLICK that renders an
    * empty panel. `audit-tab-body-coverage` exists for exactly this, after this
@@ -87,7 +87,7 @@ export interface BrandDetailTabsProps {
    * and the "N ended — show all" hint; see `ListingTabCountResult`.
    */
   totals?: Record<string, number | undefined>;
-  /** Enabled listing types (e.g. ["standard","auction"]). When omitted, all tabs shown. */
+  /** Enabled listing types (e.g. ["standard","collector-drop"]). When omitted, all tabs shown. */
   enabledListingTypes?: string[];
   /** Enabled category types (e.g. ["category","brand","bundle"]). When omitted, all tabs shown. */
   enabledCategoryTypes?: string[];
@@ -167,8 +167,8 @@ export function BrandDetailTabs({
           initialData={activeTab === pluginFor("standard").tabSlug ? initialProductsData : undefined}
         />
       )}
-      {activeTab === pluginFor("auction").tabSlug && (
-        <AuctionsIndexListing brandName={brandName} />
+      {activeTab === pluginFor("collector-drop").tabSlug && (
+        <CollectorDropsIndexListing brandName={brandName} />
       )}
       {activeTab === pluginFor("pre-order").tabSlug && (
         <PreOrdersIndexListing brandName={brandName} />

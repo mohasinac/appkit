@@ -20,16 +20,16 @@ export type ListingBadgeVariant =
  *
  * Typed `Record<ListingType, …>` (2026-08-21) so a new listing type is a
  * COMPILE error here rather than a silent fallthrough. It previously covered
- * only auction / pre-order / prize-draw / standard, so the other five types
+ * only collector drop / pre-order / prize-draw / standard, so the other five types
  * fell through to the caller's `?? "default"` and all rendered identically.
  */
 export const LISTING_BADGE_VARIANT: Record<ListingType, ListingBadgeVariant> = {
   standard: "default",
   // Shares `primary` with art/stickers: all three are "a thing we make or
-  // salvage ourselves" rather than a mechanism (auction) or a promise
+  // salvage ourselves" rather than a mechanism (collector drop) or a promise
   // (pre-order), and the badge LABEL is what distinguishes them.
   spares: "primary",
-  auction: "warning",
+  "collector-drop": "warning",
   "pre-order": "secondary",
   "random-lots": "primary",
   classified: "secondary",

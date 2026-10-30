@@ -72,9 +72,9 @@ export interface MessageProductRef {
    * 🛑 Required for the card to LINK anywhere correct.
    *
    * Nine listing types have five different detail routes
-   * (`/auctions/…`, `/pre-orders/…`, `/random-lots/…`, `/classified/…`, …) and
+   * (`/collector-drops/…`, `/pre-orders/…`, `/random-lots/…`, `/classified/…`, …) and
    * `pluginFor(type).detailRoute()` is the only thing that knows which. A card
-   * that hardcodes `/products/{slug}` sends an auction to the standard product
+   * that hardcodes `/products/{slug}` sends a collector drop to the standard product
    * page — which is Root Cause #48 exactly: a doc→card mapper dropping
    * `listingType` and the link going wrong because of the one field it lost.
    *

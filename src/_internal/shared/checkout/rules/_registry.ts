@@ -20,7 +20,7 @@ import type { OrderType } from "../../../../features/orders/utils/order-splitter
 import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 import { isMultiMemberLine } from "../line-members";
 import { standardRule } from "./standard.rule";
-import { auctionRule } from "./auction.rule";
+import { collectorDropRule } from "./collector-drop.rule";
 import { preOrderRule } from "./preorder.rule";
 import { randomLotsRule } from "./random-lots.rule";
 import { offerRule } from "./offer.rule";
@@ -34,7 +34,7 @@ import { sparesRule } from "./spares.rule";
 
 export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   standard: standardRule,
-  auction: auctionRule,
+  "collector-drop": collectorDropRule,
   "pre-order": preOrderRule,
   "random-lots": randomLotsRule,
   classified: classifiedRule,

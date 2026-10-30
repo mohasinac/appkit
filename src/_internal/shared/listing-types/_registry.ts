@@ -23,7 +23,7 @@
  */
 
 import * as standard from "./standard/config";
-import * as auction from "./auction/config";
+import * as collectorDrop from "./collector-drop/config";
 import * as preOrder from "./pre-order/config";
 import * as randomLots from "./random-lots/config";
 // SB-UNI-F 2026-05-13 — Phase 2 union extension.
@@ -68,7 +68,7 @@ export interface ListingTypePlugin {
   cartLine: "single-product" | "blocked" | "bundle-expand";
   /** Public detail-page href builder — replaces the ad-hoc per-type href pickers duplicated across card/link components. */
   detailRoute: (idOrSlug: string) => string;
-  /** Card-grid badge shown for time-sensitive/action-required types (auction/pre-order); undefined = no badge. */
+  /** Card-grid badge shown for time-sensitive/action-required types (collector drop/pre-order); undefined = no badge. */
   badge?: { label: string; className: string };
   /** Seller create/edit form price-field label. */
   priceLabel: string;
@@ -152,7 +152,7 @@ export interface ListingTypePlugin {
    * tenth type must not compile until someone decides.
    *
    * False where the type's own pricing or lifecycle makes "pick N of these"
-   * meaningless — an auction is one unique lot, a pre-order is a deposit
+   * meaningless — a collector drop is one unique lot, a pre-order is a deposit
    * against a future release, a prize-draw sells entries, a classified has no
    * cart, a digital-code is a fungible pool, and a live item is
    * jurisdiction-gated per buyer.
@@ -197,7 +197,7 @@ export interface ListingTypePlugin {
   publicSortOptions: readonly SortOption[];
   /**
    * `TABLE_KEYS` values for facets that only make sense for this type
-   * (auction bid range, classified meetup city, live-item species, …). The
+   * (collector drop bid range, classified meetup city, live-item species, …). The
    * shared product facets (category/brand/price/condition) are implicit.
    */
   extraFacetKeys: readonly string[];
@@ -208,7 +208,7 @@ export interface ListingTypePlugin {
 // EMI/art-stickers session — art / stickers added.
 export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   standard: standard.config,
-  auction: auction.config,
+  "collector-drop": collectorDrop.config,
   "pre-order": preOrder.config,
   "random-lots": randomLots.config,
   classified: classified.config,
@@ -261,13 +261,26 @@ export function pluginFor(type: ListingType): ListingTypePlugin {
 
 /**
  * Infer a listing type from a product slug/id by matching its registered
- * `slugPrefix` — replaces ad-hoc `id.startsWith("auction-")` chains in
+ * `slugPrefix` — replaces ad-hoc `id.startsWith("collectordrop-")` chains in
  * contexts (guest carts, unauthenticated payloads) that don't carry an
  * explicit `listingType` field. Falls back to "standard" when no prefix matches.
  */
+/**
+ * Pre-rename slug prefixes, kept so a document written before a listing-type
+ * rename still resolves instead of silently classifying as `standard`
+ * (Root Cause #58). Checked only after every live prefix has missed.
+ */
+const LEGACY_SLUG_PREFIXES: Readonly<Record<string, ListingType>> = {
+  "auction-": "collector-drop",
+  "prizedraw-": "random-lots",
+};
+
 export function detectListingTypeFromSlug(slug: string): ListingType {
   for (const plugin of Object.values(LISTING_TYPE_REGISTRY)) {
     if (plugin.slugPrefix && slug.startsWith(plugin.slugPrefix)) return plugin.listingType;
+  }
+  for (const [prefix, type] of Object.entries(LEGACY_SLUG_PREFIXES)) {
+    if (slug.startsWith(prefix)) return type;
   }
   return "standard";
 }
@@ -322,7 +335,7 @@ export function commonSortOptionsFor(
 
 /**
  * Which "Show X" quick-filter applies to a set of listing types. A mixed
- * selection can need more than one toggle (auctions end, products sell out),
+ * selection can need more than one toggle (collector drops end, products sell out),
  * so this returns every distinct default across the set.
  */
 export function hideDefaultsFor(types: readonly ListingType[]): ListingHideDefault[] {
@@ -337,7 +350,7 @@ export function hideDefaultsFor(types: readonly ListingType[]): ListingHideDefau
 
 /**
  * The user-facing noun for each hide-default. "ended" and "closed" are one
- * query mechanic and one word to a buyer — an auction that ended and a prize
+ * query mechanic and one word to a buyer — a collector drop that ended and a prize
  * draw that closed are both simply over.
  *
  * `Record<ListingHideDefault, …>` on purpose: adding a fourth hide-default is
@@ -357,7 +370,7 @@ export interface AvailabilityTab {
 /**
  * The three-tab availability bar for a set of listing types.
  *
- * The middle label is derived, not a constant: `/auctions` reads "Ended",
+ * The middle label is derived, not a constant: `/collector-drops` reads "Ended",
  * `/art` reads "Sold", and `/products` — which spans both kinds — reads
  * "Sold & Ended". Ordering is fixed rather than set-iteration order so the
  * label can never flip to "Ended & Sold" between renders.

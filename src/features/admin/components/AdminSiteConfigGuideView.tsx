@@ -20,7 +20,7 @@ export function AdminSiteConfigGuideView() {
     { name: "fees", desc: "platformFee (%), Razorpay gateway fee pass-through toggle, GST rate on platform fees." },
     { name: "integrations", desc: "API keys: Razorpay (live/test, disabled by default — manual payment is the default), Resend, WhatsApp Cloud API. Keys are encrypted at rest — never log or export." },
     { name: "shipping", desc: "Default shipping carriers, free shipping threshold (₹), COD availability toggle." },
-    { name: "auctionConfig", desc: "Global bid increment default, auto-extend window (minutes), minimum auction duration." },
+    { name: "collectorDropConfig", desc: "Global bid increment default, auto-extend window (minutes), minimum collector drop duration." },
     { name: "platformLimits", desc: "Cart item cap (50), wishlist cap (20), history cap (50), support ticket limits (2 general + 1 per order)." },
     { name: "legalPages", desc: "Body HTML for Terms of Service, Privacy Policy, Refund Policy, and Shipping Policy. Rendered on their respective static pages." },
   ];
@@ -73,7 +73,7 @@ export function AdminSiteConfigGuideView() {
         <Stack paddingY="y-md-lg" padding="x-lg" gap="3">
           <Text className="text-[var(--appkit-color-text-muted)]" size="sm">Feature flags are boolean toggles under <Code size="xs" padding="xs" rounded="default" surface="subtle">siteSettings</Code>. They control platform-wide features without a code deploy:</Text>
           <Ul className="list-inside text-[var(--appkit-color-text-muted)]" marker="disc" spacing="tight" size="sm">
-            <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enableAuctions</Code> — globally enable/disable all auction listings.</Li>
+            <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enableCollectorDrops</Code> — globally enable/disable all collector drop listings.</Li>
             <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">enablePreOrders</Code> — globally enable/disable pre-order creation.</Li>
             <Li><Code size="xs" padding="xs" rounded="default" surface="subtle">maintenanceMode</Code> — shows a maintenance banner and blocks non-admin access.</Li>
           </Ul>

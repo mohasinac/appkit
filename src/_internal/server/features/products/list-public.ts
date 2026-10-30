@@ -30,7 +30,7 @@
  * @tag layer:server-data
  * @tag pattern:none
  * @tag access:server-only
- * @tag consumers:ProductsIndexPageView,ArtStickersListView,AuctionsListView,PreOrdersListView,api/products
+ * @tag consumers:ProductsIndexPageView,ArtStickersListView,CollectorDropsListView,PreOrdersListView,api/products
  * @tag sideEffects:firestore-read
  */
 
@@ -442,9 +442,9 @@ export function parsePublicProductParams(
   const get = (k: string) => first(params, k);
 
   // The type filter is a multi-select checkbox group, so its URL value is a
-  // pipe-joined set (`auction|pre-order`). Selected types NARROW the page's
+  // pipe-joined set (`collector drop|pre-order`). Selected types NARROW the page's
   // span; anything outside the span is discarded rather than allowed to widen
-  // it (an /art URL must not be able to ask for auctions). Nothing selected —
+  // it (an /art URL must not be able to ask for collector drops). Nothing selected —
   // or nothing valid selected — means the page's full span.
   const typeParam = get(TABLE_KEYS.LISTING_TYPE);
   const span = defaults?.listingTypes;
@@ -487,7 +487,7 @@ export function parsePublicProductParams(
     // Now a plain drawer facet again. It used to double as the hide-ended
     // mechanism, which is why it only worked when exactly one listing type was
     // selected — `dateFieldFor` returns null otherwise, so /products silently
-    // showed ended auctions in its default view.
+    // showed ended collector drops in its default view.
     dateFrom: get(TABLE_KEYS.DATE_FROM) || undefined,
     dateTo: get(TABLE_KEYS.DATE_TO) || undefined,
     page: num(get(TABLE_KEYS.PAGE)) ?? DEFAULT_PAGE,
@@ -502,8 +502,8 @@ export function parsePublicProductParams(
      * while the dropdown displayed the sort the user had picked.
      *
      * Measured against the live dev server — identical row order for
-     * `?sorts=auctionEndDate` and for no sort at all, versus a correctly
-     * ordered result for `?sort=auctionEndDate`.
+     * `?sorts=collectorDropEndDate` and for no sort at all, versus a correctly
+     * ordered result for `?sort=collectorDropEndDate`.
      *
      * It survived because the SSR paint IS correct: the listing views pass
      * `sorts` through `defaults`, and an anonymous visitor with `initialData`
@@ -539,7 +539,7 @@ export function parsePublicProductParams(
 /**
  * Only clauses Firestore can satisfy alongside an arbitrary `orderBy`. Notably
  * ABSENT: `inStock` (a `stockQuantity` range) and, unless the sort matches, the
- * auction/pre-order date ranges. Firestore appends an inequality field to the
+ * collector drop/pre-order date ranges. Firestore appends an inequality field to the
  * orderBy implicitly, so pairing one with an unrelated sort demands a composite
  * index in an order nobody declares — it fails with FAILED_PRECONDITION, which
  * upstream reads as a bare "no results".
@@ -702,8 +702,8 @@ function buildFirestoreSafeFilters(
 /** Which Timestamp field a date range refers to, given the requested listing types. */
 function dateFieldFor(types: readonly string[] | undefined): string | null {
   if (!types || types.length !== 1) return null;
-  if (types[0] === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION) {
-    return PRODUCT_FIELDS.AUCTION_END_DATE;
+  if (types[0] === PRODUCT_FIELDS.LISTING_TYPE_VALUES.COLLECTOR_DROP) {
+    return PRODUCT_FIELDS.COLLECTOR_DROP_END_DATE;
   }
   if (types[0] === PRODUCT_FIELDS.LISTING_TYPE_VALUES.PRE_ORDER) {
     return PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE;
@@ -884,7 +884,7 @@ export async function listPublicProducts(
   const types = asListingTypes(input.listingTypes);
 
   // ── Path B: one type whose unavailability IS a pushable inequality, and the
-  //    caller is already sorting by that field. Ended auctions sorted by end
+  //    caller is already sorting by that field. Ended collector drops sorted by end
   //    date is the whole reason this branch exists — it gives the archive real,
   //    unbounded-depth Firestore pagination instead of a 50-row window.
   const pushdown =
@@ -1061,7 +1061,7 @@ export async function listPublicProducts(
   // When a date range stays in memory, fetch in whichever direction front-loads
   // the rows that will PASS it: `dateFrom` (">=", still live) wants the most
   // future dates first; `dateTo` ("<=", ends by) wants the earliest first.
-  // Fetching in the client's own order instead is what made live auctions
+  // Fetching in the client's own order instead is what made live collector drops
   // invisible once ~50 had already ended.
   const fetchSorts =
     inMemory && hasDateRange && !canPushDate && dateField
@@ -1281,7 +1281,7 @@ export async function listStoreProducts(
  * 🛑 The `Date` branch is load-bearing. Without it a Date falls through to
  * `String(value)` — `"Wed Aug 30 2026 …"` — and a lexical compare of those
  * orders by WEEKDAY NAME. Every in-memory date sort was wrong: the "Sold &
- * Ended" tab ordered by `createdAt`/`auctionEndDate`, and now every per-type
+ * Ended" tab ordered by `createdAt`/`collectorDropEndDate`, and now every per-type
  * facet under "Oldest First". A Firestore Timestamp arrives here as a Date via
  * `mapDoc`, so the ISO-string case is only for a row that has already been
  * serialised; both are handled.

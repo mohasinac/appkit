@@ -80,8 +80,8 @@ interface DispatchInput {
   afterBrand: string | null;
   beforeStoreId: string | null;
   afterStoreId: string | null;
-  isAuction: boolean;
-  beforeIsAuction: boolean;
+  isCollectorDrop: boolean;
+  beforeIsCollectorDrop: boolean;
   wasPublished: boolean;
   isPublished: boolean;
   isDelete: boolean;
@@ -111,18 +111,18 @@ interface DispatchInput {
 async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
   const { productId, beforeCategories, afterCategories, beforeBrand, afterBrand,
     beforeStoreId, afterStoreId,
-    isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx } = p;
+    isCollectorDrop, beforeIsCollectorDrop, wasPublished, isPublished, isDelete, ctx } = p;
 
   /** Stage every assignment (and, if given, one brand) at `sign` x 1 item. */
   const stage = (
     batch: FirebaseFirestore.WriteBatch,
     assignments: Array<{ id: string; parentIds: string[] }>,
     brandId: string | null,
-    auction: boolean,
+    collectorDrop: boolean,
     sign: 1 | -1,
   ): void => {
-    const productDelta = auction ? 0 : sign;
-    const auctionDelta = auction ? sign : 0;
+    const productDelta = collectorDrop ? 0 : sign;
+    const collectorDropDelta = collectorDrop ? sign : 0;
     if (assignments.length === 0 && !brandId) return;
     /*
      * ONE call, which aggregates per document id — see
@@ -132,7 +132,7 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
      * increment in it rather than just the duplicate.
      */
     categoriesRepository.updateMetricsForAssignmentsInBatch(
-      batch, assignments, productDelta, auctionDelta, productId, brandId,
+      batch, assignments, productDelta, collectorDropDelta, productId, brandId,
     );
   };
 
@@ -152,7 +152,7 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
 
   if (isDelete && wasPublished && (beforeCategories.length > 0 || beforeBrand)) {
     const batch = ctx.db.batch();
-    stage(batch, await withParents(beforeCategories), beforeBrand, beforeIsAuction, -1);
+    stage(batch, await withParents(beforeCategories), beforeBrand, beforeIsCollectorDrop, -1);
     await commit(batch, "Decremented counters on hard-delete", { categories: beforeCategories, brand: beforeBrand, storeId: beforeStoreId });
     if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
     return;
@@ -160,7 +160,7 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
 
   if (!wasPublished && isPublished && (afterCategories.length > 0 || afterBrand)) {
     const batch = ctx.db.batch();
-    stage(batch, await withParents(afterCategories), afterBrand, isAuction, 1);
+    stage(batch, await withParents(afterCategories), afterBrand, isCollectorDrop, 1);
     await commit(batch, "Incremented counters on publish", { categories: afterCategories, brand: afterBrand, storeId: afterStoreId });
     if (afterStoreId) await storeRepository.incrementTotalProducts(afterStoreId, 1);
     return;
@@ -168,7 +168,7 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
 
   if (wasPublished && !isPublished && (beforeCategories.length > 0 || beforeBrand)) {
     const batch = ctx.db.batch();
-    stage(batch, await withParents(beforeCategories), beforeBrand, beforeIsAuction, -1);
+    stage(batch, await withParents(beforeCategories), beforeBrand, beforeIsCollectorDrop, -1);
     await commit(batch, "Decremented counters on unpublish", { categories: beforeCategories, brand: beforeBrand, storeId: beforeStoreId });
     if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
     return;
@@ -187,13 +187,13 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
     const brandMoved = beforeBrand !== afterBrand;
     /*
      * A listing can also change WHICH counter it belongs in without moving at
-     * all: flipping listingType between auction and anything else has to move
-     * the item from `auctionCount` to `productCount` on the same rows. That is
+     * all: flipping listingType between collector drop and anything else has to move
+     * the item from `collectorDropCount` to `productCount` on the same rows. That is
      * tested independently for the same reason category and brand are — it
      * happens on its own, and when it did, this branch returned early and left
-     * the item counted as an auction forever.
+     * the item counted as a collector drop forever.
      */
-    const typeChanged = beforeIsAuction !== isAuction;
+    const typeChanged = beforeIsCollectorDrop !== isCollectorDrop;
     if (!categoryMoved && !brandMoved && !typeChanged) return;
 
     /*
@@ -204,16 +204,16 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
      * correctly does not move — the item did not come or go, it changed shape.
      */
     if (!categoryMoved && !brandMoved) {
-      const productDelta = isAuction ? -1 : 1;
-      const auctionDelta = isAuction ? 1 : -1;
+      const productDelta = isCollectorDrop ? -1 : 1;
+      const collectorDropDelta = isCollectorDrop ? 1 : -1;
       const batch = ctx.db.batch();
       categoriesRepository.updateMetricsForAssignmentsInBatch(
-        batch, await withParents(afterCategories), productDelta, auctionDelta, productId, afterBrand,
+        batch, await withParents(afterCategories), productDelta, collectorDropDelta, productId, afterBrand,
       );
       await commit(batch, "Listing type changed", {
         productId,
-        from: beforeIsAuction ? "auction" : "product",
-        to: isAuction ? "auction" : "product",
+        from: beforeIsCollectorDrop ? "collector-drop" : "product",
+        to: isCollectorDrop ? "collector-drop" : "product",
       });
       return;
     }
@@ -241,10 +241,10 @@ async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
      * nightly and reports it as `drifted` — whereas a rejected batch is silent.
      */
     const outBatch = ctx.db.batch();
-    stage(outBatch, beforeParents, brandMoved ? beforeBrand : null, beforeIsAuction, -1);
+    stage(outBatch, beforeParents, brandMoved ? beforeBrand : null, beforeIsCollectorDrop, -1);
     await outBatch.commit();
     const batch = ctx.db.batch();
-    stage(batch, afterParents, brandMoved ? afterBrand : null, isAuction, 1);
+    stage(batch, afterParents, brandMoved ? afterBrand : null, isCollectorDrop, 1);
     await commit(batch, "Re-filed product", {
       fromCategories: categoryMoved ? beforeCategories : undefined,
       toCategories: categoryMoved ? afterCategories : undefined,
@@ -322,8 +322,8 @@ export async function handleProductWrite(
     ((before?.storeId as string | undefined) || (before?.sellerId as string | undefined)) ?? null;
   const afterStoreId =
     ((after?.storeId as string | undefined) || (after?.sellerId as string | undefined)) ?? null;
-  const isAuction = (after?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
-  const beforeIsAuction = (before?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+  const isCollectorDrop = (after?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.COLLECTOR_DROP;
+  const beforeIsCollectorDrop = (before?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.COLLECTOR_DROP;
 
   /*
    * 🛑 COUNTED means published AND available, because that is what the listing
@@ -337,7 +337,7 @@ export async function handleProductWrite(
    *
    * It closes more of the drift than it looks like it should, because the
    * transitions that matter are all WRITES: a sale decrements stock, a refund
-   * restores it, and `auctionSettlement` writes to the product when an auction
+   * restores it, and `collectorDropSettlement` writes to the product when a collector drop
    * ends. A purely time-based expiry with no accompanying write is the only
    * residue, and the nightly recount is its healer.
    */
@@ -357,7 +357,7 @@ export async function handleProductWrite(
     await dispatchProductWriteEvent({
       productId, beforeCategories, afterCategories, beforeBrand, afterBrand,
       beforeStoreId, afterStoreId,
-      isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx,
+      isCollectorDrop, beforeIsCollectorDrop, wasPublished, isPublished, isDelete, ctx,
     });
   } catch (err) {
     void normalizeError(err);

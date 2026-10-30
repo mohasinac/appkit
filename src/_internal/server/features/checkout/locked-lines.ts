@@ -1,6 +1,6 @@
 /*
  * WHY: A "locked line" is a cart line whose price was fixed outside the listing —
- *      an accepted offer or a won auction. Two things were missing before
+ *      an accepted offer or a won collector drop. Two things were missing before
  *      2026-08-21: the offer/bid was never re-checked at ORDER time (only at
  *      add-to-cart time, so a line could sit in the cart past its deadline and
  *      still check out), and nothing ever closed the loop afterwards — the
@@ -14,7 +14,7 @@
  * EXPORTS:
  *   assertLockedLinesStillValid, finalizeLockedLines
  *
- * @tag domain:checkout,offers,auctions
+ * @tag domain:checkout,offers,collector drops
  * @tag layer:server-action
  * @tag pattern:none
  * @tag access:server-only
@@ -24,9 +24,9 @@
 
 import { offerRepository } from "../../../../features/seller/repository/offer.repository";
 import { cartRepository } from "../../../../features/cart/repository/cart.repository";
-import { bidRepository } from "../../../../features/auctions/repository/bid.repository";
+import { bidRepository } from "../../../../features/collector-drops/repository/bid.repository";
 import { OfferStatusValues } from "../../../../features/seller/schemas";
-import { BID_COLLECTION } from "../../../../features/auctions/schemas/firestore";
+import { BID_COLLECTION } from "../../../../features/collector-drops/schemas/firestore";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { ValidationError } from "../../../../errors";
 import { BID_ERROR_CODES } from "../../../../errors/error-codes";
@@ -36,7 +36,7 @@ import { serverLogger } from "../../../../monitoring/server-logger";
 import { normalizeError } from "../../../../errors/normalize";
 import { resolveDate } from "../../../../utils/date.formatter";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
-import type { BidDocument } from "../../../../features/auctions/schemas/firestore";
+import type { BidDocument } from "../../../../features/collector-drops/schemas/firestore";
 import { activeLane, laneOf, laneBlockReason } from "../../../shared/checkout/lanes";
 
 /**
@@ -44,7 +44,7 @@ import { activeLane, laneOf, laneBlockReason } from "../../../shared/checkout/la
  *
  * The client scopes its selection to one lane's tab, but a selection is just a
  * list of item ids in a request body — nothing stopped a caller from checking
- * out their ₹200 standard items while a ₹30,000 auction win they already
+ * out their ₹200 standard items while a ₹30,000 collector drop win they already
  * committed to sat unpaid. Priority is enforced here, on the server, over the
  * WHOLE cart, not over the caller-supplied subset.
  */
@@ -72,7 +72,7 @@ export const CHECKOUT_LANE_BLOCKED = "CHECKOUT_LANE_BLOCKED";
 type ClaimFailure =
   | "NOT_FOUND"
   | "ALREADY_SOLD"
-  | "AUCTION_ENDED"
+  | "COLLECTOR_DROP_ENDED"
   | "LAPSED"
   | "OUTBID"
   | "WRONG_BUYER";
@@ -82,16 +82,16 @@ const CLAIM_FAILURE_ERRORS: Record<
   { message: string; code: string }
 > = {
   NOT_FOUND: {
-    message: ERROR_MESSAGES.BID.AUCTION_NOT_FOUND,
+    message: ERROR_MESSAGES.BID.COLLECTOR_DROP_NOT_FOUND,
     code: BID_ERROR_CODES.PRODUCT_NOT_FOUND,
   },
   ALREADY_SOLD: {
-    message: ERROR_MESSAGES.BID.AUCTION_ALREADY_SOLD,
-    code: BID_ERROR_CODES.AUCTION_ALREADY_SOLD,
+    message: ERROR_MESSAGES.BID.COLLECTOR_DROP_ALREADY_SOLD,
+    code: BID_ERROR_CODES.COLLECTOR_DROP_ALREADY_SOLD,
   },
-  AUCTION_ENDED: {
-    message: ERROR_MESSAGES.BID.AUCTION_ENDED_BEFORE_CHECKOUT,
-    code: BID_ERROR_CODES.AUCTION_ENDED_BEFORE_CHECKOUT,
+  COLLECTOR_DROP_ENDED: {
+    message: ERROR_MESSAGES.BID.COLLECTOR_DROP_ENDED_BEFORE_CHECKOUT,
+    code: BID_ERROR_CODES.COLLECTOR_DROP_ENDED_BEFORE_CHECKOUT,
   },
   LAPSED: {
     message: ERROR_MESSAGES.BID.BUYOUT_LAPSED,
@@ -110,19 +110,19 @@ const CLAIM_FAILURE_ERRORS: Record<
 /**
  * Convert a pending Buy Now claim into an actual sale, atomically.
  *
- * This is where a buyout is decided, and it is the ONLY place the auction is
- * closed. `buyNowAuction` deliberately leaves the listing untouched: the auction
+ * This is where a buyout is decided, and it is the ONLY place the collector drop is
+ * closed. `buyNowCollectorDrop` deliberately leaves the listing untouched: the collector drop
  * keeps running, keeps taking bids, and keeps accepting other buyers' buyouts.
- * That means several people can be holding a claim on the same auction at once,
+ * That means several people can be holding a claim on the same collector drop at once,
  * which is intentional — whoever reaches this transaction first gets the item,
  * and everyone else is refused HERE, before their order is written and before
  * any payment is captured.
  *
  * Four ways to lose, all of them checked inside the transaction against freshly
  * read documents rather than against the caller's stale cart line:
- *  - the auction is already sold (another buyout committed first);
+ *  - the collector drop is already sold (another buyout committed first);
  *  - its clock ran out (settlement will award it to a real bidder — the user's
- *    explicit rule: an unfinished buyout at auction end fails);
+ *    explicit rule: an unfinished buyout at collector drop end fails);
  *  - the claim's own bid is no longer `active` (the deadline sweep cancelled it);
  *  - bidding passed the buyout price, so buying out is no longer the better deal.
  *
@@ -130,11 +130,11 @@ const CLAIM_FAILURE_ERRORS: Record<
  * body, so each of these precise, buyer-readable refusals survives as itself
  * instead of being reshaped by the transaction wrapper. The caller throws.
  */
-export async function claimAuctionForCheckout(
+export async function claimCollectorDropForCheckout(
   item: CartItemDocument,
   buyerUid: string,
 ): Promise<{ ok: true; bidAmount: number } | { ok: false; reason: ClaimFailure }> {
-  const productId = item.auctionId ?? item.productId;
+  const productId = item.collectorDropId ?? item.productId;
   const bidId = item.bidId;
   if (!bidId) return { ok: false, reason: "NOT_FOUND" };
 
@@ -155,9 +155,9 @@ export async function claimAuctionForCheckout(
     if (bid.status !== "active") return { ok: false as const, reason: "LAPSED" as const };
     if (product.isSold === true) return { ok: false as const, reason: "ALREADY_SOLD" as const };
 
-    const endDate = product.auctionEndDate ? resolveDate(product.auctionEndDate) : null;
+    const endDate = product.collectorDropEndDate ? resolveDate(product.collectorDropEndDate) : null;
     if (endDate && endDate.getTime() <= Date.now()) {
-      return { ok: false as const, reason: "AUCTION_ENDED" as const };
+      return { ok: false as const, reason: "COLLECTOR_DROP_ENDED" as const };
     }
 
     const bidAmount = bid.bidAmount;
@@ -172,10 +172,10 @@ export async function claimAuctionForCheckout(
     tx.update(productRef, {
       isSold: true,
       availableQuantity: 0,
-      // Ends the auction NOW. Everything above has already established that
+      // Ends the collector drop NOW. Everything above has already established that
       // nobody outbid the buyout price, so no bidder loses anything they would
       // otherwise have won.
-      auctionEndDate: new Date(),
+      collectorDropEndDate: new Date(),
       currentBid: bidAmount,
       leadingBidderId: bid.userId,
       bidsHaveStarted: true,
@@ -199,8 +199,8 @@ export async function claimAuctionForCheckout(
  * accepted offer, wait out the 48h window, and still be charged the locked
  * price. Throws on the first invalid line; the caller's transaction aborts.
  *
- * Auction lines were skipped entirely until 2026-08-24 (`if (!item.offerId)
- * continue`), so a won auction's own `checkoutDeadline` had never been checked
+ * Collector Drop lines were skipped entirely until 2026-08-24 (`if (!item.offerId)
+ * continue`), so a won collector drop's own `checkoutDeadline` had never been checked
  * at order time at all — and a buyout claim, which is decided here, had nowhere
  * to be decided.
  */
@@ -211,22 +211,22 @@ export async function assertLockedLinesStillValid(
   const now = new Date();
 
   for (const item of items) {
-    // --- Auction lines: deadline for every one, plus the claim for a buyout ---
-    if (item.bidId || item.isAuctionWin) {
+    // --- Collector Drop lines: deadline for every one, plus the claim for a buyout ---
+    if (item.bidId || item.isCollectorDropWin) {
       if (item.checkoutDeadline && now > resolveDate(item.checkoutDeadline)!) {
         throw new ValidationError(
           item.isBuyout
             ? ERROR_MESSAGES.BID.BUYOUT_LAPSED
-            : "The payment window for this auction win has expired.",
+            : "The payment window for this collector drop win has expired.",
           { code: item.isBuyout ? BID_ERROR_CODES.BUYOUT_LAPSED : undefined },
         );
       }
       if (item.isBuyout) {
-        const claim = await claimAuctionForCheckout(item, buyerUid);
+        const claim = await claimCollectorDropForCheckout(item, buyerUid);
         if (!claim.ok) {
           const { message, code } = CLAIM_FAILURE_ERRORS[claim.reason];
-          serverLogger.info("claimAuctionForCheckout refused", {
-            productId: item.auctionId ?? item.productId,
+          serverLogger.info("claimCollectorDropForCheckout refused", {
+            productId: item.collectorDropId ?? item.productId,
             bidId: item.bidId,
             buyerUid,
             reason: claim.reason,
@@ -324,22 +324,22 @@ export async function finalizeLockedLines(
       }
     }
     if (item.isBuyout && item.bidId) {
-      await closeOutBuyoutLosers(item.auctionId ?? item.productId, item.bidId);
+      await closeOutBuyoutLosers(item.collectorDropId ?? item.productId, item.bidId);
     }
   }
 }
 
 /**
- * A buyout ended the auction, so everyone still bidding on it lost.
+ * A buyout ended the collector drop, so everyone still bidding on it lost.
  *
  * Deliberately AFTER the claim transaction rather than inside it: the number of
- * active bids on a hot auction is unbounded, and a transaction that touches all
+ * active bids on a hot collector drop is unbounded, and a transaction that touches all
  * of them would either blow the 500-write limit or contend with every incoming
  * bid. The claim only has to be atomic about who gets the ITEM; tidying up the
  * losers is bookkeeping, so it is bounded, best-effort and logged.
  *
- * Their bids are `lost`, not `outbid` — the auction is over, which is the same
- * distinction `auctionSettlement` draws.
+ * Their bids are `lost`, not `outbid` — the collector drop is over, which is the same
+ * distinction `collectorDropSettlement` draws.
  */
 async function closeOutBuyoutLosers(productId: string, winningBidId: string): Promise<void> {
   try {
@@ -352,8 +352,8 @@ async function closeOutBuyoutLosers(productId: string, winningBidId: string): Pr
     // at zero read cost.
     await bidRepository.markManyLost(losers, {
       actor: { role: "system" },
-      trigger: "finalizeLockedLines:buyoutClosedAuction",
-      reason: "A Buy Now purchase ended this auction.",
+      trigger: "finalizeLockedLines:buyoutClosedCollectorDrop",
+      reason: "A Buy Now purchase ended this collector drop.",
     });
     serverLogger.info("finalizeLockedLines: buyout closed out losing bids", {
       productId,

@@ -23,7 +23,7 @@ export const PRODUCT_FEATURE_CATEGORY_OPTIONS: SelectOption<ProductFeatureCatego
     { value: "seller", label: "Seller" },
     { value: "condition", label: "Condition" },
     { value: "platform", label: "Platform" },
-    { value: "auction", label: "Auction" },
+    { value: "collector-drop", label: "Collector Drop" },
     { value: "preorder", label: "Pre-order" },
     { value: "custom", label: "Custom" },
   ];
@@ -32,7 +32,7 @@ export const PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS: SelectOption<ProductFeaturePr
   [
     { value: "all", label: "All listing types" },
     { value: "product", label: "Standard product" },
-    { value: "auction", label: "Auction" },
+    { value: "collector-drop", label: "Collector Drop" },
     { value: "preorder", label: "Pre-order" },
     { value: "random-lots", label: "Random lots" },
     { value: "classified", label: "Classified" },

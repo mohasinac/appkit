@@ -682,7 +682,7 @@ export function SellerOrderDetailPanel({
 
             {/*
               Above the items on purpose: the seller needs to know this was an
-              accepted offer or a won auction BEFORE reading what is in the
+              accepted offer or a won collector drop BEFORE reading what is in the
               parcel, because it is the thing that explains a price that does
               not match the listing. Renders nothing on an ordinary order.
             */}
@@ -1274,7 +1274,7 @@ export function SellerOrdersView({
     // while sitting on Active should show delivered orders, not nothing.
     /*
      * Two independent axes, joined. The lane answers "how was this won", the
-     * status answers "where is it now" — a seller asking "which of my auction
+     * status answers "where is it now" — a seller asking "which of my collector drop
      * wins are still unshipped" should not have to choose between them.
      *
      * 🛑 `orderType` is a registered SELLER_SIEVE_FIELD as of this change. It
@@ -1307,7 +1307,7 @@ export function SellerOrdersView({
           Provenance — the same tabs the buyer has had, from the same shared
           constant. A seller could see every order and could not ask "show me
           the ones I accepted an offer on", which is exactly the split that
-          changes how one is handled: an auction win has a forfeit deadline, an
+          changes how one is handled: a collector drop win has a forfeit deadline, an
           accepted offer has an agreed price that is not the listing price.
         */}
         <FilterChipGroup

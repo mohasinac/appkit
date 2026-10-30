@@ -30,7 +30,7 @@ export const TicketCategoryValues = {
   LISTING_DISPUTE: "listing_dispute",
   SCAM_REPORT: "scam_report",
   REFUND_REQUEST: "refund_request",
-  AUCTION_DISPUTE: "auction_dispute",
+  COLLECTOR_DROP_DISPUTE: "collector_drop_dispute",
   GENERAL: "general",
   // ST-4 — sellers request admin-only field changes on their store
   // (status / capabilities / isVerified) through this category.

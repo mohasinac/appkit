@@ -14,7 +14,7 @@ export interface StoreTab {
 export interface StoreNavTabsProps {
   tabs: StoreTab[];
   /**
-   * Listing-type tabs (Products/Auctions/Pre-Orders/.../Art & Stickers) —
+   * Listing-type tabs (Products/Collector Drops/Pre-Orders/.../Art & Stickers) —
    * rendered as a single dropdown ahead of `tabs` instead of one row entry
    * each, so the bar can't overflow no matter how many listing types are
    * enabled. Picking an option navigates to its `href`.

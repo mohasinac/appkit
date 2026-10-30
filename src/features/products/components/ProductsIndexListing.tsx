@@ -172,9 +172,9 @@ export function ProductsIndexListing({
     selectedTypes.length > 0 ? selectedTypes : enabledSpan
   ) as readonly ListingType[];
 
-  // Sorts valid across every selected type. Pick Auctions alone and you get
-  // "Ending Soon"; pick Auctions + Products and you get only what both
-  // support, because a sort on `auctionEndDate` would order the products
+  // Sorts valid across every selected type. Pick Collector Drops alone and you get
+  // "Ending Soon"; pick Collector Drops + Products and you get only what both
+  // support, because a sort on `collectorDropEndDate` would order the products
   // arbitrarily (and needs an index nobody declares for that shape).
   // Price sorts are dropped for signed-out visitors for the same reason the
   // price-range facet is hidden: ordering by price discloses the relative
@@ -218,7 +218,7 @@ export function ProductsIndexListing({
   }, [onFilterReset]);
 
   const applyFilters = useCallback(() => {
-    // A sort valid for the old type selection (say -auctionEndDate) can be
+    // A sort valid for the old type selection (say -collectorDropEndDate) can be
     // invalid for the new one, so it is blanked in the SAME setMany as the
     // filters — a follow-up table.set would read stale searchParams and
     // overwrite this update (Root Cause #13).
@@ -278,7 +278,7 @@ export function ProductsIndexListing({
     // One scope for every type. The per-type meaning of "unavailable" — sold
     // out, ended, closed, depleted — is resolved server-side from the listing
     // -type registry, which is why this no longer needs the old
-    // "only when exactly one type is selected" caveat that let ended auctions
+    // "only when exactly one type is selected" caveat that let ended collector drops
     // leak into the default /products view.
     availability,
   };

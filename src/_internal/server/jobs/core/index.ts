@@ -37,7 +37,7 @@ export {
   type JobRunner,
   type JobRunResult,
 } from "./jobRunners";
-export { runAuctionSettlement } from "./auctionSettlement";
+export { runCollectorDropSettlement } from "./collectorDropSettlement";
 export { assignRandomLotsWinner, type AssignRandomLotsWinnerResult } from "./randomLotsAssignWinner";
 export { handleRandomLotsPaymentConfirmed } from "./onRandomLotsPaymentConfirmed";
 export { handleRandomLotsSoldOut } from "./randomLotsSoldOutReveal";

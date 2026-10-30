@@ -33,7 +33,7 @@ export const SECTION_TITLE = {
   welcome: "Discover Amazing Products",
   categories: "Shop by Category",
   products: "Featured Products",
-  auctions: "Live Auctions",
+  collectorDrops: "Live Collector Drops",
   preOrders: "Reserve Before It Ships",
   stores: "Featured Stores",
   events: "Events & Offers",
@@ -58,7 +58,7 @@ export const SECTION_TITLE = {
 export const VIEW_MORE_LABEL = {
   categories: "All categories →",
   products: "View all products →",
-  auctions: "View all auctions →",
+  collectorDrops: "View all collector drops →",
   preOrders: "View all pre-orders →",
   stores: "View all stores →",
   events: "View all events →",
@@ -77,10 +77,10 @@ export const SECTION_COPY = {
   featuresLearnMore: "Learn about our security →",
   bannerPrimaryCta: "Shop All Products →",
   /*
-   * 🛑 Not "Browse Auctions →". The CTA banner is NOT in
-   * `HOMEPAGE_SECTION_LISTING_TYPE`, so unlike the auctions rail it is never
+   * 🛑 Not "Browse Collector Drops →". The CTA banner is NOT in
+   * `HOMEPAGE_SECTION_LISTING_TYPE`, so unlike the collector drops rail it is never
    * gated — it renders whatever this says on a site running
-   * `listings.listingTypes.auction: false`, which is a button on the homepage
+   * `listings.listingTypes.collector-drop: false`, which is a button on the homepage
    * leading to a browse page with nothing in it. The `secondaryHref` default in
    * CTABannerSection.tsx moved with it; they are one control in two files.
    */

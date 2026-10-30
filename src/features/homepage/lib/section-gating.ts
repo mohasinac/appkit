@@ -7,7 +7,7 @@
  * `MarketplaceHomepageView` has three section gates and they are all keyed on
  * `SectionType`: `HOMEPAGE_SECTION_LISTING_TYPE`,
  * `HOMEPAGE_SECTION_CATEGORY_TYPE`, `HOMEPAGE_SECTION_BROWSE_PAGE`. They work,
- * and they are enough for a section that IS a surface — the auctions rail, the
+ * and they are enough for a section that IS a surface — the collector drops rail, the
  * categories rail, the stores rail.
  *
  * They cannot see a `custom-cards`, `promo-grid`, `banner`, `welcome` or

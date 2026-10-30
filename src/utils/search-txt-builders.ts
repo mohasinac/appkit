@@ -40,7 +40,7 @@ import type { EventDocument } from "../features/events/schemas/firestore";
 import type { BlogPostDocument } from "../features/blog/schemas/firestore";
 import type { ReviewDocument } from "../features/reviews/schemas/firestore";
 import type { OrderDocument } from "../features/orders/schemas/firestore";
-import type { BidDocument } from "../features/auctions/schemas/firestore";
+import type { BidDocument } from "../features/collector-drops/schemas/firestore";
 import type { CouponDocument } from "../features/promotions/schemas/firestore";
 import type { OfferDocument } from "../features/seller/schemas/firestore";
 
@@ -339,7 +339,7 @@ export function buildScammerSearchTxt(s: Partial<ScammerDocument>): string[] {
  * bids — what a buyer or a seller actually looks a bid up BY.
  *
  * `productTitle` is what a buyer searching their own bids means ("which
- * auction was that?"); `userName` is what a seller scanning bids on their
+ * collector drop was that?"); `userName` is what a seller scanning bids on their
  * listing means ("has Ravi bid?").
  *
  * 🛑 `userEmail` is ABSENT. It is the single entry in `BID_PII_FIELDS`, and a

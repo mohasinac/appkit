@@ -430,7 +430,7 @@ const _rawProductsSparesSeedData: Partial<ProductDocument>[] = [
  * 🛑 The wrappers go AFTER the closing `]`, applied to the whole array — never
  * to a spread inside it.
  *
- * This file's siblings carry the scar: `products-auctions-seed-data.ts` had
+ * This file's siblings carry the scar: `products-collector-drops-seed-data.ts` had
  * `..._raw.map(withTokens)` with fixtures appended after the spread, so the
  * appended rows got none of it. That was found once for `searchTxt`, fixed, and
  * documented in a comment directly above the pipeline — and `listingType`

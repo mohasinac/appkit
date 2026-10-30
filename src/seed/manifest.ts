@@ -25,7 +25,7 @@ import { categoriesSeedData } from "./categories-seed-data";
 import { usersSeedData } from "./users-seed-data";
 import { storesSeedData } from "./stores-seed-data";
 import { productsStandardSeedData } from "./products-standard-seed-data";
-import { productsAuctionsSeedData } from "./products-auctions-seed-data";
+import { productsCollectorDropsSeedData } from "./products-collector-drops-seed-data";
 import { productsPreordersSeedData } from "./products-preorders-seed-data";
 import { productsRandomLotsSeedData } from "./products-random-lots-seed-data";
 import { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
@@ -107,7 +107,7 @@ function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
 const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
   standard: "standard",
   spares: "spares",
-  auction: "auction",
+  "collector-drop": "collector-drop",
   "pre-order": "preorder",
   "random-lots": "random-lots",
   classified: "classified",
@@ -134,7 +134,7 @@ export const SEED_MANIFEST: SeedManifest = {
   products: pick(
     [
       ...asArr(productsStandardSeedData),
-      ...asArr(productsAuctionsSeedData),
+      ...asArr(productsCollectorDropsSeedData),
       ...asArr(productsPreordersSeedData),
       ...asArr(productsRandomLotsSeedData),
       ...asArr(productsClassifiedsSeedData),

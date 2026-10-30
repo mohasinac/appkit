@@ -11,7 +11,7 @@ import { annotate } from "../../shell/field-ui-meta";
 
 export const PRODUCT_FEATURE_PRODUCT_TYPE_ENUM = z.enum([
   "product",
-  "auction",
+  "collector-drop",
   "preorder",
   "random-lots",
   "classified",
@@ -25,7 +25,7 @@ export const PRODUCT_FEATURE_CATEGORY_ENUM = z.enum([
   "seller",
   "condition",
   "platform",
-  "auction",
+  "collector-drop",
   "preorder",
   "custom",
 ]);

@@ -116,7 +116,7 @@ export const INDEX_TYPES: readonly SearchIndexType[] = [
    * The first draft had a single `{ key: "product", hrefTemplate:
    * "/products/{s}" }`, which is Root Cause #48 rebuilt from scratch: "a
    * per-listing-type detailRoute() that silently defaults to the standard
-   * product page". An auction lives at `/auctions/{slug}`, a pre-order at
+   * product page". A collector drop lives at `/collector-drops/{slug}`, a pre-order at
    * `/pre-orders/{slug}`, a classified at `/classified/{slug}`. Every one of
    * those results would have rendered correctly and navigated to the wrong
    * page — the exact failure that made non-standard listings "revert to

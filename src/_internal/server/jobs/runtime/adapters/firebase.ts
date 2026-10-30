@@ -6,7 +6,7 @@ import { normalizeError } from "../../../../../errors/normalize";
  * consumer's `functions/src/index.ts` becomes a thin barrel:
  *
  *   import { handlers } from "./_internal/server/jobs/handlers";
- *   export const auctionSettlement = bindSchedule("auctionSettlement", handlers.auctionSettlement, { schedule: "every 15 minutes" });
+ *   export const collectorDropSettlement = bindSchedule("collectorDropSettlement", handlers.collectorDropSettlement, { schedule: "every 15 minutes" });
  *
  * The adapter resolves a JobContext (db + logger + env) per invocation so the
  * handler stays portable.

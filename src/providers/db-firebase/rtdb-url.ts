@@ -31,7 +31,7 @@ export function resolveRtdbUrl(): string | undefined {
   // time and NOTHING ever connected to it. Client writes were shielded only
   // because every rule is `.write: false`; server writes use the Admin SDK and
   // bypass rules entirely — so `npm run dev` wrote to PRODUCTION. A local bid
-  // overwrote the prod `auction-bids` node that live auction pages subscribe to,
+  // overwrote the prod `collector-drop-bids` node that live collector drop pages subscribe to,
   // and a local message send wrote prod `chats/**`.
   //
   // `FIREBASE_DATABASE_EMULATOR_HOST` is the standard variable the Firebase CLI

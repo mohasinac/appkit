@@ -1,7 +1,7 @@
 /**
  * DetailViewShell
  *
- * View shell for entity detail pages (product, auction, event, order, blog post, etc.).
+ * View shell for entity detail pages (product, collector drop, event, order, blog post, etc.).
  * Provides loading/skeleton and not-found guards, an optional breadcrumb slot,
  * a configurable main content area, and sequential below-fold sections.
  *

@@ -10,7 +10,7 @@
  * `ALL_LISTING_TYPES` + the listing-type plugin registry, so a new listing
  * type appears on every tab bar automatically. They used to be nine separate
  * hand-maintained literals and had drifted badly: `/products` offered only 4
- * of 9 types (missing auctions, pre-orders, prize draws, art, stickers — the
+ * of 9 types (missing collector drops, pre-orders, prize draws, art, stickers — the
  * bug that started this sweep), the admin type chips used display LABELS as
  * Sieve filter ids, and several arrays still listed `bundle`, which stopped
  * being a listingType in SB-UNI-D. `scripts/audit-listing-type-tab-coverage.mjs`
@@ -70,10 +70,10 @@ export interface ListingTab {
  *     same registry, and `/search` maps every resource type to its own page.
  *     Neither falls through to `/products` for a typed request.
  *  3. "Cross-type Compare + bulk-cart only exist on this page." Still true, and
- *     accepted: you can no longer compare an auction against a standard product.
+ *     accepted: you can no longer compare a collector drop against a standard product.
  *
  * A type appearing both here and in the main nav is the bug this fixes — the
- * same item reachable from two places with two different chromes (an auction
+ * same item reachable from two places with two different chromes (a collector drop
  * card in the general grid renders Buy-Now chrome, not bid affordances).
  */
 export const GENERIC_PRODUCT_LISTING_TYPES: readonly ListingType[] =

@@ -5,11 +5,11 @@
  * `trigger.kind` and the matching handler shape).
  *
  * Usage:
- *   export const auctionSettlement = defineFunction({
- *     name: "auctionSettlement",
- *     description: "Settle expired auctions and notify winners.",
+ *   export const collectorDropSettlement = defineFunction({
+ *     name: "collectorDropSettlement",
+ *     description: "Settle expired collector drops and notify winners.",
  *     trigger: { kind: "schedule", cron: "every 15 minutes" },
- *     handler: auctionSettlementHandler,
+ *     handler: collectorDropSettlementHandler,
  *     options: { timeoutSeconds: 300, memory: "256MiB" },
  *   });
  */

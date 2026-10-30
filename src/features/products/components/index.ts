@@ -75,8 +75,8 @@ export {
 export type { ProductFeaturesProviderProps } from "./ProductFeaturesContext";
 export { ProductDetailView } from "./ProductDetailView";
 export type { ProductDetailViewProps } from "./ProductDetailView";
-export { AuctionDetailView } from "./AuctionDetailView";
-export type { AuctionDetailViewProps } from "./AuctionDetailView";
+export { CollectorDropDetailView } from "./CollectorDropDetailView";
+export type { CollectorDropDetailViewProps } from "./CollectorDropDetailView";
 export { PreOrderDetailView } from "./PreOrderDetailView";
 export type { PreOrderDetailViewProps } from "./PreOrderDetailView";
 export { ProductInfo } from "./ProductInfo";

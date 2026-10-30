@@ -8,7 +8,7 @@ import type { EventEntryItem } from "../types";
  * inline; a page that re-listed them would be a second copy, and the first
  * field added to one and not the other is the drift.
  *
- * Same shape as `buildBidDetailFields` in the auctions feature — that one also
+ * Same shape as `buildBidDetailFields` in the collector drops feature — that one also
  * takes a viewer, because a bid's bidder identity is portal-dependent. An
  * event entry has no such split: only admins and moderators reach this at all,
  * so there is no viewer parameter to add and adding one "for symmetry" would

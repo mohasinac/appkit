@@ -28,7 +28,7 @@ export type ActiveAdRecord = {
  * H3 — fetch the slot's ad only once it is actually NEAR the viewport.
  *
  * 🛑 The gap this closes: every `<AdSlot>` called this on mount unconditionally
- * — four on the homepage alone, more on auctions/blog/promotions/search — so an
+ * — four on the homepage alone, more on collector drops/blog/promotions/search — so an
  * ad slot at the bottom of a page a visitor never scrolls to still fired its
  * request on first paint. `/api/ads` is CDN-cached (`s-maxage=600`), so this was
  * never a Firestore-read problem; it is a wasted-request problem on exactly the

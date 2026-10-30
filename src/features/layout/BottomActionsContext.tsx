@@ -111,7 +111,7 @@ export interface BottomActionsState {
   bulk?: BottomBulkConfig;
   /**
    * Optional single-line info label rendered above the action row.
-   * Useful for contextual data like "Current bid: ₹1,200" on auction pages.
+   * Useful for contextual data like "Current bid: ₹1,200" on collector drop pages.
    */
   infoLabel?: string;
   /**
@@ -119,7 +119,7 @@ export interface BottomActionsState {
    * (i.e. topmost of the three stacked rows: secondaryLabel, infoLabel,
    * action row). Purely additive — no existing caller sets this, so every
    * bar that doesn't pass it renders identically to before. Introduced for
-   * the auction detail page's live countdown ("Ends in 2d 5h").
+   * the collector drop detail page's live countdown ("Ends in 2d 5h").
    */
   secondaryLabel?: string;
   /**

@@ -66,8 +66,8 @@ export { ShopByCategorySection } from "./ShopByCategorySection";
 export type { FeaturedProductsSectionProps } from "./FeaturedProductsSection";
 export { FeaturedProductsSection } from "./FeaturedProductsSection";
 
-export type { FeaturedAuctionsSectionProps } from "./FeaturedAuctionsSection";
-export { FeaturedAuctionsSection } from "./FeaturedAuctionsSection";
+export type { FeaturedCollectorDropsSectionProps } from "./FeaturedCollectorDropsSection";
+export { FeaturedCollectorDropsSection } from "./FeaturedCollectorDropsSection";
 
 export type { FeaturedPreOrdersSectionProps } from "./FeaturedPreOrdersSection";
 export { FeaturedPreOrdersSection } from "./FeaturedPreOrdersSection";

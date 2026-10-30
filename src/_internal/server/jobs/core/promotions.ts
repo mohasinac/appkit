@@ -19,7 +19,7 @@ export async function runPromotions(
   ctx: JobContext,
 ): Promise<PromotionsCallableResult> {
   /*
-   * `FEATURE_EVENTS` gate deleted 2026-10-19 — see `auctionSettlement.ts`.
+   * `FEATURE_EVENTS` gate deleted 2026-10-19 — see `collectorDropSettlement.ts`.
    * Unset in the Functions env, and this branch returned three EMPTY ARRAYS,
    * which is indistinguishable from "nothing is promoted right now" to every
    * caller. A refusal shaped like a valid empty answer is the worst of the

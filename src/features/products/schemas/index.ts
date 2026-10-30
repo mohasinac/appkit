@@ -42,7 +42,7 @@ export const printMetaSchema = z.object({
  *
  * const myProductSchema = productItemSchema.extend({
  *   brand: z.string(),
- *   auctionEndDate: z.string().optional(),
+ *   collectorDropEndDate: z.string().optional(),
  * });
  * type MyProduct = z.infer<typeof myProductSchema>;
  */
@@ -110,7 +110,7 @@ export const productItemSchema = z.object({
       "graded",
     ])
     .optional(),
-  // SB1-G Phase 4 — canonical discriminator (legacy `isAuction`/`isPreOrder` booleans removed).
+  // SB1-G Phase 4 — canonical discriminator (legacy `isCollectorDrop`/`isPreOrder` booleans removed).
   madeToOrder: z.boolean().optional(),
   listingType: LISTING_TYPE_ENUM.optional(),
   // SB1-C — prize-draw + bundle fields. All optional.
@@ -186,16 +186,16 @@ export const productItemSchema = z.object({
     .array(z.object({ quantity: z.number(), discountPercent: z.number() }))
     .optional(),
 
-  // Auction detail fields
+  // Collector Drop detail fields
   startingBid: z.number().optional(),
   bidCount: z.number().optional(),
-  auctionEndDate: z.union([z.string(), z.date()]).optional(),
+  collectorDropEndDate: z.union([z.string(), z.date()]).optional(),
   reservePrice: z.number().optional(),
   buyNowPrice: z.number().optional(),
   minBidIncrement: z.number().optional(),
   autoExtendable: z.boolean().optional(),
-  auctionExtensionMinutes: z.number().optional(),
-  auctionShippingPaidBy: z.enum(["seller", "winner"]).optional(),
+  collectorDropExtensionMinutes: z.number().optional(),
+  collectorDropShippingPaidBy: z.enum(["seller", "winner"]).optional(),
 
   // Pre-order detail fields
   preOrderDeliveryDate: z.union([z.string(), z.date()]).optional(),

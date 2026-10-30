@@ -70,9 +70,9 @@ export async function HelpPageView({
     },
     {
       icon: Gavel,
-      title: t("topicAuctions"),
-      desc: t("topicAuctionsDesc"),
-      href: String(ROUTES.PUBLIC.HELP_AUCTIONS),
+      title: t("topicCollectorDrops"),
+      desc: t("topicCollectorDropsDesc"),
+      href: String(ROUTES.PUBLIC.HELP_COLLECTOR_DROPS),
       color: "bg-sky-50 border-sky-200 dark:bg-sky-900/20 dark:border-sky-700",
       iconColor: "text-sky-600 dark:text-sky-400",
     },

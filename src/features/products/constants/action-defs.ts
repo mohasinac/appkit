@@ -59,11 +59,11 @@ export const ACTION_ID = {
   MAKE_OFFER:"make-offer",
   SHARE:"share",
   COMPARE:"compare",
-  // Auction
+  // Collector Drop
   PLACE_BID:"place-bid",
-  BUY_NOW_AUCTION:"buy-now-auction",
-  WATCH_AUCTION:"watch-auction",
-  UNWATCH_AUCTION:"unwatch-auction",
+  BUY_NOW_COLLECTOR_DROP:"buy-now-collectorDrop",
+  WATCH_COLLECTOR_DROP:"watch-collectorDrop",
+  UNWATCH_COLLECTOR_DROP:"unwatch-collectorDrop",
   // Pre-order
   RESERVE_NOW:"reserve-now",
   CANCEL_RESERVATION:"cancel-reservation",
@@ -156,10 +156,10 @@ export const ACTION_META: Record<ActionId, ActionMeta> = {
   [ACTION_ID.MAKE_OFFER]:           { id: ACTION_ID.MAKE_OFFER,           label: regLabel("PRODUCT","make-offer","Make an Offer"),        variant: "outline",   iconName: "Tag",      requiresAuth: true,  authMessage: "You need to be signed in to make an offer."               },
   [ACTION_ID.SHARE]:                { id: ACTION_ID.SHARE,                label: regLabel("PRODUCT","share","Share"),                variant: "ghost",     iconName: "Share2"                                                                                },
   [ACTION_ID.COMPARE]:              { id: ACTION_ID.COMPARE,              label: regLabel("PRODUCT","compare","Compare"),              variant: "secondary", iconName: "Columns"                                                                               },
-  [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: regLabel("AUCTION","place-bid","Place Bid"),            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to place a bid."                      },
-  [ACTION_ID.BUY_NOW_AUCTION]:      { id: ACTION_ID.BUY_NOW_AUCTION,      label: regLabel("AUCTION","buy-it-now","Buy Now"),              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
-  [ACTION_ID.WATCH_AUCTION]:        { id: ACTION_ID.WATCH_AUCTION,        label: regLabel("AUCTION","watch","Watch"),                variant: "ghost",     iconName: "Eye",      requiresAuth: true,  authMessage: "You need to be signed in to watch auctions."              },
-  [ACTION_ID.UNWATCH_AUCTION]:      { id: ACTION_ID.UNWATCH_AUCTION,      label: regLabel("AUCTION","unwatch","Unwatch"),              variant: "ghost",     iconName: "EyeOff",   requiresAuth: true,  authMessage: "You need to be signed in to manage your watchlist."        },
+  [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: regLabel("COLLECTOR_DROP","place-bid","Place Bid"),            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to place a bid."                      },
+  [ACTION_ID.BUY_NOW_COLLECTOR_DROP]:      { id: ACTION_ID.BUY_NOW_COLLECTOR_DROP,      label: regLabel("COLLECTOR_DROP","buy-it-now","Buy Now"),              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
+  [ACTION_ID.WATCH_COLLECTOR_DROP]:        { id: ACTION_ID.WATCH_COLLECTOR_DROP,        label: regLabel("COLLECTOR_DROP","watch","Watch"),                variant: "ghost",     iconName: "Eye",      requiresAuth: true,  authMessage: "You need to be signed in to watch collector drops."              },
+  [ACTION_ID.UNWATCH_COLLECTOR_DROP]:      { id: ACTION_ID.UNWATCH_COLLECTOR_DROP,      label: regLabel("COLLECTOR_DROP","unwatch","Unwatch"),              variant: "ghost",     iconName: "EyeOff",   requiresAuth: true,  authMessage: "You need to be signed in to manage your watchlist."        },
   [ACTION_ID.RESERVE_NOW]:          { id: ACTION_ID.RESERVE_NOW,          label: regLabel("PRE_ORDER","reserve-now","Reserve Now"),          variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to reserve a pre-order."              },
   [ACTION_ID.CANCEL_RESERVATION]:   { id: ACTION_ID.CANCEL_RESERVATION,   label: regLabel("PRE_ORDER","cancel-reservation","Cancel Reservation"),   variant: "danger",    iconName: "X",        requiresAuth: true,  authMessage: "You need to be signed in to cancel a reservation."         },
   // ── Checkout / navigation CTAs ────────────────────────────────────────────
@@ -201,8 +201,8 @@ export const ACTION_META: Record<ActionId, ActionMeta> = {
 export const DETAIL_ACTIONS = {
   /** Standard product: buy, cart, wishlist, offer, share */
   product:  [ACTION_ID.BUY_NOW, ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.MAKE_OFFER, ACTION_ID.SHARE],
-  /** Auction: bid, buy-now, watch, share */
-  auction:  [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_AUCTION, ACTION_ID.WATCH_AUCTION, ACTION_ID.SHARE],
+  /** Collector Drop: bid, buy-now, watch, share */
+  "collector-drop":  [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_COLLECTOR_DROP, ACTION_ID.WATCH_COLLECTOR_DROP, ACTION_ID.SHARE],
   /** Pre-order: reserve, wishlist, share */
   preorder: [ACTION_ID.RESERVE_NOW, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.SHARE],
   /** Random lots: enter, wishlist, share */
@@ -218,7 +218,7 @@ export const DETAIL_ACTIONS = {
 // Mobile bottom bar — 1–2 primary CTAs only (limited horizontal space)
 export const MOBILE_PRIMARY_ACTIONS = {
   product:        [ACTION_ID.BUY_NOW, ACTION_ID.ADD_TO_CART],
-  auction:        [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_AUCTION],
+  "collector-drop":     [ACTION_ID.PLACE_BID, ACTION_ID.BUY_NOW_COLLECTOR_DROP],
   preorder:       [ACTION_ID.RESERVE_NOW],
   "random-lots":   [ACTION_ID.ENTER_RANDOM_LOTS],
   classified:     [ACTION_ID.MAKE_OFFER],
@@ -229,7 +229,7 @@ export const MOBILE_PRIMARY_ACTIONS = {
 // Listing page bulk actions — shown in the bottom action bar when items are selected
 export const LISTING_BULK_ACTIONS = {
   products:     [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
-  auctions:     [ACTION_ID.WATCH_AUCTION, ACTION_ID.UNWATCH_AUCTION, ACTION_ID.COMPARE],
+  collectorDrops:     [ACTION_ID.WATCH_COLLECTOR_DROP, ACTION_ID.UNWATCH_COLLECTOR_DROP, ACTION_ID.COMPARE],
   preorders:    [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
   randomLots:   [ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE] as readonly ActionId[],
   classifieds:  [ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE] as readonly ActionId[],
@@ -392,7 +392,7 @@ export const SELLER_ROW_ACTIONS = {
   classified:     [ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
   digitalCodes:   [ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
   live:           [ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
-  auctions:       [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
+  collectorDrops:       [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
   preOrders:      [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
   randomLots:     [ROW_ACTION_ID.VIEW, ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
   templates:      [ROW_ACTION_ID.EDIT, ROW_ACTION_ID.DELETE],
@@ -499,7 +499,7 @@ export const DASHBOARD_QUICK_ACTION_ID = {
   SELLER_VIEW_ORDERS: "dqa-seller-view-orders",
   SELLER_PAYOUT_REQ:"dqa-seller-payout-request",
   SELLER_SETTINGS:"dqa-seller-settings",
-  SELLER_AUCTIONS:"dqa-seller-auctions",
+  SELLER_COLLECTOR_DROPS:"dqa-seller-collectorDrops",
   SELLER_SHIPPING:"dqa-seller-shipping",
   SELLER_WHATSAPP:"dqa-seller-whatsapp",
   SELLER_REVIEWS:"dqa-seller-reviews",
@@ -573,7 +573,7 @@ export const DASHBOARD_QUICK_ACTION_META: Record<DashboardQuickActionId, Dashboa
   [DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS]: { id: DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS, label: "Orders",         variant: "outline",  iconName: "ShoppingBag",  requiresAuth: true, requiredRole: "seller" },
   [DASHBOARD_QUICK_ACTION_ID.SELLER_PAYOUT_REQ]:  { id: DASHBOARD_QUICK_ACTION_ID.SELLER_PAYOUT_REQ,  label: "Request Payout", variant: "outline",  iconName: "Banknote",     requiresAuth: true, requiredRole: "seller" },
   [DASHBOARD_QUICK_ACTION_ID.SELLER_SETTINGS]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_SETTINGS,    label: "Store Settings", variant: "ghost",    iconName: "Settings",     requiresAuth: true, requiredRole: "seller" },
-  [DASHBOARD_QUICK_ACTION_ID.SELLER_AUCTIONS]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_AUCTIONS,    label: "Auctions",       variant: "outline",  iconName: "Gavel",        requiresAuth: true, requiredRole: "seller" },
+  [DASHBOARD_QUICK_ACTION_ID.SELLER_COLLECTOR_DROPS]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_COLLECTOR_DROPS,    label: "Collector Drops",       variant: "outline",  iconName: "Gavel",        requiresAuth: true, requiredRole: "seller" },
   [DASHBOARD_QUICK_ACTION_ID.SELLER_SHIPPING]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_SHIPPING,    label: "Shipping",       variant: "outline",  iconName: "Truck",        requiresAuth: true, requiredRole: "seller" },
   [DASHBOARD_QUICK_ACTION_ID.SELLER_WHATSAPP]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_WHATSAPP,    label: "WhatsApp",       variant: "outline",  iconName: "Phone",        requiresAuth: true, requiredRole: "seller" },
   [DASHBOARD_QUICK_ACTION_ID.SELLER_REVIEWS]:     { id: DASHBOARD_QUICK_ACTION_ID.SELLER_REVIEWS,     label: "Reviews",        variant: "outline",  iconName: "Star",         requiresAuth: true, requiredRole: "seller" },
@@ -626,7 +626,7 @@ export const DASHBOARD_QUICK_ACTIONS = {
     DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS,
     DASHBOARD_QUICK_ACTION_ID.SELLER_ANALYTICS,
     DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_COUPON,
-    DASHBOARD_QUICK_ACTION_ID.SELLER_AUCTIONS,
+    DASHBOARD_QUICK_ACTION_ID.SELLER_COLLECTOR_DROPS,
     DASHBOARD_QUICK_ACTION_ID.SELLER_BUNDLES,
     DASHBOARD_QUICK_ACTION_ID.SELLER_RANDOM_LOTS,
     DASHBOARD_QUICK_ACTION_ID.SELLER_OFFERS,
@@ -707,7 +707,7 @@ export const SELLER_BULK_ACTIONS = {
   art:            [ROW_ACTION_ID.DELETE],
   stickers:       [ROW_ACTION_ID.DELETE],
   spares:         [ROW_ACTION_ID.DELETE],
-  auctions:       [ROW_ACTION_ID.DELETE],
+  collectorDrops:       [ROW_ACTION_ID.DELETE],
   preOrders:      [ROW_ACTION_ID.DELETE],
   randomLots:     [ROW_ACTION_ID.DELETE],
   templates:      [ROW_ACTION_ID.DELETE],

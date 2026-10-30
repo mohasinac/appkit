@@ -254,7 +254,7 @@ export const DEFAULT_STORE_CATEGORY_DATA: Partial<StoreCategoryDocument> = {
  */
 export const LISTING_TEMPLATE_TYPES = [
   "standard",
-  "auction",
+  "collector-drop",
   "pre-order",
   "random-lots",
   "bundle",

@@ -11,8 +11,8 @@
  * This replaced an earlier note reading "FOUR ACTIVE, NOT FIVE, SINCE
  * 2026-10-20 … nothing was promoted to backfill it". Two slides were promoted
  * on 2026-10-21 (`slide-festive-cashback`, `slide-bundles-save`) and two
- * demoted: `slide-beyblade-auction` (CTA into a vertical switched off at
- * `listings.listingTypes.auction: false`) and `slide-beyblade-collection-hunt`
+ * demoted: `slide-beyblade-collectorDrop` (CTA into a vertical switched off at
+ * `listings.listingTypes.collector-drop: false`) and `slide-beyblade-collection-hunt`
  * (a restatement of the hero's own first card).
  *
  * Do NOT activate `slide-upcoming-promo` to change the count: that one is the
@@ -23,7 +23,7 @@
  * `MarketplaceHomepageView` tie-breaks on `updatedAt` then `id.localeCompare`,
  * so two slides sharing an order makes the running order alphabetical by
  * accident rather than a layout decision — which is exactly what happened
- * when `slide-beyblade-auction` and `slide-upcoming-promo` both sat on 6.
+ * when `slide-beyblade-collectorDrop` and `slide-upcoming-promo` both sat on 6.
  *
  * 🛑 EVERY ACTIVE SLIDE MUST CARRY AN `overlay` OR `cards`, OR IT RENDERS BLANK.
  * `HeroCarousel` gates all slide copy on `slide.overlay` (line ~412) and the
@@ -40,7 +40,7 @@
  * Overlay titles render as <h2> — the welcome section above the carousel owns
  * the page's single <h1>.
  *
- * One slide (slide-beyblade-auction) uses background.type:"video" with a direct,
+ * One slide (slide-beyblade-collectorDrop) uses background.type:"video" with a direct,
  * Creative-Commons-licensed MP4 URL — HeroCarousel renders video backgrounds via a
  * native <video> element (MediaVideo), not a YouTube iframe embed, so this needs a
  * playable video file URL rather than a YouTube video ID.
@@ -192,9 +192,9 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
          * LESSON: on a site that keeps withdrawing surfaces, the safe
          * destination for a hero card is one that cannot close.
          *
-         * It was the AUCTIONS card ("Bid / Live auctions / Place a bid before
-         * the timer runs out" → `/auctions`), still on the first screen weeks
-         * after `listings.listingTypes.auction` went `false` — the
+         * It was the COLLECTOR_DROPS card ("Bid / Live collector drops / Place a bid before
+         * the timer runs out" → `/collector-drops`), still on the first screen weeks
+         * after `listings.listingTypes.collector-drop` went `false` — the
          * section-level gate is keyed on `SectionType` and a carousel is type
          * `carousel` whatever it contains, so nothing could see it.
          *
@@ -259,7 +259,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   /*
    * ── Two promo slides, added 2026-10-21 ───────────────────────────────────
    *
-   * Both took slots freed by disabling `slide-beyblade-auction` (a CTA into a
+   * Both took slots freed by disabling `slide-beyblade-collectorDrop` (a CTA into a
    * switched-off vertical) and `slide-beyblade-collection-hunt` (the hero's
    * first card restated). `MAX_ACTIVE_SLIDES` is 5 and remains exactly met —
    * a sixth active slide is not an error, it is silently never rendered.
@@ -358,23 +358,23 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   },
   {
     /*
-     * 🛑 DISABLED, NOT DELETED — the same arrangement the auctions RAIL uses in
+     * 🛑 DISABLED, NOT DELETED — the same arrangement the collector drops RAIL uses in
      * `homepage-sections-seed-data.ts`, and for the same reason. Every word of
      * the copy, the video background and the CTA stay exactly as they were, so
-     * flipping `listings.listingTypes.auction` back to `true` and this flag
+     * flipping `listings.listingTypes.collector-drop` back to `true` and this flag
      * with it restores the slide intact.
      *
      * Two locks, deliberately. `gateCarouselSlides` already drops this at
      * render because `overlay.button.link` and `link.url` both resolve to
-     * `/auctions` — but that one is invisible, and a slide listed as active in
+     * `/collector-drops` — but that one is invisible, and a slide listed as active in
      * the carousel admin while never appearing on the page reads as a bug in
      * the admin. `active: false` is the lock a human sees.
      *
      * 🛑 The copy names no listing type — "Win it at your price" — which is
      * exactly why the gate matches on the LINK and not on the words.
      */
-    id: "slide-beyblade-auction",
-    title: "Live auctions",
+    id: "slide-beyblade-collectorDrop",
+    title: "Live collector drops",
     // Moved 2 → 6 to free the top slots for the two promo slides added
     // 2026-10-21. A disabled slide keeps a slot so re-enabling restores its
     // position; it does not need an EARLY one.
@@ -394,16 +394,16 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
       enabled: true,
       subtitle: "Bidding open now",
       title: "Win it at your price",
-      description: "Live auctions close every day. Place a bid, set your maximum, and let it ride.",
+      description: "Live collector drops close every day. Place a bid, set your maximum, and let it ride.",
       button: {
-        id: "slide-auctions-cta",
-        text: "Browse live auctions",
-        link: String(ROUTES.PUBLIC.AUCTIONS),
+        id: "slide-collectorDrops-cta",
+        text: "Browse live collector drops",
+        link: String(ROUTES.PUBLIC.COLLECTOR_DROPS),
         variant: "primary",
         openInNewTab: false,
       },
     },
-    link: { url: String(ROUTES.PUBLIC.AUCTIONS), openInNewTab: false },
+    link: { url: String(ROUTES.PUBLIC.COLLECTOR_DROPS), openInNewTab: false },
     settings: SLIDE_SETTINGS,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(55),
@@ -584,7 +584,7 @@ const _rawSlides: Partial<CarouselSlideDocument>[] = [
   {
     id: "slide-upcoming-promo",
     title: "Seasonal promo (draft)",
-    // Moved 6 → 8: `slide-beyblade-auction` now holds 6, and two slides on
+    // Moved 6 → 8: `slide-beyblade-collectorDrop` now holds 6, and two slides on
     // one order is the collision the header warns about —
     // `MarketplaceHomepageView` tie-breaks on `updatedAt` then
     // `id.localeCompare`, making the running order alphabetical by accident.

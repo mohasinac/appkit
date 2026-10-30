@@ -11,7 +11,7 @@
  * WHAT: One three-tab scope bar — Available / <Sold & Ended> / All — shared by
  *       the public browse pages, the store tabs, the category and brand
  *       panels, and the admin/seller dashboards. The middle label is DERIVED
- *       from each listing type's `hideDefault`, so /auctions reads "Ended",
+ *       from each listing type's `hideDefault`, so /collector-drops reads "Ended",
  *       /art reads "Sold", and /products reads "Sold & Ended".
  *
  * EXPORTS: AvailabilityTabs, AvailabilityTabsProps
@@ -20,7 +20,7 @@
  * @tag layer:ui
  * @tag pattern:none
  * @tag access:client
- * @tag consumers:ProductsIndexListing,AuctionsIndexListing,PreOrdersIndexListing,RandomLotsIndexListing,Store*Listing,CategoryProductsListing,Seller*View,Admin*View
+ * @tag consumers:ProductsIndexListing,CollectorDropsIndexListing,PreOrdersIndexListing,RandomLotsIndexListing,Store*Listing,CategoryProductsListing,Seller*View,Admin*View
  * @tag sideEffects:url-mutation
  */
 

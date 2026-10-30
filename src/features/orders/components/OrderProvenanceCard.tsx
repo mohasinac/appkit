@@ -7,7 +7,7 @@
  * ## Why this component had to be written
  *
  * `sourceContext` is a six-variant discriminated union, assembled at a real
- * cost — an auction pays one `findByProductSorted`, an offer one `findById` —
+ * cost — a collector drop pays one `findByProductSorted`, an offer one `findById` —
  * written on every order by both checkout paths, mapped through to the client
  * type by `orderDocumentToOrder` (adapters.ts:359) … and, until this file,
  * rendered in **zero** `.tsx` files anywhere in the repo.
@@ -26,8 +26,8 @@
  * exhaustive.
  *
  * **A saving is shown only where it is real.** Not every variant records a
- * displaced price: `auction-buy-now` has `listPrice`, `offer-accepted` has
- * `listPriceAtOffer`, and `auction-won` has only `startingBid` — which is a
+ * displaced price: `collector-drop-buy-now` has `listPrice`, `offer-accepted` has
+ * `listPriceAtOffer`, and `collector-drop-won` has only `startingBid` — which is a
  * floor, not an asking price, so presenting the gap as a discount would be a
  * fabrication. Where a displaced price exists it is shown only when it is
  * strictly greater than what was paid.
@@ -91,10 +91,10 @@ function contentFor(ctx: OrderSourceContext, currency?: string): ProvenanceConte
       // Deliberately silent — see the header. Explicit so the switch is exhaustive.
       return null;
 
-    case "auction-won": {
+    case "collector-drop-won": {
       const rows: ProvenanceRow[] = [
         { label: "Winning bid", value: money(ctx.winningBidAmount) },
-        { label: "Bids in the auction", value: String(ctx.bidCount) },
+        { label: "Bids in the collector drop", value: String(ctx.bidCount) },
         { label: "Starting bid", value: money(ctx.startingBid) },
       ];
       if (ctx.runnerUpAmount !== undefined) {
@@ -106,9 +106,9 @@ function contentFor(ctx: OrderSourceContext, currency?: string): ProvenanceConte
           value: `${money(ctx.reservePrice)} — ${ctx.reserveMet ? "met" : "not met"}`,
         });
       }
-      rows.push({ label: "Auction ended", value: dateText(ctx.auctionEndedAt) });
+      rows.push({ label: "Collector Drop ended", value: dateText(ctx.collectorDropEndedAt) });
       return {
-        title: "Won at auction",
+        title: "Won at collector drop",
         tone: "success",
         summary:
           ctx.bidCount > 1
@@ -118,7 +118,7 @@ function contentFor(ctx: OrderSourceContext, currency?: string): ProvenanceConte
       };
     }
 
-    case "auction-buy-now": {
+    case "collector-drop-buy-now": {
       const rows: ProvenanceRow[] = [
         { label: "Buy Now price", value: money(ctx.buyNowPrice) },
         { label: "List price", value: money(ctx.listPrice) },
@@ -130,7 +130,7 @@ function contentFor(ctx: OrderSourceContext, currency?: string): ProvenanceConte
         { label: "Bought", value: dateText(ctx.boughtAt) },
       ];
       return {
-        title: "Bought now, ending the auction",
+        title: "Bought now, ending the collector drop",
         tone: "info",
         /*
          * A buyout IS a real bid (the schema's own note: recording bidCount 0

@@ -91,7 +91,7 @@ export interface ResolvedEntity {
   readonly href: string;
   readonly score: number;
   /**
-   * The record's raw compact facet string (`"lt:auction|br:takara-tomy"`), or
+   * The record's raw compact facet string (`"lt:collector drop|br:takara-tomy"`), or
    * `""`. Carried on the hit so a facet rail can count what the CURRENT result
    * set contains without going back to the artifact and re-finding each row.
    *

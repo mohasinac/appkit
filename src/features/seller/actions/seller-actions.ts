@@ -29,7 +29,7 @@ import { ProductStatusValues } from "../../products/schemas";
 import {
   assertRandomLotsNotLocked,
   assertRandomLotsWonItemsImmutable,
-  assertAuctionTermsMutable,
+  assertCollectorDropTermsMutable,
 } from "../../../_internal/server/features/products/service";
 import { orderRepository } from "../../orders/repository/orders.repository";
 import { OrderStatusValues } from "../../orders/schemas";
@@ -1019,7 +1019,7 @@ export async function sellerUpdateProduct(
     assertRandomLotsNotLocked(existing, "unpublished or archived");
   }
   assertRandomLotsWonItemsImmutable(existing, input.prizeDrawItems);
-  assertAuctionTermsMutable(existing, input);
+  assertCollectorDropTermsMutable(existing, input);
   const finalizedData = await finalizeProductMediaReferences(input);
   const updated = await productRepository.updateProduct(
     productId,

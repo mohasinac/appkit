@@ -19,10 +19,10 @@ const registry: CronRegistry = new Map();
  *
  * @example
  * ```ts
- * export const auctionExpiryJob = createCronJob(
+ * export const collectorDropExpiryJob = createCronJob(
  * {
- * name: "auctions_expire",
- * description: "Close live auctions whose endTime has passed.",
+ * name: "collector_drops_expire",
+ * description: "Close live collector drops whose endTime has passed.",
  * schedule: "every 5 minutes",
  * timezone: "Asia/Kolkata",
  * },
@@ -94,7 +94,7 @@ export function _resetCronRegistry(): void {
  *
  * @example
  * ```ts
- * const result = await runJob("auctions_expire", {
+ * const result = await runJob("collector_drops_expire", {
  * scheduleTime: new Date().toISOString(),
  * });
  * ```

@@ -175,7 +175,7 @@ const RESOURCE_ICON_MAP: Record<string, string> = {
   classified: "📋",
   "pre-orders": "🕓",
   "random-lots": "🎁",
-  auctions: "🔨",
+  collectorDrops: "🔨",
   bundles: "🎀",
   bids: "🔨",
   orders: "🧾",

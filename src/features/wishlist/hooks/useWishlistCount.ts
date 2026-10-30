@@ -81,7 +81,7 @@ export function useWishlistCount(userId: string | null | undefined) {
     mergedRef.current = userId;
 
     const items = getGuestWishlistItems().filter((i) =>
-      ["product", "auction", "preorder"].includes(i.type),
+      ["product", "collector-drop", "preorder", "auction"].includes(i.type),
     );
 
     const finish = () => {

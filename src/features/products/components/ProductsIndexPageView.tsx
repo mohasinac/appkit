@@ -43,12 +43,12 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
   // an inbound link from before /products was narrowed) must be sent to the
   // dedicated page that owns them. Without this, `narrowed = selected ∩ span`
   // is empty and listPublicProducts falls back to the FULL span — so
-  // /products?listingType=auction would silently render the general catalogue
-  // and look like the auctions had vanished.
+  // /products?listingType=collector-drop would silently render the general catalogue
+  // and look like the collector drops had vanished.
   //
   // Only redirect when the out-of-span types agree on one destination: `art`
   // and `stickers` both point at /art, so that pair still resolves, whereas
-  // auction+pre-order genuinely has no single home and is better served by
+  // collector drop+pre-order genuinely has no single home and is better served by
   // dropping the filter.
   const outOfSpan = selectedTypes.filter(
     (t) => !GENERIC_PRODUCT_LISTING_TYPES.includes(t),
@@ -60,7 +60,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
     if (destinations.size === 1) {
       const [destination] = [...destinations];
       // Carry the search term only. Sort keys are per-type (Root Cause #63) —
-      // forwarding a /products sort to /auctions would name a field that page's
+      // forwarding a /products sort to /collector-drops would name a field that page's
       // config never offers, which drops the sort silently rather than loudly.
       const q = searchParams[TABLE_KEYS.QUERY];
       const term = (Array.isArray(q) ? q[0] : q)?.trim();
@@ -89,7 +89,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
      * query would spend a round trip against Rule #6's budget for one link.
      *
      * 🛑 `safeRead`, so a settings failure hides the banner rather than
-     * failing the catalogue. Auctions have their own nav entry and their own
+     * failing the catalogue. Collector Drops have their own nav entry and their own
      * page; the banner is a shortcut, and a shortcut is the correct thing to
      * lose when its gate cannot be evaluated.
      */
@@ -101,18 +101,18 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
   ]);
 
   /*
-   * 🛑 Auctions are a LISTING TYPE an admin can switch off, and this banner
+   * 🛑 Collector Drops are a LISTING TYPE an admin can switch off, and this banner
    * advertised them unconditionally.
    *
-   * Every other auction entry point already respects the flag — the navbar
+   * Every other collector drop entry point already respects the flag — the navbar
    * child (filtered by key in `LayoutShellClient`), the footer link
    * (`FOOTER_LINK_LISTING_TYPES`), the store tabs (`tabs.ts`), the
    * category/brand tabs, and the homepage section (`gatedListing`). This was
    * the one surface left promoting a page that renders nothing on a site with
-   * auctions disabled, which is Root Cause #37's dead-link shape reached from
+   * collector drops disabled, which is Root Cause #37's dead-link shape reached from
    * the other direction.
    */
-  const showAuctionsBanner = isListingTypeEnabled("auction", settings);
+  const showCollectorDropsBanner = isListingTypeEnabled("collector-drop", settings);
 
   return (
     <Main>
@@ -125,11 +125,11 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
           <Text className="mt-1" color="muted" size="sm">
             Discover amazing products and deals
           </Text>
-          {showAuctionsBanner && (
+          {showCollectorDropsBanner && (
           <Div className="mt-3">
             <TextLink
               variant="bare"
-              href={String(ROUTES.PUBLIC.AUCTIONS)}
+              href={String(ROUTES.PUBLIC.COLLECTOR_DROPS)}
               rounded="full"
               paddingX="sm"
               paddingY="2xs"
@@ -140,7 +140,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
               gap="sm"
               className="border border-primary/30 bg-primary/10 text-primary-700 dark:text-primary-400 hover:bg-primary/15 transition-colors"
             >
-              🏷️ Looking for unique deals? Browse Auctions →
+              🏷️ Looking for unique deals? Browse Collector Drops →
             </TextLink>
           </Div>
           )}

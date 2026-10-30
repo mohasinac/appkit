@@ -604,18 +604,18 @@ export { PageViewTracker } from "./features/analytics/components/PageViewTracker
 export type { PageViewTrackerProps } from "./features/analytics/components/PageViewTracker";
 export { PAGE_VIEW_ENTITY_TYPES } from "./features/analytics/types";
 export type { PageViewEntityType } from "./features/analytics/types";
-export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
+export { CollectorDropBidsTable } from "./features/collector-drops/components/CollectorDropBidsTable";
 // The ONE bid-detail field builder, shared by all three portals' list modals
 // and — since W22 — their detail pages. `viewer` is what decides whether the
 // bidder's identity is shown, so keeping it in one place is what stops a
 // buyer-facing surface ever rendering another bidder's name.
-export { buildBidDetailFields, bidStatusBadge } from "./features/auctions/components/bid-detail-fields";
+export { buildBidDetailFields, bidStatusBadge } from "./features/collector-drops/components/bid-detail-fields";
 // Same reason, one feature over: the entry detail modal and its full page
 // render from one builder rather than two lists that can drift.
 export { buildEventEntryDetailFields } from "./features/events/components/event-entry-detail-fields";
 export type { EntryFieldRow } from "./features/events/components/event-entry-detail-fields";
-export type { BidDetailViewer } from "./features/auctions/components/bid-detail-fields";
-export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
+export type { BidDetailViewer } from "./features/collector-drops/components/bid-detail-fields";
+export type { CollectorDropBidsTableProps, CollectorDropWithBids } from "./features/collector-drops/components/CollectorDropBidsTable";
 export { ProtectedRoute } from "./features/auth/components/Guards";
 export { ForgotPasswordView } from "./features/auth/components/ForgotPasswordView";
 export { LoginForm } from "./features/auth/components/LoginForm";
@@ -792,8 +792,8 @@ export { COMPARE_MAX_ITEMS } from "./features/products/constants/action-defs";
 export {
   STANDARD_SORT_OPTIONS,
   STANDARD_PUBLIC_SORT_OPTIONS,
-  AUCTION_SORT_OPTIONS,
-  AUCTION_PUBLIC_SORT_OPTIONS,
+  COLLECTOR_DROP_SORT_OPTIONS,
+  COLLECTOR_DROP_PUBLIC_SORT_OPTIONS,
   PREORDER_SORT_OPTIONS,
   PREORDER_PUBLIC_SORT_OPTIONS,
   BUNDLE_SORT_OPTIONS,
@@ -1042,7 +1042,7 @@ export {
 // SB-UNI-F 2026-05-13 — Phase 2 predicates surfaced through client barrel.
 export {
   normalizeListingType,
-  isAuctionListing,
+  isCollectorDropListing,
   isPreOrderListing,
   isStandardListing,
   isRandomLotListing,
@@ -1444,7 +1444,7 @@ export type {
   SellerEditProductViewProps,
 } from "./features/seller/index";
 export { BecomeSellerView } from "./features/account/components/BecomeSellerView";
-export type { BidDocument } from "./features/auctions/schemas/firestore";
+export type { BidDocument } from "./features/collector-drops/schemas/firestore";
 export type { ClaimedCouponDocument } from "./features/promotions/schemas";
 export { groupOrderItemsByLine } from "./features/orders/utils/bundle-grouping";
 export { shortOrderRef } from "./features/orders/utils/order-ref";
@@ -1535,7 +1535,7 @@ export {
   ADMIN_CART_OWNERSHIP_TABS,
   ADMIN_COUPON_TYPE_TABS,
   SELLER_PRODUCT_STATUS_TABS,
-  SELLER_AUCTION_STATUS_TABS,
+  SELLER_COLLECTOR_DROP_STATUS_TABS,
   SELLER_ORDER_STATUS_TABS,
   SELLER_OFFER_STATUS_TABS,
   SELLER_BID_STATUS_TABS,
@@ -1574,7 +1574,7 @@ export {
   SCHEMA_DEFAULTS,
 } from "./constants/field-names";
 
-// Checkout lanes — the derived auction > offer > standard partition of the
+// Checkout lanes — the derived collector drop > offer > standard partition of the
 // cart, and the priority rule that decides which one may be checked out.
 export {
   CART_LANE,

@@ -71,7 +71,7 @@ export interface BuyerFacingFees {
 /**
  * Withheld on purpose (11 of 25): gatewayFeePercent, sellerShippingFixed,
  * platformShippingPercent, platformShippingFixedMin, autoPayoutWindowDays,
- * payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee,
+ * payoutHoldDays, minPayoutAmount, collectorDropListingFee, preOrderListingFee,
  * featuredSlotFee, promotedSlotFee — plus `surchargeSellerSharePercent`, which
  * lives on the EMI block and is excluded by `BuyerEmiSettings` below.
  *

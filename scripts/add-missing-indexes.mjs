@@ -5,12 +5,12 @@ const content = readFileSync(filePath, "utf8").replace(/^\uFEFF/, "");
 const f = JSON.parse(content);
 
 const newIndexes = [
-  // products - auction
+  // products - collector drop
   {
     collectionGroup: "products",
     queryScope: "COLLECTION",
     fields: [
-      { fieldPath: "isAuction", order: "ASCENDING" },
+      { fieldPath: "isCollectorDrop", order: "ASCENDING" },
       { fieldPath: "reservePrice", order: "DESCENDING" },
     ],
   },
@@ -19,7 +19,7 @@ const newIndexes = [
     queryScope: "COLLECTION",
     fields: [
       { fieldPath: "status", order: "ASCENDING" },
-      { fieldPath: "auctionEndDate", order: "DESCENDING" },
+      { fieldPath: "collectorDropEndDate", order: "DESCENDING" },
     ],
   },
   // products - preorder

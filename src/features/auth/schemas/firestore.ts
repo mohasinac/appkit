@@ -188,7 +188,7 @@ export interface UserDocument extends BaseDocument {
    */
   stats?: {
     totalOrders: number;
-    auctionsWon: number;
+    collectorDropsWon: number;
     itemsSold: number;
     reviewsCount: number;
   };
@@ -364,7 +364,7 @@ export const DEFAULT_USER_DATA: Partial<UserPlain> = {
   },
   stats: {
     totalOrders: 0,
-    auctionsWon: 0,
+    collectorDropsWon: 0,
     itemsSold: 0,
     reviewsCount: 0,
   },
@@ -499,7 +499,7 @@ export const USER_FIELDS = {
   STATS: "stats",
   STAT: {
     TOTAL_ORDERS: "stats.totalOrders",
-    AUCTIONS_WON: "stats.auctionsWon",
+    COLLECTOR_DROPS_WON: "stats.collectorDropsWon",
     ITEMS_SOLD: "stats.itemsSold",
     REVIEWS_COUNT: "stats.reviewsCount",
     // `RATING` removed — `stats.rating` had no writer and no buyer-rating

@@ -37,9 +37,9 @@ import {
 } from "../../site-settings/components/ThemeManagerView";
 import { DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME } from "../../../tokens/themes";
 import {
-  DEFAULT_AUCTION_BID_INCREMENT_TIERS,
+  DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
   type BidIncrementTier,
-} from "../../../_internal/shared/features/auctions/config";
+} from "../../../_internal/shared/features/collector-drops/config";
 import { validateGstEnablement } from "../../../_internal/shared/features/site-settings/gst-registration";
 import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } from "../../about/schemas/firestore";
 /*
@@ -356,7 +356,7 @@ export function AdminSiteSettingsView({
   const [gatewayFeePercent, setGatewayFeePercent] = React.useState(2);
   const [payoutHoldDays, setPayoutHoldDays] = React.useState(7);
   const [minPayoutAmount, setMinPayoutAmount] = React.useState(100);
-  const [auctionListingFee, setAuctionListingFee] = React.useState(0);
+  const [collectorDropListingFee, setCollectorDropListingFee] = React.useState(0);
   const [preOrderListingFee, setPreOrderListingFee] = React.useState(0);
   const [featuredSlotFee, setFeaturedSlotFee] = React.useState(999);
   const [promotedSlotFee, setPromotedSlotFee] = React.useState(499);
@@ -444,8 +444,8 @@ export function AdminSiteSettingsView({
   const [notifEmailTypes, setNotifEmailTypes] = React.useState<string[]>([]);
   const [notifWhatsappTypes, setNotifWhatsappTypes] = React.useState<string[]>([]);
 
-  // ⑩ Auction
-  const [bidIncrementTiers, setBidIncrementTiers] = React.useState<BidIncrementTier[]>(DEFAULT_AUCTION_BID_INCREMENT_TIERS);
+  // ⑩ Collector Drop
+  const [bidIncrementTiers, setBidIncrementTiers] = React.useState<BidIncrementTier[]>(DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS);
   const [autoExtendWindow, setAutoExtendWindow] = React.useState(5);
   const [settlementGrace, setSettlementGrace] = React.useState(24);
 
@@ -635,7 +635,7 @@ export function AdminSiteSettingsView({
      */
     setPayoutHoldDays(Math.max(s.commissions?.payoutHoldDays ?? 7, PAYOUT_HOLD_FLOOR_DAYS));
     setMinPayoutAmount(s.commissions?.minPayoutAmount ?? 100);
-    setAuctionListingFee(s.commissions?.auctionListingFee ?? 0);
+    setCollectorDropListingFee(s.commissions?.collectorDropListingFee ?? 0);
     setPreOrderListingFee(s.commissions?.preOrderListingFee ?? 0);
     setFeaturedSlotFee(s.commissions?.featuredSlotFee ?? 999);
     setPromotedSlotFee(s.commissions?.promotedSlotFee ?? 499);
@@ -716,9 +716,9 @@ export function AdminSiteSettingsView({
     setNotifEmailTypes(s.notificationChannels?.email?.types ?? []);
     setNotifWhatsappTypes(s.notificationChannels?.whatsapp?.types ?? []);
 
-    setBidIncrementTiers(s.auctionConfig?.bidIncrementTiers ?? DEFAULT_AUCTION_BID_INCREMENT_TIERS);
-    setAutoExtendWindow(s.auctionConfig?.autoExtendWindowMinutes ?? 5);
-    setSettlementGrace(s.auctionConfig?.settlementGracePeriodHours ?? 24);
+    setBidIncrementTiers(s.collectorDropConfig?.bidIncrementTiers ?? DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS);
+    setAutoExtendWindow(s.collectorDropConfig?.autoExtendWindowMinutes ?? 5);
+    setSettlementGrace(s.collectorDropConfig?.settlementGracePeriodHours ?? 24);
 
     setMaxProductsPerStore(s.platformLimits?.maxProductsPerStore ?? 100);
     setMaxCustomFields(s.platformLimits?.maxCustomFieldsPerProduct ?? 50);
@@ -874,7 +874,7 @@ export function AdminSiteSettingsView({
         offsetX: watermarkOffsetX,
         offsetY: watermarkOffsetY,
       },
-      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, whatsappNotifyFee, whatsappNotifyFeeEnabled, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, saleProtectionFeeEnabled, saleProtectionFeePercent, saleProtectionFeeMin, codHandlingFeePercent, codHandlingFeeCap, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
+      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, whatsappNotifyFee, whatsappNotifyFeeEnabled, minPayoutAmount, collectorDropListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, saleProtectionFeeEnabled, saleProtectionFeePercent, saleProtectionFeeMin, codHandlingFeePercent, codHandlingFeeCap, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
@@ -955,7 +955,7 @@ export function AdminSiteSettingsView({
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
       payment: { razorpayEnabled, phonepeEnabled, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
-      auctionConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
+      collectorDropConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml, cancellation: cancellationHtml, grievance: grievanceHtml },
       // Both keys are always sent: Firestore's update() replaces a nested map
@@ -1490,7 +1490,7 @@ export function AdminSiteSettingsView({
                 *
                 * Flagged for a real decision: delete, or build the billing.
                 */}
-                <Input label="Auction listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(auctionListingFee)} onChange={(e) => setAuctionListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
+                <Input label="Collector Drop listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(collectorDropListingFee)} onChange={(e) => setCollectorDropListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Pre-order listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(preOrderListingFee)} onChange={(e) => setPreOrderListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Featured slot fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it. /admin/deals sets isPromoted for free today." value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Promoted slot fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it. /admin/deals sets isPromoted for free today." value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
@@ -1989,9 +1989,9 @@ export function AdminSiteSettingsView({
             </SettingsTabForm>
           </TabsContent>
 
-          {/* ⑩ Auction Config */}
-          <TabsContent value="auction">
-            <SettingsTabForm id="auction" label="Auction">
+          {/* ⑩ Collector Drop Config */}
+          <TabsContent value="collector-drop">
+            <SettingsTabForm id="collector-drop" label="Collector Drop">
               <Stack gap="sm" rounded="lg" border="default" padding="sm">
                 <Text size="xs" weight="medium" color="muted">Bid increment tiers</Text>
                 <Text size="xs" color="muted">
@@ -2053,8 +2053,8 @@ export function AdminSiteSettingsView({
                   + Add tier
                 </Button>
               </Stack>
-              <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend auction end time if a bid arrives within this window." />
-              <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the auction is re-listed." />
+              <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend collector drop end time if a bid arrives within this window." />
+              <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the collector drop is re-listed." />
             </SettingsTabForm>
           </TabsContent>
 
@@ -2195,7 +2195,7 @@ export function AdminSiteSettingsView({
                   />
                 </Grid>
                 <Text size="xs" color="muted">
-                  Some notification types never email regardless of these settings — losing an auction,
+                  Some notification types never email regardless of these settings — losing a collector drop,
                   being outbid, marketing, review activity and ticket updates are shown in the
                   notification bell only. That is deliberate: those were the highest-volume sends and
                   the ones most likely to exhaust the day&apos;s allowance. A support reply can still be

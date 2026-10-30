@@ -105,7 +105,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       const cart = await this.getOrCreate(userId);
       const items = [...cart.items];
 
-      // A locked line (accepted offer / won auction) is identified by its
+      // A locked line (accepted offer / won collector drop) is identified by its
       // offerId or bidId, never merged by productId — two separate wins on the
       // same listing are two separate obligations, and re-running the
       // settlement sweep must not duplicate a line it already wrote.
@@ -151,8 +151,8 @@ export class CartRepository extends BaseRepository<CartDocument> {
           listingType: input.listingType,
           ...(input.isOffer !== undefined && { isOffer: input.isOffer }),
           ...(input.offerId !== undefined && { offerId: input.offerId }),
-          ...(input.isAuctionWin !== undefined && { isAuctionWin: input.isAuctionWin }),
-          ...(input.auctionId !== undefined && { auctionId: input.auctionId }),
+          ...(input.isCollectorDropWin !== undefined && { isCollectorDropWin: input.isCollectorDropWin }),
+          ...(input.collectorDropId !== undefined && { collectorDropId: input.collectorDropId }),
           ...(input.bidId !== undefined && { bidId: input.bidId }),
           ...(input.isBuyout !== undefined && { isBuyout: input.isBuyout }),
           ...(input.lockedPrice !== undefined && {
@@ -520,7 +520,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
   /**
    * Empty the cart, keeping any locked line.
    *
-   * A locked line is a won auction or an accepted offer — settlement put it
+   * A locked line is a won collector drop or an accepted offer — settlement put it
    * there and the buyer owes payment on it, so "clear" cannot mean "walk away"
    * (see § Checkout Lanes). Callers must tell the buyer that is what happened;
    * a silently-surviving row reads as a failed clear.
@@ -592,7 +592,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
    * that blocks user-initiated removal.
    *
    * Only the expiry sweeps call this: a locked line whose claim has lapsed must
-   * be cleared, or it keeps the buyer's auction/offer lane non-empty forever
+   * be cleared, or it keeps the buyer's collector drop/offer lane non-empty forever
    * and the lane gate blocks their ordinary checkout on something they can no
    * longer act on.
    */
@@ -619,7 +619,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
     return this.removeLockedLines(userId, (item) => item.offerId === offerId);
   }
 
-  /** Clear the cart line created for a specific won auction bid. */
+  /** Clear the cart line created for a specific won collector drop bid. */
   async removeItemsByBidId(userId: string, bidId: string): Promise<number> {
     return this.removeLockedLines(userId, (item) => item.bidId === bidId);
   }

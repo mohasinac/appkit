@@ -56,7 +56,7 @@ export {
 } from "../features/reviews/repository/reviews.repository";
 
 // Canonical appkit-owned repositories
-export { bidRepository } from "../features/auctions/repository/bid.repository";
+export { bidRepository } from "../features/collector-drops/repository/bid.repository";
 export {
   CartRepository,
   cartRepository,

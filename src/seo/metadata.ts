@@ -137,14 +137,14 @@ export interface BlogSeoInput {
   authorName?: string;
 }
 
-export interface AuctionSeoInput {
+export interface CollectorDropSeoInput {
   title: string;
   slug: string;
   description: string;
   seoTitle?: string;
   seoDescription?: string;
   mainImage?: string;
-  auctionEndDate?: Date;
+  collectorDropEndDate?: Date;
 }
 
 export function generateProfileMetadata(
@@ -255,22 +255,22 @@ export function generateBlogMetadata(
   );
 }
 
-export function generateAuctionMetadata(
-  auction: AuctionSeoInput,
+export function generateCollectorDropMetadata(
+  collectorDrop: CollectorDropSeoInput,
   seoConfig: SeoConfig = SEO_CONFIG,
 ): Metadata {
-  const title = auction.seoTitle || `Auction: ${auction.title}`;
+  const title = collectorDrop.seoTitle || `Collector Drop: ${collectorDrop.title}`;
   const description =
-    auction.seoDescription ||
-    auction.description.slice(0, 160) ||
-    `Bid on ${auction.title} on ${seoConfig.siteName}.`;
+    collectorDrop.seoDescription ||
+    collectorDrop.description.slice(0, 160) ||
+    `Bid on ${collectorDrop.title} on ${seoConfig.siteName}.`;
 
   return generateMetadata(
     {
       title,
       description,
-      image: auction.mainImage || seoConfig.defaultImage,
-      path: `/auctions/${auction.slug}`,
+      image: collectorDrop.mainImage || seoConfig.defaultImage,
+      path: `/collector-drops/${collectorDrop.slug}`,
       type: "website",
     },
     seoConfig,

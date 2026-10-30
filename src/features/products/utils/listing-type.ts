@@ -12,7 +12,7 @@ export function isListingType(value: string): value is ListingType {
  * Parse a multi-select listing-type URL value into canonical types.
  *
  * The type filter is a checkbox group, so its URL value is a pipe-joined set
- * (`auction|pre-order`) — the same shape the Sieve adapter upgrades to a
+ * (`collector drop|pre-order`) — the same shape the Sieve adapter upgrades to a
  * Firestore `in` query. Unknown tokens are DROPPED rather than passed through:
  * an unrecognised value reaching `where("listingType","==",x)` matches zero
  * documents forever with no error (Root Cause #33), so silently ignoring it and
@@ -37,7 +37,7 @@ export function parseSelectedListingTypes(raw: string | undefined | null): Listi
  * Toggle one type in a pipe-joined selection, returning the new URL value
  * (`""` when nothing is left selected). Keeps canonical iteration order so the
  * URL is stable regardless of the order the user ticked the boxes — otherwise
- * `auction|art` and `art|auction` would be two different React Query keys for
+ * `collector drop|art` and `art|collector drop` would be two different React Query keys for
  * the same result set.
  */
 export function toggleListingTypeSelection(
@@ -53,7 +53,7 @@ export function toggleListingTypeSelection(
 /**
  * Canonical accessor for the listing-kind discriminator. `listingType` is the
  * single source of truth on every `ProductDocument` / `ProductItem` — the
- * legacy `isAuction` / `isPreOrder` booleans were removed in S3 (SB1-G final,
+ * legacy `isCollectorDrop` / `isPreOrder` booleans were removed in S3 (SB1-G final,
  * 2026-05-13).
  *
  * Returns `"standard"` when the input is undefined or missing the field, so
@@ -62,13 +62,23 @@ export function toggleListingTypeSelection(
 export function normalizeListingType(
   input?: { listingType?: ListingType },
 ): ListingType {
-  return input?.listingType ?? "standard";
+  const raw = input?.listingType;
+  if (raw === undefined) return "standard";
+  /*
+   * Pre-rename spellings a stored document may still carry. Normalising them
+   * HERE is what gives every `is*Listing` predicate below back-compat for
+   * free, rather than each call site having to remember both spellings
+   * (Root Cause #58).
+   */
+  if ((raw as string) === "auction") return "collector-drop";
+  if ((raw as string) === "prize-draw") return "random-lots";
+  return raw;
 }
 
 /** Convenience predicates that read the canonical `listingType` discriminator. */
-export const isAuctionListing = (
+export const isCollectorDropListing = (
   input?: { listingType?: ListingType },
-): boolean => normalizeListingType(input) === "auction";
+): boolean => normalizeListingType(input) === "collector-drop";
 
 export const isPreOrderListing = (
   input?: { listingType?: ListingType },

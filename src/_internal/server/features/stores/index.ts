@@ -1,7 +1,7 @@
 export {
   getStoreForDetail,
   listStoreProductsInitial,
-  listStoreAuctionsInitial,
+  listStoreCollectorDropsInitial,
   listStorePreOrdersInitial,
   listSitemapStores,
 } from "./data";

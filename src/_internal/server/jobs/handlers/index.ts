@@ -3,7 +3,7 @@
  * adapter (Firebase Functions, local cron, etc.).
  *
  * S4 batch 1: promotions, onOrderCreate, onOrderStatusChange,
- *             auctionSettlement, autoPayoutEligibility, couponExpiry, offerExpiry
+ *             collectorDropSettlement, autoPayoutEligibility, couponExpiry, offerExpiry
  * S5 batch 2: onReviewWrite, cartPrune, notificationPrune,
  *             dailyDataCleanup, countersReconcile, cleanupRtdbEvents
  */
@@ -15,7 +15,7 @@ export { cartPruneHandler } from "./cartPrune";
 export { notificationPruneHandler } from "./notificationPrune";
 export { dailyDataCleanupHandler } from "./dailyDataCleanup";
 export { cleanupRtdbEventsHandler } from "./cleanupRtdbEvents";
-export { auctionSettlementHandler } from "./auctionSettlement";
+export { collectorDropSettlementHandler } from "./collectorDropSettlement";
 export { autoPayoutEligibilityHandler } from "./autoPayoutEligibility";
 export { countersReconcileHandler } from "./countersReconcile";
 export { paymentReconcileHandler } from "./paymentReconcile";

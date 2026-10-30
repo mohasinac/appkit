@@ -32,7 +32,7 @@ function entryLabel(entry: CollectionCardsEntry): string {
   if (entry.label) return entry.label;
   switch (entry.type) {
     case "products": return "Products";
-    case "auctions": return "Auctions";
+    case "collector-drops": return "Collector Drops";
     case "pre-orders": return "Pre-orders";
     case "stores": return "Stores";
     case "events": return "Events";
@@ -53,9 +53,9 @@ function entryLabel(entry: CollectionCardsEntry): string {
  * costs zero extra round-trips (Rule #6). Those three were chosen first
  * because they are the PERMANENT axes: populated independently of the
  * product catalogue's size, so a `collection-cards` section built from them
- * can never go empty the way a `"products"`/`"auctions"` entry could.
+ * can never go empty the way a `"products"`/`"collector-drops"` entry could.
  *
- * Every other entry type (`products`, `auctions`, `pre-orders`, `events`,
+ * Every other entry type (`products`, `collector drops`, `pre-orders`, `events`,
  * `blog-posts`, `reviews`) still renders the honest placeholder — a real
  * "not wired yet" state is correct here, not a bug to paper over with
  * fabricated data, and the earlier revision's "data wiring lands with the

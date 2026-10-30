@@ -157,7 +157,7 @@ export { productsBeybladeXSeedData } from "./products-beyblade-x-seed-data";
  * sync either way (it counts ids). The removal is
  *   npx appkit-seed delete --yes --collections products && npx appkit-seed load
  */
-export { productsAuctionsSeedData } from "./products-auctions-seed-data";
+export { productsCollectorDropsSeedData } from "./products-collector-drops-seed-data";
 export { productsPreordersSeedData } from "./products-preorders-seed-data";
 export { productsRandomLotsSeedData } from "./products-random-lots-seed-data";
 export { productsClassifiedsSeedData } from "./products-classifieds-seed-data";

@@ -53,7 +53,7 @@ export interface FeatureManifest {
  * export default {
  * auth: true,
  * events: true,
- * auctions: false,
+ * collector drops: false,
  * } satisfies FeaturesConfig;
  * ```
  */

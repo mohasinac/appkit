@@ -41,7 +41,7 @@ import { BATCH_LIMIT } from "../handlers/messages";
  */
 
 export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
-  // `FEATURE_PAYOUTS` gate deleted 2026-10-19 — see `auctionSettlement.ts`.
+  // `FEATURE_PAYOUTS` gate deleted 2026-10-19 — see `collectorDropSettlement.ts`.
   // This was the one flag actually set (`functions/.env.letitrip-in-app`), so
   // unlike its four siblings this job was running; removing the gate is a
   // no-op in behaviour and removes the lever that could silently stop payouts.

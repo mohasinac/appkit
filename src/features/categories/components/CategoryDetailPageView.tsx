@@ -77,17 +77,17 @@ const __W = "max-w-7xl mx-auto";
  * `CategoryTableColumns` renders "own (total)" explicitly.
  */
 /*
- * 🛑 products + auctions, SUMMED.
+ * 🛑 products + collector drops, SUMMED.
  *
- * `metrics.productCount` EXCLUDES auctions — `Tally` keeps `productIds` and
- * `auctionIds` as separate arrays and writes `auctionCount` /
- * `totalAuctionCount` alongside, so the comparable "how much is in here"
+ * `metrics.productCount` EXCLUDES collector drops — `Tally` keeps `productIds` and
+ * `collectorDropIds` as separate arrays and writes `collectorDropCount` /
+ * `totalCollectorDropCount` alongside, so the comparable "how much is in here"
  * figure is the sum of both. Reading only the product half understated every
- * subcategory holding an auction, and understated it silently: the chip
+ * subcategory holding a collector drop, and understated it silently: the chip
  * showed a plausible smaller number rather than anything that looked wrong.
  *
  * This page already derives its own header figures correctly that way
- * (`productCount` and `auctionCount` resolved separately further down); this
+ * (`productCount` and `collectorDropCount` resolved separately further down); this
  * was the one place that took the product half for the whole.
  *
  * Prefer the rollup (`total*`) over the own-count for both halves, because a
@@ -98,8 +98,8 @@ const __W = "max-w-7xl mx-auto";
  */
 function listingCountFor(child: CategoryItem): number {
   const products = child.metrics?.totalProductCount ?? child.metrics?.productCount ?? 0;
-  const auctions = child.metrics?.totalAuctionCount ?? child.metrics?.auctionCount ?? 0;
-  return products + auctions;
+  const collectorDrops = child.metrics?.totalCollectorDropCount ?? child.metrics?.collectorDropCount ?? 0;
+  return products + collectorDrops;
 }
 
 /**
@@ -527,7 +527,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   // Header pills read TOTALS, deliberately: "47 products" is a statement about
   // what this category holds, not about what one scope is currently showing.
   const productCount = totals.products ?? category?.metrics?.totalProductCount ?? category?.metrics?.productCount ?? 0;
-  const auctionCount = totals.auctions ?? category?.metrics?.totalAuctionCount ?? category?.metrics?.auctionCount ?? 0;
+  const collectorDropCount = totals.collectorDrops ?? category?.metrics?.totalCollectorDropCount ?? category?.metrics?.collectorDropCount ?? 0;
   const preOrderCount = totals["pre-orders"] ?? 0;
 
   /*
@@ -825,9 +825,9 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 {ownHere!.toLocaleString()} here · {inSubcategories!.toLocaleString()} in subcategories
               </Span>
             )}
-            {auctionCount > 0 && (
+            {collectorDropCount > 0 && (
               <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
+                {collectorDropCount.toLocaleString()} {collectorDropCount === 1 ? "collector drop" : "collector drops"}
               </Span>
             )}
             {preOrderCount > 0 && (
@@ -1088,7 +1088,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         </Section>
       )}
 
-      {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}
+      {/* ── Tabs: Products / Collector Drops / Pre-Orders ──────────────────────── */}
       <Section padding="y-lg">
         <Container size="xl">
           <CategoryDetailTabs

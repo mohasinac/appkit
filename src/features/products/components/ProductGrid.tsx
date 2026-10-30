@@ -228,7 +228,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           "Taking Offers", "Final Sale" and "Has Variants" each rendered
           unconditionally when its own condition held, into one absolutely-
           positioned stack, with none of them aware of the others. A
-          discounted auction that is a bundled set member with offers enabled,
+          discounted collector drop that is a bundled set member with offers enabled,
           final sale and variants showed all seven — covering the product
           photograph the card exists to show.
 

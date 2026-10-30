@@ -140,7 +140,7 @@ const numberCell = (key: string, header: string): AdminTableColumn<SellerListing
  * A `Record<…, SellerListingTypeSpec>` rather than a `Partial`: a key here is a
  * deliberate claim that this type has a dedicated seller browse page, and the
  * type union is deliberately the narrow set of five rather than `ListingType`,
- * because standard / auction / pre-order / prize-draw do NOT have one — their
+ * because standard / collector drop / pre-order / prize-draw do NOT have one — their
  * store routes redirect into the multi-type `SellerProductsView`.
  */
 export type SellerListingTypeKey =

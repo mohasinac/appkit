@@ -108,9 +108,9 @@ export const MUTATION_EVENTS = {
     UPDATED: "appkit/promotion/updated",
     DELETED: "appkit/promotion/deleted",
   },
-  AUCTION: {
-    BID_PLACED: "appkit/auction/bid-placed",
-    SETTLED: "appkit/auction/settled",
+  COLLECTOR_DROP: {
+    BID_PLACED: "appkit/collector-drop/bid-placed",
+    SETTLED: "appkit/collector-drop/settled",
   },
 } as const;
 
@@ -212,8 +212,10 @@ export function inferMutationEvent(actionName: string): string | undefined {
     ["collection", "COLLECTION"],
     ["promotion", "PROMOTION"],
     ["coupon", "PROMOTION"],
-    ["auction", "AUCTION"],
-    ["bid", "AUCTION"],
+    ["collectordrop", "COLLECTOR_DROP"],
+    // pre-rename action names
+    ["auction", "COLLECTOR_DROP"],
+    ["bid", "COLLECTOR_DROP"],
   ];
 
   for (const [keyword, featureKey] of features) {

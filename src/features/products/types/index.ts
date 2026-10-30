@@ -51,7 +51,7 @@ export type ProductCondition =
 // enumerate what it can, then work the unchecked list deliberately.
 export type ListingType =
   | "standard"
-  | "auction"
+  | "collector-drop"
   | "pre-order"
   | "random-lots"
   | "classified"
@@ -206,16 +206,16 @@ export interface ProductItem {
   minOfferPercent?: number;
   bulkDiscounts?: { quantity: number; discountPercent: number }[];
 
-  // Auction detail fields
+  // Collector Drop detail fields
   startingBid?: number;
   bidCount?: number;
-  auctionEndDate?: string | Date;
+  collectorDropEndDate?: string | Date;
   reservePrice?: number;
   buyNowPrice?: number;
   minBidIncrement?: number;
   autoExtendable?: boolean;
-  auctionExtensionMinutes?: number;
-  auctionShippingPaidBy?: "seller" | "winner";
+  collectorDropExtensionMinutes?: number;
+  collectorDropShippingPaidBy?: "seller" | "winner";
 
   // Pre-order detail fields
   preOrderDeliveryDate?: string | Date;
@@ -241,7 +241,7 @@ export interface ProductItem {
   // SB1-B — hard cap on units a single user may purchase (bundle / prize-draw / pre-order)
   maxPerUser?: number;
 
-  /** Winner's display name for ended auctions — shown masked in public UI */
+  /** Winner's display name for ended collector drops — shown masked in public UI */
   winnerDisplayName?: string;
 
   // Analytics
@@ -312,10 +312,10 @@ export interface ProductListParams {
   page?: number;
   pageSize?: number;
   featured?: boolean;
-  /** Auction-specific: current bid range */
+  /** CollectorDrop-specific: current bid range */
   minBid?: number;
   maxBid?: number;
-  /** Auction: end date range / Pre-order: delivery date range */
+  /** Collector Drop: end date range / Pre-order: delivery date range */
   dateFrom?: string;
   dateTo?: string;
   /** Pre-order production status */

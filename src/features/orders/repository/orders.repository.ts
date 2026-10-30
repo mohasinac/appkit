@@ -788,7 +788,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
      * 🛑 It was absent, and absence here is SILENT: `sieve.ts` sets
      * `throwExceptions: false`, so an unallowlisted field does not raise —
      * `findField` returns undefined and the clause is simply dropped. A lane
-     * chip emitting `orderType==auction` would therefore have returned the
+     * chip emitting `orderType==collector-drop` would therefore have returned the
      * seller's ENTIRE order list while looking exactly like a working filter
      * (Root Cause #62). Checked before wiring the chip, not after.
      *
@@ -926,7 +926,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     // S-SBUNI-RULES 2026-05-13 — refund + batch fields
     paymentBatchId: { canFilter: true, canSort: false },
     contestable: { canFilter: true, canSort: false },
-    // Lane segregation on /user/orders — "standard"/"auction"/"offer" etc.
+    // Lane segregation on /user/orders — "standard"/"collector-drop"/"offer" etc.
     // Never filtered as "standard" via Firestore == (see listForUser callers):
     // orders written before this field existed have no value to match.
     orderType: { canFilter: true, canSort: false },

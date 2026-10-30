@@ -10,8 +10,8 @@ import { ACTION_META, MOBILE_PRIMARY_ACTIONS } from "../constants/action-defs";
  * "primary CTA that scrolls to the buy/contact panel, plus a price label".
  *
  * Pre-order, random-lots, classified, digital-code and live all fit that shape, which put
- * it well past the Rule of Three for a per-type copy. Auction and standard product keep
- * their own registrars — the auction ticks a live countdown into `secondaryLabel`, and
+ * it well past the Rule of Three for a per-type copy. Collector Drop and standard product keep
+ * their own registrars — the collector drop ticks a live countdown into `secondaryLabel`, and
  * the product bar carries three buttons whose labels track cart/wishlist state.
  *
  * Renders nothing; it exists purely to register into `BottomActionsContext`.
@@ -25,7 +25,7 @@ export interface ListingBottomActionsProps {
   currency: string;
   /**
    * Register nothing at all — for ended/closed/sold-out listings, matching how the
-   * auction and random-lots registrars bail out.
+   * collector drop and random-lots registrars bail out.
    */
   unavailable?: boolean;
   /** Appended after the formatted price, e.g. "per entry". */

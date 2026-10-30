@@ -3,7 +3,7 @@ let _seq = 1;
 
 export interface SeedBidDocument {
   id: string;
-  auctionId: string;
+  collectorDropId: string;
   userId: string;
   amount: number;
   timestamp: Date;
@@ -17,7 +17,7 @@ export function makeBid(
   const n = _seq++;
   return {
     id: overrides.id ?? `bid-${n}`,
-    auctionId: overrides.auctionId ?? "auction-1",
+    collectorDropId: overrides.collectorDropId ?? "collectordrop-1",
     userId: overrides.userId ?? `user-${n}`,
     amount: overrides.amount ?? n,
     timestamp: overrides.timestamp ?? new Date(),
@@ -36,13 +36,13 @@ export function makeWinningBid(
 export const BID_FIXTURES = {
   winning: makeWinningBid({
     id: "bid-winner-1",
-    auctionId: "auction-1",
+    collectorDropId: "collectordrop-1",
     userId: "buyer-user-1",
     amount: 5000,
   }),
   outbid: makeBid({
     id: "bid-outbid-1",
-    auctionId: "auction-1",
+    collectorDropId: "collectordrop-1",
     userId: "buyer-user-1",
     amount: 4500,
     isWinning: false,
