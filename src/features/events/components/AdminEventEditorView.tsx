@@ -232,6 +232,16 @@ interface EventDraft {
   allowGuestParticipation: boolean;
   // Pin — lifts this event to the top of /events and the homepage rail.
   isPinned: boolean;
+  // Homepage hero carousel — one slide per event, no separate slide record.
+  // See CLAUDE.md "Homepage Hero Carousel". `showOnCarousel` is the publish
+  // decision; the rest are the slide's own artwork (EventCarouselOverlayConfig).
+  showOnCarousel: boolean;
+  carouselEyebrow: string;
+  carouselTitle: string;
+  carouselDescription: string;
+  carouselButtonText: string;
+  carouselBackgroundMediaSlug: string;
+  carouselOrder: string;
   /*
    * PROMOTIONAL coupons shown on the public event page. Distinct from the
    * `couponId` of an OFFER event below (that one IS the offer) and from
@@ -323,6 +333,13 @@ const DEFAULT_DRAFT: EventDraft = {
   createdBy: "",
   allowGuestParticipation: false,
   isPinned: false,
+  showOnCarousel: false,
+  carouselEyebrow: "",
+  carouselTitle: "",
+  carouselDescription: "",
+  carouselButtonText: "",
+  carouselBackgroundMediaSlug: "",
+  carouselOrder: "",
   couponIds: [],
   discountPercent: "10",
   saleBannerText: "",
@@ -363,6 +380,30 @@ function buildEventTypeConfig(draft: EventDraft): JsonObjectWithUndefined {
   if (draft.type === "survey") return { surveyConfig: { requireLogin: draft.requireLogin, maxEntriesPerUser: Number(draft.maxEntriesPerUser) || 1, hasLeaderboard: draft.hasLeaderboard, hasPointSystem: draft.hasPointSystem, pointsLabel: draft.hasPointSystem ? (draft.pointsLabel.trim() || "Points") : undefined, entryReviewRequired: draft.entryReviewRequired, formFields: draft.surveyFields.map((f, i) => ({ ...f, order: i })) } };
   if (draft.type === "feedback") return { feedbackConfig: { anonymous: draft.anonymous, formFields: draft.feedbackFields.map((f, i) => ({ ...f, order: i })) } };
   return {};
+}
+
+/**
+ * `showOnCarousel` is the publish decision and is always sent, so turning it
+ * OFF actually unpublishes — merge-write semantics mean an omitted key just
+ * leaves the stored value in place. `carouselConfig` is sent only while
+ * publishing is on; the admin UI only ever authors `placement: "overlay"`
+ * (one event, full hero) — `"cards"` stays a schema capability with no
+ * authoring surface here, per CLAUDE.md "Homepage Hero Carousel".
+ */
+function buildCarouselFields(draft: EventDraft): JsonObjectWithUndefined {
+  const fields: JsonObjectWithUndefined = { showOnCarousel: draft.showOnCarousel };
+  if (!draft.showOnCarousel) return fields;
+  const order = Number(draft.carouselOrder);
+  fields.carouselConfig = {
+    placement: "overlay",
+    eyebrow: draft.carouselEyebrow.trim() || undefined,
+    title: draft.carouselTitle.trim(),
+    description: draft.carouselDescription.trim() || undefined,
+    buttonText: draft.carouselButtonText.trim() || undefined,
+    backgroundMediaSlug: draft.carouselBackgroundMediaSlug.trim() || undefined,
+    order: Number.isFinite(order) && draft.carouselOrder.trim() !== "" ? order : undefined,
+  };
+  return fields;
 }
 
 function buildEventRaffleFields(draft: EventDraft): JsonObjectWithUndefined {
@@ -539,6 +580,16 @@ function eventToDraft(event: Record<string, any>): EventDraft {
         // the toggle as off rather than leaving it `undefined`, which React
         // would read as an uncontrolled input.
         isPinned: Boolean(event.isPinned),
+        // `??`, not `||` — a deliberate `showOnCarousel: false` on an event
+        // whose legacy `carouselConfig.active` is still `true` must mean OFF.
+        // See `isPublishedToCarousel` in events/utils/carousel-slide.ts.
+        showOnCarousel: Boolean(event.showOnCarousel ?? event.carouselConfig?.active),
+        carouselEyebrow: event.carouselConfig?.eyebrow || "",
+        carouselTitle: event.carouselConfig?.title || "",
+        carouselDescription: event.carouselConfig?.description || "",
+        carouselButtonText: event.carouselConfig?.buttonText || "",
+        carouselBackgroundMediaSlug: event.carouselConfig?.backgroundMediaSlug || "",
+        carouselOrder: event.carouselConfig?.order != null ? String(event.carouselConfig.order) : "",
         couponIds: Array.isArray(event.couponIds) ? event.couponIds : [],
         discountPercent: String(event.saleConfig?.discountPercent ?? 10),
         saleBannerText: event.saleConfig?.bannerText || "",
@@ -655,6 +706,7 @@ export function AdminEventEditorView({
         couponIds: draft.couponIds,
         ...buildEventTypeConfig(draft),
         ...buildEventRaffleFields(draft),
+        ...buildCarouselFields(draft),
       };
 
       if (eventId) {
@@ -806,7 +858,7 @@ export function AdminEventEditorView({
     {
       id: "settings",
       label: "Settings",
-      fields: ["status", "allowGuestParticipation", "isPinned", "couponIds", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
+      fields: ["status", "allowGuestParticipation", "isPinned", "showOnCarousel", "carouselEyebrow", "carouselTitle", "carouselDescription", "carouselButtonText", "carouselBackgroundMediaSlug", "carouselOrder", "couponIds", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
       // Same: the offer-coupon, offer-display-code and poll-minimum-options
       // rules are all stated in eventDraftSchema's superRefine, which now
       // surfaces them inline on the field instead of as a step-blocking banner.
@@ -844,6 +896,63 @@ export function AdminEventEditorView({
             <Text size="xs" color="muted">
               Pinned events are listed first on the Events page and in the homepage strip, ahead of the usual soonest-first order. A pinned event still has to be Active to appear at all — pinning does not publish it.
             </Text>
+          </Stack>
+
+          <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+            <Toggle
+              checked={values.showOnCarousel}
+              onChange={(v) => onChange({ showOnCarousel: v })}
+              label="Show on homepage carousel"
+            />
+            <Text size="xs" color="muted">
+              Publishes this event as one slide on the homepage hero carousel — a full-bleed photo with the headline and button below. One event, one slide; at most 5 events show at once.
+            </Text>
+            {values.showOnCarousel && (
+              <Stack gap="sm" className="mt-2">
+                <Grid cols={2} gap="sm">
+                  <Input
+                    label="Eyebrow (optional)"
+                    value={values.carouselEyebrow}
+                    onChange={(e) => onChange({ carouselEyebrow: e.target.value })}
+                    placeholder="Ends this weekend"
+                  />
+                  <Input
+                    label="Slide order"
+                    type="number"
+                    value={values.carouselOrder}
+                    onChange={(e) => onChange({ carouselOrder: e.target.value })}
+                    placeholder="Lower shows first"
+                  />
+                </Grid>
+                <Input
+                  label="Headline"
+                  value={values.carouselTitle}
+                  onChange={(e) => onChange({ carouselTitle: e.target.value })}
+                  placeholder="Short — renders up to 6rem wide"
+                  required
+                />
+                <Textarea
+                  label="Description (optional)"
+                  value={values.carouselDescription}
+                  onChange={(e) => onChange({ carouselDescription: e.target.value })}
+                  rows={2}
+                />
+                <Grid cols={2} gap="sm">
+                  <Input
+                    label="Button text (optional)"
+                    value={values.carouselButtonText}
+                    onChange={(e) => onChange({ carouselButtonText: e.target.value })}
+                    placeholder="See the offer"
+                  />
+                  <Input
+                    label="Hero background image slug (optional)"
+                    value={values.carouselBackgroundMediaSlug}
+                    onChange={(e) => onChange({ carouselBackgroundMediaSlug: e.target.value })}
+                    helperText="Falls back to the event's cover image when empty — a dedicated hero crop (1920×860) is sharper than an upscaled cover (1200×600)."
+                  />
+                </Grid>
+              </Stack>
+            )}
           </Stack>
 
           <PromotionalCouponsField values={values} onChange={onChange} />

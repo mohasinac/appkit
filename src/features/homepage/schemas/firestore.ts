@@ -1,10 +1,17 @@
 /**
  * Homepage Feature Firestore Document Types & Constants
- * Covers: carousel slides, homepage sections
+ * Covers: homepage sections (incl. the hero carousel's LAYOUT config)
+ *
+ * 🛑 There is no more carousel SLIDE document here (removed 2026-10-31). The
+ * hero rail has no standalone Firestore collection any more — every slide is
+ * one event with `showOnCarousel: true`, computed live by
+ * `getHeroCarouselSlides()` (`_internal/server/features/events/data.ts`). See
+ * CLAUDE.md "Homepage Hero Carousel". `CarouselSectionConfig` below is the
+ * one survivor: it is layout only (title/height/autoplay/dots/arrows) and was
+ * always independent of slide content.
  */
 
 import {
-  generateCarouselId,
   generateHomepageSectionId,
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
@@ -16,232 +23,13 @@ import type { FAQCategory } from "../../faq/types";
    is exactly the state `renderIcon` left these sections in. */
 import type { IconKey } from "../../../ui/icons/icon-registry";
 
-// --- Carousel Slides ----------------------------------------------------------
-
-/** Unified background for a slide or card — supports image, video, solid color, or gradient. */
-export interface CarouselBackground {
-  type: "image" | "video" | "color" | "gradient";
-  /** URL for image/video backgrounds */
-  url?: string;
-  /** Mobile-optimised URL (image/video) */
-  mobileUrl?: string;
-  /** Poster frame URL for video backgrounds */
-  thumbnail?: string;
-  /** Hex/token value for solid-color backgrounds */
-  color?: string;
-  /** Gradient start color (token or hex) */
-  gradientFrom?: string;
-  /** Gradient end color (token or hex) */
-  gradientTo?: string;
-  /** Gradient angle in degrees (0–360) */
-  gradientAngle?: number;
-  /** Dim overlay drawn on top of image/video */
-  dimOverlay?: { enabled: boolean; opacity: number };
-}
-
 export type CarouselSlideHeight = "viewport" | "tall" | "medium";
-export type CarouselHoverEffect = "scale" | "color" | "glow" | "none";
-
-/** A content card placed in one of 6 grid zones (2 rows × 3 cols). */
-export type CarouselCard = {
-  id: string;
-  /** Zone 1–6: row 1 = zones 1–3, row 2 = zones 4–6 */
-  zone: 1 | 2 | 3 | 4 | 5 | 6;
-  /** On mobile, collapse to row-1 centre (zone 2) or row-2 centre (zone 5) */
-  mobileZone?: 2 | 5;
-  background: CarouselBackground;
-  content?: {
-    eyebrow?: string;
-    title?: string;
-    subtitle?: string;
-    description?: string;
-    textColor?: string;
-    textAlign?: "left" | "center" | "right";
-  };
-  buttons?: Array<{
-    id?: string;
-    text: string;
-    href: string;
-    variant: "primary" | "secondary" | "outline" | "ghost" | "link";
-    openInNewTab?: boolean;
-  }>;
-  hover?: {
-    effect: CarouselHoverEffect;
-    scaleValue?: number;
-    colorValue?: string;
-  };
-  isButtonOnly?: boolean;
-  /** Legacy — kept for backward compat; use `zone` instead */
-  gridRow?: 1 | 2;
-  /** Legacy — kept for backward compat; use `zone` instead */
-  gridCol?: 1 | 2 | 3;
-}
-
-export type GridCardCreateInput = Omit<CarouselCard, "id">;
-
-/** A named carousel that holds up to MAX_SLIDES_PER_CAROUSEL slide references. */
-export interface CarouselDocument extends BaseDocument {
-  name: string;
-  status: "active" | "draft";
-  /** Ordered slide IDs (max MAX_SLIDES_PER_CAROUSEL). */
-  slideIds: string[];
-  createdBy: string;
-}
-
-export type CarouselCreateInput = Omit<CarouselDocument, "id" | "createdAt" | "updatedAt">;
-export type CarouselUpdateInput = Partial<Pick<CarouselDocument, "name" | "status" | "slideIds">>;
-
-export class TooManySlidesError extends Error {
-  constructor() {
-    super(`A carousel may have at most ${MAX_SLIDES_PER_CAROUSEL} slides.`);
-    this.name = "TooManySlidesError";
-  }
-}
-
-export interface CarouselSlideDocument extends BaseDocument {
-  /**
-   * Reference to a named CarouselDocument (EX2).
-   * null = default hero carousel (backward-compat with pre-EX2 slides).
-   */
-  carouselId?: string | null;
-  title: string;
-  order: number;
-  active: boolean;
-  /** New unified background field (CF1). */
-  background?: CarouselBackground;
-  /** @deprecated Use `background`. Kept for backward compat — component falls back gracefully. */
-  media?: {
-    type: "image" | "video";
-    url: string;
-    alt?: string;
-    thumbnail?: string;
-  };
-  link?: {
-    url: string;
-    openInNewTab: boolean;
-  };
-  /** @deprecated Use `background.mobileUrl`. Kept for backward compat. */
-  mobileMedia?: {
-    type: "image" | "video";
-    url: string;
-    alt?: string;
-  };
-  cards: CarouselCard[];
-  overlay?: {
-    enabled?: boolean;
-    color?: string;
-    opacity?: number;
-    title?: string;
-    subtitle?: string;
-    description?: string;
-    button?: {
-      id?: string;
-      text: string;
-      link: string;
-      variant: "primary" | "secondary" | "outline";
-      openInNewTab: boolean;
-    };
-  };
-  settings?: {
-    autoplayDelayMs?: number;
-    height?: CarouselSlideHeight;
-  };
-  analytics?: {
-    views: number;
-    lastViewed?: Date;
-  };
-  createdBy: string;
-}
-
-export const CAROUSEL_SLIDES_COLLECTION = "carouselSlides" as const;
-export const CAROUSELS_COLLECTION = "carousels" as const;
-export const CAROUSEL_SLIDES_INDEXED_FIELDS = [
-  "active",
-  "order",
-  "createdBy",
-  "createdAt",
-] as const;
-export const MAX_ACTIVE_SLIDES = 5 as const;
-/** Maximum slides per named carousel (EX2). */
-export const MAX_SLIDES_PER_CAROUSEL = 5 as const;
-export const GRID_CONFIG = { rows: 2, cols: 3 } as const;
-export const DEFAULT_CAROUSEL_SLIDE_DATA: Partial<CarouselSlideDocument> = {
-  active: false,
-  order: 0,
-  cards: [],
-};
-
-export const CAROUSEL_SLIDES_PUBLIC_FIELDS = [
-  "id",
-  "title",
-  "order",
-  "active",
-  "background",
-  "media",
-  "link",
-  "mobileMedia",
-  "cards",
-  "overlay",
-  "settings",
-] as const;
-
-export type CarouselSlideCreateInput = Omit<
-  CarouselSlideDocument,
-  "id" | "createdAt" | "updatedAt"
->;
-export type CarouselSlideUpdateInput = Partial<
-  Pick<
-    CarouselSlideDocument,
-    | "title"
-    | "order"
-    | "active"
-    | "background"
-    | "media"
-    | "link"
-    | "mobileMedia"
-    | "cards"
-    | "overlay"
-    | "settings"
-  >
->;
-
-export const carouselSlideQueryHelpers = {
-  active: () => ["active", "==", true] as const,
-  inactive: () => ["active", "==", false] as const,
-  byCreator: (userId: string) => ["createdBy", "==", userId] as const,
-} as const;
-
-export function createCarouselId(title: string): string {
-  return generateCarouselId({ title });
-}
-
-export function isValidGridPosition(gridRow: number, gridCol: number): boolean {
-  return (
-    gridRow >= 1 &&
-    gridRow <= GRID_CONFIG.rows &&
-    gridCol >= 1 &&
-    gridCol <= GRID_CONFIG.cols
-  );
-}
-
-export function canActivateSlide(currentActiveCount: number): boolean {
-  return currentActiveCount < MAX_ACTIVE_SLIDES;
-}
 
 // --- Homepage Sections --------------------------------------------------------
 
 /**
- * Config for the hero carousel section — references the carouselSlides collection.
- *
- * Every field here reaches `HeroCarousel` as a prop. It did not used to: the
- * section renderer emitted `<HeroCarousel initialSlides={slides} />` and dropped
- * the whole config, so all six controls were inert in the admin UI.
- *
- * `carouselId` was REMOVED. Nothing ever read it — SSR calls
- * `carouselRepository.getActiveSlides()` (all active, capped at 5) and the
- * client refetch goes through `useHeroCarousel`, and neither accepts an id.
- * Honouring it means changing the repository, `GET /api/homepage/carousel` and
- * the hook; leaving it in the schema advertised a capability that did not exist.
+ * Config for the hero carousel SECTION — title/height/autoplay/dots/arrows.
+ * Slide CONTENT is a separate concern entirely: see the file-header note.
  */
 export interface CarouselSectionConfig {
   /** Accessible name for the carousel region. Not rendered as visible copy. */

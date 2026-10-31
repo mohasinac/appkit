@@ -49,7 +49,6 @@ import { reviewRepository } from "../features/reviews/repository/reviews.reposit
 import { bidRepository } from "../features/collector-drops/repository/bid.repository";
 import { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
 import { notificationRepository } from "../features/admin/repository/notification.repository";
-import { carouselRepository } from "../features/homepage/repository/carousel.repository";
 import { homepageSectionsRepository } from "../features/homepage/repository/homepage-sections.repository";
 import { couponsRepository } from "../features/promotions/repository/coupons.repository";
 import { faqsRepository } from "../features/faq/repository/faqs.repository";
@@ -91,9 +90,6 @@ export class UnitOfWork {
   }
   get siteSettings() {
     return siteSettingsRepository;
-  }
-  get carousel() {
-    return carouselRepository;
   }
   get homepageSections() {
     return homepageSectionsRepository;

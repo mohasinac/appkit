@@ -188,7 +188,10 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 6,
     enabled: true,
     config: {
-      title: "Featured promotions",
+      // Accessible region name only, never rendered as visible copy — see
+      // CarouselSectionConfig. Every slide is now one event, so this says
+      // what it actually is.
+      title: "Featured events",
       height: "medium",
       defaultAutoplayDelayMs: 6000,
       pauseOnHover: true,
@@ -704,9 +707,9 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: false,
     config: {
       height: "md",
-      /* Real imagery instead of a `seedPhoto()` grey tile — see the MEDIA block
-         in carousel-slides-seed-data.ts for why that helper produces one of six
-         flat SVG rectangles and why a third-party host is not the alternative.
+      /* Real imagery instead of a `seedPhoto()` grey tile — that helper
+         produces a flat SVG rectangle, and a third-party host is not the
+         alternative (see root-cause-history.md, entry 104).
          🛑 A seller pitch wants a HUMAN packing an order, which the wiki corpus
          does not contain; this generation cover is a stand-in until a real photo
          exists for the slot. */

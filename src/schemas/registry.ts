@@ -31,8 +31,6 @@ import { addressFirestoreSchema } from "../features/addresses/schemas";
 import { blogPostFirestoreSchema } from "../features/blog/schemas";
 import { categoryFirestoreSchema } from "../features/categories/schemas";
 import {
-  carouselFirestoreSchema,
-  carouselSlideFirestoreSchema,
   homepageSectionFirestoreSchema,
 } from "../features/homepage/schemas";
 import { faqFirestoreSchema } from "../features/faq/schemas";
@@ -67,8 +65,8 @@ import { supportTicketFirestoreSchema } from "../features/support/schemas";
 const firestore = {
   addresses: addressFirestoreSchema,                         // W2
   blogPosts: blogPostFirestoreSchema,                        // W2
-  carousels: carouselFirestoreSchema,                        // W2
-  carouselSlides: carouselSlideFirestoreSchema,              // W2
+  // carousels / carouselSlides REMOVED 2026-10-31 — no standalone slide
+  // document any more. See CLAUDE.md "Homepage Hero Carousel".
   categories: categoryFirestoreSchema,                       // W2
   claimedCoupons: claimedCouponFirestoreSchema,              // W2
   coupons: couponFirestoreSchema,                            // W2

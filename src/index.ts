@@ -1733,11 +1733,6 @@ export { bidRepository } from "./features/collector-drops/repository/bid.reposit
 // blogRepository - Shared export for blog repository.
 export { blogRepository } from "./features/blog/repository/blog.repository";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// carouselRepository - Shared export for carousel repository.
-export { carouselRepository } from "./features/homepage/repository/carousel.repository";
-// carouselsRepository - Named carousel management repository (EX2).
-export { carouselsRepository, CarouselsRepository } from "./features/homepage/repository/carousels.repository";
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // cartRepository - Shared export for cart repository.
 export { cartRepository } from "./features/cart/repository/cart.repository";
 // SB-UNI-C â€" brandsRepository + BrandDocument + BRANDS_COLLECTION deleted.
@@ -3203,12 +3198,6 @@ export { AdminBlogView } from "./features/admin/components/AdminBlogView";
 export { AdminBlogEditorView } from "./features/admin/components/AdminBlogEditorView";
 export type { AdminBlogEditorViewProps } from "./features/admin/components/AdminBlogEditorView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminCarouselView - Component for admin carousel view.
-export { AdminCarouselView } from "./features/admin/components/AdminCarouselView";
-// AdminCarouselEditorView - Component for admin carousel slide create/edit form.
-export { AdminCarouselEditorView } from "./features/admin/components/AdminCarouselEditorView";
-export type { AdminCarouselEditorViewProps } from "./features/admin/components/AdminCarouselEditorView";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminBrandsView - Component for admin brands management view.
 export { AdminBrandsView } from "./features/admin/components/AdminBrandsView";
 export type { AdminBrandsViewProps } from "./features/admin/components/AdminBrandsView";
@@ -3386,9 +3375,6 @@ export { AdminHistoryView } from "./features/admin/components/AdminHistoryView";
 // AdminGroupedListingsView - Admin cross-store grouped-listings moderation view (W1-29).
 export { AdminGroupedListingsView } from "./features/admin/components/AdminGroupedListingsView";
 export type { AdminGroupedListingsViewProps } from "./features/admin/components/AdminGroupedListingsView";
-// AdminCarouselGroupEditorView - Create form for named carousel groups (EX2 nav-wiring fix).
-export { AdminCarouselGroupEditorView } from "./features/admin/components/AdminCarouselGroupEditorView";
-export type { AdminCarouselGroupEditorViewProps } from "./features/admin/components/AdminCarouselGroupEditorView";
 // AdminContactEditorView - Admin contact submission detail SideDrawer (B7/VA15).
 export { AdminContactEditorView } from "./features/admin/components/AdminContactEditorView";
 export type { AdminContactEditorViewProps } from "./features/admin/components/AdminContactEditorView";
@@ -3531,9 +3517,6 @@ export type { AdminOffersViewProps } from "./features/admin/components/AdminOffe
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AdminBlogViewProps - Type contract for admin blog view props.
 export type { AdminBlogViewProps } from "./features/admin/components/AdminBlogView";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AdminCarouselViewProps - Type contract for admin carousel view props.
-export type { AdminCarouselViewProps } from "./features/admin/components/AdminCarouselView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // AdminCategoriesViewProps - Type contract for admin categories view props.
 export type { AdminCategoriesViewProps } from "./features/admin/components/AdminCategoriesView";
@@ -5908,44 +5891,17 @@ export type { WhatsAppCommunitySectionProps } from "./features/homepage/componen
 // carouselGET - Shared export for carousel get.
 export { carouselGET } from "./features/homepage/api/carousel/route";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselItemDELETE - Shared export for carousel item delete.
-export { carouselItemDELETE } from "./features/homepage/api/carousel/[id]/route";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselItemGET - Shared export for carousel item get.
-export { carouselItemGET } from "./features/homepage/api/carousel/[id]/route";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselItemPATCH - Shared export for carousel item patch.
-export { carouselItemPATCH } from "./features/homepage/api/carousel/[id]/route";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselPOST - Shared export for carousel post.
-export { carouselPOST } from "./features/homepage/api/carousel/route";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createCarouselSlide - Helper for create carousel slide.
-export { createCarouselSlide } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createHomepageSection - Helper for create homepage section.
 export { createHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createSectionSchema - Helper for create section schema.
 export { createSectionSchema } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// deleteCarouselSlide - Helper for delete carousel slide.
-export { deleteCarouselSlide } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteHomepageSection - Helper for delete homepage section.
 export { deleteHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getCarouselSlideById - Helper for get carousel slide by id.
-export { getCarouselSlideById } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getHomepageSectionById - Helper for get homepage section by id.
 export { getHomepageSectionById } from "./features/homepage/actions/homepage-section-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// listActiveCarouselSlides - Helper for list active carousel slides.
-export { listActiveCarouselSlides } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// listAllCarouselSlides - Helper for list all carousel slides.
-export { listAllCarouselSlides } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listEnabledHomepageSections - Helper for list enabled homepage sections.
 export { listEnabledHomepageSections } from "./features/homepage/actions/homepage-section-actions";
@@ -5953,26 +5909,14 @@ export { listEnabledHomepageSections } from "./features/homepage/actions/homepag
 // listHomepageSections - Helper for list homepage sections.
 export { listHomepageSections } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// reorderCarouselSlides - Shared export for reorder carousel slides.
-export { reorderCarouselSlides } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reorderHomepageSections - Shared export for reorder homepage sections.
 export { reorderHomepageSections } from "./features/homepage/actions/homepage-section-actions";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// updateCarouselSlide - Helper for update carousel slide.
-export { updateCarouselSlide } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateHomepageSection - Helper for update homepage section.
 export { updateHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateSectionSchema - Helper for update section schema.
 export { updateSectionSchema } from "./features/homepage/actions/homepage-section-actions";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CarouselSlideInput - Type contract for carousel slide input.
-export type { CarouselSlideInput } from "./features/homepage/actions/carousel-actions";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CarouselSlideUpdateInput - Type contract for carousel slide update input.
-export type { CarouselSlideUpdateInput } from "./features/homepage/actions/carousel-actions";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CreateHomepageSectionInput - Type contract for create homepage section input.
 export type { CreateHomepageSectionInput } from "./features/homepage/actions/homepage-section-actions";
@@ -8731,23 +8675,8 @@ export { homepageSectionCreateSchema } from "./features/homepage/schemas/index";
 export { resolveNextSectionOrder } from "./features/homepage/actions/homepage-section-actions";
 export type { HomepageSectionCreateValues } from "./features/homepage/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// CAROUSEL_SLIDES_COLLECTION - Constant used across modules.
-export { CAROUSEL_SLIDES_COLLECTION } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// CAROUSEL_SLIDES_INDEXED_FIELDS - Constant used across modules.
-export { CAROUSEL_SLIDES_INDEXED_FIELDS } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// CAROUSEL_SLIDES_PUBLIC_FIELDS - Constant used across modules.
-export { CAROUSEL_SLIDES_PUBLIC_FIELDS } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// DEFAULT_CAROUSEL_SLIDE_DATA - Constant used across modules.
-export { DEFAULT_CAROUSEL_SLIDE_DATA } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_SECTION_ORDER - Constant used across modules.
 export { DEFAULT_SECTION_ORDER } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// GRID_CONFIG - Constant used across modules.
-export { GRID_CONFIG } from "./features/homepage/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // HOMEPAGE_SECTIONS_COLLECTION - Constant used across modules.
 export { HOMEPAGE_SECTIONS_COLLECTION } from "./features/homepage/schemas/index";
@@ -8755,26 +8684,16 @@ export { HOMEPAGE_SECTIONS_COLLECTION } from "./features/homepage/schemas/index"
 // HOMEPAGE_SECTIONS_INDEXED_FIELDS - Constant used across modules.
 export { HOMEPAGE_SECTIONS_INDEXED_FIELDS } from "./features/homepage/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// MAX_ACTIVE_SLIDES - Constant used across modules.
-export { MAX_ACTIVE_SLIDES } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// canActivateSlide - Shared export for can activate slide.
-export { canActivateSlide } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// carouselSlideQueryHelpers - Shared export for carousel slide query helpers.
-export { carouselSlideQueryHelpers } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// createCarouselId - Helper for create carousel id.
-export { createCarouselId } from "./features/homepage/schemas/index";
+// MAX_ACTIVE_SLIDES - the hero-rail slide ceiling. Relocated 2026-10-31 out of
+// the (now-deleted) carouselSlides schema file — it is still read by the live
+// events-to-slides computation.
+export { MAX_ACTIVE_SLIDES } from "./features/homepage/constants/carousel";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // createHomepageSectionId - Helper for create homepage section id.
 export { createHomepageSectionId } from "./features/homepage/schemas/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // homepageSectionQueryHelpers - Shared export for homepage section query helpers.
 export { homepageSectionQueryHelpers } from "./features/homepage/schemas/index";
-// [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// isValidGridPosition - Shared export for is valid grid position.
-export { isValidGridPosition } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CollectorDropsSectionConfig - Type contract for collector drops section config.
 export type { CollectorDropsSectionConfig } from "./features/homepage/schemas/index";
@@ -8788,19 +8707,6 @@ export type { BlogArticlesSectionConfig } from "./features/homepage/schemas/inde
 // BrandsSectionConfig - Type contract for brands section config.
 export type { BrandsSectionConfig } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CarouselDocument - Named carousel document type (EX2).
-export type { CarouselDocument, CarouselCreateInput, CarouselUpdateInput } from "./features/homepage/schemas/index";
-// TooManySlidesError - Thrown when a carousel already has MAX_SLIDES_PER_CAROUSEL slides.
-export { TooManySlidesError } from "./features/homepage/schemas/index";
-// CAROUSELS_COLLECTION - Firestore collection name for named carousels.
-export { CAROUSELS_COLLECTION, MAX_SLIDES_PER_CAROUSEL } from "./features/homepage/schemas/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CarouselSlideCreateInput - Type contract for carousel slide create input.
-export type { CarouselSlideCreateInput } from "./features/homepage/schemas/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CarouselSlideDocument - Type contract for carousel slide document.
-export type { CarouselSlideDocument } from "./features/homepage/schemas/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CategoriesSectionConfig - Type contract for categories section config.
 export type { CategoriesSectionConfig } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -8812,9 +8718,6 @@ export type { FAQSectionConfig } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FeaturesSectionConfig - Type contract for features section config.
 export type { FeaturesSectionConfig } from "./features/homepage/schemas/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// GridCardCreateInput - Type contract for grid card create input.
-export type { GridCardCreateInput } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HomepageSectionCreateInput - Type contract for homepage section create input.
 export type { HomepageSectionCreateInput } from "./features/homepage/schemas/index";

@@ -105,6 +105,34 @@ export const eventDraftSchema = z.object({
     section: "settings", order: 6, row: "pair", kind: "toggle",
     help: "Show this event as a slide on the homepage carousel. Needs carousel artwork to be configured.",
   }),
+  /*
+   * The slide's own artwork — only meaningful while `showOnCarousel` is on.
+   * The admin editor authors `placement: "overlay"` exclusively (one event,
+   * full hero); `"cards"` is a schema capability with no authoring surface
+   * here. See `EventCarouselOverlayConfig`.
+   */
+  carouselEyebrow: annotate(z.string().optional(), {
+    section: "settings", order: 7, row: "pair",
+    help: "Small uppercase line above the headline — a date, a status, a hook.",
+  }),
+  carouselTitle: annotate(z.string().optional(), {
+    section: "settings", order: 8, row: "full",
+    help: "The headline. Kept short — it renders at up to 6rem on a wide screen.",
+  }),
+  carouselDescription: annotate(z.string().optional(), {
+    section: "settings", order: 9, row: "full", kind: "textarea",
+  }),
+  carouselButtonText: annotate(z.string().optional(), {
+    section: "settings", order: 10, row: "pair",
+  }),
+  carouselBackgroundMediaSlug: annotate(z.string().optional(), {
+    section: "settings", order: 11, row: "pair",
+    help: "Falls back to the event's own cover image when empty.",
+  }),
+  carouselOrder: annotate(z.string().optional(), {
+    section: "settings", order: 12, row: "pair",
+    help: "Slide position in the hero rail. Lower shows first.",
+  }),
 }).passthrough().superRefine((v, ctx) => {
   if (v.type === "offer") {
     if (!v.couponId.trim()) {
@@ -116,5 +144,8 @@ export const eventDraftSchema = z.object({
   }
   if (v.type === "poll" && v.pollOptions.filter((o) => o.label.trim()).length < 2) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["pollOptions"], message: "Poll events require at least 2 options" });
+  }
+  if (v.showOnCarousel && !(v.carouselTitle ?? "").trim()) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["carouselTitle"], message: "Headline is required to show this event on the homepage carousel" });
   }
 });

@@ -27,8 +27,8 @@ const APPKIT_SRC = join(dirname(fileURLToPath(import.meta.url)), "..", "src");
 const W2_REQUIRED_COLLECTIONS = [
   "addresses",
   "blogPosts",
-  "carousels",
-  "carouselSlides",
+  // carousels / carouselSlides REMOVED 2026-10-31 — no standalone slide
+  // document any more. See CLAUDE.md "Homepage Hero Carousel".
   "categories",
   "claimedCoupons",
   "coupons",

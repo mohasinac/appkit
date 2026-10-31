@@ -74,7 +74,6 @@ export type OwnerQuickActionsResource =
   | "REVIEW"
   | "STORE"
   | "USER"
-  | "CAROUSEL"
   | "SECTION";
 
 /**
@@ -138,9 +137,6 @@ const RESOURCE_LEAVES: Record<OwnerQuickActionsResource, ResourceLeaves> = {
    * the category leaves rather than duplicating copy that would drift.
    */
   FRANCHISE: { bucket: "CATEGORY", edit: "edit", remove: "delete" },
-
-  /** Carousel slides have no bucket of their own; the leaves live under ADMIN. */
-  CAROUSEL: { bucket: "ADMIN", edit: "edit-carousel", remove: "delete-carousel" },
 
   /*
    * ── The three PENCIL-ONLY resources ─────────────────────────────────────

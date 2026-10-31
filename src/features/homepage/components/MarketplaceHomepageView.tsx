@@ -8,7 +8,10 @@ import { Main } from "../../../ui/components/Semantic";
 // client-reference proxy (Root Cause #76). Rendering it as JSX is the supported
 // boundary; importing it from its defining module is Root Cause #18.
 import { TopBannerPortal } from "../../../ui/components/TopBannerPortal";
-import { carouselRepository } from "../repository/carousel.repository";
+// The homepage hero carousel has no Firestore-backed slide collection — every
+// slide is one event with `showOnCarousel: true`, computed live. See
+// CLAUDE.md "Homepage Hero Carousel".
+import { getHeroCarouselSlides } from "../../../_internal/server/features/events/data";
 // Both are React.cache wrappers around a single repository call, shared with
 // other readers in the same request tree (the locale layout for settings,
 // page.tsx's FAQ JSON-LD for the FAQs). Importing the repositories directly
@@ -129,28 +132,12 @@ import { getHomepageCoupons } from "../../../_internal/server/features/promotion
 import type {
   HomepageSectionDocument,
   StatsSectionConfig,
-  CarouselSlideDocument,
 } from "../schemas";
-import type { CarouselSlide } from "../types/index";
 import type { ProductItem } from "../../products/types";
 
 import type { CategoryItem } from "../../categories/types";
 import type { BlogPost } from "../../blog/types";
 import type { EventItem } from "../../events/types";
-
-/**
- * Converts Firestore CarouselSlideDocument[] (Date fields) to the API-shaped
- * CarouselSlide[] (string dates) expected by HeroCarousel / useHeroCarousel.
- * The two types share all display-relevant fields; only createdAt/updatedAt
- * and internal-only fields (analytics, createdBy) diverge.
- */
-function toCarouselSlides(docs: CarouselSlideDocument[]): CarouselSlide[] {
-  return docs.map(({ createdAt, updatedAt, analytics: _analytics, createdBy: _createdBy, ...rest }) => ({
-    ...rest,
-    createdAt: createdAt instanceof Date ? createdAt.toISOString() : undefined,
-    updatedAt: updatedAt instanceof Date ? updatedAt.toISOString() : undefined,
-  }));
-}
 
 export type { MarketplaceHomepageViewAdSlots } from "../lib/section-renderer";
 
@@ -178,7 +165,7 @@ export async function MarketplaceHomepageView({
   // Every read on this page is a RAIL: the homepage must still render when one
   // fails, but a failure has to be distinguishable from an empty catalogue —
   // that is exactly Root Cause #59, and safeRead is what records it.
-  const slides = await safeRead(() => carouselRepository.getActiveSlides(), {
+  const slides = await safeRead(() => getHeroCarouselSlides(), {
     route: "/", key: "homepage.carouselSlides", fallback: [],
   });
   // getSiteSettingsGlobal, not the repository directly — the locale layout and
@@ -450,7 +437,7 @@ export async function MarketplaceHomepageView({
    * type, so a keyword scan would miss the worse of the two offenders while
    * eating innocent ones. See `slide-gating.ts`.
    */
-  const carouselSlides = gateCarouselSlides(toCarouselSlides(slides), closedSurfaces);
+  const carouselSlides = gateCarouselSlides(slides, closedSurfaces);
 
   return (
     <Main>

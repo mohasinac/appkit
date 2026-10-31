@@ -208,12 +208,12 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
    * Marking a placeholder permanent only makes the placeholder unpurgeable, so
    * each of these has to trace to a crawl source: blogPosts to the buying/rules
    * guide split, homepageSections to worldhobbyshop's generation tiles and
-   * 25-link systems matrix, carouselSlides to beybladeartshop's 5-slide hero
-   * including the anti-counterfeit slide.
+   * 25-link systems matrix.
+   *
+   * `carousels` / `carouselSlides` were REMOVED 2026-10-31 — there is no
+   * standalone slide document any more. See CLAUDE.md "Homepage Hero Carousel".
    */
   blogPosts: "permanent",
-  carousels: "permanent",
-  carouselSlides: "permanent",
   homepageSections: "permanent",
 
   /*

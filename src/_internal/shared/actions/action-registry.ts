@@ -2967,34 +2967,6 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["admin"],
     },
-    // ── Carousel management ──────────────────────────────────────────────
-    "edit-carousel": {
-      iconKey: "edit",
-      id: "admin.edit-carousel",
-      label: "Edit Slide",
-      ariaLabel: "Edit carousel slide",
-      description: "Open the edit panel for a carousel slide.",
-      kind: "ghost",
-      permissions: ["admin"],
-    },
-    "activate-carousel": {
-      iconKey: "resume",
-      id: "admin.activate-carousel",
-      label: "Activate",
-      ariaLabel: "Show this slide in the carousel",
-      description: "Set a carousel slide to active so the hero carousel renders it.",
-      kind: "primary",
-      permissions: ["admin"],
-    },
-    "deactivate-carousel": {
-      iconKey: "hide",
-      id: "admin.deactivate-carousel",
-      label: "Deactivate",
-      ariaLabel: "Hide this slide from the carousel",
-      description: "Set a carousel slide to inactive without deleting it.",
-      kind: "secondary",
-      permissions: ["admin"],
-    },
     /*
      * Homepage sections have no bucket of their own, so their leaves live here
      * beside the carousel ones for the same reason — both are homepage chrome
@@ -3082,21 +3054,6 @@ export const ACTIONS: ActionTree = {
       description: "Hide a navigation item without deleting it.",
       kind: "secondary",
       permissions: ["admin"],
-    },
-    "delete-carousel": {
-      iconKey: "delete",
-      id: "admin.delete-carousel",
-      label: "Delete Slides",
-      ariaLabel: "Delete selected carousel slides",
-      description: "Permanently delete the selected carousel slides.",
-      kind: "danger",
-      permissions: ["admin"],
-      confirmation: {
-        title: "Delete these slides?",
-        body: "The selected carousel slides will be permanently removed.",
-        confirmLabel: "Delete",
-        confirmKind: "danger",
-      },
     },
     // ── Contact management ────────────────────────────────────────────────
     "mark-contact-read": {

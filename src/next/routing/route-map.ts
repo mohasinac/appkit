@@ -549,18 +549,9 @@ export const DEFAULT_ROUTE_MAP = {
      * something and one selects a working alternative).
      */
     INTEGRATIONS: "/admin/integrations",
-    CAROUSEL: "/admin/carousel",
-    CAROUSEL_NEW: "/admin/carousel/new",
-    CAROUSEL_EDIT: (id: string) => `/admin/carousel/${id}/edit`,
-    CAROUSELS: "/admin/carousels",
-    CAROUSEL_DETAIL: (id: string) => `/admin/carousels/${id}`,
-    /*
-     * 🛑 PLURAL = the named carousel GROUP. Singular `CAROUSEL_NEW` /
-     * `CAROUSEL_EDIT` above are `/admin/carousel/*` and mean a SLIDE.
-     * Two different entities, one letter apart — do not merge them.
-     */
-    CAROUSELS_NEW: "/admin/carousels/new",
-    CAROUSELS_EDIT: (id: string) => `/admin/carousels/${id}/edit`,
+    // "Hero Slides" / "Named Carousels" admin pages were REMOVED 2026-10-31 —
+    // see CLAUDE.md "Homepage Hero Carousel". Carousel authoring is now part
+    // of the event editor (EVENT_EDIT below).
     SECTIONS: "/admin/sections",
     NAVIGATION: "/admin/navigation",
     /*

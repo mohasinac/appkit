@@ -9,17 +9,19 @@
  * Three Months", and neither edit knew about the other.
  *
  * So the event owns its promo, and this is the only function that renders that
- * intent into a slide. The seed derives `carouselSlidesSeedData` through it;
- * `scripts/push-editorial-content.mjs` pushes what the seed produced. Neither
- * hand-writes a slide, so there is no second copy to drift from.
+ * intent into a slide.
+ *
+ * 🛑 NOTHING PERSISTS THE RESULT (2026-10-31). A first attempt materialized
+ * this output into a standalone `carouselSlides` Firestore document at
+ * seed/push time — the owner reverted that entirely on 2026-10-27 after it
+ * shipped a 6-card slide linking into a closed `/events` section. The
+ * `carouselSlides` collection, its schema and its admin authoring UI are gone;
+ * `getHeroCarouselSlides()` (`_internal/server/features/events/data.ts`) is
+ * the one caller, and it calls this live on every homepage request instead of
+ * writing the output anywhere.
  */
 
-import type {
-  CarouselSlideDocument,
-  CarouselCard,
-  CarouselBackground,
-} from "../../homepage/schemas/firestore";
-import { MAX_ACTIVE_SLIDES } from "../../homepage/schemas/firestore";
+import type { CarouselSlideCard, CarouselBackground, CarouselSlide } from "../../homepage/types/index";
 import type { EventDocument, EventCarouselCard } from "../schemas/firestore";
 
 /** Matches the seeded slides; a slower rail is unreadable, a faster one is a blur. */
@@ -71,7 +73,7 @@ function resolveBackgroundSlug(event: EventDocument): string | undefined {
   return match ? match[1] : undefined;
 }
 
-function toCard(card: EventCarouselCard, eventHref: string, dim: number): CarouselCard {
+function toCard(card: EventCarouselCard, eventHref: string, dim: number): CarouselSlideCard {
   return {
     id: `card-zone-${card.zone}`,
     zone: card.zone,
@@ -134,7 +136,7 @@ function isPublishedToCarousel(event: EventDocument): boolean {
 export function buildSlideFromEvent(
   event: EventDocument,
   opts: BuildSlideOptions,
-): Partial<CarouselSlideDocument> | null {
+): CarouselSlide | null {
   const cfg = event.carouselConfig;
   /*
    * Both halves are required: the flag says "publish it", the config says
@@ -147,8 +149,10 @@ export function buildSlideFromEvent(
   const dim = cfg.dimOpacity ?? DEFAULT_DIM;
   const bg = background(resolveBackgroundSlug(event), dim);
 
+  // Nothing persists this slide, so there is no competing document-id
+  // namespace to disambiguate — the slide's id IS the event's id.
   const base = {
-    id: `slide-${event.id}`,
+    id: event.id,
     title: event.title,
     order: cfg.order ?? 99,
     /*
@@ -210,7 +214,7 @@ export function buildSlideFromEvent(
       description: cfg.description,
       button: cfg.buttonText
         ? {
-            id: `slide-${event.id}-cta`,
+            id: `${event.id}-cta`,
             text: cfg.buttonText,
             link: opts.eventHref,
             variant: "primary" as const,
@@ -221,32 +225,13 @@ export function buildSlideFromEvent(
   };
 }
 
-/**
- * Build every event-owned slide, newest-ordered, and refuse an over-full rail.
- *
- * 🛑 `MAX_ACTIVE_SLIDES` is a real ceiling, not advice — `HeroCarousel` renders
- * the first five and a sixth active slide is authored, stored, and never seen
- * by anyone. Failing here is what makes that visible at seed time rather than
- * as a silently missing promotion.
+/*
+ * There is deliberately no batch "build every event-owned slide" helper here
+ * any more. The one that used to live here THREW past `MAX_ACTIVE_SLIDES` —
+ * correct for a seed-time build guard, wrong for a live request path: an
+ * admin toggling a 6th event's `showOnCarousel` on would 500 the homepage for
+ * every visitor until someone noticed and toggled it back off.
+ * `getHeroCarouselSlides()` (`_internal/server/features/events/data.ts`) maps
+ * each event through `buildSlideFromEvent` individually and caps the result
+ * with a plain `.slice(0, MAX_ACTIVE_SLIDES)` — no throw.
  */
-export function buildSlidesFromEvents(
-  events: readonly EventDocument[],
-  resolveHref: (event: EventDocument) => string,
-  createdBy: string,
-): Partial<CarouselSlideDocument>[] {
-  const slides = events
-    .map((e) => buildSlideFromEvent(e, { eventHref: resolveHref(e), createdBy }))
-    .filter((s): s is Partial<CarouselSlideDocument> => s !== null)
-    .sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
-
-  const activeCount = slides.filter((s) => s.active).length;
-  if (activeCount > MAX_ACTIVE_SLIDES) {
-    throw new Error(
-      `${activeCount} active event slides but MAX_ACTIVE_SLIDES is ${MAX_ACTIVE_SLIDES}. ` +
-        `The extras would never render. Deactivate one, or fold several deals into ` +
-        `a single cards slide — that is what the 6 zones are for.`,
-    );
-  }
-
-  return slides;
-}

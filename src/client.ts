@@ -539,7 +539,6 @@ export { AdminDashboardView } from "./features/admin/components/AdminDashboardVi
 export { AdminAnalyticsView } from "./features/admin/components/AdminAnalyticsView";
 export { AdminPageViewsReportView } from "./features/admin/components/analytics/AdminPageViewsReportView";
 export { AdminRandomLotsView } from "./features/admin/components/AdminRandomLotsView";
-export { AdminCarouselView } from "./features/admin/components/AdminCarouselView";
 export { AdminSublistingCategoriesView } from "./features/admin/components/AdminSublistingCategoriesView";
 export { AdminFulfillmentView } from "./features/admin/components/AdminFulfillmentView";
 export { DataTable } from "./features/admin/components/DataTable";
@@ -548,7 +547,6 @@ export { useAdminListingData, toRecordArray, toStringValue, toRelativeDate } fro
 export type { AdminDashboardViewProps } from "./features/admin/components/AdminDashboardView";
 export type { AdminAnalyticsViewProps, AdminAnalyticsViewLabels } from "./features/admin/components/AdminAnalyticsView";
 export type { AdminRandomLotsViewProps } from "./features/admin/components/AdminRandomLotsView";
-export type { AdminCarouselViewProps } from "./features/admin/components/AdminCarouselView";
 export type { AdminFulfillmentViewProps } from "./features/admin/components/AdminFulfillmentView";
 export type { AdminListingScaffoldRow, ListingViewConfig } from "./features/admin/components/DataListingView";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
@@ -1389,7 +1387,6 @@ export type { CommandPaletteGroup } from "./features/shell/CommandPalette";
 export {
   AdminBlogEditorView,
   AdminBundleEditorView,
-  AdminCarouselEditorView,
   AdminCategoryEditorView,
   AdminCouponEditorView,
   AdminFaqEditorView,

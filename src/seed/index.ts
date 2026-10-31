@@ -185,8 +185,8 @@ export { blogPostsSeedData } from "./blog-posts-seed-data";
 export { faqSeedData } from "./faq-seed-data";
 export { homepageSectionsSeedData } from "./homepage-sections-seed-data";
 export { siteSettingsSeedData } from "./site-settings-seed-data";
-export { carouselSlidesSeedData } from "./carousel-slides-seed-data";
-export { carouselsSeedData } from "./carousels-seed-data";
+// carouselSlidesSeedData was REMOVED 2026-10-31 — see CLAUDE.md "Homepage Hero Carousel".
+// carouselsSeedData (named carousel groups, EX2) was REMOVED 2026-10-31.
 export { wishlistsSeedData } from "./wishlists-seed-data";
 export { historySeedData } from "./history-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";

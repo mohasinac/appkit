@@ -65,7 +65,7 @@ if (!["load", "delete", "status", "purge"].includes(ACTION)) {
   console.error("  purge   delete every document whose seedPurpose is \"test\", and NOTHING else.");
   console.error("          Unlike `delete`, which empties whole collections, this keeps real");
   console.error("          content (faqs, categories, taxCodes, productFeatures, blogPosts,");
-  console.error("          carousels, homepageSections, siteSettings, the tester checklist) and");
+  console.error("          homepageSections, siteSettings, the tester checklist) and");
   console.error("          keeps the two keep-list rows: the admin account and store-letitrip-official.");
   console.error("          Organic rows carry no seedPurpose at all and are unreachable by it.");
   console.error("");
@@ -269,7 +269,7 @@ const {
   couponsSeedData, couponUsageSeedData,
   eventsSeedData, eventEntriesSeedData, eventLikesSeedData, payoutsSeedData, offersSeedData,
   notificationsSeedData, blogPostsSeedData,
-  carouselsSeedData, carouselSlidesSeedData, homepageSectionsSeedData,
+  homepageSectionsSeedData,
   siteSettingsSeedData, faqSeedData,
   wishlistsSeedData, historySeedData,
   groupedListingsSeedData,
@@ -287,7 +287,7 @@ const {
   USER_COLLECTION,
   CATEGORIES_COLLECTION, STORE_COLLECTION,
   PRODUCT_COLLECTION, ORDER_COLLECTION, REVIEW_COLLECTION, BID_COLLECTION,
-  COUPONS_COLLECTION, CAROUSELS_COLLECTION, CAROUSEL_SLIDES_COLLECTION,
+  COUPONS_COLLECTION,
   HOMEPAGE_SECTIONS_COLLECTION, SITE_SETTINGS_COLLECTION, FAQS_COLLECTION,
   NOTIFICATIONS_COLLECTION, PAYOUT_COLLECTION, OFFER_COLLECTION, BLOG_POSTS_COLLECTION,
   EVENTS_COLLECTION, EVENT_ENTRIES_COLLECTION, EVENT_LIKES_COLLECTION, SESSION_COLLECTION,
@@ -334,8 +334,6 @@ const COLLECTION_MAP = {
   reviews: REVIEW_COLLECTION,
   bids: BID_COLLECTION,
   coupons: COUPONS_COLLECTION,
-  carousels: CAROUSELS_COLLECTION,
-  carouselSlides: CAROUSEL_SLIDES_COLLECTION,
   homepageSections: HOMEPAGE_SECTIONS_COLLECTION,
   siteSettings: SITE_SETTINGS_COLLECTION,
   faqs: FAQS_COLLECTION,
@@ -736,8 +734,6 @@ const SEED_DATA_MAP = {
   bids: bidsSeedData,
   coupons: couponsSeedData,
   couponUsage: couponUsageSeedData,
-  carousels: carouselsSeedData,
-  carouselSlides: carouselSlidesSeedData,
   homepageSections: homepageSectionsSeedData,
   siteSettings: [siteSettingsSeedData],
   faqs: faqSeedData,
@@ -801,7 +797,7 @@ const SEED_DATA_MAP = {
 };
 
 const ALL_COLLECTIONS = Object.keys(COLLECTION_MAP);
-const REPLACE_ON_LOAD = new Set(["homepageSections", "carouselSlides"]);
+const REPLACE_ON_LOAD = new Set(["homepageSections"]);
 
 const collectionsToProcess = ONLY_SET
   ? ALL_COLLECTIONS.filter((c) => ONLY_SET.has(c))

@@ -499,8 +499,18 @@ export function HeroCarousel({
                   photography.
                 */}
                 <Div className="absolute bottom-2 left-2 z-10">
+                  {/*
+                    Every slide is one event — there is no separate carousel-
+                    slide record any more (see CLAUDE.md "Homepage Hero
+                    Carousel"), so `slide.id` IS the event id and the pencil
+                    opens that event's own editor. Deliberately no `onDelete`:
+                    `RESOURCE_LEAVES.EVENT` carries a remove leaf, but wiring
+                    it here would let a click on a hero slide delete the whole
+                    event — unfeaturing it is `showOnCarousel`, on the event
+                    editor this links to, not a destructive action on the rail.
+                  */}
                   <OwnerQuickActions
-                    resource="CAROUSEL"
+                    resource="EVENT"
                     placement="card"
                     /* Sits on the slide photograph — without this it renders
                      * the light `surface-elevated` chip, a pale rounded box
@@ -508,7 +518,7 @@ export function HeroCarousel({
                      * translucent backdrop that variant exists for. */
                     onMedia
                     recordLabel={slide.title ?? `Slide ${slideIndex + 1}`}
-                    editHref={String(ROUTES.ADMIN.CAROUSEL_EDIT(slide.id))}
+                    editHref={String(ROUTES.ADMIN.EVENTS_EDIT(slide.id))}
                   />
                 </Div>
                 {/* Background */}

@@ -38,8 +38,6 @@ import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
 import { couponsSeedData } from "./coupons-seed-data";
-import { carouselsSeedData } from "./carousels-seed-data";
-import { carouselSlidesSeedData } from "./carousel-slides-seed-data";
 import { homepageSectionsSeedData } from "./homepage-sections-seed-data";
 import { siteSettingsSeedData } from "./site-settings-seed-data";
 import { faqSeedData } from "./faq-seed-data";
@@ -75,7 +73,7 @@ export interface SeedManifestEntry {
 /** Every collection name the CLI seeder (appkit/scripts/seed-cli.mjs) and this manifest cover. */
 export type SeedCollectionName =
   | "users" | "addresses" | "categories" | "stores" | "products" | "orders"
-  | "reviews" | "bids" | "coupons" | "carousels" | "carouselSlides"
+  | "reviews" | "bids" | "coupons"
   | "homepageSections" | "siteSettings" | "faqs" | "notifications" | "payouts"
   | "blogPosts" | "events" | "eventEntries" | "sessions" | "carts" | "wishlists"
   | "history" | "groupedListings" | "scammerProfiles"
@@ -161,13 +159,9 @@ export const SEED_MANIFEST: SeedManifest = {
       name: c.code ?? c.id,
     })),
   ),
-  carousels: pick(asArr(carouselsSeedData)),
-  carouselSlides: pick(
-    asArr(carouselSlidesSeedData).map((s) => ({
-      ...s,
-      name: s.title ?? s.id,
-    })),
-  ),
+  // `carousels` / `carouselSlides` seed collections were REMOVED 2026-10-31 —
+  // the hero carousel has no standalone slide document any more. See
+  // CLAUDE.md "Homepage Hero Carousel".
   homepageSections: pick(
     asArr(homepageSectionsSeedData).map((s) => ({
       ...s,

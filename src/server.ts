@@ -638,6 +638,21 @@ export { PhonePeProvider } from "./providers/payment-phonepe/index";
 // RazorpayProvider - IPaymentProvider over Razorpay's client-side-modal gateway.
 export { RazorpayProvider } from "./providers/payment-razorpay/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// CashfreeProvider - IPaymentProvider over Cashfree's PG Orders API (bare fetch, no SDK). SERVER ONLY — never index.ts/client.ts.
+export { CashfreeProvider } from "./providers/payment-cashfree/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// packCashfreeWebhookSignature - packs Cashfree's x-webhook-timestamp + x-webhook-signature into the one `signature` slot IPaymentProvider.verifyWebhook has.
+export { packCashfreeWebhookSignature } from "./providers/payment-cashfree/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// CASHFREE_WEBHOOK_SIGNATURE_HEADER - the header Cashfree signs a webhook into.
+export { CASHFREE_WEBHOOK_SIGNATURE_HEADER } from "./providers/payment-cashfree/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// CASHFREE_WEBHOOK_TIMESTAMP_HEADER - the timestamp header that is part of Cashfree's signed payload.
+export { CASHFREE_WEBHOOK_TIMESTAMP_HEADER } from "./providers/payment-cashfree/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// CASHFREE_SESSION_METADATA_KEY - where createOrder publishes Cashfree's payment_session_id (it has no checkoutUrl).
+export { CASHFREE_SESSION_METADATA_KEY } from "./providers/payment-cashfree/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyRazorpayWebhookSignature - HMAC-SHA256 over the RAW webhook body. SDK-free module.
 export { verifyWebhookSignature as verifyRazorpayWebhookSignature } from "./providers/payment-razorpay/signature";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -1292,44 +1307,17 @@ export type { ViewerLike, TestDataFlagged } from "./_internal/server/features/te
 // carouselGET - Shared export for carousel get.
 export { carouselGET } from "./features/homepage/api/carousel/route";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselItemDELETE - Shared export for carousel item delete.
-export { carouselItemDELETE } from "./features/homepage/api/carousel/[id]/route";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselItemGET - Shared export for carousel item get.
-export { carouselItemGET } from "./features/homepage/api/carousel/[id]/route";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselItemPATCH - Shared export for carousel item patch.
-export { carouselItemPATCH } from "./features/homepage/api/carousel/[id]/route";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// carouselPOST - Shared export for carousel post.
-export { carouselPOST } from "./features/homepage/api/carousel/route";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// createCarouselSlide - Helper for create carousel slide.
-export { createCarouselSlide } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createHomepageSection - Helper for create homepage section.
 export { createHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createSectionSchema - Helper for create section schema.
 export { createSectionSchema } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// deleteCarouselSlide - Helper for delete carousel slide.
-export { deleteCarouselSlide } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteHomepageSection - Helper for delete homepage section.
 export { deleteHomepageSection } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getCarouselSlideById - Helper for get carousel slide by id.
-export { getCarouselSlideById } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getHomepageSectionById - Helper for get homepage section by id.
 export { getHomepageSectionById } from "./features/homepage/actions/homepage-section-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// listActiveCarouselSlides - Helper for list active carousel slides.
-export { listActiveCarouselSlides } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// listAllCarouselSlides - Helper for list all carousel slides.
-export { listAllCarouselSlides } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // listEnabledHomepageSections - Helper for list enabled homepage sections.
 export { listEnabledHomepageSections } from "./features/homepage/actions/homepage-section-actions";
@@ -1337,14 +1325,8 @@ export { listEnabledHomepageSections } from "./features/homepage/actions/homepag
 // listHomepageSections - Helper for list homepage sections.
 export { listHomepageSections } from "./features/homepage/actions/homepage-section-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// reorderCarouselSlides - Shared export for reorder carousel slides.
-export { reorderCarouselSlides } from "./features/homepage/actions/carousel-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reorderHomepageSections - Shared export for reorder homepage sections.
 export { reorderHomepageSections } from "./features/homepage/actions/homepage-section-actions";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// updateCarouselSlide - Helper for update carousel slide.
-export { updateCarouselSlide } from "./features/homepage/actions/carousel-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateHomepageSection - Helper for update homepage section.
 export { updateHomepageSection } from "./features/homepage/actions/homepage-section-actions";
