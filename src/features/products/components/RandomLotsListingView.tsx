@@ -57,12 +57,12 @@ export async function RandomLotsListingView({
             level={1}
             className="mb-2" color="primary" size="3xl" weight="semibold"
           >
-            Prize Draws
+            Random Lots
           </Heading>
           <Text className="mb-6 text-[var(--appkit-color-text-muted)]" size="sm">
-            Fair-RNG draws for sealed Pokémon, Hot Wheels Super Treasure Hunts,
-            Gundam kits and more. Every winner picked by crypto.randomInt —
-            proof on GitHub.
+            Every lot ships a real item — the surprise is which one. Sealed
+            Pokémon, Hot Wheels Super Treasure Hunts, Gundam kits and more,
+            allocated by crypto.randomInt with proof on GitHub.
           </Text>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <RandomLotsIndexListing initialData={result ?? undefined} />
