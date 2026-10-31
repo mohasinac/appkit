@@ -108,6 +108,34 @@ const notTerminal = (o: OrderDocument): boolean =>
  */
 const hasDispatched = (o: OrderDocument): boolean => Boolean(o.shippingDate);
 
+/**
+ * 🛑 A PRE-ORDER IS NOT A LATE ORDER, and without this every one of them was
+ * cancelled and refunded about five days after payment.
+ *
+ * `seller-accept` (3 calendar days from `orderDate`) and `seller-dispatch`
+ * (2 business days from `acceptedAt`) are both `onDue: "act"` — they cancel
+ * the order and refund the buyer with the seller recorded as having failed.
+ * Neither precondition looked at the order's TYPE, and `obligationSweep` runs
+ * every 5 minutes.
+ *
+ * A pre-order is a deposit against a future release: the seeded fixtures carry
+ * delivery dates at +45, +90 and +120 days, and by definition none of them is
+ * dispatchable within two days of payment. So the two policies that enforce
+ * "dispatch promptly" fired on the one order type for which prompt dispatch is
+ * not the promise — and because `act` refunds, the failure was silent and
+ * looked like ordinary cancellation.
+ *
+ * The obligation a pre-order DOES owe is `preorder-deliver`, below, anchored on
+ * the delivery date the seller published.
+ *
+ * Keyed on `orderType` rather than on the items' `listingType` because the
+ * order is the subject here, the splitter already stamps it
+ * (`order-splitter.ts`), and `preorder.rule.ts` sets `orderType: "preorder"`
+ * with a store-scoped `splitKey` — so a pre-order never shares an order with
+ * anything else.
+ */
+const isPreOrder = (o: OrderDocument): boolean => o.orderType === "preorder";
+
 export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
   /*
    * ── PRE-DISPATCH ─────────────────────────────────────────────────────────
@@ -131,7 +159,8 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
     anchor: (o) => o.orderDate ?? o.createdAt,
     duration: { value: 3, unit: "days", calendar: "calendar" },
     warnAt: [{ value: 24, unit: "hours", calendar: "calendar" }],
-    precondition: (o) => isPaid(o) && notTerminal(o) && !o.acceptedAt && !hasDispatched(o),
+    precondition: (o) =>
+      isPaid(o) && notTerminal(o) && !o.acceptedAt && !hasDispatched(o) && !isPreOrder(o),
     onDue: "act",
     publishedCopyKey: "obligations.sellerAccept",
     describe: "The seller did not accept this order within the acceptance window.",
@@ -168,11 +197,56 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
      * would be redundant and would imply nobody traced it.
      */
     precondition: (o) =>
-      isPaid(o) && notTerminal(o) && !hasDispatched(o) && !hasOpenCourierBlock(o),
+      isPaid(o) &&
+      notTerminal(o) &&
+      !hasDispatched(o) &&
+      !hasOpenCourierBlock(o) &&
+      !isPreOrder(o),
     blockedBy: ["seller-accept"],
     onDue: "act",
     publishedCopyKey: "obligations.sellerDispatch",
     describe: "The seller accepted this order but did not dispatch it in time.",
+  },
+
+  /**
+   * A pre-order whose published release date passed without dispatch.
+   *
+   * The obligation a pre-order actually owes, replacing the two above that it
+   * is now exempt from. Anchored on the date the SELLER published and the
+   * buyer agreed to wait for — carried on the order as
+   * `sourceContext.expectedDeliveryDate`, snapshot at checkout
+   * (`source-context.ts`), so no product read is needed and a later edit to
+   * the listing cannot move a deadline the buyer already accepted.
+   *
+   * 🛑 `OrderSourcePreOrder.expectedDeliveryDate`, NOT
+   * `OrderDocument.estimatedDeliveryDate` — the latter is the COURIER's ETD
+   * captured at dispatch, a different concept the schema explicitly warns was
+   * already mistaken for this one once.
+   *
+   * The grace period is deliberate: a release date is a plan, and treating the
+   * day after it as a breach would cancel orders over a courier pickup sliding
+   * by an afternoon. It is calendar rather than business days because a buyer
+   * waiting three months does not experience a weekend as a pause.
+   *
+   * `act` matches the two policies it replaces: the buyer gets back a deposit
+   * paid against a release that did not happen, and the seller forfeits the
+   * sale. 🛑 Anything beyond 45 days cannot be split-settled through Easy
+   * Split at all, which is why the write path caps the date rather than
+   * leaving this sweep to clean up after it.
+   */
+  "preorder-deliver": {
+    anchor: (o) =>
+      o.sourceContext?.path === "pre-order" ? o.sourceContext.expectedDeliveryDate : null,
+    duration: { value: 7, unit: "days", calendar: "calendar" },
+    warnAt: [
+      { value: 7, unit: "days", calendar: "calendar" },
+      { value: 24, unit: "hours", calendar: "calendar" },
+    ],
+    precondition: (o) => isPaid(o) && notTerminal(o) && !hasDispatched(o) && isPreOrder(o),
+    onDue: "act",
+    publishedCopyKey: "obligations.preorderDeliver",
+    describe:
+      "This pre-order's published release date passed and the seller did not dispatch it.",
   },
 
   /**

@@ -54,6 +54,22 @@ export type ObligationKind =
   // ── pre-dispatch ────────────────────────────────────────────────────────
   | "seller-accept"
   | "seller-dispatch"
+  /**
+   * A pre-order whose published release date passed without dispatch.
+   *
+   * 🛑 Its own kind rather than a widened `seller-dispatch`, because the two
+   * answer different questions and are anchored on different facts.
+   * `seller-dispatch` asks "did the seller act on an order they can fulfil
+   * today", anchored on `acceptedAt`. This asks "did the release the buyer
+   * paid a deposit against actually arrive", anchored on the delivery date the
+   * SELLER published — a date that is known at purchase and is the thing the
+   * buyer agreed to wait for.
+   *
+   * It is also the enforcement half of the 45-day rule: Cashfree Easy Split
+   * will not hold a settlement beyond 45 days from the transaction, so a
+   * pre-order promising later than that cannot be split-settled at all.
+   */
+  | "preorder-deliver"
   | "proof-reupload"
   // ── in transit ──────────────────────────────────────────────────────────
   | "delivery-confirm"
@@ -194,6 +210,7 @@ export function createObligationId(subjectId: string, kind: ObligationKind): str
 const OBLIGATION_KIND_MAP: Record<ObligationKind, true> = {
   "seller-accept": true,
   "seller-dispatch": true,
+  "preorder-deliver": true,
   "proof-reupload": true,
   "delivery-confirm": true,
   "return-respond": true,
