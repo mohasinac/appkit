@@ -1,5 +1,7 @@
 import { logServerWarning } from "../../../../monitoring";
+import { AuthorizationError } from "../../../../errors";
 import { GroqModelProvider } from "../../../../providers/ai-groq";
+import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import type { IAssistantModelProvider } from "../../../shared/features/assistant/types";
 import { runAssistantTurn } from "./turn";
 import { escalateToHuman } from "./escalate";
@@ -23,6 +25,22 @@ function getAssistantProviders(): readonly IAssistantModelProvider[] {
   // Env read happens inside the provider's own `turn()` call, never cached
   // at module load — see providers/ai-groq's docstring.
   return [new GroqModelProvider()];
+}
+
+/**
+ * 🛑 `!== false` — the opposite polarity to `assertChatEnabled` in
+ * `_internal/server/features/messages/actions.ts`. This is a kill switch on
+ * an already-shipped path, not an opt-in for a new one: an unseeded
+ * document, a never-written field, or a failed read must all mean ON, or a
+ * settings outage silently takes the assistant down with no admin action.
+ * Checked server-side so a stale client (the widget already rendered before
+ * an admin flips the switch) cannot route around it.
+ */
+async function assertAssistantEnabled(): Promise<void> {
+  const settings = await siteSettingsRepository.getSingleton();
+  if (settings?.assistant?.enabled === false) {
+    throw new AuthorizationError("The assistant is not currently available.");
+  }
 }
 
 export interface AssistantUser {
@@ -49,6 +67,8 @@ export async function answerAssistantQuestion(
   user: AssistantUser,
   question: string,
 ): Promise<AssistantAnswer> {
+  await assertAssistantEnabled();
+
   const history = await getAssistantHistory(user.id);
 
   const outcome = await runAssistantTurn(

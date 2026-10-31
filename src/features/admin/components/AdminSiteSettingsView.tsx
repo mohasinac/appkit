@@ -226,6 +226,11 @@ export function AdminSiteSettingsView({
   const [faviconUrl, setFaviconUrl] = React.useState("");
   const [maintenanceMode, setMaintenanceMode] = React.useState(false);
   const [maintenanceMessage, setMaintenanceMessage] = React.useState("");
+  // D9 — opt-in; absent/unseeded reads as OFF.
+  const [chatEnabled, setChatEnabled] = React.useState(false);
+  // Customer assistant — kill switch on an already-shipped path; absent/
+  // unseeded reads as ON, matching assertAssistantEnabled's server-side polarity.
+  const [assistantEnabled, setAssistantEnabled] = React.useState(true);
 
   // ② Appearance — background image/gradient/color/video (light + dark).
   // The old primaryColor/secondaryColor/accentColor/fontFamily/defaultTheme
@@ -570,6 +575,8 @@ export function AdminSiteSettingsView({
     setFaviconUrl(s.favicon ?? "");
     setMaintenanceMode(s.maintenance?.enabled ?? false);
     setMaintenanceMessage(s.maintenance?.message ?? "");
+    setChatEnabled(s.chat?.enabled ?? false);
+    setAssistantEnabled(s.assistant?.enabled ?? true);
 
     setLightBgType(s.background?.light?.type ?? "color");
     setLightBgValue(s.background?.light?.value ?? "");
@@ -873,6 +880,8 @@ export function AdminSiteSettingsView({
       },
       siteName, tagline, logo: logoUrl, favicon: faviconUrl,
       maintenance: { enabled: maintenanceMode, message: maintenanceMessage },
+      chat: { enabled: chatEnabled },
+      assistant: { enabled: assistantEnabled },
       background: {
         light: {
           type: lightBgType,
@@ -1263,6 +1272,10 @@ export function AdminSiteSettingsView({
               <Stack gap="sm" rounded="lg" border="default" padding="md">
                 <Div id="setting-maintenance-mode"><Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} /></Div>
                 <Input label="Maintenance message" value={maintenanceMessage} onChange={(e) => setMaintenanceMessage(e.target.value)} placeholder="We're back soon." disabled={!maintenanceMode} />
+              </Stack>
+              <Stack gap="sm" rounded="lg" border="default" padding="md">
+                <Div id="setting-chat-enabled"><Toggle label="Buyer-seller messaging enabled" checked={chatEnabled} onChange={setChatEnabled} /></Div>
+                <Div id="setting-assistant-enabled"><Toggle label="Customer assistant enabled (floating chat widget + full-chat page)" checked={assistantEnabled} onChange={setAssistantEnabled} /></Div>
               </Stack>
             </SettingsTabForm>
           </TabsContent>

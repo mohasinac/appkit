@@ -11,6 +11,8 @@ import { useFormShellState } from "../../../ui/forms/FormShell";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { apiClient } from "../../../http/ApiClient";
 import { useApiMutation } from "../../../client/api/useApiMutation";
+import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
+import type { PublicSiteSettings } from "../../../_internal/shared/features/site-settings/types";
 import { ASSISTANT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { askAssistantSchema } from "../schemas/ask";
 
@@ -42,6 +44,7 @@ export function AssistantPageView() {
   const [question, setQuestion] = useState("");
   const [exchanges, setExchanges] = useState<readonly Exchange[]>([]);
   const shell = useFormShellState(askAssistantSchema);
+  const { data: siteSettings } = useSiteSettings<PublicSiteSettings>();
 
   const ask = useApiMutation({
     errorMessage: "Could not reach the assistant. Please try again.",
@@ -65,6 +68,24 @@ export function AssistantPageView() {
             Ask the assistant
           </Heading>
           <Text color="muted">Sign in to ask about an order, a product, or our policies.</Text>
+        </Stack>
+      </Container>
+    );
+  }
+
+  /*
+   * `=== false` only — absence (not yet fetched, unseeded document) must
+   * render the normal page, same kill-switch polarity as the widget and
+   * `assertAssistantEnabled` server-side.
+   */
+  if (siteSettings?.assistant?.enabled === false) {
+    return (
+      <Container padding="page">
+        <Stack gap="sm">
+          <Heading level={1} size="xl">
+            Ask the assistant
+          </Heading>
+          <Text color="muted">The assistant is not currently available.</Text>
         </Stack>
       </Container>
     );

@@ -16,6 +16,8 @@ import { useAuth } from "../../../react/contexts/SessionContext";
 import { useHandMode } from "../../../_internal/client/hand-mode/HandModeProvider";
 import { apiClient } from "../../../http/ApiClient";
 import { useApiMutation } from "../../../client/api/useApiMutation";
+import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
+import type { PublicSiteSettings } from "../../../_internal/shared/features/site-settings/types";
 import { ASSISTANT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { askAssistantSchema } from "../schemas/ask";
 
@@ -83,6 +85,7 @@ export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidget
   const [question, setQuestion] = useState("");
   const [exchanges, setExchanges] = useState<readonly Exchange[]>([]);
   const shell = useFormShellState(askAssistantSchema);
+  const { data: siteSettings } = useSiteSettings<PublicSiteSettings>();
 
   const ask = useApiMutation({
     errorMessage: "Could not reach the assistant. Please try again.",
@@ -103,8 +106,15 @@ export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidget
    * flash the bubble away from them on every page load. Hiding rather than
    * disabling, because `/api/assistant/ask` is auth-required — a guest
    * would see a dead control that answers 401.
+   *
+   * 🛑 `assistant?.enabled === false` is the ONLY disabling value — absence
+   * (not yet fetched, or an unseeded settings document) must render the
+   * widget rather than hide it, matching the kill-switch's server-side
+   * polarity (`assertAssistantEnabled` in actions.ts). Hiding on absence
+   * would blank the widget for every visitor until the first settings fetch
+   * resolves.
    */
-  if (loading || !user) return null;
+  if (loading || !user || siteSettings?.assistant?.enabled === false) return null;
 
   function handleLaunch() {
     if (isDesktopViewport()) {

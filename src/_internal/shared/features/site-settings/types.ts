@@ -57,6 +57,13 @@ export interface PublicSiteSettings {
   /** D9 — off by default; `enabled: false` is emitted rather than omitted, same `always-present` reasoning as `disabledRoutes` below. */
   chat?: { enabled: boolean };
   /**
+   * The customer-assistant floating widget / full-chat page. Read by
+   * `<AssistantWidget>`/`<AssistantPageView>`, both client components.
+   * Opposite polarity to `chat` above — a kill switch on an already-shipped
+   * path, so absence means ON; see the schema field's own doc comment.
+   */
+  assistant?: { enabled: boolean };
+  /**
    * Is the support desk reachable — read by `UserLayoutClient`, a client
    * component. Narrowed to the one boolean rather than passed by reference,
    * so a field added to the document's `support` group later is not published

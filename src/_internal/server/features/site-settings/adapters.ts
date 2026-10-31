@@ -88,6 +88,9 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
   // render a "Message seller" CTA at all. Narrowed to `enabled` only; there is
   // nothing else in the group.
   "chat",
+  // The customer-assistant kill switch — <AssistantWidget>/<AssistantPageView>,
+  // both client components. Narrowed to `enabled` only, same shape as `chat`.
+  "assistant",
   /*
    * useSearchIndex — the kill switch for the browser-side search artifact.
    *
@@ -298,6 +301,17 @@ export function toPublicSiteSettings(
      * 🛑 `!== false`, the opposite of the line above it, and the two sit
      * together deliberately so the difference is visible rather than looking
      * like one of them is a mistake.
+     *
+     * `chat` is a feature nobody has turned on yet; absent means off. The
+     * customer assistant is already a shipped primary path; absent means ON,
+     * and only an explicit `false` disables it. Same reasoning `search`
+     * below uses for the identical reason.
+     */
+    assistant: { enabled: doc.assistant?.enabled !== false },
+    /*
+     * 🛑 `!== false`, the opposite of `chat` above, and the two sit together
+     * deliberately so the difference is visible rather than looking like one
+     * of them is a mistake.
      *
      * `chat` is a feature nobody has turned on yet; absent means off. This is
      * a kill switch on a path that is already the primary one; absent means

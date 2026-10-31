@@ -958,6 +958,18 @@ export interface SiteSettingsDocument extends BaseDocument {
     enabled: boolean;
   };
   /**
+   * The customer-assistant floating widget / full-chat page. A kill switch
+   * on an already-shipped path, the opposite polarity to `chat` above:
+   * absent, an unseeded document, and a failed settings fetch all mean ON —
+   * only an explicit `false` turns it off. Turning it off hides the widget
+   * everywhere it is mounted (site-wide, via `LayoutShellClient`), not just
+   * the API — `answerAssistantQuestion` refuses too, so a stale client
+   * cannot route around the switch.
+   */
+  assistant?: {
+    enabled: boolean;
+  };
+  /**
    * The public search index — the browser-side artifact, not the per-listing
    * search boxes, which this flag cannot reach.
    *
