@@ -5,7 +5,7 @@
  *
  * Three of the four already have an authoritative field:
  *
- *   payments  -> `payment.razorpayEnabled`
+ *   payments  -> `payment.razorpayEnabled` OR `.phonepeEnabled` OR `.cashfreeEnabled`
  *   email     -> `messaging.emailEnabled`   (read by `guardSend`)
  *   shipping  -> `shipping.provider`        ("manual" | "shiprocket")
  *
@@ -102,9 +102,10 @@ export const INTEGRATIONS: Record<IntegrationId, IntegrationDescriptor> = {
     offConsequence:
       "Buyers can no longer pay online. Checkout falls back to the manual methods (cash, UPI with a proof upload), which need an admin to verify every payment by hand. 🛑 Payments already in progress are abandoned — a buyer part-way through the gateway may be charged without an order being placed. Switch off when nobody is checking out.",
     severe: true,
-    // Both gateways, because the enforcing guard is an OR across them. See the
-    // note on `readIntegrationStates`.
-    field: "payment.razorpayEnabled + payment.phonepeEnabled",
+    // All three gateways, because the enforcing guard is an OR across them. See
+    // the note on `readIntegrationStates`.
+    field:
+      "payment.razorpayEnabled + payment.phonepeEnabled + payment.cashfreeEnabled",
     routeGuard: "gated",
     routeGuardNote:
       "withOnlinePaymentEnabled, on all six /api/payment routes. Predates this page; this page now reads the same expression so the two cannot disagree.",
@@ -246,7 +247,17 @@ export function readIntegrationStates(
     payments: {
       enabled:
         settings?.payment?.razorpayEnabled === true ||
-        settings?.payment?.phonepeEnabled === true,
+        settings?.payment?.phonepeEnabled === true ||
+        /*
+         * 🛑 Cashfree joined this OR when the provider was added, in the SAME
+         * change. Leaving it out would have 404'd all six /api/payment routes
+         * for an install whose only enabled gateway is Cashfree — the gateway
+         * registered, the routes shut, and the admin page reporting "payments
+         * OFF" about a provider it had just been told to use. That is the same
+         * disagreement this function exists to make impossible, one gateway
+         * later.
+         */
+        settings?.payment?.cashfreeEnabled === true,
     },
     email: { enabled: settings?.messaging?.emailEnabled !== false },
     // "Enabled" means we are booking couriers, i.e. the provider is not manual.
@@ -277,7 +288,11 @@ export function readIntegrationStates(
  * switches.
  */
 export interface IntegrationPatch {
-  payment?: { razorpayEnabled?: boolean; phonepeEnabled?: boolean };
+  payment?: {
+    razorpayEnabled?: boolean;
+    phonepeEnabled?: boolean;
+    cashfreeEnabled?: boolean;
+  };
   messaging?: { emailEnabled: boolean };
   shipping?: { provider: "manual" | "shiprocket" };
   support?: { enabled: boolean };
@@ -290,23 +305,31 @@ export function integrationPatch(
   switch (id) {
     case "payments":
       /*
-       * 🛑 Writes BOTH gateway flags, and the OFF case is why.
+       * 🛑 Writes EVERY gateway flag on the way OFF, and that is why.
        *
-       * The guard is an OR, so clearing only `razorpayEnabled` while PhonePe
-       * was on would leave every /api/payment route open — the switch would
-       * report success and change nothing. "Disable payments" has to mean no
-       * online gateway is live, which is one flag per gateway.
+       * The guard is an OR across all three, so clearing only `razorpayEnabled`
+       * while PhonePe or Cashfree was on would leave every /api/payment route
+       * open — the switch would report success and change nothing. "Disable
+       * payments" has to mean no online gateway is live, which is one flag per
+       * gateway. A fourth gateway must be added here too, not just to the OR.
        *
        * The ON case re-enables RAZORPAY only, deliberately asymmetric:
-       * `providers.config.ts` prefers Razorpay and ignores PhonePe when both
-       * are true (it logs exactly that), so turning both on would set a flag
-       * with no effect and make the page claim two gateways where there is
-       * one. Choosing a gateway is a different decision from switching
-       * payments on, and it belongs in Site Settings → Payment.
+       * `providers.config.ts` resolves ONE provider in the order razorpay →
+       * phonepe → cashfree and ignores the rest (it logs exactly that), so
+       * turning several on would set flags with no effect and make the page
+       * claim three gateways where there is one. Choosing a gateway is a
+       * different decision from switching payments on, and it belongs in Site
+       * Settings → Payment.
        */
       return enabled
         ? { payment: { razorpayEnabled: true } }
-        : { payment: { razorpayEnabled: false, phonepeEnabled: false } };
+        : {
+            payment: {
+              razorpayEnabled: false,
+              phonepeEnabled: false,
+              cashfreeEnabled: false,
+            },
+          };
     case "email":
       return { messaging: { emailEnabled: enabled } };
     case "shipping":

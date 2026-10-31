@@ -394,6 +394,10 @@ export function AdminSiteSettingsView({
   const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
   const [razorpayKeySecret, setRazorpayKeySecret] = React.useState("");
   const [razorpayWebhookSecret, setRazorpayWebhookSecret] = React.useState("");
+  const [cashfreeAppId, setCashfreeAppId] = React.useState("");
+  const [cashfreeSecretKey, setCashfreeSecretKey] = React.useState("");
+  const [cashfreeEnvironment, setCashfreeEnvironment] = React.useState("sandbox");
+  const [cashfreeWebhookSecret, setCashfreeWebhookSecret] = React.useState("");
   const [phonepeClientId, setPhonepeClientId] = React.useState("");
   const [phonepeClientSecret, setPhonepeClientSecret] = React.useState("");
   const [phonepeClientVersion, setPhonepeClientVersion] = React.useState("1");
@@ -429,6 +433,7 @@ export function AdminSiteSettingsView({
   // ⑨ Payment methods (siteSettings.payment — read by checkout for method eligibility)
   const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
   const [phonepeEnabled, setPhonepeEnabled] = React.useState(false);
+  const [cashfreeEnabled, setCashfreeEnabled] = React.useState(false);
   const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
   const [codEnabled, setCodEnabled] = React.useState(true);
   const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
@@ -675,6 +680,10 @@ export function AdminSiteSettingsView({
     setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
     setRazorpayKeySecret(s.credentialsMasked?.razorpayKeySecret ?? "");
     setRazorpayWebhookSecret(s.credentialsMasked?.razorpayWebhookSecret ?? "");
+    setCashfreeAppId(s.credentialsMasked?.cashfreeAppId ?? "");
+    setCashfreeSecretKey(s.credentialsMasked?.cashfreeSecretKey ?? "");
+    setCashfreeEnvironment(s.credentialsMasked?.cashfreeEnvironment ?? "sandbox");
+    setCashfreeWebhookSecret(s.credentialsMasked?.cashfreeWebhookSecret ?? "");
     setPhonepeClientId(s.credentialsMasked?.phonepeClientId ?? "");
     setPhonepeClientSecret(s.credentialsMasked?.phonepeClientSecret ?? "");
     setPhonepeClientVersion(s.credentialsMasked?.phonepeClientVersion ?? "1");
@@ -705,6 +714,7 @@ export function AdminSiteSettingsView({
 
     setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
     setPhonepeEnabled(s.payment?.phonepeEnabled ?? false);
+    setCashfreeEnabled(s.payment?.cashfreeEnabled ?? false);
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
     setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
@@ -787,6 +797,10 @@ export function AdminSiteSettingsView({
       razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
       razorpayKeySecret: s.credentialsMasked?.razorpayKeySecret ?? "",
       razorpayWebhookSecret: s.credentialsMasked?.razorpayWebhookSecret ?? "",
+      cashfreeAppId: s.credentialsMasked?.cashfreeAppId ?? "",
+      cashfreeSecretKey: s.credentialsMasked?.cashfreeSecretKey ?? "",
+      cashfreeEnvironment: s.credentialsMasked?.cashfreeEnvironment ?? "",
+      cashfreeWebhookSecret: s.credentialsMasked?.cashfreeWebhookSecret ?? "",
       phonepeClientId: s.credentialsMasked?.phonepeClientId ?? "",
       phonepeClientSecret: s.credentialsMasked?.phonepeClientSecret ?? "",
       phonepeClientVersion: s.credentialsMasked?.phonepeClientVersion ?? "",
@@ -902,6 +916,10 @@ export function AdminSiteSettingsView({
         razorpayKeyId: maskedOrReal("razorpayKeyId", razorpayKeyId),
         razorpayKeySecret: maskedOrReal("razorpayKeySecret", razorpayKeySecret),
         razorpayWebhookSecret: maskedOrReal("razorpayWebhookSecret", razorpayWebhookSecret),
+        cashfreeAppId: maskedOrReal("cashfreeAppId", cashfreeAppId),
+        cashfreeSecretKey: maskedOrReal("cashfreeSecretKey", cashfreeSecretKey),
+        cashfreeEnvironment: maskedOrReal("cashfreeEnvironment", cashfreeEnvironment),
+        cashfreeWebhookSecret: maskedOrReal("cashfreeWebhookSecret", cashfreeWebhookSecret),
         phonepeClientId: maskedOrReal("phonepeClientId", phonepeClientId),
         phonepeClientSecret: maskedOrReal("phonepeClientSecret", phonepeClientSecret),
         phonepeClientVersion: maskedOrReal("phonepeClientVersion", phonepeClientVersion),
@@ -954,7 +972,7 @@ export function AdminSiteSettingsView({
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
-      payment: { razorpayEnabled, phonepeEnabled, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
+      payment: { razorpayEnabled, phonepeEnabled, cashfreeEnabled, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
       collectorDropConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml, cancellation: cancellationHtml, grievance: grievanceHtml },
@@ -1016,7 +1034,13 @@ export function AdminSiteSettingsView({
     { label: "Bluedart", value: "bluedart" },
     { label: "FedEx", value: "fedex" },
   ];
-  const PHONEPE_ENVIRONMENT_OPTIONS = [
+  /*
+   * Shared by every gateway that has a sandbox/production split (PhonePe,
+   * Cashfree). Was `PHONEPE_ENVIRONMENT_OPTIONS`; renamed when the second
+   * gateway needed the identical two options, because a provider-named
+   * constant used by two providers is how a name stops meaning anything.
+   */
+  const GATEWAY_ENVIRONMENT_OPTIONS = [
     { label: "Sandbox (test)", value: "sandbox" },
     { label: "Production (live)", value: "production" },
   ];
@@ -1872,9 +1896,44 @@ export function AdminSiteSettingsView({
                   <MaskedInput label="PhonePe Client ID" value={phonepeClientId} onChange={setPhonepeClientId} placeholder="MERCHANTID_…" />
                   <MaskedInput label="PhonePe Client Secret" value={phonepeClientSecret} onChange={setPhonepeClientSecret} placeholder="••••••••" />
                   <Input label="PhonePe Client Version" value={phonepeClientVersion} onChange={(e) => setPhonepeClientVersion(e.target.value)} placeholder="1" />
-                  <Select label="PhonePe Environment" options={PHONEPE_ENVIRONMENT_OPTIONS} value={phonepeEnvironment} onValueChange={setPhonepeEnvironment} />
+                  <Select label="PhonePe Environment" options={GATEWAY_ENVIRONMENT_OPTIONS} value={phonepeEnvironment} onValueChange={setPhonepeEnvironment} />
                   <MaskedInput label="PhonePe Webhook Username" value={phonepeWebhookUsername} onChange={setPhonepeWebhookUsername} placeholder="••••••••" />
                   <MaskedInput label="PhonePe Webhook Password" value={phonepeWebhookPassword} onChange={setPhonepeWebhookPassword} placeholder="••••••••" />
+                </Grid>
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Cashfree Payments</Text>
+                {/*
+                  🛑 The App ID is NOT publishable, unlike Razorpay's Key ID —
+                  Cashfree hands the browser a per-order payment_session_id, so
+                  no Cashfree credential ever leaves the server. Both fields are
+                  masked for that reason.
+                */}
+                <Grid cols={2} gap="md">
+                  <MaskedInput label="Cashfree App ID" value={cashfreeAppId} onChange={setCashfreeAppId} placeholder="••••••••" />
+                  <MaskedInput label="Cashfree Secret Key" value={cashfreeSecretKey} onChange={setCashfreeSecretKey} placeholder="••••••••" />
+                  {/*
+                    🛑 This Select shows NO selection once a value has been
+                    stored, and that is the safe behaviour — do not "fix" it by
+                    defaulting the hydrate to "sandbox".
+
+                    Everything in `credentials` is masked generically, and
+                    `maskSecret` returns "****" for anything under 12 chars — so
+                    both "sandbox" and "production" come back as "****", which
+                    matches no option. Because the state then equals
+                    `originalMaskedRef`, `maskedOrReal` sends "" and the stored
+                    value is PRESERVED.
+
+                    Defaulting the display to "sandbox" instead would make the
+                    state differ from the mask, so the next save of any tab would
+                    write "sandbox" over a stored "production" — i.e. silently
+                    point a live gateway at the sandbox API. Same shape as the
+                    saved-but-never-hydrated hazard documented on
+                    `SiteSettingsDocument.contact.upiVpa`. PhonePe's Environment
+                    select above behaves identically, for the same reason.
+                  */}
+                  <Select label="Cashfree Environment" options={GATEWAY_ENVIRONMENT_OPTIONS} value={cashfreeEnvironment} onValueChange={setCashfreeEnvironment} />
+                  <MaskedInput label="Cashfree Webhook Secret" value={cashfreeWebhookSecret} onChange={setCashfreeWebhookSecret} placeholder="••••••••" />
                 </Grid>
               </Stack>
               <Stack gap="sm">
@@ -1951,6 +2010,7 @@ export function AdminSiteSettingsView({
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
               <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI/netbanking) enabled — needs Key ID + Key Secret under Credentials" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
               <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — ignored while Razorpay is on; only one online gateway runs at a time" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
+              <Div id="setting-cashfree-enabled"><Toggle label="Cashfree Payments enabled — needs App ID + Secret Key under Credentials. Checked LAST, so it is ignored while Razorpay or PhonePe is on" checked={cashfreeEnabled} onChange={setCashfreeEnabled} /></Div>
               <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
               <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />

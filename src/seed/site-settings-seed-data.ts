@@ -143,6 +143,13 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   payment: {
     razorpayEnabled: false,
     phonepeEnabled: false,
+    /*
+     * Cashfree. OFF, like the other two online gateways — a reseed must never
+     * switch a money path on. `providers.config.ts` checks it LAST
+     * (razorpay → phonepe → cashfree → manual), so it only takes effect when
+     * both of the others are off.
+     */
+    cashfreeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,
@@ -638,6 +645,21 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     razorpayKeyId: "",
     razorpayKeySecret: "",
     razorpayWebhookSecret: "",
+    /*
+     * Cashfree — EMPTY for the same reason as Razorpay above. `CashfreeProvider`
+     * throws at construction on empty credentials, so an enabled flag with no
+     * real key fails loudly at boot; a `*_PLACEHOLDER` would instead be sent to
+     * Cashfree's API and fail mid-checkout.
+     *
+     * `cashfreeEnvironment` is seeded `"sandbox"` rather than empty because it
+     * is a MODE, not a secret, and sandbox is the safe default: an empty value
+     * falls back to sandbox in `resolveKeys()` anyway, and seeding it makes the
+     * chosen mode visible in the admin UI instead of blank.
+     */
+    cashfreeAppId: "",
+    cashfreeSecretKey: "",
+    cashfreeEnvironment: "sandbox",
+    cashfreeWebhookSecret: "",
     resendApiKey: "",
     whatsappApiKey: "wa_PLACEHOLDER",
     // Real Meta secrets — deliberately left empty. With these unset the order

@@ -286,6 +286,20 @@ export interface SiteSettingsCredentials {
   razorpayKeySecret?: string;
   /** Webhook signing secret from Razorpay's dashboard → Webhooks. Without it `verifyWebhook()` fails closed. */
   razorpayWebhookSecret?: string;
+  /**
+   * Cashfree Payments App ID — sent as `x-client-id`.
+   *
+   * 🛑 Unlike `razorpayKeyId` above, this is NOT publishable. Cashfree hands the
+   * browser a per-order `payment_session_id` instead, so no Cashfree credential
+   * ever leaves the server.
+   */
+  cashfreeAppId?: string;
+  /** Cashfree secret key — `x-client-secret`. Server-only. */
+  cashfreeSecretKey?: string;
+  /** "sandbox" | "production" — selects Cashfree's base URL. */
+  cashfreeEnvironment?: string;
+  /** Webhook signing secret from Cashfree's dashboard. Without it `verifyWebhook()` fails closed. */
+  cashfreeWebhookSecret?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
   metaAppId?: string;
@@ -336,6 +350,10 @@ export interface SiteSettingsCredentialsMasked {
   razorpayKeyId?: string;
   razorpayKeySecret?: string;
   razorpayWebhookSecret?: string;
+  cashfreeAppId?: string;
+  cashfreeSecretKey?: string;
+  cashfreeEnvironment?: string;
+  cashfreeWebhookSecret?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
   metaAppId?: string;
@@ -592,12 +610,25 @@ export interface SiteSettingsDocument extends BaseDocument {
      *
      * 🛑 The site-wide fallback `resolveDisplayedUpiId` uses when a seller has
      * no UPI configured or the store is admin-owned — i.e. what a buyer paying
-     * manually is told to pay INTO. It was being silently erased on every
-     * settings save until 2026-10-19: `buildFullPayload()` writes the whole
-     * `contact` group and simply did not carry this key, so saving any
-     * unrelated tab blanked it and manual payments lost their destination.
-     * Any key added here must also be added to that function's state and
-     * payload (Root Cause #76).
+     * manually is told to pay INTO. It was lost on settings saves until
+     * 2026-10-19, when `AdminSiteSettingsView` grew state, a hydrate, a payload
+     * entry and a control for it.
+     *
+     * 🛑 CORRECTED 2026-10-31 — the MECHANISM this comment used to name was
+     * wrong, and it had propagated to two other comments in this file. It read
+     * *"`buildFullPayload()` writes the whole `contact` group and simply did not
+     * carry this key, so saving any unrelated tab blanked it"*. It does not:
+     * `SiteSettingsRepository.updateSingleton` writes
+     * `.update(toDottedPaths(updateData))`, so a group is flattened to leaf
+     * paths and **an omitted key is never touched**. Omission is
+     * non-destructive.
+     *
+     * The real failure is the MIRROR: a key that `buildFullPayload` DOES send
+     * but the hydrate step never reads back. Its React state keeps its literal
+     * default, and the next save of any tab writes that default over whatever
+     * was stored. So all four of **state · hydrate · payload · control** are
+     * still required for every key here — the reason is "a default would be
+     * written", not "the key would be deleted".
      */
     upiVpa?: string;
     /** WhatsApp number with country code (market-specific) */
@@ -615,9 +646,10 @@ export interface SiteSettingsDocument extends BaseDocument {
     /**
      * Razorpay (client-side card/UPI/netbanking modal).
      *
-     * 🛑 Checked BEFORE `phonepeEnabled` in `providers.config.ts` — exactly
-     * one online gateway can be registered per process, so the order is the
-     * tie-break when both are on, not a precedence anyone should rely on.
+     * 🛑 FIRST in `providers.config.ts`'s resolution chain — exactly one online
+     * gateway can be registered per process, so the order
+     * (**razorpay → phonepe → cashfree → manual**) is the tie-break when more
+     * than one is on, not a precedence anyone should rely on.
      * Turning this on with no credentials makes the provider constructor
      * throw at boot; `resolveKeys()` treats a seeded `*_PLACEHOLDER` as
      * absent, so a placeholder reads as "unconfigured" rather than failing
@@ -625,6 +657,24 @@ export interface SiteSettingsDocument extends BaseDocument {
      */
     razorpayEnabled: boolean;
     phonepeEnabled: boolean;
+    /**
+     * Cashfree Payments (PG Orders API, `CashfreeProvider`).
+     *
+     * LAST of the three online gateways in the resolution chain, so it runs
+     * only when both `razorpayEnabled` and `phonepeEnabled` are false.
+     *
+     * 🛑 It exists because Razorpay and PhonePe both name "Bidding/Auction
+     * houses" in their prohibited-merchant lists and this marketplace's
+     * `collector-drop` listing type is competitive bidding. Adding the gateway
+     * does NOT by itself open any listing type to online payment —
+     * `blockedPaymentMethods` on each checkout rule is unchanged and is a
+     * separate, provider-aware change.
+     *
+     * Needs App ID + Secret Key under Credentials (or `CASHFREE_APP_ID` /
+     * `CASHFREE_SECRET_KEY`); the constructor throws at boot on empty
+     * credentials, same as Razorpay's.
+     */
+    cashfreeEnabled: boolean;
     upiManualEnabled: boolean;
     codEnabled: boolean;
     /**
@@ -864,13 +914,24 @@ export interface SiteSettingsDocument extends BaseDocument {
    * (`useSearchIndex`).
    *
    * 🛑 It is NOT in `payment` or any other existing group, and that is
-   * defensive rather than tidy. `AdminSiteSettingsView.buildFullPayload`
-   * writes `payment: { phonepeEnabled, upiManualEnabled, codEnabled,
-   * otpCheckoutThreshold }` — the WHOLE group, from four pieces of form
-   * state — so any fifth key in there is silently erased the next time an
-   * admin saves anything on that page (Root Cause #76). A kill switch that a
-   * routine save turns back on is worse than none, because it fails in the
-   * direction of the thing it exists to stop.
+   * defensive rather than tidy — but the REASON stated here was wrong until
+   * 2026-10-31 and is corrected below.
+   *
+   * It read: *"`buildFullPayload` writes `payment: { phonepeEnabled,
+   * upiManualEnabled, codEnabled, otpCheckoutThreshold }` — the WHOLE group,
+   * from four pieces of form state — so any fifth key in there is silently
+   * erased"*. Both halves were wrong. The key list was stale (it already wrote
+   * `razorpayEnabled` and `codMaxOrderValue` too, and now `cashfreeEnabled`),
+   * and the mechanism does not exist: `updateSingleton` writes
+   * `.update(toDottedPaths(updateData))`, so a group is flattened to LEAF paths
+   * and an omitted key is never touched.
+   *
+   * The hazard that IS real is the mirror — a key the payload SENDS but the
+   * hydrate never reads back gets its React default written over the stored
+   * value on the next save of any tab. A kill switch that a routine save turns
+   * back on is worse than none, because it fails in the direction of the thing
+   * it exists to stop; being outside a form-managed group removes that risk
+   * entirely rather than relying on four edits staying in step.
    *
    * ## 🛑 Default ON — the opposite polarity to `chat.enabled`
    *
@@ -898,11 +959,18 @@ export interface SiteSettingsDocument extends BaseDocument {
    * It is NOT in `notificationChannels.whatsapp`, which governs the platform's
    * outbound order-update templates — a different channel with a different cost
    * (per-template spend vs. a public CSV), owned by the platform rather than
-   * pointed at by each seller. Nor is it in `payment` or any other group that
-   * `AdminSiteSettingsView.buildFullPayload` rewrites WHOLE from form state: a
-   * fifth key in such a group is silently erased the next time an admin saves
-   * anything on that page (Root Cause #76), and a kill switch that a routine
-   * save turns back on fails in the direction of the thing it exists to stop.
+   * pointed at by each seller. Nor is it in `payment` or any other group
+   * `AdminSiteSettingsView.buildFullPayload` assembles from form state.
+   *
+   * 🛑 CORRECTED 2026-10-31 — this used to say *"a fifth key in such a group is
+   * silently erased the next time an admin saves anything on that page"*, which
+   * is not a thing that happens: `updateSingleton` writes
+   * `.update(toDottedPaths(updateData))`, so an omitted key is left untouched.
+   * The hazard is the mirror — a key the payload sends but the hydrate never
+   * reads back has its React default written over the stored value — and a kill
+   * switch that a routine save turns back on fails in the direction of the thing
+   * it exists to stop. Staying outside a form-managed group removes that risk
+   * rather than relying on state/hydrate/payload/control staying in step.
    *
    * ## 🛑 Default ON — reader tests `!== false`
    *
@@ -1294,6 +1362,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   payment: {
     razorpayEnabled: false,
     phonepeEnabled: false,
+    cashfreeEnabled: false,
     upiManualEnabled: true,
     codEnabled: true,
     codMaxOrderValue: COD_MAX_ORDER_VALUE_FALLBACK,

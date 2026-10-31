@@ -72,6 +72,20 @@ export {
 // Payment (PhonePe) — disabled by default; siteSettings.payment.phonepeEnabled turns it on
 export { PhonePeProvider } from "./providers/payment-phonepe/index";
 export type { PhonePeConfig } from "./providers/payment-phonepe/index";
+
+// Payment (Cashfree) — disabled by default; siteSettings.payment.cashfreeEnabled turns it on.
+// Bare `fetch`, no SDK, no npm dependency. `order_amount` is decimal rupees, so the
+// adapter converts at its own boundary and keeps the contract in the smallest unit.
+export { CashfreeProvider } from "./providers/payment-cashfree/index";
+export type { CashfreeConfig } from "./providers/payment-cashfree/index";
+export {
+  packCashfreeWebhookSignature,
+  verifyCashfreeWebhookSignature,
+  CASHFREE_WEBHOOK_SIGNATURE_HEADER,
+  CASHFREE_WEBHOOK_TIMESTAMP_HEADER,
+  CASHFREE_SESSION_METADATA_KEY,
+} from "./providers/payment-cashfree/index";
+
 export { rupeesToPaise, paiseToRupees } from "./core/money";
 
 // Payment (manual) — the default provider

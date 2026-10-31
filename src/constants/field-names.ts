@@ -1282,6 +1282,7 @@ export const SITE_SETTINGS_FIELDS = {
   PAYMENT_FIELDS: {
     RAZORPAY_ENABLED: "payment.razorpayEnabled",
     PHONEPE_ENABLED: "payment.phonepeEnabled",
+    CASHFREE_ENABLED: "payment.cashfreeEnabled",
     UPI_MANUAL_ENABLED: "payment.upiManualEnabled",
     COD_ENABLED: "payment.codEnabled",
   },

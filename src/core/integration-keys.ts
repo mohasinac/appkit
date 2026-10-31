@@ -37,6 +37,15 @@ export interface ResolvedKeys {
   razorpayKeySecret: string;
   /** Webhook signing secret. Optional in practice: without it `verifyWebhook()` fails closed and the buyer-present /verify path still works. */
   razorpayWebhookSecret: string;
+  // Cashfree Payments (PG Orders API)
+  /** `x-client-id`. 🛑 NOT publishable, unlike `razorpayKeyId` — never hand this to a browser. */
+  cashfreeAppId: string;
+  /** `x-client-secret`. Server-only. */
+  cashfreeSecretKey: string;
+  /** "sandbox" | "production" — selects Cashfree's base URL. Defaults to sandbox. */
+  cashfreeEnvironment: string;
+  /** Webhook signing secret. Without it `verifyWebhook()` fails closed, which only disables the webhook fallback. */
+  cashfreeWebhookSecret: string;
   // Resend email
   resendApiKey: string;
   // WhatsApp Business Cloud (Twilio legacy key)
@@ -58,6 +67,10 @@ const EMPTY_KEYS: ResolvedKeys = {
   razorpayKeyId: "",
   razorpayKeySecret: "",
   razorpayWebhookSecret: "",
+  cashfreeAppId: "",
+  cashfreeSecretKey: "",
+  cashfreeEnvironment: "",
+  cashfreeWebhookSecret: "",
   resendApiKey: "",
   whatsappApiKey: "",
   whatsappPhoneNumberId: "",
@@ -118,6 +131,21 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
       db.phonepeWebhookUsername || process.env.PHONEPE_WEBHOOK_USERNAME || "",
     phonepeWebhookPassword:
       db.phonepeWebhookPassword || process.env.PHONEPE_WEBHOOK_PASSWORD || "",
+    /*
+     * Cashfree. Through `usable()` like Razorpay's, not bare like PhonePe's —
+     * the seed writes `*_PLACEHOLDER` into `credentials`, and a placeholder
+     * reaching Cashfree's API produces an authentication failure mid-checkout
+     * instead of cleanly falling back to the env var. `CashfreeProvider`'s
+     * constructor throws on empty credentials, so an enabled flag with no real
+     * key fails LOUDLY at boot rather than at the moment a buyer tries to pay.
+     */
+    cashfreeAppId: usable(db.cashfreeAppId) || process.env.CASHFREE_APP_ID || "",
+    cashfreeSecretKey:
+      usable(db.cashfreeSecretKey) || process.env.CASHFREE_SECRET_KEY || "",
+    cashfreeEnvironment:
+      usable(db.cashfreeEnvironment) || process.env.CASHFREE_ENVIRONMENT || "sandbox",
+    cashfreeWebhookSecret:
+      usable(db.cashfreeWebhookSecret) || process.env.CASHFREE_WEBHOOK_SECRET || "",
     resendApiKey: db.resendApiKey || process.env.RESEND_API_KEY || "",
     whatsappApiKey: db.whatsappApiKey || process.env.WHATSAPP_API_KEY || "",
     whatsappPhoneNumberId:
