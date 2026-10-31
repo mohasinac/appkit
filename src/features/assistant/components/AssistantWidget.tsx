@@ -10,6 +10,7 @@ import { Heading, Text } from "../../../ui/components/Typography";
 import { Button } from "../../../ui/components/Button";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { useFormShellState } from "../../../ui/forms/FormShell";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { useHandMode } from "../../../_internal/client/hand-mode/HandModeProvider";
@@ -190,6 +191,7 @@ export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidget
                   onChange={setQuestion}
                   maxLength={2000}
                 />
+                <FormErrorSummary />
                 <Button
                   type="submit"
                   isLoading={ask.isPending}
