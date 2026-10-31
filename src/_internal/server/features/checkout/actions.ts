@@ -2220,7 +2220,21 @@ export async function createCheckoutOrderAction(
    * capture, taking the buyer's money and then refusing the order. Pre-capture
    * is the only safe place for this, and the method is decided here.
    */
-  assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod);
+  /*
+   * 🛑 The third argument is NOT optional in effect, even though its type
+   * allows omission. The gate FAILS CLOSED: a listing type carrying
+   * `requiresGatewayPermission` (collector-drop, random-lots) is refused
+   * online payment unless the ACTIVE gateway declares it accepts that type.
+   * Razorpay and PhonePe declare nothing, because both name "Bidding/Auction
+   * houses" in their prohibited-merchant lists; only Cashfree opens them.
+   *
+   * Read off the registered provider rather than compared against the string
+   * "cashfree", so a second permitted gateway is a change to that adapter and
+   * not to this call site (Root Cause #61).
+   */
+  assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod, {
+    gatewayAccepts: getProviders().payment?.acceptsRestrictedListingTypes,
+  });
   /*
    * 🛑 The second axis needs its own assertion, and omitting it would have
    * been a silent regression of a rule that already exists.

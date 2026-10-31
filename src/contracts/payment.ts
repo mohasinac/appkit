@@ -171,6 +171,35 @@ export interface GatewayPaymentRecord {
 export abstract class IPaymentProvider {
   /** Short discriminator used by admin dev tooling to confirm which provider is registered. */
   abstract readonly name: string;
+
+  /**
+   * Listing types this gateway's own merchant terms permit, where the default
+   * is that they do NOT.
+   *
+   * 🛑 FAIL-CLOSED, and that direction is the whole point. Razorpay and
+   * PhonePe both name *"Bidding/Auction houses"* in their prohibited-merchant
+   * lists; Cashfree's published terms do not. The penalty for getting it wrong
+   * is not a declined transaction — it is the merchant account frozen with the
+   * settlement balance held, which takes down payments for EVERY listing type,
+   * not just the offending one. So a gateway is assumed to prohibit a
+   * restricted type until it says otherwise, and a new adapter that forgets to
+   * declare this is safe by omission rather than dangerous by omission.
+   *
+   * 🛑 Declared HERE, on the provider, rather than tested by name at the gate.
+   * `activeGateway === "cashfree"` would restate the compliance rule at every
+   * call site and go quietly wrong the day a second permitted gateway is
+   * added — the ten-hand-written-enumerations shape of Root Cause #61. The
+   * gateway is the thing that knows what its contract allows, so it is the
+   * thing that declares it.
+   *
+   * 🛑 This is NOT the same question as `supportsSplit` in the consumer's
+   * gateway registry, and the two must not be collapsed. Razorpay Route splits
+   * perfectly well AND prohibits auctions; Cashfree happens to do both. One is
+   * a capability, the other is a permission.
+   *
+   * Empty for every provider that has not been checked against its terms.
+   */
+  readonly acceptsRestrictedListingTypes: readonly string[] = [];
   abstract createOrder(
     amount: number,
     currency: string,

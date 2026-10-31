@@ -46,6 +46,28 @@ import {
 import { getCartItemMemberIds } from "../line-members";
 import { getCategoryRule, getListingRule } from "./_registry";
 
+/**
+ * What the gate needs to know about the gateway that would collect.
+ *
+ * 🛑 Passed in rather than read from the provider registry, because this
+ * module is isomorphic (`@tag access:isomorphic`) and the registry is
+ * server-only. The server callers resolve it; nothing else may.
+ */
+export interface PaymentGateContext {
+  /**
+   * `IPaymentProvider.acceptsRestrictedListingTypes` for the ACTIVE gateway.
+   *
+   * 🛑 `undefined` means "the caller did not say", and the gate treats that as
+   * ACCEPTS NOTHING. That is deliberate: the cost of wrongly permitting is the
+   * merchant account frozen with the settlement balance held — which takes
+   * down payments for every listing type at once — and the cost of wrongly
+   * refusing is a buyer told to use bank transfer. A new call site that
+   * forgets this argument is therefore merely inconvenient rather than
+   * account-ending.
+   */
+  gatewayAccepts?: readonly string[];
+}
+
 /** Why one method is unavailable, and which listing said so. */
 export interface BlockedMethod {
   /** The listing's own wording when it has one, else a generated sentence. */
@@ -64,8 +86,10 @@ export interface BlockedMethod {
 export function blockedMethodsForCart(
   items: readonly CartItemDocument[],
   productById: ReadonlyMap<string, ProductDocument>,
+  ctx: PaymentGateContext = {},
 ): Map<CheckoutPaymentMethod, BlockedMethod> {
   const blocked = new Map<CheckoutPaymentMethod, BlockedMethod>();
+  const gatewayAccepts = new Set(ctx.gatewayAccepts ?? []);
 
   const claim = (
     methods: readonly CheckoutPaymentMethod[] | undefined,
@@ -117,6 +141,28 @@ export function blockedMethodsForCart(
       const type = (product.listingType ?? "standard") as ListingType;
       const rule = getListingRule(type);
       claim(rule.blockedPaymentMethods, product.title ?? type, rule.blockedPaymentMessage);
+
+      /*
+       * The gateway half. A type carrying `requiresGatewayPermission` may be
+       * paid online ONLY by a gateway whose own terms permit it — Razorpay and
+       * PhonePe name "Bidding/Auction houses" in their prohibited lists,
+       * Cashfree does not.
+       *
+       * 🛑 Claimed as a SEPARATE reason with its own wording, not folded into
+       * the rule's `blockedPaymentMessage`. That message explains the listing
+       * ("winner assignment waits on confirmed payment") and would be a lie
+       * here, where the listing is fine and the acquirer is the obstacle. A
+       * buyer who is told the wrong reason picks the wrong remedy.
+       */
+      if (rule.requiresGatewayPermission && !gatewayAccepts.has(type)) {
+        claim(
+          ["online"],
+          product.title ?? type,
+          `"${product.title ?? type}" cannot be paid for online with the payment ` +
+            `provider currently active on this store. Use a direct bank/UPI ` +
+            `transfer, or cash on pickup where it is offered.`,
+        );
+      }
     }
   }
 
@@ -143,6 +189,7 @@ export function assertPaymentMethodAllowed(
   items: readonly CartItemDocument[],
   productById: ReadonlyMap<string, ProductDocument>,
   paymentMethod: CheckoutPaymentMethod | undefined,
+  ctx: PaymentGateContext = {},
 ): void {
   if (!paymentMethod) return;
 
@@ -154,7 +201,7 @@ export function assertPaymentMethodAllowed(
    */
   if (paymentMethod === "admin_bypass") return;
 
-  const blocked = blockedMethodsForCart(items, productById);
+  const blocked = blockedMethodsForCart(items, productById, ctx);
   const offender = blocked.get(paymentMethod);
   if (!offender) return;
 

@@ -100,6 +100,27 @@ export interface ListingCheckoutRule {
    * as prize-draw's does.
    */
   blockedPaymentMessage?: string;
+  /**
+   * This type may only be paid for online by a gateway whose own merchant
+   * terms permit it.
+   *
+   * 🛑 Separate from `blockedPaymentMethods` because it is a DIFFERENT KIND of
+   * rule, and folding the two was the mistake worth avoiding.
+   * `blockedPaymentMethods` is a statement about the LISTING — a unique lot has
+   * no second-highest bidder, so a pay-later method puts the seller's goods at
+   * risk whatever gateway is registered. This is a statement about the
+   * GATEWAY — Razorpay and PhonePe name "Bidding/Auction houses" in their
+   * prohibited lists and Cashfree does not, so the same listing is payable or
+   * not depending on who is collecting.
+   *
+   * A static array cannot express "depends on who is collecting", which is why
+   * `"online"` moved out of `blockedPaymentMethods` on the two types that set
+   * this and `cod`/`emi` stayed behind.
+   *
+   * 🛑 The gate FAILS CLOSED on it: a caller that does not say which gateway
+   * is active gets the refusal. See `IPaymentProvider.acceptsRestrictedListingTypes`.
+   */
+  requiresGatewayPermission?: boolean;
 
   /**
    * Return the grouping key used by the order splitter. Items with the same

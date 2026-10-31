@@ -31,10 +31,23 @@ export const collectorDropRule: ListingCheckoutRule = {
    * accept the non-payment risk on their own lots, and they do not get to
    * accept the risk of losing the merchant account. `emi` goes for the same
    * reason as `online` — it settles through the same acquirer.
+   *
+   * 🛑 `online` MOVED OUT of this list on 2026-10-31, to
+   * `requiresGatewayPermission` below. Everything above is still true of
+   * Razorpay and PhonePe and is kept for that reason — but it was never true
+   * of every acquirer, only of the ones whose terms name bidding. Cashfree's
+   * published terms do not, so "online is prohibited here" was being stated
+   * as a property of the LISTING when it is a property of WHO IS COLLECTING.
+   *
+   * `cod` and `emi` stay, and the distinction is the point: those are about
+   * the unique lot (no second-highest bidder behind a pay-later default, and
+   * EMI settles through an acquirer anyway), so they hold whatever gateway is
+   * registered.
    */
-  blockedPaymentMethods: ["online", "cod", "emi"],
+  blockedPaymentMethods: ["cod", "emi"],
+  requiresGatewayPermission: true,
   blockedPaymentMessage:
-    "A collector drop win is settled by direct bank/UPI transfer or cash on pickup — card and online payment are not available for collector drops.",
+    "A collector drop win is settled by direct bank/UPI transfer or cash on pickup — pay-later methods are not available for collector drops.",
   canMergeWithSameProduct: false,
   refundPolicy: { full: true, partial: false, partialGranularity: "none" },
   splitKey: (item: CartItemDocument) => `collectorDrop:${item.itemId}`,

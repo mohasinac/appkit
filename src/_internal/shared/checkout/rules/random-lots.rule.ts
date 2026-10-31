@@ -37,7 +37,24 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  *
  * `admin_bypass` stays usable for QA regardless.
  */
-const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", "cod", "emi"];
+/*
+ * 🛑 `online` MOVED OUT of this list on 2026-10-31, to
+ * `requiresGatewayPermission` on the rule. Everything above remains true of
+ * Razorpay and PhonePe — but it was a statement about WHO IS COLLECTING
+ * wearing the shape of a statement about the listing.
+ *
+ * The owner's framing is what reopens it: a random lot is **a booster box**.
+ * Every numbered slot is a named prize with an image
+ * (`lotterySlotWriteSchema`), so every buyer receives a real item and nobody
+ * pays for nothing — consideration buying A GOOD, NOT A CHANCE. That is a
+ * product sale and sits outside the gambling clause Cashfree's terms do name.
+ * The `reveal` mode is the same mechanic with the slot chosen for you.
+ *
+ * `cod` and `emi` stay for the original reason, which the acquirer question
+ * does not touch: winner assignment triggers on CONFIRMED payment, and a
+ * pay-later method does not guarantee that happens before the draw.
+ */
+const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "emi"];
 
 /**
  * The refusal, kept VERBATIM when this check moved out of `preflightChecks`
@@ -50,7 +67,7 @@ const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["online", 
  * than abandon the entry.
  */
 const RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE =
-  "Random-lots entries are paid by direct bank/UPI transfer or cash on pickup — card and online payment are not available for random lots.";
+  "A random lot is paid for up front — winner assignment waits on confirmed payment, so pay-later methods are not available for random lots.";
 
 export const randomLotsRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
@@ -60,6 +77,7 @@ export const randomLotsRule: ListingCheckoutRule = {
   maxLinesPerOrder: RANDOM_LOTS_MAX_REVEALS_PER_ORDER,
   refundPolicy: { full: false, partial: false, partialGranularity: "none" },
   blockedPaymentMethods: RANDOM_LOTS_BLOCKED_PAYMENT_METHODS,
+  requiresGatewayPermission: true,
   blockedPaymentMessage: RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE,
 
   splitKey: (item: CartItemDocument) => `random-lots:${item.itemId}`,

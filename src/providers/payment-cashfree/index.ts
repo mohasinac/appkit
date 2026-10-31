@@ -301,6 +301,29 @@ export function verifyCashfreeWebhookSignature(
 
 export class CashfreeProvider extends IPaymentProvider {
   readonly name = "cashfree";
+
+  /*
+   * 🛑 The reason this adapter exists. Cashfree's published terms
+   * (Attachment A, "List of Negative, Risky and Restricted Categories of
+   * Business") name gaming/gambling — lottery tickets, sports bets, online
+   * gambling enrolment — and do NOT name auctions, bidding, or auction
+   * houses anywhere. Razorpay and PhonePe both name "Bidding/Auction houses"
+   * explicitly, which is why neither declares these.
+   *
+   * `random-lots` is included on the owner's framing, recorded here because
+   * it is the part a reader will want to challenge: every numbered slot is a
+   * named prize with an image (`lotterySlotWriteSchema`), so every buyer
+   * receives a real item and nobody pays for nothing. That is consideration
+   * buying A GOOD, NOT A CHANCE — a blind box, which is a product sale and
+   * sits outside the gambling clause. The `reveal` mode is the same mechanic
+   * with the slot chosen for you.
+   *
+   * 🛑 Verified against the published terms, NOT against a categorisation in
+   * writing from Cashfree naming our types. Getting that in writing before
+   * real money moves is the outstanding item; a published list is evidence
+   * about the policy, not a decision about this merchant.
+   */
+  override readonly acceptsRestrictedListingTypes = ["collector-drop", "random-lots"] as const;
   private readonly baseUrl: string;
   private readonly appId: string;
   private readonly secretKey: string;
