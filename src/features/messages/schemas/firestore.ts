@@ -34,9 +34,15 @@ export type ConversationStatus = "active" | "archived";
 /**
  * "assistant" widens the original two-human shape (buyer <-> seller) to
  * buyer <-> assistant — same two-participant invariant, just naming who the
- * other side is. `assertParticipant` / `otherParticipant` / `sendMessage` in
- * `actions.ts` are id-based and need no change for this to work; only
- * `openConversationWithAssistant` (new) builds a conversation that uses it.
+ * other side is.
+ *
+ * 🛑 No current writer. `openConversationWithAssistant`, the one function
+ * that built a conversation using this value, was removed 2026-10-31 — the
+ * customer assistant feature dropped the shared inbox as its storage in
+ * favour of its own `assistantHistory/{userId}` document. The value is left
+ * in the union rather than removed: deleting a `ParticipantRole` member is a
+ * wider, unrelated change, and `ConversationsInboxView`'s label-derivation
+ * switch stays correct whether or not this branch is ever reached again.
  */
 export type ParticipantRole = "buyer" | "seller" | "assistant";
 

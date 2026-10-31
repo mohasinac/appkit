@@ -2110,7 +2110,6 @@ export {
 export {
   createOrOpenConversation,
   openConversationWithSeller,
-  openConversationWithAssistant,
   listConversationsForUser,
   listMessagesForConversation,
   sendMessage,
@@ -2124,6 +2123,18 @@ export {
   stripPii as stripChatPii,
   type SendMessageInput,
 } from "./_internal/server/features/messages/actions";
+/**
+ * The customer assistant — a floating-widget chatbot with its own storage
+ * (`assistantHistory/{userId}`), deliberately NOT riding the buyer<->seller
+ * inbox above. `answerAssistantQuestion` is the ONE entry point; everything
+ * else the feature needs (routing, redaction, handles, budget, quorum,
+ * escalation, the tool registry) is internal wiring.
+ */
+export {
+  answerAssistantQuestion,
+  type AssistantUser,
+  type AssistantAnswer,
+} from "./_internal/server/features/assistant/actions";
 export {
   resolveCodeAssetForOrder,
   codeAssetHeaders,

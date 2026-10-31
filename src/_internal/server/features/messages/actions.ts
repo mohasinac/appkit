@@ -15,7 +15,6 @@ import {
   deleteAllMessages,
   listAllAttachmentUrls,
 } from "../../../../features/messages/repository/messages.repository";
-import { ASSISTANT_PARTICIPANT_ID } from "../../../../features/messages/schemas/firestore";
 import type {
   ConversationDocument,
   MessageDocument,
@@ -147,31 +146,17 @@ export async function openConversationWithSeller(
   return createOrOpenConversation(buyerId, store.ownerId);
 }
 
-/**
- * The buyer<->assistant conversation shape (A2). Deliberately NOT routed
- * through `createOrOpenConversation` — that function requires
- * `userRepository.findById(otherUserId)` to resolve to a real user and
- * throws `NotFoundError` otherwise, which is correct for a real seller but
- * wrong here: `ASSISTANT_PARTICIPANT_ID` is a synthetic id with no `users`
- * document, by design (see the constant's own doc comment). The repository
- * methods below (`findBetween`/`createBetween`) are pure id operations with
- * no such lookup, so this mirrors `createOrOpenConversation`'s shape without
- * inheriting the one check that does not apply.
+/*
+ * 🛑 `openConversationWithAssistant` was REMOVED 2026-10-31 — the customer
+ * assistant feature dropped the shared buyer<->seller inbox as its storage
+ * (owner's instruction) in favour of its own `assistantHistory/{userId}`
+ * document (`_internal/server/features/assistant/history-store.ts`). This
+ * was its only caller. `ASSISTANT_PARTICIPANT_ID` and the `"assistant"`
+ * `ParticipantRole` value are left in place deliberately — removing a type
+ * union member is a wider, unrelated change, and `ConversationsInboxView`'s
+ * label-derivation fix stays correct whether or not that branch is ever
+ * reached again.
  */
-export async function openConversationWithAssistant(
-  buyerId: string,
-): Promise<ConversationDocument> {
-  await assertChatEnabled();
-
-  const existing = await conversationsRepository.findBetween(buyerId, ASSISTANT_PARTICIPANT_ID);
-  if (existing) return existing;
-
-  const roles: Record<string, ParticipantRole> = {
-    [buyerId]: "buyer",
-    [ASSISTANT_PARTICIPANT_ID]: "assistant",
-  };
-  return conversationsRepository.createBetween(buyerId, ASSISTANT_PARTICIPANT_ID, roles);
-}
 
 export async function listConversationsForUser(
   userId: string,

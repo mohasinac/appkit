@@ -5934,6 +5934,12 @@ export { AutoBreadcrumbs } from "./features/layout/AutoBreadcrumbs";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BackToTop - Shared export for back to top.
 export { BackToTop } from "./features/layout/BackToTop";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AssistantWidget - the site-wide floating "chat with us" bubble for the customer assistant.
+export { AssistantWidget, type AssistantWidgetProps } from "./features/assistant/components/AssistantWidget";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AssistantPageView - the assistant's dedicated full-chat page, the widget's "expand" target.
+export { AssistantPageView } from "./features/assistant/components/AssistantPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BottomActions - Shared export for bottom actions. @deprecated — alias of SideActionDock.
 export { BottomActions } from "./features/layout/index";

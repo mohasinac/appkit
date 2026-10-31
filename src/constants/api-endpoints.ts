@@ -601,6 +601,14 @@ export const MESSAGE_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
+// Assistant — the customer-assistant floating widget / full-chat page
+// ---------------------------------------------------------------------------
+
+export const ASSISTANT_ENDPOINTS = {
+  ASK: "/api/assistant/ask",
+} as const;
+
+// ---------------------------------------------------------------------------
 // Events
 // ---------------------------------------------------------------------------
 
@@ -995,6 +1003,7 @@ export const API_ENDPOINTS = {
   CONTACT: CONTACT_ENDPOINTS,
   ADS: AD_ENDPOINTS,
   MESSAGES: MESSAGE_ENDPOINTS,
+  ASSISTANT: ASSISTANT_ENDPOINTS,
   EVENTS: EVENT_ENDPOINTS,
   LOTTERY: LOTTERY_ENDPOINTS,
   FAQS: FAQ_ENDPOINTS,
