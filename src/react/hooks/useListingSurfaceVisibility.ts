@@ -5,7 +5,9 @@ import type { ListingType } from "../../features/products/types/index";
 import {
   ALL_LISTING_TYPES,
   isListingSurfaceVisible,
+  isListingTypeListed,
   isCountedSurfaceVisible,
+  type FlagValue,
   type SurfaceCountSnapshot,
 } from "../../_internal/shared/listing-types/feature-flags";
 
@@ -54,15 +56,25 @@ export type ListingSurfaceVisibility = Record<ListingType, boolean> & {
 
 export function useListingSurfaceVisibility(): ListingSurfaceVisibility {
   const { data } = useSiteSettings<{
-    listings?: { listingTypes?: Partial<Record<ListingType, boolean>> };
+    listings?: { listingTypes?: Partial<Record<ListingType, FlagValue>> };
     surfaceCounts?: SurfaceCountSnapshot;
   }>();
 
   const settings = { listings: { listingTypes: data?.listings?.listingTypes } };
   const counts = data?.surfaceCounts;
 
+  /*
+   * 🛑 `isListingSurfaceVisible` alone is not "should this be linked" — it
+   * answers enabled-and-has-stock, which stays `true` for `"unlisted"` (an
+   * unlisted type's own pages must keep serving at 200). This hook decides
+   * whether a nav/footer LINK renders, so it also requires `isListingTypeListed`
+   * — the one place "unlisted" actually withdraws a link rather than a page.
+   */
   const flags = Object.fromEntries(
-    ALL_LISTING_TYPES.map((t) => [t, isListingSurfaceVisible(t, settings, counts)]),
+    ALL_LISTING_TYPES.map((t) => [
+      t,
+      isListingSurfaceVisible(t, settings, counts) && isListingTypeListed(t, settings),
+    ]),
   ) as Record<ListingType, boolean>;
 
   return {

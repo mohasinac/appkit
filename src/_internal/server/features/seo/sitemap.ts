@@ -19,9 +19,13 @@ import { safeRead } from "../../../../errors/safe-read";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import {
   ALL_BROWSE_PAGES,
+  ALL_LISTING_TYPES,
   browsePageForPath,
-  isBrowsePageEnabled,
+  isBrowsePageListed,
+  isListingTypeEnabled,
+  isListingTypeListed,
 } from "../../../shared/listing-types/feature-flags";
+import { pluginFor } from "../../../shared/listing-types/_registry";
 import {
   closedSurfacePrefixes,
   hiddenSurfaceRoutes,
@@ -812,9 +816,37 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     // on a transient Firestore error is the expensive direction of this guess.
     fallback: null,
   });
+  /*
+   * 🛑 `isBrowsePageListed`, not `isBrowsePageEnabled` — this `closed` set is
+   * the SITEMAP's own filter (separate from `hiddenSurfacePaths`/
+   * `closedPrefixes` below, which deliberately mirror the edge 404 gate and
+   * must not diverge from it). `"unlisted"` sections keep serving at 200 —
+   * the edge gate stays on `isBrowsePageEnabled` semantics via
+   * `closedSurfacePrefixes` — they just stop being advertised here.
+   */
   const closed = new Set(
-    ALL_BROWSE_PAGES.filter((p) => !isBrowsePageEnabled(p, settings)),
+    ALL_BROWSE_PAGES.filter((p) => !isBrowsePageListed(p, settings)),
   );
+  /*
+   * The listing-type equivalent of `closed` above — a type that is enabled
+   * (still serves at 200, so NOT in `hiddenSurfaceRoutes`) but set to
+   * `"unlisted"` loses its sitemap entry without losing its edge-gate status.
+   * Mirrors `hiddenSurfaceRoutes`' own routeOf/second-pass shape so a shared
+   * browse route (`art`+`stickers` -> `/art`) only withdraws once every type
+   * on it is unlisted, not the moment the first one is.
+   */
+  const routeOfType = (type: (typeof ALL_LISTING_TYPES)[number]): string =>
+    String(pluginFor(type).browseRoute ?? "");
+  const unlistedTypeRoutes = new Set<string>();
+  for (const type of ALL_LISTING_TYPES) {
+    if (!isListingTypeEnabled(type, settings)) continue; // already in hiddenSurfacePaths
+    if (isListingTypeListed(type, settings)) continue;
+    const route = routeOfType(type);
+    if (route) unlistedTypeRoutes.add(route);
+  }
+  for (const type of ALL_LISTING_TYPES) {
+    if (isListingTypeListed(type, settings)) unlistedTypeRoutes.delete(routeOfType(type));
+  }
 
   /*
    * The same treatment for a listing-type surface that is switched off or
@@ -863,7 +895,9 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     const path = entry.url.startsWith("http")
       ? new URL(entry.url).pathname
       : entry.url;
-    if (hiddenSurfacePaths.has(path.replace(/\/+$/, "") || "/")) return false;
+    const normalisedPath = path.replace(/\/+$/, "") || "/";
+    if (hiddenSurfacePaths.has(normalisedPath)) return false;
+    if (unlistedTypeRoutes.has(normalisedPath)) return false;
     if (isUnderClosedPrefix(path, closedPrefixes)) return false;
     if (closed.size === 0) return true;
     const page = browsePageForPath(path);

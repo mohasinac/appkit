@@ -6987,10 +6987,17 @@ export {
   isListingSurfaceVisible,
   isCountedSurfaceVisible,
   visibleListingTypes,
+  // "Listed" gates (open / unlisted / closed) — answers "show this in nav/
+  // footer/the sitemap", distinct from the *Enabled siblings above, which
+  // answer "does this 404." Same barrel choice.
+  isListingTypeListed,
+  isCategoryTypeListed,
+  isBrowsePageListed,
 } from "./_internal/shared/listing-types/feature-flags";
 export type {
   BrowsePageKey,
   SurfaceCountSnapshot,
+  FlagValue,
 } from "./_internal/shared/listing-types/feature-flags";
 // Content tagging — does a stored document's own governing flag still allow
 // it to be shown. Same barrel choice as the feature-flag helpers above.

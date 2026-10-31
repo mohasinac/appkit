@@ -1109,14 +1109,21 @@ export interface SiteSettingsDocument extends BaseDocument {
    * compile error — this interface is not, and historically drifted: it still
    * listed 8 types after the union reached 10 (`art` and `stickers` missing),
    * which is Root Cause #58's shape. Add new types to that Record, not here.
+   *
+   * 🛑 A third value, `"unlisted"`, sits between `true` and `false`: the type
+   * stays enabled (`isListingTypeEnabled` returns `true` for it — nothing
+   * 404s, a direct link a customer already holds keeps working) but is
+   * dropped from nav/footer/sitemap (`isListingTypeListed` returns `false`).
+   * Existing `!== false` comparisons are untouched by this addition, which is
+   * exactly why it is additive rather than a breaking change to every reader.
    */
   listings?: {
-    listingTypes?: Partial<Record<string, boolean>>;
+    listingTypes?: Partial<Record<string, boolean | "unlisted">>;
     categoryTypes?: {
-      category?: boolean;
-      sublisting?: boolean;
-      brand?: boolean;
-      bundle?: boolean;
+      category?: boolean | "unlisted";
+      sublisting?: boolean | "unlisted";
+      brand?: boolean | "unlisted";
+      bundle?: boolean | "unlisted";
     };
     /**
      * Which public BROWSE SECTIONS are open — `/categories`, `/brands`,
@@ -1136,7 +1143,7 @@ export interface SiteSettingsDocument extends BaseDocument {
      * when the two drift (it listed 8 types after the union reached 10).
      * Add a new section THERE, not here.
      */
-    browsePages?: Partial<Record<string, boolean>>;
+    browsePages?: Partial<Record<string, boolean | "unlisted">>;
     /**
      * Public paths withdrawn wholesale — closed including every descendant.
      *

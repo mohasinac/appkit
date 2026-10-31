@@ -25,11 +25,21 @@ import type { CategoryType } from "../../../features/categories/types/index";
 // import chain, so this stays safe in the client bundle (appkit Export Rules).
 import { ROUTES } from "../../../next/routing/route-map";
 
+/**
+ * Three states, not two. `true`/absent is fully open; `false` closes the
+ * surface outright (404, dropped from nav/sitemap); `"unlisted"` sits
+ * between them — the surface keeps serving (a direct link a customer
+ * already holds, an order confirmation, a bookmark, must not 404 just
+ * because a type was deprioritized) but is withdrawn from nav, footer and
+ * the sitemap, same as `false` for discovery purposes.
+ */
+export type FlagValue = boolean | "unlisted";
+
 interface FeatureFlagSnapshot {
   listings?: {
-    listingTypes?: Partial<Record<ListingType, boolean>>;
-    categoryTypes?: Partial<Record<CategoryType, boolean>>;
-    browsePages?: Partial<Record<BrowsePageKey, boolean>>;
+    listingTypes?: Partial<Record<ListingType, FlagValue>>;
+    categoryTypes?: Partial<Record<CategoryType, FlagValue>>;
+    browsePages?: Partial<Record<BrowsePageKey, FlagValue>>;
   };
 }
 
@@ -92,10 +102,31 @@ export function isBrowsePageEnabled(
   return settings?.listings?.browsePages?.[page] !== false;
 }
 
+/**
+ * Should this section appear in nav/footer/the sitemap? `false` and
+ * `"unlisted"` both answer no — only the absent-or-`true` default is listed.
+ * A direct link still resolves either way; `isBrowsePageEnabled` above is
+ * what the 404 gate reads, and it is deliberately untouched by this
+ * function.
+ */
+export function isBrowsePageListed(
+  page: BrowsePageKey,
+  settings: FeatureFlagSnapshot | null | undefined,
+): boolean {
+  const flag = settings?.listings?.browsePages?.[page];
+  return flag !== false && flag !== "unlisted";
+}
+
+/**
+ * Which sections to actually show links for — nav, footer, sitemap. Reads
+ * `isBrowsePageListed`, not `isBrowsePageEnabled`: an `"unlisted"` section's
+ * own page still serves at 200 (that's what `isBrowsePageEnabled` and the
+ * 404 gate in `closedSurfacePrefixes` answer), it just stops appearing here.
+ */
 export function enabledBrowsePages(
   settings: FeatureFlagSnapshot | null | undefined,
 ): BrowsePageKey[] {
-  return ALL_BROWSE_PAGES.filter((p) => isBrowsePageEnabled(p, settings));
+  return ALL_BROWSE_PAGES.filter((p) => isBrowsePageListed(p, settings));
 }
 
 /** Narrow an untrusted string — a route param, a form value — to the union. */
@@ -170,12 +201,34 @@ export function isListingTypeEnabled(
   return flag !== false;
 }
 
+/**
+ * Should this type appear in nav/footer/the sitemap? `false` and
+ * `"unlisted"` both answer no. `isListingTypeEnabled` above is still what
+ * the 404 gate reads — an unlisted type keeps serving existing detail
+ * pages, it just stops being advertised as a place to browse.
+ */
+export function isListingTypeListed(
+  type: ListingType,
+  settings: FeatureFlagSnapshot | null | undefined,
+): boolean {
+  const flag = settings?.listings?.listingTypes?.[type];
+  return flag !== false && flag !== "unlisted";
+}
+
 export function isCategoryTypeEnabled(
   type: CategoryType,
   settings: FeatureFlagSnapshot | null | undefined,
 ): boolean {
   const flag = settings?.listings?.categoryTypes?.[type];
   return flag !== false;
+}
+
+export function isCategoryTypeListed(
+  type: CategoryType,
+  settings: FeatureFlagSnapshot | null | undefined,
+): boolean {
+  const flag = settings?.listings?.categoryTypes?.[type];
+  return flag !== false && flag !== "unlisted";
 }
 
 /**
@@ -286,18 +339,24 @@ export function isCountedSurfaceVisible(
 }
 
 /**
- * Visible listing types — the flag list, minus the ones measured empty.
+ * Visible listing types — the flag list, minus the ones measured empty,
+ * minus the ones set to `"unlisted"`.
  *
  * This is what nav, footer and the sitemap filter on. `enabledListingTypes`
  * above is deliberately left alone: it answers "what does this marketplace
  * sell", which `/api/products`' post-filter and the seller forms still need
- * even for a type with zero rows today.
+ * even for a type with zero rows today. `isListingSurfaceVisible` (and
+ * therefore `hiddenSurfaceRoutes`'s 404 gate) is ALSO deliberately left
+ * alone — an `"unlisted"` type keeps serving its browse route and every
+ * detail page at 200, it only stops being advertised here.
  */
 export function visibleListingTypes(
   settings: FeatureFlagSnapshot | null | undefined,
   counts: SurfaceCountSnapshot | null | undefined,
 ): ListingType[] {
-  return ALL_LISTING_TYPES.filter((t) => isListingSurfaceVisible(t, settings, counts));
+  return ALL_LISTING_TYPES.filter(
+    (t) => isListingSurfaceVisible(t, settings, counts) && isListingTypeListed(t, settings),
+  );
 }
 
 export function enabledCategoryTypes(

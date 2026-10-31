@@ -4,7 +4,9 @@ import { useSiteSettings } from "../../core/hooks/useSiteSettings";
 import {
   ALL_BROWSE_PAGES,
   browsePageForPath,
+  isBrowsePageListed,
   type BrowsePageKey,
+  type FlagValue,
 } from "../../_internal/shared/listing-types/feature-flags";
 
 /**
@@ -21,7 +23,7 @@ import {
  * blank the navbar on every cold load until the settings request resolved —
  * visible flicker on every page of the site rather than one empty browse tab.
  */
-export type BrowsePageFlagsShape = Partial<Record<BrowsePageKey, boolean>>;
+export type BrowsePageFlagsShape = Partial<Record<BrowsePageKey, FlagValue>>;
 
 export type BrowsePageFlags = Record<BrowsePageKey, boolean> & {
   /** True when the section is open (or the setting has not loaded yet). */
@@ -38,12 +40,18 @@ export function useBrowsePageFlags(): BrowsePageFlags {
     listings?: { browsePages?: BrowsePageFlagsShape };
   }>();
 
-  const bp = data?.listings?.browsePages;
+  const settings = { listings: { browsePages: data?.listings?.browsePages } };
 
-  // Closed only when EXPLICITLY false — a missing flag, or settings that have
-  // not loaded, means open.
+  /*
+   * 🛑 `"unlisted"` also withdraws the nav link, not just `false` — the
+   * section's own page keeps serving at 200 either way (that's the 404 gate
+   * in `closedSurfacePrefixes`, unaffected by this). `isBrowsePageListed`
+   * already encodes "missing or settings-not-loaded-yet means open", so the
+   * permissive-default behaviour this hook's docstring describes is
+   * unchanged.
+   */
   const flags = Object.fromEntries(
-    ALL_BROWSE_PAGES.map((page) => [page, bp?.[page] !== false]),
+    ALL_BROWSE_PAGES.map((page) => [page, isBrowsePageListed(page, settings)]),
   ) as Record<BrowsePageKey, boolean>;
 
   return {
