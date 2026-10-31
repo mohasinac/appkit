@@ -20,7 +20,7 @@
  * The other ten hold no PII and use the BaseRepository public API only.
  */
 
-import { BaseRepository } from "../../../providers/db-firebase";
+import { BaseRepository, type DocumentSnapshot } from "../../../providers/db-firebase";
 import { arrayUnion, increment } from "../../../contracts/field-ops";
 import { revealPii } from "../../../security/pii-accessors";
 import {
@@ -198,6 +198,24 @@ export class ItemRequestsRepository extends BaseRepository<ItemRequestDocument> 
   constructor() {
     super(ITEM_REQUESTS_COLLECTION);
   }
+
+  /*
+   * 🛑 Documents written before `replies`/`replyCount` existed have neither
+   * field — `DEFAULT_ITEM_REQUEST_DATA` is only applied at create time, and
+   * `BaseRepository.mapDoc` does no default-merge. `/item-requests/[id]`'s
+   * `.replies.length` then throws on a plain `undefined`, crashing the page
+   * for every viewport. Backfilled here so every read path (detail, list,
+   * Sieve) agrees, not just the one call site that happened to crash first.
+   */
+  protected override mapDoc<D = ItemRequestDocument>(snap: DocumentSnapshot): D {
+    const raw = super.mapDoc<ItemRequestDocument>(snap);
+    return {
+      ...raw,
+      replies: raw.replies ?? [],
+      replyCount: raw.replyCount ?? 0,
+    } as unknown as D;
+  }
+
   async listOpen(opts?: { limit?: number }): Promise<{ items: ItemRequestDocument[] }> {
     const all = await this.findBy("status", "open");
     const limit = opts?.limit ?? 50;
