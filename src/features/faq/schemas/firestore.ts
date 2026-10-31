@@ -6,6 +6,8 @@ import type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 export type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 import { generateFAQId } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+import type { ContentTag } from "../../../_internal/shared/content-tags/registry";
+export type { ContentTag } from "../../../_internal/shared/content-tags/registry";
 // Imported from the DEFINING module, not a barrel (Root Cause #18).
 import {
   extractPlaceholders,
@@ -28,6 +30,14 @@ export interface FAQDocument extends BaseDocument {
   order: number;
   priority: number;
   tags: string[];
+  /**
+   * The flags this FAQ's content depends on, if any. A FAQ explaining how
+   * collector-drop bidding works tags `{ governs: "listingType", value:
+   * "collector-drop" }` — when that type is disabled, the FAQ stops being
+   * served rather than instructing a buyer on a feature they cannot reach.
+   * Absent/empty means always visible (see `isContentVisible`).
+   */
+  contentTags?: ContentTag[];
   /** Normalized edge-n-gram search field. Replaced `searchTokens`. */
   searchTxt?: string[];
   relatedFAQs: string[];
@@ -78,6 +88,7 @@ export const DEFAULT_FAQ_DATA: Partial<FAQDocument> = {
   order: 0,
   priority: 0,
   tags: [],
+  contentTags: [],
   searchTxt: [],
   relatedFAQs: [],
   useSiteSettings: true,
@@ -125,6 +136,7 @@ export type FAQUpdateInput = Partial<
     | "order"
     | "priority"
     | "tags"
+    | "contentTags"
     | "relatedFAQs"
     | "useSiteSettings"
     | "variables"
