@@ -92,7 +92,6 @@ const ENDPOINT_TO_COLLECTION = {
   "ADMIN_ENDPOINTS.ADMIN_HISTORY":          { collection: "history",             implicit: [] },
   "ADMIN_ENDPOINTS.FEATURE_FLAGS":          { collection: "featureFlags",        implicit: [] },
   "ADMIN_ENDPOINTS.STORE_ADDRESSES":        { collection: "addresses",           implicit: ["ownerType==store"] },
-  "ADMIN_ENDPOINTS.CAROUSEL":               { collection: "carouselSlides",      implicit: [] },
   "ADMIN_ENDPOINTS.NAVIGATION":             { collection: "navigation",          implicit: [] },
   "ADMIN_ENDPOINTS.PRODUCT_FEATURES":       { collection: "productFeatures",     implicit: [] },
   "ADMIN_ENDPOINTS.TEAM":                   { collection: "users",               implicit: ["role==employee"] },
@@ -166,7 +165,6 @@ const REPO_TO_COLLECTION = {
   // schemas/firestore.ts (or schemas/rbac.ts), not guessed from the
   // repository's variable name.
   sessionRepository:           "sessions",
-  carouselRepository:          "carouselSlides",
   jobsRepository:              "jobs",
   offerRepository:             "offers",
   // Singleton doc (id "global") — SiteSettingsRepository, no list-style

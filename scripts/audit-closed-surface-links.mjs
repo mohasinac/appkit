@@ -32,8 +32,8 @@
  *
  * ## What it checks
  *
- * Every string in every seeded homepage-section config and carousel slide, and
- * the public footer/nav link tables, against the closed-surface rules derived
+ * Every string in every seeded homepage-section config, and the public
+ * footer/nav link tables, against the closed-surface rules derived
  * from `site-settings-seed-data` — the same three axes `isClosedHref` reads:
  *
  *   · `listings.listingTypes`  — a type switched off (the seed cannot know the
@@ -79,7 +79,6 @@ if (!existsSync(DIST)) {
 const load = (rel) => import(pathToFileURL(resolve(DIST, rel)).href);
 
 const { homepageSectionsSeedData } = await load("seed/homepage-sections-seed-data.js");
-const { carouselSlidesSeedData } = await load("seed/carousel-slides-seed-data.js");
 const { siteSettingsSeedData } = await load("seed/site-settings-seed-data.js");
 const { closedSurfacePrefixes, isUnderClosedPrefix } = await load(
   "_internal/shared/listing-types/hidden-surfaces.js",
@@ -149,14 +148,12 @@ for (const section of homepageSectionsSeedData ?? []) {
   walk(section.config, "config", `section ${section.id} (${section.type})`);
 }
 
-for (const slide of carouselSlidesSeedData ?? []) {
-  if (slide?.active === false) continue;
-  walk(
-    { link: slide.link, overlay: slide.overlay, cards: slide.cards, buttons: slide.buttons },
-    "",
-    `slide ${slide.id}`,
-  );
-}
+/*
+ * 🛑 No carousel-slide loop any more. There is no seeded slide array to scan —
+ * every hero slide is computed live from an event's own `carouselConfig`
+ * (`getHeroCarouselSlides()`), and its link is always that event's own detail
+ * page, never a hand-typed href. See CLAUDE.md "Homepage Hero Carousel".
+ */
 
 if (violations.length > 0) {
   console.error(
