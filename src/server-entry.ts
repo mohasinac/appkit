@@ -301,10 +301,35 @@ export {
   cartRequiresSplitSettlement,
   SETTLEMENT_CONSTRAINT,
   GATEWAY_UNAVAILABLE_CODE,
+  /*
+   * Phase 3 — the per-vendor SHARE of one capture, and the record of it.
+   * Exported beside the gateway choice because the consumer's capture route is
+   * the only request holding both the cart and the vendor registrations.
+   *
+   * 🛑 `buildSplitInstructions` returns a refusal list that MUST refuse the
+   * capture. Collecting "what we can split" leaves the rest in the platform's
+   * own account, which is the commingling, and it looks like a success.
+   */
+  resolveCaptureSplit,
+  buildSplitInstructions,
+  splitRefusalReason,
+  vendorSettlementForGroup,
+  orderNeedsManualPayout,
+  recordSplitSettlementPayouts,
+  SPLIT_UNSETTLEABLE_CODE,
   type CollectingGatewayResult,
   type SettlementConstraint,
   type CartVendorComposition,
   type GatewayResolution,
+  type SplitCandidateGroup,
+  type SplitSettlementLine,
+  type BuiltSplitInstructions,
+  type SplitBlockedStore,
+  type VendorSettlement,
+  type SplitSettlementPayoutInput,
+  type CaptureSplitInput,
+  type CaptureSplitGroupInput,
+  type ResolvedCaptureSplit,
   type CreateCheckoutOrderInput,
   type VerifyAndPlaceGatewayOrderInput,
   type CheckoutOrderResult,
@@ -412,6 +437,14 @@ export {
   STORES_PRODUCTS_PAGE_SIZE,
   STORES_SITEMAP_LIMIT,
   STORES_FEATURED_LIMIT,
+  /*
+   * Phase 3 — the one named side effect of a store becoming active. Exported
+   * because the consumer owns the admin PATCH route, which is
+   * `storeRepository.setStatus`'s sole dispatcher and therefore the only place
+   * this can be called from today.
+   */
+  onStoreActivated,
+  STORE_VENDOR_REGISTER_JOB,
 } from "./_internal/server/features/stores/index";
 
 // S4–S5: Job handlers + Firebase binders moved to the `@mohasinac/appkit/jobs`

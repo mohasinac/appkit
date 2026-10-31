@@ -117,6 +117,48 @@ export interface StorePayoutDocument extends BaseDocument {
   /** Seller-set personal follow-up flag — surfaced only to the owning seller, never mutated by admin. */
   sellerReminderFlag?: boolean;
 
+  /*
+   * ── SPLIT SETTLEMENT: the gateway paid this, not us ──────────────────────
+   *
+   * Present only on a row created by `createSplitSettlementPayout`, i.e. a
+   * seller share that a payment aggregator settled out of escrow at capture.
+   * Absent means the ordinary manual path and nothing changes about it.
+   *
+   * 🛑 THESE ARE THE "do not re-add without a real writer" FIELDS, re-added
+   * WITH one. The note two screens down records that the RazorpayX dispatcher
+   * and its `razorpayPayoutId` / `razorpayStatus` / `failureCount` /
+   * `lastFailureReason` were deleted together, and that instruction is honoured
+   * here in both directions:
+   *
+   *   · the three below have a live writer — `createSplitSettlementPayout`,
+   *     which is also the first thing in this codebase ever to write
+   *     `status: "processing"`;
+   *   · `failureCount` and `lastFailureReason` are deliberately NOT re-added,
+   *     because a split settlement has no retry loop of ours to count. A
+   *     refusal happens at capture, before any payout row exists, and the
+   *     capture is refused rather than retried.
+   *
+   * 🛑 GATEWAY-NAMESPACED, never `cashfreeVendorId`. `supportsSplit` is a
+   * capability precisely so a second splitting gateway is a registry row and
+   * not a sweep (Root Cause #61); a gateway-shaped field name here would
+   * reintroduce the coupling in the schema, where it is hardest to change.
+   */
+
+  /** The adapter that collected and split, e.g. `"cashfree"`. */
+  settlementGateway?: string;
+  /** The gateway's vendor id the money was settled to — i.e. the store slug. */
+  settlementVendorId?: string;
+  /**
+   * The gateway reference this settlement can be looked up by.
+   *
+   * 🛑 Our own merchant order id for the CAPTURE, not a settlement id of the
+   * gateway's: Easy Split settles on its own cycle and does not hand one back
+   * at capture time. It is the only reference that exists at the moment the row
+   * is written, and it is the join key to the orders — so it is honest about
+   * what it is rather than being named after a value we do not have.
+   */
+  settlementReference?: string;
+
   /**
    * Who changed what, when, and why. See § "Status History" in CLAUDE.md.
    *
@@ -218,6 +260,21 @@ export function isEmployeePayout(p: AnyPayoutDocument): p is EmployeePayoutDocum
  * comparable payout API, so seller payouts are fully manual again via
  * `adminUpdatePayout`. Those four fields no longer exist on `PayoutDocument`;
  * do not re-add them here without a real writer.
+ *
+ * 🛑 PARTIALLY SUPERSEDED 2026-10-31, and read the asymmetry rather than the
+ * headline. Split settlement is NOT a payouts API — the whole point is that the
+ * aggregator settles out of escrow and the platform never holds the money, so
+ * there is no dispatcher to rebuild. What it does give is a real writer for
+ * `status: "processing"` and for three gateway-namespaced fields
+ * (`settlementGateway` / `settlementVendorId` / `settlementReference`, declared
+ * on `StorePayoutDocument` above). `failureCount` and `lastFailureReason` stay
+ * deleted: a split has no retry loop of ours to count, because a refusal
+ * happens at capture, before a payout row exists.
+ *
+ * `settlementGateway` and friends are deliberately NOT tracked below. They are
+ * written once, at the row's birth, and never change — a tracked field that
+ * cannot move would add a timeline entry describing the creation the row
+ * already is.
  */
 export const PAYOUT_TRACKED_FIELDS = [
   "status",

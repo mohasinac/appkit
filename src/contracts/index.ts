@@ -42,6 +42,11 @@ export type {
   Refund,
   Dispute,
   GatewayPaymentRecord,
+  // Split settlement — the vendor and per-vendor-share surface.
+  SettlementVendorInput,
+  SettlementVendorOutcome,
+  SettlementVendorResult,
+  SplitInstruction,
 } from "./payment";
 // IPaymentProvider is an abstract class (not a pure type) — subclasses need
 // the runtime constructor to `extends` it, so it's a value export.

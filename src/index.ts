@@ -7138,6 +7138,32 @@ export type {
   GstEnablementInput,
   GstEnablementProblems,
 } from "./_internal/shared/features/site-settings/gst-registration";
+/*
+ * The ONE definition of "is this payout destination well-formed", exported for
+ * exactly the reason the GSTIN gate above it is: BOTH ends need the same
+ * implementation. The seller's route and the appkit write path both decide
+ * `isConfigured` from it, and the IFSC/VPA patterns existed in FIVE
+ * disagreeing copies before this (Root Cause #75). Pure — no node imports, so
+ * it is safe on the client entry too.
+ */
+export {
+  IFSC_PATTERN,
+  UPI_VPA_PATTERN,
+  PAN_PATTERN,
+  isValidIfsc,
+  isValidUpiVpa,
+  isValidPan,
+  normalisePan,
+  PAYOUT_VERIFICATION,
+  payoutDestinationIssues,
+  payoutDestinationIsWellFormed,
+  resetVerificationOnChange,
+} from "./_internal/shared/features/payouts/destination";
+export type {
+  PayoutVerificationStatus,
+  PayoutDestinationIssue,
+  PayoutDestinationLike,
+} from "./_internal/shared/features/payouts/destination";
 export type {
   EmiSettings,
   EmiIneligibleReason,

@@ -1262,6 +1262,46 @@ export interface OrderDocument extends BaseDocument {
   shippingLabelUrl?: string;
   payoutStatus?: OrderPayoutStatus;
   payoutId?: string;
+
+  /**
+   * ── This order's seller share was settled BY THE GATEWAY at capture ───────
+   *
+   * Present only on an order collected through split settlement: the buyer's
+   * money went buyer → aggregator escrow → seller, and the platform never held
+   * this seller's share. Absent means the ordinary path — we owe them a payout.
+   *
+   * 🛑 **IT IS THE DOUBLE-PAYMENT GUARD.** `orderNeedsManualPayout`
+   * (`_internal/shared/checkout/settlement-split.ts`) is the one predicate that
+   * reads it, and both mark-shipped writers consult it before setting
+   * `payoutStatus: "eligible"`. Without that gate the weekly and automatic
+   * sweeps would create a `payouts` row for the FULL share of an order the
+   * aggregator has already paid — the seller paid twice, once from escrow and
+   * once from the platform's own balance.
+   *
+   * 🛑 A SNAPSHOT, never recomputed. It records how THIS order was collected.
+   * Re-deriving it from the store's current vendor registration would mean a
+   * store whose registration is later revoked retroactively re-acquires a
+   * payout for money it has already received (Root Cause #42).
+   *
+   * 🛑 `vendorAmount` is the share INSTRUCTED at capture, and it is deliberately
+   * NOT the whole of what the seller is owed. `computePayoutDeduction` takes a
+   * postage reimbursement and a points-earn figure that do not exist until the
+   * parcel ships, so a residue is decided later. That residue has no settlement
+   * path today — see `settlement-split.ts`' header; it is a stated gap, not an
+   * oversight to be fixed by inflating this number.
+   */
+  splitSettlement?: {
+    /** The adapter that collected and split, e.g. `"cashfree"`. */
+    gateway: string;
+    /** The gateway's vendor id for this seller — i.e. the store slug. */
+    vendorId: string;
+    /** Decimal rupees instructed to that vendor for THIS order. */
+    vendorAmount: number;
+    /** When the instruction was sent with the capture. */
+    instructedAt: Date | string;
+    /** Our own merchant order id for the capture, so the two can be joined. */
+    merchantOrderId?: string;
+  };
   offerId?: string;
 
   // â"€â"€ SB1-F (S19 2026-05-12) â€" prize-draw + bundle additive fields â"€â"€â"€â"€â"€â"€â"€â"€â"€

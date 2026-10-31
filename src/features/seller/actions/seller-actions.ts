@@ -39,6 +39,22 @@ import { couponsRepository } from "../../promotions/repository/coupons.repositor
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { computePayoutDeduction } from "../../../_internal/shared/fees/calculator";
+/*
+ * The one predicate that decides whether WE still owe this seller a payout. A
+ * split-settled order has already been paid out of the aggregator's escrow, and
+ * marking it payout-eligible would pay the seller twice.
+ */
+import { orderNeedsManualPayout } from "../../../_internal/shared/checkout/settlement-split";
+/*
+ * The ONE definition of "is this payout destination well-formed". `isConfigured`
+ * is derived from it rather than asserted, and the gateway's verification
+ * verdict is reset whenever the destination changes.
+ */
+import {
+  payoutDestinationIssues,
+  payoutDestinationIsWellFormed,
+  resetVerificationOnChange,
+} from "../../../_internal/shared/features/payouts/destination";
 import {
   ordersTaxableValue,
   ordersShippingReimbursement,
@@ -394,6 +410,22 @@ type SafePayoutDetails = Omit<SellerPayoutDetails, "bankAccount"> & {
   >;
 };
 
+/**
+ * 🛑 THIS IS THE WRITE PATH, and it used to assert `isConfigured: true`
+ * unconditionally on both arms — so a store could be "payout configured" with
+ * an IFSC that is not an IFSC and a VPA that is not a VPA. The consumer action
+ * that calls it had Zod patterns; this function, which is what actually writes,
+ * had none, so any other caller bypassed every check.
+ *
+ * Now:
+ *   · the destination is VALIDATED here, through the one shared definition
+ *     (`payoutDestinationIssues`), so the check cannot be skipped by reaching
+ *     this function directly;
+ *   · `isConfigured` is DERIVED from that same definition — it means
+ *     FORMAT-VALID and nothing more;
+ *   · the gateway's verification verdict is RESET, because the destination it
+ *     referred to has just changed.
+ */
 export async function updatePayoutSettings(
   userId: string,
   input: UpdatePayoutSettingsInput,
@@ -401,19 +433,39 @@ export async function updatePayoutSettings(
   let payoutDetails: SellerPayoutDetails;
 
   if (input.method === "upi") {
-    payoutDetails = { method: "upi", upiId: input.upiId, isConfigured: true };
+    payoutDetails = {
+      method: "upi",
+      upiId: input.upiId.trim(),
+      isConfigured: false,
+      ...resetVerificationOnChange(),
+    };
   } else {
     const { accountNumber, ...bankRest } = input.bankAccount;
     payoutDetails = {
       method: "bank_transfer",
       bankAccount: {
         ...bankRest,
+        ifscCode: bankRest.ifscCode.trim().toUpperCase(),
         accountNumber,
         accountNumberMasked: maskAccountNumber(accountNumber),
       },
-      isConfigured: true,
+      isConfigured: false,
+      ...resetVerificationOnChange(),
     };
   }
+
+  /*
+   * 🛑 Validated BEFORE the write and THROWN on, not recorded as a flag. A
+   * malformed destination is not a degraded state a seller should be left in
+   * believing it saved — that belief is what `isConfigured: true` created. The
+   * issues carry a dotted path each, so the caller can attach them to the right
+   * field rather than show one banner.
+   */
+  const issues = payoutDestinationIssues(payoutDetails);
+  if (issues.length > 0) {
+    throw new ValidationError(issues.map((issue) => issue.message).join(" "));
+  }
+  payoutDetails.isConfigured = payoutDestinationIsWellFormed(payoutDetails);
 
   await userRepository.update(userId, { payoutDetails });
 
@@ -1098,7 +1150,21 @@ export async function customShipOrder(
     trackingNumber: input.trackingNumber,
     trackingUrl: input.trackingUrl,
     shippingDate: new Date(),
-    payoutStatus: "eligible",
+    /*
+     * 🛑 THE DOUBLE-PAYMENT GUARD. An order whose seller share was settled
+     * straight to them out of the aggregator's escrow at capture
+     * (`order.splitSettlement`) must NOT become payout-eligible: the weekly and
+     * automatic sweeps would then create a `payouts` row for the FULL share and
+     * the seller would be paid twice — once from escrow and once from the
+     * platform's own balance.
+     *
+     * 🛑 `undefined`, not `"requested"`. The field stays ABSENT rather than
+     * being given a status the manual pipeline owns: `getEligibleAutomatic`
+     * filters on `payoutStatus == "eligible"`, so absence keeps it out of every
+     * sweep, while "requested" would claim a payout request nobody made and
+     * `payoutId` would be missing from it.
+     */
+    payoutStatus: orderNeedsManualPayout(order) ? "eligible" : undefined,
   });
 
   /*

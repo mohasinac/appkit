@@ -15,6 +15,13 @@ import {
 } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
+/*
+ * The verification lifecycle lives in `_internal/shared/features/payouts/`
+ * beside the format rules that produce `isConfigured`, so the two halves of
+ * "is this destination usable" cannot drift apart. Type-only here — this schema
+ * file must stay importable from anywhere.
+ */
+import type { PayoutVerificationStatus } from "../../../_internal/shared/features/payouts/destination";
 
 // ============================================================================
 // SCHEMA DEFAULTS
@@ -336,7 +343,53 @@ export interface SellerPayoutDetails {
   method: SellerPayoutMethod;
   upiId?: string;
   bankAccount?: SellerBankAccount;
+  /**
+   * The destination is WELL-FORMED. Nothing more.
+   *
+   * 🛑 It used to be written `true` unconditionally by both arms of
+   * `updatePayoutSettings` (measured 2026-10-31 at
+   * `features/seller/actions/seller-actions.ts:404,414`), so a store could be
+   * "payout configured" with an IFSC that is not an IFSC. It is now derived
+   * from `payoutDestinationIsWellFormed`
+   * (`_internal/shared/features/payouts/destination.ts`) and from nowhere
+   * else — never typed by a caller, never defaulted to `true`.
+   *
+   * 🛑 FORMAT-VALID IS NOT BANK-VERIFIED. Whether the account exists and
+   * belongs to the named holder is `verificationStatus` below, and only a
+   * gateway can answer it.
+   */
   isConfigured: boolean;
+
+  /*
+   * ── Destination verification (Phase 3) ──────────────────────────────────
+   *
+   * 🛑 Written ONLY from a payment gateway's own vendor-registration response
+   * (`settlementVendorRegister`). There is deliberately no local path that can
+   * set `verified`: we hold no banking licence and have no account-validation
+   * API, so a locally-asserted "verified" would be the same self-assertion
+   * `isConfigured` just stopped being.
+   *
+   * 🛑 Absent means `unverified`, which is a FACT and not "unknown" — a
+   * destination nobody has checked is unverified. Reading absence as anything
+   * better is how the old boolean came to mean nothing.
+   *
+   * 🛑 RESET on every destination change by `resetVerificationOnChange`. A
+   * status that outlived the account number it referred to would be a claim
+   * about a destination nobody checked, and it fails in the direction of money
+   * leaving for an account the seller has since replaced.
+   */
+  verificationStatus?: PayoutVerificationStatus;
+  /**
+   * The gateway's own refusal reason, verbatim.
+   *
+   * Operator-facing: it is shown to the seller and the admin because "account
+   * name does not match PAN" is actionable and "verification failed" is not.
+   * It carries no PII of its own — it describes the destination, which the
+   * seller supplied.
+   */
+  verificationMessage?: string;
+  /** When a gateway last ACCEPTED this destination. Absent ≠ never valid; absent = never accepted. */
+  verifiedAt?: Date | string;
 }
 
 export const USER_COLLECTION = "users" as const;

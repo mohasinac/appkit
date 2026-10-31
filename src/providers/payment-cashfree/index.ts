@@ -63,10 +63,36 @@ import type {
   Refund,
   Dispute,
   GatewayPaymentRecord,
+  SettlementVendorInput,
+  SettlementVendorResult,
+  SplitInstruction,
 } from "../../contracts";
 import type { JsonValue } from "../../schemas/types";
 import { getDefaultCurrency } from "../../core/baseline-resolver";
 import { paiseToRupees, rupeesToPaise } from "../../core/money";
+import { normalizeError } from "../../errors/normalize";
+
+/**
+ * Cashfree's PG orders collection — a path SEGMENT, no leading slash.
+ * `request()` owns the join; see its note on why the slash lives there.
+ */
+const CASHFREE_ORDERS_PATH = "orders";
+/*
+ * EASY SPLIT lives in its own module, and not only for file length: every fact
+ * in it is SPECIFIED, NOT CONFIRMED (the endpoint, the body, the order field,
+ * the per-order vendor cap), so isolating it makes correcting any one of them a
+ * single edit with no call-site changes. Read that file's header before trusting
+ * a split — one of its assumptions fails SILENTLY.
+ */
+import {
+  EASY_SPLIT_VENDORS_PATH,
+  MAX_SPLIT_VENDORS_PER_ORDER,
+  ORDER_SPLITS_FIELD,
+  cashfreeVendorPayload,
+  mapCashfreeVendorStatus,
+  toOrderSplits,
+  type CashfreeVendorEntity,
+} from "./easy-split";
 
 // --- Configuration ------------------------------------------------------------
 
@@ -141,6 +167,8 @@ interface CashfreePaymentEntity {
   payment_time?: string;
   bank_reference?: string;
 }
+
+/* `CashfreeVendorEntity` lives in `./easy-split` with the rest of that surface. */
 
 interface CashfreeRefundEntity {
   cf_refund_id?: string | number;
@@ -354,13 +382,25 @@ export class CashfreeProvider extends IPaymentProvider {
    * what `mapToHttpError` reads. Production scrubs 5xx messages before they
    * reach a buyer, so the detail stays server-side.
    */
+  /**
+   * One HTTPS call to Cashfree.
+   *
+   * 🛑 `path` is a SEGMENT, with or without a leading slash — this method owns
+   * the join. Callers may therefore name their endpoints without a leading
+   * slash, which matters because `no-restricted-syntax` reads a bare
+   * `"/orders"` as an APP route that should come from `ROUTES.*`. It is not:
+   * it is a third-party API path, and `ROUTES` would be exactly the wrong home
+   * for it. Normalising here lets the constants say what they are instead of
+   * being spelled around the rule.
+   */
   private async request<T>(
     path: string,
     init?: { method?: "GET" | "POST"; body?: unknown },
   ): Promise<T> {
     const method = init?.method ?? "GET";
     const hasBody = init?.body !== undefined;
-    const response = await fetch(`${this.baseUrl}${path}`, {
+    const suffix = path.startsWith("/") ? path : `/${path}`;
+    const response = await fetch(`${this.baseUrl}${suffix}`, {
       method,
       headers: {
         "x-client-id": this.appId,
@@ -382,7 +422,13 @@ export class CashfreeProvider extends IPaymentProvider {
     }
     try {
       return JSON.parse(text) as T;
-    } catch {
+    } catch (err) {
+      /*
+       * The parse error itself says only "unexpected token"; what diagnoses
+       * this is the BODY, which the thrown error carries. Normalised rather
+       * than dropped so the shape matches every other catch in the tree.
+       */
+      void normalizeError(err);
       throw Object.assign(
         new Error(
           `Cashfree ${method} ${path} returned a non-JSON body (${response.status}): ${text.slice(0, 200)}`,
@@ -420,6 +466,61 @@ export class CashfreeProvider extends IPaymentProvider {
     currency?: string,
     metadata?: Record<string, JsonValue>,
   ): Promise<PaymentOrder> {
+    return this.createOrderInternal(amount, currency, metadata);
+  }
+
+  /**
+   * Creates a Cashfree order whose CAPTURE is split across vendors.
+   *
+   * 🛑 This is the method the checkout path calls — always, even with no
+   * splits. See `IPaymentProvider.createOrderWithSplit` for why there is one
+   * call site rather than a choice between two methods.
+   *
+   * 🛑 Every vendor named in `splits` must already be an `active` Easy Split
+   * vendor. That is the CALLER's check (`buildSplitInstructions` refuses to
+   * build a split for an unregistered store, and `toOrderSplits` refuses an
+   * empty `vendorId`) because the caller is the only place that holds the store
+   * documents and can refuse BEFORE a payment session exists.
+   *
+   * 🛑 Refuses above `MAX_SPLIT_VENDORS_PER_ORDER` and NEVER truncates — see
+   * that constant's own 🛑. Dropping the last vendor's split would collect
+   * their share into the platform's account and look like a success.
+   */
+  override async createOrderWithSplit(
+    amount: number,
+    currency: string,
+    metadata?: Record<string, JsonValue>,
+    splits?: readonly SplitInstruction[],
+  ): Promise<PaymentOrder> {
+    if (
+      splits &&
+      MAX_SPLIT_VENDORS_PER_ORDER > 0 &&
+      splits.length > MAX_SPLIT_VENDORS_PER_ORDER
+    ) {
+      throw Object.assign(
+        new Error(
+          `This cart needs money settled to ${splits.length} sellers in one payment, ` +
+            `and Cashfree accepts at most ${MAX_SPLIT_VENDORS_PER_ORDER} per order. ` +
+            `Refusing rather than dropping a seller's share from the split.`,
+        ),
+        { httpStatus: 409, code: "SPLIT_VENDOR_LIMIT_EXCEEDED" },
+      );
+    }
+    return this.createOrderInternal(amount, currency, metadata, splits);
+  }
+
+  /**
+   * The one implementation behind both public create methods.
+   *
+   * Kept private so there is no third way to create a Cashfree order: a second
+   * public entry point is a second place a split instruction can be forgotten.
+   */
+  private async createOrderInternal(
+    amount: number,
+    currency?: string,
+    metadata?: Record<string, JsonValue>,
+    splits?: readonly SplitInstruction[],
+  ): Promise<PaymentOrder> {
     const uid = metadata?.uid;
     if (typeof uid !== "string" || !uid) {
       throw new Error("CashfreeProvider.createOrder requires metadata.uid");
@@ -443,7 +544,13 @@ export class CashfreeProvider extends IPaymentProvider {
         : undefined;
 
     const orderTags = toOrderTags(metadata);
-    const entity = await this.request<CashfreeOrderEntity>("/orders", {
+    /*
+     * 🛑 Built BEFORE the request, so a malformed instruction throws with no
+     * payment session created. `toOrderSplits` refuses an unregistered vendor
+     * and a non-positive share rather than dropping either from the settlement.
+     */
+    const orderSplits = splits && splits.length > 0 ? toOrderSplits(splits) : undefined;
+    const entity = await this.request<CashfreeOrderEntity>(CASHFREE_ORDERS_PATH, {
       method: "POST",
       body: {
         order_id: orderId,
@@ -458,6 +565,13 @@ export class CashfreeProvider extends IPaymentProvider {
         },
         ...(returnUrl ? { order_meta: { return_url: returnUrl } } : {}),
         ...(orderTags ? { order_tags: orderTags } : {}),
+        /*
+         * 🛑 The split instruction. `ORDER_SPLITS_FIELD` is ASSUMED — see point
+         * 2 of the block comment on the Easy Split section, which is the one
+         * assumption in this file whose failure mode is SILENT. Prove it
+         * against a sandbox order before real money goes through here.
+         */
+        ...(orderSplits ? { [ORDER_SPLITS_FIELD]: orderSplits } : {}),
       },
     });
 
@@ -507,6 +621,82 @@ export class CashfreeProvider extends IPaymentProvider {
     return typeof rupees === "number" && Number.isFinite(rupees)
       ? rupeesToPaise(rupees)
       : fallback;
+  }
+
+  /**
+   * Registers a seller as an Easy Split vendor.
+   *
+   * 🛑 IDEMPOTENT BY `PUT`-LIKE SEMANTICS, and that is an ASSUMPTION too. The
+   * `vendor_id` is ours (the store slug), so a repeat call names the same
+   * vendor — but whether Cashfree treats a second `POST` for a known
+   * `vendor_id` as an update, a conflict, or a duplicate has NOT been
+   * confirmed. The failure is benign in both directions this adapter can see:
+   * a conflict surfaces as a 409 carried into `message` and the job records
+   * `rejected`, which an operator reads and acts on. It is called out because
+   * the job WILL re-run — jobs retry, and an admin can re-approve a store.
+   *
+   * 🛑 Returns `pending` for any status it does not recognise, never `active`
+   * and never `rejected`. See `mapCashfreeVendorStatus`.
+   *
+   * 🛑 A NON-2xx IS NOT A THROW HERE, unlike every other method on this class.
+   * `request()` throws, so the catch converts it into `outcome: "rejected"`
+   * with Cashfree's own body as the message. That is deliberate: the caller is
+   * a background job whose job is to RECORD why a store could not be onboarded
+   * (blockers #3 and #5 mean refusals are expected and routine), and a throw
+   * would make a routine refusal indistinguishable from an outage. The one
+   * thing that must never happen is a refusal recorded as a success.
+   *
+   * 🛑 The thrown message is carried VERBATIM but truncated. Cashfree's errors
+   * name the offending field, which is the whole value of surfacing them — and
+   * `request()` already caps the body at 500 chars. It describes the
+   * DESTINATION the seller supplied; it carries no credential of ours.
+   */
+  override async registerSettlementVendor(
+    input: SettlementVendorInput,
+  ): Promise<SettlementVendorResult> {
+    if (!input.vendorId) {
+      throw Object.assign(
+        new Error("CashfreeProvider.registerSettlementVendor requires a vendorId"),
+        { httpStatus: 400 },
+      );
+    }
+    try {
+      const entity = await this.request<CashfreeVendorEntity>(EASY_SPLIT_VENDORS_PATH, {
+        method: "POST",
+        body: cashfreeVendorPayload(input),
+      });
+      const outcome = mapCashfreeVendorStatus(entity.status);
+      return {
+        gateway: this.name,
+        // Echo OUR id back, not Cashfree's echo: a gateway that returned a
+        // different id would mean our idempotency key is not the one it keys
+        // on, and recording theirs would hide that rather than surface it.
+        vendorId: input.vendorId,
+        outcome,
+        ...(outcome === "active"
+          ? {}
+          : {
+              message:
+                entity.message ??
+                `Cashfree reported vendor status "${entity.status ?? "(none)"}" — ` +
+                  `not yet settleable.`,
+            }),
+      };
+    } catch (err) {
+      /*
+       * A 4xx from Cashfree IS the answer — the gateway refused this vendor,
+       * which is a `rejected` outcome the job records and a seller can act on,
+       * not an outage. Normalised first so the message is the same shape every
+       * other catch in the tree produces.
+       */
+      const normalized = normalizeError(err);
+      return {
+        gateway: this.name,
+        vendorId: input.vendorId,
+        outcome: "rejected",
+        message: normalized.message,
+      };
+    }
   }
 
   /**

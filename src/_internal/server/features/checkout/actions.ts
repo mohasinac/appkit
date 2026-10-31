@@ -27,7 +27,15 @@ import {
   claimedCouponsRepository,
   addressesRepository,
   productRepository,
+  /*
+   * Phase 3 — the split-settlement records written by the capture request, read
+   * back here so each order can record whether ITS seller's share went straight
+   * to them out of escrow. That record is the double-payment guard.
+   */
+  payoutRepository,
 } from "../../../../repositories";
+import type { SplitSettlementRecord } from "../../../../features/payments/repository/payout.repository";
+import type { StoreSettlementVendor } from "../../../../features/stores/schemas/firestore";
 import { isIntraStateSupply } from "../../../shared/fees/calculator";
 import { resolveStateKey, INDIA_STATES } from "../../../shared/fees/india-states";
 import {
@@ -574,6 +582,21 @@ export async function resolveShippingCost(
    * reports that as `unpriced` and the caller refuses.
    */
   sharedPurchaseRates: SharedPurchaseRates;
+  /**
+   * Phase 3 — this store's split-settlement vendor registrations, per gateway.
+   *
+   * Here for the same reason `storeTaxIdentity`, `storeProtections` and
+   * `sharedPurchaseRates` are: this function already holds the store document,
+   * and a second `findById` per order group would spend a Firestore read
+   * against Rule #6's ~3-round-trip budget to learn one nested object. (Its
+   * name is narrower than its job — it resolves per-store checkout facts.)
+   *
+   * 🛑 Returned RAW, keyed by gateway, with no "is it settleable" verdict. The
+   * caller knows WHICH gateway will collect; this function does not, and
+   * answering for a gateway it guessed at is how a split instruction gets built
+   * against the wrong registration.
+   */
+  settlementVendors: Record<string, StoreSettlementVendor> | undefined;
 }> {
   if (!storeId) {
     return {
@@ -591,6 +614,9 @@ export async function resolveShippingCost(
       // No store, so no seller registration — the caller falls back to the
       // platform's via resolveSupplierIdentity.
       storeTaxIdentity: undefined,
+      // No store, so no vendor. The split builder treats that as NOT settleable
+      // and refuses the capture rather than collecting into our own account.
+      settlementVendors: undefined,
     };
   }
   const store = await storeRepository.findById(storeId);
@@ -738,6 +764,12 @@ export async function resolveShippingCost(
           registeredAddress: store.registeredAddress,
         }
       : undefined,
+    /*
+     * Raw and per gateway — see the field's own 🛑. The store document is
+     * already in hand, so this costs nothing; deciding settleability here would
+     * mean guessing which gateway collects.
+     */
+    settlementVendors: store?.settlementVendors,
   };
 }
 
@@ -3634,6 +3666,20 @@ async function createPhonePeGroupOrder(
      */
     emiOptIn: boolean;
     emiTenureMonths?: number;
+    /**
+     * What the gateway was INSTRUCTED to settle to each vendor out of this one
+     * capture, keyed by `storeId`. Absent/empty on an ordinary capture.
+     *
+     * 🛑 READ, not recomputed — `payoutRepository.findBySettlementReference`,
+     * resolved once by the caller for the whole capture. The instruction was
+     * built in an EARLIER request (`/api/payment/create-order`), which is the
+     * only place that held the vendor records and the exact amounts; the cart
+     * can gain a line between that request and this one, which is why this
+     * function already has a settlement-compliance detector upstream. A read of
+     * what we wrote is a fact, a recomputation is a guess that agrees most of
+     * the time, and the difference decides whether a seller gets paid twice.
+     */
+    splitByStore?: ReadonlyMap<string, SplitSettlementRecord>;
   },
 ): Promise<number> {
   const {
@@ -3670,6 +3716,7 @@ async function createPhonePeGroupOrder(
     emiOptIn,
     emiTenureMonths,
     deliverySnapshot,
+    splitByStore,
   } = ctx;
 
   /*
@@ -3682,6 +3729,13 @@ async function createPhonePeGroupOrder(
   const gatewayName = getProviders().payment?.name ?? "phonepe";
 
   const firstItem = group[0].item;
+  /*
+   * What this seller was instructed to be settled out of this capture, if
+   * anything. Resolved once here rather than three times in the order literal
+   * below — a repeated `Map.get(...)!` is three chances for one of them to read
+   * a different key.
+   */
+  const splitForThisStore = splitByStore?.get(firstItem.storeId);
   const groupTotal = group.reduce(
     (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
@@ -4029,6 +4083,37 @@ async function createPhonePeGroupOrder(
         transactionId,
       },
     },
+    /*
+     * ── Split settlement: this seller's share never entered our account ─────
+     *
+     * 🛑 **THE DOUBLE-PAYMENT GUARD'S ONLY WRITER.** `orderNeedsManualPayout`
+     * reads it, and both mark-shipped writers consult that before setting
+     * `payoutStatus: "eligible"`. Without this field the weekly and automatic
+     * sweeps would create a `payouts` row for the FULL share of an order the
+     * aggregator has already settled — the seller paid twice, once out of
+     * escrow and once out of the platform's own balance.
+     *
+     * 🛑 Only written when the capture CARRIED an instruction for this store.
+     * It is never inferred from the gateway's name or from the store being
+     * third-party: if the split field had been silently ignored by the gateway
+     * (the one assumption in `payment-cashfree` whose failure mode is silent),
+     * an inferred flag would mark the order settled and the seller would never
+     * be paid at all. A missing entry here means the ordinary payout path,
+     * which is the safe direction — a seller chasing a late payout is
+     * recoverable; one who was never paid and whose order says otherwise is
+     * not.
+     */
+    splitSettlement: splitForThisStore
+      ? {
+          gateway: splitForThisStore.gateway || gatewayName,
+          vendorId: splitForThisStore.vendorId,
+          vendorAmount: splitForThisStore.amount,
+          // 🛑 The payout row's own `requestedAt`, never `new Date()` here —
+          // the settle request can be minutes after the capture.
+          instructedAt: splitForThisStore.instructedAt,
+          merchantOrderId,
+        }
+      : undefined,
     shippingAddress,
     notes,
     platformFee,
@@ -4992,6 +5077,39 @@ export async function verifyAndPlaceGatewayOrderAction(
   const useAllPoints = cart.useAllPoints === true;
   const pointsBudget = { remaining: useAllPoints ? await safePointsBalance(uid) : 0 };
 
+  /*
+   * ── What the gateway was INSTRUCTED to settle to each vendor ──────────────
+   *
+   * One bounded single-field query for the whole capture, so each order can
+   * record whether ITS seller's share went straight to them out of escrow.
+   * That record is the double-payment guard: without it the payout sweeps would
+   * later create a full payout for a share the aggregator has already settled.
+   *
+   * 🛑 READ, never recomputed. The instruction was built in the capture request
+   * (`/api/payment/create-order`), which is the only place that held the vendor
+   * registrations and the exact amounts. The cart can gain a line between that
+   * request and this one — which is exactly why the settlement-compliance
+   * detector above exists — so a recomputation here would quietly disagree with
+   * what was actually sent.
+   *
+   * 🛑 Best-effort: an unreadable payout row must not fail a placement whose
+   * payment has already been taken (the money-taken/no-order class this
+   * function carries two 🛑 blocks about). An empty map means "no split
+   * recorded", which routes the order down the ORDINARY payout path — a seller
+   * chasing a late payout is recoverable; one whose order wrongly claims it was
+   * already settled would never be paid at all.
+   */
+  let splitByStore: Map<string, SplitSettlementRecord> = new Map();
+  try {
+    splitByStore = await payoutRepository.findBySettlementReference(merchantOrderId);
+  } catch (err) {
+    const normalized = normalizeError(err);
+    serverLogger.error(
+      "verifyAndPlaceGatewayOrderAction: could not read the split-settlement records for this capture — orders will be placed on the ORDINARY payout path",
+      { merchantOrderId, error: normalized.message },
+    );
+  }
+
   for (const { items: group, orderType } of orderGroups) {
     total += await createPhonePeGroupOrder(group, orderType, {
       appliedCoupons,
@@ -5043,6 +5161,7 @@ export async function verifyAndPlaceGatewayOrderAction(
        */
       emiOptIn: cart.emiPlan?.tenureMonths !== undefined,
       emiTenureMonths: cart.emiPlan?.tenureMonths,
+      splitByStore,
     });
   }
 

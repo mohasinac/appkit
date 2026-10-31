@@ -34,6 +34,24 @@ import {
   PAYOUT_PII_INDEX_MAP,
 } from "../../../security";
 
+/**
+ * What ONE vendor was instructed to be settled out of one capture.
+ *
+ * Read back by the settle path from the `payouts` row the capture wrote, so the
+ * order records the amount that was actually instructed rather than one
+ * recomputed from a cart that may have changed in between.
+ */
+export interface SplitSettlementRecord {
+  /** The gateway's vendor id — i.e. the store slug. */
+  vendorId: string;
+  /** Decimal rupees instructed to that vendor. */
+  amount: number;
+  /** The adapter that collected and split. Empty only on a row written before this field existed. */
+  gateway: string;
+  /** The payout row's own `requestedAt` — when the instruction was written. Never fabricated. */
+  instructedAt: Date;
+}
+
 /** Who/why for a payout write that lands in `statusHistory`. */
 export interface PayoutWriteContext {
   actor?: HistoryActor;
@@ -185,6 +203,133 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       .set(prepareForFirestore(encrypted));
 
     return { id, ...data };
+  }
+
+  /**
+   * Record a seller share that a payment AGGREGATOR settled, not us.
+   *
+   * ## 🛑 THE FIRST WRITER `status: "processing"` HAS EVER HAD
+   *
+   * `processing` and `failed` have been in `PayoutStatus` since the RazorpayX
+   * dispatcher was deleted, and `PAYOUT_TRACKED_FIELDS`' own note records that
+   * nothing wrote them. `failed` was already reachable (an admin may set it
+   * through `adminUpdatePayout`); `processing` was not reachable from anywhere.
+   * This is it, and the meaning is exact: **the money has left our control and
+   * has not yet landed.** Under split settlement that is literally true — the
+   * buyer's payment went into the aggregator's escrow with an instruction to
+   * pay this vendor, and the aggregator settles on its own cycle.
+   *
+   * ## 🛑 Why a separate method instead of `createPayout`
+   *
+   * `createPayout` hardcodes `status: "pending"`, and that is correct for every
+   * row it writes: a pending payout is one WE still owe and an admin will
+   * dispatch by hand. A row written here is one nobody will dispatch, ever.
+   * Widening `createPayout` with a status parameter would make "pending" a
+   * default a caller can forget, and a split-settled share sitting in the
+   * manual queue is a seller about to be paid twice.
+   *
+   * ## 🛑 It is a RECORD, not an instruction
+   *
+   * Nothing downstream acts on this row. It exists so the seller can see what
+   * they were paid and why, so `getPaidOutOrderIds` (which counts `pending`,
+   * `processing` and `paid`) stops the same orders being swept into a second
+   * payout, and so the books can tell escrow-settled revenue from
+   * platform-settled. Marking it `paid` is a later reconciliation step against
+   * the aggregator's own statement; `adminUpdatePayout` already does that.
+   *
+   * 🛑 `amount` is the share INSTRUCTED at capture and is NOT the whole of what
+   * the seller will be owed. Postage reimbursement and the points-earn side are
+   * decided after dispatch and cannot be expressed in a capture-time split —
+   * see `_internal/shared/checkout/settlement-split.ts`' header. That residue
+   * has no settlement path today and this method must not be read as claiming
+   * it does.
+   */
+  async createSplitSettlementPayout(
+    input: PayoutCreateInput & {
+      settlementGateway: string;
+      settlementVendorId: string;
+      settlementReference?: string;
+    },
+  ): Promise<PayoutPlain> {
+    const now = new Date();
+    const id = createPayoutId({ sellerName: input.sellerName, date: now });
+
+    const data: Omit<PayoutPlain, "id"> = {
+      ...input,
+      /*
+       * 🛑 Not `pending`. A `pending` row is one an admin dispatches by hand,
+       * and dispatching this one would pay the seller a second time out of the
+       * platform's own balance — which is the commingling in reverse.
+       */
+      status: PAYOUT_FIELDS.STATUS_VALUES.PROCESSING,
+      requestedAt: now,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    const encrypted = this.applyWriteHooks(data);
+    await this.db
+      .collection(this.collection)
+      .doc(id)
+      .set(prepareForFirestore(encrypted));
+
+    return { id, ...data };
+  }
+
+  /**
+   * Every split-settlement row written for ONE capture, keyed by store.
+   *
+   * 🛑 This is how the SETTLE path learns what was actually INSTRUCTED, rather
+   * than recomputing it. The capture happens in an earlier request
+   * (`/api/payment/create-order`), which is the only place that holds the
+   * vendor records and the exact per-vendor amounts it sent; recomputing at
+   * settle would silently diverge in the one window that matters — the cart can
+   * gain a line between the two requests, which is precisely why
+   * `verifyAndPlaceGatewayOrderAction` already carries a settlement-compliance
+   * detector. A read of what we wrote is a fact; a recomputation is a guess
+   * that agrees most of the time.
+   *
+   * One Firestore equality on a single field, so it is served by the automatic
+   * index — no composite. Bounded at 20: the reference is one capture, and a
+   * capture spanning more than a handful of vendors is the open question in
+   * `settlement-split.ts`, not a page to iterate.
+   */
+  async findBySettlementReference(
+    reference: string,
+  ): Promise<Map<string, SplitSettlementRecord>> {
+    const byStore = new Map<string, SplitSettlementRecord>();
+    if (!reference) return byStore;
+    const snap = await this.db
+      .collection(this.collection)
+      .where("settlementReference", "==", reference)
+      .limit(20)
+      .get();
+    for (const doc of snap.docs) {
+      /*
+       * 🛑 `mapDoc`, not `doc.data()`. It runs `deserializeTimestamps`, so
+       * `requestedAt` arrives as a `Date` rather than a Firestore `Timestamp` —
+       * and a `Timestamp` written into `OrderDocument.splitSettlement.instructedAt`
+       * (declared `Date | string`) would type-check through the cast chain and
+       * then break every date arithmetic that reads it. Same defect the
+       * `shippingDate` string/Timestamp split records.
+       */
+      const data = this.mapDoc<PayoutDocument>(doc);
+      if (!data.storeId || !data.settlementVendorId) continue;
+      byStore.set(data.storeId, {
+        vendorId: data.settlementVendorId,
+        amount: data.amount,
+        gateway: data.settlementGateway ?? "",
+        /*
+         * 🛑 The row's OWN `requestedAt`, which IS the moment the instruction
+         * was written, and it is required on every row this method can match.
+         * Never `new Date()` at the point of reading: a fabricated timestamp on
+         * a money record is CLAUDE.md § Status History's first rule, and the
+         * settle request can be minutes after the capture.
+         */
+        instructedAt: data.requestedAt,
+      });
+    }
+    return byStore;
   }
 
   /** Override base update to preserve encryption/indexing for changed PII fields. */

@@ -276,6 +276,28 @@ export const PRIVATE_STORE_FIELDS = [
   "gstin",
   "legalName",
   "registeredAddress",
+  /*
+   * ── Split-settlement identity (Phase 3) ──────────────────────────────────
+   *
+   * 🛑 `pan` is the one field on this document whose disclosure has a LEGAL
+   * dimension rather than a commercial one. It is a government identity number
+   * for the seller, collected for exactly one purpose — onboarding them as a
+   * vendor with a splitting payment aggregator — and it has exactly one reader,
+   * `settlementVendorRegister`, which runs in a Firebase Function. It is
+   * ciphertext at rest (`STORE_PII_FIELDS`), so what this entry prevents is not
+   * a plaintext leak but an `enc:v1:…` blob in every store payload: still
+   * needless exposure, on the same reasoning that strips the raw credential
+   * blobs from `GET /api/admin/site`.
+   *
+   * 🛑 `settlementVendors` names an external account identifier inside this
+   * business's aggregator relationship, per gateway, with a refusal reason
+   * attached. Published, it would advertise which sellers an aggregator has
+   * declined — a fact about them we were told in confidence and that says
+   * nothing about their goods. It also has no public reader, which is this
+   * file's bar on its own.
+   */
+  "pan",
+  "settlementVendors",
 ] as const;
 
 /**

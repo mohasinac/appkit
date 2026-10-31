@@ -12,6 +12,12 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { getBrandName } from "../../../core/brand-resolver";
+/*
+ * The ONE PAN shape check, shared with the route that persists it — two regexes
+ * for one format is how they come to disagree (Root Cause #75). Pure, no node
+ * imports, so it is safe in a `"use client"` module.
+ */
+import { isValidPan } from "../../../_internal/shared/features/payouts/destination";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
 } as const;
@@ -56,13 +62,20 @@ const payoutSettingsDraftSchema = z.object({
   // invoices. A seller with a GSTIN invoices under it; one without
   // invoices under {getBrandName()}'s (resolveSupplierIdentity).
   //
-  // `pan` and `businessType` were removed 2026-10-19: neither exists on
-  // StoreDocument or UserDocument and the route stripped them, so a
-  // seller who entered a PAN was told it saved and it went nowhere.
-  // An input that provably cannot persist is worse than no input.
+  // `businessType` is still absent: it has no field on StoreDocument and the
+  // route would strip it, so an input for it would tell the seller we hold
+  // something we do not. An input that provably cannot persist is worse than
+  // no input.
+  //
+  // 🛑 `pan` is BACK (Phase 3) because that bar is now met: `StoreDocument.pan`
+  // exists, is encrypted at rest by `STORE_PII_FIELDS`, the route declares it
+  // in BOTH arms of its discriminated union, and the split-settlement vendor
+  // registration reads it. Writer and reader, which is exactly what the
+  // 2026-10-19 removal asked for before it came back.
   gstin: annotate(z.string(), { section: "tax", sectionLabel: "Tax Info", order: 1, row: "pair" }),
-  legalName: annotate(z.string(), { section: "tax", order: 2, row: "pair" }),
-  registeredAddress: annotate(z.string(), { section: "tax", order: 3, row: "full" }),
+  pan: annotate(z.string(), { section: "tax", order: 2, row: "pair" }),
+  legalName: annotate(z.string(), { section: "tax", order: 3, row: "pair" }),
+  registeredAddress: annotate(z.string(), { section: "tax", order: 4, row: "full" }),
 
   autoPayout: annotate(z.boolean(), {
     section: "preferences", sectionLabel: "Preferences", order: 1, row: "quarter",
@@ -130,6 +143,24 @@ const payoutSettingsDraftSchema = z.object({
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["bankName"], message: "Bank name is required" });
     }
   }
+  /*
+   * 🛑 The PAN is OPTIONAL and only its SHAPE is checked. Which seller entity
+   * types actually require one is the payment aggregator's rule, not ours, so
+   * refusing a blank here would decide on its behalf that a seller cannot sell
+   * (blocker #5). A malformed one is refused, because the gateway would refuse
+   * it too, for a reason the seller could not read.
+   *
+   * Shape only, deliberately: unlike a GSTIN, a PAN carries no check character
+   * that can be recomputed, so `isValidPan` cannot mean more than this and must
+   * never be read as if it did.
+   */
+  if (v.pan.trim() && !isValidPan(v.pan)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["pan"],
+      message: "Invalid PAN — expected five letters, four digits, then one letter.",
+    });
+  }
 });
 
 type PayoutMethod = "upi" | "bank_transfer";
@@ -144,6 +175,7 @@ interface PayoutDraft {
   bankName: string;
   accountType: AccountType;
   gstin: string;
+  pan: string;
   legalName: string;
   registeredAddress: string;
   autoPayout: boolean;
@@ -165,8 +197,50 @@ interface SafePayoutDetails {
     bankName: string;
     accountType: AccountType;
   };
+  /**
+   * The destination is WELL-FORMED. Nothing more.
+   *
+   * 🛑 It used to be written `true` unconditionally by the write path, so this
+   * badge said "Payout configured" about a destination no bank would accept.
+   * `verification` below is the separate answer to "has anyone CHECKED it", and
+   * the two must stay visibly different — see the badge pair in the Payout
+   * Method section.
+   */
   isConfigured: boolean;
 }
+
+/** Mirrors `PAYOUT_VERIFICATION`. Absent means `unverified`, which is a fact. */
+type PayoutVerificationState = {
+  status: "unverified" | "pending" | "verified" | "failed";
+  message: string;
+};
+
+/**
+ * 🛑 A complete `Record`, not a partial map with a fallback.
+ *
+ * A missing key would render `undefined` for a status the seller is in, which
+ * is the one outcome worse than either answer: it tells them nothing and reads
+ * as a broken page. `tsc` refuses a fifth status without an entry here.
+ *
+ * 🛑 `unverified` is deliberately NEUTRAL, not a warning. It is the normal
+ * state for a seller who has just filled the form in — a provider has not been
+ * asked yet — and shouting about it would make the common case look broken.
+ */
+const VERIFICATION_BADGE: Record<
+  PayoutVerificationState["status"],
+  /*
+   * 🛑 Variants from `BadgeVariant`, which has no `error` or `neutral` — it is
+   * `danger` and `default`. A name the catalogue does not define would resolve
+   * to `undefined` in `BADGE_CLASSES` and render an unstyled span, which reads
+   * as a broken badge rather than a missing one.
+   */
+  { label: string; variant: "success" | "warning" | "danger" | "default" }
+> = {
+  unverified: { label: "Not yet checked", variant: "default" },
+  pending: { label: "Provider is checking", variant: "warning" },
+  verified: { label: "Verified by provider", variant: "success" },
+  failed: { label: "Provider rejected these details", variant: "danger" },
+};
 
 export interface SellerPayoutSettingsViewProps {
   apiBase?: string;
@@ -181,6 +255,10 @@ const DEFAULT_DRAFT: PayoutDraft = {
   bankName: "",
   accountType: "savings",
   gstin: "",
+  // Blank on load even when one is stored: the route returns `panOnFile`, a
+  // boolean, never the PAN itself. Same treatment as `accountNumber` above —
+  // leave it blank to keep what is saved, type one to replace it.
+  pan: "",
   legalName: "",
   registeredAddress: "",
   autoPayout: true,
@@ -262,6 +340,18 @@ function RadioFieldGroup<V extends string>({
 export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS }: SellerPayoutSettingsViewProps) {
   const [draft, setDraft] = useState<PayoutDraft>(DEFAULT_DRAFT);
   const [current, setCurrent] = useState<SafePayoutDetails | null>(null);
+  /*
+   * 🛑 TWO separate pieces of state, because they answer two questions the old
+   * single badge conflated: `panOnFile` is "do we hold one" (the value itself
+   * is never sent to the browser), and `verification` is "has a payment
+   * provider accepted the destination". Neither can be derived from
+   * `isConfigured`, which only means "well-formed".
+   */
+  const [panOnFile, setPanOnFile] = useState(false);
+  const [verification, setVerification] = useState<PayoutVerificationState>({
+    status: "unverified",
+    message: "",
+  });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -273,6 +363,14 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       .then((res) => {
         const details: SafePayoutDetails = res?.data?.payoutDetails ?? { method: "upi", isConfigured: false };
         setCurrent(details);
+        setPanOnFile(res?.data?.panOnFile === true);
+        setVerification({
+          // Absent means `unverified` — a destination nobody has checked IS
+          // unverified, and reading absence as anything better is the defect
+          // `isConfigured: true` used to be.
+          status: res?.data?.payoutVerification?.status ?? "unverified",
+          message: res?.data?.payoutVerification?.message ?? "",
+        });
         setDraft({
           method: details.method,
           upiId: details.upiId ?? "",
@@ -295,6 +393,9 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
            * is the supplier of record on that store's invoices.
            */
           gstin: res?.data?.gstin ?? "",
+          // Never loaded from the response — the route sends `panOnFile`, a
+          // boolean, and never the value. See DEFAULT_DRAFT.
+          pan: "",
           legalName: res?.data?.legalName ?? "",
           registeredAddress: res?.data?.registeredAddress ?? "",
           autoPayout: res?.data?.preferences?.autoPayout ?? true,
@@ -347,6 +448,21 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         // Flat, matching the route's schema. A nested `taxInfo` object was
         // stripped by `z.object()` and never reached Firestore.
         gstin: draft.gstin.trim(),
+        /*
+         * 🛑 Sent ONLY when the seller typed something, and that is not an
+         * optimisation. The field loads blank by design (the route returns a
+         * boolean, never the PAN), so sending `""` on every save would CLEAR a
+         * stored PAN every time a seller changed an unrelated toggle.
+         *
+         * 🛑 KNOWN CONSEQUENCE, stated rather than hidden: a seller therefore
+         * cannot CLEAR a PAN from this form — only replace it. That is the
+         * identical trade-off the `accountNumber` field above already makes
+         * ("leave blank to keep the existing saved number"), and the route does
+         * accept an empty string as a deliberate clear, so the capability
+         * exists and simply has no control yet. A "remove" control is the fix;
+         * sending `""` on every save is not.
+         */
+        ...(draft.pan.trim() ? { pan: draft.pan.trim().toUpperCase() } : {}),
         legalName: draft.legalName.trim(),
         registeredAddress: draft.registeredAddress.trim(),
         preferences: {
@@ -393,7 +509,20 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
       setSuccess(true);
       const updated: SafePayoutDetails = json?.data?.payoutDetails ?? { method: draft.method, isConfigured: false };
       setCurrent(updated);
-      setDraft((prev) => ({ ...prev, accountNumber: "" }));
+      /*
+       * 🛑 Read back from the RESPONSE, not inferred from the draft. The write
+       * RESETS the verification (the destination just changed), and a form that
+       * kept showing the old "Verified by provider" badge would be asserting
+       * that a provider has accepted an account it has never seen.
+       */
+      setPanOnFile(json?.data?.panOnFile === true);
+      setVerification({
+        status: json?.data?.payoutVerification?.status ?? "unverified",
+        message: json?.data?.payoutVerification?.message ?? "",
+      });
+      // Both secrets cleared from the draft after a successful save — neither is
+      // ever sent back to the browser, so keeping them would be the only copy.
+      setDraft((prev) => ({ ...prev, accountNumber: "", pan: "" }));
     } catch (err) {
       /*
        * `normalizeError` was already being called and its result DISCARDED,
@@ -432,10 +561,40 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           <Heading level={3} className="mb-2">Payout Method</Heading>
           {current && (
             <Row className="mb-2" align="center" gap="sm">
+              {/*
+                🛑 TWO badges, because they answer two different questions and
+                one badge conflated them. `isConfigured` means the destination
+                is the right SHAPE — it used to be written `true`
+                unconditionally, so this badge said "Payout configured" about an
+                IFSC that is not an IFSC. Whether a payment provider has
+                actually accepted the account is the second badge, and only a
+                provider can answer it: we hold no banking licence and run no
+                penny-drop.
+              */}
               <Badge variant={current.isConfigured ? "success" : "warning"}>
-                {current.isConfigured ? "Payout configured" : "Not configured"}
+                {current.isConfigured ? "Details complete" : "Details incomplete"}
+              </Badge>
+              <Badge variant={VERIFICATION_BADGE[verification.status].variant}>
+                {VERIFICATION_BADGE[verification.status].label}
               </Badge>
             </Row>
+          )}
+          {verification.status === "failed" && verification.message && (
+            <Alert variant="error">
+              {/*
+                The provider's own sentence, verbatim. "Account name does not
+                match PAN" is actionable; "verification failed" is not — which
+                is the whole reason the message is stored and surfaced rather
+                than reduced to a status.
+              */}
+              {verification.message}
+            </Alert>
+          )}
+          {verification.status === "pending" && (
+            <Alert variant="info">
+              Your payment provider is still checking these details. Payouts to
+              you are held until it finishes.
+            </Alert>
           )}
           {current?.isConfigured && (
             <Alert variant="info">
@@ -558,7 +717,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     {
       id: "tax",
       label: "Tax Info",
-      fields: ["gstin", "legalName", "registeredAddress"],
+      fields: ["gstin", "pan", "legalName", "registeredAddress"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Tax Information</Heading>
@@ -597,14 +756,37 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
             disabled={busy}
           />
           {/*
-            PAN and Business Type were removed 2026-10-19. Neither had any
-            storage — no field on StoreDocument or UserDocument — and the
-            route's z.object() stripped the whole `taxInfo` object, so a
-            seller who entered their PAN was shown a success toast and the
-            value went nowhere. An input that provably cannot persist is
-            worse than no input: it tells the seller we hold something we
-            do not. Re-add either one WITH a schema field and a write path.
+            Business Type is still absent: it has no field on StoreDocument and
+            the route would strip it, so an input for it would tell the seller
+            we hold something we do not. Re-add it WITH a schema field and a
+            write path, which is the bar PAN has now cleared.
           */}
+          <FormField
+            name="pan"
+            label="PAN (optional)"
+            type="text"
+            value={values.pan}
+            onChange={(v) => onChange({ pan: v.toUpperCase() })}
+            placeholder="e.g. ABCDE1234F"
+            helpText={
+              panOnFile
+                ? "A PAN is on file. Leave this blank to keep it, or type a new one to replace it."
+                : "Needed before a payment provider can pay you directly. Stored encrypted and never displayed again."
+            }
+            disabled={busy}
+          />
+          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
+            {/*
+              🛑 The copy has to say WHY it is being asked for, because a
+              government identity number collected without a stated purpose is
+              the thing a seller is right to refuse. It also must not overstate
+              it: which seller types actually require one is the payment
+              provider's rule, so this says "most" rather than "all".
+            */}
+            Most payment providers require a PAN before they will settle money
+            to a seller directly. We store it encrypted, send it only to the
+            provider that pays you, and never show it again — including to you.
+          </Text>
         </Stack>
       ),
     },
@@ -740,7 +922,14 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
         </Stack>
       ),
     },
-  ], [busy, current]);
+    /*
+     * `panOnFile` and `verification` are read inside the renders above, so they
+     * are dependencies. Omitting them would freeze the PAN help text and both
+     * badges at their first-render values — i.e. the form would keep saying
+     * "Not yet checked" after a save that reset the verification, which is the
+     * stale-render half of Root Cause #38.
+     */
+  ], [busy, current, panOnFile, verification]);
 
   const { openIds, setOpenIds, goToSection, fieldToSectionIndex, sectionMeta } =
     useSectionFormNav(sections, draft);

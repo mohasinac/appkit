@@ -44,3 +44,30 @@ export {
   type SettlementGatewayCandidate,
   type GatewayResolution,
 } from "../../../shared/checkout/settlement";
+/*
+ * Phase 3 — WHAT each seller's share of that one capture is. Exported for the
+ * same reason the gateway choice above is: the consumer owns the capture route,
+ * and that is the only request that holds both the cart and the vendor
+ * registrations, so it is the only place the instruction can be built and the
+ * only place a refusal can land before money moves.
+ */
+export {
+  buildSplitInstructions,
+  splitRefusalReason,
+  vendorSettlementForGroup,
+  orderNeedsManualPayout,
+  SPLIT_UNSETTLEABLE_CODE,
+  type SplitCandidateGroup,
+  type SplitSettlementLine,
+  type BuiltSplitInstructions,
+  type SplitBlockedStore,
+  type VendorSettlement,
+} from "../../../shared/checkout/settlement-split";
+export {
+  resolveCaptureSplit,
+  recordSplitSettlementPayouts,
+  type CaptureSplitInput,
+  type CaptureSplitGroupInput,
+  type ResolvedCaptureSplit,
+  type SplitSettlementPayoutInput,
+} from "./split-settlement";

@@ -2063,7 +2063,7 @@ export function AdminSiteSettingsView({
                 helperText="The one store whose stock this business may collect payment for into its own account. LEAVE BLANK AND NO CART CAN BE PAID ONLINE: any cart holding another seller's items must be collected by a gateway that settles their share directly to them at capture (Cashfree Easy Split), because a non-splitting capture puts their money in this business's account first. Blank means every store counts as another seller's."
                 value={platformStoreId}
                 onChange={(e) => setPlatformStoreId(e.target.value)}
-                placeholder="store-letitrip-official"
+                placeholder="store-your-official-slug"
               />
               <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
               <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>

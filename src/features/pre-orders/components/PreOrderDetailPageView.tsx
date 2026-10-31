@@ -20,6 +20,7 @@ import { formatCurrency, roundRupees } from "../../../utils/number.formatter";
 import { toDescriptionHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
 import { ProgressBarFill } from "../../../ui/components/ProgressBarFill";
+import { Disclaimer } from "../../../ui/components/Disclaimer";
 import { Button } from "../../../ui/components/Button";
 import { Container, Row, Stack } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
@@ -388,6 +389,19 @@ function PreOrderBuyBarPanel({
           </Div>
         </>
       )}
+
+      {/*
+        🛑 BESIDE THE RESERVE BUTTON, not on a policy page reachable from the
+        footer — rule 1 of the disclaimer registry. The 45-day promise and its
+        consequence (an automatic cancellation and refund if the seller
+        overruns) are facts about the decision the buyer is making right here,
+        and a buyer whose order is cancelled by a timer must have been told
+        before they paid, not after.
+
+        `inline` because this panel already has its own card chrome; the entry
+        is `tone: "warning"`, which `Disclaimer` keeps inline.
+      */}
+      <Disclaimer id="pre-order" inline />
     </Stack>
   );
 }

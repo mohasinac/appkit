@@ -17,6 +17,11 @@ import { runWhatsAppNotify, type WhatsAppNotifyPayload } from "./whatsappNotify"
 import { runNewsletterExport } from "./newsletterExport";
 import { runStoreNameBackfill } from "./storeNameBackfill";
 import { runCategoryTaxonomyBackfill } from "./categoryTaxonomyBackfill";
+import {
+  runSettlementVendorRegister,
+  type SettlementVendorRegisterPayload,
+} from "./settlementVendorRegister";
+import { STORE_VENDOR_REGISTER_JOB } from "../../features/stores/activation";
 import type { JsonValue } from "@mohasinac/appkit";
 import { bookShipment } from "../../features/shipping/book";
 
@@ -161,7 +166,37 @@ async function runBookShipmentJob(
   };
 }
 
+/**
+ * Register a store as a split-settlement vendor with the collecting gateway.
+ *
+ * 🛑 A JOB, not an inline call from the admin approval route: it is an outbound
+ * HTTPS call on a path an admin is waiting on, against Rule #6's 10s ceiling,
+ * in a request that has already made two reads and up to three writes.
+ *
+ * 🛑 ONE dispatch point. The runner records every non-registration outcome on
+ * the store with a stated reason (blocker #4 means it routinely fires for a
+ * store with no payout details yet), so a second place deciding whether to call
+ * it would be a second place that can disagree about what "not registered"
+ * means.
+ */
+async function runSettlementVendorRegisterJob(
+  payload: Record<string, JsonValue>,
+  ctx: JobContext,
+): Promise<JobRunResult> {
+  return runSettlementVendorRegister(
+    { storeSlug: String(payload.storeSlug ?? "") } satisfies SettlementVendorRegisterPayload,
+    ctx,
+  );
+}
+
 export const JOB_RUNNERS: Record<string, JobRunner> = {
+  /*
+   * 🛑 Keyed by the SHARED constant, not a literal. A `jobType` is matched by
+   * string equality, so a typo at either end writes a job document that is
+   * picked up, matched against nothing, and marked failed with "unknown job
+   * type" — which reads as a runner fault rather than a key mismatch.
+   */
+  [STORE_VENDOR_REGISTER_JOB]: runSettlementVendorRegisterJob,
   bookShipment: runBookShipmentJob,
   payoutsWeekly: runPayoutsWeeklyJob,
   hardBanCascade: runHardBanCascadeJob,

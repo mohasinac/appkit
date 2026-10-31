@@ -26,6 +26,12 @@ export {
   type ToStoreListItemOptions,
   type StoreProjectionSource,
 } from "./adapters";
+/*
+ * The one named side effect of a store becoming active. Exported because the
+ * consumer owns the admin PATCH route, which is `setStatus`'s sole dispatcher
+ * and therefore the only place this can be called from today.
+ */
+export { onStoreActivated, STORE_VENDOR_REGISTER_JOB } from "./activation";
 export {
   resolveStoreTabs,
   getDefaultStoreTabPath,

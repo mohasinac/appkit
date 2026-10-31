@@ -206,6 +206,27 @@ export interface PayoutDeduction {
  *
  * Also defaulted to 0, for the same reason.
  */
+/**
+ * A commission PERCENT (what an admin types) as a RATE (what a payout row
+ * stores). `5` becomes `0.05`.
+ *
+ * Trivial arithmetic, and it lives here anyway for two reasons. `/ 100` on a
+ * `commissions.*` field is exactly what `audit-money-paths` R3 forbids outside
+ * this file, because the two units are both bare numbers and swapping them
+ * silently charges a seller 100× or 1/100× — there is no type that separates
+ * them. And it was already open-coded identically in `autoPayoutEligibility`
+ * and `weeklyPayoutEligibility` (both staged in that audit), so the next
+ * writer copied the shape rather than a helper.
+ *
+ * 🛑 This is a UNIT CONVERSION, not a rounding site. Do not round here: the
+ * rate is stored to explain a fee that has already been computed and rounded
+ * by `computePayoutDeduction`, and rounding the explanation would make it
+ * disagree with the amount it explains.
+ */
+export function commissionPercentToRate(percent: number | undefined): number {
+  return (percent ?? 0) / 100;
+}
+
 export function computePayoutDeduction(
   grossAmount: number,
   commissions: FeeCommissionRates,

@@ -27,6 +27,9 @@ import { DatabaseError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
 
 import type { FirestoreDocument } from "@mohasinac/appkit";
+import { STORE_PII_FIELDS } from "../../../security/pii-schemas";
+import { decryptPii } from "../../../security/pii-encrypt";
+import type { StoreSettlementVendor } from "../schemas/firestore";
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
 import { buildStoreSearchTxt } from "../../../utils/search-txt-builders";
 import type { JsonValue } from "../../../schemas/types";
@@ -48,6 +51,24 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   constructor() {
     super(STORE_COLLECTION);
   }
+
+  /**
+   * `pan` — encrypted on EVERY write path by `applyWriteHooks`.
+   *
+   * 🛑 Declared here rather than encrypted at the call site, which is the whole
+   * reason the hook exists: there are ~14 store write paths and two of them
+   * (`setStatus`, `adminUpdate`) take an arbitrary `Partial<StoreDocument>`, so
+   * a per-call-site encrypt would be correct in whichever ones somebody
+   * remembered. `encryptPiiFields` is idempotent on the `enc:v1:` prefix, so a
+   * value already encrypted passes through unchanged.
+   *
+   * 🛑 `mapDoc` is deliberately NOT overridden to decrypt. This repository is
+   * ciphertext-by-default by accident of history — it never had a `mapDoc`
+   * decrypt to remove — and that is the state `audit-pii-coverage` R3
+   * prescribes, so the new field gets it for free. Plaintext is `revealPan`,
+   * named and greppable.
+   */
+  protected override piiFields = STORE_PII_FIELDS;
 
   protected override mapDoc<D = StoreDocument>(snap: DocumentSnapshot): D {
     return super.mapDoc<StoreDocument>(snap) as unknown as D;
@@ -169,6 +190,73 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
   }
 
   /**
+   * The store's PAN in PLAINTEXT. The only way to get it.
+   *
+   * 🛑 NAMED and opt-in, following `SiteSettingsRepository.getDecryptedCredentials`.
+   * `mapDoc` returns the `enc:v1:…` value, so every other reader of a store
+   * document holds ciphertext and cannot leak plaintext by forgetting to
+   * project. Its one legitimate caller is the vendor-registration job, which
+   * hands the PAN straight to the aggregator and never stores or logs it.
+   *
+   * 🛑 Returns `undefined` for an absent field — which is a real and common
+   * state, not an error. Most sellers have not supplied a PAN, and blocker #5
+   * means some may never be onboardable; the job records that rather than
+   * throwing.
+   *
+   * 🛑 There is no masked variant and none should be added speculatively. No
+   * surface renders a PAN today, and a `maskedPan` with no reader is the
+   * shadow-constant shape of Root Cause #53 — it would read as proof that
+   * somewhere shows one.
+   */
+  revealPan(doc: Pick<StoreDocument, "pan"> | null | undefined): string | undefined {
+    const value = doc?.pan;
+    if (!value) return undefined;
+    const plain = decryptPii(value);
+    return typeof plain === "string" && plain ? plain : undefined;
+  }
+
+  /**
+   * Record one gateway's vendor registration for this store.
+   *
+   * 🛑 A DOTTED PATH, never `update({ settlementVendors: … })`. Firestore
+   * replaces a map field entirely, so writing the object wholesale would delete
+   * every OTHER gateway's registration — the same defect
+   * `audit-pii-crypto`'s PII_MAP_WHOLESALE_UPDATE exists for, on a map that
+   * happens to hold no PII. With one splitting gateway live today the bug would
+   * be invisible and would surface on the day a second is added, which is the
+   * worst possible time to find it.
+   *
+   * 🛑 Goes through the raw collection rather than `update()`, deliberately:
+   * `BaseRepository.update` takes `Partial<Plaintext<T>>`, which cannot express
+   * a dotted key, and a cast to smuggle one past it would also smuggle past
+   * `applyWriteHooks`. Nothing in this map is PII or searchable, so there is no
+   * hook this bypass loses — `incrementTotalProducts` writes
+   * `stats.totalProducts` the same way for the same reason.
+   *
+   * Not in `STORE_TRACKED_FIELDS`: a registration attempt is an operational
+   * event with its own `attempts`/`lastAttemptAt`, and tracking it would write
+   * a timeline entry per retry and exhaust the 50-entry FIFO cap while burying
+   * the status changes a seller actually reads — the identical argument the
+   * `standing` block makes.
+   */
+  async setSettlementVendor(
+    storeSlug: string,
+    gateway: string,
+    record: StoreSettlementVendor,
+  ): Promise<void> {
+    if (!storeSlug || !gateway) {
+      throw new DatabaseError("setSettlementVendor requires a storeSlug and a gateway");
+    }
+    await this.db
+      .collection(this.collection)
+      .doc(storeSlug)
+      .update({
+        [`settlementVendors.${gateway}`]: record,
+        updatedAt: new Date(),
+      });
+  }
+
+  /**
    * Update store fields (partial).
    */
   async updateStore(
@@ -198,6 +286,23 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
    * write and a single timeline entry; `prior` keeps that entry read-free
    * for the route, which has already fetched the store to 404 on a missing
    * one (Rule #6).
+   *
+   * 🛑 **ACTIVATION SIDE EFFECTS DO NOT LIVE HERE.** Approving a store is what
+   * triggers split-settlement vendor registration, and the enqueue for it is
+   * `onStoreActivated` in
+   * `_internal/server/features/stores/activation.ts` — called by the admin
+   * PATCH route, which is this method's sole dispatcher.
+   *
+   * Two reasons it is not in this method. A repository is the data layer and no
+   * repository in this codebase imports another feature's — `enqueueJob` lives
+   * in `features/jobs/actions/` and pulls the jobs repository and the admin
+   * Auth SDK with it, which is the Turbopack import-chain trap (Root Cause
+   * #6/#18). And a job enqueued from inside a write primitive would fire for a
+   * reseed, a backfill and a test fixture, none of which is an approval.
+   *
+   * A SECOND dispatcher of this method must call `onStoreActivated` too. That
+   * is the cost of the layering, and it is stated here because this is where
+   * someone will look.
    */
   async setStatus(
     storeSlug: string,

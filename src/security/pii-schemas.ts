@@ -188,6 +188,31 @@ export const LOTTERY_ENTRY_PII_FIELDS = [
   "userDisplayName",
 ] as const;
 
+/**
+ * PII fields on the stores collection.
+ *
+ * `pan` only — the seller's Permanent Account Number, needed to onboard them as
+ * a split-settlement vendor. It is a government identity number and the one
+ * field on `StoreDocument` whose disclosure has a legal dimension rather than a
+ * commercial one.
+ *
+ * 🛑 THIS IS NOT THE `STORE_SECRET_FIELDS` THE COMMENT BELOW DESCRIBES, and the
+ * difference is which KEY encrypts it. This list is assigned to
+ * `StoreRepository.piiFields`, so it is encrypted by `encryptPiiFields` with
+ * the PII key — the same mechanism as every other entry in this file, and the
+ * reason it belongs here. The deleted constant named fields encrypted with
+ * `SETTINGS_ENCRYPTION_KEY`, i.e. the OTHER crypto system, which is exactly why
+ * its presence in this registry was the hazard rather than its contents.
+ *
+ * 🛑 No blind index: nothing queries a store by PAN, and a PAN is not a lookup
+ * key — it is a value handed to one aggregator at registration time.
+ *
+ * 🛑 `StoreRepository.mapDoc` does NOT decrypt it. Reads return `enc:v1:…` and
+ * plaintext requires the named `revealPan` accessor, which is the
+ * `SiteSettingsRepository` shape `audit-pii-coverage` R3 prescribes.
+ */
+export const STORE_PII_FIELDS = ["pan"] as const;
+
 // `STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"]` was deleted here.
 //
 // It had ZERO consumers, and its presence in this file was the whole hazard:

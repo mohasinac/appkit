@@ -7,7 +7,24 @@
 import type { CartItemDocument, CartLineKind, CartLineMember } from "../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../features/products/schemas/firestore";
 import { roundRupees } from "../../../utils/number.formatter";
-import { calculateGstInclusive, taxableFromInclusive } from "../fees/calculator";
+import { calculateGstInclusive } from "../fees/calculator";
+import type { PayableOrderLike } from "./payout-base";
+
+/*
+ * 🛑 The payout base moved to `./payout-base` on 2026-10-31 — this file had
+ * reached its 1000-line ceiling and a split capture needed a third caller of
+ * the same rule. Re-exported rather than relocated-and-repointed so the ~20
+ * existing importers keep working; new code should import from the module
+ * that defines it (Root Cause #18).
+ */
+export {
+  orderTaxableValue,
+  ordersTaxableValue,
+  linesTaxableValue,
+  commissionRecordRates,
+  type PayableOrderLike,
+  type TaxableLineLike,
+} from "./payout-base";
 /*
  * Points: the CAP arithmetic only. `maxRedeemablePoints` lives beside
  * `POINTS_MAX_REDEMPTION_PERCENT`, which is the constant that defines it, so
@@ -499,20 +516,6 @@ export function allocateAcrossMembers(total: number, weights: number[]): number[
   return out;
 }
 
-/** Exactly the fields `orderGoodsValue` / `orderTaxableValue` read. */
-export interface PayableOrderLike {
-  items?: Array<{
-    quantity: number;
-    unitPrice: number;
-    cancelledQuantity?: number;
-    /** Snapshotted at purchase. Absent or 0 means no tax to back out. */
-    gstRate?: number;
-  }>;
-  /** The flat shape, authoritative when `items` is absent. */
-  quantity?: number;
-  unitPrice?: number;
-  gstRate?: number;
-}
 
 /**
  * The GOODS VALUE of an order — the only correct base for a seller payout.
@@ -566,56 +569,6 @@ export function ordersGoodsValue(orders: readonly PayableOrderLike[]): number {
   return roundRupees(orders.reduce((sum, o) => sum + orderGoodsValue(o), 0));
 }
 
-/**
- * The TAXABLE VALUE of an order — **the payout base.**
- *
- * 🛑 This is the second of two narrowings, and the distinction between them is
- * worth keeping straight:
- *
- *  - C0 established the base is the **goods value**, not the order grand total
- *    (which folded in GST, the platform fee the buyer already paid, shipping,
- *    COD handling, add-ons and the EMI surcharge).
- *  - This establishes it is the **taxable value**, not the gross goods value —
- *    because every price here is tax-INCLUSIVE, so the goods value still has
- *    our GST sitting inside it, and paying that out is the very thing C0 set
- *    out to stop.
- *
- * The second narrowing was not possible until the pricing model was settled:
- * under the old add-on-top math the goods value WAS the taxable value, so the
- * two were indistinguishable and C0's fix was complete as written.
- *
- * One sentence covers both seller modes, which is the reason the flag is an
- * authoring convenience and nothing more:
- *
- *   **the payout base is the taxable value, never the gross.**
- *
- *   - inclusive seller, ₹999 @5% → buyer pays ₹999, taxable ₹951.43, payout ₹951.43
- *   - exclusive seller types ₹999 → grossed up on write to ₹1,048.95, buyer
- *     pays ₹1,048.95, taxable ₹999.00, payout ₹999.00
- *
- * Per ITEM, using each line's own snapshotted `gstRate`: a mixed 5% + 18%
- * order cannot be backed out with a single blended rate, and an order-level
- * rate does not exist.
- */
-export function orderTaxableValue(order: PayableOrderLike): number {
-  const items = order.items;
-  if (items?.length) {
-    const raw = items.reduce((sum, i) => {
-      const live = Math.max(0, i.quantity - (i.cancelledQuantity ?? 0));
-      return sum + taxableFromInclusive(live * i.unitPrice, i.gstRate ?? 0);
-    }, 0);
-    return roundRupees(raw);
-  }
-  return taxableFromInclusive(
-    (order.quantity ?? 0) * (order.unitPrice ?? 0),
-    order.gstRate ?? 0,
-  );
-}
-
-/** Sum of `orderTaxableValue` across orders — the payout base for a batch. */
-export function ordersTaxableValue(orders: readonly PayableOrderLike[]): number {
-  return roundRupees(orders.reduce((sum, o) => sum + orderTaxableValue(o), 0));
-}
 
 /** The subset `orderShippingReimbursement` reads. */
 export interface ReimbursableOrderLike {
