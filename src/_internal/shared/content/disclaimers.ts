@@ -231,13 +231,35 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
     surfaces: ["LiveItemDetailPageView", "/live"],
   },
 
+  /*
+   * 🛑 The 45-day promise and its CONSEQUENCE, in the buyer's own terms.
+   *
+   * This entry used to describe only the deposit mechanics, which left the one
+   * thing a buyer most needs to know unsaid: a pre-order that overruns its
+   * promised date is **cancelled and refunded automatically**, with no further
+   * decision from them. A refund they did not ask for reads as us losing their
+   * order unless it was declared up front — the same argument the
+   * `automated-decision` entry makes.
+   *
+   * `{{preOrderMaxDeliveryDays}}` resolves from `PREORDER_MAX_DELIVERY_DAYS`,
+   * the constant the four enforcement points refuse on, so this is rule 3 of
+   * the header working as intended: a gateway-driven change to the ceiling
+   * updates this text instead of contradicting it. Never type "45" here.
+   *
+   * `tone: "warning"` rather than `legal` — an automatic cancellation is a
+   * consequence the buyer cannot undo, which is the stated bar for warning.
+   */
   "pre-order": {
+    heading: "Pre-order terms",
     body:
-      "A release date on a pre-order is the manufacturer's estimate and can move or be cancelled by them. " +
+      "A pre-order must promise delivery within {{preOrderMaxDeliveryDays}} days of your purchase. " +
+      "If the seller has not delivered by the date shown on the listing, the order is **cancelled and " +
+      "refunded automatically** — you do not have to ask, and the item is not held for you afterwards. " +
+      "The date is the seller's estimate and can move within that window, but never beyond it. " +
       "Your deposit is refundable until the item ships; the remaining balance is charged when it is ready " +
       "to dispatch, against the terms shown when you placed the pre-order.",
-    tone: "legal",
-    surfaces: ["PreOrderDetailPageView", "/pre-orders"],
+    tone: "warning",
+    surfaces: ["PreOrderDetailPageView", "/pre-orders", "CheckoutRouteClient"],
   },
 
   "collectordrop-binding": {

@@ -2,6 +2,11 @@ import { z } from "zod";
 import { mediaUrlSchema } from "../../../../validation/schemas";
 import { PRODUCT_MAX_IMAGES } from "../../media/limits";
 import { PRODUCT_UPDATABLE_FIELDS } from "../../../../features/products/schemas/firestore";
+import {
+  checkPreOrderDeliveryDate,
+  preOrderDeliveryMessage,
+  type PreOrderDeliveryDateLike,
+} from "../../../../features/products/constants/preorder-window";
 
 const priceSchema = z.number().min(0, "Price must be non-negative");
 
@@ -81,7 +86,49 @@ const extraWritableShape = Object.fromEntries(
 
 export const productInputSchema = productBaseShape.extend(extraWritableShape);
 
-export const productUpdateSchema = productInputSchema.partial();
+/**
+ * The 45-day pre-order delivery cap, as a field-level refinement.
+ *
+ * 🛑 FIELD level, not a whole-object `.refine()`. An object refinement carries
+ * no `path` unless one is supplied by hand, and a message with no path lands
+ * nowhere — `applyZodIssues` keys on the dotted path and `<FormErrorSummary>`
+ * offers a jump link from it, so an un-pathed issue is a save that fails with
+ * the field looking fine. Refining the field is what puts the message on the
+ * date input.
+ *
+ * Accepts `string | Date` because the two write paths disagree about the
+ * shape: a request body carries ISO text while `productToDraft`/an admin tool
+ * can hand back a real `Date`. The verdict function takes both, so neither
+ * caller needs a cast.
+ */
+const preOrderDeliveryDateRefinement = z
+  .union([z.string(), z.date()])
+  .superRefine((value, ctx) => {
+    const verdict = checkPreOrderDeliveryDate(value as PreOrderDeliveryDateLike);
+    if (verdict === "ok" || verdict === "absent") return;
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: preOrderDeliveryMessage(verdict) ?? "Invalid delivery date",
+    });
+  });
+
+/**
+ * 🛑 The UPDATE path needs the cap as badly as create does, and did not have it.
+ *
+ * `preOrderDeliveryDate` reaches this schema through `EXTRA_WRITABLE_FIELDS`,
+ * i.e. as `z.unknown().optional()` — so before this a seller could create a
+ * compliant 30-day pre-order and immediately PATCH it to 200 days through
+ * `updateProductAction`, and every bound on the create side was decoration.
+ * This is the create/update asymmetry of Root Cause #39: a rule applied to one
+ * door and not the other is not a rule.
+ *
+ * `.extend()` AFTER `.partial()`, so the field stays optional (a partial update
+ * that does not mention the date must not be refused for not mentioning it)
+ * while a supplied value is bounded.
+ */
+export const productUpdateSchema = productInputSchema.partial().extend({
+  preOrderDeliveryDate: preOrderDeliveryDateRefinement.optional(),
+});
 
 export const collectorDropInputSchema = productInputSchema.extend({
   // SB1-G — canonical discriminator. Locked to "collector-drop" via literal.
@@ -99,7 +146,28 @@ export const collectorDropInputSchema = productInputSchema.extend({
 export const preOrderInputSchema = productInputSchema.extend({
   // SB1-G — canonical discriminator. Locked to "pre-order" via literal.
   listingType: z.literal("pre-order"),
-  preOrderDeliveryDate: z.string().datetime({ offset: true }),
+  /*
+   * 🛑 The ONE bound-check that covers the real create path
+   * (`createPreOrderAction`). It validated datetime FORMAT only until Phase 2,
+   * so a pre-order promising delivery in 200 days parsed cleanly — and Cashfree
+   * Easy Split cannot hold a settlement past 45 days, so that order's money had
+   * nowhere lawful to go. See `PREORDER_MAX_DELIVERY_DAYS`.
+   *
+   * The format check stays in front of the window check: `.datetime()` is what
+   * refuses `"tomorrow"` with a message about the format rather than about the
+   * window.
+   */
+  preOrderDeliveryDate: z
+    .string()
+    .datetime({ offset: true })
+    .superRefine((value, ctx) => {
+      const verdict = checkPreOrderDeliveryDate(value);
+      if (verdict === "ok") return;
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: preOrderDeliveryMessage(verdict) ?? "Invalid delivery date",
+      });
+    }),
   preOrderDepositPercent: z.number().min(0).max(100).optional(),
   preOrderMaxQuantity: z.number().int().min(1).optional(),
   preOrderProductionStatus: z.enum(["upcoming", "in_production", "ready_to_ship"]).default("upcoming"),

@@ -34,11 +34,25 @@ export const config = {
   canJoinProductGroup: false,
   iconKey: "preOrder" as const,
   hideDefault: "closed" as const,
-  // A pre-order closes when its allocation fills, NOT when its delivery date
-  // passes — a shipped-soon pre-order is still orderable. `preOrderClosed`
-  // exists on the schema but no write path has ever set it, so the count pair
-  // is the only real signal; it is checked defensively anyway in case one
-  // starts.
+  /*
+   * A pre-order closes when its allocation fills, NOT when its delivery date
+   * passes — a shipped-soon pre-order is still orderable.
+   *
+   * 🛑 THIS IS THE CANONICAL PRE-ORDER AVAILABILITY RULE. `./schema.ts`'s
+   * `isOpenPreOrder` used to state a different one — it gated on the delivery
+   * date with a non-null assertion on an optional field, so a dateless
+   * pre-order read as closed — and it now DELEGATES here. The date is a
+   * checkout input, not an availability input: `preOrderRule.preflightChecks`
+   * refuses a past or beyond-45-day date at the moment money would move. See
+   * `features/products/constants/preorder-window.ts`.
+   *
+   * 🛑 `preOrderClosed` NOW HAS A WRITE PATH. This comment used to say "no
+   * write path has ever set it", and the reason was not that nobody tried: the
+   * field was absent from `PRODUCT_UPDATABLE_FIELDS`, so the write schema
+   * dropped it while returning 200 (Root Cause #101). It is in both the
+   * updatable and public lists as of Phase 2, so this check is load-bearing
+   * rather than defensive.
+   */
   isAvailable: (row: AvailabilityRow) => {
     if (row[PRODUCT_FIELDS.PRE_ORDER_CLOSED] === true) return false;
     const current = num(row[PRODUCT_FIELDS.PRE_ORDER_CURRENT_COUNT]);

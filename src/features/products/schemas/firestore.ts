@@ -1175,6 +1175,15 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "preOrderCurrentCount",
   "preOrderProductionStatus",
   "preOrderCancellable",
+  /*
+   * Public because `pre-order/config.ts`'s `isAvailable` reads it as its FIRST
+   * test, and that predicate runs against public rows (`/api/products` JSON and
+   * the colocated `listingProcessor` payload as well as Firestore documents).
+   * A projection that stripped it would make the flag unreadable at exactly the
+   * surface it decides. Not sensitive: "this pre-order is closed" is what the
+   * card is about to say anyway.
+   */
+  "preOrderClosed",
   "condition",
   "insurance",
   "insuranceCost",
@@ -1298,6 +1307,22 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "preOrderMaxQuantity",
   "preOrderProductionStatus",
   "preOrderCancellable",
+  /*
+   * 🛑 WAS IN NEITHER LIST, so every writer of it silently no-opped.
+   *
+   * `ProductDocument.preOrderClosed` is declared, `SIEVE_FIELDS` can filter on
+   * it, and `pre-order/config.ts`'s `isAvailable` checks it first — but the
+   * write schema has no `.passthrough()`, so a field absent from this list is
+   * dropped before it reaches Firestore while the write still returns 200
+   * (Root Cause #101). An auto-close therefore appeared to succeed and changed
+   * nothing, which is exactly why `config.ts` could say "no write path has ever
+   * set it": one could not.
+   *
+   * It is the seller's own merchandising switch on their own listing — the same
+   * category as `isSold` directly below — so it belongs here rather than behind
+   * an admin-only door.
+   */
+  "preOrderClosed",
   "isOnSale",
   "isSold",
   /* 🛑 Listed here or an update STRIPS it — the write schema has no

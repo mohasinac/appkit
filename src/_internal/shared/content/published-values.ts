@@ -51,6 +51,7 @@ import {
 import { PAYMENT_WINDOW_MINUTES } from "../../../features/orders/constants/payment-window";
 import { SALE_PROTECTION_MAX_VALUE } from "../features/shipping/protections";
 import { LANE_CHECKOUT_WINDOW_MS } from "../checkout/lanes";
+import { PREORDER_MAX_DELIVERY_DAYS } from "../checkout/rules/_limits";
 import {
   DISPUTE_TRANSIT_WINDOW_DAYS,
   DISPUTE_NOT_REACHED_GRACE_DAYS,
@@ -103,6 +104,14 @@ export type PublishedValueKey =
    */
   | "disputeTransitWindowDays"
   | "disputeNotReachedGraceDays"
+  /*
+   * The pre-order delivery ceiling. 🛑 A GATEWAY constraint turned into a
+   * product promise — Cashfree Easy Split will not hold a settlement past 45
+   * days — so the published number must come from the constant the write
+   * schemas, the seller form and the checkout rule all refuse on, never from a
+   * literal in a disclaimer body.
+   */
+  | "preOrderMaxDeliveryDays"
   // ── Money ────────────────────────────────────────────────────────────────
   | "platformFeeMax"
   | "platformFeePercent"
@@ -255,6 +264,7 @@ export function resolvePublishedValues(
      */
     disputeTransitWindowDays: String(DISPUTE_TRANSIT_WINDOW_DAYS),
     disputeNotReachedGraceDays: String(DISPUTE_NOT_REACHED_GRACE_DAYS),
+    preOrderMaxDeliveryDays: String(PREORDER_MAX_DELIVERY_DAYS),
 
     // ── Money: settings-driven, with the schema defaults as the fallback ───
     platformFeeMax: formatRupees(settings?.platformFeeMax ?? 10),

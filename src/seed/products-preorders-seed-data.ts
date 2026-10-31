@@ -27,6 +27,41 @@ import { buildSearchTxt } from "../utils/search-txt";
 import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
+import { PREORDER_MAX_DELIVERY_DAYS } from "../_internal/shared/checkout/rules/_limits";
+
+/**
+ * A delivery date `n` days out, refused by the seed itself if it breaks the rule.
+ *
+ * 🛑 Every fixture here used to be a bare `Date.now() + N * 24 * 60 * 60 * 1000`,
+ * and three of them were +60, +90 and +120 — all beyond the 45-day cap
+ * `PREORDER_MAX_DELIVERY_DAYS` now enforces, because Cashfree Easy Split
+ * cannot hold a settlement past 45 days. They rendered as perfectly ordinary
+ * buyable cards and `preOrderRule.preflightChecks` refuses them at payment, so
+ * the seeded catalogue would have shipped three listings that look buyable and
+ * are not. A fixture that cannot exercise the flow it appears to be for was
+ * never one.
+ *
+ * The throw is the point: this is a *build-time* assert on seed data, so the
+ * next person who types 90 here finds out from the seed module rather than from
+ * a buyer. The refusal path itself is covered by
+ * `.build-memory/preorder-window-control.mjs`, which can plant a +90 date
+ * without leaving one in the catalogue.
+ *
+ * 🛑 And no absolute dates. One fixture carried `new Date("2026-11-21")`, which
+ * is a time bomb in the other direction: it silently becomes a PAST delivery
+ * date and the listing stops being buyable with nothing in the file to say why.
+ * Same reasoning as the tester's `windowOffset` rule in CLAUDE.md.
+ */
+function deliveryInDays(days: number): Date {
+  if (days < 1 || days > PREORDER_MAX_DELIVERY_DAYS) {
+    throw new Error(
+      `Pre-order seed fixture promises delivery in ${days} days — the cap is ` +
+        `${PREORDER_MAX_DELIVERY_DAYS} (PREORDER_MAX_DELIVERY_DAYS). ` +
+        `Beyond it the order cannot be split-settled and is cancelled automatically.`,
+    );
+  }
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+}
 
 const _rawPreordersSeedData: Partial<ProductDocument>[] = [
   {
@@ -64,7 +99,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(45),
     preOrderProductionStatus: "in_production",
     preOrderDepositPercent: 25,
     preOrderMaxQuantity: 100,
@@ -100,7 +135,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(40),
     preOrderProductionStatus: "upcoming",
     preOrderDepositPercent: 20,
     preOrderMaxQuantity: 80,
@@ -139,7 +174,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: true,
     isPromoted: false,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(5),
     preOrderProductionStatus: "ready_to_ship",
     preOrderDepositPercent: 100,
     preOrderMaxQuantity: 40,
@@ -179,7 +214,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(30),
     preOrderProductionStatus: "in_production",
     preOrderDepositPercent: 25,
     preOrderMaxQuantity: 25,
@@ -218,7 +253,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(35),
     preOrderProductionStatus: "in_production",
     preOrderDepositPercent: 100,
     preOrderMaxQuantity: 20,
@@ -261,7 +296,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: true,
     isPromoted: true,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 120 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(44),
     preOrderProductionStatus: "upcoming",
     preOrderDepositPercent: 15,
     preOrderMaxQuantity: 200,
@@ -296,7 +331,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     featured: false,
     isPromoted: false,
     isOnSale: false,
-    preOrderDeliveryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+    preOrderDeliveryDate: deliveryInDays(14),
     preOrderProductionStatus: "ready_to_ship",
     preOrderDepositPercent: 30,
     preOrderMaxQuantity: 40,
@@ -343,7 +378,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     ],
     featured: true,
     isOnSale: false,
-    preOrderDeliveryDate: new Date("2026-11-21"),
+    preOrderDeliveryDate: deliveryInDays(21),
     preOrderProductionStatus: "upcoming",
     preOrderDepositPercent: 30,
     preOrderMaxQuantity: 10,

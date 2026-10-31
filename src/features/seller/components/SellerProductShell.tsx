@@ -27,6 +27,13 @@ import {
   PRODUCT_IMAGE_INDEX_MAX,
 } from "../../../_internal/shared/media/limits";
 import { isFinalSale } from "../../products/constants/final-sale";
+import {
+  checkPreOrderDeliveryDate,
+  preOrderDeliveryMaxInputValue,
+  preOrderDeliveryMessage,
+  PREORDER_DELIVERY_REQUIRED_MESSAGE,
+} from "../../products/constants/preorder-window";
+import { PREORDER_MAX_DELIVERY_DAYS } from "../../../_internal/shared/checkout/rules/_limits";
 // The one `ProductImage[] | string[]` → `string[]` normaliser — a value
 // import, needed at runtime by `galleryFields` below.
 import { productImageUrls } from "../../products/schemas/firestore";
@@ -1157,17 +1164,55 @@ function StepPreOrderSettings({
   values: SellerProductDraft;
   onChange: (p: Partial<SellerProductDraft>) => void;
 }) {
+  /*
+   * 🛑 A DATE CONTROL WITH A CEILING, not free text.
+   *
+   * This was `type="text"` labelled "(YYYY-MM-DD)", so `"tomorrow"` and
+   * `"next Diwali"` both reached the server — and the section schema below was
+   * `z.string().min(1)`, so they passed the client too. The `max` comes from
+   * the same constant the server refuses on, so the picker cannot offer a day
+   * the save will reject.
+   *
+   * The control speaks calendar days and the document stores an instant, so
+   * the two conversions sit here and nowhere else: a picked day becomes the
+   * END of that day in UTC (the seller means "by then", and end-of-day is what
+   * `preOrderDeliveryWindowEnd` compares against, so day 45 is accepted rather
+   * than refused by a few hours). A stored instant renders back as its own
+   * calendar day.
+   */
+  const deliveryMax = preOrderDeliveryMaxInputValue();
+  const deliveryDayValue = (() => {
+    const raw = values.preOrderDeliveryDate;
+    if (!raw) return "";
+    const d = new Date(raw);
+    return Number.isNaN(d.getTime()) ? "" : d.toISOString().slice(0, 10);
+  })();
+  const deliveryVerdict = checkPreOrderDeliveryDate(values.preOrderDeliveryDate);
+
   return (
     <Stack gap="md">
+      {/*
+        🛑 `absent` is deliberately NOT surfaced here. An empty field on a form
+        the seller has not filled in yet is not a mistake they have made, and a
+        validation note that accuses them of one before they start is Root
+        Cause #74. The section schema still refuses an empty date on submit.
+      */}
+      {deliveryVerdict !== "ok" && deliveryVerdict !== "absent" && (
+        <Alert variant="warning">{preOrderDeliveryMessage(deliveryVerdict)}</Alert>
+      )}
       <FormGroup columns={2}>
         <FormField
           name="preOrderDeliveryDate"
-          label="Estimated Delivery Date (YYYY-MM-DD)"
-          type="text"
-          value={values.preOrderDeliveryDate ?? ""}
-          onChange={(v) => onChange({ preOrderDeliveryDate: v })}
-          placeholder="e.g. 2026-12-15"
-          helpText="When you expect to ship to buyers"
+          label="Estimated Delivery Date"
+          type="date"
+          value={deliveryDayValue}
+          max={deliveryMax}
+          onChange={(v) =>
+            onChange({
+              preOrderDeliveryDate: v ? new Date(`${v}T23:59:59.000Z`).toISOString() : "",
+            })
+          }
+          helpText={`When you expect to ship to buyers — no more than ${PREORDER_MAX_DELIVERY_DAYS} days away (latest: ${deliveryMax}). A pre-order that overruns its promised date is cancelled and refunded automatically.`}
         />
         <FormField
           name="preOrderMaxQuantity"
@@ -1517,8 +1562,27 @@ const sectionSchemas = {
     collectorDropEndDate: z.string().min(1, "Collector Drop end date is required"),
   }).passthrough(),
 
+  /*
+   * 🛑 The 45-day cap, mirrored client-side.
+   *
+   * This was `z.string().min(1)`, so `"tomorrow"` passed the client and the
+   * seller only learned otherwise from whatever the server said — which, for a
+   * 200-day date, used to be nothing at all. Same predicate as both write
+   * schemas and the checkout rule (`preorder-window.ts`), so the four cannot
+   * drift; a mirrored literal is how Root Cause #30 is written.
+   */
   preorder: z.object({
-    preOrderDeliveryDate: z.string().min(1, "Estimated delivery date is required"),
+    preOrderDeliveryDate: z
+      .string()
+      .min(1, PREORDER_DELIVERY_REQUIRED_MESSAGE)
+      .superRefine((value, ctx) => {
+        const verdict = checkPreOrderDeliveryDate(value);
+        if (verdict === "ok") return;
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: preOrderDeliveryMessage(verdict) ?? "Invalid delivery date",
+        });
+      }),
   }).passthrough(),
 
   classified: z.object({

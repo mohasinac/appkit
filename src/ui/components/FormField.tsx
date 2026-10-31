@@ -36,12 +36,30 @@ export interface FormFieldProps {
     | "password"
     | "tel"
     | "number"
+    | "date"
     | "datetime-local"
     | "textarea"
     | "select"
     | "image"
     | "media";
   value?: string;
+  /**
+   * Native `min` / `max` bounds, forwarded to the underlying `<input>`.
+   *
+   * 🛑 A BROWSER HINT, never the enforcement. `<input type="date" max>` stops
+   * the picker offering a later day and is trivially bypassed by typing or by
+   * posting the request directly — so every `max` here must have a matching
+   * server-side refusal, and the two must derive from the same constant or
+   * they will disagree. The pre-order delivery date is the worked example:
+   * `preOrderDeliveryMaxInputValue()` feeds this prop and
+   * `checkPreOrderDeliveryDate()` refuses the write, both from
+   * `PREORDER_MAX_DELIVERY_DAYS`.
+   *
+   * Only reaches the `<input>` branch — `select`/`textarea`/`image`/`media`
+   * have nothing to bound.
+   */
+  min?: string | number;
+  max?: string | number;
   onChange?: (value: string) => void;
   onBlur?: () => void;
   /** Override error — falls back to FormShell context error for this field */
@@ -72,6 +90,8 @@ export function FormField({
   card = false,
   type = "text",
   value = "",
+  min,
+  max,
   onChange,
   onBlur,
   error: errorProp,
@@ -247,6 +267,8 @@ export function FormField({
           name={name}
           type={type}
           value={value}
+          min={min}
+          max={max}
           onChange={(event) => handleFieldChange(event.target.value)}
           onBlur={handleFieldBlur}
           placeholder={placeholder}
