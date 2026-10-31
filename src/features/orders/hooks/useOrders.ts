@@ -67,7 +67,13 @@ export function useOrder(
     enabled: opts?.enabled !== false && !!id,
   });
 
-  return { order: query.data, isLoading: query.isLoading, error: query.error };
+  return {
+    order: query.data,
+    isLoading: query.isLoading,
+    error: query.error,
+    /** Exposed for a bounded, manually-triggered re-check — never a recurring poll. */
+    refetch: query.refetch,
+  };
 }
 
 export function useTrackOrder(
