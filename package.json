@@ -96,6 +96,26 @@
    "types": "./dist/providers/shipping-shiprocket/index.d.ts",
    "import": "./dist/providers/shipping-shiprocket/index.js"
   },
+  "./providers/payment-manual": {
+    "types": "./dist/providers/payment-manual/index.d.ts",
+    "import": "./dist/providers/payment-manual/index.js"
+  },
+  "./providers/shipping-manual": {
+    "types": "./dist/providers/shipping-manual/index.d.ts",
+    "import": "./dist/providers/shipping-manual/index.js"
+  },
+  "./providers/payment-razorpay": {
+    "types": "./dist/providers/payment-razorpay/index.d.ts",
+    "import": "./dist/providers/payment-razorpay/index.js"
+  },
+  "./providers/payment-phonepe": {
+    "types": "./dist/providers/payment-phonepe/index.d.ts",
+    "import": "./dist/providers/payment-phonepe/index.js"
+  },
+  "./providers/payment-cashfree": {
+    "types": "./dist/providers/payment-cashfree/index.d.ts",
+    "import": "./dist/providers/payment-cashfree/index.js"
+  },
   "./providers/storage-firebase": {
       "types": "./dist/providers/storage-firebase/index.d.ts",
       "import": "./dist/providers/storage-firebase/index.js"
@@ -222,6 +242,22 @@
     "./checkout/lanes": {
       "types": "./dist/_internal/shared/checkout/lanes.d.ts",
       "import": "./dist/_internal/shared/checkout/lanes.js"
+    },
+    "./errors/action-reporter": {
+      "types": "./dist/_internal/shared/types/action-error-reporter.d.ts",
+      "import": "./dist/_internal/shared/types/action-error-reporter.js"
+    },
+    "./admin/daily-digest": {
+      "types": "./dist/_internal/server/features/admin/daily-digest-actions.d.ts",
+      "import": "./dist/_internal/server/features/admin/daily-digest-actions.js"
+    },
+    "./site-settings/supplier": {
+      "types": "./dist/_internal/shared/features/site-settings/supplier-of-record.d.ts",
+      "import": "./dist/_internal/shared/features/site-settings/supplier-of-record.js"
+    },
+    "./auth/permissions": {
+      "types": "./dist/_internal/server/features/auth/permissions.d.ts",
+      "import": "./dist/_internal/server/features/auth/permissions.js"
     },
     "./checkout/line-members": {
       "types": "./dist/_internal/shared/checkout/line-members.d.ts",
