@@ -5,7 +5,7 @@ import type {
   ModelToolCall,
   ModelTurnResult,
   PiiClass,
-} from "../../../shared/features/assistant/types";
+} from "../../../../contracts/ai";
 import { routeModel } from "./model-routing";
 import { assertAlreadyPublic, redactMessages } from "./redaction";
 import { HandleRegistry, HANDLE_CORE_PATTERN } from "./handles";

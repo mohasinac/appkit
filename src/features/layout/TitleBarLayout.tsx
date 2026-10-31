@@ -62,6 +62,13 @@ export interface TitleBarLayoutProps {
   notificationSlot?: React.ReactNode;
   /** Optional dev-only action slot rendered in the right-side action group. */
   devSlot?: React.ReactNode;
+  /**
+   * Optional language-switcher slot. The consumer mounts its own
+   * locale-aware wrapper here (next-intl's `useRouter`/`usePathname` are
+   * consumer-specific, created from the consumer's own `routing` object) —
+   * appkit only renders whatever is passed, same pattern as `devSlot`.
+   */
+  localeSlot?: React.ReactNode;
   /** Optional nav slot rendered between logo and right action icons (desktop only). */
   navSlot?: React.ReactNode;
   /** When set, renders a dismissable promo micro-strip above the header. */
@@ -157,6 +164,7 @@ export function TitleBarLayout({
   user,
   notificationSlot,
   devSlot,
+  localeSlot,
   navSlot,
   promoStripText,
   isDark = false,
@@ -451,6 +459,7 @@ export function TitleBarLayout({
               `overflow-x-clip`, so clipped is gone, not scrollable). */}
           <Row gap="xs" reverse="hand" justify="end" className="flex-1">
             {devSlot}
+            {localeSlot}
             {navSlot}
             {compareEl}
             {notificationSlot}

@@ -99,6 +99,34 @@ export const REQUIRED_THEME_TOKENS = [
   "appkit-text-3xl",
   "appkit-text-4xl",
   "appkit-text-5xl",
+  // Radius scale — previously fixed in :root with no per-theme override seam.
+  "appkit-radius-sm",
+  "appkit-radius-md",
+  "appkit-radius-lg",
+  "appkit-radius-xl",
+  "appkit-radius-2xl",
+  "appkit-radius-3xl",
+  "appkit-radius-card",
+  "appkit-radius-btn",
+  "appkit-radius-full",
+  // Letter-spacing scale — `sunset.ts`'s CSS block already varies this per
+  // theme (hand-written, outside the theme-record mechanism); promoting it
+  // here gives an ADMIN-authored theme the same seam.
+  "appkit-tracking-tighter",
+  "appkit-tracking-tight",
+  "appkit-tracking-normal",
+  "appkit-tracking-wide",
+  "appkit-tracking-wider",
+  // Motion — duration + easing. `appkit/src/tokens/motion.ts`'s spring/tween
+  // presets are a separate, non-CSS concern (motion/react `Transition`
+  // objects) and are not part of this CSS-variable set.
+  "appkit-duration-fast",
+  "appkit-duration-base",
+  "appkit-duration-slow",
+  "appkit-duration-slower",
+  "appkit-ease-default",
+  "appkit-ease-in",
+  "appkit-ease-out",
 ] as const;
 
 export type RequiredThemeToken = (typeof REQUIRED_THEME_TOKENS)[number];

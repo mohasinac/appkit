@@ -1,4 +1,4 @@
-import type { JsonObject } from "../../../../schemas/types";
+import type { JsonObject } from "../schemas/types";
 
 /**
  * The assistant's model contract — one provider per vendor, chosen per job.
@@ -20,6 +20,19 @@ import type { JsonObject } from "../../../../schemas/types";
  * And it is a seam with a reader from day one (`audit-provider-registry-readers`
  * exists because Tier AK shipped six that had none): the router below picks
  * between providers per job, so the abstraction is load-bearing immediately.
+ *
+ * ## Moved here 2026-11 (Phase 2E, overhaul brief)
+ *
+ * Was `_internal/shared/features/assistant/types.ts` — the only
+ * assistant-relevant contract living outside `contracts/`, where every other
+ * provider interface (payment, shipping, tax, email, search, storage, …)
+ * already lives. `providers/ai-groq` is unchanged; only this declaration and
+ * `getAssistantProviders()` in `actions.ts` (now resolving `getProviders().ai`
+ * before falling back to Groq) moved. The request/response/PII vocabulary
+ * below (`Redacted`, `AssistantJob`, `PiiClass`, `ModelTurnRequest`, …) moves
+ * with the interface rather than staying behind, same as `TaxComponent`/
+ * `TaxBreakdown`/`TaxJurisdiction` bundle with `ITaxProvider` in `tax.ts` —
+ * a contract owns its full input/output vocabulary, not just the bare class.
  *
  * @tag domain:assistant
  * @tag layer:contract

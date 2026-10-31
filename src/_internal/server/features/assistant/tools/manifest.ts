@@ -1,5 +1,5 @@
 import { zodInputToJsonSchema } from "./json-schema";
-import type { ToolSchema } from "../../../../shared/features/assistant/types";
+import type { ToolSchema } from "../../../../../contracts/ai";
 import type { AnyAssistantToolDef } from "./define";
 
 /**

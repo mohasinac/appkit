@@ -19,10 +19,12 @@ import {
   BUILT_IN_THEMES,
   REQUIRED_GRADIENT_KEYS,
   REQUIRED_THEME_TOKENS,
+  getDefaultBuiltInTheme,
   type GradientKey,
   type ThemeMode,
   type ThemeRecord,
 } from "../../../tokens/themes";
+import { findContrastIssues, type ContrastIssue } from "../../../tokens/contrast";
 import { Alert } from "../../../ui/components/Alert";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
@@ -82,6 +84,12 @@ const TOKEN_GROUPS: { label: string; keys: readonly (typeof REQUIRED_THEME_TOKEN
   { label: "Fonts", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-font-")) },
   { label: "Spacing scale", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-space-")) },
   { label: "Font-size scale", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-text-")) },
+  { label: "Radius scale", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-radius-")) },
+  { label: "Letter spacing", keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-tracking-")) },
+  {
+    label: "Motion",
+    keys: REQUIRED_THEME_TOKENS.filter((k) => k.startsWith("appkit-duration-") || k.startsWith("appkit-ease-")),
+  },
 ];
 
 function isBuiltInId(id: string): boolean {
@@ -248,6 +256,20 @@ function ThemeEditor({
     [draft, onChange],
   );
 
+  /*
+   * Live AAA check — same pair set `audit-color-contrast.mjs` enforces at
+   * build time, run here against the draft so an admin sees a failure
+   * before saving rather than discovering it in the next `npm run check`.
+   * Resolved the same way `ThemeProvider.applyTheme` effectively resolves a
+   * theme: the draft's own overrides over its mode's built-in fallback — a
+   * key the draft has not touched yet still has a real value to measure.
+   */
+  const contrastIssues: ContrastIssue[] = useMemo(() => {
+    const fallback = getDefaultBuiltInTheme(draft.mode);
+    const effectiveTokens = { ...fallback.tokens, ...draft.tokens };
+    return findContrastIssues(effectiveTokens, draft.mode);
+  }, [draft.tokens, draft.mode]);
+
   return (
     <Section padding="md" surface="card" border="default" rounded="lg">
       <Stack gap="md">
@@ -333,12 +355,31 @@ function ThemeEditor({
           </Stack>
         </Stack>
 
+        {contrastIssues.length > 0 ? (
+          <Alert variant="error">
+            <Stack gap="xs">
+              <Text size="sm" weight="semibold">
+                {contrastIssues.length} colour pairing{contrastIssues.length === 1 ? "" : "s"} fail{contrastIssues.length === 1 ? "s" : ""} WCAG AAA — fix before saving.
+              </Text>
+              {contrastIssues.map((issue) => (
+                <Text key={issue.label} size="xs">
+                  {issue.label}: {issue.ratio.toFixed(2)}:1, needs {issue.min}:1.
+                </Text>
+              ))}
+            </Stack>
+          </Alert>
+        ) : null}
+
         <Row gap="sm" justify="end">
           <Button variant="ghost" onClick={onCancel}>
             Cancel
           </Button>
           {!readOnly ? (
-            <Button variant="primary" onClick={onSave}>
+            <Button
+              variant="primary"
+              onClick={onSave}
+              disabled={contrastIssues.length > 0}
+            >
               Save theme
             </Button>
           ) : null}

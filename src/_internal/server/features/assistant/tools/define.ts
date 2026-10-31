@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import type { PiiClass } from "../../../../shared/features/assistant/types";
+import type { PiiClass } from "../../../../../contracts/ai";
 import type { HandleRegistry } from "../handles";
 
 /**

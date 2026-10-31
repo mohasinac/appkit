@@ -30,7 +30,7 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-color-primary-900": "#7f1d1d",
     "appkit-color-primary-950": "#450a0a",
 
-    "appkit-color-secondary": "#06b6d4",
+    "appkit-color-secondary": "#036272",
     "appkit-color-secondary-50": "#ecfeff",
     "appkit-color-secondary-100": "#cffafe",
     "appkit-color-secondary-200": "#a5f3fc",
@@ -57,7 +57,7 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-color-border-subtle": "rgba(30, 41, 59, 0.6)",
     "appkit-color-text": "#fafafa",
     "appkit-color-text-muted": "#b4b4bd",
-    "appkit-color-text-faint": "#8b8b94",
+    "appkit-color-text-faint": "#b3b3b9",
     "appkit-color-link": "#22d3ee",
 
     "appkit-color-success": "#34d399",

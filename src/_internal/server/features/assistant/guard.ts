@@ -1,5 +1,5 @@
 import { logServerWarning } from "../../../../monitoring";
-import type { IAssistantModelProvider, PiiClass } from "../../../shared/features/assistant/types";
+import type { IAssistantModelProvider, PiiClass } from "../../../../contracts/ai";
 import { routeModel } from "./model-routing";
 
 /**

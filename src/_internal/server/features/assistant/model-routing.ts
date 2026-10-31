@@ -2,7 +2,7 @@ import {
   type AssistantJob,
   type IAssistantModelProvider,
   type PiiClass,
-} from "../../../shared/features/assistant/types";
+} from "../../../../contracts/ai";
 
 /**
  * Pick a provider for a job — and refuse rather than downgrade.

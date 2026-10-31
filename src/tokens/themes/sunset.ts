@@ -26,6 +26,11 @@ export const SUNSET_THEME: ThemeRecord = {
     "appkit-color-primary": "#f59e0b",
     "appkit-color-primary-500": "#f59e0b",
     "appkit-color-primary-600": "#d97706",
+    // Added 2026-11 — sunset had no primary-700 and silently inherited
+    // :root's teal. Set equal to `primary`: this theme's CTA ink is the dark
+    // text-on-primary below (D7), already 7.29:1 against bare primary —
+    // darkening toward that dark ink instead of away from it fails (2.24:1).
+    "appkit-color-primary-700": "#f59e0b",
     /*
      * 🛑 D7 — DARK ink on this primary, declared rather than inherited.
      *
@@ -55,8 +60,8 @@ export const SUNSET_THEME: ThemeRecord = {
     "appkit-color-border-subtle": "#ffedd5",
 
     "appkit-color-text": "#431407",
-    "appkit-color-text-muted": "#9a3412",
-    "appkit-color-text-faint": "#c2410c",
+    "appkit-color-text-muted": "#903011",
+    "appkit-color-text-faint": "#903009",
 
     "appkit-color-success": "#15803d",
     "appkit-color-success-surface": "#f0fdf4",

@@ -166,6 +166,7 @@ export interface AppLayoutShellProps {
   titleBarNavSlot?: React.ReactNode;
   titleBarNotificationSlot?: React.ReactNode;
   titleBarDevSlot?: React.ReactNode;
+  titleBarLocaleSlot?: React.ReactNode;
   titleBarPromoStripText?: string;
   showThemeToggle?: boolean;
   suppressDashboardNav?: boolean;
@@ -979,6 +980,7 @@ export function AppLayoutShell({
   titleBarNavSlot,
   titleBarNotificationSlot,
   titleBarDevSlot,
+  titleBarLocaleSlot,
   titleBarPromoStripText,
   showThemeToggle = false,
   suppressDashboardNav = false,
@@ -1138,6 +1140,7 @@ export function AppLayoutShell({
             navSlot={titleBarNavSlot}
             notificationSlot={titleBarNotificationSlot}
             devSlot={titleBarDevSlot}
+            localeSlot={titleBarLocaleSlot}
             promoStripText={titleBarPromoStripText}
             isDark={theme === "dark"}
             onToggleTheme={showThemeToggle ? toggleTheme : undefined}

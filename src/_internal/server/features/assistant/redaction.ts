@@ -1,5 +1,5 @@
 import { redactPii } from "../../../../security/pii-redact";
-import type { Redacted } from "../../../shared/features/assistant/types";
+import type { Redacted } from "../../../../contracts/ai";
 
 /**
  * The ONLY place `Redacted<string>` is minted.

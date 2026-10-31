@@ -8,6 +8,8 @@ import type { ISearchProvider } from "./search";
 import type { ICacheProvider, IQueueProvider, IEventBus } from "./infra";
 import type { IStyleAdapter } from "./style";
 import type { IDbProvider } from "./repository";
+import type { IDesignPack } from "./design-pack";
+import type { IAssistantModelProvider } from "./ai";
 
 export interface IRbacProvider {
   /** Resolve the permission list for a user UID. Admin role returns []. */
@@ -54,6 +56,24 @@ export interface ProviderRegistry {
   queue?: IQueueProvider;
   eventBus?: IEventBus;
   rbac?: IRbacProvider;
+  /**
+   * Design-value lookup (radius, letter-spacing, motion, the six
+   * surface/padding/rounded/border/shadow/gap class maps). Optional, like
+   * `tax`/`search` — an install that never registers one gets
+   * `DEFAULT_DESIGN_PACK` (`design-pack-default.ts`) at the call site, which
+   * wraps the existing hardcoded tables and changes nothing.
+   */
+  designPack?: IDesignPack;
+  /**
+   * Assistant model vendors, preference-ordered — an ARRAY like
+   * `paymentGateways`, not a single slot like `tax`/`search`, because
+   * `getAssistantProviders()`'s whole point is trying each in order and
+   * refusing (never silently falling back) rather than picking one at
+   * module load. Absent means the Assistant feature's own default
+   * (`[new GroqModelProvider()]`) — registering here is how a second vendor
+   * gets wired without editing `_internal/server/features/assistant/actions.ts`.
+   */
+  aiProviders?: readonly IAssistantModelProvider[];
 }
 
 let _registry: ProviderRegistry | null = null;

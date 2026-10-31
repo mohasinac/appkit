@@ -1,8 +1,9 @@
 import { logServerWarning } from "../../../../monitoring";
 import { AuthorizationError } from "../../../../errors";
 import { GroqModelProvider } from "../../../../providers/ai-groq";
+import { getProviders } from "../../../../contracts/registry";
 import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
-import type { IAssistantModelProvider } from "../../../shared/features/assistant/types";
+import type { IAssistantModelProvider } from "../../../../contracts/ai";
 import { runAssistantTurn } from "./turn";
 import { escalateToHuman } from "./escalate";
 import { classifyEscalation } from "./severity";
@@ -22,6 +23,10 @@ import { appendAssistantTurn, getAssistantHistory } from "./history-store";
  */
 
 function getAssistantProviders(): readonly IAssistantModelProvider[] {
+  // A registered `aiProviders` list wins outright — this is the seam a
+  // second vendor wires through, same as `payment`/`shipping` already do.
+  const registered = getProviders().aiProviders;
+  if (registered && registered.length > 0) return registered;
   // Env read happens inside the provider's own `turn()` call, never cached
   // at module load — see providers/ai-groq's docstring.
   return [new GroqModelProvider()];

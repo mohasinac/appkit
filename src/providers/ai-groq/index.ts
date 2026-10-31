@@ -4,7 +4,7 @@ import {
   type AssistantJob,
   type ModelTurnRequest,
   type ModelTurnResult,
-} from "../../_internal/shared/features/assistant/types";
+} from "../../contracts/ai";
 
 /**
  * Groq — the default provider, and the only one allowed near PII.

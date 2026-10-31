@@ -5994,6 +5994,10 @@ export { TitleBar } from "./features/layout/TitleBar";
 // TitleBarLayout - Component for title bar layout.
 export { TitleBarLayout } from "./features/layout/TitleBarLayout";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// LanguageSwitcher - Presentational locale dropdown, mounted via TitleBarLayout's localeSlot.
+export { LanguageSwitcher } from "./features/layout/LanguageSwitcher";
+export type { LanguageSwitcherProps, LanguageSwitcherOption } from "./features/layout/LanguageSwitcher";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActions - React hook for use bottom actions.
 export { useBottomActions } from "./features/layout/hooks/useBottomActions";
 export { RecordStatusTimeline } from "./features/status-history/components/RecordStatusTimeline";

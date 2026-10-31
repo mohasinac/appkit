@@ -26,7 +26,7 @@ export const COBALT_NIGHT_THEME: ThemeRecord = {
     "appkit-color-primary": "#5992ff",
     "appkit-color-primary-500": "#5992ff",
     "appkit-color-primary-600": "#3570fc",
-    "appkit-color-secondary": "#84e122",
+    "appkit-color-secondary": "#3a630d",
     "appkit-color-secondary-500": "#84e122",
 
     "appkit-color-bg": "#111e58",
@@ -38,8 +38,8 @@ export const COBALT_NIGHT_THEME: ThemeRecord = {
     "appkit-color-border-subtle": "rgba(24, 49, 142, 0.6)",
 
     "appkit-color-text": "#eef5ff",
-    "appkit-color-text-muted": "#bcd4ff",
-    "appkit-color-text-faint": "#8eb9ff",
+    "appkit-color-text-muted": "#ccdfff",
+    "appkit-color-text-faint": "#cbdfff",
 
     "appkit-color-success": "#4ade80",
     "appkit-color-success-surface": "rgba(20, 83, 45, 0.3)",

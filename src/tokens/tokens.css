@@ -38,7 +38,7 @@
   --appkit-color-primary-400:      #2dd4bf;
   --appkit-color-primary-500:      #14b8a6;
   --appkit-color-primary-600:      #0d9488;
-  --appkit-color-primary-700:      #0f766e;
+  --appkit-color-primary-700:      #0d645d;    /* darkened 2026-11 — AAA 7:1 with white text on the solid primary button */
   --appkit-color-primary-800:      #115e59;
   --appkit-color-primary-900:      #134e4a;
   --appkit-color-primary-950:      #042f2e;
@@ -297,8 +297,8 @@
   --appkit-color-border-subtle:    #f4f4f5;    /* zinc-100 */
 
   --appkit-color-text:             #18181b;    /* zinc-900 */
-  --appkit-color-text-muted:       #5b5b63;    /* darkened from zinc-500 #71717a — ~7:1 on --appkit-color-bg */
-  --appkit-color-text-faint:       #6f6f78;    /* darkened from #87878f — now clears WCAG AA 4.5:1 for NORMAL text, not just large (audit-a11y) */
+  --appkit-color-text-muted:       #52525a;    /* darkened 2026-11 — AAA 7:1 on every light-mode body surface, incl. border-subtle (the worst case) */
+  --appkit-color-text-faint:       #525259;    /* darkened 2026-11 — AAA 7:1, not just AA 4.5:1 (audit-color-contrast) */
   --appkit-color-text-on-primary:  #ffffff;
   --appkit-color-text-on-dark:     #ffffff;
 
@@ -448,7 +448,7 @@
   --appkit-color-primary-900:      #7f1d1d;
   --appkit-color-primary-950:      #450a0a;
 
-  --appkit-color-secondary:        #06b6d4;
+  --appkit-color-secondary:        #036272;    /* darkened 2026-11 — AAA 7:1 with white text on the dark-mode solid primary button (Button.style.css ".dark .appkit-button--primary") */
   --appkit-color-secondary-50:     #ecfeff;
   --appkit-color-secondary-100:    #cffafe;
   --appkit-color-secondary-200:    #a5f3fc;
@@ -507,7 +507,7 @@
 
   --appkit-color-text:             #fafafa;    /* zinc-50 */
   --appkit-color-text-muted:       #b4b4bd;    /* lightened from zinc-400 #a1a1aa — ~9:1 on the dark page */
-  --appkit-color-text-faint:       #8b8b94;    /* lightened from zinc-500 #71717a, which was ~3:1 and read as barely present */
+  --appkit-color-text-faint:       #b3b3b9;    /* lightened 2026-11 — AAA 7:1 on surface-elevated (the worst case) */
 
   --appkit-color-link:             #22d3ee;    /* secondary-400 — 11.16:1 on --appkit-color-bg. NOT primary: this theme's primary is crimson */
 
@@ -595,7 +595,7 @@
   --appkit-color-primary:          #5992ff;
   --appkit-color-primary-500:      #5992ff;
   --appkit-color-primary-600:      #3570fc;
-  --appkit-color-secondary:        #84e122;
+  --appkit-color-secondary:        #3a630d;    /* darkened 2026-11, same lime hue — AAA 7:1 with white text on the solid primary button */
   --appkit-color-secondary-500:    #84e122;
 
   --appkit-color-bg:               #111e58;    /* primary-950 */
@@ -628,8 +628,8 @@
   --appkit-color-border-subtle:    rgba(24, 49, 142, 0.6);
 
   --appkit-color-text:             #eef5ff;    /* primary-50 */
-  --appkit-color-text-muted:       #bcd4ff;    /* primary-200 */
-  --appkit-color-text-faint:       #8eb9ff;    /* primary-300 */
+  --appkit-color-text-muted:       #ccdfff;    /* lightened 2026-11 — AAA 7:1 on surface (the worst case) */
+  --appkit-color-text-faint:       #cbdfff;    /* lightened 2026-11 — AAA 7:1 on surface (the worst case) */
 
   --appkit-color-link:             #5992ff;    /* primary-500 — 5.17:1 on --appkit-color-bg */
 
@@ -657,6 +657,13 @@
   --appkit-color-primary:          #f59e0b;    /* amber-500 */
   --appkit-color-primary-500:      #f59e0b;
   --appkit-color-primary-600:      #d97706;
+  /* Added 2026-11 — sunset had no primary-700 at all and silently inherited
+     :root's TEAL (#0f766e) for the solid primary button — wrong brand hue for
+     this preset. Set equal to `primary`, not darkened: this theme's ink on
+     its own CTA is the dark `text-on-primary` below (D7), which already
+     measures 7.29:1 against bare primary — darkening primary-700 moves
+     toward the dark ink instead of away from it and fails (measured 2.24:1). */
+  --appkit-color-primary-700:      #f59e0b;
   --appkit-color-secondary:        #f43f5e;    /* rose-500 */
   --appkit-color-secondary-500:    #f43f5e;
 
@@ -692,8 +699,8 @@
   --appkit-color-border-subtle:    #ffedd5;    /* orange-100 */
 
   --appkit-color-text:             #431407;    /* orange-950 */
-  --appkit-color-text-muted:       #9a3412;    /* orange-800 */
-  --appkit-color-text-faint:       #c2410c;    /* orange-700 */
+  --appkit-color-text-muted:       #903011;    /* darkened 2026-11 — AAA 7:1 on border-subtle (the worst case) */
+  --appkit-color-text-faint:       #903009;    /* darkened 2026-11 — AAA 7:1 on border-subtle (the worst case) */
   /* D7: dark ink on the amber primary. Inherited white measured 2.15:1 and
      failed AA for UI text; orange-950 is 7.29:1 on primary and 4.91:1 on
      primary-600. Declared in BOTH places or the first paint disagrees with
