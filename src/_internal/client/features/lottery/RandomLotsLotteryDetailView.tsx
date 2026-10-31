@@ -75,7 +75,7 @@ export function RandomLotsLotteryDetailView({
 
           <Stack gap="sm">
             <Row gap="xs" align="center" wrap>
-              <Badge variant="info">Lottery Prize Draw</Badge>
+              <Badge variant="info">Slot-pick Random Lot</Badge>
               {config && (
                 <Badge variant={isActive ? "success" : "secondary"}>
                   {config.slots.filter((s) => s.isBooked).length}/{config.totalSlots} claimed

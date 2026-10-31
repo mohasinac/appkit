@@ -59,7 +59,7 @@ const DEFAULT_LABELS: Required<MarketplaceRandomLotCardLabels> = {
   randomLotBadge: "Random Lots",
   pendingBadge: "Reveal pending",
   openBadge: "Reveal open",
-  closedBadge: "Draw closed",
+  closedBadge: "Lot closed",
   entriesRemainingLabel: (remaining, max) => `${remaining}/${max} entries left`,
   pricePerEntryLabel: "per entry",
   enterDraw: ACTIONS.RANDOM_LOTS["enter-draw"].label,

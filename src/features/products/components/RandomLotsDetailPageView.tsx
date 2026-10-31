@@ -57,7 +57,7 @@ function statusLabel(s: "pending" | "open" | "closed" | undefined): string {
     case "open":
       return "Reveal open";
     case "closed":
-      return "Draw closed";
+      return "Lot closed";
     case "pending":
     default:
       return "Reveal pending";
@@ -251,7 +251,7 @@ export async function RandomLotsDetailPageView({
               <Div>
                 <Row gap="xs" wrap className="mb-2">
                   <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
-                    Prize Draw
+                    Random Lot
                   </Span>
                   <Span
                     size="xs"

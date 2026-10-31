@@ -496,8 +496,8 @@ export const ACTIONS: ActionTree = {
     "enter-draw": {
       iconKey: "confirm",
       id: "random-lots.enter-draw",
-      label: "Enter draw",
-      description: "Purchase an entry into the random lots draw.",
+      label: "Claim a lot",
+      description: "Buy a lot — you receive a real item, allocated at random.",
       kind: "secondary",
       listingTypeScope: ["random-lots"],
     },

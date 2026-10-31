@@ -161,7 +161,7 @@ export function RandomLotsEntryActions({
         onClick={handleEnter}
       >
         {closed
-          ? "Draw closed"
+          ? "Lot closed"
           : isAuthResolving
             ? "Checking…"
             : adding

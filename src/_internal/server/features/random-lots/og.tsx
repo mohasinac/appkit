@@ -49,7 +49,7 @@ export function renderRandomLotsOg(
 
   return renderRandomLotsOgImage(
     {
-      title: doc?.title ?? doc?.name ?? "Prize Draw",
+      title: doc?.title ?? doc?.name ?? "Random Lot",
       pricePerEntryLabel,
       imageUrl: resolveOgImageUrl(doc?.mainImage ||
           (typeof doc?.images?.[0] === "string" ? doc.images[0] : doc?.images?.[0]?.url) ||
@@ -79,7 +79,7 @@ export function renderRandomLotsOgImage(
     title: data.title,
     subtitle: data.entriesLabel ?? undefined,
     imageUrl: data.imageUrl,
-    siteName: `${siteName} · Prize Draw`,
+    siteName: `${siteName} · Random Lots`,
     badges: badges.length > 0 ? badges : undefined,
     theme: { accentColor: "#fbbf24" },
   });

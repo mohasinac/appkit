@@ -36,7 +36,7 @@ export interface RandomLotsWinnerMappingViewProps {
 }
 
 export function RandomLotsWinnerMappingView({
-  title = "Prize Draw — Winner Mapping",
+  title = "Random Lots — Allocation Mapping",
   items,
   isAdmin,
 }: RandomLotsWinnerMappingViewProps) {
