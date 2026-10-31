@@ -15,7 +15,7 @@
  * admin could flip an entry and nothing would happen. `ContentTag.governs` is
  * restricted to the three flag groups that genuinely exist and already have
  * real readers (`isListingTypeEnabled`, `isCategoryTypeEnabled`,
- * `isBrowsePageEnabled` in `../listing-types/feature-flags`) — so a content
+ * `isBrowsePageEnabled` in `../../listing-types/feature-flags`) — so a content
  * tag can never reference a flag that governs nothing.
  *
  * @tag domain:content
@@ -24,14 +24,15 @@
  * @tag sideEffects:none
  */
 
-import type { ListingType } from "../../../features/products/types/index";
-import type { CategoryType } from "../../../features/categories/types/index";
+import type { ListingType } from "../../../../features/products/types/index";
+import type { CategoryType } from "../../../../features/categories/types/index";
 import {
   isListingTypeEnabled,
   isCategoryTypeEnabled,
   isBrowsePageEnabled,
   type BrowsePageKey,
-} from "../listing-types/feature-flags";
+  type FlagValue,
+} from "../../listing-types/feature-flags";
 
 /**
  * What a piece of content depends on being enabled. A FAQ about collector-drop
@@ -47,9 +48,9 @@ export interface ContentTag {
 /** The snapshot shape every `isXEnabled` helper in `feature-flags.ts` reads. */
 interface ContentFlagSnapshot {
   listings?: {
-    listingTypes?: Partial<Record<string, boolean>>;
-    categoryTypes?: Partial<Record<string, boolean>>;
-    browsePages?: Partial<Record<string, boolean>>;
+    listingTypes?: Partial<Record<string, FlagValue>>;
+    categoryTypes?: Partial<Record<string, FlagValue>>;
+    browsePages?: Partial<Record<string, FlagValue>>;
   };
 }
 

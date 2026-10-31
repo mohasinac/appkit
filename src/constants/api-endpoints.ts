@@ -527,6 +527,8 @@ export const CHECKOUT_ENDPOINTS = {
 export const PAYMENT_ENDPOINTS = {
   CREATE_ORDER: "/api/payment/create-order",
   VERIFY: "/api/payment/verify",
+  /** Mints the RTDB event subscription token for the live payment-status signal. */
+  EVENT_INIT: "/api/payment/event/init",
 } as const;
 
 // ---------------------------------------------------------------------------

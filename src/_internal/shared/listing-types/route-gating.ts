@@ -36,6 +36,7 @@ import {
   ALL_LISTING_TYPES,
   isListingSurfaceVisible,
   type BrowsePageKey,
+  type FlagValue,
   type SurfaceCountSnapshot,
 } from "./feature-flags";
 import { closedSurfacePrefixes, isUnderClosedPrefix } from "./hidden-surfaces";
@@ -43,8 +44,8 @@ import type { ListingType } from "../../../features/products/types/index";
 
 interface ListingFlagSnapshot {
   listings?: {
-    listingTypes?: Partial<Record<ListingType, boolean>>;
-    browsePages?: Partial<Record<BrowsePageKey, boolean>>;
+    listingTypes?: Partial<Record<ListingType, FlagValue>>;
+    browsePages?: Partial<Record<BrowsePageKey, FlagValue>>;
   };
   disabledRoutes?: string[];
 }

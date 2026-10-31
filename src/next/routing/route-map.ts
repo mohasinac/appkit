@@ -25,6 +25,7 @@ export const DEFAULT_ROUTE_MAP = {
     PRE_ORDERS: "/pre-orders",
     /** D56 — the public rate card + self-serve booking form. */
     ADVERTISE: "/advertise",
+    ASSISTANT: "/assistant",
     PRE_ORDER_DETAIL: (id: string) => `/pre-orders/${id}`,
     // SB1-J — bundles + prize draws (additive, pages not yet built)
     BUNDLES: "/bundles",

@@ -19,6 +19,7 @@ import { useApiMutation } from "../../../client/api/useApiMutation";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { PublicSiteSettings } from "../../../_internal/shared/features/site-settings/types";
 import { ASSISTANT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROUTES } from "../../../next/routing/route-map";
 import { askAssistantSchema } from "../schemas/ask";
 
 /**
@@ -77,7 +78,7 @@ export interface AssistantWidgetProps {
   fullPageHref?: string;
 }
 
-export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidgetProps) {
+export function AssistantWidget({ fullPageHref = String(ROUTES.PUBLIC.ASSISTANT) }: AssistantWidgetProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, loading } = useAuth();

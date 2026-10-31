@@ -26,7 +26,7 @@ const faqBaseSchema = z.object({
   order: z.number().int().min(0).default(0),
   tags: z.array(z.string().min(1).max(50)).max(10).optional(),
   /*
-   * Mirrors `ContentTag` (`_internal/shared/content-tags/registry.ts`) —
+   * Mirrors `ContentTag` (`_internal/shared/features/content-tags/registry.ts`) —
    * `governs` stays a plain string enum here rather than importing the type,
    * since this is the request-validation boundary and a Zod enum gives a
    * clearer 400 than a TS type ever would.

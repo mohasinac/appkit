@@ -6,8 +6,8 @@ import type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 export type { FAQCategory, FAQAnswer, FAQStats } from "../types";
 import { generateFAQId } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
-import type { ContentTag } from "../../../_internal/shared/content-tags/registry";
-export type { ContentTag } from "../../../_internal/shared/content-tags/registry";
+import type { ContentTag } from "../../../_internal/shared/features/content-tags/registry";
+export type { ContentTag } from "../../../_internal/shared/features/content-tags/registry";
 // Imported from the DEFINING module, not a barrel (Root Cause #18).
 import {
   extractPlaceholders,

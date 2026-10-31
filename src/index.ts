@@ -7001,8 +7001,8 @@ export type {
 } from "./_internal/shared/listing-types/feature-flags";
 // Content tagging — does a stored document's own governing flag still allow
 // it to be shown. Same barrel choice as the feature-flag helpers above.
-export { isContentVisible } from "./_internal/shared/content-tags/registry";
-export type { ContentTag } from "./_internal/shared/content-tags/registry";
+export { isContentVisible } from "./_internal/shared/features/content-tags/registry";
+export type { ContentTag } from "./_internal/shared/features/content-tags/registry";
 // Basic/advanced listing-type split — which types a store may create.
 // Pure (no firebase-admin in its import chain), so it is safe in index.ts.
 export {

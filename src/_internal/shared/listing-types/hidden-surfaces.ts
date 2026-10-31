@@ -47,17 +47,26 @@ import {
   isCategoryTypeEnabled,
   isListingSurfaceVisible,
   type BrowsePageKey,
+  type FlagValue,
   type SurfaceCountSnapshot,
 } from "./feature-flags";
 import { pluginFor } from "./_registry";
 import { ROUTES } from "../../../next/routing/route-map";
 
-/** The snapshot shape `isListingSurfaceVisible` reads its admin flags from. */
+/**
+ * The snapshot shape `isListingSurfaceVisible` reads its admin flags from.
+ *
+ * `FlagValue` (not `boolean`) because `isListingTypeEnabled`/
+ * `isCategoryTypeEnabled`/`isBrowsePageEnabled` all read `"unlisted"` as
+ * enabled (`!== false`) — the 404 gate this module drives must agree with
+ * them, or `SiteSettingsDocument`'s widened `listings` shape (which carries
+ * the real `"unlisted"` value) could never satisfy this interface.
+ */
 interface SettingsSnapshot {
   listings?: {
-    listingTypes?: Partial<Record<string, boolean>>;
-    browsePages?: Partial<Record<BrowsePageKey, boolean>>;
-    categoryTypes?: Partial<Record<string, boolean>>;
+    listingTypes?: Partial<Record<string, FlagValue>>;
+    browsePages?: Partial<Record<BrowsePageKey, FlagValue>>;
+    categoryTypes?: Partial<Record<string, FlagValue>>;
     closedPaths?: string[];
   };
   disabledRoutes?: string[];
