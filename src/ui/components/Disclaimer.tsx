@@ -8,7 +8,7 @@ import React from "react";
  */
 import { Div } from "./Div";
 import { Stack } from "./Layout";
-import { Text } from "./Typography";
+import { Span, Text } from "./Typography";
 import {
   DISCLAIMERS,
   type DisclaimerId,
@@ -82,9 +82,17 @@ export interface DisclaimerProps {
 function renderEmphasis(text: string): React.ReactNode[] {
   return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
     part.startsWith("**") && part.endsWith("**") && part.length > 4 ? (
-      <Text as="span" key={i} weight="semibold">
+      /*
+       * 🛑 `Span`, not `Text as="span"` — `Text` defaults `size = "base"`,
+       * so an emphasised phrase RESET the surrounding size instead of
+       * inheriting it. Visible as a run of body copy jumping a size mid-
+       * sentence; caught by looking at the rendered pre-order terms, where
+       * the bold phrase is long enough to break the line rhythm. `Span`
+       * emits no size class when none is passed, so it inherits.
+       */
+      <Span key={i} weight="semibold">
         {part.slice(2, -2)}
-      </Text>
+      </Span>
     ) : (
       <React.Fragment key={i}>{part}</React.Fragment>
     ),
