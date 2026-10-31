@@ -133,6 +133,33 @@ export interface AppLayoutShellProps {
    * rendered, `<Main>` owns it when not. See the comment on `<Main>`.
    */
   showFooter?: boolean;
+  /**
+   * Show the PUBLIC nav-link row (Home / Products / Blog / …). Defaults to
+   * `true`; pass `false` on a dashboard.
+   *
+   * 🛑 This is the second half of "two navigation systems at once", and it is
+   * NOT the title bar. Measured on `/admin/products` at 1280×800 before this
+   * existed:
+   *
+   *   public nav-link row ....... 1280px wide, always on screen
+   *   admin sidebar ............. 320px wide, x=1280 — **0px visible**
+   *
+   * So the hierarchy was inverted: six links an admin never uses mid-task sat
+   * permanently across the top, while the nav they DO need was behind a drawer
+   * toggle. That is clutter and an extra click for every admin navigation.
+   *
+   * 🛑 The old comment at the `<FooterLayout>` call said dropping the navbar
+   * had to wait for a "Phase 3a role title bar", because the navbar "carries
+   * search, cart and the account menu". It does not — `<TitleBar>` does, and
+   * it renders separately, immediately above. Only the LINK ROW is suppressed
+   * here, so a dashboard keeps search, cart, notifications and the account
+   * menu, and keeps its way back to the shop via the logo and
+   * `SIDEBAR_SUPPORT_LINKS`.
+   *
+   * Consumer-decided rather than route-sniffed, exactly like `showFooter`:
+   * this component is handed its chrome and does not interpret paths.
+   */
+  showNavbar?: boolean;
   searchSlot?: React.ReactNode;
   /** Render-prop alternative to searchSlot — receives onClose so the slot can close the overlay. */
   searchSlotRenderer?: (onClose: () => void) => React.ReactNode;
@@ -946,6 +973,7 @@ export function AppLayoutShell({
   shopHref,
   footer,
   showFooter = true,
+  showNavbar = true,
   searchSlot,
   searchSlotRenderer,
   titleBarNavSlot,
@@ -1117,7 +1145,7 @@ export function AppLayoutShell({
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}
           />
-          <NavbarWithSettings navItems={navItems} hiddenNavItems={hiddenNavItems} permissions={authUser?.permissions} />
+          {showNavbar && <NavbarWithSettings navItems={navItems} hiddenNavItems={hiddenNavItems} permissions={authUser?.permissions} />}
           {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
           {/* Inside the observed sticky wrapper so any future banner content's
               height is automatically included in --header-height — a banner

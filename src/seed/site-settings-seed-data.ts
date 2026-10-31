@@ -120,7 +120,22 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   },
   contact: {
     email: "support@letitrip.in",
-    phone: "+91-8919665811",
+    /*
+     * 🛑 EMPTY ON PURPOSE — owner's decision 2026-10-31: the proprietor's
+     * personal mobile is not published. It rendered on /contact, on /faqs and
+     * /faqs/[category], and in the sitewide Organization JSON-LD
+     * (src/app/layout.tsx -> telephone).
+     *
+     * 🛑 It must stay "" rather than be DELETED. `appkit-seed load` writes with
+     * set(..., { merge: true }), which can never remove a field — deleting this
+     * key would leave the old number live in Firestore forever while the seed
+     * looked clean. An empty string is what actually overwrites it.
+     *
+     * Business contact is the email above; see also BUSINESS_SUPPORT_PHONE /
+     * BUSINESS_GRIEVANCE_PHONE, which must be cleared in every env store
+     * (.env.local AND Vercel) for the same reason.
+     */
+    phone: "",
     address: "Siddeshwar Peth, Solapur, Maharashtra 413001",
     upiVpa: "mohsin0502@okicici",
     whatsappNumber: "918919665811",
@@ -298,7 +313,9 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       minOrderValue: 999,
       returnWindow: 7,
       supportEmail: "support@letitrip.in",
-      supportPhone: "+91-8919665811",
+      /* 🛑 Empty on purpose — see the note on `contact.phone` above. Must be
+       * "" and not deleted: seed load is a merge write and cannot remove. */
+      supportPhone: "",
       codDeposit: 0.1,
     },
   },
