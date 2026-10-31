@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { MessageCircle, Maximize2, X } from "lucide-react";
 import { Div } from "../../../ui/components/Div";
 import { IconButton } from "../../../ui/components/IconButton";
@@ -79,6 +79,7 @@ export interface AssistantWidgetProps {
 
 export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidgetProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user, loading } = useAuth();
   const { hand } = useHandMode();
   const [open, setOpen] = useState(false);
@@ -113,8 +114,23 @@ export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidget
    * polarity (`assertAssistantEnabled` in actions.ts). Hiding on absence
    * would blank the widget for every visitor until the first settings fetch
    * resolves.
+   *
+   * 🛑 Suppressed on the full-chat page itself. Without this, "expand" left
+   * the panel's `open` state `true` with no route-based reset — the panel
+   * then rendered ON TOP of the full page it had just navigated to,
+   * duplicating the same form. A floating entry point to a page the visitor
+   * is already on is redundant regardless of how `open` got there.
    */
-  if (loading || !user || siteSettings?.assistant?.enabled === false) return null;
+  if (loading || !user || siteSettings?.assistant?.enabled === false || pathname === fullPageHref) {
+    return null;
+  }
+
+  function handleExpand() {
+    // See the suppression note above — without this, navigating away and
+    // back (or to any other page) would reopen a panel nobody asked for.
+    setOpen(false);
+    router.push(fullPageHref);
+  }
 
   function handleLaunch() {
     if (isDesktopViewport()) {
@@ -166,7 +182,7 @@ export function AssistantWidget({ fullPageHref = "/assistant" }: AssistantWidget
                 variant="ghost"
                 size="sm"
                 aria-label="Expand to full page"
-                onClick={() => router.push(fullPageHref)}
+                onClick={handleExpand}
                 icon={<Maximize2 aria-hidden="true" />}
               />
             </Div>
