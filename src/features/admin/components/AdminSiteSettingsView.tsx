@@ -434,6 +434,15 @@ export function AdminSiteSettingsView({
   const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
   const [phonepeEnabled, setPhonepeEnabled] = React.useState(false);
   const [cashfreeEnabled, setCashfreeEnabled] = React.useState(false);
+  /*
+   * 🛑 Defaults to EMPTY, which means "every store is third-party" and
+   * therefore refuses online collection for every cart. That is the
+   * fail-closed direction and it must not be "helpfully" defaulted to a store
+   * id here — a wrong guess would authorise collecting another seller's money
+   * into the platform's own account (the RBI commingling), and it would
+   * present as a completely successful checkout.
+   */
+  const [platformStoreId, setPlatformStoreId] = React.useState("");
   const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
   const [codEnabled, setCodEnabled] = React.useState(true);
   const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
@@ -715,6 +724,14 @@ export function AdminSiteSettingsView({
     setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
     setPhonepeEnabled(s.payment?.phonepeEnabled ?? false);
     setCashfreeEnabled(s.payment?.cashfreeEnabled ?? false);
+    /*
+     * 🛑 The HYDRATE leg, and skipping it is the live risk this file's own
+     * comments name: a key that is SAVED but never hydrated renders its
+     * default — here the empty string — and the next save writes that default
+     * over the stored value. For this field that silently turns online
+     * collection off for the whole site on the first unrelated settings save.
+     */
+    setPlatformStoreId(s.payment?.platformStoreId ?? "");
     setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
     setCodEnabled(s.payment?.codEnabled ?? true);
     setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
@@ -972,7 +989,14 @@ export function AdminSiteSettingsView({
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
       shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
-      payment: { razorpayEnabled, phonepeEnabled, cashfreeEnabled, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
+      /*
+       * `platformStoreId` is trimmed and sent as `undefined` when blank rather
+       * than as `""` — the resolver treats an empty-ish value as unset anyway,
+       * but writing a literal empty string would record a DECISION ("no store
+       * is ours") where none was made, and a stored `""` reads differently
+       * from an absent key to anyone inspecting the document.
+       */
+      payment: { razorpayEnabled, phonepeEnabled, cashfreeEnabled, platformStoreId: platformStoreId.trim() || undefined, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
       collectorDropConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml, cancellation: cancellationHtml, grievance: grievanceHtml },
@@ -2009,8 +2033,25 @@ export function AdminSiteSettingsView({
             <SettingsTabForm id="shipping" label="Shipping">
               <Text size="sm" weight="medium" color="muted">Payment methods</Text>
               <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI/netbanking) enabled — needs Key ID + Key Secret under Credentials" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
-              <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — ignored while Razorpay is on; only one online gateway runs at a time" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
-              <Div id="setting-cashfree-enabled"><Toggle label="Cashfree Payments enabled — needs App ID + Secret Key under Credentials. Checked LAST, so it is ignored while Razorpay or PhonePe is on" checked={cashfreeEnabled} onChange={setCashfreeEnabled} /></Div>
+              <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — when several are on, the first in the Razorpay → PhonePe → Cashfree order is the DEFAULT; carts needing split settlement still go to Cashfree" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
+              <Div id="setting-cashfree-enabled"><Toggle label="Cashfree Payments enabled — needs App ID + Secret Key under Credentials. Last in the default order, but REQUIRED for any cart holding another seller’s items: it is the only gateway that pays each seller directly at capture. Leave it off and those carts cannot be paid online at all" checked={cashfreeEnabled} onChange={setCashfreeEnabled} /></Div>
+              <Input
+                label="Platform's own store ID"
+                /*
+                  🛑 A free-text store id rather than a picker, deliberately.
+                  This view loads no store list, and the cost of a typo is
+                  FAIL-CLOSED and loud — an id naming no real store behaves
+                  exactly like a blank one, so every cart becomes third-party
+                  and online payment is refused with a reason, which an admin
+                  notices immediately. A picker would be nicer; a wrong default
+                  would be dangerous, and that is the trade this field is
+                  placed on.
+                */
+                helperText="The one store whose stock this business may collect payment for into its own account. LEAVE BLANK AND NO CART CAN BE PAID ONLINE: any cart holding another seller's items must be collected by a gateway that settles their share directly to them at capture (Cashfree Easy Split), because a non-splitting capture puts their money in this business's account first. Blank means every store counts as another seller's."
+                value={platformStoreId}
+                onChange={(e) => setPlatformStoreId(e.target.value)}
+                placeholder="store-letitrip-official"
+              />
               <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
               <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>
               <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />

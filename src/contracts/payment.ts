@@ -309,3 +309,51 @@ export abstract class IPaymentProvider {
    * feature is finished; this is the shape.
    */
 }
+
+/**
+ * One online gateway an admin has switched on, paired with the capability the
+ * per-cart resolver needs and the adapter cannot state.
+ *
+ * ## Why the registry grew a LIST beside its single `payment`
+ *
+ * `payment` is resolved ONCE per process from the site-settings flags, and
+ * that is correct for almost everything — a refund, a reconciliation sweep and
+ * a webhook all talk to whichever gateway is live. It cannot express "this
+ * cart needs a splitting gateway and that one doesn't", because the cart does
+ * not exist at module load. So the per-cart resolver needs every ENABLED
+ * gateway, not just the one that won the tie-break; with only the winner
+ * visible, an admin who had enabled both PhonePe and Cashfree would see every
+ * multi-vendor cart refused, because PhonePe sorts first.
+ *
+ * `payment` keeps its meaning and every existing caller keeps its behaviour.
+ * This is additive and optional.
+ *
+ * 🛑 `supportsSplit` lives HERE and not on `IPaymentProvider`, and that
+ * division is deliberate — see `acceptsRestrictedListingTypes`' own 🛑. Whether
+ * split settlement is available is a fact about the PRODUCT the business
+ * bought (Easy Split is a separately-onboarded Cashfree product, not an
+ * inherent property of the Cashfree API), so the consumer's own gateway
+ * registry is what knows it. Whether a listing type is permitted is a fact
+ * about the adapter's merchant TERMS, so the provider declares that. Razorpay
+ * Route splits perfectly well and prohibits auctions; collapsing the two
+ * fields would make one of those two gateways unrepresentable.
+ */
+export interface RegisteredPaymentGateway {
+  /** The adapter itself — this is what actually creates the order. */
+  provider: IPaymentProvider;
+  /**
+   * Can this gateway split ONE capture across several vendors, so the platform
+   * never holds the vendor's share?
+   *
+   * 🛑 `false` is the safe answer and must stay the default for anything not
+   * explicitly known to split. A wrong `true` collects a vendor's money into
+   * the platform's own account, which is the RBI commingling this field exists
+   * to prevent, and it presents as a completely successful checkout.
+   */
+  supportsSplit: boolean;
+  /**
+   * Tie-break when several gateways qualify for the same cart. Lower wins,
+   * matching the consumer registry's own `order`.
+   */
+  order: number;
+}

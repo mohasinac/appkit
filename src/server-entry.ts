@@ -286,6 +286,25 @@ export {
   CHECKOUT_DEFAULT_COMMISSIONS,
   CHECKOUT_PAYMENT_METHODS,
   assertPaymentMethodAllowed,
+  /*
+   * Phase 1c — WHICH gateway may collect a given cart. Exported for the same
+   * reason `assertPaymentMethodAllowed` above it is: the consumer owns
+   * `/api/payment/create-order`, and that route is the only place a refusal
+   * can land before money moves.
+   *
+   * 🛑 `assertCollectingGateway` must be called BEFORE a payment session
+   * exists and must never be used to refuse after capture — see its own 🛑.
+   */
+  assertCollectingGateway,
+  resolveCollectingGatewayForCart,
+  cartVendorComposition,
+  cartRequiresSplitSettlement,
+  SETTLEMENT_CONSTRAINT,
+  GATEWAY_UNAVAILABLE_CODE,
+  type CollectingGatewayResult,
+  type SettlementConstraint,
+  type CartVendorComposition,
+  type GatewayResolution,
   type CreateCheckoutOrderInput,
   type VerifyAndPlaceGatewayOrderInput,
   type CheckoutOrderResult,

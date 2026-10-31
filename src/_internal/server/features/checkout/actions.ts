@@ -168,6 +168,17 @@ import {
   assertPaymentMethodAllowed,
   assertEmiOptInAllowed,
 } from "../../../shared/checkout/rules";
+/*
+ * Phase 1c — the PER-CART gateway choice. `assertCollectingGateway` refuses
+ * before capture (the `"online"` tender in `createCheckoutOrderAction`);
+ * `resolveCollectingGatewayForCart` is the non-throwing form, used at SETTLE
+ * where the money has already moved and a refusal would only deny the buyer
+ * the order they paid for. See `gateway-selection.ts`.
+ */
+import {
+  assertCollectingGateway,
+  resolveCollectingGatewayForCart,
+} from "./gateway-selection";
 // The `GroupCouponDiscountResult` type is deliberately NOT imported: every
 // call site here destructures the result inline, so naming the type would be
 // an unused import.
@@ -2232,9 +2243,73 @@ export async function createCheckoutOrderAction(
    * "cashfree", so a second permitted gateway is a change to that adapter and
    * not to this call site (Root Cause #61).
    */
+  /*
+   * ── Phase 1c: WHICH gateway may collect, for the ONLINE tender ────────────
+   *
+   * 🛑 Gated on `paymentMethod === "online"`, and that gate is the rule rather
+   * than an optimisation. The commingling this guards against is a property of
+   * a GATEWAY CAPTURE: the money lands in the aggregator's escrow and is
+   * settled out of it. COD, cash and a manual bank/UPI transfer involve no
+   * capture at all — a manual transfer is already buyer-to-whoever-the-admin-
+   * names — so applying the rule there would refuse the one set of tenders
+   * that has no commingling problem.
+   *
+   * 🛑 Reachable, which is why this is not capture-route-only: `/api/checkout`
+   * accepts `paymentMethod: "online"`, so this action creates orders for an
+   * online tender BEFORE any capture exists. Guarding only
+   * `/api/payment/create-order` would leave this entry point open.
+   *
+   * 🛑 RESOLVED NON-THROWING FIRST, so the gate below can be told which gateway
+   * would really collect. Passing `getProviders().payment` there — the
+   * process-level tie-break winner — would refuse a collector-drop whenever
+   * PhonePe sorts ahead of an enabled Cashfree, i.e. exactly the configuration
+   * Phase 1c exists to make work. The two gates then compose instead of
+   * disagreeing.
+   */
+  const collectingGateway =
+    paymentMethod === "online"
+      ? resolveCollectingGatewayForCart({
+          items: cartItems,
+          productById: preTxProductById,
+          platformStoreId: siteSettings?.payment?.platformStoreId,
+        })
+      : null;
+
   assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod, {
-    gatewayAccepts: getProviders().payment?.acceptsRestrictedListingTypes,
+    /*
+     * The gateway that would actually collect when there is one; otherwise the
+     * process default, which is what every non-online tender is measured
+     * against and is unchanged. Either way `undefined` means ACCEPTS NOTHING
+     * (`PaymentGateContext.gatewayAccepts`), so a failed resolution cannot
+     * widen this.
+     */
+    gatewayAccepts: collectingGateway
+      ? collectingGateway.provider?.acceptsRestrictedListingTypes
+      : getProviders().payment?.acceptsRestrictedListingTypes,
   });
+
+  /*
+   * Thrown AFTER the listing-level gate, deliberately. A listing that forbids
+   * online payment outright (`blockedPaymentMethods`) should say so in its own
+   * words; the gateway refusal is the narrower, second reason and must not
+   * mask it. When only this one binds it throws `GATEWAY_UNAVAILABLE_FOR_CART`
+   * naming which of the two independent constraints applied.
+   */
+  if (collectingGateway && !collectingGateway.resolution.ok) {
+    /*
+     * Re-resolves rather than re-throwing the stored resolution, because the
+     * error SHAPE (code, `constraint`, `detail`) belongs to
+     * `assertCollectingGateway` and must have exactly one definition — a
+     * hand-rolled `Object.assign(new ValidationError(...))` here would be a
+     * second one to drift from (Root Cause #61). The resolution is pure with
+     * no IO, so the repeat costs nothing.
+     */
+    assertCollectingGateway({
+      items: cartItems,
+      productById: preTxProductById,
+      platformStoreId: siteSettings?.payment?.platformStoreId,
+    });
+  }
   /*
    * 🛑 The second axis needs its own assertion, and omitting it would have
    * been a silent regression of a rule that already exists.
@@ -4383,6 +4458,78 @@ export async function verifyAndPlaceGatewayOrderAction(
     const product = productByIdPaid.get(firstMember) ?? null;
     return { item, product };
   });
+
+  /*
+   * ── Phase 1c at SETTLE: resolve and RECORD. Deliberately does NOT throw. ──
+   *
+   * 🛑 THIS IS THE ONE PLACE THE FAIL-CLOSED RULE MUST NOT REFUSE, and the
+   * reason is arithmetic rather than taste. By the time this runs the gateway
+   * has already captured — the `status !== "paid"` check above is what let us
+   * get here. The funds have therefore already settled wherever the collecting
+   * gateway settles them, so throwing does not un-commingle anything: it only
+   * denies the buyer the order their money has already paid for. That is the
+   * money-taken/no-order failure class this function carries two separate 🛑
+   * blocks about (the `ADDRESS_REQUIRED` tombstone, `order_TqJvzY4gVjR2cc`,
+   * ₹2,511.80 and a manual refund).
+   *
+   * The enforcement point is CAPTURE — `/api/payment/create-order` and the
+   * `"online"` branch of `createCheckoutOrderAction`, both of which refuse
+   * before a payment session exists. This is the detector for the case those
+   * two did not cover: the cart can gain another seller's line between the
+   * capture request and this one (`assertCanAddNewItems` only blocks adding
+   * while a HIGHER lane is pending, so a standard line can still arrive), and
+   * the webhook path reaches here with no session at all.
+   *
+   * So the obligation here is VISIBILITY. A multi-vendor order collected by a
+   * gateway that cannot split means the platform now owes those vendors a
+   * payout from its own balance — a compliance incident an operator has to
+   * know about and resolve out of band. Silently placing the order and saying
+   * nothing is what makes that invisible, and invisible is the whole failure
+   * mode: a commingled capture looks exactly like a successful checkout.
+   *
+   * Best-effort on purpose — neither the log nor the notification may fail a
+   * placement whose payment has already been taken.
+   */
+  const settlementCheck = resolveCollectingGatewayForCart({
+    items: settleItems,
+    productById: productByIdPaid,
+    platformStoreId: siteSettings?.payment?.platformStoreId,
+  });
+  if (!settlementCheck.resolution.ok) {
+    const collectingGateway = getProviders().payment?.name ?? "unknown";
+    serverLogger.error(
+      "SETTLEMENT COMPLIANCE: a captured payment was settled by a gateway that cannot satisfy this cart",
+      {
+        merchantOrderId,
+        gateway: collectingGateway,
+        constraint: settlementCheck.resolution.failedConstraint ?? "none",
+        detail: settlementCheck.resolution.detail,
+      },
+    );
+    await adminNotificationsRepository
+      .create({
+        category: "payouts",
+        title: "Payment collected by a gateway that cannot split this cart",
+        body:
+          `Payment ${merchantOrderId} was captured by "${collectingGateway}" for a cart ` +
+          `that needed more (${settlementCheck.resolution.failedConstraint ?? "no gateway enabled"}). ` +
+          `${settlementCheck.resolution.detail ?? ""} The order is being placed — the buyer has ` +
+          `already paid — but any third-party seller's share is now in the platform's own ` +
+          `account and must be settled manually.`,
+        severity: "error",
+        isRead: false,
+        entityType: "order",
+        entityId: merchantOrderId,
+        audienceUserIds: [],
+      })
+      .catch((notifyErr: unknown) => {
+        void normalizeError(notifyErr);
+        serverLogger.error(
+          "verifyAndPlaceGatewayOrderAction: failed to write admin notification for a settlement-compliance incident",
+          { merchantOrderId },
+        );
+      });
+  }
 
   // SB6-C — maxPerUser cap check before we touch any state.
   await enforceMaxPerUserForCart({

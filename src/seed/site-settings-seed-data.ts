@@ -17,6 +17,16 @@ import type { SiteSettingsDocument } from "../features/admin/schemas";
 import { seedExtMedia, seedPhoto } from "./_helpers/media";
 import { ROUTES } from "../next/routing/route-map";
 import { DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS } from "../_internal/shared/features/collector-drops/config";
+/*
+ * 🛑 IMPORTED, not re-typed. `PLATFORM_STORE_ID` already exists and already
+ * identifies this install's own storefront for the consignment and points
+ * paths; a second literal here would be a third spelling of the same id,
+ * and the one that drifted would authorise collecting another seller's money
+ * into this business's account. Two DECLARATIONS for two different questions
+ * is deliberate (see the schema field's 🛑); two LITERALS for one answer is
+ * not.
+ */
+import { PLATFORM_STORE_ID } from "../features/stores/schemas/firestore";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -146,10 +156,30 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     /*
      * Cashfree. OFF, like the other two online gateways — a reseed must never
      * switch a money path on. `providers.config.ts` checks it LAST
-     * (razorpay → phonepe → cashfree → manual), so it only takes effect when
-     * both of the others are off.
+     * (razorpay → phonepe → cashfree → manual), so it is the process DEFAULT
+     * only when both of the others are off.
+     *
+     * 🛑 "Only takes effect when the others are off" stopped being true in
+     * Phase 1c. Every enabled gateway is registered and the collecting gateway
+     * is chosen per cart: anything holding a store other than
+     * `platformStoreId` below must be collected by one that splits at capture,
+     * which today is only this one. With it off, such a cart is REFUSED online
+     * rather than collected into the platform's own account.
      */
     cashfreeEnabled: false,
+    /*
+     * The platform's own store. Any cart holding another store's items must be
+     * collected by a gateway that splits at capture (Easy Split), because a
+     * non-splitting capture settles the vendor's share into the proprietor's
+     * own account — the RBI commingling.
+     *
+     * 🛑 Seeded rather than left unset, and the reason is NOT convenience:
+     * unset means "every store is third-party", so leaving it out would refuse
+     * online collection for the platform's own stock too. Seeding it is the
+     * only statement that makes a platform-only cart payable. The fail-closed
+     * default still protects an install that never configures it.
+     */
+    platformStoreId: PLATFORM_STORE_ID,
     upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,

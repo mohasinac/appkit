@@ -646,10 +646,15 @@ export interface SiteSettingsDocument extends BaseDocument {
     /**
      * Razorpay (client-side card/UPI/netbanking modal).
      *
-     * 🛑 FIRST in `providers.config.ts`'s resolution chain — exactly one online
-     * gateway can be registered per process, so the order
-     * (**razorpay → phonepe → cashfree → manual**) is the tie-break when more
-     * than one is on, not a precedence anyone should rely on.
+     * 🛑 FIRST in `providers.config.ts`'s tie-break
+     * (**razorpay → phonepe → cashfree → manual**), which decides the
+     * process-level DEFAULT provider when more than one is on — not a
+     * precedence anyone should rely on.
+     *
+     * 🛑 It no longer decides which gateway COLLECTS. Every enabled gateway is
+     * registered and the choice is per cart (see `platformStoreId` below): a
+     * cart holding another store's items must be collected by one that splits
+     * at capture, whatever won this tie-break.
      * Turning this on with no credentials makes the provider constructor
      * throw at boot; `resolveKeys()` treats a seeded `*_PLACEHOLDER` as
      * absent, so a placeholder reads as "unconfigured" rather than failing
@@ -660,8 +665,18 @@ export interface SiteSettingsDocument extends BaseDocument {
     /**
      * Cashfree Payments (PG Orders API, `CashfreeProvider`).
      *
-     * LAST of the three online gateways in the resolution chain, so it runs
+     * LAST of the three in the tie-break, so it is the process-level DEFAULT
      * only when both `razorpayEnabled` and `phonepeEnabled` are false.
+     *
+     * 🛑 CORRECTED — "runs only when the others are off" is no longer true, and
+     * the difference is the whole of Phase 1c. Every enabled gateway is
+     * registered (`ProviderRegistry.paymentGateways`), and the gateway that
+     * collects a given cart is chosen PER CART: anything holding another
+     * store's items must be collected by one that splits at capture, which
+     * today means this one. So enabling Cashfree beside PhonePe is a real and
+     * intended configuration — PhonePe stays the default for the platform's
+     * own stock, Cashfree collects everything multi-vendor — rather than a
+     * setting that silently does nothing.
      *
      * 🛑 It exists because Razorpay and PhonePe both name "Bidding/Auction
      * houses" in their prohibited-merchant lists and this marketplace's
@@ -675,6 +690,49 @@ export interface SiteSettingsDocument extends BaseDocument {
      * credentials, same as Razorpay's.
      */
     cashfreeEnabled: boolean;
+    /**
+     * The `storeId` of the platform's OWN store — the one store whose stock the
+     * proprietorship may lawfully collect payment for into its own account.
+     *
+     * 🛑 UNSET MEANS EVERY STORE IS THIRD-PARTY, and that direction is the
+     * whole value of the field. A split settlement is lawful because the money
+     * never enters the platform's account (buyer → aggregator escrow →
+     * vendor); a gateway that cannot split at capture settles the lot into the
+     * proprietor's current account, and the only way a vendor's share then
+     * reaches them is a payout from that account — which is the RBI
+     * commingling. So an install that has not been told which store is its own
+     * must REFUSE online collection for every cart rather than assume the cart
+     * is all its own stock. Assuming the other way round is a silent commingle
+     * on a real payment, and it presents as a completely successful checkout,
+     * so nothing would ever surface it.
+     *
+     * Read by `cartVendorComposition`
+     * (`_internal/shared/checkout/settlement.ts`): any cart holding a line
+     * whose `storeId` is not this value must be collected by a gateway that
+     * splits at capture. A cart that is only this store's stock may use
+     * whichever gateway is enabled.
+     *
+     * 🛑 A `storeId`, not a slug-looking free-text label — on this platform
+     * `storeId === storeSlug === store.id` (see `StoreDocument`), which is also
+     * the key `splitCartIntoOrderGroups` groups on, so the comparison is
+     * against the same identifier the orders are keyed by. A value naming no
+     * real store behaves exactly like unset: every cart is third-party.
+     *
+     * 🛑 `PLATFORM_STORE_ID` (`features/stores/schemas/firestore.ts`) ALREADY
+     * NAMES THE SAME STORE, and this field is deliberately a second
+     * declaration rather than a reader of it. That constant answers PRODUCT
+     * questions — which store a catalogue consignment is filed under, which
+     * store may not decline to fund the points programme; a wrong answer there
+     * is a mis-filed listing. This answers a COMPLIANCE question — whose money
+     * this business may collect into its own account; a wrong answer is RBI
+     * commingling on a real payment. Defaulting this to that constant would
+     * put a hardcoded brand literal (consumer data its own comment says does
+     * not belong in appkit, tracked for removal under A5c) in charge of an
+     * authorisation decision for every install of the package. The SEED sets
+     * this from the constant, so the two agree for this install without the
+     * rule inheriting a default nobody chose.
+     */
+    platformStoreId?: string;
     upiManualEnabled: boolean;
     codEnabled: boolean;
     /**

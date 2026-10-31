@@ -698,5 +698,28 @@ export const STORE_ADDRESS_SUBCOLLECTION = "addresses" as const;
  * same literal already lives legitimately (`CONSIGNMENT_STORE_ID` in
  * `features/catalogue/utils/product-from-item.ts`), and this file is the one
  * that already documents the rule on `acceptsPoints` above.
+ *
+ * 🛑 THE MONEY PATH DOES NOT READ THIS, and that is not an oversight — do not
+ * "finish the job" by wiring it in. `siteSettings.payment.platformStoreId` is
+ * a SECOND, admin-owned declaration of the same store, read by
+ * `cartVendorComposition` (`_internal/shared/checkout/settlement.ts`) to decide
+ * whether a cart may be collected by a gateway that cannot split at capture.
+ *
+ * Two declarations for two different questions:
+ *
+ *  - this constant answers PRODUCT questions — which store a catalogue
+ *    consignment is listed under, which store cannot decline to fund the points
+ *    programme. A wrong answer is a mis-filed listing.
+ *  - the setting answers a COMPLIANCE question — whose money this business may
+ *    lawfully collect into its own account. A wrong answer is RBI commingling
+ *    on a real payment, and it presents as a successful checkout.
+ *
+ * So the setting FAILS CLOSED when unset (every store counts as third-party)
+ * and must never fall back to this constant: a hardcoded brand literal — one
+ * this file's own comment above describes as consumer data that does not belong
+ * in appkit, tracked for removal under A5c — would then be making an
+ * authorisation decision for every install of the package. The seed sets the
+ * setting FROM this constant, which is how they agree for this install without
+ * the compliance rule inheriting a default nobody chose.
  */
 export const PLATFORM_STORE_ID = "store-letitrip-official";
