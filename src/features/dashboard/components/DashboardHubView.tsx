@@ -8,6 +8,7 @@ import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
 import type { AttentionCounts } from "../../../_internal/server/features/dashboard/attention";
 import type { DashboardHubSection } from "../../../_internal/shared/features/dashboard/hub-sections";
+import { HiddenHubCardGate, HiddenHubCardsRestoreBar } from "./HiddenHubCardGate";
 
 /**
  * The dashboard hub — one component, two modes, zero copy of its own.
@@ -88,6 +89,14 @@ export interface DashboardHubViewProps {
    * withheld rather than guessed.
    */
   showScreenCount?: boolean;
+  /**
+   * `"{portal}:hub"` — opts every card into per-user hide/show (Phase 4A).
+   * Omit to keep this component fully server-safe with no interactivity at
+   * all, same as before this phase; passing it mounts `HiddenHubCardGate`
+   * client leaves around each card, which does not force this component
+   * itself to become a client component (RSC composition, not a hook here).
+   */
+  hideScope?: string;
 }
 
 /**
@@ -128,44 +137,58 @@ interface HubCard {
   meta?: string;
 }
 
-function CardGrid({ cards }: { cards: HubCard[] }) {
+function CardLink({ card }: { card: HubCard }) {
   return (
-    <Grid cols="cards" gap="md">
-      {cards.map((card) => (
-        <TextLink
-          key={card.key}
-          variant="bare"
-          href={card.href}
-          rounded="xl"
-          layout="flex-col"
-          gap="sm"
-          paddingX="lg"
-          paddingY="lg"
-          shadow="hover-md"
-          className="group border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all"
+    <TextLink
+      variant="bare"
+      href={card.href}
+      rounded="xl"
+      layout="flex-col"
+      gap="sm"
+      paddingX="lg"
+      paddingY="lg"
+      shadow="hover-md"
+      className="group border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all"
+    >
+      <Row align="center" justify="between" gap="sm" className="min-w-0 w-full">
+        <Text
+          weight="semibold"
+          className="min-w-0 text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors"
         >
-          <Row align="center" justify="between" gap="sm" className="min-w-0 w-full">
-            <Text
-              weight="semibold"
-              className="min-w-0 text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors"
-            >
-              {card.label}
-            </Text>
-            {badgeFor(card.count)}
-          </Row>
-          {card.description && (
-            <Text size="sm" className="text-[var(--appkit-color-text-muted)] leading-relaxed">
-              {card.description}
-            </Text>
-          )}
-          {card.meta && (
-            <Text size="xs" className="text-[var(--appkit-color-text-faint)] mt-auto">
-              {card.meta}
-            </Text>
-          )}
-        </TextLink>
-      ))}
-    </Grid>
+          {card.label}
+        </Text>
+        {badgeFor(card.count)}
+      </Row>
+      {card.description && (
+        <Text size="sm" className="text-[var(--appkit-color-text-muted)] leading-relaxed">
+          {card.description}
+        </Text>
+      )}
+      {card.meta && (
+        <Text size="xs" className="text-[var(--appkit-color-text-faint)] mt-auto">
+          {card.meta}
+        </Text>
+      )}
+    </TextLink>
+  );
+}
+
+function CardGrid({ cards, hideScope }: { cards: HubCard[]; hideScope?: string }) {
+  return (
+    <Stack gap="sm">
+      {hideScope && <HiddenHubCardsRestoreBar scope={hideScope} allCardKeys={cards.map((c) => c.key)} />}
+      <Grid cols="cards" gap="md">
+        {cards.map((card) =>
+          hideScope ? (
+            <HiddenHubCardGate key={card.key} scope={hideScope} cardKey={card.key}>
+              <CardLink card={card} />
+            </HiddenHubCardGate>
+          ) : (
+            <CardLink key={card.key} card={card} />
+          ),
+        )}
+      </Grid>
+    </Stack>
   );
 }
 
@@ -179,6 +202,7 @@ export function DashboardHubView({
   above,
   emptyMessage,
   showScreenCount = true,
+  hideScope,
 }: DashboardHubViewProps) {
   const hasAny = sections.some((section) => section.items.length > 0);
 
@@ -223,6 +247,7 @@ export function DashboardHubView({
               : undefined,
             count: sectionTotal(section, counts),
           }))}
+          hideScope={hideScope ? `${hideScope}:sections` : undefined}
         />
       )}
 
@@ -246,6 +271,7 @@ export function DashboardHubView({
                 description: item.description,
                 count: item.id ? (counts[item.id] ?? null) : null,
               }))}
+              hideScope={hideScope ? `${hideScope}:screens:${section.slug}` : undefined}
             />
           </Section>
         ))}

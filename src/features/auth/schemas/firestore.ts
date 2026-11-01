@@ -282,6 +282,16 @@ export interface UserDocument extends BaseDocument {
     /** Which side CTA panels/drawers/sidebars dock to and where close buttons
      * sit. Absent/"right" = default (right-docked). "left" = left-hand mode. */
     handMode?: "left" | "right";
+    /**
+     * Dashboard hub cards this user has hidden, per scope (`"{portal}:hub"`).
+     * Phase 4A, overhaul brief — point 1's "silence panels I don't use
+     * without an admin-wide change." Hiding here is additive to, never a
+     * substitute for, the site-level nav/content-tag visibility that already
+     * decides whether a card exists at all: a card the admin has disabled
+     * cannot be un-hidden by a user's own list, and a card the user hid stays
+     * hidden until THEY unhide it, never rediscovered by a later page view.
+     */
+    hiddenHubCards?: Record<string, string[]>;
   };
 }
 

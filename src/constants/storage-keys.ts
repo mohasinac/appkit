@@ -90,6 +90,10 @@ export const STORAGE_KEYS = {
   get sectionState() {
     return storageKey("section-state");
   },
+  /** Per-user hidden dashboard hub cards (Phase 4A, overhaul brief). */
+  get hiddenHubCards() {
+    return storageKey("hidden-hub-cards");
+  },
   /** Last category visited, for the contextual trail. Was `"letitrip:last-category"`. */
   get lastCategory() {
     return storageKey("last-category");
