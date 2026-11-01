@@ -136,6 +136,15 @@ export const AdminAuditActionValues = {
    * question that follows a complaint is who wrote it.
    */
   SCAMMER_PROFILE_UPDATE: "scammer_profile_update",
+  /**
+   * A common-toggle card on the admin dashboard quick-jump (Phase 9, overhaul
+   * brief) flipped a site-settings boolean — maintenance mode, buyer-seller
+   * messaging, or the customer assistant. Each of the three has a wider
+   * blast radius than a single admin's own session (maintenance mode takes
+   * the whole site down for every visitor), so "who flipped this, and when"
+   * is the same question `store_status_change` already answers for stores.
+   */
+  COMMON_TOGGLE_CHANGE: "common_toggle_change",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];
