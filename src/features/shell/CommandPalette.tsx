@@ -8,6 +8,8 @@ import { Kbd } from "../../ui/components/Kbd";
 import { Modal } from "../../ui/components/Modal";
 import { Row, Stack } from "../../ui/components/Layout";
 import { Span, Text } from "../../ui/components/Typography";
+import { useToastSafe } from "../../ui/components/toast-context";
+import { normalizeError } from "../../errors/normalize";
 
 /**
  * A navigable link, or a direct boolean toggle resolved without leaving the
@@ -49,6 +51,7 @@ type FlatItem = CommandPaletteItem & { groupTitle: string; key: string };
  */
 export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to a page…" }: CommandPaletteProps) {
   const router = useRouter();
+  const toast = useToastSafe();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -102,10 +105,13 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
     setTogglingKey(item.key);
     try {
       await item.onToggle();
+    } catch (err) {
+      void normalizeError(err);
+      toast?.showToast(`Couldn't update "${item.label}" — please try again.`, "error");
     } finally {
       setTogglingKey(null);
     }
-  }, [togglingKey]);
+  }, [togglingKey, toast]);
 
   const activate = useCallback(
     (item: FlatItem) => {
