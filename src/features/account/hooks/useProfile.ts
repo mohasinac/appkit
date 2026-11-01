@@ -3,6 +3,7 @@ import type { JsonValue } from "../../../schemas/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { RecentlyVisitedMap } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface UserProfile {
   uid: string;
@@ -26,6 +27,8 @@ export interface UserProfile {
     handMode?: "left" | "right";
     /** scope ("{portal}:hub") -> hidden hub-card keys. See useHiddenHubCards. */
     hiddenHubCards?: Record<string, string[]>;
+    /** scope ("{portal}:hub") -> recently-visited/used cards. See useRecentlyVisited. */
+    recentlyVisited?: RecentlyVisitedMap;
   };
 }
 
@@ -50,6 +53,8 @@ export interface UpdateCurrentProfileInput {
     handMode?: "left" | "right";
     /** scope ("{portal}:hub") -> hidden hub-card keys. See useHiddenHubCards. */
     hiddenHubCards?: Record<string, string[]>;
+    /** scope ("{portal}:hub") -> recently-visited/used cards. See useRecentlyVisited. */
+    recentlyVisited?: RecentlyVisitedMap;
   };
 }
 

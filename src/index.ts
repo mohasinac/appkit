@@ -7020,6 +7020,16 @@ export type {
 // it to be shown. Same barrel choice as the feature-flag helpers above.
 export { isContentVisible } from "./_internal/shared/features/content-tags/registry";
 export type { ContentTag } from "./_internal/shared/features/content-tags/registry";
+// Common toggles — the closed list of site-settings booleans the admin
+// dashboard-landing quick-jump (Phase 9, overhaul brief) can search and flip
+// directly, mirroring the ALL_LISTING_TYPES closed-set pattern above. Pure
+// data, no firebase-admin in its import chain.
+export {
+  COMMON_TOGGLES,
+  COMMON_TOGGLE_IDS,
+  commonToggleById,
+} from "./_internal/shared/features/site-settings/common-toggles";
+export type { CommonToggleDef } from "./_internal/shared/features/site-settings/common-toggles";
 // Basic/advanced listing-type split — which types a store may create.
 // Pure (no firebase-admin in its import chain), so it is safe in index.ts.
 export {

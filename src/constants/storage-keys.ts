@@ -94,6 +94,10 @@ export const STORAGE_KEYS = {
   get hiddenHubCards() {
     return storageKey("hidden-hub-cards");
   },
+  /** Per-user recently-visited/used dashboard-landing cards (Phase 9, overhaul brief). */
+  get recentlyVisited() {
+    return storageKey("recently-visited");
+  },
   /** Last category visited, for the contextual trail. Was `"letitrip:last-category"`. */
   get lastCategory() {
     return storageKey("last-category");

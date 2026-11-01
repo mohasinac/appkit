@@ -426,8 +426,20 @@ function SidebarSectionLinks({
           <Li key={`${item.href}-${item.label}`}>
             {/* The control is a SIBLING of the link, never a child — see
                 `SidebarItemActionRenderer`. `min-w-0` lets the link truncate
-                instead of pushing the control off the edge. */}
-            <Row align="center" gap="xs" className={action ? "w-full" : undefined}>
+                instead of pushing the control off the edge.
+                🛑 The row itself carries the surface/border when a sibling
+                action is present, so the label-plus-toggle reads as ONE row
+                rather than small text floating beside an unrelated switch —
+                the owner's own "whole rows instead of just small words". */}
+            <Row
+              align="center"
+              gap="xs"
+              className={
+                action
+                  ? "w-full rounded-lg border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]"
+                  : undefined
+              }
+            >
               <TextLink
                 href={item.href}
                 variant="none"
@@ -723,10 +735,19 @@ function SidebarContent({
     logout: sidebarProfileLabels?.logout ?? "Logout",
   };
 
+  /*
+   * 🛑 `justify-start`, not `justify-end`. The owner's own words: "ugly
+   * sidebar... like whole rows instead of just small words" — right-
+   * justifying icon+label pushed the text away from its icon and toward the
+   * middle of the row instead of reading as a normal left-to-right list
+   * item, which is most of what made a plain two-word row look unfinished.
+   * `min-h-11` (44px) matches the `IconButton size="touch"` convention this
+   * codebase already uses for every other tap target.
+   */
   const navItemClass =
-  "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] transition-colors hover:bg-primary-surface hover:text-primary-800 text-[var(--appkit-color-text-muted)] dark:hover:text-secondary-300";
+  "flex w-full min-h-11 items-center justify-start gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] transition-colors hover:bg-primary-surface hover:text-primary-800 text-[var(--appkit-color-text-muted)] dark:hover:text-secondary-300";
   const navItemActiveClass =
-    "flex w-full items-center justify-end gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium bg-primary-50 text-primary-800 dark:bg-primary-900/25 dark:text-primary-300";
+    "flex w-full min-h-11 items-center justify-start gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium bg-primary-50 text-primary-800 dark:bg-primary-900/25 dark:text-primary-300";
 
   const profileLinks = [
     { href: profileHref },

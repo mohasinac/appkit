@@ -10,15 +10,22 @@ import { Row, Stack } from "../../ui/components/Layout";
 import { Span, Text } from "../../ui/components/Typography";
 import { useToastSafe } from "../../ui/components/toast-context";
 import { normalizeError } from "../../errors/normalize";
+import { rankNavSearchResults } from "./searchNavItems";
 
 /**
  * A navigable link, or a direct boolean toggle resolved without leaving the
  * palette — Phase 4B's "any listing type, category, brand… I can control it,
  * but still simple steps" (overhaul brief). Discriminated so a caller cannot
  * supply both `href` and `onToggle` and leave which one wins ambiguous.
+ *
+ * `description`/`keywords` on the nav variant are optional — Phase 9 widened
+ * this so the same `label`/`description`/`keywords` a nav item already
+ * carries for the sidebar search (`matchesNavQuery`) also ranks here, via
+ * `rankNavSearchResults` below, instead of the palette's own narrower
+ * label-only substring match.
  */
 export type CommandPaletteItem =
-  | { kind?: "nav"; href: string; label: string }
+  | { kind?: "nav"; href: string; label: string; description?: string; keywords?: string[] }
   | {
       kind: "toggle";
       label: string;
@@ -70,13 +77,7 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
     [groups],
   );
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return flatItems;
-    return flatItems.filter(
-      (item) => item.label.toLowerCase().includes(q) || item.groupTitle.toLowerCase().includes(q),
-    );
-  }, [flatItems, query]);
+  const results = useMemo(() => rankNavSearchResults(flatItems, query), [flatItems, query]);
 
   useEffect(() => {
     setActiveIndex(0);

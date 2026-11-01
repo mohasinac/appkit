@@ -22,6 +22,7 @@ import type { Encrypted, Plaintext } from "../../../security/encrypted";
  * file must stay importable from anywhere.
  */
 import type { PayoutVerificationStatus } from "../../../_internal/shared/features/payouts/destination";
+import type { RecentlyVisitedMap } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // ============================================================================
 // SCHEMA DEFAULTS
@@ -292,6 +293,15 @@ export interface UserDocument extends BaseDocument {
      * hidden until THEY unhide it, never rediscovered by a later page view.
      */
     hiddenHubCards?: Record<string, string[]>;
+    /**
+     * Recently-visited pages and recently-used toggles/charts, per scope
+     * (`"{portal}:hub"`). Phase 9, overhaul brief — the dashboard-landing
+     * quick-jump's "save the last visited as a card... up to 10 cards."
+     * Capped at `RECENT_ENTRIES_MAX` per scope by both the client hook and
+     * the server merge route. See `RecentEntry` for why this is a
+     * discriminated union rather than a flat shape.
+     */
+    recentlyVisited?: RecentlyVisitedMap;
   };
 }
 

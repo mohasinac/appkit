@@ -48,6 +48,7 @@
 import { useCallback, useState } from "react";
 import { useIsAdmin, useIsOwner } from "../../auth/hooks/useRBAC";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
+import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
 import { Icon } from "../../../ui/components/Icon";
@@ -224,6 +225,7 @@ export function OwnerQuickActions({
   const session = useOptionalSession();
   const isOwnerOrAdmin = useIsOwner(ownerId);
   const isAdmin = useIsAdmin();
+  const { editMode, canUseEditMode } = useEditMode();
   const { showToast } = useToast();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -286,6 +288,22 @@ export function OwnerQuickActions({
    * the only person who can edit them.
    */
   if (!isAdmin && !isOwnerOrAdmin && !ownsStore) return null;
+
+  /*
+   * 🛑 ROOT CAUSE of "Edit toggle OFF but pencil/clone/bin still show on
+   * public cards" (found live 2026-11-01): this component predates Phase
+   * 3's `EditModeProvider` and was never wired to it. The owner/admin check
+   * above is necessary but was never sufficient for an ADMIN viewer — the
+   * whole point of that toggle is "off = the admin sees exactly what a
+   * buyer/seller sees" (it is also the admin's own proof that a Phase 1
+   * content-tag kill-switch is actually hidden). `canUseEditMode` is true
+   * only for an admin session (`EditModeProvider`'s `enabled` prop is the
+   * same admin-role check `isAdmin` above derives independently), so this
+   * gate applies ONLY to admins. A non-admin owner — a seller editing their
+   * own listing — has no toggle at all and keeps today's always-visible
+   * behaviour; Phase 3 never touched seller-side editing.
+   */
+  if (canUseEditMode && !editMode) return null;
 
   const editDef = bucket[leaves.edit];
   const deleteDef = leaves.remove ? bucket[leaves.remove] : undefined;
