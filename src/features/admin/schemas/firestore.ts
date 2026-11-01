@@ -958,6 +958,23 @@ export interface SiteSettingsDocument extends BaseDocument {
     enabled: boolean;
   };
   /**
+   * Site-wide maintenance window. The edge gate (`src/proxy.ts` in the
+   * consumer) reads this via `GET /api/maintenance`, which deliberately
+   * reads the RAW Firestore snapshot rather than this typed field — its own
+   * header explains why: that endpoint predates this declaration, written
+   * when the consumer was pinned to the npm registry build (an appkit
+   * source change was invisible until the next publish, "every way of
+   * forcing one is blocked"). The consumer is `file:./appkit` now, so that
+   * constraint no longer holds, but the route's own caching/fail-open
+   * behavior is unrelated to this field and is deliberately left untouched
+   * here — this declaration exists so OTHER typed readers (1A-vi's
+   * TOGGLE_CATALOG) have a real field to point at, not to migrate that route.
+   */
+  maintenance?: {
+    enabled: boolean;
+    message?: string;
+  };
+  /**
    * The customer-assistant floating widget / full-chat page. A kill switch
    * on an already-shipped path, the opposite polarity to `chat` above:
    * absent, an unseeded document, and a failed settings fetch all mean ON —

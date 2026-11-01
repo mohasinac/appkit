@@ -132,6 +132,13 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   "commissions", // internal economics; the buyer-facing subset ships via toBuyerFacingFees
   "emi", // ditto — surchargeSellerSharePercent is a platform/seller revenue split
   "gst", // GSTIN, registered legal name and address
+  // Site-wide maintenance window. Deliberately NOT exposed through this
+  // projection — `GET /api/maintenance` is the one sanctioned, narrow public
+  // read (its own header explains why: different freshness, different
+  // fail-open/fail-closed contract, different cost than this payload). This
+  // field's value reaching the public settings response would be a SECOND,
+  // slower-cached copy of the same fact with the opposite failure contract.
+  "maintenance",
   "laborRate", // internal procurement cost basis
   "adSettings", // providerCredentials + unpublished ad inventory; /api/ads serves the filtered public view
   "integrations", // analytics/tag IDs are injected server-side into markup, not fetched by the client

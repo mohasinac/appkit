@@ -7020,18 +7020,19 @@ export type {
 // it to be shown. Same barrel choice as the feature-flag helpers above.
 export { isContentVisible } from "./_internal/shared/features/content-tags/registry";
 export type { ContentTag } from "./_internal/shared/features/content-tags/registry";
-// Common toggles — the closed list of site-settings booleans the admin
-// dashboard-landing quick-jump (Phase 9, overhaul brief) can search and flip
-// directly, mirroring the ALL_LISTING_TYPES closed-set pattern above. Pure
-// data, no firebase-admin in its import chain.
+// Toggle catalog (1A-vi, formerly COMMON_TOGGLES) — the closed list of
+// site-settings booleans the admin dashboard-landing quick-jump (Phase 9,
+// overhaul brief) can search and flip directly, mirroring the
+// ALL_LISTING_TYPES closed-set pattern above. Pure data, no firebase-admin
+// in its import chain.
 export {
-  COMMON_TOGGLES,
-  COMMON_TOGGLE_IDS,
-  commonToggleById,
-} from "./_internal/shared/features/site-settings/common-toggles";
-export type { CommonToggleDef } from "./_internal/shared/features/site-settings/common-toggles";
-// Settings previews — the READ-ONLY counterpart to COMMON_TOGGLES (Phase 10,
-// "widget descriptors"). Pure data, same reason COMMON_TOGGLES is exported
+  TOGGLE_CATALOG,
+  TOGGLE_CATALOG_IDS,
+  toggleCatalogById,
+} from "./_internal/shared/features/site-settings/toggle-catalog";
+export type { ToggleCatalogEntry } from "./_internal/shared/features/site-settings/toggle-catalog";
+// Settings previews — the READ-ONLY counterpart to TOGGLE_CATALOG (Phase 10,
+// "widget descriptors"). Pure data, same reason TOGGLE_CATALOG is exported
 // from here rather than a consumer-unreachable `_internal` subpath.
 export {
   SETTINGS_PREVIEW,

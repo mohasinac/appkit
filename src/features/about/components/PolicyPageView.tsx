@@ -11,6 +11,8 @@ import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import type { SiteSettingsDocument } from "../../admin/schemas/firestore";
+import { getCompositeSentence } from "../../../_internal/shared/content/composite-sentences";
+import { getFragmentedParagraph } from "../../../_internal/shared/content/fragmented-paragraphs";
 
 
 export type PolicyKey =
@@ -129,14 +131,16 @@ export async function PolicyPageView({
 }: PolicyPageViewProps) {
   const page = { container: PAGE_CONTAINER };
   const meta = POLICY_META[policy];
-  const { getTranslations } = await import("next-intl/server");
+  const { getTranslations, getLocale } = await import("next-intl/server");
 
   const t = await getTranslations(meta.namespace);
+  const locale = await getLocale();
 
   // Check Firestore for admin-overridden HTML content
   let adminHtml = "";
+  let settings: SiteSettingsDocument | undefined;
   try {
-    const settings = await siteSettingsRepository.getSingleton();
+    settings = await siteSettingsRepository.getSingleton();
     adminHtml = settings.legalPages?.[meta.firestoreField] ?? "";
   } catch (_err) {
     void normalizeError(_err);
@@ -156,6 +160,23 @@ export async function PolicyPageView({
     body: string;
   }>;
   const sections = Array.isArray(rawSections) ? rawSections : [];
+
+  /*
+   * 1A-ii composite-sentence cascade — `cancellationPolicy`'s section 3
+   * heading names collector-drop/pre-order/random-lots inline ("Collector
+   * Drops, pre-orders and prize draws"). Overridden here rather than left as
+   * static i18n so disabling one of those types drops it from the heading,
+   * same as everywhere else this mechanism applies. Scoped to this one
+   * (policy, index) pair deliberately — the OTHER 7 policy pages' sections
+   * are plain single-topic prose with nothing to cascade.
+   */
+  if (policy === "cancellation" && sections[3]) {
+    sections[3] = {
+      ...sections[3],
+      heading: getCompositeSentence("cancellationPolicy.sections.3.heading", locale, settings),
+      body: getFragmentedParagraph("cancellationPolicy.sections.3.body", locale, settings),
+    };
+  }
 
   // Derived from POLICY_META, so a newly added policy appears in every other
   // page's related list automatically and can never link to itself.

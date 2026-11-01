@@ -18,9 +18,9 @@
  * plan's Phase 10 section for the full per-surface reasoning; the summary:
  *
  * - `settingPreview` — READ-ONLY. Points at a site-settings toggle OUTSIDE
- *   the closed, write-capable `COMMON_TOGGLES` registry. Never flips
+ *   the closed, write-capable `TOGGLE_CATALOG` registry. Never flips
  *   anything; navigates to the real settings tab and shows the current value
- *   as text. `SETTINGS_PREVIEW_IDS` and `COMMON_TOGGLE_IDS` are disjoint by
+ *   as text. `SETTINGS_PREVIEW_IDS` and `TOGGLE_CATALOG_IDS` are disjoint by
  *   construction (enforced by `audit-widget-descriptor-sync.mjs` R3) — there
  *   is exactly one writable path into site settings from a dashboard card.
  * - `adminRow` — a bookmark to one `DataListingView` row, not a live mirror

@@ -87,7 +87,7 @@ export interface DashboardQuickJumpProps {
   /** Live chart/stat values this portal makes searchable + cardable. */
   charts?: DashboardQuickJumpChart[];
   /**
-   * Phase 10 — read-only site-settings previews outside `COMMON_TOGGLES`,
+   * Phase 10 — read-only site-settings previews outside `TOGGLE_CATALOG`,
    * searchable the same way toggles/charts are (small, static candidate
    * set). Admin-only in practice; omit elsewhere.
    */
