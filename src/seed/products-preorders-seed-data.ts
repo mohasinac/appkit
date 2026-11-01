@@ -24,7 +24,7 @@
 import { ProductDocument } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto, seedGallery } from "./_helpers/media";
+import { seedPhoto, seedGallery, seedStockPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 import { PREORDER_MAX_DELIVERY_DAYS } from "../_internal/shared/checkout/rules/_limits";
@@ -366,7 +366,7 @@ const _rawPreordersSeedData: Partial<ProductDocument>[] = [
     listingType: "pre-order" as const,
     categorySlugs: ["category-x-customize-sets"],
     brand: "Takara-Tomy",
-    images: seedGallery("/media/product-customize-set-c-cx-20-image"),
+    images: seedGallery(seedStockPhoto("product-customize-set-c-cx-20-image")),
     isSold: false,
     availableQuantity: 10,
     tags: ["custom-line", "cx", "unreleased"],

@@ -27,7 +27,7 @@
 import { ProductDocument, ProductSpecification } from "../features/products/schemas/firestore";
 import { PRODUCT_FIELDS } from "../constants/field-names";
 import { buildSearchTxt } from "../utils/search-txt";
-import { seedPhoto, seedGallery } from "./_helpers/media";
+import { seedPhoto, seedGallery, seedStockPhoto } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
@@ -498,8 +498,8 @@ export const productsCollectorDropsSeedData: Partial<ProductDocument>[] = [
     bidCount: 0,
     bidsHaveStarted: false,
     isSold: false,
-    mainImage: "/media/product-aeropegasus-3-70a-image",
-    images: seedGallery("/media/product-aeropegasus-3-70a-image"),
+    mainImage: seedStockPhoto("product-aeropegasus-3-70a-image"),
+    images: seedGallery(seedStockPhoto("product-aeropegasus-3-70a-image")),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     tags: ["attack-type", "rare-bey", "prize-exclusive"],

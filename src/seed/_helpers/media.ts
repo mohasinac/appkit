@@ -180,3 +180,32 @@ export function seedPhoto(seed: string, _width?: number, _height?: number): stri
   // entry per size, which is the thing this change removes.
   return `${SEED_TILE_PREFIX}${bg}.svg`;
 }
+
+/*
+ * 🛑 TEMPORARY STOPGAP (2026-11-01) — a hand-authored fixture (13 products in
+ * `products-beyblade-x-seed-data.ts`) referenced a `/media/product-*-image`
+ * slug with NO matching `mediaAssets` row, so every one of those images
+ * 404'd. The REAL fix is re-running `scripts/fetch-product-images.mjs` +
+ * `scripts/upload-product-images.mjs` — the reproducible, provenance-tracked
+ * pipeline that file's own header names as the source of those references —
+ * not this. Use `seedStockPhoto` only until that pipeline is re-run.
+ *
+ * Deliberately a SMALL, FIXED set of verified real URLs (not one unique URL
+ * per product) — this project suspended itself once already (Root Cause
+ * #104 / the picsum incident, same file, above) by minting a distinct
+ * third-party URL per seed item: each one is its own CDN cache key, so N
+ * products means N origin fetches through `/api/media/ext` instead of a
+ * handful that get reused and cached. Three verified Unsplash CDN URLs,
+ * assigned deterministically like `seedPhoto` above.
+ */
+const STOCK_PHOTO_URLS = [
+  "https://images.unsplash.com/photo-1744308324561-e96e2799f296?fm=jpg&q=60&w=900&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1759680190851-199358b2cd8c?fm=jpg&q=60&w=900&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1647221598398-934ed5cb0e4f?fm=jpg&q=60&w=900&auto=format&fit=crop",
+] as const;
+
+/** Deterministic stock-photo stand-in, wrapped in the external-media proxy. See the stopgap note above `STOCK_PHOTO_URLS`. */
+export function seedStockPhoto(seed: string): string {
+  const url = STOCK_PHOTO_URLS[seedHash(seed) % STOCK_PHOTO_URLS.length];
+  return seedExtMedia(url);
+}
