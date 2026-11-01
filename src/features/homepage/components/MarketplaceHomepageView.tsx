@@ -458,7 +458,7 @@ export async function MarketplaceHomepageView({
           </TopBannerPortal>
         ) : null}
         {orderedSections.map((section) =>
-          renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData, brand),
+          renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData, brand, siteSettings),
         )}
       </Div>
     </Main>

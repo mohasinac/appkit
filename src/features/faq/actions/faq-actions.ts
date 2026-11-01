@@ -8,6 +8,9 @@ import type {
   FirebaseSieveResult,
   SieveModel,
 } from "../../../providers/db-firebase";
+import { isContentVisible } from "../../../_internal/shared/features/content-tags/registry";
+import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
+import { resolveFaqAnswer } from "../utils/resolveFaqAnswer";
 
 // --- Schemas --------------------------------------------------------------
 
@@ -39,6 +42,30 @@ const faqBaseSchema = z.object({
       }),
     )
     .max(10)
+    .optional(),
+  /*
+   * Mirrors `ContentFragment` (`_internal/shared/content/fragments.ts`) — for
+   * an answer that MENTIONS several governed things rather than being solely
+   * about one (which `contentTags` above already covers). Each fragment's own
+   * `governs` is optional (omitted = always-shown clause, e.g. the answer's
+   * opening sentence).
+   */
+  answerFragments: z
+    .array(
+      z.object({
+        // Mirrors `ContentTag` verbatim (not a `{kind, value}` wrapper) — a
+        // fragment's `governs` IS a `ContentTag`, passed straight into
+        // `isContentVisible([f.governs], settings)` with no reshaping.
+        governs: z
+          .object({
+            governs: z.enum(["listingType", "categoryType", "browsePage"]),
+            value: z.string().min(1).max(50),
+          })
+          .optional(),
+        text: z.string().min(1).max(2000),
+      }),
+    )
+    .max(20)
     .optional(),
   relatedFAQs: z.array(z.string()).max(5).optional(),
   useSiteSettings: z.boolean().default(true),
@@ -160,7 +187,18 @@ export async function listPublicFaqs(
     page: 1,
     pageSize: limit,
   });
-  return result.items;
+  /*
+   * In-memory post-filter, same technique `listPublicProducts`'s `finish()`
+   * already uses for listing-type visibility — a Firestore equality query
+   * cannot express "none of this FAQ's N tags is for a disabled thing"
+   * (CLAUDE.md § "Availability & Order-Scope Tabs" explains why the dense/
+   * negation-shaped case always stays a per-row predicate). First real
+   * consumer of `contentTags`/`isContentVisible` (1A).
+   */
+  const settings = await siteSettingsRepository.getSingleton();
+  return result.items
+    .filter((faq) => isContentVisible(faq.contentTags, settings))
+    .map((faq) => resolveFaqAnswer(faq, settings));
 }
 
 export async function getFaqById(id: string): Promise<FAQDocument | null> {

@@ -8,6 +8,8 @@ import { generateFAQId } from "../../../utils/id-generators";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { ContentTag } from "../../../_internal/shared/features/content-tags/registry";
 export type { ContentTag } from "../../../_internal/shared/features/content-tags/registry";
+import type { ContentFragment } from "../../../_internal/shared/content/fragments";
+export type { ContentFragment } from "../../../_internal/shared/content/fragments";
 // Imported from the DEFINING module, not a barrel (Root Cause #18).
 import {
   extractPlaceholders,
@@ -38,6 +40,19 @@ export interface FAQDocument extends BaseDocument {
    * Absent/empty means always visible (see `isContentVisible`).
    */
   contentTags?: ContentTag[];
+  /**
+   * Fragment-level content cascade — for a FAQ that MENTIONS several
+   * governed things without being solely about any one of them (e.g. "What
+   * are the different ways to buy on LetItRip?" naming standard/auction/
+   * pre-order). Distinct from `contentTags` (whole-document hide, above):
+   * when present, `answerFragments` OVERRIDES `answer.text` at render time,
+   * resolved via `resolveFragmentedAnswer()`
+   * (`_internal/shared/content/fragments.ts`) — a disabled fragment's
+   * `governs` tag drops just that clause, the FAQ stays visible. `answer.text`
+   * stays the fallback for FAQs with no governed mentions, and remains the
+   * `searchTxt`-indexing source either way.
+   */
+  answerFragments?: ContentFragment[];
   /** Normalized edge-n-gram search field. Replaced `searchTokens`. */
   searchTxt?: string[];
   relatedFAQs: string[];

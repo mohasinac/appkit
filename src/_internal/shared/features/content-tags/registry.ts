@@ -46,7 +46,7 @@ export interface ContentTag {
 }
 
 /** The snapshot shape every `isXEnabled` helper in `feature-flags.ts` reads. */
-interface ContentFlagSnapshot {
+export interface ContentFlagSnapshot {
   listings?: {
     listingTypes?: Partial<Record<string, FlagValue>>;
     categoryTypes?: Partial<Record<string, FlagValue>>;

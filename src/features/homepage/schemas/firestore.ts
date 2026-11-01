@@ -22,6 +22,8 @@ import type { FAQCategory } from "../../faq/types";
    icon fields below must be a closed union or a typo is a silent blank — which
    is exactly the state `renderIcon` left these sections in. */
 import type { IconKey } from "../../../ui/icons/icon-registry";
+import type { ContentTag } from "../../../_internal/shared/features/content-tags/registry";
+export type { ContentTag } from "../../../_internal/shared/features/content-tags/registry";
 
 export type CarouselSlideHeight = "viewport" | "tall" | "medium";
 
@@ -53,6 +55,16 @@ export interface WelcomeSectionConfig {
   /** Secondary CTA beside the primary one. */
   secondaryCtaText?: string;
   secondaryCtaLink?: string;
+  /**
+   * What this CTA depends on being enabled, if anything (1A-v-b
+   * `GovernedLink`). An admin who points the secondary CTA at `/pre-orders`
+   * tags `{governs: "listingType", value: "pre-order"}`; when that type is
+   * disabled, `resolveGovernedLink()` falls back to the untagged default
+   * (`SECTION_COPY.welcomeSecondaryCta` / `/products`) instead of serving a
+   * dead link. Absent means the CTA is always shown as configured — matching
+   * every other flag check in this codebase's "absent means enabled" default.
+   */
+  secondaryCtaGoverns?: ContentTag;
   // `background` was REMOVED here and on the categories/stores/events configs.
   // A repo-wide grep found no renderer reading any of them — four controls in
   // the admin builder that had never affected a pixel.

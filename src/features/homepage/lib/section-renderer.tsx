@@ -49,6 +49,10 @@ import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
 // categoryType:"bundle" rows on the categories collection.
 import { FeaturedBundlesSection } from "../components/FeaturedBundlesSection";
 import { HomepageSectionBoundary } from "../components/HomepageSectionBoundary";
+import {
+  resolveGovernedLink,
+  type ContentFlagSnapshot,
+} from "../../../_internal/shared/content/fragments";
 import { RandomLotsSection } from "../../products/components/RandomLotsSection";
 import { EventGiveawaysSection } from "../../events/components/EventGiveawaysSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
@@ -196,6 +200,8 @@ interface SectionRenderCtx {
   liveStats: LiveStatsMap;
   sectionData: SectionData;
   brand: HomepageBrand | undefined;
+  /** Live flag snapshot (1A-v-b `GovernedLink`) — most sections ignore it. */
+  settings: ContentFlagSnapshot | null | undefined;
 }
 
 interface SectionDef {
@@ -250,8 +256,21 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
 
   welcome: {
     surfaces: ["homepage"],
-    render: ({ config, brand, sectionData }) => {
+    render: ({ config, brand, sectionData, settings }) => {
       const cfg = config as WelcomeSectionConfig;
+      // 1A-v-b `GovernedLink` — falls back to the pre-existing generic
+      // default (never a dead link) when the configured target is disabled.
+      const secondaryCta = resolveGovernedLink(
+        cfg?.secondaryCtaText && cfg?.secondaryCtaLink
+          ? {
+              label: cfg.secondaryCtaText,
+              href: cfg.secondaryCtaLink,
+              governs: cfg.secondaryCtaGoverns,
+            }
+          : undefined,
+        { label: SECTION_COPY.welcomeSecondaryCta, href: ROUTES.PUBLIC.PRODUCTS },
+        settings,
+      );
       /*
        * Hero imagery, taken from the featured categories' own covers.
        *
@@ -293,8 +312,8 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           showCTA={cfg?.showCTA ?? true}
           ctaLabel={cfg?.ctaText || SECTION_COPY.welcomePrimaryCta}
           ctaHref={cfg?.ctaLink || ROUTES.PUBLIC.PRODUCTS}
-          secondaryCtaLabel={cfg?.secondaryCtaText || SECTION_COPY.welcomeSecondaryCta}
-          secondaryCtaHref={cfg?.secondaryCtaLink || ROUTES.PUBLIC.PRODUCTS}
+          secondaryCtaLabel={secondaryCta.label}
+          secondaryCtaHref={secondaryCta.href}
           trustChips={[...WELCOME_TRUST_CHIPS]}
           brandLogoText={brand?.shortName}
           brandTld={brand?.tld}
@@ -894,6 +913,7 @@ function renderSectionElement(
   liveStats: LiveStatsMap,
   sectionData: SectionData,
   brand: HomepageBrand | undefined,
+  settings: ContentFlagSnapshot | null | undefined,
 ): React.ReactNode {
   const def = SECTION_REGISTRY[section.type];
   // No `default` arm left to fall through to — an unmapped `SectionType` is a
@@ -909,6 +929,7 @@ function renderSectionElement(
     liveStats,
     sectionData,
     brand,
+    settings,
   });
 }
 
@@ -921,6 +942,7 @@ export function renderSection(
   liveStats: LiveStatsMap,
   sectionData: SectionData = {},
   brand?: HomepageBrand,
+  settings?: ContentFlagSnapshot | null,
 ): React.ReactNode {
   const sectionElement = renderSectionElement(
     section,
@@ -930,6 +952,7 @@ export function renderSection(
     liveStats,
     sectionData,
     brand,
+    settings,
   );
   if (!sectionElement) return null;
 

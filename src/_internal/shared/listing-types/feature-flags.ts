@@ -35,7 +35,7 @@ import { ROUTES } from "../../../next/routing/route-map";
  */
 export type FlagValue = boolean | "unlisted";
 
-interface FeatureFlagSnapshot {
+export interface FeatureFlagSnapshot {
   listings?: {
     listingTypes?: Partial<Record<ListingType, FlagValue>>;
     categoryTypes?: Partial<Record<CategoryType, FlagValue>>;
@@ -359,9 +359,68 @@ export function visibleListingTypes(
   );
 }
 
+/**
+ * Every category type, in canonical iteration order.
+ *
+ * Declared as `Record<CategoryType, true>` rather than a plain array, same
+ * reason as `ALL_LISTING_TYPES_MAP` above (Root Cause #61): adding a member to
+ * the `CategoryType` union without adding it here is then a COMPILE error, not
+ * a silent omission. `franchise` and `character` were missing from the old
+ * hand-written array here for exactly that reason — `enabledCategoryTypes()`
+ * never included either even when enabled, which meant
+ * `BrandDetailTabs.tsx`/`CategoryDetailTabs.tsx`'s tab-visibility filter
+ * (`enabledCategoryTypes.includes(mapping.type)`) always dropped any tab
+ * mapped to `franchise`/`character`, regardless of the actual flag state.
+ */
+const ALL_CATEGORY_TYPES_MAP: Record<CategoryType, true> = {
+  category: true,
+  sublisting: true,
+  brand: true,
+  bundle: true,
+  franchise: true,
+  character: true,
+};
+
+export const ALL_CATEGORY_TYPES = Object.keys(
+  ALL_CATEGORY_TYPES_MAP,
+) as CategoryType[];
+
 export function enabledCategoryTypes(
   settings: FeatureFlagSnapshot | null | undefined,
 ): CategoryType[] {
-  const all: CategoryType[] = ["category", "sublisting", "brand", "bundle"];
-  return all.filter((t) => isCategoryTypeEnabled(t, settings));
+  return ALL_CATEGORY_TYPES.filter((t) => isCategoryTypeEnabled(t, settings));
+}
+
+/**
+ * One operational row's visibility check (1A-iii) — for the ~50+ schemas
+ * that already carry the canonical `listingType`/`categoryType` scalar
+ * CLAUDE.md's "Listing Types Reference" documents, read by a PUBLIC-facing
+ * list. Reuses `isListingTypeEnabled`/`isCategoryTypeEnabled` directly rather
+ * than adding a second tag array to a transactional record — the row already
+ * names its own type, it just needs that name checked against the live flag
+ * at the query/render layer.
+ *
+ * 🛑 Deliberately NOT for genuinely operational, non-public surfaces (orders,
+ * cart, payments, shipments, ledger, audit-log, jobs) — a buyer must keep
+ * seeing their own past order for a since-closed listing type; filtering
+ * that by the live flag would be a regression, not a fix. Call this only
+ * from a public LIST/browse read path.
+ */
+export function isGovernedRowVisible(
+  row: { listingType?: string; categoryType?: string },
+  settings: FeatureFlagSnapshot | null | undefined,
+): boolean {
+  if (
+    row.listingType &&
+    !isListingTypeEnabled(row.listingType as ListingType, settings)
+  ) {
+    return false;
+  }
+  if (
+    row.categoryType &&
+    !isCategoryTypeEnabled(row.categoryType as CategoryType, settings)
+  ) {
+    return false;
+  }
+  return true;
 }
