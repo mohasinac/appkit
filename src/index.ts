@@ -5998,9 +5998,7 @@ export { TitleBarLayout } from "./features/layout/TitleBarLayout";
 export { LanguageSwitcher } from "./features/layout/LanguageSwitcher";
 export type { LanguageSwitcherProps, LanguageSwitcherOption } from "./features/layout/LanguageSwitcher";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// EditModeProvider / useEditMode / LiveEditableRegion - Admin-only "view as buyer" toggle (Phase 3, overhaul brief).
-export { EditModeProvider, useEditMode } from "./_internal/client/edit-mode/EditModeProvider";
-export type { EditModeContextValue } from "./_internal/client/edit-mode/EditModeProvider";
+// LiveEditableRegion - Admin-only inline edit affordance (Phase 3, overhaul brief). EditModeProvider/useEditMode live at the "./edit-mode" subpath, mirroring hand-mode.
 export { LiveEditableRegion } from "./ui/components/LiveEditableRegion";
 export type { LiveEditableRegionProps } from "./ui/components/LiveEditableRegion";
 export { EditModeToggle } from "./features/layout/EditModeToggle";
