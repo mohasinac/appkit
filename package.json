@@ -31,6 +31,10 @@
       "types": "./dist/hand-mode/index.d.ts",
       "import": "./dist/hand-mode/index.js"
     },
+    "./edit-mode": {
+      "types": "./dist/edit-mode/index.d.ts",
+      "import": "./dist/edit-mode/index.js"
+    },
     "./theme": {
       "types": "./dist/theme/index.d.ts",
       "import": "./dist/theme/index.js"

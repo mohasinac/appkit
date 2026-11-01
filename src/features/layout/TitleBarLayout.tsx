@@ -69,6 +69,12 @@ export interface TitleBarLayoutProps {
    * appkit only renders whatever is passed, same pattern as `devSlot`.
    */
   localeSlot?: React.ReactNode;
+  /**
+   * Optional admin edit-mode toggle slot (Phase 3). The consumer decides
+   * whether to render anything here based on the session's role — appkit
+   * never makes that decision itself, same pattern as `devSlot`/`localeSlot`.
+   */
+  editModeSlot?: React.ReactNode;
   /** Optional nav slot rendered between logo and right action icons (desktop only). */
   navSlot?: React.ReactNode;
   /** When set, renders a dismissable promo micro-strip above the header. */
@@ -165,6 +171,7 @@ export function TitleBarLayout({
   notificationSlot,
   devSlot,
   localeSlot,
+  editModeSlot,
   navSlot,
   promoStripText,
   isDark = false,
@@ -459,6 +466,7 @@ export function TitleBarLayout({
               `overflow-x-clip`, so clipped is gone, not scrollable). */}
           <Row gap="xs" reverse="hand" justify="end" className="flex-1">
             {devSlot}
+            {editModeSlot}
             {localeSlot}
             {navSlot}
             {compareEl}

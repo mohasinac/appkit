@@ -5998,6 +5998,21 @@ export { TitleBarLayout } from "./features/layout/TitleBarLayout";
 export { LanguageSwitcher } from "./features/layout/LanguageSwitcher";
 export type { LanguageSwitcherProps, LanguageSwitcherOption } from "./features/layout/LanguageSwitcher";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// EditModeProvider / useEditMode / LiveEditableRegion - Admin-only "view as buyer" toggle (Phase 3, overhaul brief).
+export { EditModeProvider, useEditMode } from "./_internal/client/edit-mode/EditModeProvider";
+export type { EditModeContextValue } from "./_internal/client/edit-mode/EditModeProvider";
+export { LiveEditableRegion } from "./ui/components/LiveEditableRegion";
+export type { LiveEditableRegionProps } from "./ui/components/LiveEditableRegion";
+export { EditModeToggle } from "./features/layout/EditModeToggle";
+export {
+  registerClientLiveEditProvider,
+  getClientLiveEditProvider,
+} from "./contracts/client-live-edit";
+export type {
+  IClientLiveEditProvider,
+  LiveEditSaveRequest,
+} from "./contracts/client-live-edit";
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActions - React hook for use bottom actions.
 export { useBottomActions } from "./features/layout/hooks/useBottomActions";
 export { RecordStatusTimeline } from "./features/status-history/components/RecordStatusTimeline";

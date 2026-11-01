@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { RichText } from "../../../ui/rich-text/RichText";
+import { LiveEditableRegion } from "../../../ui/components/LiveEditableRegion";
 import { Row } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { Tabs, TabsList, TabsTrigger } from "../../../ui/components/Tabs";
@@ -133,16 +134,19 @@ function FAQAccordionItem({
             unusable in half the places it is needed (and would pull a settings
             read into every FAQ accordion on the page).
           */}
-          {faq.answer.format === "html" ? (
-            <RichText
-              html={resolvePublishedCopy(faq.answer.text, publishedValues)}
-              className="prose-sm"
-            />
-          ) : (
-            <Text className="whitespace-pre-line">
-              {resolvePublishedCopy(faq.answer.text, publishedValues)}
-            </Text>
-          )}
+          <LiveEditableRegion
+            contentType="faq"
+            id={faq.id}
+            field="answer"
+            value={faq.answer.text}
+            renderValue={(raw) =>
+              faq.answer.format === "html" ? (
+                <RichText html={resolvePublishedCopy(raw, publishedValues)} className="prose-sm" />
+              ) : (
+                <Text className="whitespace-pre-line">{resolvePublishedCopy(raw, publishedValues)}</Text>
+              )
+            }
+          />
           {/*
             Owner edit, per question.
 
