@@ -64,6 +64,7 @@ function TrustFeatureCard({
          * (owner's own ask) is the fix; at `sm`+, each tile owns its own
          * grid column, where left-align reads correctly.
          */
+        // audit-content-alignment-ok: mobile-only (below sm) centering of a stacked icon+title+description tile, explicitly requested by the owner from a live screenshot — not marketing-copy centering the site-wide convention guards against; sm:+ stays left-aligned per that convention.
         "flex flex-col items-center text-center sm:items-start sm:text-left p-[var(--appkit-space-4)]",
         "transition-all duration-500",
         delayClass,
