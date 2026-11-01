@@ -44,7 +44,18 @@ interface AdminProductsResponse {
   total?: number;
 }
 
-type ProductRow = AdminListingScaffoldRow;
+/*
+ * Phase 4C (overhaul brief) — `price`/`stockQuantity` promoted from inside
+ * the `secondary` concatenated string to real, dedicated columns, same
+ * pattern `SellerProductsView`'s own PRODUCT_COLUMNS already uses. `secondary`
+ * keeps showing them too (removing them would blank the mobile/narrow-view
+ * row, which only renders primary/secondary) — this is additive scanability,
+ * not a replacement for what was already readable.
+ */
+type ProductRow = AdminListingScaffoldRow & {
+  price?: number;
+  stockQuantity?: number;
+};
 type FlagField = "featured" | "isPromoted" | "isOnSale" | "isSold";
 
 /** `POST /api/admin/products/bulk` — named so the partial-failure shape is
@@ -78,6 +89,26 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
           <Text weight="semibold" color="primary">{row.primary}</Text>
           <Text size="xs" color="muted">{row.secondary}</Text>
         </Stack>
+      ),
+    },
+    {
+      key: "price",
+      header: "Price",
+      className: "w-28 text-right",
+      render: (row) => (
+        <Span size="sm" weight="medium">
+          {typeof row.price === "number" ? formatMoney(row.price) : <Span color="faint">—</Span>}
+        </Span>
+      ),
+    },
+    {
+      key: "stockQuantity",
+      header: "Stock",
+      className: "w-24 text-right",
+      render: (row) => (
+        <Span size="sm" weight="medium">
+          {typeof row.stockQuantity === "number" ? row.stockQuantity : <Span color="faint">—</Span>}
+        </Span>
       ),
     },
     {
@@ -389,6 +420,8 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
             ]
               .filter(Boolean)
               .join(" · "),
+          price: typeof item.price === "number" ? item.price : undefined,
+          stockQuantity: typeof item.stockQuantity === "number" ? item.stockQuantity : undefined,
           status: toStringValue(item.status, "Unknown"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           featured: Boolean(item.featured),
