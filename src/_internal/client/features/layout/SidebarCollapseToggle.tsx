@@ -47,6 +47,24 @@ export function SidebarCollapseToggle({
   // Chevron rotation direction mirrors along with the dock side so it keeps
   // pointing "into" the collapsed panel regardless of which edge it's on.
   const chevronRotated = edge === "left" ? !expanded : expanded;
+  /*
+   * 🛑 MUST be `position: absolute`, pinned to the panel's INNER (content-
+   * facing) edge — never a normal flex sibling after the nav panel.
+   *
+   * The collapsed state translates the WHOLE panel by `100% - 1.25rem`
+   * (`sidebarPositionClasses.ts`), leaving only a 1.25rem sliver at the
+   * panel's inner edge inside the viewport; the rest, including whatever
+   * sits at the panel's OUTER edge in normal flex flow, lands past the
+   * viewport edge, clipped by `overflow-x: hidden` — genuinely unreachable,
+   * not just visually awkward. `roundedClass` above already encodes the
+   * correct edge (rounds toward the content side), which is the tell that
+   * this was always meant to dock there; only the positioning mechanism was
+   * wrong. Absolute positioning relative to the panel (its `fixed` ancestor
+   * still establishes a containing block) keeps the handle at the same
+   * viewport position in BOTH collapsed and expanded states, instead of
+   * moving with panel content as a flex child would.
+   */
+  const edgeOffsetClass = edge === "left" ? "right-0 translate-x-full" : "left-0 -translate-x-full";
   return (
     <IconButton
       type="button"
@@ -55,7 +73,7 @@ export function SidebarCollapseToggle({
       aria-expanded={expanded}
       variant="ghost"
       style={HANDLE_STYLE}
-      className={`w-9 shrink-0 ${roundedClass} shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]`}
+      className={`absolute top-0 ${edgeOffsetClass} w-9 shrink-0 ${roundedClass} shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]`}
       icon={
         <svg
           className={`w-4 h-4 drop-shadow-sm transition-transform duration-300 ${chevronRotated ? "rotate-180" : ""} shrink-0`}
