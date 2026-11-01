@@ -1,5 +1,6 @@
 "use client";
 import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
+import { DASHBOARD_ACCENT_CLASSES } from "../../../_internal/shared/features/layout/config";
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -26,7 +27,17 @@ const __O = {
 const CLS_STORE_AVATAR = "relative h-8 w-8 overflow-hidden rounded-md bg-cover bg-center flex-shrink-0";
 const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-[length:var(--appkit-text-sm)] font-bold text-primary";
 const CLS_STORE_NAME = "text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] truncate";
-const CLS_NAV_ACTIVE = "bg-warning-surface dark:bg-warning-surface text-warning dark:text-warning";
+/*
+ * Sourced from the shared DASHBOARD_ACCENT_CLASSES.store map (Phase 4D,
+ * overhaul brief) rather than re-hardcoded here — `bg-warning-surface` /
+ * `text-warning` are already theme-aware CSS-variable-backed utilities, so
+ * (unlike the string this replaced) no separate `dark:` variant is needed;
+ * the map's own author already made that call for `activeBg`/`activeText`.
+ * Concatenated as two COMPLETE literal tokens, never built via template-
+ * literal interpolation of a partial class name — Tailwind's scanner reads
+ * this file as plain text and cannot resolve an interpolated fragment.
+ */
+const CLS_NAV_ACTIVE = `${DASHBOARD_ACCENT_CLASSES.store.activeBg} ${DASHBOARD_ACCENT_CLASSES.store.activeText}`;
 const CLS_NAV_BADGE = "shrink-0 rounded-full bg-warning-solid px-[var(--appkit-space-1-5)] py-[var(--appkit-space-0-5)] text-[10px] text-warning-on-solid leading-none";
 const CLS_NAV_ICON_ACTIVE = "text-warning dark:text-warning";
 

@@ -20,7 +20,15 @@ export const DASHBOARD_SIDEBAR_WIDTH = {
   compact: "lg:w-16",
 };
 
-/** Per-variant accent token map. Drives DashboardSidebar active-item styling. */
+/**
+ * Per-variant accent token map — AdminSidebar/SellerSidebar/UserSidebar's
+ * active-item styling (point 12, overhaul brief's per-portal wayfinding).
+ *
+ * Phase 4D (2026-11): until then this was DEAD — each of the three sidebars
+ * hardcoded its own copy of these exact classes rather than reading from
+ * here, so a future change to this map would silently stop matching what
+ * actually renders. All three now reference it directly.
+ */
 export const DASHBOARD_ACCENT_CLASSES: Record<DashboardVariant, {
   activeBg: string;
   activeText: string;

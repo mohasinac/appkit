@@ -1,5 +1,6 @@
 "use client";
 import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
+import { DASHBOARD_ACCENT_CLASSES } from "../../../_internal/shared/features/layout/config";
 import React, { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
@@ -63,8 +64,8 @@ function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: bo
       onClick={onClick}
       className={`flex items-center justify-end gap-[var(--appkit-space-2-5)] rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2)] text-[0.8125rem] font-medium leading-tight transition-colors ${
  isActive
- ? "bg-[var(--appkit-color-surface-elevated)] text-[var(--appkit-color-text)]"
- : "text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-[var(--appkit-color-text)]"
+ ? `${DASHBOARD_ACCENT_CLASSES.admin.activeBg} ${DASHBOARD_ACCENT_CLASSES.admin.activeText}`
+ : `text-[var(--appkit-color-text-muted)] ${DASHBOARD_ACCENT_CLASSES.admin.hoverBg} hover:text-[var(--appkit-color-text)]`
  }`}
     >
       {item.icon && <Span size="base" className="shrink-0 opacity-60">{item.icon}</Span>}
