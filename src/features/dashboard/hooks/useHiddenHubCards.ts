@@ -44,6 +44,11 @@ function writeLocalHidden(scope: string, hiddenIds: string[]): void {
     all[scope] = hiddenIds;
     window.localStorage.setItem(STORAGE_KEYS.hiddenHubCards, JSON.stringify(all));
   } catch (err) {
+    // audit-silent-degrade-ok: `persist()` calls this unconditionally before
+    // scheduling the debounced profile mutation (the durable copy), which
+    // does not depend on this write having succeeded — a failure here
+    // (quota exceeded, private-mode storage block) only costs the no-flash
+    // local mirror for this one device/session, never the hide action itself.
     void normalizeError(err);
   }
 }

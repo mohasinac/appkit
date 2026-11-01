@@ -97,8 +97,8 @@ export function PrizeRevealModal({
 
         <AnimatePresence mode="wait">
           {!winner ? (
-            // audit-content-alignment-ok: informational reveal-status panel, not marketing content
             <FadeIn key="pending">
+              {/* audit-content-alignment-ok: informational reveal-status panel, not marketing content */}
               <Div className={`bg-[var(--appkit-color-bg)] ${__P.p4} text-center`} rounded="default">
                 <Text size="lg" weight="semibold">Reveal pending</Text>
                 <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
@@ -107,8 +107,8 @@ export function PrizeRevealModal({
               </Div>
             </FadeIn>
           ) : !revealed ? (
-            // audit-content-alignment-ok: the build-up beat before the win card appears
             <FadeIn key="building">
+              {/* audit-content-alignment-ok: the build-up beat before the win card appears */}
               <Div className={`border-2 border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center animate-pulse`} rounded="lg">
                 <Text className="tracking-wider text-[var(--appkit-color-text-muted)]" size="xs" transform="uppercase">
                   Revealing your prize…
@@ -116,8 +116,8 @@ export function PrizeRevealModal({
               </Div>
             </FadeIn>
           ) : (
-            // audit-content-alignment-ok: theatrical reveal-modal centerpiece, not marketing content
             <ScaleIn key="revealed">
+              {/* audit-content-alignment-ok: theatrical reveal-modal centerpiece, not marketing content */}
               <Div className={`border-2 border-[var(--appkit-color-primary)] bg-[var(--appkit-color-surface)] ${__P.p4} text-center`} rounded="lg">
                 <Text className="tracking-wider text-[var(--appkit-color-text-muted)]" size="xs" transform="uppercase">
                   You won
