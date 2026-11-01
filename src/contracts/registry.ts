@@ -8,7 +8,6 @@ import type { ISearchProvider } from "./search";
 import type { ICacheProvider, IQueueProvider, IEventBus } from "./infra";
 import type { IStyleAdapter } from "./style";
 import type { IDbProvider } from "./repository";
-import type { IDesignPack } from "./design-pack";
 import type { IAssistantModelProvider } from "./ai";
 
 export interface IRbacProvider {
@@ -56,14 +55,6 @@ export interface ProviderRegistry {
   queue?: IQueueProvider;
   eventBus?: IEventBus;
   rbac?: IRbacProvider;
-  /**
-   * Design-value lookup (radius, letter-spacing, motion, the six
-   * surface/padding/rounded/border/shadow/gap class maps). Optional, like
-   * `tax`/`search` — an install that never registers one gets
-   * `DEFAULT_DESIGN_PACK` (`design-pack-default.ts`) at the call site, which
-   * wraps the existing hardcoded tables and changes nothing.
-   */
-  designPack?: IDesignPack;
   /**
    * Assistant model vendors, preference-ordered — an ARRAY like
    * `paymentGateways`, not a single slot like `tax`/`search`, because
