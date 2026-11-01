@@ -45,8 +45,20 @@ export const DASHBOARD_ACCENT_CLASSES: Record<DashboardVariant, {
     hoverBg: "hover:bg-[var(--appkit-color-surface)]",
   },
   user: {
-    activeBg: "bg-primary-50 dark:bg-primary-900/25",
-    activeText: "text-primary-700 dark:text-primary-300",
+    /*
+     * 🛑 NOT `bg-primary-*`/`text-primary-*`. The dark theme preset
+     * rebrands `primary` to crimson red (tokens.css, "primary = Crimson
+     * Red"), so the active-nav highlight on every user-portal sidebar item
+     * read as an error/danger bar, not a brand accent — found live via
+     * owner screenshot, 2026-11-02. Matching admin's neutral
+     * `surface-elevated` would also have fixed the danger-color misread,
+     * but would make admin and user visually indistinguishable, defeating
+     * Phase 4D's own per-portal wayfinding goal (point 12) — store already
+     * owns `warning`/amber for the same reason admin owns neutral. `info`
+     * (teal/blue) is the third distinct, non-status-danger hue available.
+     */
+    activeBg: "bg-info-surface",
+    activeText: "text-info",
     hoverBg: "hover:bg-[var(--appkit-color-surface)]",
   },
 };

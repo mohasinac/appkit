@@ -150,8 +150,16 @@ export function AssistantWidget({ fullPageHref = String(ROUTES.PUBLIC.ASSISTANT)
 
   return (
     <>
+      {/*
+       * 🛑 `+3.5rem` on top of the shared bottom-chrome calc(), matching
+       * `SideActionDock.tsx`'s own documented convention for stacking a
+       * second corner FAB above `BackToTop` (same hand-edge, same tier
+       * clearance). This widget previously copied BackToTop's expression
+       * verbatim with no extra offset, so both landed in the exact same
+       * spot — found live, 2026-11-02.
+       */}
       <Div
-        className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+var(--appkit-space-4))] ${edge} z-[var(--appkit-z-popover)]`}
+        className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+var(--appkit-space-4)+3.5rem)] ${edge} z-[var(--appkit-z-popover)]`}
       >
         <IconButton
           type="button"
@@ -171,7 +179,7 @@ export function AssistantWidget({ fullPageHref = String(ROUTES.PUBLIC.ASSISTANT)
           rounded="lg"
           border="default"
           shadow="lg"
-          className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+5rem)] ${edge} z-[var(--appkit-z-popover)] w-[min(22rem,calc(100vw-2rem))] max-h-[70vh] overflow-y-auto`}
+          className={`fixed bottom-[calc(var(--keyboard-inset-height,0px)+var(--bottom-nav-height,4rem)+var(--bottom-chrome-height,0px)+5rem+3.5rem)] ${edge} z-[var(--appkit-z-popover)] w-[min(22rem,calc(100vw-2rem))] max-h-[70vh] overflow-y-auto`}
         >
           <Stack gap="sm">
             <Div layout="flex" align="center" justify="between">

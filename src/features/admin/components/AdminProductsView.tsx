@@ -407,19 +407,15 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
            * index; until it exists, a row that says "No SKU" on every product
            * tells an admin nothing except that we asked.
            */
-          secondary:
-            collectorDropSecondary ||
-            [
-              toStringValue(item.storeName, "No store"),
-              typeof item.price === "number"
-                ? formatMoney(item.price)
-                : null,
-              typeof item.stockQuantity === "number"
-                ? `${item.stockQuantity} in stock`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(" · "),
+          /*
+           * 🛑 Price/stock were ALSO in this join, duplicating the real
+           * `price`/`stockQuantity` columns added above — both numbers
+           * rendered twice per row, the opposite of this view's own stated
+           * "net element count must not increase" requirement. Found live,
+           * 2026-11-02. `secondary` is the seller name only now; the real
+           * columns are the only place price/stock render.
+           */
+          secondary: collectorDropSecondary || toStringValue(item.storeName, "No store"),
           price: typeof item.price === "number" ? item.price : undefined,
           stockQuantity: typeof item.stockQuantity === "number" ? item.stockQuantity : undefined,
           status: toStringValue(item.status, "Unknown"),
