@@ -83,6 +83,8 @@ export { ProductInfo } from "./ProductInfo";
 export type { ProductInfoProps } from "./ProductInfo";
 export { ProductTabs } from "./ProductTabs";
 export type { ProductTabsProps, ProductTab } from "./ProductTabs";
+export { BidHistory } from "./BidHistory";
+export type { BidHistoryProps, BidHistoryEntry } from "./BidHistory";
 export { PlaceBidForm } from "./PlaceBidForm";
 export type { PlaceBidFormProps } from "./PlaceBidForm";
 export { MakeOfferButton } from "./MakeOfferButton";

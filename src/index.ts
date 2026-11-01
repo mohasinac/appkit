@@ -6805,6 +6805,9 @@ export { BundleBuyNowCta } from "./features/categories/components/BundleBuyNowCt
 export type { BundleBuyNowCtaProps } from "./features/categories/components/BundleBuyNowCta";
 // CategoryBundlesListing is also re-exported lower in this file (line ~8871);
 // the canonical export lives there next to BUNDLE_MIN_ITEMS / BUNDLE_MAX_ITEMS.
+// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// BidHistory - Shared export for bid history.
+export { BidHistory } from "./features/products/components/BidHistory";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_PRODUCT_DATA - Constant used across modules.
 export { DEFAULT_PRODUCT_DATA } from "./features/products/schemas/firestore";
@@ -7248,6 +7251,12 @@ export { useRelatedProducts } from "./features/products/hooks/useRelatedProducts
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CollectorDropDetailViewProps - Type contract for collector drop detail view props.
 export type { CollectorDropDetailViewProps } from "./features/products/components/CollectorDropDetailView";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// BidHistoryEntry - Type contract for bid history entry.
+export type { BidHistoryEntry } from "./features/products/components/BidHistory";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// BidHistoryProps - Type contract for bid history props.
+export type { BidHistoryProps } from "./features/products/components/BidHistory";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // InteractiveProductCardProps - Type contract for interactive product card props.
 export type { InteractiveProductCardProps } from "./features/products/components/InteractiveProductCard";
