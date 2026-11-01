@@ -59,7 +59,16 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           ref={ref as React.RefObject<HTMLElement>}
           id={id}
           aria-label={ariaLabel}
-          className={`fixed inset-y-0 ${edgeClass} w-80 bg-[var(--appkit-color-surface)] ${borderClass} border-[var(--appkit-color-border-subtle)] shadow-2xl transform duration-300 ease-in-out z-50 ${isOpen ? "translate-x-0" : closedTransform} flex flex-col`}
+          /*
+           * 🛑 `z-[var(--appkit-z-sidebar)]`, not raw `z-50`. The sticky
+           * title bar wrapper (AppLayoutShell.tsx) ALSO hardcoded raw
+           * `z-50` — an accidental tie the project's own token scale
+           * (`--appkit-z-title-bar: 42` < `--appkit-z-sidebar: 50`)
+           * already exists to prevent. Under the tie, this panel's own
+           * header strip visually collided with the title bar instead of
+           * sitting cleanly above it. Found live, 2026-11-01.
+           */
+          className={`fixed inset-y-0 ${edgeClass} w-80 bg-[var(--appkit-color-surface)] ${borderClass} border-[var(--appkit-color-border-subtle)] shadow-2xl transform duration-300 ease-in-out z-[var(--appkit-z-sidebar)] ${isOpen ? "translate-x-0" : closedTransform} flex flex-col`}
         >
           <Section tone="plain" background={background} className="flex flex-col flex-1 min-h-0">
             {/* Fixed (non-scrolling) header strip */}

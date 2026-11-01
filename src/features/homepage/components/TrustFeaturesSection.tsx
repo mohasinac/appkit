@@ -55,7 +55,16 @@ function TrustFeatureCard({
   return (
     <Div
       className={[
-        "flex flex-col items-start text-left p-[var(--appkit-space-4)]",
+        /*
+         * 🛑 Centered below `sm`, left-aligned at `sm` and up. `Grid
+         * cols="statTiles"` collapses to a single column on mobile, where
+         * a left-aligned icon+title+description tile floats at the left
+         * edge of the full-width row with empty space beside it — reading
+         * as unfinished. Centering it on the single-column breakpoint only
+         * (owner's own ask) is the fix; at `sm`+, each tile owns its own
+         * grid column, where left-align reads correctly.
+         */
+        "flex flex-col items-center text-center sm:items-start sm:text-left p-[var(--appkit-space-4)]",
         "transition-all duration-500",
         delayClass,
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",

@@ -101,29 +101,6 @@ import { SEEDED_LIKE_COUNTS } from "./event-likes-seed-data";
 
 const NOW = new Date();
 
-/*
- * 🛑 EVENT COVERS REUSE REAL CATALOGUE PHOTOGRAPHY, DELIBERATELY.
- *
- * These `category-*-image` slugs are the model covers already fetched from
- * beyblade.fandom.com, already uploaded to Storage, already recorded in
- * `docs/research/.../image-provenance.json`, and already resolvable through
- * `/media/<shortId>`. Pointing an event at one costs no new fetch and cannot
- * 404 — and it is the only source that has Beyblade subject matter at all.
- * Openverse indexes Commons, Flickr and museums; it has no Beyblades.
- *
- * The carousel BACKGROUNDS are different and must not come from here: a
- * full-bleed backdrop sits under inverse-ink copy at ~55% dim, and a product
- * shot competes with the headline and loses both. Those are the abstract
- * `carousel-bg-*` slots in the editorial manifest.
- */
-const COVER = {
-  launchWeek: "category-ultimate-valkyrie-legacy-variable-9-image",
-  clearance: "category-spriggan-requiem-0-zeta-image",
-  spin: "category-storm-spriggan-knuckle-unite-image",
-  vote: "category-astral-spriggan-over-quattro-0-image",
-  raffle: "category-dranzer-g-image",
-} as const;
-
 const _raweventsSeedData: EventDocument[] = [
   // ── UPCOMING — Offer: 10% festive cashback, code published early ─────────
   /*
@@ -252,13 +229,32 @@ const _raweventsSeedData: EventDocument[] = [
      * the read-only fallback for documents already in Firestore.
      */
     showOnCarousel: true,
+    /*
+     * 🛑 SWITCHED FROM `placement: "cards"` TO `"overlay"`, 2026-11-01 —
+     * found live, by the owner, as "4/6 back to back cards" instead of the
+     * one clean hero slide every other event on this rail gets.
+     *
+     * `"cards"` is the mode CLAUDE.md's own "Homepage Hero Carousel"
+     * section already documents as having "no authoring surface in the
+     * simplified admin form and should not be reached for without a real
+     * need" — this row predates that simplification and was the one place
+     * still exercising it. Six small zone cards crammed into one slide,
+     * each needing its own `mediaSlug` to look finished, is also simply a
+     * worse result than one full-bleed hero with the offers summarized —
+     * the SAME six codes already render properly as cards in the
+     * `HomepageCouponsSection` ("Offers & coupons") lower on the page, so
+     * nothing here is losing its only home.
+     *
+     * `backgroundMediaSlug: "carousel-bg-cashback"` is unchanged — it was
+     * already confirmed real/uploaded (see the comment history below,
+     * kept for the record of why this specific slug was chosen over
+     * `carousel-bg-festive-deals`, which 404s).
+     */
     carouselConfig: {
-      placement: "cards",
+      placement: "overlay",
       order: 2,
       active: true,
       /*
-       * 🛑 AN IMAGE THAT ALREADY EXISTS, not the new Openverse slot.
-       *
        * `carousel-bg-festive-deals` is declared in the editorial manifest
        * but has not been fetched or uploaded, so `/media/<slug>` would 404
        * and the slide would render as a bare dark box — a broken image is
@@ -275,64 +271,11 @@ const _raweventsSeedData: EventDocument[] = [
        */
       backgroundMediaSlug: "carousel-bg-cashback",
       dimOpacity: 0.62,
-      cards: [
-        {
-          zone: 1,
-          mediaSlug: COVER.launchWeek,
-          eyebrow: "Buy 3, get 1 free",
-          title: "BUY3GET1",
-          description: "Four items under ₹2,000 — the cheapest comes off.",
-          buttonText: "Copy the code",
-        },
-        {
-          zone: 2,
-          mediaSlug: COVER.clearance,
-          eyebrow: "Opens Dhanteras",
-          title: "10% back, up to ₹1,000",
-          description: "CASHBACK10, on orders over ₹999. Diwali fortnight only.",
-          buttonText: "See all four codes",
-        },
-        {
-          zone: 3,
-          mediaSlug: COVER.spin,
-          eyebrow: "Daily, free",
-          title: "Spin the Launcher",
-          description: "One spin a day through the Diwali fortnight.",
-          href: "/events/spin-the-launcher",
-          buttonText: "Take your spin",
-        },
-        {
-          zone: 4,
-          mediaSlug: COVER.launchWeek,
-          eyebrow: "6–20 November",
-          title: "Beyblade X Launch Week",
-          description: "The X range, with the festive codes on top.",
-          href: "/events/beyblade-x-launch-week",
-          buttonText: "Shop the range",
-        },
-        {
-          zone: 5,
-          mediaSlug: COVER.raffle,
-          eyebrow: "Free to enter",
-          title: "Signed Dranzer G",
-          description: "One giveaway, one winner, drawn 1 December.",
-          // 🛑 `href` KEPT at the old slug. A slug is a live public URL and
-          // this file's own header argues against renaming one "to buy a
-          // tidier string"; the 2026-10-31 EventType rename changed the enum,
-          // not any event's identity.
-          href: "/events/signed-dranzer-raffle",
-          buttonText: "Enter the giveaway",
-        },
-        {
-          zone: 6,
-          mediaSlug: COVER.vote,
-          eyebrow: "Your call",
-          title: "What should we restock?",
-          description: "Vote on what we bring back in 2027.",
-          href: "/events/restock-vote-2027",
-          buttonText: "Cast a vote",
-        },
-      ],
+      eyebrow: "Dhanteras through 5 February",
+      title: "Four Offers, Three Months",
+      description:
+        "Buy 3 Get 1 Free, up to 10% cashback, and free shipping — stack whichever code is worth most on your basket.",
+      buttonText: "See all the offers",
     },
     stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: SEEDED_LIKE_COUNTS["event-festive-cashback-10"] ?? 0 },
     createdBy: "user-admin-letitrip",

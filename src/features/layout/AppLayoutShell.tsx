@@ -1139,7 +1139,15 @@ export function AppLayoutShell({
             moment it was closed. Out here it simply scrolls away. */}
         <Div id={TOP_BANNER_SLOT_ID} className="w-full" />
 
-        <Div ref={headerRef} className="sticky top-0 z-50 w-full">
+        {/*
+          🛑 `z-[var(--appkit-z-title-bar)]` (42), not raw `z-50`. This
+          wrapper tied z-index with SidebarLayout.tsx's `Aside`, which also
+          hardcoded `z-50` — an accidental tie the token scale
+          (title-bar: 42 < sidebar: 50) already exists to prevent. The tie
+          visually collided the secondary-nav drawer's own header strip
+          with this title bar. Found live, 2026-11-01.
+        */}
+        <Div ref={headerRef} className="sticky top-0 z-[var(--appkit-z-title-bar)] w-full">
           <TitleBar
             onToggleSidebar={handleTogglePublicSidebar}
             sidebarOpen={sidebarOpen}
