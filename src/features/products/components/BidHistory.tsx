@@ -12,6 +12,9 @@ export interface BidHistoryEntry {
   bidderName?: string;
   amount: number;
   placedAt: string;
+  /** The current highest bid — set by the caller, since "leading" depends on
+   *  the caller's own pagination/sort position, not anything in the entry. */
+  isLeading?: boolean;
 }
 
 export interface BidHistoryProps {
@@ -111,13 +114,30 @@ export function BidHistory({
               rounded="lg"
               padding="sm"
               textSize="sm"
-              className="border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]"
+              className={
+                bid.isLeading
+                  ? "border-2 border-[var(--appkit-color-success)] bg-success-surface"
+                  : "border border-[var(--appkit-color-border-subtle)] bg-[var(--appkit-color-surface)]"
+              }
              data-section="bidhistory-div-422">
               <Stack gap="xs">
                 <Span weight="bold" className="text-primary-600 dark:text-primary-400">
                   <GatedPrice label="Sign in to see bids">
                     {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
                   </GatedPrice>
+                  {bid.isLeading && (
+                    <Span
+                      weight="semibold"
+                      className="ml-2 text-success normal-case tracking-normal"
+                      size="xs"
+                      rounded="full"
+                      padding="pill-xs"
+                      surface="success-surface"
+                      transform="uppercase"
+                    >
+                      Leading
+                    </Span>
+                  )}
                 </Span>
                 <Span size="xs" color="muted">
                   {bid.bidderName || maskBidderId(bid.bidderId)}

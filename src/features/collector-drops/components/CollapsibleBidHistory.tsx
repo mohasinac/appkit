@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Row } from "../../../ui/components/Layout";
@@ -58,7 +59,13 @@ export function CollapsibleBidHistory({ productId, initialData, currency, pageSi
     { productId, page, pageSize },
     { initialData, enabled: open },
   );
-  const bids = rawBids.map(toBidHistoryEntry);
+  // `useBids` sorts newest-first and bids only ever increase, so on page 1 the
+  // most recent bid IS the current leading one — derived from position, no
+  // extra field or read needed.
+  const bids = rawBids.map((b, i) => ({
+    ...toBidHistoryEntry(b),
+    isLeading: page === 1 && i === 0,
+  }));
   const total = initialData.total;
 
   return (
@@ -81,15 +88,11 @@ export function CollapsibleBidHistory({ productId, initialData, currency, pageSi
             </Span>
           )}
         </Span>
-        <svg
-          className={`h-4 w-4 text-zinc-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
+        <ChevronDown
+          className={`h-4 w-4 flex-shrink-0 transition-transform duration-200 ${
+            open ? "rotate-180 text-[var(--appkit-color-primary)]" : "text-zinc-400"
+          }`}
+        />
       </Button>
 
       {open && (
