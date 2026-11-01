@@ -581,6 +581,24 @@ export const ACTIONS: ActionTree = {
         confirmKind: "danger",
       },
     },
+    /*
+     * Phase 10 ("widget descriptors") — non-destructive, no confirmation.
+     * Records an `adminRow` RecentEntry via `recordVisit`; never a write to
+     * the bundle document itself. BUNDLE is one of only 5 `AdminRowResource`
+     * values (the others: RANDOM_LOTS, BEY, PART, SUBLISTING) — the ones
+     * whose admin view resolves a row to a real URL via `rowHrefTemplate`,
+     * per `recent-entry.ts`'s own doc comment on why most resources are NOT
+     * eligible (`renderEditor`/`onRowClick` drawers have no URL to pin).
+     */
+    "pin-to-dashboard": {
+      iconKey: "save",
+      id: "bundle.pin-to-dashboard",
+      label: "Pin to dashboard",
+      ariaLabel: "Pin this bundle to the dashboard",
+      description: "Adds this bundle as a recency card on your dashboard landing — findable and reopenable without the admin table.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
   },
   /*
    * These four buckets were literally `{}` for months while their editors

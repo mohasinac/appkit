@@ -56,6 +56,7 @@ import { isFinalSale } from "../constants/final-sale";
 import { FeatureBadgeList } from "./FeatureBadge";
 import type { ProductFeatureDocument } from "../schemas/product-features";
 import { ShareButton } from "./ShareButton";
+import { PdpSectionJumpNav } from "./PdpSectionJumpNav";
 import { toCustomSectionTabs } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
 import { ShowGroupSection } from "./ShowGroupSection";
@@ -608,28 +609,37 @@ export async function ProductDetailPageView({
       <Container size="xl" padding="y-lg">
         <ProductDetailView
           renderBreadcrumb={() => (
-            <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
-              {/*
-                * I5b — one row of crumbs, the full chain, with the middle
-                * collapsed behind a real `<details>` dropdown and the other
-                * assignments in one extra crumb. `ContextualTrail` renders the
-                * DEFAULT chain on the server and may swap to the trail matching
-                * the category page the visitor came from after hydration —
-                * suppressed entirely for a single assignment, which is almost
-                * every row, so the common case gains no layout shift.
-                */}
-              <ContextualTrail
-                trails={trails}
-                alternates={{ ids: categoryIds, names: categoryIdNames }}
-              />
-              <ShareButton title={title || undefined} />
-            </Row>
+            <>
+              <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
+                {/*
+                  * I5b — one row of crumbs, the full chain, with the middle
+                  * collapsed behind a real `<details>` dropdown and the other
+                  * assignments in one extra crumb. `ContextualTrail` renders the
+                  * DEFAULT chain on the server and may swap to the trail matching
+                  * the category page the visitor came from after hydration —
+                  * suppressed entirely for a single assignment, which is almost
+                  * every row, so the common case gains no layout shift.
+                  */}
+                <ContextualTrail
+                  trails={trails}
+                  alternates={{ ids: categoryIds, names: categoryIdNames }}
+                />
+                <ShareButton title={title || undefined} />
+              </Row>
+              {/* Phase 10 ("widget descriptors") — renders nothing signed-out. */}
+              <PdpSectionJumpNav productId={String(product.id)} title={title || "this product"} />
+            </>
           )}
           renderGallery={() => (
-            <ProductGalleryClient images={images} video={productVideo} productName={title || undefined} />
+            // Phase 10 ("widget descriptors") — id anchor for the PDP "jump to
+            // section" nav + pdpSection RecentEntry href resolution. Mirrors
+            // PdpSectionId's "gallery" 1:1 (appkit/.../dashboard/recent-entry.ts).
+            <Div id="section-gallery">
+              <ProductGalleryClient images={images} video={productVideo} productName={title || undefined} />
+            </Div>
           )}
           renderInfo={() => (
-            <Stack gap="md">
+            <Stack gap="md" id="section-info">
               {/*
                 Owner quick-actions — pencil, admin-only clone, bin.
 
@@ -902,7 +912,7 @@ export async function ProductDetailPageView({
             </Stack>
           )}
           renderActions={() => (
-            <Stack className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
+            <Stack id="section-actions" className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
               {/* Price + discount */}
               {price !== null && (
                 <Div>
@@ -1200,6 +1210,7 @@ export async function ProductDetailPageView({
               : undefined
           }
           renderTabs={() => (
+            <Div id="section-tabs">
             <ProductTabsShell
               partsContent={compositionContent}
               descriptionContent={
@@ -1268,6 +1279,7 @@ export async function ProductDetailPageView({
               }
               customTabs={toCustomSectionTabs(p.customSections)}
             />
+            </Div>
           )}
           renderBundleSection={
             bundleMemberships.length > 0
@@ -1304,7 +1316,7 @@ export async function ProductDetailPageView({
               : undefined
           }
           renderRelated={() => (
-            <Stack gap="xl">
+            <Stack gap="xl" id="section-related">
               <GroupedListingsCarousel groups={groups} />
               <RelatedItemsSection
                 relatedItems={relatedItems}

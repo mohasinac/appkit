@@ -1890,3 +1890,22 @@ export type {
   CheckoutPricingPreview,
   CheckoutPricingPreviewStore,
 } from "./_internal/server/features/checkout/actions";
+
+// Phase 10 ("widget descriptors") — SETTINGS_PREVIEW and friends are pure
+// data (no firebase-admin in their import chain), but AdminDashboardQuickJumpMount.tsx
+// (the consumer of these) is a "use client" component, and the main index.ts
+// barrel's transitive closure reaches server-only code — audit-client-server-only-leak
+// is what catches that. Re-exported here, client-safe, same reasoning as every
+// other pure-data export in this file.
+export {
+  SETTINGS_PREVIEW,
+  SETTINGS_PREVIEW_IDS,
+  settingsPreviewById,
+} from "./_internal/shared/features/site-settings/settings-preview-registry";
+export type { SettingsPreviewDef } from "./_internal/shared/features/site-settings/settings-preview-registry";
+export {
+  ADMIN_ROW_HREF_BY_RESOURCE,
+  ADMIN_ROW_RESOURCE_LABEL,
+} from "./_internal/shared/features/admin/row-widget-resources";
+export { PDP_SECTION_IDS, PDP_SECTION_LABEL } from "./_internal/shared/features/products/pdp-section-ids";
+export type { RecentEntry, RecentEntryInput, AdminRowResource, PdpSectionId } from "./_internal/shared/features/dashboard/recent-entry";

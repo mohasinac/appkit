@@ -7,7 +7,8 @@ import React, { useState, useCallback } from "react";
 import { Badge } from "../../../ui/components/Badge";
 import { Button } from "../../../ui/components/Button";
 import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
-import { Stack } from "../../../ui/components/Layout";
+import { Stack, Row } from "../../../ui/components/Layout";
+import { useRecentlyVisited } from "../../dashboard/hooks/useRecentlyVisited";
 import { Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { useToast } from "../../../ui/components/toast-context";
@@ -100,6 +101,10 @@ export interface AdminBundlesViewProps {
 export function AdminBundlesView({ editHrefTemplate, newHref }: AdminBundlesViewProps) {
   const [rebuildingId, setRebuildingId] = useState<string | null>(null);
   const toast = useToast();
+  // Phase 10 ("widget descriptors") — BUNDLE is one of the 5 real
+  // AdminRowResource values; see recent-entry.ts's doc comment for why most
+  // admin resources are NOT eligible (renderEditor/onRowClick, no real URL).
+  const { recordVisit } = useRecentlyVisited("admin:hub");
 
   const handleRebuild = useCallback(
     async (bundleId: string) => {
@@ -216,15 +221,23 @@ export function AdminBundlesView({ editHrefTemplate, newHref }: AdminBundlesView
       }));
     },
     renderRowActions: (row) => (
-      <Button
-        variant="ghost"
-        size="sm"
-        isLoading={rebuildingId === row.id}
-        disabled={rebuildingId === row.id}
-        onClick={() => void handleRebuild(row.id)}
-      >
-        {ACTIONS.ADMIN["rebuild-bundle"].label}
-      </Button>
+      <Row gap="xs">
+        <Button
+          variant="ghost"
+          size="sm"
+          isLoading={rebuildingId === row.id}
+          disabled={rebuildingId === row.id}
+          onClick={() => void handleRebuild(row.id)}
+        >
+          {ACTIONS.ADMIN["rebuild-bundle"].label}
+        </Button>
+        <Button
+          action={ACTIONS.BUNDLE["pin-to-dashboard"]}
+          variant="ghost"
+          size="sm"
+          onClick={() => recordVisit({ kind: "adminRow", resource: "BUNDLE", rowId: row.id, label: row.primary })}
+        />
+      </Row>
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>

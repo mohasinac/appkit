@@ -33,6 +33,14 @@ function entryKey(entry: RecentEntry): string {
       return `toggle:${entry.toggleId}`;
     case "chart":
       return `chart:${entry.chartId}`;
+    case "settingPreview":
+      return `settingPreview:${entry.settingId}`;
+    case "adminRow":
+      return `adminRow:${entry.resource}:${entry.rowId}`;
+    case "productCard":
+      return `productCard:${entry.productId}`;
+    case "pdpSection":
+      return `pdpSection:${entry.productId}:${entry.sectionId}`;
   }
 }
 

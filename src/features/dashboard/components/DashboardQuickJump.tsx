@@ -13,6 +13,8 @@ import { useToastSafe } from "../../../ui/components/toast-context";
 import { rankNavSearchResults, type NavSearchGroupedItem } from "../../shell/searchNavItems";
 import { useRecentlyVisited } from "../hooks/useRecentlyVisited";
 import type { RecentEntry, RecentEntryInput } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { ROUTES } from "../../../next/routing/route-map";
+import { ADMIN_ROW_HREF_BY_RESOURCE, ADMIN_ROW_RESOURCE_LABEL } from "../../../_internal/shared/features/admin/row-widget-resources";
 
 /**
  * DashboardQuickJump — the dashboard-landing search + recent/default cards
@@ -58,6 +60,21 @@ export interface DashboardQuickJumpGroup {
   items: { href: string; label: string; description?: string; keywords?: string[] }[];
 }
 
+/**
+ * Phase 10 ("widget descriptors") — a `settingPreview` search/card source.
+ * READ-ONLY by construction: there is no `onToggle`/write callback here at
+ * all, unlike `DashboardQuickJumpToggle`. See `recent-entry.ts`'s doc
+ * comment for why this stays separate from the write-capable toggle kind.
+ */
+export interface DashboardQuickJumpSettingPreview {
+  settingId: string;
+  label: string;
+  /** Live current value, read by the caller — never cached here. */
+  value: string;
+  href: string;
+  keywords?: string[];
+}
+
 export interface DashboardQuickJumpProps {
   /** `"{portal}:hub"` — same scope convention as `useHiddenHubCards`. */
   scope: string;
@@ -69,18 +86,59 @@ export interface DashboardQuickJumpProps {
   toggles?: DashboardQuickJumpToggle[];
   /** Live chart/stat values this portal makes searchable + cardable. */
   charts?: DashboardQuickJumpChart[];
+  /**
+   * Phase 10 — read-only site-settings previews outside `COMMON_TOGGLES`,
+   * searchable the same way toggles/charts are (small, static candidate
+   * set). Admin-only in practice; omit elsewhere.
+   */
+  settingsPreviews?: DashboardQuickJumpSettingPreview[];
   placeholder?: string;
 }
 
 type SearchItem =
   | ({ kind: "page"; href: string } & NavSearchGroupedItem)
   | ({ kind: "toggle"; toggleId: string; isOn: boolean; onToggle: () => Promise<void> } & NavSearchGroupedItem)
-  | ({ kind: "chart"; chartId: string; value: string | number } & NavSearchGroupedItem);
+  | ({ kind: "chart"; chartId: string; value: string | number } & NavSearchGroupedItem)
+  | ({ kind: "settingPreview"; settingId: string; value: string; href: string } & NavSearchGroupedItem);
 
 function searchItemKey(item: SearchItem): string {
   if (item.kind === "page") return `page:${item.href}`;
   if (item.kind === "toggle") return `toggle:${item.toggleId}`;
+  if (item.kind === "settingPreview") return `settingPreview:${item.settingId}`;
   return `chart:${item.chartId}`;
+}
+
+/**
+ * Phase 10 — `adminRow`/`productCard`/`pdpSection` are never ranked by
+ * search (§4 of the plan's Phase 10 section: their candidate sets are not
+ * small/static the way toggles/charts/settingPreviews are). This resolves
+ * ONLY the href for a card already in the recency/default list — never
+ * called from the search path.
+ */
+function resolveCardHref(card: RecentEntry | QuickJumpDefaultCard): string | null {
+  if (card.kind === "page" || card.kind === "productCard") return card.href;
+  if (card.kind === "adminRow") return ADMIN_ROW_HREF_BY_RESOURCE[card.resource]?.(card.rowId) ?? null;
+  if (card.kind === "pdpSection") return `${String(ROUTES.PUBLIC.PRODUCT_DETAIL(card.productId))}#section-${card.sectionId}`;
+  return null;
+}
+
+function cardKey(card: RecentEntry | QuickJumpDefaultCard): string {
+  switch (card.kind) {
+    case "page":
+      return `page:${card.href}`;
+    case "toggle":
+      return `toggle:${card.toggleId}`;
+    case "chart":
+      return `chart:${card.chartId}`;
+    case "settingPreview":
+      return `settingPreview:${card.settingId}`;
+    case "adminRow":
+      return `adminRow:${card.resource}:${card.rowId}`;
+    case "productCard":
+      return `productCard:${card.productId}`;
+    case "pdpSection":
+      return `pdpSection:${card.productId}:${card.sectionId}`;
+  }
 }
 
 export function DashboardQuickJump({
@@ -89,6 +147,7 @@ export function DashboardQuickJump({
   defaultCards,
   toggles = [],
   charts = [],
+  settingsPreviews = [],
   placeholder = "What do you want to do?",
 }: DashboardQuickJumpProps) {
   const { items: recentItems, recordVisit } = useRecentlyVisited(scope);
@@ -125,8 +184,17 @@ export function DashboardQuickJump({
       value: c.value,
       groupTitle: "Stats",
     }));
-    return [...pageItems, ...toggleItems, ...chartItems];
-  }, [groups, toggles, charts]);
+    const settingPreviewItems: SearchItem[] = settingsPreviews.map((s) => ({
+      kind: "settingPreview" as const,
+      settingId: s.settingId,
+      label: s.label,
+      keywords: s.keywords,
+      value: s.value,
+      href: s.href,
+      groupTitle: "Settings",
+    }));
+    return [...pageItems, ...toggleItems, ...chartItems, ...settingPreviewItems];
+  }, [groups, toggles, charts, settingsPreviews]);
 
   const results = useMemo(
     () => rankNavSearchResults(searchItems, query).slice(0, 8),
@@ -161,6 +229,10 @@ export function DashboardQuickJump({
       void runToggle(item.toggleId, item.label);
       return;
     }
+    if (item.kind === "settingPreview") {
+      recordVisit({ kind: "settingPreview", settingId: item.settingId, label: item.label });
+      return;
+    }
     recordVisit({ kind: "chart", chartId: item.chartId, label: item.label });
   }
 
@@ -168,9 +240,13 @@ export function DashboardQuickJump({
     if (e.key !== "Enter") return;
     const top = results[0];
     if (!top) return;
-    if (top.kind === "page") {
+    if (top.kind === "page" || top.kind === "settingPreview") {
       e.preventDefault();
-      recordVisit({ kind: "page", href: top.href, label: top.label });
+      recordVisit(
+        top.kind === "page"
+          ? { kind: "page", href: top.href, label: top.label }
+          : { kind: "settingPreview", settingId: top.settingId, label: top.label },
+      );
       router.push(top.href);
       return;
     }
@@ -208,10 +284,11 @@ export function DashboardQuickJump({
         <Grid cols="cards" gap="md">
           {cards.map((card) => (
             <QuickJumpCard
-              key={card.kind === "page" ? `page:${card.href}` : card.kind === "toggle" ? `toggle:${card.toggleId}` : `chart:${card.chartId}`}
+              key={cardKey(card)}
               card={card}
               toggles={toggles}
               charts={charts}
+              settingsPreviews={settingsPreviews}
               busy={card.kind === "toggle" && togglingId === card.toggleId}
               onToggle={runToggle}
             />
@@ -231,7 +308,7 @@ function QuickJumpResultRow({
   busy: boolean;
   onSelect: () => void;
 }) {
-  if (item.kind === "page") {
+  if (item.kind === "page" || item.kind === "settingPreview") {
     return (
       <TextLink
         variant="bare"
@@ -244,7 +321,9 @@ function QuickJumpResultRow({
       >
         <Row align="center" justify="between" gap="sm">
           <Span size="sm">{item.label}</Span>
-          <Span size="xs" color="muted">{item.groupTitle}</Span>
+          <Span size="xs" color="muted">
+            {item.kind === "settingPreview" ? item.value : item.groupTitle}
+          </Span>
         </Row>
       </TextLink>
     );
@@ -278,23 +357,34 @@ function QuickJumpCard({
   card,
   toggles,
   charts,
+  settingsPreviews,
   busy,
   onToggle,
 }: {
   card: RecentEntry | QuickJumpDefaultCard;
   toggles: DashboardQuickJumpToggle[];
   charts: DashboardQuickJumpChart[];
+  settingsPreviews: DashboardQuickJumpSettingPreview[];
   busy: boolean;
   onToggle: (toggleId: string, label: string) => Promise<void>;
 }) {
   const baseClass =
     "border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all";
 
-  if (card.kind === "page") {
+  /*
+   * Phase 10 — `adminRow`/`productCard`/`pdpSection` render identically to
+   * `page`: a bookmark (label + link), no live column/badge/price/stock
+   * preview. This is the named escape hatch from the plan's Phase 10
+   * section, not an oversight — each source system is too structurally
+   * different from the dashboard's own data to mirror live.
+   */
+  if (card.kind === "page" || card.kind === "adminRow" || card.kind === "productCard" || card.kind === "pdpSection") {
+    const href = resolveCardHref(card);
+    if (!href) return null;
     return (
       <TextLink
         variant="bare"
-        href={card.href}
+        href={href}
         rounded="xl"
         layout="flex-col"
         gap="sm"
@@ -305,6 +395,34 @@ function QuickJumpCard({
       >
         <Text weight="semibold" className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors">
           {card.label}
+        </Text>
+        {card.kind === "adminRow" && (
+          <Text size="xs" color="muted">{ADMIN_ROW_RESOURCE_LABEL[card.resource]}</Text>
+        )}
+      </TextLink>
+    );
+  }
+
+  if (card.kind === "settingPreview") {
+    // Live value comes from the `settingsPreviews` prop (the caller's own, always-current data), never from the card record itself.
+    const live = settingsPreviews.find((s) => s.settingId === card.settingId);
+    return (
+      <TextLink
+        variant="bare"
+        href={live?.href ?? "#"}
+        rounded="xl"
+        layout="flex-col"
+        gap="sm"
+        paddingX="lg"
+        paddingY="lg"
+        shadow="hover-md"
+        className={`group ${baseClass}`}
+      >
+        <Text size="xs" weight="semibold" className="uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
+          {card.label}
+        </Text>
+        <Text weight="bold" className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors">
+          {live ? live.value : "—"}
         </Text>
       </TextLink>
     );

@@ -7030,6 +7030,24 @@ export {
   commonToggleById,
 } from "./_internal/shared/features/site-settings/common-toggles";
 export type { CommonToggleDef } from "./_internal/shared/features/site-settings/common-toggles";
+// Settings previews — the READ-ONLY counterpart to COMMON_TOGGLES (Phase 10,
+// "widget descriptors"). Pure data, same reason COMMON_TOGGLES is exported
+// from here rather than a consumer-unreachable `_internal` subpath.
+export {
+  SETTINGS_PREVIEW,
+  SETTINGS_PREVIEW_IDS,
+  settingsPreviewById,
+} from "./_internal/shared/features/site-settings/settings-preview-registry";
+export type { SettingsPreviewDef } from "./_internal/shared/features/site-settings/settings-preview-registry";
+// Admin-row widget resources (Phase 10) — the closed AdminRowResource href
+// map + display labels, same public-barrel reasoning as above.
+export {
+  ADMIN_ROW_HREF_BY_RESOURCE,
+  ADMIN_ROW_RESOURCE_LABEL,
+} from "./_internal/shared/features/admin/row-widget-resources";
+// PDP section ids (Phase 10) — the jump-nav's label map.
+export { PDP_SECTION_IDS, PDP_SECTION_LABEL } from "./_internal/shared/features/products/pdp-section-ids";
+export type { RecentEntry, RecentEntryInput, AdminRowResource, PdpSectionId } from "./_internal/shared/features/dashboard/recent-entry";
 // Basic/advanced listing-type split — which types a store may create.
 // Pure (no firebase-admin in its import chain), so it is safe in index.ts.
 export {

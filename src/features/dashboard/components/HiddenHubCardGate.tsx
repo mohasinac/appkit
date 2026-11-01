@@ -26,7 +26,7 @@ export function HiddenHubCardGate({
   cardKey: string;
   children: React.ReactNode;
 }) {
-  const { isHidden, hide, unhide } = useHiddenHubCards(scope);
+  const { isHidden, hide } = useHiddenHubCards(scope);
 
   if (isHidden(cardKey)) return null;
 
