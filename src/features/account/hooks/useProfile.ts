@@ -24,6 +24,8 @@ export interface UserProfile {
     sectionState?: Record<string, string[]>;
     dataViewMode?: "table" | "grid" | "list";
     handMode?: "left" | "right";
+    /** scope ("{portal}:hub") -> hidden hub-card keys. See useHiddenHubCards. */
+    hiddenHubCards?: Record<string, string[]>;
   };
 }
 
@@ -46,6 +48,8 @@ export interface UpdateCurrentProfileInput {
     sectionState?: Record<string, string[]>;
     dataViewMode?: "table" | "grid" | "list";
     handMode?: "left" | "right";
+    /** scope ("{portal}:hub") -> hidden hub-card keys. See useHiddenHubCards. */
+    hiddenHubCards?: Record<string, string[]>;
   };
 }
 
