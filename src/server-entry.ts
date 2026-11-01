@@ -503,6 +503,7 @@ export type {
   AppkitBusinessGrievance,
   AppkitBusinessPolicy,
   AppkitBusinessBank,
+  AppkitPortalHostsConfig,
   PendingString,
 } from "./_internal/shared/config/schema";
 export {

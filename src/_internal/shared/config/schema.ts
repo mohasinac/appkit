@@ -282,6 +282,28 @@ export interface AppkitI18nConfig {
   enableLocaleCookie?: boolean;
 }
 
+/**
+ * Hostnames that serve one dashboard portal directly at its root, instead of
+ * the public homepage. e.g. `admin.letitrip.in` should land on the admin
+ * dashboard, not `/`.
+ *
+ * 🛑 This is the ONE definition — a host-rewrite gate (proxy.ts) and a
+ * cookie-domain helper both derive from it. Keep any inlined edge-runtime
+ * copy of these three strings in sync by comment reference, the same
+ * discipline `seo.siteUrl` already requires (Root Cause #81's pattern,
+ * applied to a second host-owning value).
+ */
+export interface AppkitPortalHostsConfig {
+  /** Serves the admin dashboard (`/admin/*`) at its root. */
+  admin?: string;
+  /** Serves the seller/store dashboard (`/store/*`) at its root — "seller" is
+   *  the external-facing name; CLAUDE.md's own convention is STORE
+   *  internally, so this key names the subdomain's PUBLIC identity. */
+  seller?: string;
+  /** Serves the auth flow (`/auth/*`) at its root. */
+  auth?: string;
+}
+
 export interface AppkitVercelConfig {
   /** Vercel project ID */
   projectId: string;
@@ -329,4 +351,12 @@ export interface AppkitConfig {
   firebase?: AppkitFirebaseConfig;
   /** Vercel project configuration (used by vercel-* CLI binaries) */
   vercel?: AppkitVercelConfig;
+  /**
+   * Dashboard-portal subdomains — each one serves its dashboard at `/`
+   * instead of the public homepage. Owner action required before these do
+   * anything: register the hostnames as Vercel domains and point DNS at
+   * Vercel. Absent/undefined means "not deployed yet" — the host-rewrite
+   * gate must no-op rather than guess.
+   */
+  portalHosts?: AppkitPortalHostsConfig;
 }
