@@ -9,9 +9,25 @@ import { Modal } from "../../ui/components/Modal";
 import { Row, Stack } from "../../ui/components/Layout";
 import { Span, Text } from "../../ui/components/Typography";
 
+/**
+ * A navigable link, or a direct boolean toggle resolved without leaving the
+ * palette — Phase 4B's "any listing type, category, brand… I can control it,
+ * but still simple steps" (overhaul brief). Discriminated so a caller cannot
+ * supply both `href` and `onToggle` and leave which one wins ambiguous.
+ */
+export type CommandPaletteItem =
+  | { kind?: "nav"; href: string; label: string }
+  | {
+      kind: "toggle";
+      label: string;
+      isOn: boolean;
+      /** Resolves once the toggle has actually been saved — the palette shows the new state only then, never optimistically. */
+      onToggle: () => Promise<void>;
+    };
+
 export interface CommandPaletteGroup {
   title: string;
-  items: { href: string; label: string }[];
+  items: CommandPaletteItem[];
 }
 
 export interface CommandPaletteProps {
@@ -22,11 +38,7 @@ export interface CommandPaletteProps {
   placeholder?: string;
 }
 
-interface FlatItem {
-  href: string;
-  label: string;
-  groupTitle: string;
-}
+type FlatItem = CommandPaletteItem & { groupTitle: string; key: string };
 
 /**
  * CommandPalette — data-driven quick-jump search over a flat/grouped set of
@@ -41,8 +53,17 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const [togglingKey, setTogglingKey] = useState<string | null>(null);
+
   const flatItems = useMemo<FlatItem[]>(
-    () => groups.flatMap((g) => g.items.map((item) => ({ ...item, groupTitle: g.title }))),
+    () =>
+      groups.flatMap((g) =>
+        g.items.map((item) => ({
+          ...item,
+          groupTitle: g.title,
+          key: item.kind === "toggle" ? `${g.title}:${item.label}` : item.href,
+        })),
+      ),
     [groups],
   );
 
@@ -76,6 +97,24 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
     [onClose, router],
   );
 
+  const runToggle = useCallback(async (item: FlatItem) => {
+    if (item.kind !== "toggle" || togglingKey) return;
+    setTogglingKey(item.key);
+    try {
+      await item.onToggle();
+    } finally {
+      setTogglingKey(null);
+    }
+  }, [togglingKey]);
+
+  const activate = useCallback(
+    (item: FlatItem) => {
+      if (item.kind === "toggle") void runToggle(item);
+      else navigate(item.href);
+    },
+    [navigate, runToggle],
+  );
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Escape") { onClose(); return; }
@@ -84,9 +123,9 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
       if (e.key !== "Enter") return;
       e.preventDefault();
       const target = results[activeIndex];
-      if (target) navigate(target.href);
+      if (target) activate(target);
     },
-    [results, activeIndex, navigate, onClose],
+    [results, activeIndex, activate, onClose],
   );
 
   return (
@@ -115,14 +154,15 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
               {results.map((item, idx) => (
                 <Button
                   variant="ghost"
-                  key={item.href}
+                  key={item.key}
                   type="button"
-                  onClick={() => navigate(item.href)}
+                  onClick={() => activate(item)}
                   onMouseEnter={() => setActiveIndex(idx)}
                   justify="between"
                   rounded="md"
                   paddingX="sm"
                   paddingY="xs"
+                  disabled={item.kind === "toggle" && togglingKey === item.key}
                   className={[
                     "w-full text-left",
                     idx === activeIndex
@@ -131,7 +171,13 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
                   ].join(" ")}
                 >
                   <Span size="sm" weight={idx === activeIndex ? "semibold" : "normal"}>{item.label}</Span>
-                  <Span size="xs" color="muted">{item.groupTitle}</Span>
+                  {item.kind === "toggle" ? (
+                    <Span size="xs" color={item.isOn ? "success" : "muted"}>
+                      {togglingKey === item.key ? "Saving…" : item.isOn ? "On" : "Off"}
+                    </Span>
+                  ) : (
+                    <Span size="xs" color="muted">{item.groupTitle}</Span>
+                  )}
                 </Button>
               ))}
             </Stack>
@@ -163,4 +209,32 @@ export function useCommandPaletteHotkey(onOpen: () => void) {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [onOpen]);
+}
+
+/**
+ * Owns the open-state + hotkey + render — the entire admin-only
+ * `AdminCommandPaletteMount` consumer file had no admin-specific logic at
+ * all, so Phase 4B (overhaul brief) folded it in here rather than writing
+ * two more near-identical copies for store/user (Rule of Three, hit on
+ * arrival rather than waited out). Each portal still supplies its own
+ * `groups` — already permission/entitlement-filtered by its layout — so
+ * this stays one render path with three different inputs, not three paths.
+ */
+export function CommandPaletteMount({
+  groups,
+  placeholder,
+}: {
+  groups: CommandPaletteGroup[];
+  placeholder?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  useCommandPaletteHotkey(() => setOpen(true));
+  return (
+    <CommandPalette
+      isOpen={open}
+      onClose={() => setOpen(false)}
+      groups={groups}
+      placeholder={placeholder}
+    />
+  );
 }
