@@ -49,10 +49,21 @@ export interface PublicSiteSettings {
    * Withholding it would leave every link to a closed section in the chrome,
    * pointing at a route that now 404s — a dead-end CTA on every page of the
    * site, which is a worse outcome than not having the flag at all.
+   *
+   * `bundlesEnabled` is a DERIVED single boolean, not the raw `categoryTypes`
+   * map — `categoryTypes.bundle` stays withheld like every other key in that
+   * object. `src/proxy.ts` already 404s `/bundles` when
+   * `isCategoryTypeEnabled("bundle", settings)` is false, but
+   * `LayoutShellClient`'s nav filter had no way to agree, because
+   * `bundles`/`bundle` is a `categoryType`, not a `ListingType`, so it was
+   * never in `NAV_KEY_LISTING_TYPES` or `browsePages` — the nav showed the
+   * link while the proxy 404'd it. This one field closes that gap without
+   * reopening the `categoryTypes` privacy boundary.
    */
   listings: {
     listingTypes?: NonNullable<SiteSettingsDocument["listings"]>["listingTypes"];
     browsePages?: NonNullable<SiteSettingsDocument["listings"]>["browsePages"];
+    bundlesEnabled?: boolean;
   };
   /** D9 — off by default; `enabled: false` is emitted rather than omitted, same `always-present` reasoning as `disabledRoutes` below. */
   chat?: { enabled: boolean };

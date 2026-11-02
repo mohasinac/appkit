@@ -36,6 +36,7 @@ import {
   closedSurfacePrefixes,
   hiddenSurfaceRoutes,
 } from "../../../shared/listing-types/hidden-surfaces";
+import { isCategoryTypeEnabled } from "../../../shared/listing-types/feature-flags";
 
 /**
  * Document fields with a proven `useSiteSettings()` reader. Every entry below
@@ -45,7 +46,7 @@ import {
 export const PUBLIC_SITE_SETTINGS_FIELDS = [
   "contact", // user/orders/[id]/payment — contact.whatsappNumber (narrowed: no address/upiVpa)
   "payment", // CheckoutRouteClient — payment.otpCheckoutThreshold (narrowed)
-  "listings", // useListingTypeFlags + LayoutShellClient nav filter — narrowed to listings.{listingTypes,browsePages}; categoryTypes has no client reader
+  "listings", // useListingTypeFlags + LayoutShellClient nav filter — narrowed to listings.{listingTypes,browsePages,bundlesEnabled}; categoryTypes has no client reader
   "notificationChannels", // NARROWED: only {email,whatsapp,sms}.enabled — see the projection below
   "announcementBar", // the homepage banner (AdminSiteSettingsView edits it)
   /*
@@ -231,6 +232,11 @@ export function toPublicSiteSettings(
       // Read by LayoutShellClient to drop nav/footer links into a closed
       // section. `categoryTypes` is still withheld — it has no client reader.
       browsePages: doc.listings?.browsePages,
+      // One derived boolean, not the raw `categoryTypes` map — closes the
+      // bundles nav/proxy drift (the nav had no way to agree with
+      // `src/proxy.ts`'s own `closedSurfacePrefixes` 404 gate) without
+      // reopening `categoryTypes` as a whole.
+      bundlesEnabled: isCategoryTypeEnabled("bundle", doc),
     },
     /*
      * 🛑 Narrowed to the three booleans a client reads, not the group by
