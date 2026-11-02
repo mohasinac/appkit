@@ -1,6 +1,7 @@
 import { getMyOrdersTool } from "./get-my-orders";
 import { searchFaqsTool } from "./search-faqs";
 import { searchProductsTool } from "./search-products";
+import { getToggleStateTool } from "./get-toggle-state";
 
 /**
  * The registered tool set.
@@ -8,6 +9,7 @@ import { searchProductsTool } from "./search-products";
  * A2 (`piiClass: "none"`) — public, projected, no auth beyond the route's:
  *   · searchFaqs       wraps listPublicFaqs, the /faqs page's own function
  *   · searchProducts   wraps listPublicProducts, what GET /api/products serves
+ *   · getToggleState   (2E-ii) wraps TOGGLE_CATALOG — read-only, no write sibling
  *
  * A3 (`piiClass: "handle-only"`) — the customer's own data:
  *   · getMyOrders      scoped to ctx.userId from the verified session, with
@@ -22,10 +24,12 @@ import { searchProductsTool } from "./search-products";
 export const BUILTIN_ASSISTANT_TOOLS = [
   searchFaqsTool,
   searchProductsTool,
+  getToggleStateTool,
   getMyOrdersTool,
 ] as const;
 
-export { searchFaqsTool, searchProductsTool, getMyOrdersTool };
+export { searchFaqsTool, searchProductsTool, getMyOrdersTool, getToggleStateTool };
 export type { SearchFaqsResult } from "./search-faqs";
 export type { SearchProductsResult } from "./search-products";
 export type { MyOrderResult } from "./get-my-orders";
+export type { ToggleStateResult } from "./get-toggle-state";
