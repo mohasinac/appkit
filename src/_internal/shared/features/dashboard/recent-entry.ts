@@ -135,3 +135,98 @@ type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K>
 
 /** What a caller supplies to `recordVisit` — every `RecentEntry` field except `visitedAt`, which the hook stamps itself. */
 export type RecentEntryInput = DistributiveOmit<RecentEntry, "visitedAt">;
+
+/**
+ * `CardElement` — one unit inside a composable `DashboardCard` (Phase 9-ii,
+ * overhaul brief, owner-expanded 2026-11-02). The 7 `RecentEntry` kinds
+ * minus `visitedAt` (a card holds its own `createdAt`/`updatedAt` instead —
+ * visit timestamps stop being meaningful once a card can hold several
+ * elements a user composed by hand), plus 3 new kinds the owner named:
+ * `text` (free prose, no identity — authored directly, never auto-recorded),
+ * `link` (a bare bookmark, distinct from `page`: not tied to a real
+ * `NavMeta`-tagged route, so it is never auto-tracked by `RecentVisitTracker`
+ * either), and `form` (an inline quick-edit, reusing `<QuickFormDrawer>`'s
+ * `schema`+`fields` contract rendered in-card instead of in a drawer).
+ *
+ * A card's `elements` array can mix several of the SAME kind — "multiple
+ * charts, multiple toggles, multiple links" was the owner's own example —
+ * which is exactly why this is a per-element union nested inside
+ * `DashboardCard.elements: CardElement[]`, not a 10th `RecentEntry` kind.
+ */
+export type CardElement =
+  | { kind: "page"; href: string; label: string }
+  | { kind: "toggle"; toggleId: string; label: string }
+  | { kind: "chart"; chartId: string; label: string }
+  | { kind: "settingPreview"; settingId: string; label: string }
+  | { kind: "adminRow"; resource: AdminRowResource; rowId: string; label: string }
+  | { kind: "productCard"; productId: string; href: string; label: string }
+  | { kind: "pdpSection"; productId: string; sectionId: PdpSectionId; label: string }
+  | { kind: "text"; body: string }
+  | { kind: "link"; href: string; label: string }
+  | { kind: "form"; formId: string; label: string };
+
+/**
+ * `DashboardCard` — the composable unit a user's dashboard landing is made
+ * of. `color` is a token KEY into the same `surface-tokens.ts` map every
+ * other themeable surface uses (`SurfaceKey` or similar) — never a raw hex,
+ * per the Theme/Tokens/Variants rule. `saved` distinguishes the two tiers:
+ * an auto-created, capped-10, FIFO-evicted recent card (`saved: false`) from
+ * a user-curated, uncapped one (`saved: true`) — see `SavedCardsMap` below.
+ */
+export interface DashboardCard {
+  id: string;
+  title?: string;
+  color?: string;
+  elements: CardElement[];
+  saved: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Per-user saved cards, namespaced by `"{portal}:hub"` scope — same convention as `RecentlyVisitedMap`. Deliberately NO cap: "saving these cards so they're kept even if the history goes above 10" was the owner's own reason for a second, uncapped field rather than a flag on the capped one. */
+export type SavedCardsMap = Record<string, DashboardCard[]>;
+
+function legacyElementKey(entry: RecentEntry): string {
+  switch (entry.kind) {
+    case "page":
+      return `page:${entry.href}`;
+    case "toggle":
+      return `toggle:${entry.toggleId}`;
+    case "chart":
+      return `chart:${entry.chartId}`;
+    case "settingPreview":
+      return `settingPreview:${entry.settingId}`;
+    case "adminRow":
+      return `adminRow:${entry.resource}:${entry.rowId}`;
+    case "productCard":
+      return `productCard:${entry.productId}`;
+    case "pdpSection":
+      return `pdpSection:${entry.productId}:${entry.sectionId}`;
+  }
+}
+
+/**
+ * Wraps one OLD-shape `RecentEntry` (the shape shipped by Phase 9/10, still
+ * what `uiPreferences.recentlyVisited` holds in Firestore) as a single-
+ * element `DashboardCard`, at READ time — never a migration script, never a
+ * Firestore write. Same technique `getCartLineMembers()` already uses for
+ * `bundleProductIds` back-compat (CLAUDE.md's documented precedent): the new
+ * field becomes authoritative going forward, the old shape keeps reading
+ * correctly through a wrapper, and zero existing `uiPreferences` documents
+ * need touching.
+ *
+ * `id` reuses the exact identity each `RecentEntry` kind already had via
+ * `entryKey()` in `useRecentlyVisited.ts` — same string, so a card migrated
+ * from an old entry and a freshly-recorded one for the same target dedupe
+ * identically once the hook moves to this shape.
+ */
+export function cardFromLegacyEntry(entry: RecentEntry): DashboardCard {
+  const { visitedAt, ...rest } = entry;
+  return {
+    id: legacyElementKey(entry),
+    elements: [rest as CardElement],
+    saved: false,
+    createdAt: visitedAt,
+    updatedAt: visitedAt,
+  };
+}
