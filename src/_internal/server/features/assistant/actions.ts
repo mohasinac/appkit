@@ -8,6 +8,8 @@ import { runAssistantTurn } from "./turn";
 import { escalateToHuman } from "./escalate";
 import { classifyEscalation } from "./severity";
 import { BUILTIN_ASSISTANT_TOOLS } from "./tools/builtin";
+import { mergeAssistantToolRegistries } from "./tools/registry";
+import type { AnyAssistantToolDef } from "./tools/define";
 import { appendAssistantTurn, getAssistantHistory } from "./history-store";
 
 /**
@@ -68,9 +70,19 @@ export interface AssistantAnswer {
   text: string;
 }
 
-export async function answerAssistantQuestion(
+/**
+ * Shared by both public entry points below — the refusal/escalation
+ * handling is IDENTICAL regardless of who is asking or which tools they
+ * have; only `roles` and `tools` differ. Extracted 2026-11-02 (Phase 2E-ii)
+ * when `answerAdminAssistantQuestion` was added, rather than hand-copying
+ * ~45 lines of escalation logic a second time (Duplication Decision
+ * Framework's bug-fix-multiplier criterion — a fix to the refusal path
+ * would otherwise need two commits).
+ */
+async function runAnswerTurn(
   user: AssistantUser,
   question: string,
+  opts: { roles: readonly string[]; tools: readonly AnyAssistantToolDef[] },
 ): Promise<AssistantAnswer> {
   await assertAssistantEnabled();
 
@@ -85,11 +97,11 @@ export async function answerAssistantQuestion(
        */
       conversationId: user.id,
       userId: user.id,
-      roles: ["buyer"],
+      roles: opts.roles,
       /*
-       * 🛑 "redacted", not "none" — a buyer's free text can carry a phone
-       * number, an email or an address at any time, and nothing stops them.
-       * See redaction.ts's `assertAlreadyPublic` docstring for why "none" is
+       * 🛑 "redacted", not "none" — free text can carry a phone number, an
+       * email or an address at any time, and nothing stops the caller. See
+       * redaction.ts's `assertAlreadyPublic` docstring for why "none" is
        * reserved for text whose SOURCE is already a public projection.
        */
       piiClass: "redacted",
@@ -100,7 +112,7 @@ export async function answerAssistantQuestion(
     },
     {
       providers: getAssistantProviders(),
-      tools: BUILTIN_ASSISTANT_TOOLS,
+      tools: opts.tools,
       /*
        * Owner's instruction 2026-10-31 ("its fine with groq"). Groq is the
        * only registered vendor, so without this a money/policy answer could
@@ -171,4 +183,37 @@ export async function answerAssistantQuestion(
   await appendAssistantTurn(user.id, question, replyText);
 
   return { text: replyText };
+}
+
+/** The buyer-facing entry point — unchanged behaviour (`roles: ["buyer"]`, builtin tools only). */
+export async function answerAssistantQuestion(
+  user: AssistantUser,
+  question: string,
+): Promise<AssistantAnswer> {
+  return runAnswerTurn(user, question, { roles: ["buyer"], tools: BUILTIN_ASSISTANT_TOOLS });
+}
+
+/**
+ * The admin/seller-facing entry point — 2E-ii (overhaul brief). A SEPARATE
+ * exported function rather than a `roles` parameter bolted onto
+ * `answerAssistantQuestion`, because the two have different RBAC postures:
+ * the buyer one is reachable by anyone signed in; this one is for a
+ * session that has already passed an admin/seller gate at the ROUTE level
+ * (mirroring every other admin-only surface in this codebase) — the
+ * caller's own `roles` is trusted input here, not re-derived.
+ *
+ * `extraTools` is where `createSearchNavTool(...)` (or any other
+ * consumer-supplied tool) joins the builtin set — appkit cannot import the
+ * consumer's own nav tree, so the caller flattens it and passes the
+ * resulting tool in.
+ */
+export async function answerAdminAssistantQuestion(
+  user: AssistantUser,
+  question: string,
+  opts: { roles: readonly string[]; extraTools?: readonly AnyAssistantToolDef[] },
+): Promise<AssistantAnswer> {
+  return runAnswerTurn(user, question, {
+    roles: opts.roles,
+    tools: mergeAssistantToolRegistries(BUILTIN_ASSISTANT_TOOLS, opts.extraTools ?? []),
+  });
 }

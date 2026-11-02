@@ -2135,15 +2135,29 @@ export {
 /**
  * The customer assistant — a floating-widget chatbot with its own storage
  * (`assistantHistory/{userId}`), deliberately NOT riding the buyer<->seller
- * inbox above. `answerAssistantQuestion` is the ONE entry point; everything
- * else the feature needs (routing, redaction, handles, budget, quorum,
- * escalation, the tool registry) is internal wiring.
+ * inbox above. `answerAssistantQuestion` is the buyer-facing entry point;
+ * everything else the feature needs (routing, redaction, handles, budget,
+ * quorum, escalation, the tool registry) is internal wiring.
+ *
+ * `answerAdminAssistantQuestion` (2E-ii, overhaul brief) is the SEPARATE
+ * admin/seller-facing entry point — see its own doc comment in `actions.ts`
+ * for why it isn't a `roles` parameter on the buyer function instead.
+ * `createSearchNavTool` is its first real extra tool: a FACTORY (not a
+ * builtin) because the nav tree it searches is consumer-defined — the
+ * caller flattens its own `ADMIN_NAV_GROUPS`/`STORE_NAV_GROUPS` into
+ * `SearchableNavItem[]` and passes the built tool in as `extraTools`.
  */
 export {
   answerAssistantQuestion,
+  answerAdminAssistantQuestion,
   type AssistantUser,
   type AssistantAnswer,
 } from "./_internal/server/features/assistant/actions";
+export {
+  createSearchNavTool,
+  type SearchableNavItem,
+  type NavSearchResult,
+} from "./_internal/server/features/assistant/tools/admin/search-nav";
 export {
   resolveCodeAssetForOrder,
   codeAssetHeaders,
