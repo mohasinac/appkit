@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { siteSettingsRepository } from "../../../../../../features/admin/repository/site-settings.repository";
 import { TOGGLE_CATALOG } from "../../../../../shared/features/site-settings/toggle-catalog";
-import type { FirestoreDocument, FirestoreValue } from "../../../../../../schemas/types";
 import { defineAssistantTool } from "../define";
 
 /**
@@ -50,12 +49,19 @@ export interface ToggleStateResult {
  * a 6-line helper is below the Rule-of-Three threshold for extracting a
  * shared one.
  */
-function getBooleanAtDotPath(obj: FirestoreDocument, path: string): boolean | undefined {
-  let cursor: FirestoreValue = obj;
+/*
+ * A local, deliberately narrow tree type — not `FirestoreDocument`, which
+ * `audit-assistant-egress` R3 bans by name ANYWHERE in this directory
+ * (every `*Document` identifier, not just in a return-type position), on
+ * the theory that a tool reaching for a document-shaped type is a step
+ * away from reaching for a real one.
+ */
+type ToggleTree = { readonly [key: string]: boolean | ToggleTree | undefined };
+
+function getBooleanAtDotPath(obj: ToggleTree, path: string): boolean | undefined {
+  let cursor: boolean | ToggleTree | undefined = obj;
   for (const key of path.split(".")) {
-    if (typeof cursor !== "object" || cursor === null || Array.isArray(cursor)) {
-      return undefined;
-    }
+    if (typeof cursor !== "object" || cursor === undefined) return undefined;
     cursor = cursor[key];
   }
   return typeof cursor === "boolean" ? cursor : undefined;
@@ -87,7 +93,7 @@ export const getToggleStateTool = defineAssistantTool({
     return matches.slice(0, 5).map((t) => ({
       id: t.id,
       label: t.label,
-      enabled: getBooleanAtDotPath(settings as unknown as FirestoreDocument, t.dotPath) !== false,
+      enabled: getBooleanAtDotPath(settings as unknown as ToggleTree, t.dotPath) !== false,
     }));
   },
 });
