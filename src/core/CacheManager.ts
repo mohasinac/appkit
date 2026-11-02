@@ -69,6 +69,44 @@ export class CacheManager {
     return Array.from(this.cache.keys());
   }
 
+  /**
+   * Item 8 §18 (overhaul brief) — the admin cache page's real prerequisite.
+   * `.keys()`/`.clear()` already told a caller WHICH keys exist and how to
+   * wipe everything; neither told it how STALE an entry is, which is what
+   * a "current TTL" column needs. Returns `null` for a missing OR already
+   * logically-expired key — same "nothing to show" answer either way, so a
+   * caller never has to special-case the two.
+   */
+  public getEntryMeta(key: string): { ageMs: number; ttl: number | undefined; expiresInMs: number | null } | null {
+    const entry = this.cache.get(key);
+    if (!entry) return null;
+    const ageMs = Date.now() - entry.timestamp;
+    if (entry.ttl && ageMs > entry.ttl) return null;
+    return {
+      ageMs,
+      ttl: entry.ttl,
+      expiresInMs: entry.ttl ? entry.ttl - ageMs : null,
+    };
+  }
+
+  /**
+   * Item 8 §18 — a repository whose cache is keyed per-id/per-slug (e.g.
+   * `products.repository.ts`) has no single key to `.delete()`; every entry
+   * sharing that repository's key prefix needs to go together. The admin
+   * page's "Clear all `<repo>` cache" button is this, not a loop the caller
+   * reimplements against `.keys()` itself.
+   */
+  public clearByPrefix(prefix: string): number {
+    let cleared = 0;
+    for (const key of this.cache.keys()) {
+      if (key.startsWith(prefix)) {
+        this.cache.delete(key);
+        cleared++;
+      }
+    }
+    return cleared;
+  }
+
   public cleanExpired(): number {
     let cleaned = 0;
     for (const [key, entry] of this.cache.entries()) {
