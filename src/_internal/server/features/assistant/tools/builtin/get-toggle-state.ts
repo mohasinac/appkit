@@ -38,16 +38,27 @@ export interface ToggleStateResult {
   enabled: boolean;
 }
 
-/** `path.a.b.c` → the value at that path, or `undefined` if any segment is
- * missing. Deliberately NOT imported from `security/pii-encrypt.ts`'s
- * private `getPath` — that module owns PII-path semantics and this one
- * doesn't need them; a 2-copy duplicate of a 6-line helper is below the
- * Rule-of-Three threshold for extracting a shared one. */
-function getAtDotPath(obj: Record<string, unknown>, path: string): unknown {
-  return path.split(".").reduce<unknown>((acc, key) => {
-    if (acc === null || typeof acc !== "object") return undefined;
-    return (acc as Record<string, unknown>)[key];
-  }, obj);
+/**
+ * `path.a.b.c` → the boolean at that path, or `undefined` if any segment is
+ * missing or the leaf isn't a boolean. Narrower than a generic dot-path
+ * getter on purpose — every `TOGGLE_CATALOG.dotPath` resolves to a plain
+ * `boolean | "unlisted"` leaf (never an object or array), so the caller
+ * never needs anything wider than this. Deliberately NOT imported from
+ * `security/pii-encrypt.ts`'s private `getPath` — that module owns
+ * PII-path semantics and this one doesn't need them; a 2-copy duplicate of
+ * a 6-line helper is below the Rule-of-Three threshold for extracting a
+ * shared one.
+ */
+function getBooleanAtDotPath(
+  obj: Record<string, unknown>,
+  path: string,
+): boolean | undefined {
+  let cursor: Record<string, unknown> | boolean | undefined = obj;
+  for (const key of path.split(".")) {
+    if (typeof cursor !== "object" || cursor === null) return undefined;
+    cursor = cursor[key] as Record<string, unknown> | boolean | undefined;
+  }
+  return typeof cursor === "boolean" ? cursor : undefined;
 }
 
 export const getToggleStateTool = defineAssistantTool({
@@ -76,7 +87,7 @@ export const getToggleStateTool = defineAssistantTool({
     return matches.slice(0, 5).map((t) => ({
       id: t.id,
       label: t.label,
-      enabled: getAtDotPath(settings as Record<string, unknown>, t.dotPath) !== false,
+      enabled: getBooleanAtDotPath(settings as Record<string, unknown>, t.dotPath) !== false,
     }));
   },
 });
