@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { siteSettingsRepository } from "../../../../../../features/admin/repository/site-settings.repository";
 import { TOGGLE_CATALOG } from "../../../../../shared/features/site-settings/toggle-catalog";
+import type { FirestoreDocument, FirestoreValue } from "../../../../../../schemas/types";
 import { defineAssistantTool } from "../define";
 
 /**
@@ -49,14 +50,13 @@ export interface ToggleStateResult {
  * a 6-line helper is below the Rule-of-Three threshold for extracting a
  * shared one.
  */
-function getBooleanAtDotPath(
-  obj: Record<string, unknown>,
-  path: string,
-): boolean | undefined {
-  let cursor: Record<string, unknown> | boolean | undefined = obj;
+function getBooleanAtDotPath(obj: FirestoreDocument, path: string): boolean | undefined {
+  let cursor: FirestoreValue = obj;
   for (const key of path.split(".")) {
-    if (typeof cursor !== "object" || cursor === null) return undefined;
-    cursor = cursor[key] as Record<string, unknown> | boolean | undefined;
+    if (typeof cursor !== "object" || cursor === null || Array.isArray(cursor)) {
+      return undefined;
+    }
+    cursor = cursor[key];
   }
   return typeof cursor === "boolean" ? cursor : undefined;
 }
@@ -87,7 +87,7 @@ export const getToggleStateTool = defineAssistantTool({
     return matches.slice(0, 5).map((t) => ({
       id: t.id,
       label: t.label,
-      enabled: getBooleanAtDotPath(settings as Record<string, unknown>, t.dotPath) !== false,
+      enabled: getBooleanAtDotPath(settings as unknown as FirestoreDocument, t.dotPath) !== false,
     }));
   },
 });
