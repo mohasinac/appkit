@@ -292,17 +292,23 @@ export function resolveStockResync(
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;
+  private static readonly CACHE_PREFIX = "repo:products:";
 
   constructor() {
     super(PRODUCT_COLLECTION);
   }
 
   private cacheKeyById(id: string): string {
-    return `repo:products:id:${id}`;
+    return `${ProductRepository.CACHE_PREFIX}id:${id}`;
   }
 
   private cacheKeyBySlug(slug: string): string {
-    return `repo:products:slug:${slug}`;
+    return `${ProductRepository.CACHE_PREFIX}slug:${slug}`;
+  }
+
+  /** Item 8 §18 (overhaul brief) — the one dynamic, per-id/per-slug keyed cache today. */
+  public cachePrefix(): string {
+    return ProductRepository.CACHE_PREFIX;
   }
 
   private cacheSet(product: ProductDocument): void {

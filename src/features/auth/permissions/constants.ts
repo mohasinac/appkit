@@ -237,6 +237,8 @@ export type Permission =
   | "admin:maintenance:purge-errors"
   | "admin:maintenance:view-gateway-events"
   | "admin:maintenance:view-obligations"
+  | "admin:maintenance:view-cache"
+  | "admin:maintenance:clear-cache"
 
   /*
    * Payment protection — the operator queues the money spine writes to.
@@ -604,6 +606,13 @@ export const PERMISSION_GROUPS: Record<
      */
     "admin:maintenance:view-gateway-events",
     "admin:maintenance:view-obligations",
+    /*
+     * View-only. `clear-cache` is deliberately NOT granted here — same
+     * exclusion as `purge-errors`, which this role also lacks. Wiping a
+     * repository's cache site-wide is a blunter action than looking at one;
+     * admin role bypasses this map entirely when it's actually needed.
+     */
+    "admin:maintenance:view-cache",
   ],
 } as const;
 

@@ -2,6 +2,7 @@ import * as React from "react";
 import { Anchor, Div, Heading, Li, Nav, Section, Span, Text, Ul } from "@mohasinac/appkit/client";
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
 import { CacheInvalidationPanel } from "./CacheInvalidationPanel";
+import { RepositoryCacheStatusPanel } from "./RepositoryCacheStatusPanel";
 
 export interface MaintenanceDashboardViewProps {
   counts: MaintenanceDashboardCounts;
@@ -71,6 +72,7 @@ export function MaintenanceDashboardView({
         after a bulk data change is usually to reach it.
       */}
       <CacheInvalidationPanel />
+      <RepositoryCacheStatusPanel />
 
       <Section style={{ marginBottom: "1.5rem" }}>
         <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600 }}>Top codes (30d)</Heading>

@@ -2091,6 +2091,22 @@ export const ACTIONS: ActionTree = {
         confirmLabel: "Invalidate all",
       },
     },
+    "clear-repository-cache": {
+      // Item 8 §18 (overhaul brief) — the CacheManager in-memory read cache
+      // (site settings, products), a different layer entirely from
+      // `invalidate-cache`'s Next.js page/ISR cache above. No confirmation:
+      // unlike that one, this has no production cost either way — a cleared
+      // key just means the next read is a cache miss, one Firestore round
+      // trip, bounded by the same TTL that already governs it.
+      iconKey: "retry",
+      id: "admin.clear-repository-cache",
+      label: "Clear",
+      ariaLabel: "Clear this cache entry",
+      description:
+        "Delete one cached read-cache entry (or every entry sharing a repository's key prefix) so the next read goes to Firestore instead of the in-memory cache.",
+      kind: "secondary",
+      permissions: ["admin"],
+    },
     "update-pricing": {
       iconKey: "save",
       id: "admin.update-pricing",

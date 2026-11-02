@@ -331,6 +331,15 @@ export type {
   ListCloudLogEntriesResult,
 } from "./_internal/server/features/maintenance/cloud-logs-data";
 
+// [SERVER-ONLY] Admin cache status + clear for /admin/maintenance/cache — item 8 §18 (overhaul brief).
+export { getCacheAdminStatus, clearAdminCache } from "./_internal/server/features/maintenance/cache-admin";
+export type {
+  CacheAdminStatus,
+  NamedCacheStatus,
+  KeyedCacheStatus,
+  CacheClearTarget,
+} from "./_internal/server/features/maintenance/cache-admin";
+
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ADDRESS_FIXTURES - Constant used across modules.
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

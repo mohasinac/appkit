@@ -122,6 +122,15 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
   }
 
   /**
+   * Item 8 §18 (overhaul brief) — the admin cache page's one way to learn the
+   * two real key strings without duplicating them as a second literal
+   * elsewhere (Root Cause #42's mirror-drift). Read-only; no new mechanism.
+   */
+  public adminCacheKeys(): { main: string; flags: string } {
+    return { main: this.cacheKey(), flags: this.flagCacheKey() };
+  }
+
+  /**
    * The narrow `{listingTypes, categoryTypes, browsePages}` slice that
    * `isContentVisible`/`isGovernedRowVisible`/`isListingTypeEnabled`/
    * `isCategoryTypeEnabled` actually need — cached independently of the rest
