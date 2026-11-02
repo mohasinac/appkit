@@ -229,7 +229,7 @@ export function ProductFeatureBadges({
 
   const renderPill = (badge: FeatureBadge) => (
     <Span layout="inline-flex" gap="xs"
-      className={`.5 border py-[0.375rem] ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
+      className={`border py-[0.375rem] ${badge.bgClass} ${badge.colorClass}`} rounded="lg" padding="x-sm" size="xs" weight="medium"
     >
       <Span aria-hidden="true">{badge.icon}</Span>
       {badge.label}
