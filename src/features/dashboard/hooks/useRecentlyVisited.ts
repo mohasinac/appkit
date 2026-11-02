@@ -86,7 +86,26 @@ export function useRecentlyVisited(scope: string): UseRecentlyVisitedResult {
   const updateProfile = useUpdateCurrentProfile();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [localItems, setLocalItems] = useState<RecentEntry[] | null>(() => readLocalRecent(scope));
+  /*
+   * 🛑 Must start `null` on BOTH server and the client's first render — not
+   * `readLocalRecent(scope)` in a lazy initializer. A lazy `useState`
+   * initializer runs during React's render phase, which SSR also executes
+   * for a "use client" component; `readLocalRecent` branches on
+   * `typeof window`, so it returned `[]` server-side and real (non-empty)
+   * localStorage data on the client's first paint — a hydration mismatch
+   * whenever a prior visit had already written an entry. Same bug class as
+   * the `typeof document` portal-mount gates fixed elsewhere this session
+   * (see project_ssr_portal_hydration_bugs), different mechanism: a
+   * render-phase environment branch instead of a render-time early return.
+   * The localStorage read now happens in the effect below, post-mount —
+   * client-only by construction, so it can never run during SSR.
+   */
+  const [localItems, setLocalItems] = useState<RecentEntry[] | null>(null);
+
+  useEffect(() => {
+    const local = readLocalRecent(scope);
+    if (local.length > 0) setLocalItems(local);
+  }, [scope]);
 
   useEffect(() => {
     const stored = profile?.uiPreferences?.recentlyVisited?.[scope];
