@@ -1100,13 +1100,6 @@ export interface SiteSettingsDocument extends BaseDocument {
     keywords: string[];
     ogImage: string;
   };
-  features: {
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
-    enabled: boolean;
-  }[];
   /**
    * Which listing and category types the marketplace offers.
    *

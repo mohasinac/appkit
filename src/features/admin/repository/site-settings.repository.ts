@@ -383,34 +383,6 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
   }
 
   /**
-   * Get site features
-   *
-   * @returns Promise<Array<{id, icon, title, description}>>
-   */
-  async getFeatures() {
-    const settings = await this.getSingleton();
-    return settings.features || [];
-  }
-
-  /**
-   * Update site features
-   *
-   * @param features - New features array
-   * @returns Promise<void>
-   */
-  async updateFeatures(
-    features: Array<{
-      id: string;
-      name: string;
-      description: string;
-      icon: string;
-      enabled: boolean;
-    }>,
-  ): Promise<void> {
-    await this.updateSingleton({ features } as any);
-  }
-
-  /**
    * Get email settings for transactional emails
    *
    * @returns Promise<{fromName, fromEmail, replyTo}>

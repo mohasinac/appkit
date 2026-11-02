@@ -258,50 +258,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     ],
     ogImage: seedPhoto("site-og-image-collectibles-20260101", 1200, 630),
   },
-  features: [
-    {
-      id: "feature_001",
-      name: "Huge Catalogue",
-      description: "Curated Collectibles Across Every Category",
-      icon: "📦",
-      enabled: true,
-    },
-    {
-      id: "feature_002",
-      name: "Fast Shipping",
-      description: "Delivered in 3–7 Days Across India",
-      icon: "🚚",
-      enabled: true,
-    },
-    {
-      id: "feature_003",
-      name: "Authentic Only",
-      description: "Verified Sellers, Verified Products",
-      icon: "✅",
-      enabled: true,
-    },
-    {
-      id: "feature_004",
-      name: "Secure Payments",
-      description: "Escrow-Protected Transactions",
-      icon: "🔒",
-      enabled: true,
-    },
-    {
-      id: "feature_005",
-      name: "Live Collector Drops",
-      description: "Bid on Rare & Collectible Items",
-      icon: "🏆",
-      enabled: true,
-    },
-    {
-      id: "feature_006",
-      name: "Pre-Orders",
-      description: "Reserve Upcoming Releases Early",
-      icon: "⏳",
-      enabled: true,
-    },
-  ],
   // Every key here is an ADMIN OVERRIDE, and an empty string is the correct
   // default: `PolicyPageView` falls back to the i18n `sections[]` content for
   // that page whenever the value is empty, and every one of these pages already

@@ -152,7 +152,6 @@ export const PRIVATE_SITE_SETTINGS_FIELDS = [
   "favicon", // emitted by generateMetadata, server-side
   "seo", // consumed by generateMetadata, server-side
   "socialLinks", // rendered server-side in the footer
-  "features", // rendered server-side
   "shipping", // rendered server-side
   "returns", // rendered server-side
   "faq", // faq.variables are interpolated server-side by /api/faqs
