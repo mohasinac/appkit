@@ -65,9 +65,9 @@ export function RepositoryCacheStatusPanel(): React.JSX.Element {
     try {
       const res = await fetch(ADMIN_ENDPOINTS.MAINTENANCE_CACHE);
       const body = (await res.json()) as
-        | { ok: true; data: CacheAdminStatus }
-        | { ok: false; code?: string };
-      if (!res.ok || !body.ok) {
+        | { success: true; data: CacheAdminStatus }
+        | { success: false; code?: string };
+      if (!res.ok || !body.success) {
         setError(
           toUserMessage("code" in body ? String(body.code) : undefined, undefined, {
             fallback: `Could not load cache status (HTTP ${res.status}).`,
@@ -102,9 +102,9 @@ export function RepositoryCacheStatusPanel(): React.JSX.Element {
         body: JSON.stringify(kind === "all" ? { kind } : { kind, id }),
       });
       const body = (await res.json()) as
-        | { ok: true; data: { cleared: number; status: CacheAdminStatus } }
-        | { ok: false; code?: string };
-      if (!res.ok || !body.ok) {
+        | { success: true; data: { cleared: number; status: CacheAdminStatus } }
+        | { success: false; code?: string };
+      if (!res.ok || !body.success) {
         setError(
           toUserMessage("code" in body ? String(body.code) : undefined, undefined, {
             fallback: `Could not clear that cache (HTTP ${res.status}).`,

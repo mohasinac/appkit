@@ -54,9 +54,9 @@ export function CloudLogsListView({
       url.searchParams.set("pageToken", nextPageToken);
       const res = await fetch(url.toString());
       const body = (await res.json()) as
-        | { ok: true; data: { entries: CloudLogEntry[]; nextPageToken: string | null } }
-        | { ok: false; code: string; error: string };
-      if (!res.ok || !body.ok) {
+        | { success: true; data: { entries: CloudLogEntry[]; nextPageToken: string | null } }
+        | { success: false; code: string; error: string };
+      if (!res.ok || !body.success) {
         setError(toUserMessage("code" in body ? String(body.code) : undefined, undefined, { fallback: `Could not load logs (HTTP ${res.status}).` }));
         return;
       }

@@ -64,9 +64,9 @@ export function CacheInvalidationPanel(): React.JSX.Element {
         body: JSON.stringify({}),
       });
       const body = (await res.json()) as
-        | { ok: true; data: RevalidateResult }
-        | { ok: false; code?: string; error?: string };
-      if (!res.ok || !body.ok) {
+        | { success: true; data: RevalidateResult }
+        | { success: false; code?: string; error?: string };
+      if (!res.ok || !body.success) {
         /*
          * 🛑 `toUserMessage`, never `?? body.error`. The server's own message
          * is server text; piping it into the UI is how a Node MODULE_NOT_FOUND

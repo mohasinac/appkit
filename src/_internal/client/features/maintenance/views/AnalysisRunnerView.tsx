@@ -25,9 +25,9 @@ export function AnalysisRunnerView(): React.JSX.Element {
         body: JSON.stringify({ days, source }),
       });
       const body = (await res.json()) as
-        | { ok: true; data: AnalyzeReport }
-        | { ok: false; code: string; error: string };
-      if (!res.ok || !body.ok) {
+        | { success: true; data: AnalyzeReport }
+        | { success: false; code: string; error: string };
+      if (!res.ok || !body.success) {
         setError(toUserMessage("code" in body ? String(body.code) : undefined, undefined, { fallback: `The analysis run failed (HTTP ${res.status}).` }));
         setRunning(false);
         return;
