@@ -200,6 +200,13 @@ function SlideBackground({
         top of it — letterboxing it would put that copy on bare surface with
         the dim layer darkening nothing, which is unreadable rather than
         merely different. Filling the box is the contract.
+
+        🛑 `fallback=""` suppresses MediaImage's own large centered 🖼️ glyph
+        when the backdrop 404s — found live, overlapping the foreground
+        headline text it sits behind. The headline/eyebrow/CTA already
+        communicate the slide's content; a missing backdrop should degrade to
+        the neutral surface colour, not a second, competing icon fighting the
+        real copy for the same screen space.
       */}
       <MediaImage
         src={src}
@@ -207,6 +214,7 @@ function SlideBackground({
         size="hero"
         objectFit="cover"
         fill
+        fallback=""
         priority={priority}
         fetchPriority={priority ? "high" : "low"}
       />
@@ -244,7 +252,8 @@ function CardBackground({ bg }: { bg: CarouselBackground }) {
   if (bg.type === "image" && bg.url) {
     // `cover` for the same reason as the slide backdrop above — this sits
     // behind the card's eyebrow/title/description, not beside them.
-    return <MediaImage src={bg.url} alt="" size="card" objectFit="cover" fill />;
+    // `fallback=""` for the same reason too — see that comment.
+    return <MediaImage src={bg.url} alt="" size="card" objectFit="cover" fill fallback="" />;
   }
   return null;
 }
