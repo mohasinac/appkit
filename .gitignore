@@ -15,3 +15,6 @@ GEMINI.md
 /firestore.indexes.json
 /storage.rules
 /database.rules.json
+
+# scaffold-feature.mjs scratch output — never the real src/app tree
+/.scaffold-output/
