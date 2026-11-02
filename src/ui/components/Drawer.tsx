@@ -1,5 +1,5 @@
 "use client"
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { Heading } from "./Typography";
@@ -77,6 +77,23 @@ export function Drawer({
   const resolvedSide = side ?? hand;
   const panelRef = useRef<HTMLDivElement>(null);
   const prevFocusRef = useRef<HTMLElement | null>(null);
+  /*
+   * 🛑 `useState(false)` + `useEffect`, NOT `typeof document === "undefined"`
+   * at render time — found 2026-11-02 via a real, reproducible-on-every-page
+   * hydration mismatch (React's own warning literally names this exact
+   * pattern as cause #1). `document` is always undefined during SSR and
+   * always defined on the client's FIRST render too (the DOM exists before
+   * React hydrates it) — so branching on it directly makes the server render
+   * `null` and the client's very first paint render the full portal, which
+   * is precisely what hydration compares and rejects. Gating on a state flag
+   * that starts `false` on BOTH sides and only flips `true` inside a
+   * `useEffect` (which never runs during SSR, and runs on the client only
+   * AFTER the initial hydration pass) makes the first client render agree
+   * with the server, then mounts the portal on the next tick — the standard
+   * SSR-safe-portal pattern.
+   */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Body scroll lock
   useEffect(() => {
@@ -108,7 +125,7 @@ export function Drawer({
   const { closed, open, base } = SIDE_TRANSLATE[resolvedSide];
   const isBottom = resolvedSide === "bottom";
 
-  if (typeof document === "undefined") return null;
+  if (!mounted) return null;
 
   return createPortal(
     <div

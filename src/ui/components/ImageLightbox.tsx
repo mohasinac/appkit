@@ -64,6 +64,9 @@ export function ImageLightbox({
   const [rotation, setRotation] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+  // Same SSR-safe-portal fix as Drawer.tsx/Modal.tsx — see that file's comment.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Sync external activeIndex and reset transforms
   useEffect(() => {
@@ -183,7 +186,7 @@ export function ImageLightbox({
     if (isOpen) requestAnimationFrame(() => overlayRef.current?.focus());
   }, [isOpen]);
 
-  if (!isOpen || typeof document === "undefined") return null;
+  if (!isOpen || !mounted) return null;
 
   const image = images[currentIndex];
   const hasMultiple = images.length > 1;

@@ -45,6 +45,17 @@ export function Modal({
   const titleId = React.useId();
   const panelRef = React.useRef<HTMLDivElement>(null);
   const previousFocusRef = React.useRef<HTMLElement | null>(null);
+  /*
+   * 🛑 `useState(false)` + `useEffect`, NOT `typeof document === "undefined"`
+   * at render time — same fix, same root cause, as `Drawer.tsx` (found
+   * 2026-11-02 via a real, reproducible hydration mismatch site-wide). See
+   * that file's comment for the full explanation: branching on `document`
+   * directly makes the server render `null` and the client's FIRST render
+   * (before hydration settles) render the full portal, which is exactly
+   * what hydration compares and rejects.
+   */
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
 
   React.useEffect(() => {
     if (!visible) {
@@ -105,7 +116,7 @@ export function Modal({
 
   const reduced = useReducedMotion();
 
-  if (typeof document === "undefined") {
+  if (!mounted) {
     return null;
   }
 

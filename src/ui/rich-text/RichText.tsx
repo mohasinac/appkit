@@ -1,5 +1,5 @@
 "use client"
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Div } from "../components/Div";
 import { normalizeRichTextHtml } from "../../utils/string.formatter";
 import { useSiteSettings } from "../../core/hooks/useSiteSettings";
@@ -307,16 +307,41 @@ export function RichText({
   const { data: settings } = useSiteSettings<{ hiddenSurfacePrefixes?: string[] }>();
   const closedPrefixes = settings?.hiddenSurfacePrefixes ?? [];
 
-  const safe = useMemo(() => {
-    const sanitized = unwrapClosedLinks(
-      sanitiseHtml(normalizeRichTextHtml(html)),
-      closedPrefixes,
-    );
+  /*
+   * Identical between server and client's FIRST render — only sanitising,
+   * which (per `sanitiseHtml`'s own contract) is server-safe.
+   */
+  const baseSafe = useMemo(
+    () => sanitiseHtml(normalizeRichTextHtml(html)),
+    [html],
+  );
 
-    if (!highlightCode || typeof document === "undefined") return sanitized;
+  /*
+   * 🛑 `mounted`-deferred, NOT computed inline above — found 2026-11-02 via
+   * a real, reproducible hydration mismatch (a FAQ answer's link to
+   * `/tools/authenticity` present in the server HTML, stripped client-side,
+   * the instant `useSiteSettings()` resolved `hiddenSurfacePrefixes`).
+   * `unwrapClosedLinks` and the syntax-highlighting step both use real DOM
+   * APIs (`document.createElement`), which only work client-side — so
+   * computing them inline makes the server render `baseSafe` unmodified
+   * while the client's very first paint (before this effect has even run)
+   * already has `document` and renders the TRANSFORMED html, which is
+   * exactly what hydration compares and rejects. Deferring both to a
+   * `useEffect` makes the first client render match the server (closed-
+   * surface links briefly visible, code briefly unhighlighted), then
+   * applies both transforms in one client-only re-render right after mount.
+   */
+  const [safe, setSafe] = useState(baseSafe);
+  useEffect(() => {
+    const unwrapped = unwrapClosedLinks(baseSafe, closedPrefixes);
+
+    if (!highlightCode || typeof document === "undefined") {
+      setSafe(unwrapped);
+      return;
+    }
 
     const container = document.createElement("div");
-    container.innerHTML = sanitized;
+    container.innerHTML = unwrapped;
     container.querySelectorAll("pre > code").forEach((codeEl) => {
       const langClass = Array.from(codeEl.classList).find((c) =>
         c.startsWith("language-"),
@@ -324,8 +349,12 @@ export function RichText({
       const lang = langClass ? langClass.replace("language-", "") : "plaintext";
       codeEl.innerHTML = highlightCode(codeEl.textContent ?? "", lang);
     });
-    return container.innerHTML;
-  }, [html, highlightCode]);
+    setSafe(container.innerHTML);
+    // `closedPrefixes` is `settings?.hiddenSurfacePrefixes ?? []` — a FRESH
+    // array reference every render whenever settings is still loading, so
+    // depending on the array itself would re-run this effect every render
+    // until the query settles. `.join(",")` compares CONTENT, not identity.
+  }, [baseSafe, closedPrefixes.join(","), highlightCode]);
 
   const ref = (el: HTMLDivElement | null) => {
     if (el && copyableCode) {

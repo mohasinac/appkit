@@ -37,6 +37,9 @@ export function QuickCreateModal<T = unknown>({
   const [busy, setBusy] = React.useState(false);
   const titleId = React.useId();
   const panelRef = React.useRef<HTMLDivElement>(null);
+  // Same SSR-safe-portal fix as Drawer.tsx/Modal.tsx — see that file's comment.
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
 
   React.useEffect(() => {
     if (!isOpen) return;
@@ -67,7 +70,7 @@ export function QuickCreateModal<T = unknown>({
     }
   };
 
-  if (!isOpen || typeof document === "undefined") return null;
+  if (!isOpen || !mounted) return null;
 
   const saving = busy || isSaving;
 
