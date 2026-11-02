@@ -72,7 +72,7 @@ import { MAX_FEATURES_PER_PRODUCT } from "../schemas/product-features";
 // The ONE `{{placeholder}}` implementation, promoted out of the FAQ schema in
 // B3. A second regex here would be Root Cause #75's shape.
 import { interpolate } from "../../../_internal/shared/templating/placeholders";
-import type { ProductStatus } from "../types";
+import type { ProductStatus, ListingType } from "../types";
 /*
  * From their DEFINING modules, not a barrel — a repository reaching the wide
  * entry is how the Turbopack client-bundle trap gets re-opened (Root Cause #18).
@@ -101,23 +101,23 @@ const SIEVE_CLAUSE_LT_CLASSIFIED = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TY
 const SIEVE_CLAUSE_LT_DIGITAL_CODE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.DIGITAL_CODE}`;
 const SIEVE_CLAUSE_LT_LIVE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.LIVE}`;
 
-// Canonical tokens match the `ListingType` union in
-// `appkit/src/features/products/types/index.ts`. Legacy aliases (`preorder`,
-// `product`, `prizedraw`) are accepted for backwards compatibility with older
-// consumer routes/clients; they normalise to the canonical value before
-// reaching Firestore.
+/*
+ * 🛑 1A-vii (overhaul brief) — the canonical half of this union now IS
+ * `ListingType`, not a hand-typed copy of its 10 members. Before this, a
+ * missing art/stickers entry (Root Cause #58, see the comment on
+ * LISTING_KIND_ALIAS_MAP below) was possible precisely because this list
+ * was a SEPARATE literal `tsc` never checked against the real union — a
+ * 10th member added to `ListingType` could land here unnoticed. Unioning
+ * with `ListingType` directly means a future 11th member fails to compile
+ * HERE, at `LISTING_KIND_ALIAS_MAP`'s `Record<ProductListingKind, string>`
+ * below, the moment it's missing — not silently at query time in
+ * production. Legacy aliases (`preorder`, `product`, `prizedraw`,
+ * `prize-draw`, `auction`) are accepted for backwards compatibility with
+ * older consumer routes/clients; they normalise to the canonical value
+ * before reaching Firestore.
+ */
 type ProductListingKind =
-  | "standard"
-  | "collector-drop"
-  | "pre-order"
-  | "random-lots"
-  | "classified"
-  | "digital-code"
-  | "live"
-  | "art"
-  | "stickers"
-  | "spares"
-  // Legacy aliases — see `LISTING_KIND_ALIAS_MAP` below.
+  | ListingType
   | "preorder"
   | "product"
   | "prizedraw"
