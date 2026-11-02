@@ -26,16 +26,16 @@ import { resolveFaqAnswer } from "./resolveFaqAnswer";
  * 🛑 Filters by `isContentVisible` (1A) — `faqsRepository.getHomepageFAQs()`
  * cannot express "none of this FAQ's tags is for a disabled thing" as a
  * Firestore query, so this is the same in-memory post-filter
- * `listPublicFaqs`/`listPublicProducts` already use. `siteSettingsRepository.getSingleton()`
- * carries its own internal TTL cache (`CacheManager`), so this adds no new
- * uncached read — it's a second `await` inside the same `React.cache` entry,
- * not a second Firestore round-trip per request (the repository's own cache
- * absorbs repeat calls within the TTL window).
+ * `listPublicFaqs`/`listPublicProducts` already use. `siteSettingsRepository.getFlagSnapshot()`
+ * (1A-iv) carries its own 30-minute internal TTL cache (`CacheManager`) —
+ * longer-lived than `getSingleton()`'s 60s, since this reads settings purely
+ * for the flag check and nothing else off the document — so this adds no
+ * new uncached read.
  */
 export const getHomepageFaqsCached = cache(async () => {
   const [faqs, settings] = await Promise.all([
     faqsRepository.getHomepageFAQs(),
-    siteSettingsRepository.getSingleton(),
+    siteSettingsRepository.getFlagSnapshot(),
   ]);
   return faqs
     .filter((faq) => isContentVisible(faq.contentTags, settings))

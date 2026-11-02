@@ -28,6 +28,7 @@ import {
   SiteSettingsUpdateInput,
   DEFAULT_SITE_SETTINGS_DATA,
 } from "../schemas";
+import type { FeatureFlagSnapshot } from "../../../_internal/shared/listing-types/feature-flags";
 import { DatabaseError } from "../../../errors";
 import { decryptSecret, encryptSecret, maskSecret } from "../../../security";
 
@@ -99,6 +100,14 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
    */
   private readonly SINGLETON_ID = "global";
   private static readonly CACHE_TTL_MS = 60_000;
+  /*
+   * 1A-iv (overhaul brief) — the enable/disabled STATE specifically (listing
+   * types, category types, browse pages) changes rarely and is cheap to let
+   * lag slightly, so it gets its own, longer-lived key rather than riding
+   * the 60s key above that the rest of `siteSettings` (commissions,
+   * credentials) needs faster convergence on.
+   */
+  private static readonly FLAG_CACHE_TTL_MS = 30 * 60_000;
 
   constructor() {
     super(SITE_SETTINGS_COLLECTION);
@@ -106,6 +115,41 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
 
   private cacheKey(): string {
     return `repo:site-settings:${this.SINGLETON_ID}`;
+  }
+
+  private flagCacheKey(): string {
+    return `repo:site-settings:flags:${this.SINGLETON_ID}`;
+  }
+
+  /**
+   * The narrow `{listingTypes, categoryTypes, browsePages}` slice that
+   * `isContentVisible`/`isGovernedRowVisible`/`isListingTypeEnabled`/
+   * `isCategoryTypeEnabled` actually need — cached independently of the rest
+   * of `siteSettings` under its own 30-minute key.
+   *
+   * 🛑 Skips the cache entirely in non-production (`NODE_ENV !== "production"`,
+   * this codebase's existing local/deployed test — `csp.ts`/
+   * `action-response.ts`/`action-tracker.ts` already use it; there is no
+   * `VERCEL_ENV` convention anywhere in `appkit/src` to introduce a second
+   * one), so a local session always sees a toggle flip immediately rather
+   * than waiting out the window.
+   */
+  async getFlagSnapshot(): Promise<FeatureFlagSnapshot> {
+    const isProd = process.env.NODE_ENV === "production";
+    if (isProd) {
+      const cached = cacheManager.get<FeatureFlagSnapshot>(this.flagCacheKey());
+      if (cached) return cached;
+    }
+
+    const settings = await this.getSingleton();
+    const snapshot: FeatureFlagSnapshot = { listings: settings.listings };
+
+    if (isProd) {
+      cacheManager.set(this.flagCacheKey(), snapshot, {
+        ttl: SiteSettingsRepository.FLAG_CACHE_TTL_MS,
+      });
+    }
+    return snapshot;
   }
 
   /**
@@ -199,6 +243,10 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
   ): Promise<SiteSettingsDocument> {
     try {
       cacheManager.delete(this.cacheKey());
+      // 1A-iv: never leave the 30-minute flag snapshot stale on the instance
+      // that served the write — the window only bounds staleness on a
+      // DIFFERENT running instance that hasn't seen this update yet.
+      cacheManager.delete(this.flagCacheKey());
 
       let finalUpdates: SiteSettingsUpdateInput = updates;
 

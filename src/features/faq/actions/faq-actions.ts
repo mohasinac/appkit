@@ -193,9 +193,13 @@ export async function listPublicFaqs(
    * cannot express "none of this FAQ's N tags is for a disabled thing"
    * (CLAUDE.md § "Availability & Order-Scope Tabs" explains why the dense/
    * negation-shaped case always stays a per-row predicate). First real
-   * consumer of `contentTags`/`isContentVisible` (1A).
+   * consumer of `contentTags`/`isContentVisible` (1A), and the first real
+   * consumer of `getFlagSnapshot()`'s 30-minute flag cache (1A-iv) — this
+   * reads settings purely to check flags, never anything else off the
+   * document, so the narrower, longer-lived cache is a strict win here over
+   * `getSingleton()`'s 60s whole-document one.
    */
-  const settings = await siteSettingsRepository.getSingleton();
+  const settings = await siteSettingsRepository.getFlagSnapshot();
   return result.items
     .filter((faq) => isContentVisible(faq.contentTags, settings))
     .map((faq) => resolveFaqAnswer(faq, settings));
