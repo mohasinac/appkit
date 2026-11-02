@@ -22,7 +22,7 @@ import type { Encrypted, Plaintext } from "../../../security/encrypted";
  * file must stay importable from anywhere.
  */
 import type { PayoutVerificationStatus } from "../../../_internal/shared/features/payouts/destination";
-import type { RecentlyVisitedMap } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { RecentlyVisitedMap, SavedCardsMap } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // ============================================================================
 // SCHEMA DEFAULTS
@@ -302,6 +302,17 @@ export interface UserDocument extends BaseDocument {
      * discriminated union rather than a flat shape.
      */
     recentlyVisited?: RecentlyVisitedMap;
+    /**
+     * User-curated dashboard cards, per scope (`"{portal}:hub"`). Phase 9-ii,
+     * overhaul brief — "saving these cards so they're kept even if the
+     * history goes above 10." Deliberately a SEPARATE field from
+     * `recentlyVisited` rather than a `saved: true` flag inside it: the two
+     * have different eviction rules (this one has NO cap; `recentlyVisited`
+     * is capped at `RECENT_ENTRIES_MAX` and FIFO-evicts), so a flag on one
+     * shared array would mean a saved card could still be evicted by the
+     * cap — exactly the bug the owner's own request names.
+     */
+    savedCards?: SavedCardsMap;
   };
 }
 

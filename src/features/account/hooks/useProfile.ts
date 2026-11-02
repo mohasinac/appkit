@@ -3,7 +3,7 @@ import type { JsonValue } from "../../../schemas/types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { RecentlyVisitedMap } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { RecentlyVisitedMap, SavedCardsMap } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface UserProfile {
   uid: string;
@@ -29,6 +29,8 @@ export interface UserProfile {
     hiddenHubCards?: Record<string, string[]>;
     /** scope ("{portal}:hub") -> recently-visited/used cards. See useRecentlyVisited. */
     recentlyVisited?: RecentlyVisitedMap;
+    /** scope ("{portal}:hub") -> user-curated, UNCAPPED dashboard cards (Phase 9-ii). */
+    savedCards?: SavedCardsMap;
   };
 }
 
@@ -55,6 +57,8 @@ export interface UpdateCurrentProfileInput {
     hiddenHubCards?: Record<string, string[]>;
     /** scope ("{portal}:hub") -> recently-visited/used cards. See useRecentlyVisited. */
     recentlyVisited?: RecentlyVisitedMap;
+    /** scope ("{portal}:hub") -> user-curated, UNCAPPED dashboard cards (Phase 9-ii). */
+    savedCards?: SavedCardsMap;
   };
 }
 
