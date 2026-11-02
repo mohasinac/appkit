@@ -59,6 +59,18 @@ export const REQUIRED_THEME_TOKENS = [
   "appkit-color-error-surface",
   "appkit-color-info",
   "appkit-color-info-surface",
+  // Generic accents — 2A/Phase 11 (overhaul brief). NOT status colors: these
+  // exist purely to visually differentiate otherwise-unrelated badges from
+  // each other (first consumer: ProductFeatureBadges' COD/EMI/wishlist
+  // pills, previously hardcoded Tailwind purple/indigo/pink literals with no
+  // theme seam at all). Reusable by any future badge needing a non-status
+  // accent — not a one-off naming for these 3 specifically.
+  "appkit-color-accent-a",
+  "appkit-color-accent-a-surface",
+  "appkit-color-accent-b",
+  "appkit-color-accent-b-surface",
+  "appkit-color-accent-c",
+  "appkit-color-accent-c-surface",
   // Focus
   "appkit-color-focus-ring",
   // Glow shadow (theme-tinted; dimensional shadow stays in tokens layer)

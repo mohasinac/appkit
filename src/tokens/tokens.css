@@ -322,6 +322,13 @@
   --appkit-color-error-text:       #991b1b;    /* red-800 */
   --appkit-color-info:             #0369a1;    /* sky-700 — 4.5:1 AA against info-surface */
   --appkit-color-info-surface:     #f0f9ff;    /* sky-50 */
+  /* Generic accents (2A/Phase 11) — not status colors. See required.ts. */
+  --appkit-color-accent-a:          #4338ca;    /* indigo-700 */
+  --appkit-color-accent-a-surface:  #eef2ff;    /* indigo-50 */
+  --appkit-color-accent-b:          #be185d;    /* pink-700 */
+  --appkit-color-accent-b-surface:  #fdf2f8;    /* pink-50 */
+  --appkit-color-accent-c:          #7e22ce;    /* purple-700 */
+  --appkit-color-accent-c-surface:  #faf5ff;    /* purple-50 */
   --appkit-color-star:             #facc15;    /* yellow-400 — star ratings (decorative convention) */
 
   /* Solid status fills — the OVERLAY counterpart to the `-surface` tints above.
@@ -521,6 +528,12 @@
   --appkit-color-error-text:       #fca5a5;    /* red-300 */
   --appkit-color-info:             #38bdf8;    /* sky-400 */
   --appkit-color-info-surface:     rgba(12, 74, 110, 0.25);
+  --appkit-color-accent-a:          #818cf8;    /* indigo-400 */
+  --appkit-color-accent-a-surface:  rgba(49, 46, 129, 0.25);
+  --appkit-color-accent-b:          #f472b6;    /* pink-400 */
+  --appkit-color-accent-b-surface:  rgba(131, 24, 67, 0.25);
+  --appkit-color-accent-c:          #c084fc;    /* purple-400 */
+  --appkit-color-accent-c-surface:  rgba(88, 28, 135, 0.25);
 
   --appkit-color-focus-ring:       #f87171;    /* primary-400 */
   --appkit-shadow-glow:            0 0 0 1px rgba(239,68,68,0.12), 0 4px 16px -4px rgba(239,68,68,0.22);
@@ -641,6 +654,12 @@
   --appkit-color-error-surface:    rgba(127, 29, 29, 0.3);
   --appkit-color-info:             #38bdf8;
   --appkit-color-info-surface:     rgba(12, 74, 110, 0.3);
+  --appkit-color-accent-a:          #818cf8;
+  --appkit-color-accent-a-surface:  rgba(49, 46, 129, 0.3);
+  --appkit-color-accent-b:          #f472b6;
+  --appkit-color-accent-b-surface:  rgba(131, 24, 67, 0.3);
+  --appkit-color-accent-c:          #c084fc;
+  --appkit-color-accent-c-surface:  rgba(88, 28, 135, 0.3);
 
   --appkit-color-focus-ring:       #8eb9ff;
   --appkit-shadow-glow:            0 0 0 1px rgba(89,146,255,0.18), 0 4px 16px -4px rgba(89,146,255,0.30);
@@ -715,6 +734,12 @@
   --appkit-color-error-surface:    #fef2f2;
   --appkit-color-info:             #0369a1;
   --appkit-color-info-surface:     #f0f9ff;
+  --appkit-color-accent-a:          #4338ca;
+  --appkit-color-accent-a-surface:  #eef2ff;
+  --appkit-color-accent-b:          #be185d;
+  --appkit-color-accent-b-surface:  #fdf2f8;
+  --appkit-color-accent-c:          #7e22ce;
+  --appkit-color-accent-c-surface:  #faf5ff;
 
   --appkit-color-focus-ring:       #f59e0b;
   --appkit-shadow-glow:            0 0 0 1px rgba(245,158,11,0.18), 0 4px 16px -4px rgba(245,158,11,0.30);

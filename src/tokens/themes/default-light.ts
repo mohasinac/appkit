@@ -72,6 +72,14 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-error-surface": "#fef2f2",
     "appkit-color-info": "#0369a1",
     "appkit-color-info-surface": "#f0f9ff",
+
+    // Generic accents — not status colors, see required.ts's own comment.
+    "appkit-color-accent-a": "#4338ca",   // indigo-700 on indigo-50
+    "appkit-color-accent-a-surface": "#eef2ff",
+    "appkit-color-accent-b": "#be185d",   // pink-700 on pink-50
+    "appkit-color-accent-b-surface": "#fdf2f8",
+    "appkit-color-accent-c": "#7e22ce",   // purple-700 on purple-50
+    "appkit-color-accent-c-surface": "#faf5ff",
     "appkit-color-star": "#facc15",
     "appkit-color-whatsapp-light": "#1ebe5d",
     "appkit-color-whatsapp-bg": "#ECE5DD",

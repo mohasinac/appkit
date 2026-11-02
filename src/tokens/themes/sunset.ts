@@ -72,6 +72,14 @@ export const SUNSET_THEME: ThemeRecord = {
     "appkit-color-info": "#0369a1",
     "appkit-color-info-surface": "#f0f9ff",
 
+    // Generic accents — not status colors, see required.ts's own comment.
+    "appkit-color-accent-a": "#4338ca",
+    "appkit-color-accent-a-surface": "#eef2ff",
+    "appkit-color-accent-b": "#be185d",
+    "appkit-color-accent-b-surface": "#fdf2f8",
+    "appkit-color-accent-c": "#7e22ce",
+    "appkit-color-accent-c-surface": "#faf5ff",
+
     "appkit-color-focus-ring": "#f59e0b",
     "appkit-shadow-glow":
       "0 0 0 1px rgba(245,158,11,0.18), 0 4px 16px -4px rgba(245,158,11,0.30)",

@@ -69,6 +69,14 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-color-info": "#38bdf8",
     "appkit-color-info-surface": "rgba(12, 74, 110, 0.25)",
 
+    // Generic accents — not status colors, see required.ts's own comment.
+    "appkit-color-accent-a": "#818cf8",   // indigo-400 on indigo-900 tint
+    "appkit-color-accent-a-surface": "rgba(49, 46, 129, 0.25)",
+    "appkit-color-accent-b": "#f472b6",   // pink-400 on pink-900 tint
+    "appkit-color-accent-b-surface": "rgba(131, 24, 67, 0.25)",
+    "appkit-color-accent-c": "#c084fc",   // purple-400 on purple-900 tint
+    "appkit-color-accent-c-surface": "rgba(88, 28, 135, 0.25)",
+
     "appkit-color-focus-ring": "#f87171",
 
     "appkit-shadow-glow":

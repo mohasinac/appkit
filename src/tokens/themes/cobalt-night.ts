@@ -50,6 +50,14 @@ export const COBALT_NIGHT_THEME: ThemeRecord = {
     "appkit-color-info": "#38bdf8",
     "appkit-color-info-surface": "rgba(12, 74, 110, 0.3)",
 
+    // Generic accents — not status colors, see required.ts's own comment.
+    "appkit-color-accent-a": "#818cf8",
+    "appkit-color-accent-a-surface": "rgba(49, 46, 129, 0.3)",
+    "appkit-color-accent-b": "#f472b6",
+    "appkit-color-accent-b-surface": "rgba(131, 24, 67, 0.3)",
+    "appkit-color-accent-c": "#c084fc",
+    "appkit-color-accent-c-surface": "rgba(88, 28, 135, 0.3)",
+
     "appkit-color-focus-ring": "#8eb9ff",
     "appkit-shadow-glow":
       "0 0 0 1px rgba(89,146,255,0.18), 0 4px 16px -4px rgba(89,146,255,0.30)",

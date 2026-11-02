@@ -100,6 +100,20 @@ export function defineTailwindConfig(override: TailwindConfigOverride = {}) {
             DEFAULT: "var(--appkit-color-info)",
             surface: "var(--appkit-color-info-surface)",
           },
+          // Generic accents (2A/Phase 11) — not status colors, see
+          // tokens/themes/required.ts's own comment.
+          "accent-a": {
+            DEFAULT: "var(--appkit-color-accent-a)",
+            surface: "var(--appkit-color-accent-a-surface)",
+          },
+          "accent-b": {
+            DEFAULT: "var(--appkit-color-accent-b)",
+            surface: "var(--appkit-color-accent-b-surface)",
+          },
+          "accent-c": {
+            DEFAULT: "var(--appkit-color-accent-c)",
+            surface: "var(--appkit-color-accent-c-surface)",
+          },
         },
         ...((consumerTheme.extend as Record<string, unknown>) ?? {}),
       },
