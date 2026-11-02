@@ -179,9 +179,11 @@ export function ProductFeatureBadges({
       key: "cod",
       icon: <Span size="xs">₹</Span>,
       label: labels.codAvailable,
-      colorClass: "text-purple-700 dark:text-purple-300",
-      bgClass:
-        "bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-800",
+      // Generic accent token (2A/Phase 11), not a status color — COD/EMI/
+      // wishlist exist purely to differentiate from each other, same
+      // convention the success/warning/error/info badges above use.
+      colorClass: "text-accent-c dark:text-accent-c",
+      bgClass: "bg-accent-c-surface dark:bg-accent-c-surface border-accent-c dark:border-accent-c",
       href: codHref,
     });
   }
@@ -191,9 +193,8 @@ export function ProductFeatureBadges({
       key: "emi",
       icon: <Span size="xs">📅</Span>,
       label: labels.emiAvailable,
-      colorClass: "text-indigo-700 dark:text-indigo-300",
-      bgClass:
-        "bg-indigo-50 dark:bg-indigo-900/30 border-indigo-200 dark:border-indigo-800",
+      colorClass: "text-accent-a dark:text-accent-a",
+      bgClass: "bg-accent-a-surface dark:bg-accent-a-surface border-accent-a dark:border-accent-a",
       href: emiHref,
     });
   }
@@ -203,9 +204,8 @@ export function ProductFeatureBadges({
       key: "wishlist",
       icon: <Icon name="wishlist" size="xs" filled />,
       label: labels.wishlistCount(wishlistCount),
-      colorClass: "text-pink-700 dark:text-pink-300",
-      bgClass:
-        "bg-pink-50 dark:bg-pink-900/30 border-pink-200 dark:border-pink-800",
+      colorClass: "text-accent-b dark:text-accent-b",
+      bgClass: "bg-accent-b-surface dark:bg-accent-b-surface border-accent-b dark:border-accent-b",
     });
   }
 
