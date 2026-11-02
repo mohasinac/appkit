@@ -62,6 +62,23 @@ const TRANSITIVE_RUNTIME_DUPS = [
    */
   "@google-cloud/storage",
   "@google-cloud/firestore",
+  /*
+   * `next` (peer) is removed above, but npm never cleans up a deleted
+   * package's OWN transitive deps automatically — `rmSync` on `node_modules/
+   * next` leaves next's scoped sub-packages (its native SWC binary, its env
+   * helper, etc.) orphaned on disk: 142 MB measured on this machine
+   * (`@next/swc-win32-x64-msvc` + `@next/env`), referenced by NOTHING once
+   * `next` itself is gone (confirmed: no remaining package.json under
+   * appkit/node_modules declares a dependency on anything under `@next/`).
+   * `@next` is a scope Vercel reserves for Next's own sub-packages — nothing
+   * unrelated ever publishes under it — so removing the whole scope is safe
+   * and, unlike naming one platform binary, portable across OS/arch (the
+   * win32 name above would silently no-op on Linux CI). They own no React
+   * context and nothing here RUNS `next` itself — appkit's own build only
+   * type-checks against `next`'s .d.ts files, which resolve to the
+   * root-installed copy post-prune.
+   */
+  "@next",
 ];
 
 // Peer deps that have NO React context / module-scope singleton and that the
