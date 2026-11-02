@@ -146,7 +146,13 @@ export function useSavedCards(scope: string): UseSavedCardsResult {
           id,
           title: initial?.title,
           color: initial?.color,
-          elements: initial?.elements ?? [],
+          // The server's own Zod schema requires `elements.min(1)` — an
+          // empty array here would 400 on the very first autosave, silently
+          // reverting on the next load with no explanation. A single blank
+          // `text` element is the correct empty state: it renders as an
+          // editable block the user fills in immediately, same shape
+          // `addTextElement()` in the edit panel already produces.
+          elements: initial?.elements?.length ? initial.elements : [{ kind: "text", body: "" }],
           saved: true,
           createdAt: now,
           updatedAt: now,

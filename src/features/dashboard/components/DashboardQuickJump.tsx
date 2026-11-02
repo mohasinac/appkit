@@ -174,7 +174,7 @@ export function DashboardQuickJump({
   placeholder = "What do you want to do?",
 }: DashboardQuickJumpProps) {
   const { items: recentItems, recordVisit } = useRecentlyVisited(scope);
-  const { items: savedItems, saveFromRecent, removeCard, updateCard } = useSavedCards(scope);
+  const { items: savedItems, saveFromRecent, createCard, removeCard, updateCard } = useSavedCards(scope);
   const toast = useToastSafe();
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -360,11 +360,24 @@ export function DashboardQuickJump({
               />
             ))}
           </Grid>
-          {savedItems.length > 0 && (
-            <Stack gap="sm">
+          <Stack gap="sm">
+            <Row align="center" justify="between">
               <Span size="xs" weight="semibold" color="muted" className="uppercase tracking-widest">
                 Saved
               </Span>
+              <Button
+                variant="ghost"
+                size="sm"
+                type="button"
+                onClick={() => {
+                  createCard();
+                  toast?.showToast("New card added — edit it to fill it in.", "success");
+                }}
+              >
+                <Icon name="create" size="sm" /> New card
+              </Button>
+            </Row>
+            {savedItems.length > 0 && (
               <Grid cols="cards" gap="md">
                 {savedItems.map((card) => (
                   <SavedQuickJumpCard
@@ -379,8 +392,8 @@ export function DashboardQuickJump({
                   />
                 ))}
               </Grid>
-            </Stack>
-          )}
+            )}
+          </Stack>
         </>
       )}
       {pendingConfirm && (
@@ -726,11 +739,25 @@ function SavedCardEditPanel({
   onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements">>) => void;
   onDone: () => void;
 }) {
+  const toast = useToastSafe();
+
   function updateElement(index: number, body: string) {
     const next = card.elements.map((el, i) => (i === index && el.kind === "text" ? { ...el, body } : el));
     onUpdate({ elements: next });
   }
+  /*
+   * 🛑 A card's `elements` array is server-validated `.min(1)` (the route's
+   * own Zod schema — confirmed by negative control when that schema was
+   * built). Letting the last element go to 0 here isn't caught until the
+   * debounced PATCH 400s 600ms later, with no rollback and no specific
+   * error — the edit just silently reverts on next load. Refusing the
+   * client-side action is the correct fix, not a server-side message.
+   */
   function removeElement(index: number) {
+    if (card.elements.length <= 1) {
+      toast?.showToast("A card needs at least one element — add another before removing this one.", "info");
+      return;
+    }
     onUpdate({ elements: card.elements.filter((_, i) => i !== index) });
   }
   function addTextElement() {
@@ -780,6 +807,7 @@ function SavedCardEditPanel({
                   icon={<Icon name="close" size="sm" />}
                   size="sm"
                   variant="ghost"
+                  disabled={card.elements.length <= 1}
                   onClick={() => removeElement(i)}
                 />
               </Row>
@@ -791,6 +819,7 @@ function SavedCardEditPanel({
                   icon={<Icon name="close" size="sm" />}
                   size="sm"
                   variant="ghost"
+                  disabled={card.elements.length <= 1}
                   onClick={() => removeElement(i)}
                 />
               </Row>
