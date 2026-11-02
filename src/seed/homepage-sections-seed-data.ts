@@ -205,11 +205,23 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   // ---- 6. Trust bar --------------------------------------------------------
   // Research: ~80% of attention is above the fold and the first 3–4 trust
   // elements carry nearly all of the lift.
+  /*
+   * 🛑 OFF since 2026-11-02 — Phase 11's owner-decided merge. Three of its
+   * four claims (authenticity, secure payments, returns) duplicated
+   * `section-platform-features` below almost verbatim; the two sections
+   * read as the same promise made twice in a row. The one genuinely unique
+   * claim here ("Real human support") moved into that section's own items
+   * instead of staying behind a second, redundant tile grid.
+   *
+   * Disabled rather than deleted, matching `section-whatsapp-community`'s
+   * own convention below — the copy stays intact if this is ever split
+   * back out.
+   */
   {
     id: "section-trust-indicators",
     type: "trust-indicators",
     order: 7,
-    enabled: true,
+    enabled: false,
     config: {
       title: "Why buyers trust us",
       indicators: [
@@ -835,9 +847,17 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
           description: "If an item arrives wrong or damaged, tell us inside the window and we make it right.",
         },
         {
-          key: "encrypted-data",
-          title: "Encrypted personal data",
-          description: "Addresses and phone numbers are encrypted at rest.",
+          /*
+           * Replaces "Encrypted personal data" (2026-11-02, Phase 11 merge)
+           * — folded in from the retired section-trust-indicators, whose
+           * other three claims all duplicated this section already. Kept
+           * this one over the encryption claim: a backend security detail
+           * buyers rarely weigh, versus "can I actually reach someone" —
+           * the question this storefront's own support flow answers daily.
+           */
+          key: "support",
+          title: "Real human support",
+          description: "Questions about an order reach a person, not a form.",
         },
       ],
     },
