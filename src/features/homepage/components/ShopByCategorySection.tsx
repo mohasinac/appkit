@@ -11,7 +11,7 @@ import { POSTER_CLASS } from "../../../ui/components/PosterCard";
 import { Row } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { ROUTES } from "../../../next/routing/route-map";
-import { resolveMediaUrl } from "../../../utils/media-url";
+import { resolveMediaUrl, SEED_TILE_PREFIX } from "../../../utils/media-url";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
@@ -56,7 +56,18 @@ function isImageUrl(s: string): boolean {
 function CategoryChip({ category }: { category: CategoryItem }) {
   const iconSrc = category.display?.icon;
   const coverImage = category.display?.coverImage;
-  const resolvedCover = coverImage && isImageUrl(coverImage) ? resolveMediaUrl(coverImage) : undefined;
+  /*
+   * 🛑 `SEED_TILE_PREFIX` covers are flat placeholder SVGs `seedPhoto()`
+   * writes when a category has no real artwork — same rule `WelcomeSection`'s
+   * mosaic already applies (`section-renderer.tsx`'s `heroImages` filter).
+   * Without this, a category with no real cover rendered a coloured
+   * rectangle as if it were a photograph; dropping it falls through to the
+   * existing no-image state below (emoji + name + count, no `<Image>` block).
+   */
+  const resolvedCover =
+    coverImage && isImageUrl(coverImage) && !coverImage.startsWith(SEED_TILE_PREFIX)
+      ? resolveMediaUrl(coverImage)
+      : undefined;
   const productCount = category.metrics?.totalProductCount ?? category.metrics?.productCount ?? 0;
 
   /*
