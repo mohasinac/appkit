@@ -38,7 +38,16 @@ import { matchesNavQuery, type NavSearchable } from "../../_internal/shared/feat
 /** Score a group-title substring match falls back to when nothing else hits. Below every `matchesNavQuery` tier (lowest is `description: 10`). */
 const GROUP_TITLE_FALLBACK_SCORE = 5;
 
-export type NavSearchGroupedItem = NavSearchable & { groupTitle: string };
+/**
+ * `priority` (9-ii, overhaul brief — the Android-Settings reference: "only
+ * the important cards and toggles show up over the garbage stuff") is a
+ * TIEBREAKER ONLY — applied strictly after `score`, never instead of it, so
+ * an important-but-fuzzy match can never outrank a genuine exact label hit.
+ * Absent means `0`, which is every existing caller's current behaviour
+ * unchanged — only `TOGGLE_CATALOG`/`SETTINGS_PREVIEW` entries that
+ * explicitly set one get a real tiebreak.
+ */
+export type NavSearchGroupedItem = NavSearchable & { groupTitle: string; priority?: number };
 
 /**
  * Ranks `items` against `query`, flattened across their groups.
@@ -60,6 +69,8 @@ export function rankNavSearchResults<T extends NavSearchGroupedItem>(items: T[],
     })
     .filter((entry) => entry.score > 0);
 
-  // Array.prototype.sort is stable (ES2019+) — equal scores keep their original relative order.
-  return scored.sort((a, b) => b.score - a.score).map((entry) => entry.item);
+  // Array.prototype.sort is stable (ES2019+) — equal (score, priority) pairs keep their original relative order.
+  return scored
+    .sort((a, b) => b.score - a.score || (b.item.priority ?? 0) - (a.item.priority ?? 0))
+    .map((entry) => entry.item);
 }

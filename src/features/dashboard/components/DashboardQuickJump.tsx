@@ -44,6 +44,8 @@ export interface DashboardQuickJumpToggle {
   keywords?: string[];
   /** Resolves once the toggle has actually been saved — mirrors CommandPalette's own toggle contract. */
   onToggle: () => Promise<void>;
+  /** Search ranking tiebreaker — see `rankNavSearchResults`'s own doc comment. Absent means 0. */
+  priority?: number;
 }
 
 export interface DashboardQuickJumpChart {
@@ -73,6 +75,8 @@ export interface DashboardQuickJumpSettingPreview {
   value: string;
   href: string;
   keywords?: string[];
+  /** Search ranking tiebreaker — see `rankNavSearchResults`'s own doc comment. Absent means 0. */
+  priority?: number;
 }
 
 export interface DashboardQuickJumpProps {
@@ -175,6 +179,7 @@ export function DashboardQuickJump({
       isOn: t.isOn,
       onToggle: t.onToggle,
       groupTitle: "Settings",
+      priority: t.priority,
     }));
     const chartItems: SearchItem[] = charts.map((c) => ({
       kind: "chart" as const,
@@ -192,6 +197,7 @@ export function DashboardQuickJump({
       value: s.value,
       href: s.href,
       groupTitle: "Settings",
+      priority: s.priority,
     }));
     return [...pageItems, ...toggleItems, ...chartItems, ...settingPreviewItems];
   }, [groups, toggles, charts, settingsPreviews]);

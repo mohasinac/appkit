@@ -42,6 +42,8 @@ export interface SettingsPreviewDef {
   tab: string;
   label: string;
   keywords?: string[];
+  /** Search ranking tiebreaker (9-ii) — see `rankNavSearchResults`'s own doc comment. Absent means 0. */
+  priority?: number;
 }
 
 export const SETTINGS_PREVIEW: SettingsPreviewDef[] = [
