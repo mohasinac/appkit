@@ -93,6 +93,12 @@ export interface PublicSiteSettings {
    */
   search?: { indexEnabled: boolean };
   /**
+   * 2B — which locales the language switcher may offer. Absent/empty means
+   * every locale `routing.ts` declares is live (fail-open, same as every
+   * other flag here) — never narrowed by a failed settings read.
+   */
+  enabledLocales?: string[];
+  /**
    * 🛑 NARROWER than `NotificationChannelConfig` on purpose, and it must stay
    * that way. The full config carries `minPriority` and a `types[]` allow-list
    * naming exactly which notification types each channel carries — operational

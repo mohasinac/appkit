@@ -1038,6 +1038,22 @@ export interface SiteSettingsDocument extends BaseDocument {
     indexEnabled?: boolean;
   };
   /**
+   * 2B (overhaul brief) — which of `routing.ts`'s (still just `["en"]`)
+   * locales are actually live. Deliberately NOT where the locale set
+   * itself lives — `routing.ts`'s own header explains why `Locale` has to
+   * stay a committed TS literal rather than a runtime-sourced value (it
+   * backs compile-time locale checking everywhere). This is a NARROWING
+   * list on top of that: an admin can take a configured locale temporarily
+   * out of rotation without touching code, never add one that has no
+   * `messages/<locale>.json`.
+   *
+   * Absent or empty means "every locale in `routing.ts` is live" — the
+   * same fail-open default every other flag in this file uses, so an
+   * unseeded install or a failed settings read never silently hides the
+   * only language the site has.
+   */
+  enabledLocales?: string[];
+  /**
    * The WhatsApp catalogue feed — `/whatsapp/{storeSlug}/feed.csv`, read on a
    * schedule by each seller's own Meta Commerce Manager.
    *

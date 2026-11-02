@@ -106,6 +106,10 @@ export const PUBLIC_SITE_SETTINGS_FIELDS = [
    * leaves search working rather than dark — see the schema note.
    */
   "search",
+  // 2B — the language-switcher's own kill switch. A guest reads this before
+  // signing in (the switcher lives in the public header), same reasoning as
+  // `search` above.
+  "enabledLocales",
 ] as const;
 
 /** Everything else, with the reason it stays server-side. */
@@ -332,5 +336,11 @@ export function toPublicSiteSettings(
      * cannot accidentally re-derive it with `??`.
      */
     search: { indexEnabled: doc.search?.indexEnabled !== false },
+    // Fails OPEN to the full declared set — a missing/failed read must not
+    // narrow the switcher to fewer locales than the site actually ships.
+    enabledLocales:
+      doc.enabledLocales && doc.enabledLocales.length > 0
+        ? doc.enabledLocales
+        : undefined,
   };
 }
