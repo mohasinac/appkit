@@ -7,6 +7,8 @@ import { Icon } from "../../../ui/components/Icon";
 import { IconButton } from "../../../ui/components/IconButton";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Input } from "../../../ui/components/Input";
+import { Modal } from "../../../ui/components/Modal";
+import type { ActionConfirmation } from "../../../_internal/shared/actions/action-registry";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { SURFACE_MAP, type SurfaceKey } from "../../../ui/components/surface-tokens";
@@ -57,6 +59,12 @@ export interface DashboardQuickJumpToggle {
   onToggle: () => Promise<void>;
   /** Search ranking tiebreaker — see `rankNavSearchResults`'s own doc comment. Absent means 0. */
   priority?: number;
+  /**
+   * 9K — when set, flipping this toggle from a card/search result shows this
+   * confirm dialog first; `onToggle` only fires on confirm. Same
+   * `ActionConfirmation` shape Rule #7 requires for destructive `ActionDef`s.
+   */
+  confirmation?: ActionConfirmation;
 }
 
 export interface DashboardQuickJumpChart {
@@ -172,6 +180,14 @@ export function DashboardQuickJump({
   const [query, setQuery] = useState("");
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const savedIds = useMemo(() => new Set(savedItems.map((c) => c.id)), [savedItems]);
+  // 9K — a toggle carrying a `confirmation` parks here instead of firing
+  // immediately; the shared modal rendered at the bottom of this component
+  // resolves it on confirm/cancel. One piece of state serves all 3 toggle
+  // surfaces (search results, recent/default cards, saved cards) rather than
+  // duplicating the dialog three times.
+  const [pendingConfirm, setPendingConfirm] = useState<
+    { confirmation: ActionConfirmation; toggleId: string; label: string } | null
+  >(null);
 
   const searchItems = useMemo<SearchItem[]>(() => {
     const pageItems: SearchItem[] = groups.flatMap((g) =>
@@ -239,6 +255,28 @@ export function DashboardQuickJump({
     }
   }
 
+  /**
+   * 9K's actual gate — every toggle call site goes through THIS, never
+   * `runToggle` directly. A toggle with no `confirmation` behaves exactly as
+   * before (fires immediately); one that carries `confirmation` parks the
+   * request and opens the shared modal instead.
+   */
+  async function requestToggle(toggleId: string, label: string) {
+    const toggle = toggles.find((t) => t.toggleId === toggleId);
+    if (toggle?.confirmation) {
+      setPendingConfirm({ confirmation: toggle.confirmation, toggleId, label });
+      return;
+    }
+    await runToggle(toggleId, label);
+  }
+
+  async function confirmPendingToggle() {
+    if (!pendingConfirm) return;
+    const { toggleId, label } = pendingConfirm;
+    setPendingConfirm(null);
+    await runToggle(toggleId, label);
+  }
+
   function saveCard(card: RecentEntry | QuickJumpDefaultCard) {
     const entry: RecentEntry = "visitedAt" in card ? card : { ...card, visitedAt: new Date().toISOString() };
     saveFromRecent(entry);
@@ -251,7 +289,7 @@ export function DashboardQuickJump({
       return;
     }
     if (item.kind === "toggle") {
-      void runToggle(item.toggleId, item.label);
+      void requestToggle(item.toggleId, item.label);
       return;
     }
     if (item.kind === "settingPreview") {
@@ -317,7 +355,7 @@ export function DashboardQuickJump({
                 settingsPreviews={settingsPreviews}
                 busy={card.kind === "toggle" && togglingId === card.toggleId}
                 isSaved={savedIds.has(cardKey(card))}
-                onToggle={runToggle}
+                onToggle={requestToggle}
                 onSave={() => saveCard(card)}
               />
             ))}
@@ -335,7 +373,7 @@ export function DashboardQuickJump({
                     toggles={toggles}
                     charts={charts}
                     settingsPreviews={settingsPreviews}
-                    onToggle={runToggle}
+                    onToggle={requestToggle}
                     onRemove={() => removeCard(card.id)}
                     onUpdate={(patch) => updateCard(card.id, patch)}
                   />
@@ -344,6 +382,29 @@ export function DashboardQuickJump({
             </Stack>
           )}
         </>
+      )}
+      {pendingConfirm && (
+        <Modal
+          isOpen
+          onClose={() => setPendingConfirm(null)}
+          title={pendingConfirm.confirmation.title}
+          actions={
+            <Row gap="sm" justify="end">
+              <Button variant="ghost" type="button" onClick={() => setPendingConfirm(null)}>
+                {pendingConfirm.confirmation.cancelLabel ?? "Cancel"}
+              </Button>
+              <Button
+                variant={pendingConfirm.confirmation.confirmKind === "danger" ? "danger" : "primary"}
+                type="button"
+                onClick={() => void confirmPendingToggle()}
+              >
+                {pendingConfirm.confirmation.confirmLabel}
+              </Button>
+            </Row>
+          }
+        >
+          <Text size="sm">{pendingConfirm.confirmation.body}</Text>
+        </Modal>
       )}
     </Stack>
   );

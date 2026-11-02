@@ -29,6 +29,8 @@
  * @tag sideEffects:none
  */
 
+import type { ActionConfirmation } from "../../actions/action-registry";
+
 export interface ToggleCatalogEntry {
   /** Stable id — the route param, `RecentEntry.toggleId`, the search result's dedupe key. */
   id: string;
@@ -52,6 +54,16 @@ export interface ToggleCatalogEntry {
    * never overrides an exact label match with a merely-important fuzzy one.
    */
   priority?: number;
+  /**
+   * 9K (overhaul brief, Phase 9-ii) — a mutating card/search-result toggle
+   * shows this confirm dialog before writing, same `ActionConfirmation`
+   * shape Rule #7 already requires for destructive `ActionDef`s. Set only on
+   * entries with a real external consequence (a site-wide gate, a payment
+   * method buyers rely on mid-checkout) — most toggles are genuinely inert
+   * and stay unconfirmed, matching Rule #7's own "skipped for anything
+   * genuinely inert" standard.
+   */
+  confirmation?: ActionConfirmation;
 }
 
 export const TOGGLE_CATALOG: ToggleCatalogEntry[] = [
@@ -62,6 +74,12 @@ export const TOGGLE_CATALOG: ToggleCatalogEntry[] = [
     group: "maintenance",
     keywords: ["down", "closed", "offline", "site settings"],
     priority: 10,
+    confirmation: {
+      title: "Change maintenance mode?",
+      body: "Turning this on takes the whole storefront offline for every visitor until it's turned back off. Turning it off brings the site back live immediately.",
+      confirmLabel: "Change it",
+      confirmKind: "danger",
+    },
   },
   {
     id: "razorpay-enabled",
@@ -70,6 +88,12 @@ export const TOGGLE_CATALOG: ToggleCatalogEntry[] = [
     group: "payment",
     keywords: ["payment", "gateway", "card", "upi", "netbanking", "checkout"],
     priority: 8,
+    confirmation: {
+      title: "Change Razorpay?",
+      body: "Disabling this removes Razorpay as a payment option at checkout for every buyer — they'll only see whichever other methods are still enabled.",
+      confirmLabel: "Change it",
+      confirmKind: "danger",
+    },
   },
   {
     id: "phonepe-enabled",
@@ -78,6 +102,12 @@ export const TOGGLE_CATALOG: ToggleCatalogEntry[] = [
     group: "payment",
     keywords: ["payment", "gateway", "upi", "checkout"],
     priority: 8,
+    confirmation: {
+      title: "Change PhonePe?",
+      body: "Disabling this removes PhonePe as a payment option at checkout for every buyer — they'll only see whichever other methods are still enabled.",
+      confirmLabel: "Change it",
+      confirmKind: "danger",
+    },
   },
   {
     id: "cashfree-enabled",
@@ -86,6 +116,12 @@ export const TOGGLE_CATALOG: ToggleCatalogEntry[] = [
     group: "payment",
     keywords: ["payment", "gateway", "split settlement", "checkout"],
     priority: 8,
+    confirmation: {
+      title: "Change Cashfree Payments?",
+      body: "Disabling this removes Cashfree as a payment option at checkout for every buyer — they'll only see whichever other methods are still enabled.",
+      confirmLabel: "Change it",
+      confirmKind: "danger",
+    },
   },
   {
     id: "cod-enabled",
