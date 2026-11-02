@@ -104,7 +104,7 @@ export interface DashboardLayoutClientProps {
  * storageKey: variant-scoped localStorage key (`appkit:sidebar-open:{variant}`)
  * so admin/store/user each persist their own collapse state independently.
  */
-function useResponsiveDrawer(storageKey: string) {
+function useResponsiveDrawer(storageKey: string, skipRestore: boolean) {
   const [desktopOpen, setDesktopOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { registerNav, unregisterNav } = useDashboardNav();
@@ -114,14 +114,27 @@ function useResponsiveDrawer(storageKey: string) {
     [],
   );
 
-  // Restore persisted desktop-open state after hydration (avoids SSR mismatch).
+  /*
+   * Restore persisted desktop-open state after hydration (avoids SSR
+   * mismatch — `desktopOpen` starts `false` on both server and the
+   * client's first paint; any stored "true" is applied here, post-mount).
+   *
+   * `skipRestore` is Phase 9-ii's landing-route default (overhaul brief,
+   * § "Cards-first landing, sidebar hidden by default"): the 3 dashboard
+   * INDEX routes (`/admin`, `/store`, `/user`) always land with the
+   * sidebar collapsed, even for a returning user who previously left it
+   * open — the toggle still opens it in one click, same control, same
+   * place. Every NESTED dashboard route is unaffected; this only skips
+   * the restore on the 3 landing paths themselves.
+   */
   useEffect(() => {
+    if (skipRestore) return;
     try {
       if (localStorage.getItem(storageKey) === "true") setDesktopOpen(true);
     } catch (_err) {
       void normalizeError(_err); /* localStorage unavailable (private-browse / SSR fallback) */
     }
-  }, [storageKey]);
+  }, [storageKey, skipRestore]);
 
   const open = useCallback(() => {
     startTransition(() => {
@@ -255,7 +268,13 @@ export function DashboardLayoutClient({
   const pathname = usePathname();
   const activeHref = explicitActiveHref ?? pathname ?? "";
   const storageKey = `appkit:sidebar-open:${variant}`;
-  const { desktopOpen, mobileOpen, close, closeMobile, toggle } = useResponsiveDrawer(storageKey);
+  // Landing route ("/admin", "/store", "/user" — nothing nested) always
+  // starts collapsed; `variant` IS the landing path's own last segment.
+  const isLandingRoute = pathname === `/${variant}`;
+  const { desktopOpen, mobileOpen, close, closeMobile, toggle } = useResponsiveDrawer(
+    storageKey,
+    isLandingRoute,
+  );
   useEffect(() => { closeMobile(); }, [pathname, closeMobile]);
   const router = useRouter();
   const { signOut } = useSession();
