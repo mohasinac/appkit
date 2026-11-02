@@ -7,6 +7,9 @@ import { Icon } from "../../../ui/components/Icon";
 import { IconButton } from "../../../ui/components/IconButton";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Input } from "../../../ui/components/Input";
+import { FieldInput } from "../../../ui/forms/FieldInput";
+import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
+import { SURFACE_MAP, type SurfaceKey } from "../../../ui/components/surface-tokens";
 import { Span, Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { Toggle } from "../../../ui/components/Toggle";
@@ -163,7 +166,7 @@ export function DashboardQuickJump({
   placeholder = "What do you want to do?",
 }: DashboardQuickJumpProps) {
   const { items: recentItems, recordVisit } = useRecentlyVisited(scope);
-  const { items: savedItems, saveFromRecent, removeCard } = useSavedCards(scope);
+  const { items: savedItems, saveFromRecent, removeCard, updateCard } = useSavedCards(scope);
   const toast = useToastSafe();
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -334,6 +337,7 @@ export function DashboardQuickJump({
                     settingsPreviews={settingsPreviews}
                     onToggle={runToggle}
                     onRemove={() => removeCard(card.id)}
+                    onUpdate={(patch) => updateCard(card.id, patch)}
                   />
                 ))}
               </Grid>
@@ -539,6 +543,33 @@ function QuickJumpCard({
   );
 }
 
+/**
+ * 9H's color picker — a small, curated subset of `SURFACE_MAP`
+ * (`appkit/src/ui/components/surface-tokens.ts`), never a raw hex. The full
+ * map also has structural variants (`glass`, `interactive`, `elevated`, …)
+ * that don't mean anything as a card ACCENT — this is the "which tint"
+ * subset, same discipline as `DashboardCard.color`'s own doc comment ("a
+ * token key into the same surface-tokens.ts map... never a raw hex").
+ */
+const CARD_COLOR_OPTIONS: SurfaceKey[] = [
+  "default",
+  "muted",
+  "success-surface",
+  "warning-surface",
+  "danger-surface",
+  "info-surface",
+];
+
+function resolveCardColor(color: string | undefined): SurfaceKey | undefined {
+  return color && (CARD_COLOR_OPTIONS as string[]).includes(color) ? (color as SurfaceKey) : undefined;
+}
+
+/** `text` is the one `CardElement` kind with no `label` (free prose has no identity to label). */
+function elementDisplayLabel(el: CardElement | undefined): string {
+  if (!el) return "card";
+  return el.kind === "text" ? "card" : el.label;
+}
+
 function SavedQuickJumpCard({
   card,
   toggles,
@@ -546,6 +577,7 @@ function SavedQuickJumpCard({
   settingsPreviews,
   onToggle,
   onRemove,
+  onUpdate,
 }: {
   card: DashboardCard;
   toggles: DashboardQuickJumpToggle[];
@@ -553,23 +585,34 @@ function SavedQuickJumpCard({
   settingsPreviews: DashboardQuickJumpSettingPreview[];
   onToggle: (toggleId: string, label: string) => Promise<void>;
   onRemove: () => void;
+  onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements">>) => void;
 }) {
+  const [editing, setEditing] = useState(false);
   const baseClass =
-    "border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all";
-  // 9H (card-composition UI, add/remove/reorder elements) is not built yet —
-  // every saved card created by `saveFromRecent` today has exactly one
-  // element, so this renders the common case properly and a multi-element
-  // card as a simple stacked label list rather than a broken/blank card.
+    "border border-[var(--appkit-color-border)] hover:border-[var(--appkit-color-primary)] transition-all";
+  const colorKey = resolveCardColor(card.color);
+  // 9H's composition UI builds elements one at a time (add text, remove any
+  // element) — no drag-and-drop, matching the plan's own stated constraint
+  // ("no drag-and-drop") for this whole card system.
   const first = card.elements[0];
 
   return (
-    <Div rounded="xl" paddingX="x-lg" paddingY="y-lg" shadow="sm" className={`relative ${baseClass}`}>
-      {card.title && (
+    <Div
+      rounded="xl"
+      paddingX="x-lg"
+      paddingY="y-lg"
+      shadow="sm"
+      surface={colorKey}
+      className={`relative ${baseClass} ${colorKey ? "" : "bg-[var(--appkit-color-surface)]"}`}
+    >
+      {card.title && !editing && (
         <Text size="xs" weight="semibold" className="uppercase tracking-widest text-[var(--appkit-color-text-muted)] mb-2">
           {card.title}
         </Text>
       )}
-      {card.elements.length <= 1 && first ? (
+      {editing ? (
+        <SavedCardEditPanel card={card} onUpdate={onUpdate} onDone={() => setEditing(false)} />
+      ) : card.elements.length <= 1 && first ? (
         <SavedCardElementBody
           element={first}
           toggles={toggles}
@@ -591,16 +634,114 @@ function SavedQuickJumpCard({
           ))}
         </Stack>
       )}
-      <IconButton
-        aria-label={`Remove "${card.title ?? first?.label ?? "card"}" from saved`}
-        icon={<Icon name="close" size="sm" />}
-        size="sm"
-        variant="ghost"
-        rounded="full"
-        className="absolute right-2 top-2 z-10"
-        onClick={onRemove}
-      />
+      <Row gap="xs" className="absolute right-2 top-2 z-10">
+        <IconButton
+          aria-label={editing ? "Stop editing this card" : `Edit "${card.title ?? elementDisplayLabel(first)}"`}
+          icon={<Icon name={editing ? "confirm" : "edit"} size="sm" />}
+          size="sm"
+          variant="ghost"
+          rounded="full"
+          onClick={() => setEditing((e) => !e)}
+        />
+        <IconButton
+          aria-label={`Remove "${card.title ?? elementDisplayLabel(first)}" from saved`}
+          icon={<Icon name="close" size="sm" />}
+          size="sm"
+          variant="ghost"
+          rounded="full"
+          onClick={onRemove}
+        />
+      </Row>
     </Div>
+  );
+}
+
+function SavedCardEditPanel({
+  card,
+  onUpdate,
+  onDone,
+}: {
+  card: DashboardCard;
+  onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements">>) => void;
+  onDone: () => void;
+}) {
+  function updateElement(index: number, body: string) {
+    const next = card.elements.map((el, i) => (i === index && el.kind === "text" ? { ...el, body } : el));
+    onUpdate({ elements: next });
+  }
+  function removeElement(index: number) {
+    onUpdate({ elements: card.elements.filter((_, i) => i !== index) });
+  }
+  function addTextElement() {
+    onUpdate({ elements: [...card.elements, { kind: "text", body: "" }] });
+  }
+
+  return (
+    <Stack gap="sm" className="pr-14">
+      <FieldInput
+        name={`card-title-${card.id}`}
+        label="Title"
+        value={card.title ?? ""}
+        onChange={(value) => onUpdate({ title: value || undefined })}
+      />
+      <Div>
+        <Text size="xs" weight="semibold" color="muted" className="mb-1">Color</Text>
+        <Row gap="xs">
+          {CARD_COLOR_OPTIONS.map((key) => (
+            <button
+              key={key}
+              type="button"
+              aria-label={`Set card color to ${key}`}
+              aria-pressed={card.color === key}
+              onClick={() => onUpdate({ color: card.color === key ? undefined : key })}
+              className={`h-6 w-6 rounded-full border-2 ${SURFACE_MAP[key] || "bg-[var(--appkit-color-surface)]"} ${
+                card.color === key ? "border-[var(--appkit-color-primary)]" : "border-[var(--appkit-color-border)]"
+              }`}
+            />
+          ))}
+        </Row>
+      </Div>
+      <Div>
+        <Text size="xs" weight="semibold" color="muted" className="mb-1">Elements</Text>
+        <Stack gap="xs">
+          {card.elements.map((el, i) =>
+            el.kind === "text" ? (
+              <Row key={i} gap="xs" align="start">
+                <FieldTextarea
+                  name={`card-element-${card.id}-${i}`}
+                  value={el.body}
+                  onChange={(value) => updateElement(i, value)}
+                  rows={2}
+                  className="flex-1"
+                />
+                <IconButton
+                  aria-label="Remove this element"
+                  icon={<Icon name="close" size="sm" />}
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => removeElement(i)}
+                />
+              </Row>
+            ) : (
+              <Row key={i} gap="xs" align="center" justify="between">
+                <Text size="sm" color="muted">{el.label} ({el.kind})</Text>
+                <IconButton
+                  aria-label="Remove this element"
+                  icon={<Icon name="close" size="sm" />}
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => removeElement(i)}
+                />
+              </Row>
+            ),
+          )}
+        </Stack>
+        <Button variant="ghost" size="sm" type="button" onClick={addTextElement} className="mt-2">
+          <Icon name="create" size="sm" /> Add text block
+        </Button>
+      </Div>
+      <Button variant="primary" size="sm" type="button" onClick={onDone}>Done</Button>
+    </Stack>
   );
 }
 
