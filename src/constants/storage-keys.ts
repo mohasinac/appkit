@@ -98,6 +98,10 @@ export const STORAGE_KEYS = {
   get recentlyVisited() {
     return storageKey("recently-visited");
   },
+  /** Per-user, user-curated (uncapped) dashboard-landing cards (Phase 9-ii, overhaul brief). */
+  get savedCards() {
+    return storageKey("saved-cards");
+  },
   /** Last category visited, for the contextual trail. Was `"letitrip:last-category"`. */
   get lastCategory() {
     return storageKey("last-category");

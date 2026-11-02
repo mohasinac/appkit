@@ -1,8 +1,10 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
+import { Icon } from "../../../ui/components/Icon";
+import { IconButton } from "../../../ui/components/IconButton";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Input } from "../../../ui/components/Input";
 import { Span, Text } from "../../../ui/components/Typography";
@@ -12,7 +14,13 @@ import { normalizeError } from "../../../errors/normalize";
 import { useToastSafe } from "../../../ui/components/toast-context";
 import { rankNavSearchResults, type NavSearchGroupedItem } from "../../shell/searchNavItems";
 import { useRecentlyVisited } from "../hooks/useRecentlyVisited";
-import type { RecentEntry, RecentEntryInput } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { useSavedCards } from "../hooks/useSavedCards";
+import type {
+  CardElement,
+  DashboardCard,
+  RecentEntry,
+  RecentEntryInput,
+} from "../../../_internal/shared/features/dashboard/recent-entry";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ROW_HREF_BY_RESOURCE, ADMIN_ROW_RESOURCE_LABEL } from "../../../_internal/shared/features/admin/row-widget-resources";
 
@@ -155,10 +163,12 @@ export function DashboardQuickJump({
   placeholder = "What do you want to do?",
 }: DashboardQuickJumpProps) {
   const { items: recentItems, recordVisit } = useRecentlyVisited(scope);
+  const { items: savedItems, saveFromRecent, removeCard } = useSavedCards(scope);
   const toast = useToastSafe();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const savedIds = useMemo(() => new Set(savedItems.map((c) => c.id)), [savedItems]);
 
   const searchItems = useMemo<SearchItem[]>(() => {
     const pageItems: SearchItem[] = groups.flatMap((g) =>
@@ -226,6 +236,12 @@ export function DashboardQuickJump({
     }
   }
 
+  function saveCard(card: RecentEntry | QuickJumpDefaultCard) {
+    const entry: RecentEntry = "visitedAt" in card ? card : { ...card, visitedAt: new Date().toISOString() };
+    saveFromRecent(entry);
+    toast?.showToast(`Saved "${card.label}" to your dashboard.`, "success");
+  }
+
   function selectResult(item: SearchItem) {
     if (item.kind === "page") {
       recordVisit({ kind: "page", href: item.href, label: item.label });
@@ -287,19 +303,43 @@ export function DashboardQuickJump({
           )}
         </Stack>
       ) : (
-        <Grid cols="cards" gap="md">
-          {cards.map((card) => (
-            <QuickJumpCard
-              key={cardKey(card)}
-              card={card}
-              toggles={toggles}
-              charts={charts}
-              settingsPreviews={settingsPreviews}
-              busy={card.kind === "toggle" && togglingId === card.toggleId}
-              onToggle={runToggle}
-            />
-          ))}
-        </Grid>
+        <>
+          <Grid cols="cards" gap="md">
+            {cards.map((card) => (
+              <QuickJumpCard
+                key={cardKey(card)}
+                card={card}
+                toggles={toggles}
+                charts={charts}
+                settingsPreviews={settingsPreviews}
+                busy={card.kind === "toggle" && togglingId === card.toggleId}
+                isSaved={savedIds.has(cardKey(card))}
+                onToggle={runToggle}
+                onSave={() => saveCard(card)}
+              />
+            ))}
+          </Grid>
+          {savedItems.length > 0 && (
+            <Stack gap="sm">
+              <Span size="xs" weight="semibold" color="muted" className="uppercase tracking-widest">
+                Saved
+              </Span>
+              <Grid cols="cards" gap="md">
+                {savedItems.map((card) => (
+                  <SavedQuickJumpCard
+                    key={card.id}
+                    card={card}
+                    toggles={toggles}
+                    charts={charts}
+                    settingsPreviews={settingsPreviews}
+                    onToggle={runToggle}
+                    onRemove={() => removeCard(card.id)}
+                  />
+                ))}
+              </Grid>
+            </Stack>
+          )}
+        </>
       )}
     </Stack>
   );
@@ -365,14 +405,18 @@ function QuickJumpCard({
   charts,
   settingsPreviews,
   busy,
+  isSaved,
   onToggle,
+  onSave,
 }: {
   card: RecentEntry | QuickJumpDefaultCard;
   toggles: DashboardQuickJumpToggle[];
   charts: DashboardQuickJumpChart[];
   settingsPreviews: DashboardQuickJumpSettingPreview[];
   busy: boolean;
+  isSaved: boolean;
   onToggle: (toggleId: string, label: string) => Promise<void>;
+  onSave: () => void;
 }) {
   const baseClass =
     "border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all";
@@ -384,10 +428,11 @@ function QuickJumpCard({
    * section, not an oversight — each source system is too structurally
    * different from the dashboard's own data to mirror live.
    */
+  let cardBody: ReactNode;
   if (card.kind === "page" || card.kind === "adminRow" || card.kind === "productCard" || card.kind === "pdpSection") {
     const href = resolveCardHref(card);
     if (!href) return null;
-    return (
+    cardBody = (
       <TextLink
         variant="bare"
         href={href}
@@ -407,12 +452,10 @@ function QuickJumpCard({
         )}
       </TextLink>
     );
-  }
-
-  if (card.kind === "settingPreview") {
+  } else if (card.kind === "settingPreview") {
     // Live value comes from the `settingsPreviews` prop (the caller's own, always-current data), never from the card record itself.
     const live = settingsPreviews.find((s) => s.settingId === card.settingId);
-    return (
+    cardBody = (
       <TextLink
         variant="bare"
         href={live?.href ?? "#"}
@@ -432,13 +475,11 @@ function QuickJumpCard({
         </Text>
       </TextLink>
     );
-  }
-
-  if (card.kind === "toggle") {
+  } else if (card.kind === "toggle") {
     // Live state comes from the `toggles` prop (the caller's own, always-current data), never from the card record itself.
     const live = toggles.find((t) => t.toggleId === card.toggleId);
     const isOn = live?.isOn ?? false;
-    return (
+    cardBody = (
       <Div rounded="xl" paddingX="x-lg" paddingY="y-lg" shadow="sm" className={baseClass}>
         <Row align="center" justify="between" gap="sm">
           <Text weight="semibold" className="text-[var(--appkit-color-text)]">{card.label}</Text>
@@ -451,18 +492,201 @@ function QuickJumpCard({
         </Row>
       </Div>
     );
+  } else {
+    // chart — live value comes from the `charts` prop (the caller's own, always-current data), never from the card record itself.
+    const liveChart = charts.find((c) => c.chartId === card.chartId);
+    cardBody = (
+      <Div rounded="xl" paddingX="x-lg" paddingY="y-lg" shadow="sm" className={baseClass}>
+        <Text size="xs" weight="semibold" className="uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
+          {card.label}
+        </Text>
+        <Text size="2xl" weight="bold" numeric className="mt-2 text-[var(--appkit-color-text)] leading-none">
+          {liveChart ? liveChart.value : "—"}
+        </Text>
+      </Div>
+    );
   }
 
-  // chart — live value comes from the `charts` prop (the caller's own, always-current data), never from the card record itself.
-  const liveChart = charts.find((c) => c.chartId === card.chartId);
+  /*
+   * Phase 9-ii (9G's remaining client piece) — "Save" promotes a recent/
+   * default card into the user-curated, uncapped `savedCards` tier. Rendered
+   * as a SIBLING of the card's own link/toggle, never nested inside —
+   * a `<button>` inside an `<a>` is invalid HTML that browsers resolve by
+   * closing the anchor early, breaking the CARD's navigation rather than
+   * just the button's (same reasoning as `BlogFeaturedCard`'s owner-actions
+   * placement). Hidden once already saved — no "unsave from here" affordance
+   * yet; that's the saved-card list's own remove button (below).
+   */
   return (
-    <Div rounded="xl" paddingX="x-lg" paddingY="y-lg" shadow="sm" className={baseClass}>
-      <Text size="xs" weight="semibold" className="uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
-        {card.label}
-      </Text>
-      <Text size="2xl" weight="bold" numeric className="mt-2 text-[var(--appkit-color-text)] leading-none">
-        {liveChart ? liveChart.value : "—"}
-      </Text>
+    <Div className="relative h-full">
+      {cardBody}
+      {!isSaved && (
+        <IconButton
+          aria-label={`Save "${card.label}" to your dashboard`}
+          icon={<Icon name="save" size="sm" />}
+          size="sm"
+          variant="ghost"
+          rounded="full"
+          className="absolute right-2 top-2 z-10 bg-[var(--appkit-color-surface)]/90 backdrop-blur-sm"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onSave();
+          }}
+        />
+      )}
     </Div>
   );
+}
+
+function SavedQuickJumpCard({
+  card,
+  toggles,
+  charts,
+  settingsPreviews,
+  onToggle,
+  onRemove,
+}: {
+  card: DashboardCard;
+  toggles: DashboardQuickJumpToggle[];
+  charts: DashboardQuickJumpChart[];
+  settingsPreviews: DashboardQuickJumpSettingPreview[];
+  onToggle: (toggleId: string, label: string) => Promise<void>;
+  onRemove: () => void;
+}) {
+  const baseClass =
+    "border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] hover:border-[var(--appkit-color-primary)] transition-all";
+  // 9H (card-composition UI, add/remove/reorder elements) is not built yet —
+  // every saved card created by `saveFromRecent` today has exactly one
+  // element, so this renders the common case properly and a multi-element
+  // card as a simple stacked label list rather than a broken/blank card.
+  const first = card.elements[0];
+
+  return (
+    <Div rounded="xl" paddingX="x-lg" paddingY="y-lg" shadow="sm" className={`relative ${baseClass}`}>
+      {card.title && (
+        <Text size="xs" weight="semibold" className="uppercase tracking-widest text-[var(--appkit-color-text-muted)] mb-2">
+          {card.title}
+        </Text>
+      )}
+      {card.elements.length <= 1 && first ? (
+        <SavedCardElementBody
+          element={first}
+          toggles={toggles}
+          charts={charts}
+          settingsPreviews={settingsPreviews}
+          onToggle={onToggle}
+        />
+      ) : (
+        <Stack gap="xs">
+          {card.elements.map((el, i) => (
+            <SavedCardElementBody
+              key={`${el.kind}-${i}`}
+              element={el}
+              toggles={toggles}
+              charts={charts}
+              settingsPreviews={settingsPreviews}
+              onToggle={onToggle}
+            />
+          ))}
+        </Stack>
+      )}
+      <IconButton
+        aria-label={`Remove "${card.title ?? first?.label ?? "card"}" from saved`}
+        icon={<Icon name="close" size="sm" />}
+        size="sm"
+        variant="ghost"
+        rounded="full"
+        className="absolute right-2 top-2 z-10"
+        onClick={onRemove}
+      />
+    </Div>
+  );
+}
+
+function SavedCardElementBody({
+  element,
+  toggles,
+  charts,
+  settingsPreviews,
+  onToggle,
+}: {
+  element: CardElement;
+  toggles: DashboardQuickJumpToggle[];
+  charts: DashboardQuickJumpChart[];
+  settingsPreviews: DashboardQuickJumpSettingPreview[];
+  onToggle: (toggleId: string, label: string) => Promise<void>;
+}) {
+  if (element.kind === "toggle") {
+    const live = toggles.find((t) => t.toggleId === element.toggleId);
+    return (
+      <Row align="center" justify="between" gap="sm">
+        <Text weight="semibold" className="text-[var(--appkit-color-text)]">{element.label}</Text>
+        <Toggle
+          checked={live?.isOn ?? false}
+          disabled={!live}
+          ariaLabel={element.label}
+          onChange={() => void onToggle(element.toggleId, element.label)}
+        />
+      </Row>
+    );
+  }
+  if (element.kind === "chart") {
+    const live = charts.find((c) => c.chartId === element.chartId);
+    return (
+      <Div>
+        <Text size="xs" color="muted">{element.label}</Text>
+        <Text size="2xl" weight="bold" numeric className="leading-none">
+          {live ? live.value : "—"}
+        </Text>
+      </Div>
+    );
+  }
+  if (element.kind === "settingPreview") {
+    const live = settingsPreviews.find((s) => s.settingId === element.settingId);
+    return (
+      <TextLink variant="bare" href={live?.href ?? "#"}>
+        <Text size="xs" color="muted">{element.label}</Text>
+        <Text weight="semibold">{live ? live.value : "—"}</Text>
+      </TextLink>
+    );
+  }
+  if (element.kind === "text") {
+    return <Text size="sm">{element.body}</Text>;
+  }
+  if (element.kind === "link" || element.kind === "page") {
+    return (
+      <TextLink variant="bare" href={element.href}>
+        <Text weight="semibold">{element.label}</Text>
+      </TextLink>
+    );
+  }
+  if (element.kind === "adminRow") {
+    const href = ADMIN_ROW_HREF_BY_RESOURCE[element.resource]?.(element.rowId);
+    return href ? (
+      <TextLink variant="bare" href={href}>
+        <Text weight="semibold">{element.label}</Text>
+      </TextLink>
+    ) : (
+      <Text weight="semibold">{element.label}</Text>
+    );
+  }
+  if (element.kind === "productCard") {
+    return (
+      <TextLink variant="bare" href={element.href}>
+        <Text weight="semibold">{element.label}</Text>
+      </TextLink>
+    );
+  }
+  if (element.kind === "pdpSection") {
+    const href = `${String(ROUTES.PUBLIC.PRODUCT_DETAIL(element.productId))}#section-${element.sectionId}`;
+    return (
+      <TextLink variant="bare" href={href}>
+        <Text weight="semibold">{element.label}</Text>
+      </TextLink>
+    );
+  }
+  // "form" (9H's inline quick-edit) has no render target yet — a labeled
+  // placeholder rather than silently dropping the element.
+  return <Text size="sm" color="muted">{element.label} (form — not yet editable here)</Text>;
 }
