@@ -40,6 +40,9 @@ import { TextLink } from "../../../ui/components/TextLink";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { useBottomActions } from "../../../ui/chrome/useBottomActions";
+import { applyBottomActionVisibility } from "../../../ui/chrome/BottomActionsContext";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 import { useAdminListing } from "../hooks/useAdminListing";
 import type { AdminListingConfig } from "../hooks/useAdminListing";
 import type { AdminTableColumn } from "../types";
@@ -294,6 +297,17 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
    */
   const { isMobile } = useBreakpoint();
   const effectiveInitialView = config.initialView ?? "list";
+
+  /*
+   * 3B item 1b, bottom-bars subsystem. `config.queryKey` is already this
+   * view's own stable per-view identifier (used as the react-query key),
+   * so it doubles as the field-visibility surfaceId — one view, one
+   * bottom-bulk-actions template, no new per-view wiring to add.
+   */
+  const { editMode: bulkActionsEditMode } = useEditMode();
+  const { fields: bulkActionsFields, fieldOrder: bulkActionsOrder } = useFieldVisibility(
+    `${config.queryKey.join(":")}-bulk-actions`,
+  );
   const listing = useAdminListing<TResponse, TRow>({
     ...config,
     initialView: effectiveInitialView,
@@ -420,7 +434,14 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
       renderPrimaryAction()
     );
 
-  const bulkActionItems = config.buildBulkActions?.(selectionContext);
+  const rawBulkActionItems = config.buildBulkActions?.(selectionContext);
+  const bulkActionItems = rawBulkActionItems
+    ? applyBottomActionVisibility(
+        rawBulkActionItems,
+        bulkActionsEditMode ? {} : bulkActionsFields,
+        bulkActionsOrder,
+      )
+    : rawBulkActionItems;
 
   // Mobile bulk bar
   useBottomActions(

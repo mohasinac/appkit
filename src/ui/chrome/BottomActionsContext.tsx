@@ -92,6 +92,37 @@ export interface BottomBulkConfig {
 }
 
 /**
+ * 3B item 1b, bottom-bars subsystem. `BottomAction[]` is a plain data array
+ * each caller constructs, with a stable `id` (not a label, unlike
+ * `ListingToolbarToggle`) — the same shape `applyToggleVisibility`
+ * (`ui/components/ListingToolbar.tsx`) already handles for toolbar toggles,
+ * so admin hide/reorder needs no new derivation layer here either: filter
+ * then sort an array a caller was going to pass to `useBottomActions`/
+ * `BottomBulkConfig.actions` anyway, reusing the same `field-visibility.ts`
+ * `fields`/`fieldOrder` mechanism.
+ *
+ * Deliberately excludes admin-defined NEW actions, same reasoning as
+ * toolbars — a bulk action needs a real `onClick` tied to real behavior
+ * only the owning view can supply.
+ */
+// Generic over any `{id}`-keyed action array — `DataListingView.tsx`'s own
+// `BulkActionItem` (a different type, same shape) needs this too, and a
+// second copy for that one type would be the exact duplication this
+// mechanism elsewhere avoids by reusing one filter+sort function.
+export function applyBottomActionVisibility<T extends { id: string }>(
+  actions: T[],
+  fields: Record<string, boolean>,
+  fieldOrder: string[],
+): T[] {
+  const visible = actions.filter((a) => fields[a.id] !== false);
+  if (fieldOrder.length === 0) return visible;
+  const position = new Map(fieldOrder.map((id, i) => [id, i]));
+  return [...visible].sort(
+    (a, b) => (position.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (position.get(b.id) ?? Number.MAX_SAFE_INTEGER),
+  );
+}
+
+/**
  * Whether the bar is allowed to show on desktop (>= lg), where it has always been
  * `lg:hidden`.
  *
