@@ -63,6 +63,14 @@ const faqBaseSchema = z.object({
           })
           .optional(),
         text: z.string().min(1).max(2000),
+        /*
+         * Item 7 (2026-11-03) — replacement text used when `governs` is
+         * disabled, instead of omitting the fragment. "If an FAQ mentions
+         * pre-orders and I disable them, replace that wording, don't hide
+         * the FAQ." Optional; omitted keeps the pre-existing omit-on-disable
+         * behavior.
+         */
+        whenHidden: z.string().min(1).max(2000).optional(),
       }),
     )
     .max(20)

@@ -40,27 +40,61 @@ export type { ContentFlagSnapshot } from "../features/content-tags/registry";
  * doesn't name anything governed). `text` carries no fragment-joining
  * decoration of its own — the CALLER (sentence-grammar joining vs. paragraph
  * concatenation) owns how fragments combine; this module only decides WHICH
- * fragments survive.
+ * fragments survive, and (since `whenHidden`) what they say when they don't.
+ *
+ * `whenHidden` is the Item 7 extension (2026-11-03) — "if an FAQ mentions
+ * pre-orders and I disable them, replace that wording, don't hide the FAQ."
+ * Plain omission (the pre-existing, still-default behavior when `whenHidden`
+ * is unset) is correct when the surrounding prose reads fine with the clause
+ * simply gone — a composite sentence's grammar joiner already handles
+ * dropping one item from a list. It is NOT correct when the fragment's own
+ * sentence is specifically ABOUT the governed thing ("Reserve upcoming drops
+ * via our pre-order system") — omitting it either leaves an abrupt gap or,
+ * worse, an empty fragment with nothing to say. `whenHidden` names the
+ * REPLACEMENT sentence/clause to use instead, so the author writes both
+ * versions once, at content-authoring time, rather than the renderer trying
+ * to invent fallback prose. Every fragment written before this field existed
+ * has no `whenHidden`, so every existing caller's output is byte-identical —
+ * this is additive, not a reinterpretation of the existing shape.
  */
 export interface ContentFragment {
   governs?: ContentTag;
   text: string;
+  /** Replacement text when `governs` is disabled. Omitted = omit the fragment (pre-existing behavior). */
+  whenHidden?: string;
 }
 
 /**
  * The fragments that survive against the live flag snapshot, in original
- * order. Reuses `isContentVisible` so there is exactly one visibility rule in
- * the codebase, applied at two granularities (a whole document via
+ * order, with each fragment's EFFECTIVE text already resolved (its own
+ * `text` when visible, `whenHidden` when disabled-but-named-a-replacement,
+ * omitted entirely when disabled with no `whenHidden`). Reuses
+ * `isContentVisible` so there is exactly one visibility rule in the
+ * codebase, applied at two granularities (a whole document via
  * `contentTags`, or one fragment within it via this function) — never two
  * competing implementations of "is this governed thing enabled."
+ *
+ * A substituted fragment's returned `governs` is cleared — once its text is
+ * the REPLACEMENT, it is no longer the governed clause, and a caller that
+ * re-checked `governs` on the output would incorrectly treat already-swapped
+ * text as still needing to be hidden.
  */
 export function visibleFragments(
   fragments: ContentFragment[],
   settings: ContentFlagSnapshot | null | undefined,
 ): ContentFragment[] {
-  return fragments.filter(
-    (f) => !f.governs || isContentVisible([f.governs], settings),
-  );
+  const out: ContentFragment[] = [];
+  for (const f of fragments) {
+    if (!f.governs || isContentVisible([f.governs], settings)) {
+      out.push(f);
+      continue;
+    }
+    if (f.whenHidden) {
+      out.push({ text: f.whenHidden });
+    }
+    // else: disabled, no replacement named — omitted, exactly as before.
+  }
+  return out;
 }
 
 /**
