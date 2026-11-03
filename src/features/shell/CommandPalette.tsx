@@ -135,6 +135,25 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
     [results, activeIndex, activate, onClose],
   );
 
+  /*
+   * 🛑 Phase 4B design-spike finding, 2026-11-03: the real gap against
+   * `cmdk` was never keyboard-nav (already present below) or async grouping
+   * (nothing here needs it — nav items are a small, already-loaded set) —
+   * it was ARIA. Arrow-key highlighting was PURELY VISUAL (a Tailwind class
+   * swap), with no `role`/`aria-activedescendant` wiring, so a screen
+   * reader user pressing ArrowDown got no announcement of which result was
+   * now selected. That is a real, demonstrated accessibility gap and the
+   * actual reason this item named `cmdk` as a candidate — but the fix is
+   * the standard ARIA 1.2 combobox-with-listbox-popup pattern added to the
+   * EXISTING component, not a library swap: adopting `cmdk` would still
+   * need every `onToggle` integration, group-title rendering and the
+   * `InlineNavSearch` second rendering re-built on top of it for a problem
+   * that `role`/`aria-activedescendant` already solves. `cmdk` is not
+   * adopted.
+   */
+  const listboxId = "command-palette-listbox";
+  const activeId = results[activeIndex] ? `${listboxId}-${activeIndex}` : undefined;
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" showCloseButton={false}>
       <Stack gap="sm">
@@ -146,6 +165,11 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             aria-label={placeholder}
+            role="combobox"
+            aria-expanded={results.length > 0}
+            aria-controls={listboxId}
+            aria-activedescendant={activeId}
+            autoComplete="off"
             className="flex-1"
             autoFocus
           />
@@ -157,11 +181,14 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
               No matches for &ldquo;{query}&rdquo;.
             </Text>
           ) : (
-            <Stack gap="none">
+            <Stack gap="none" role="listbox" id={listboxId} aria-label={placeholder}>
               {results.map((item, idx) => (
                 <Button
                   variant="ghost"
                   key={item.key}
+                  id={`${listboxId}-${idx}`}
+                  role="option"
+                  aria-selected={idx === activeIndex}
                   type="button"
                   onClick={() => activate(item)}
                   onMouseEnter={() => setActiveIndex(idx)}
@@ -210,6 +237,12 @@ export function InlineNavSearch({ groups, placeholder = "Search…" }: { groups:
   const toast = useToastSafe();
   const [query, setQuery] = useState("");
   const [togglingKey, setTogglingKey] = useState<string | null>(null);
+  // 🛑 Added 2026-11-03 (same 4B design-spike pass as CommandPalette's ARIA
+  // fix) — this rendering had NO keyboard navigation at all, mouse click
+  // only, unlike its overlay sibling. Same `rankNavSearchResults` results,
+  // same reason to keep arrow-key parity between the two renderings of one
+  // search concern.
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const flatItems = useMemo<FlatItem[]>(
     () =>
@@ -224,6 +257,10 @@ export function InlineNavSearch({ groups, placeholder = "Search…" }: { groups:
   );
 
   const results = useMemo(() => (query.trim() ? rankNavSearchResults(flatItems, query) : []), [flatItems, query]);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [query]);
 
   const activate = useCallback(
     async (item: FlatItem) => {
@@ -245,32 +282,62 @@ export function InlineNavSearch({ groups, placeholder = "Search…" }: { groups:
     [router, toast, togglingKey],
   );
 
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "ArrowDown") { e.preventDefault(); setActiveIndex((i) => Math.min(i + 1, results.length - 1)); return; }
+      if (e.key === "ArrowUp") { e.preventDefault(); setActiveIndex((i) => Math.max(i - 1, 0)); return; }
+      if (e.key !== "Enter") return;
+      e.preventDefault();
+      const target = results[activeIndex];
+      if (target) void activate(target);
+    },
+    [results, activeIndex, activate],
+  );
+
+  const listboxId = "inline-nav-search-listbox";
+  const activeId = results[activeIndex] ? `${listboxId}-${activeIndex}` : undefined;
+
   return (
     <Div>
       <Input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         aria-label={placeholder}
+        role="combobox"
+        aria-expanded={results.length > 0}
+        aria-controls={listboxId}
+        aria-activedescendant={activeId}
+        autoComplete="off"
         className="w-full"
       />
       {results.length > 0 && (
         <Div className="mt-2 max-h-80" overflow="y-auto" border="default" rounded="lg" surface="elevated" shadow="md">
-          <Stack gap="none">
-            {results.map((item) => (
+          <Stack gap="none" role="listbox" id={listboxId} aria-label={placeholder}>
+            {results.map((item, idx) => (
               <Button
                 variant="ghost"
                 key={item.key}
+                id={`${listboxId}-${idx}`}
+                role="option"
+                aria-selected={idx === activeIndex}
                 type="button"
                 onClick={() => void activate(item)}
+                onMouseEnter={() => setActiveIndex(idx)}
                 justify="between"
                 rounded="none"
                 paddingX="sm"
                 paddingY="xs"
                 disabled={item.kind === "toggle" && togglingKey === item.key}
-                className="w-full text-left hover:bg-[var(--appkit-color-surface-elevated)]"
+                className={[
+                  "w-full text-left",
+                  idx === activeIndex
+                    ? "bg-[var(--appkit-color-primary-50)] text-[var(--appkit-color-primary-700)]"
+                    : "hover:bg-[var(--appkit-color-surface-elevated)]",
+                ].join(" ")}
               >
-                <Span size="sm">{item.label}</Span>
+                <Span size="sm" weight={idx === activeIndex ? "semibold" : "normal"}>{item.label}</Span>
                 {item.kind === "toggle" ? (
                   <Span size="xs" color={item.isOn ? "success" : "muted"}>
                     {togglingKey === item.key ? "Saving…" : item.isOn ? "On" : "Off"}
