@@ -11,7 +11,7 @@
  * settled cascade doesn't loop forever re-triggering itself.
  */
 import type { FirestoreTriggerHandler } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 type ItemDoc = Record<string, JsonValue>;
 

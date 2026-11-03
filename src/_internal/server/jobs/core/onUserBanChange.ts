@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import type { JobContext } from "../runtime/types";
 
 interface BanHistoryEntry {

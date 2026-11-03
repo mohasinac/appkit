@@ -1,5 +1,5 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { handleSupportTicketUpdate } from "../core/onSupportTicketUpdate";
 
 export const onSupportTicketUpdateHandler: FirestoreTriggerHandler<

@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 /**
  * Core: keep category metrics + store stats in sync when a product document
  * is written. Only published products count.

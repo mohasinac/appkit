@@ -3,7 +3,7 @@ import { reviewRepository, storeRepository } from "../../../../repositories";
 import { ReviewStatusValues } from "../../../../features/reviews/schemas/firestore";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import type { JobContext } from "../runtime/types";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 
 export interface HandleReviewWriteInput {
   reviewId: string;

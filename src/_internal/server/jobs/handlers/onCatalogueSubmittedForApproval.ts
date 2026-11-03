@@ -6,7 +6,7 @@
  * how many admins exist.
  */
 import type { FirestoreTriggerHandler } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
 
 type Doc = Record<string, JsonValue>;

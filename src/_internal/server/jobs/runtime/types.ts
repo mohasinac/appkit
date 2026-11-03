@@ -12,7 +12,7 @@
  */
 
 import type { Firestore } from "firebase-admin/firestore";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 export interface JobLogger {
   info(message: string, meta?: Record<string, JsonValue>): void;

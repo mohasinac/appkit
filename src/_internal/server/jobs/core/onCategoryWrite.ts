@@ -1,6 +1,6 @@
 import { notifyRevalidate } from "./revalidateNotify";
 import { normalizeError } from "../../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 /**
  * Core: maintain DFS `position` + `subtreeSize` on every category write.
  * CREATE → insert into parent's subtree + shift later siblings;

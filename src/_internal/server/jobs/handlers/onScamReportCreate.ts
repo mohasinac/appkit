@@ -1,5 +1,5 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { handleScamReportCreate } from "../core/onScamReportCreate";
 
 export const onScamReportCreateHandler: FirestoreTriggerHandler<

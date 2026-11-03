@@ -44,7 +44,7 @@ import {
 } from "../../../../features/jobs/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 import { JOB_RUNNERS } from "./jobRunners";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 export interface RunJobOnceInput {
   jobId: string;

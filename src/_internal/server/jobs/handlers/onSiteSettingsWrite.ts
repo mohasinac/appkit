@@ -1,6 +1,6 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
 import { notifyRevalidate } from "../core/revalidateNotify";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 /**
  * A site-settings write invalidates the whole page cache.

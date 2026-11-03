@@ -1,6 +1,6 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
 import { markSearchIndexDirty } from "../../features/search/index-build/artifact-store";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { handleScamReportVerified } from "../core/onScamReportVerified";
 import { handleScamReportRejected } from "../core/onScamReportRejected";
 

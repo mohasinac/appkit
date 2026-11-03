@@ -1,6 +1,6 @@
 import { normalizeError } from "../../../../errors/normalize";
 import type { JobContext } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 /**
  * Tell the Next.js app that a document changed, so it can drop the stale ISR

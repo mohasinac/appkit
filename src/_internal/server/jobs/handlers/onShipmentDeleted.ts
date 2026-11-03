@@ -8,7 +8,7 @@
  * items the shipment had.
  */
 import type { FirestoreTriggerHandler } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 type Doc = Record<string, JsonValue>;
 

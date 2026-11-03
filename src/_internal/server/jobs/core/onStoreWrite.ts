@@ -5,7 +5,7 @@
 
 import { notifyRevalidate } from "./revalidateNotify";
 import type { JobContext } from "../runtime/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 
 export type StoreDoc = Record<string, JsonValue>;
 

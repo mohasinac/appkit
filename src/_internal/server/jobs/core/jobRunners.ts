@@ -22,7 +22,7 @@ import {
   type SettlementVendorRegisterPayload,
 } from "./settlementVendorRegister";
 import { STORE_VENDOR_REGISTER_JOB } from "../../features/stores/activation";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { bookShipment } from "../../features/shipping/book";
 
 export interface JobRunResult {
