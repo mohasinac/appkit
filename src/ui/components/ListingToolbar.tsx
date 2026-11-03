@@ -15,6 +15,7 @@ import { SortDropdown } from "./SortDropdown";
 import { Div } from "./Div";
 import { Span } from "./Typography";
 import { StickyToolbar } from "./StickyToolbar";
+import { sortByFieldOrder, filterByFieldVisibility } from "../../features/shell/field-ui-meta";
 
 const CLS_CLEAR_LINK = "text-xs hover:text-error text-[var(--appkit-color-text-muted)] transition-colors";
 const CLS_CLEAR_ICON_BTN = "flex shrink-0 items-center justify-center rounded-lg border border-[var(--appkit-color-border)] p-1.5 sm:p-2 text-[var(--appkit-color-text-muted)] hover:bg-surface-hover hover:text-error dark:hover:text-error transition-colors";
@@ -55,12 +56,8 @@ export function applyToggleVisibility(
   fields: Record<string, boolean>,
   fieldOrder: string[],
 ): ListingToolbarToggle[] {
-  const visible = toggles.filter((t) => fields[t.label] !== false);
-  if (fieldOrder.length === 0) return visible;
-  const position = new Map(fieldOrder.map((label, i) => [label, i]));
-  return [...visible].sort(
-    (a, b) => (position.get(a.label) ?? Number.MAX_SAFE_INTEGER) - (position.get(b.label) ?? Number.MAX_SAFE_INTEGER),
-  );
+  const getKey = (t: ListingToolbarToggle) => t.label;
+  return sortByFieldOrder(filterByFieldVisibility(toggles, fields, getKey), fieldOrder, getKey);
 }
 
 export interface ListingToolbarLabels {

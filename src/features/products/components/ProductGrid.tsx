@@ -29,6 +29,7 @@ import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButt
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { useEditMode } from "../../../edit-mode";
+import { sortByFieldOrder } from "../../shell/field-ui-meta";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -112,13 +113,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   cardContentOrder = [],
 }: ProductCardProps<T>) {
   const isBlockVisible = (id: string) => cardContentFields[id] !== false;
-  const blockOrder = cardContentOrder.length > 0
-    ? [...PRODUCT_CARD_BLOCK_IDS].sort(
-        (a, b) =>
-          (cardContentOrder.indexOf(a) === -1 ? Number.MAX_SAFE_INTEGER : cardContentOrder.indexOf(a)) -
-          (cardContentOrder.indexOf(b) === -1 ? Number.MAX_SAFE_INTEGER : cardContentOrder.indexOf(b)),
-      )
-    : PRODUCT_CARD_BLOCK_IDS;
+  const blockOrder = sortByFieldOrder([...PRODUCT_CARD_BLOCK_IDS], cardContentOrder, (id) => id);
   const discount =
     product.originalPrice && product.originalPrice > product.price
       ? Math.round(

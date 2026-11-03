@@ -8,6 +8,11 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { AdminFilterFacets, buildAdminFacetFilters, type AvailableFacet } from "../../../ui/components/AdminFilterFacets";
+import type { CustomFieldDef } from "../../shell/field-ui-meta";
+import { sortByFieldOrder } from "../../shell/field-ui-meta";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 import { ListingLayout } from "../../../ui/components/ListingLayout";
 import { useToast } from "../../../ui/components/toast-context";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -30,6 +35,21 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminOrderEditorView, type AdminOrderItemRow, type AdminOrderEditorViewProps } from "./AdminOrderEditorView";
+
+/*
+ * 3B item 1b, search/facets subsystem — fields `orders.repository.ts`'s own
+ * `ADMIN_SIEVE_FIELDS` already declares `canFilter: true` for, that have no
+ * hand-written control in this view's `renderFilterPanel` today. An admin
+ * may add a facet for one of these (never a freely-typed field name —
+ * the exact guard `AdminFilterFacets`'s own header explains).
+ */
+const AVAILABLE_ORDER_FACETS: AvailableFacet[] = [
+  { key: "paymentMethod", label: "Payment method" },
+  { key: "shippingMethod", label: "Shipping method" },
+  { key: "orderType", label: "Order type" },
+  { key: "couponCode", label: "Coupon code" },
+  { key: "payoutStatus", label: "Payout status" },
+];
 
 interface AdminOrdersResponse {
   items?: JsonArray;
@@ -239,6 +259,15 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
    */
   const orderScope = useOrderScope();
 
+  // 3B item 1b, search/facets subsystem — same "hook before any conditional
+  // return" rule this file already documents above.
+  const { editMode: facetsEditMode } = useEditMode();
+  const { fieldOrder: facetOrder, customFields: rawAdminFacets, setCustomFields: setAdminFacets } =
+    useFieldVisibility("admin-orders-facets");
+  // Order is the sequence the admin added facets in unless they've reordered
+  // (fieldOrder) — the shared sortByFieldOrder primitive (field-ui-meta.ts).
+  const adminFacets = sortByFieldOrder(rawAdminFacets, facetOrder, (f) => f.key);
+
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -263,7 +292,15 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       fields: ["productTitle", "storeName", "trackingNumber"],
     },
     emptyLabel: "No orders found",
-    filterKeys: ["status", "paymentReview"],
+    // Admin-added facet keys (adminFacets, from useFieldVisibility) MUST be
+    // merged in here — useAdminListing's applyFilters()/currentFilterState
+    // only promote keys named in filterKeys from pendingFilters into the
+    // actual query (useAdminListing.ts:89-94,144). A facet key absent from
+    // this array renders, accepts input, round-trips through pendingFilters
+    // on drawer reopen, but "Apply Filters" silently never reaches the
+    // request — found live 2026-11-04, the same Root Cause #33/#62 shape
+    // one layer up from buildAdminFacetFilters itself.
+    filterKeys: ["status", "paymentReview", ...adminFacets.map((f) => f.key)],
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "orders", "listing"],
     endpoint: ADMIN_ENDPOINTS.ORDERS,
@@ -379,7 +416,10 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
     // queue is active the status filter is dropped rather than combined.
     buildFilters: (f) => {
       if (isPaymentReviewQueueMode(f.paymentReview ?? "")) return undefined;
-      return f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined;
+      const parts: string[] = [];
+      if (f.status && f.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
+      parts.push(...buildAdminFacetFilters(adminFacets, f));
+      return parts.length > 0 ? parts.join(",") : undefined;
     },
     // The payment-review queue is its own mode — it already ignores `status`
     // (see buildFilters above), so it must ignore the lifecycle scope too, or
@@ -468,6 +508,18 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           tabs={ADMIN_ORDER_PAYMENT_REVIEW_TABS}
           value={pendingFilters.paymentReview ?? ""}
           onChange={(id) => setPendingFilters((p) => ({ ...p, paymentReview: id, status: "" }))}
+        />
+        <AdminFilterFacets
+          facets={adminFacets}
+          pendingFilters={pendingFilters}
+          setPendingFilters={setPendingFilters}
+          availableFacets={AVAILABLE_ORDER_FACETS}
+          editMode={facetsEditMode}
+          onAddFacet={(facet: CustomFieldDef) => setAdminFacets([...adminFacets, facet])}
+          onRemoveFacet={(key: string) => {
+            setAdminFacets(adminFacets.filter((f) => f.key !== key));
+            setPendingFilters((p) => ({ ...p, [key]: "" }));
+          }}
         />
       </>
     ),

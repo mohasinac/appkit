@@ -512,6 +512,42 @@ export interface CustomFieldDef {
 }
 
 /**
+ * 3B item 1b — THE canonical hide/reorder primitive, used by every
+ * subsystem (forms' `fieldOrder`, toolbars' `applyToggleVisibility`,
+ * bottom-bars' `applyBottomActionVisibility`, catalogue-cards' content
+ * blocks, search/facets' admin facets). Extracted 2026-11-04 after the
+ * SAME sort-by-position-in-fieldOrder algorithm was independently
+ * hand-written four times (Rule of Three, exceeded) — "no drift" per the
+ * owner's own instruction means this is the ONE implementation from here
+ * on; a fifth hand-inlined copy is the bug this extraction exists to rule
+ * out structurally, not just by convention.
+ *
+ * Items named in `fieldOrder` sort by their index there; items not named
+ * keep their original relative order, appended after (stable sort).
+ * `getKey` lets this work over any shape — a bare string id
+ * (`ProductCard`'s content blocks), `{id}` (`BottomAction`), `{label}`
+ * (`ListingToolbarToggle`), or `{key}` (`CustomFieldDef`).
+ */
+export function sortByFieldOrder<T>(items: T[], fieldOrder: string[], getKey: (item: T) => string): T[] {
+  if (fieldOrder.length === 0) return items;
+  const position = new Map(fieldOrder.map((key, i) => [key, i]));
+  return [...items].sort((a, b) => {
+    const pa = position.get(getKey(a)) ?? Number.MAX_SAFE_INTEGER;
+    const pb = position.get(getKey(b)) ?? Number.MAX_SAFE_INTEGER;
+    return pa - pb;
+  });
+}
+
+/** The hide half of the same primitive — paired with `sortByFieldOrder` above. */
+export function filterByFieldVisibility<T>(
+  items: T[],
+  fields: Record<string, boolean>,
+  getKey: (item: T) => string,
+): T[] {
+  return items.filter((item) => fields[getKey(item)] !== false);
+}
+
+/**
  * Above this many options a select becomes a searchable `<PaginatedSelect>`.
  * The standing UI rule (CLAUDE.md § UI Primitive Rules): more than five options
  * and a plain dropdown is unscannable.

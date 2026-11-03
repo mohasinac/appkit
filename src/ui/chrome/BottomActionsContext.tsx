@@ -46,6 +46,7 @@ import React, {
   useState,
 } from "react";
 import type { ButtonProps } from "../components/Button";
+import { sortByFieldOrder, filterByFieldVisibility } from "../../features/shell/field-ui-meta";
 
 // --- Types --------------------------------------------------------------------
 
@@ -114,12 +115,8 @@ export function applyBottomActionVisibility<T extends { id: string }>(
   fields: Record<string, boolean>,
   fieldOrder: string[],
 ): T[] {
-  const visible = actions.filter((a) => fields[a.id] !== false);
-  if (fieldOrder.length === 0) return visible;
-  const position = new Map(fieldOrder.map((id, i) => [id, i]));
-  return [...visible].sort(
-    (a, b) => (position.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (position.get(b.id) ?? Number.MAX_SAFE_INTEGER),
-  );
+  const getKey = (a: T) => a.id;
+  return sortByFieldOrder(filterByFieldVisibility(actions, fields, getKey), fieldOrder, getKey);
 }
 
 /**
