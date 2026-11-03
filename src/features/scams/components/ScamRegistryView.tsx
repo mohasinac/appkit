@@ -1,4 +1,5 @@
-import { Span, sortBy } from "@mohasinac/appkit";
+import { Span } from "../../../ui/components/Typography";
+import { sortBy } from "../../../constants/sort";
 import React from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";

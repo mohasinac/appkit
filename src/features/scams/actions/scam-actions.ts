@@ -1,6 +1,6 @@
 "use server";
 
-import { sieveFilter, SIEVE_OP } from "@mohasinac/appkit";
+import { SIEVE_OP, sieveFilter } from "../../../utils/sieve-builder";
 import { scammerRepository } from "../repository/scammer.repository";
 import { safeRead } from "../../../errors/safe-read";
 import { userRepository } from "../../auth/repository/user.repository";
