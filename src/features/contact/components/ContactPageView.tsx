@@ -74,7 +74,7 @@ export function ContactPageView({ business }: ContactPageViewProps) {
   const infoItems = [
     business.supportEmail
       ? {
-          icon: "📧",
+          icon: "email" as const,
           label: "Email",
           value: business.supportEmail,
           href: `mailto:${business.supportEmail}`,
@@ -82,7 +82,7 @@ export function ContactPageView({ business }: ContactPageViewProps) {
       : null,
     business.supportPhone
       ? {
-          icon: "📞",
+          icon: "phone" as const,
           label: "Phone",
           value: business.supportPhone,
           href: `tel:${business.supportPhone.replace(/[^\d+]/g, "")}`,
@@ -90,7 +90,7 @@ export function ContactPageView({ business }: ContactPageViewProps) {
       : null,
     business.whatsAppLink
       ? {
-          icon: "💬",
+          icon: "message" as const,
           label: "WhatsApp",
           value: business.whatsAppDisplay ?? "Message us",
           href: business.whatsAppLink,
@@ -98,7 +98,7 @@ export function ContactPageView({ business }: ContactPageViewProps) {
       : null,
     business.communityUrl
       ? {
-          icon: "👥",
+          icon: "users" as const,
           label: "WhatsApp Community",
           value: "Join the group",
           href: business.communityUrl,

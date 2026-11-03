@@ -1,14 +1,17 @@
 import React from "react";
 import { Anchor } from "../../../ui/components/Anchor";
 import { Div } from "../../../ui/components/Div";
-import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Icon } from "../../../ui/components/Icon";
+import { Heading, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
+import type { IconKey } from "../../../ui/icons/icon-registry";
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
 } as const;
 
 export interface ContactInfoItem {
-  icon: string;
+  /** A real icon registry key, not a text glyph — see CLAUDE.md's "Known TS Patterns to Avoid" on sizing a character. */
+  icon: IconKey;
   label: string;
   value: string;
   href?: string;
@@ -41,7 +44,7 @@ export function ContactInfoSidebar({
         <Stack gap="md">
           {infoItems.map((item) => (
             <Row key={item.label} align="start" gap="3">
-              <Span size="xl" className="flex-shrink-0 mt-0.5">{item.icon}</Span>
+              <Icon name={item.icon} size="lg" className="flex-shrink-0 mt-0.5" />
               <Div>
                 <Text className="tracking-wide mb-0.5" color="muted" size="xs" weight="medium" transform="uppercase">
                   {item.label}

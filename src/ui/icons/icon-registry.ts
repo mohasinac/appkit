@@ -68,6 +68,7 @@ import {
   Moon,
   Package,
   Pause,
+  Phone,
   Play,
   Plus,
   RefreshCw,
@@ -89,6 +90,7 @@ import {
   Truck,
   Upload,
   User,
+  Users,
   X,
   XCircle,
   CalendarClock,
@@ -159,6 +161,9 @@ export const ICONS = {
   settings: Settings,
   expand: ChevronDown,
   user: User,
+  /** A group of people — "join the community", never a single-user context (use `user`). */
+  users: Users,
+  phone: Phone,
   // Header chrome. Added 2026-08-27 when TitleBarLayout stopped hand-inlining
   // ten raw <svg> elements — a raw <svg> carries no `shrink-0`, so inside a
   // padded flex control it silently shrank rather than rendering at its stated
