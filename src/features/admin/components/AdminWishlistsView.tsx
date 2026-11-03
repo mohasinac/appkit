@@ -14,6 +14,8 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminWishlistsResponse {
   items?: JsonArray;
@@ -62,9 +64,12 @@ const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, Wishlist
   buildFilters: () => undefined,
 };
 
-export type AdminWishlistsViewProps = ListingLayoutProps;
+export interface AdminWishlistsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewProps) {
+export function AdminWishlistsView({ children, pageRegionCards = [], ...props }: AdminWishlistsViewProps) {
   const router = useRouter();
 
   if (React.Children.count(children) > 0) {
@@ -82,12 +87,15 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
   // shows its whole record, and the genuinely useful destination is the
   // owning user's admin page, which renders their real detail.
   return (
-    <DataListingView
-      config={{
-        ...ADMIN_WISHLISTS_CONFIG,
-        onRowClick: (row) =>
-          row.userId && router.push(String(ROUTES.ADMIN.USER_DETAIL(row.userId))),
-      }}
-    />
+    <>
+      <AdminComposableRegion pageId="admin-wishlists" initialCards={pageRegionCards} />
+      <DataListingView
+        config={{
+          ...ADMIN_WISHLISTS_CONFIG,
+          onRowClick: (row) =>
+            row.userId && router.push(String(ROUTES.ADMIN.USER_DETAIL(row.userId))),
+        }}
+      />
+    </>
   );
 }

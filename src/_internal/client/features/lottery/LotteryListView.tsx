@@ -11,6 +11,8 @@ import { Div } from "../../../../ui/components/Div";
 import { MediaImage } from "../../../../ui/components/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
+import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
 interface ClientLotteryEvent {
   id: string;
@@ -31,13 +33,22 @@ interface ClientLotteryEvent {
 interface LotteryListViewProps {
   items: ClientLotteryEvent[];
   adminMode?: boolean;
+  /**
+   * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
+   * by `/admin/lotteries` and the public `/lottery`, so every caller
+   * computes its own route-template-derived id rather than this component
+   * guessing one.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
  * Card grid of lotteries.
  * Admin sees all statuses; public sees active only.
  */
-export function LotteryListView({ items, adminMode = false }: LotteryListViewProps) {
+export function LotteryListView({ items, adminMode = false, pageId, pageRegionCards = [] }: LotteryListViewProps) {
   const visible = adminMode
     ? items
     : items.filter((e) => e.status === "active");
@@ -53,6 +64,7 @@ export function LotteryListView({ items, adminMode = false }: LotteryListViewPro
             <Text color="muted">
               Check back soon for upcoming lottery events!
             </Text>
+            <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
           </Stack>
         </Section>
       </Container>
@@ -66,6 +78,7 @@ export function LotteryListView({ items, adminMode = false }: LotteryListViewPro
           <Heading level={1} size="3xl" weight="bold">
             {adminMode ? "All Lotteries" : "Active Lotteries"}
           </Heading>
+          <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
           <Grid cols={3} gap="md">
             {visible.map((event) => {
               const claimed =

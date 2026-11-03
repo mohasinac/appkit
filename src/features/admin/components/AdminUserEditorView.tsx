@@ -32,6 +32,7 @@ import {
 import { useFormShellState, FormShellContext } from "../../../ui/forms";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 
 // --- Types -------------------------------------------------------------------
 
@@ -554,6 +555,7 @@ export function AdminUserEditorView({
       >
         <FormShellContext.Provider value={form.shellCtx}>
           <Div padding="md">
+          <AdminComposableRegion pageId="admin-users-id-edit" initialCards={[]} />
           <FormErrorSummary />
           <StackedViewShell
             portal="admin"

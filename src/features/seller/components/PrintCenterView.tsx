@@ -24,6 +24,8 @@ import {
 } from "../../../_internal/shared/features/print/label-profiles";
 import { formatMoney } from "../../../utils/number.formatter";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface PrintCenterStore {
   id: string;
@@ -77,6 +79,8 @@ interface PrintCenterViewProps {
   brandName?: string;
   initialProducts?: PrintCenterProduct[];
   initialOrders?: PrintCenterOrder[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /*
@@ -127,9 +131,11 @@ function PackingSlip({ order, brandName }: { order: PrintCenterOrder; brandName:
 
 export function PrintCenterView({
   store,
+  isAdmin,
   brandName = `${getBrandName()}`,
   initialProducts = [],
   initialOrders = [],
+  pageRegionCards = [],
 }: PrintCenterViewProps) {
   const [tab, setTab] = useState<"labels" | "slips">("labels");
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
@@ -207,6 +213,18 @@ export function PrintCenterView({
           </Button>
         </Row>
       </Stack>
+
+      {/*
+        Two distinct contexts share this one view — `/admin/print-center`
+        (isAdmin) and the seller-facing `/store/fulfillment` tab (not
+        isAdmin, via PrintCenterPanel.tsx) — so they get two distinct
+        page-regions rather than one admin note bleeding into the other
+        screen (found live during the Phase 12 rollout).
+      */}
+      <AdminComposableRegion
+        pageId={isAdmin ? "admin-print-center" : "store-fulfillment-print-center"}
+        initialCards={pageRegionCards}
+      />
 
       {tab === "labels" && (
         <>

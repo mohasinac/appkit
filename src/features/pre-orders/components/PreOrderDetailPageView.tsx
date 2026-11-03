@@ -53,6 +53,8 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
@@ -66,6 +68,8 @@ export interface PreOrderDetailPageViewProps {
   onReserveNow?: (productId: string) => Promise<void>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const PRODUCTION_STATUS_LABELS: Record<string, string> = {
@@ -398,7 +402,7 @@ function PreOrderBuyBarPanel({
   );
 }
 
-export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow, productFeatures }: PreOrderDetailPageViewProps) {
+export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow, productFeatures, pageRegionCards = [] }: PreOrderDetailPageViewProps) {
   const product = initialPreOrder !== undefined
     ? (initialPreOrder ?? undefined)
     // The pre-order IS this page's subject — a read failure must surface rather
@@ -557,6 +561,8 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
           </Nav>
           <ShareButton title={title} />
         </Row>
+
+        <AdminComposableRegion pageId="pre-orders-id" initialCards={pageRegionCards} />
 
         <PreOrderDetailView
           renderGallery={() => (

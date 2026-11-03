@@ -7,8 +7,15 @@ import { Button, Div, Heading, Input, Li, Section, Span, Table, Tbody, Td, Text,
 import { Select } from "@mohasinac/appkit/ui";
 import type { AnalyzeReport } from "../../../../server/features/maintenance/analyze";
 import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";
+import { AdminComposableRegion } from "../../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../../shared/features/dashboard/recent-entry";
 
-export function AnalysisRunnerView(): React.JSX.Element {
+export interface AnalysisRunnerViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AnalysisRunnerView({ pageRegionCards = [] }: AnalysisRunnerViewProps = {}): React.JSX.Element {
   const [days, setDays] = React.useState(7);
   const [source, setSource] = React.useState<"all" | "vercel" | "client" | "function">("all");
   const [running, setRunning] = React.useState(false);
@@ -48,6 +55,7 @@ export function AnalysisRunnerView(): React.JSX.Element {
   return (
     <Div style={{ padding: "1.5rem", maxWidth: "1200px", margin: "0 auto" }}>
       <Heading level={1} style={{ fontSize: "1.5rem", fontWeight: 600 }}>Maintenance analysis</Heading>
+      <AdminComposableRegion pageId="admin-maintenance-analysis" initialCards={pageRegionCards} />
       <Div style={{ display: "flex", gap: "1rem", alignItems: "center", margin: "1rem 0" }}>
         <label>
           Days back:&nbsp;

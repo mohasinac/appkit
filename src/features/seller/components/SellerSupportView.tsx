@@ -38,6 +38,8 @@ import { SUPPORT_TICKET_FIELDS } from "../../../constants/field-names";
 import { sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import { toRelativeDate, toStringValue } from "../../admin/hooks/useAdminListingData";
 import type { JsonArray, JsonValue } from "../../../schemas/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface TicketsResponse {
   items?: JsonArray;
@@ -66,6 +68,8 @@ const STATUS_VARIANT: Record<string, "info" | "warning" | "success" | "default">
 export interface SellerSupportViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   labels?: { title?: string };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface TicketMessageLike {
@@ -153,7 +157,7 @@ function SellerSupportTicketModal({
   );
 }
 
-export function SellerSupportView({ labels = {} }: SellerSupportViewProps) {
+export function SellerSupportView({ labels = {}, pageRegionCards = [] }: SellerSupportViewProps) {
   const [detailId, setDetailId] = React.useState<string | null>(null);
   const mapRows = React.useCallback((response: TicketsResponse): TicketRow[] => {
     const items = Array.isArray(response?.items) ? response.items : [];
@@ -172,6 +176,7 @@ export function SellerSupportView({ labels = {} }: SellerSupportViewProps) {
 
   return (
     <Stack gap="md">
+      <AdminComposableRegion pageId="store-support" initialCards={pageRegionCards} />
       <DataListingView<TicketsResponse, TicketRow>
         config={{
           portal: "seller",

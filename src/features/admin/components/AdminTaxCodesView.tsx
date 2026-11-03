@@ -13,6 +13,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminTaxCodeEditorView } from "./AdminTaxCodeEditorView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const PAGE_SIZE = 50;
 
@@ -55,7 +57,10 @@ function mapTaxCodeRow(item: Record<string, JsonValue>, index: number): TaxCodeR
   };
 }
 
-export type AdminTaxCodesViewProps = ListingLayoutProps;
+export interface AdminTaxCodesViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 /**
  * `/admin/tax-codes` — the HSN + GST rate catalogue.
@@ -66,7 +71,7 @@ export type AdminTaxCodesViewProps = ListingLayoutProps;
  * activate/deactivate across a mixed selection is a rate change applied to
  * things nobody looked at. There are ~10 rows; each one is a per-row decision.
  */
-export function AdminTaxCodesView({ children, ...props }: AdminTaxCodesViewProps) {
+export function AdminTaxCodesView({ children, pageRegionCards = [], ...props }: AdminTaxCodesViewProps) {
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -121,5 +126,10 @@ export function AdminTaxCodesView({ children, ...props }: AdminTaxCodesViewProps
       isCreate ? "Add Tax Code" : "Edit Tax Code",
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-tax-codes" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

@@ -33,10 +33,14 @@ import { parseSelectedListingTypes, isCollectorDropListing } from "../../product
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { formatMoney } from "../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface AdminProductsViewProps extends ListingLayoutProps {
   actionHref?: string;
   getRowHref?: (row: AdminListingScaffoldRow) => string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface AdminProductsResponse {
@@ -134,7 +138,7 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
   ];
 }
 
-export function AdminProductsView({ children, ...props }: AdminProductsViewProps) {
+export function AdminProductsView({ children, pageRegionCards = [], ...props }: AdminProductsViewProps) {
   const [overrides, setOverrides] = useState<Record<string, Partial<ProductRow>>>({});
   const { showToast } = useToast();
   // Mirrors the raw API record per row id (ProductRow itself is the shared
@@ -575,5 +579,10 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
     resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Product" : "Edit Product"),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-products" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

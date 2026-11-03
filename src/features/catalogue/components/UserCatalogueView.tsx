@@ -15,6 +15,8 @@ import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CatalogueItemEditorView } from "./CatalogueItemEditorView";
 import type { CatalogueItemDocument } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const STATUS_VARIANT: Record<CatalogueItemDocument["listingStatus"], "default" | "success" | "warning" | "secondary"> = {
   not_listed: "secondary",
@@ -32,9 +34,11 @@ export interface UserCatalogueViewProps {
    * pointless round trip. Ordinary buyers get "Request to sell" instead.
    */
   canListDirectly: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function UserCatalogueView({ canListDirectly }: UserCatalogueViewProps) {
+export function UserCatalogueView({ canListDirectly, pageRegionCards = [] }: UserCatalogueViewProps) {
   const queryClient = useQueryClient();
   const { data, isLoading } = useQuery<{ items: CatalogueItemDocument[] }>({
     queryKey: ["user", "catalogue"],
@@ -83,6 +87,8 @@ export function UserCatalogueView({ canListDirectly }: UserCatalogueViewProps) {
         <Button onClick={() => setCreating(true)}>+ Add Item</Button>
       </Row>
 
+      <AdminComposableRegion pageId="user-catalogue" initialCards={pageRegionCards} />
+
       {isLoading ? (
         <Grid cols={3} gap="md">
           {[1, 2, 3].map((n) => (
@@ -125,11 +131,11 @@ export function UserCatalogueView({ canListDirectly }: UserCatalogueViewProps) {
       )}
 
       <SideDrawer isOpen={creating} onClose={() => setCreating(false)} title="Add to Catalogue">
-        <CatalogueItemEditorView onSaved={() => { setCreating(false); invalidate(); }} />
+        <CatalogueItemEditorView pageId="user-catalogue-new" onSaved={() => { setCreating(false); invalidate(); }} />
       </SideDrawer>
       <SideDrawer isOpen={!!editingItem} onClose={() => setEditingId(null)} title="Edit Catalogue Item">
         {editingItem && (
-          <CatalogueItemEditorView item={editingItem} onSaved={() => { setEditingId(null); invalidate(); }} />
+          <CatalogueItemEditorView pageId="user-catalogue-id-edit" item={editingItem} onSaved={() => { setEditingId(null); invalidate(); }} />
         )}
       </SideDrawer>
     </Stack>

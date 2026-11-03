@@ -63,6 +63,8 @@ import {
   groupedListingFormSchema,
   type GroupedListingFormValues,
 } from "../schemas/grouped-listing-form";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type Scope = "admin" | "store";
 
@@ -77,6 +79,14 @@ export interface GroupedListingEditorViewProps {
    * seller file a group under someone else's store.
    */
   fixedStoreId?: string;
+  /**
+   * Page-region id for this screen (Phase 12) — required because this View
+   * is mounted from FOUR different routes (admin/store x new/edit), each
+   * with its own id.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onCancel?: () => void;
 }
@@ -101,6 +111,8 @@ export function GroupedListingEditorView({
   scope,
   groupId,
   fixedStoreId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onCancel,
 }: GroupedListingEditorViewProps) {
@@ -281,6 +293,7 @@ export function GroupedListingEditorView({
 
   return (
     <Stack gap="md">
+      <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
       {needsStorePicker ? (
         <FieldSelect
           name="storeId"

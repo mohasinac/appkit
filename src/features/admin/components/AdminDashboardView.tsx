@@ -9,6 +9,8 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { DashboardStats } from "../types";
 import { DashboardStatsGrid } from "./DashboardStats";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminDashboardApiResponse {
   users?: {
@@ -43,6 +45,8 @@ export interface AdminDashboardViewProps extends Omit<
   renderRecentActivity?: () => React.ReactNode;
   renderAlerts?: () => React.ReactNode;
   renderCharts?: () => React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminDashboardView({
@@ -55,6 +59,7 @@ export function AdminDashboardView({
   renderRecentActivity,
   renderAlerts,
   renderCharts,
+  pageRegionCards = [],
   ...rest
 }: AdminDashboardViewProps) {
   const shouldFetch = Object.keys(stats).length === 0;
@@ -90,6 +95,7 @@ export function AdminDashboardView({
           </Alert>
         ) : null,
         renderAlerts?.(),
+        <AdminComposableRegion key="page-region" pageId="admin-dashboard" initialCards={pageRegionCards} />,
         renderStats
           ? renderStats(resolvedStats, busy)
           : <DashboardStatsGrid stats={resolvedStats} isLoading={busy} />,

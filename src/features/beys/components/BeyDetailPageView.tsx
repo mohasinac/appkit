@@ -33,6 +33,8 @@ import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import { ROUTES } from "../../../next/routing/route-map";
 import { PART_SLOT_LABEL, type PartSlot } from "../../parts/schemas/firestore";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 import type { BeyDocument, BeyProductDocument } from "../schemas/firestore";
 
 /**
@@ -81,6 +83,8 @@ export interface BeyDetailPageViewProps {
   categoryHref?: string | null;
   /** A character's page, for a resolved owner. */
   hrefForCharacter?: (slug: string) => string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function BeyDetailPageView({
@@ -92,6 +96,7 @@ export function BeyDetailPageView({
   hrefForPart,
   categoryHref,
   hrefForCharacter,
+  pageRegionCards = [],
 }: BeyDetailPageViewProps) {
   /*
    * ── THE SPEC TABLE ────────────────────────────────────────────────────────
@@ -193,6 +198,8 @@ export function BeyDetailPageView({
               </Text>
             )}
           </Stack>
+
+          <AdminComposableRegion pageId="beys-slug" initialCards={pageRegionCards} />
 
           {/* ── what it is built from ─────────────────────────────────────── */}
           {composition.length > 0 && (

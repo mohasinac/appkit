@@ -38,12 +38,18 @@ import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { brandFormSchema } from "../schemas/admin-editor-forms";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = { p4: "p-[var(--appkit-space-4)]" } as const;
 const __O = { yAuto: "overflow-y-auto" } as const;
 
 export interface AdminBrandEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   brandId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   /** When true, renders form only (no StackedViewShell) for use inside a SideDrawer. */
@@ -117,6 +123,8 @@ function optionalNumber(raw: string): number | undefined {
 
 export function AdminBrandEditorView({
   brandId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -336,7 +344,10 @@ export function AdminBrandEditorView({
       portal="admin"
       {...rest}
       title={isEdit ? "Edit Brand" : "Create Brand"}
-      sections={[formSection]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+        formSection,
+      ]}
     />
   );
 }

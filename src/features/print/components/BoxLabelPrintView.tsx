@@ -39,6 +39,8 @@ import {
   labelPageCss,
   type LabelProfileId,
 } from "../../../_internal/shared/features/print/label-profiles";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface PrintableBox {
   id: string;
@@ -63,12 +65,15 @@ export interface BoxLabelPrintViewProps {
    */
   printedAt: string;
   boxesFailed?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function BoxLabelPrintView({
   boxes,
   printedAt,
   boxesFailed = false,
+  pageRegionCards = [],
 }: BoxLabelPrintViewProps) {
   const [mode, setMode] = useState<"labels" | "contents">("labels");
   /*
@@ -118,6 +123,8 @@ export function BoxLabelPrintView({
         <Heading level={1} size="2xl">
           Print box labels
         </Heading>
+
+        <AdminComposableRegion pageId="admin-inventory-boxes-labels" initialCards={pageRegionCards} />
 
         {boxesFailed && (
           <Alert variant="warning">

@@ -35,6 +35,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminOrderEditorView, type AdminOrderItemRow, type AdminOrderEditorViewProps } from "./AdminOrderEditorView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /*
  * 3B item 1b, search/facets subsystem — fields `orders.repository.ts`'s own
@@ -229,9 +231,12 @@ interface OrderRow {
   currency?: string;
 }
 
-export type AdminOrdersViewProps = ListingLayoutProps;
+export interface AdminOrdersViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
+export function AdminOrdersView({ children, pageRegionCards = [], ...props }: AdminOrdersViewProps) {
   const { showToast } = useToast();
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -527,6 +532,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-orders" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminOrderEditorView
         open={drawerOpen}

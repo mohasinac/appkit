@@ -35,6 +35,8 @@ import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { sellerCouponFormSchema } from "../schemas/coupon-form";
 import { ProductInlineSelect } from "./ProductInlineSelect";
 import { CategoryChipPicker } from "./CategoryChipPicker";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -61,6 +63,8 @@ export interface SellerCouponEditorViewProps {
   initial?: Partial<CouponEditorDraft>;
   onSave: (draft: CouponEditorDraft, couponId?: string) => Promise<void>;
   onCancel?: () => void;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const EMPTY_DRAFT: CouponEditorDraft = {
@@ -89,6 +93,7 @@ export function SellerCouponEditorView({
   initial,
   onSave,
   onCancel,
+  pageRegionCards = [],
 }: SellerCouponEditorViewProps) {
   const isEdit = Boolean(couponId);
   const { showToast } = useToast();
@@ -231,6 +236,7 @@ export function SellerCouponEditorView({
             cancelLabel="Cancel"
           />
         </FormShellContext.Provider>
+        <AdminComposableRegion pageId="store-coupons-id-edit" initialCards={pageRegionCards} />
       </Stack>
     </Stack>
   );

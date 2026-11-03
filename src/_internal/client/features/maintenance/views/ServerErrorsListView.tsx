@@ -3,6 +3,8 @@
 import * as React from "react";
 import { Anchor, Div, Heading, Input, Label, Span, Table, Tbody, Td, Text, Th, Thead, Tr } from "@mohasinac/appkit/client";
 import type { ServerErrorDocument, ServerErrorSource } from "../../../../../features/server-errors/schemas/firestore";
+import { AdminComposableRegion } from "../../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../../shared/features/dashboard/recent-entry";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
 
@@ -28,6 +30,15 @@ export interface ServerErrorsListViewProps {
   source: ServerErrorSource | "all";
   rows: ServerErrorDocument[];
   detailHrefBase: string;
+  /**
+   * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
+   * by four distinct `/admin/maintenance/*-errors` (+ payment-rollbacks)
+   * routes, so every caller computes its own route-template-derived id
+   * rather than this component guessing one.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 function fmt(occurredAt: number): string {
@@ -44,6 +55,8 @@ export function ServerErrorsListView({
   source,
   rows,
   detailHrefBase,
+  pageId,
+  pageRegionCards = [],
 }: ServerErrorsListViewProps): React.JSX.Element {
   const [codeFilter, setCodeFilter] = React.useState<string>("");
   const [routeFilter, setRouteFilter] = React.useState<string>("");
@@ -62,6 +75,8 @@ export function ServerErrorsListView({
       {subtitle ? (
         <Text as="p" style={{ color: "var(--appkit-color-text-muted)", marginBottom: "1rem" }}>{subtitle}</Text>
       ) : null}
+
+      <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
 
       <Div style={{ display: "flex", gap: "0.75rem", marginBottom: "1rem", alignItems: "center" }}>
         <Label style={{ fontSize: "0.85rem" }}>

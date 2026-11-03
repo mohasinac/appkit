@@ -18,6 +18,8 @@ import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -73,6 +75,8 @@ export interface AdminAdsViewProps {
   labels?: { title?: string };
   createHref?: string;
   renderEditLink?: (item: AdminAdItem) => React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface AdsSettingsPanelProps {
@@ -173,6 +177,7 @@ export function AdminAdsView({
   labels = {},
   createHref = "/admin/ads/new",
   renderEditLink,
+  pageRegionCards = [],
 }: AdminAdsViewProps) {
   const queryClient = useQueryClient();
   const [draft, setDraft] = React.useState<AdsConfigValues>({
@@ -397,6 +402,7 @@ export function AdminAdsView({
           settingsMessage={settingsMessage}
           onSave={saveSettings}
         />
+        <AdminComposableRegion pageId="admin-ads" initialCards={pageRegionCards} />
       </Stack>
     ),
   };

@@ -20,6 +20,8 @@ import type { ListingViewConfig } from "./DataListingView";
 import { AdminFeatureEditorView } from "./AdminFeatureEditorView";
 import { PRODUCT_FEATURE_SCOPE_TABS } from "../../products/constants/product-features.constants";
 import type { ProductFeatureScope } from "../../products/schemas/product-features";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const PAGE_SIZE = 50;
 const DEFAULT_SCOPE: ProductFeatureScope = "platform";
@@ -58,9 +60,12 @@ function mapFeatureRow(item: Record<string, JsonValue>, index: number): FeatureR
   };
 }
 
-export type AdminFeaturesViewProps = ListingLayoutProps;
+export interface AdminFeaturesViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps) {
+export function AdminFeaturesView({ children, pageRegionCards = [], ...props }: AdminFeaturesViewProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -125,10 +130,20 @@ export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps
         onSaved={closePanel}
         onDeleted={closePanel}
         embedded
+        // Same page-id as the dedicated /admin/features/new and
+        // /admin/features/[id]/edit routes — this inline drawer is the same
+        // logical "create/edit a feature" screen, just reached from the list
+        // instead of a full navigation.
+        pageId={editId ? "admin-features-id-edit" : "admin-features-new"}
       />
     ),
     resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Feature" : "Edit Feature"),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-features" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

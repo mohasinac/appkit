@@ -81,6 +81,8 @@ import type { SectionType, SectionPatchPayload, ResourceMode, ResourceSortBy, Re
 import { toStringValue, buildProductsConfig, buildCollectorDropsConfig, buildStatsConfig, buildPreOrdersConfig, buildStoresConfig, buildEventsConfig, buildSocialFeedConfig, buildWelcomeConfig, buildTrustIndicatorsConfig, buildCategoriesConfig, buildBrandsConfig, buildBannerConfig, buildFeaturesConfig, buildReviewsConfig, buildWhatsAppConfig, buildFAQConfig, buildBlogConfig, buildNewsletterConfig, buildCarouselConfig, buildCustomCardsConfig, buildGoogleReviewsConfig, buildFeaturedBundlesConfig, buildRandomLotsConfig, buildEventRafflesConfig, buildCollectionCardsConfig, parseProductsBuilder, parseCollectorDropsBuilder, parseStatsBuilder, parsePreOrdersBuilder, parseStoresBuilder, parseEventsBuilder, parseSocialFeedBuilder, parseWelcomeBuilder, parseTrustIndicatorsBuilder, parseCategoriesBuilder, parseBrandsBuilder, parseBannerBuilder, parseFeaturesBuilder, parseReviewsBuilder, parseWhatsAppBuilder, parseFAQBuilder, parseBlogBuilder, parseNewsletterBuilder, parseCarouselBuilder, parseCustomCardsBuilder, parseGoogleReviewsBuilder, parseFeaturedBundlesBuilder, parseRandomLotsBuilder, parseEventRafflesBuilder, parseCollectionCardsBuilder } from "./sections/adminSectionsBuildParse";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -101,6 +103,8 @@ const HELP_VIEW_MORE = "Leave blank to use the default label.";
 
 export interface AdminSectionsViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface SectionEditorPanelProps {
@@ -2756,7 +2760,7 @@ function isSameReorder(a: ReorderItem[], b: ReorderItem[]): boolean {
  * toolbar button, a "Mode" dropdown, and a second dropdown to re-find the row
  * you had just clicked past.
  */
-export function AdminSectionsView({ children }: AdminSectionsViewProps) {
+export function AdminSectionsView({ children, pageRegionCards = [] }: AdminSectionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const queryClient = useQueryClient();
   const toast = useToast();
@@ -3147,6 +3151,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-sections" initialCards={pageRegionCards} />
       <DataListingView<AdminSectionsResponse, SectionRow> config={config} />
 
       {/*

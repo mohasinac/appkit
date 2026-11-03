@@ -10,6 +10,8 @@ import { ReviewsIndexListing } from "./ReviewsIndexListing";
 import { safeRead } from "../../../errors/safe-read";
 import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 function buildReviewFilters(params: SearchParamsRecord): string {
   const parts: string[] = ["status==approved"];
@@ -51,9 +53,11 @@ function buildReviewFilters(params: SearchParamsRecord): string {
 
 export interface ReviewsIndexPageViewProps {
   searchParams?: SearchParamsRecord;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPageViewProps) {
+export async function ReviewsIndexPageView({ searchParams = {}, pageRegionCards = [] }: ReviewsIndexPageViewProps) {
   const sort = firstParam(searchParams, "sort") || "-createdAt";
   const page = Number(firstParam(searchParams, "page")) || 1;
   const filters = buildReviewFilters(searchParams);
@@ -90,6 +94,7 @@ export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPa
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Reviews
           </Heading>
+          <AdminComposableRegion pageId="reviews" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <ReviewsIndexListing initialData={initialData} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

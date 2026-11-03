@@ -41,9 +41,15 @@ import { MediaUploadList } from "../../media/upload/MediaUploadList";
 import type { MediaField } from "../../media/types";
 import type { CatalogueItemDocument } from "../schemas/firestore";
 import { createCatalogueItemSchema } from "../schemas/validation";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface CatalogueItemEditorViewProps {
   item?: CatalogueItemDocument;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
 }
 
@@ -92,7 +98,12 @@ const loadCategoryOptions = (q: string, p: number) =>
   loadOptionsFrom(CATEGORY_ENDPOINTS.LIST, q, p, { listingOnly: "true" });
 const loadBrandOptions = (q: string, p: number) => loadOptionsFrom(BRAND_ENDPOINTS.LIST, q, p);
 
-export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorViewProps) {
+export function CatalogueItemEditorView({
+  item,
+  pageId,
+  pageRegionCards = [],
+  onSaved,
+}: CatalogueItemEditorViewProps) {
   const isCreate = !item;
   const queryClient = useQueryClient();
   const { upload } = useMediaUpload();
@@ -231,6 +242,7 @@ export function CatalogueItemEditorView({ item, onSaved }: CatalogueItemEditorVi
 
   return (
     <Stack gap="md">
+      <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
       {item?.listingStatus && item.listingStatus !== "not_listed" && (
         <Alert variant="info">
           This item is {item.listingStatus.replace(/_/g, " ")}

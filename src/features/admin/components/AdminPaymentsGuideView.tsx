@@ -5,8 +5,15 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-export function AdminPaymentsGuideView() {
+export interface AdminPaymentsGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminPaymentsGuideView({ pageRegionCards = [] }: AdminPaymentsGuideViewProps) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -19,6 +26,8 @@ export function AdminPaymentsGuideView() {
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Payments (Razorpay)</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Razorpay is disabled by default on this platform — manual UPI/bank transfer and Cash on Delivery are the default payment methods. Enable Razorpay only once you have real (or test-mode) API keys.</Text>
       </Section>
+
+      <AdminComposableRegion pageId="admin-guide-payments" initialCards={pageRegionCards} />
 
       {[
         {

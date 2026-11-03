@@ -27,6 +27,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminContactEditorView } from "./AdminContactEditorView";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminContactResponse {
   items?: JsonArray;
@@ -46,6 +48,8 @@ export interface AdminContactViewProps extends ListingLayoutProps {
   onBulkMarkRead?: (ids: string[]) => Promise<void>;
   onBulkArchive?: (ids: string[]) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminContactView({
@@ -53,6 +57,7 @@ export function AdminContactView({
   onBulkMarkRead,
   onBulkArchive,
   onBulkDelete,
+  pageRegionCards = [],
   ...props
 }: AdminContactViewProps) {
   const queryClient = useQueryClient();
@@ -124,6 +129,7 @@ export function AdminContactView({
       return mappedRows.length;
     },
     buildFilters: (f) => (f.status && f.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, f.status) : undefined),
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-contact" initialCards={pageRegionCards} />,
     // Mirrors the row action's "View" entry so the row itself is clickable,
     // not just the overflow menu.
     onRowClick: (row) => {

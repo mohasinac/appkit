@@ -18,6 +18,8 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminHistoryResponse {
   items?: JsonArray;
@@ -65,9 +67,12 @@ const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> 
   buildFilters: () => undefined,
 };
 
-export type AdminHistoryViewProps = ListingLayoutProps;
+export interface AdminHistoryViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) {
+export function AdminHistoryView({ children, pageRegionCards = [], ...props }: AdminHistoryViewProps) {
   const router = useRouter();
 
   if (React.Children.count(children) > 0) {
@@ -82,12 +87,15 @@ export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) 
   // summary (never the viewed items), so the row already shows its whole
   // record and the useful destination is the owning user's admin page.
   return (
-    <DataListingView
-      config={{
-        ...ADMIN_HISTORY_CONFIG,
-        onRowClick: (row) =>
-          row.userId && router.push(String(ROUTES.ADMIN.USER_DETAIL(row.userId))),
-      }}
-    />
+    <>
+      <AdminComposableRegion pageId="admin-history" initialCards={pageRegionCards} />
+      <DataListingView
+        config={{
+          ...ADMIN_HISTORY_CONFIG,
+          onRowClick: (row) =>
+            row.userId && router.push(String(ROUTES.ADMIN.USER_DETAIL(row.userId))),
+        }}
+      />
+    </>
   );
 }

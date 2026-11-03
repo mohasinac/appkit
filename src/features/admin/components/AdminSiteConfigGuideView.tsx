@@ -6,10 +6,17 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const CLS_HEADER_ICON = "w-5 h-5 text-amber-500";
 
-export function AdminSiteConfigGuideView() {
+export interface AdminSiteConfigGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminSiteConfigGuideView({ pageRegionCards = [] }: AdminSiteConfigGuideViewProps) {
   const SETTING_GROUPS = [
     { name: "branding", desc: "Site name, tagline, logo URL, favicon. These values override the default SVG wordmark." },
     { name: "appearance", desc: "Theme colour tokens, dark mode default, custom CSS overrides." },
@@ -37,6 +44,8 @@ export function AdminSiteConfigGuideView() {
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Site Configuration</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">All site settings are stored in a single Firestore document at <Code size="xs">siteSettings/global</Code>. Changes take effect on the next page render (ISR or cache revalidation).</Text>
       </Section>
+
+      <AdminComposableRegion pageId="admin-guide-site" initialCards={pageRegionCards} />
 
       <Section className={GC.sectionWrap}>
         <Div className={GC.sectionHeader}>

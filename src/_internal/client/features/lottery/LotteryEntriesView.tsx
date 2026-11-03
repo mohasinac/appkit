@@ -10,6 +10,8 @@ import { DataTable } from "../../../../ui/DataTable";
 import type { DataTableColumn } from "../../../../ui/DataTable";
 import { Dialog } from "../../../../ui/components/Dialog";
 import { FieldTextarea } from "../../../../ui/forms/FieldTextarea";
+import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
 interface LotteryEntryRow {
   id: string;
@@ -32,6 +34,15 @@ interface LotteryEntriesViewProps {
   isStoreOwner?: boolean;
   onFlagEntry?: (entryId: string, flagNote: string) => Promise<void>;
   onReopenSlot?: (slotNumber: number) => Promise<void>;
+  /**
+   * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
+   * by three distinct routes (the admin lottery entries page, and the admin
+   * + store random-lots entries pages), so every caller computes its own
+   * route-template-derived id rather than this component guessing one.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function LotteryEntriesView({
@@ -40,6 +51,8 @@ export function LotteryEntriesView({
   isStoreOwner = false,
   onFlagEntry,
   onReopenSlot,
+  pageId,
+  pageRegionCards = [],
 }: LotteryEntriesViewProps) {
   const [flaggingId, setFlaggingId] = useState<string | null>(null);
   const [flagNote, setFlagNote] = useState("");
@@ -106,6 +119,7 @@ export function LotteryEntriesView({
         <Stack gap="lg">
           <Heading level={1} size="2xl" weight="bold">Lottery Entries</Heading>
           <Text color="muted">{entries.length} {entries.length === 1 ? "entry" : "entries"} total</Text>
+          <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
 
           <DataTable
             data={entries}

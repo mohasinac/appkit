@@ -14,6 +14,8 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface SublistingCategoriesResponse {
   items?: JsonArray;
@@ -30,10 +32,13 @@ interface SublistingRow {
 
 interface AdminSublistingCategoriesViewProps {
   onBulkDelete?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminSublistingCategoriesView({
   onBulkDelete,
+  pageRegionCards = [],
 }: AdminSublistingCategoriesViewProps) {
   const config: ListingViewConfig<SublistingCategoriesResponse, SublistingRow> = {
     portal: "admin",
@@ -102,5 +107,10 @@ export function AdminSublistingCategoriesView({
       : undefined,
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-sublisting-categories" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

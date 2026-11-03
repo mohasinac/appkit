@@ -11,6 +11,8 @@ import type { SellerStandingSnapshot } from "../types";
 import { SellerStandingPanel } from "./SellerStandingPanel";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const CLS_CHECK_ICON = "w-5 h-5 flex-shrink-0 text-emerald-500";
 const CLS_SUCCESS_BOX = "rounded-xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-950/30 dark:border-emerald-800 px-[var(--appkit-space-5)] py-[var(--appkit-space-4)]";
@@ -118,11 +120,13 @@ function buildChecklist(store: StoreDocument | null): ChecklistStep[] {
 
 export interface StoreGuideHubViewProps {
   store: StoreDocument | null;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // -- Component -----------------------------------------------------------------
 
-export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
+export function StoreGuideHubView({ store, pageRegionCards = [] }: StoreGuideHubViewProps) {
   const storeName = store?.storeName ?? "Your Store";
   const steps = buildChecklist(store);
   const completedCount = steps.filter((s) => s.done).length;
@@ -150,6 +154,8 @@ export function StoreGuideHubView({ store }: StoreGuideHubViewProps) {
           </Text>
         </Div>
       </Section>
+
+      <AdminComposableRegion pageId="store-guide" initialCards={pageRegionCards} />
 
       {/* Main content: guide cards + checklist sidebar */}
       <Div layout="grid" gap="8" className="grid-cols-1 lg:grid-cols-3">

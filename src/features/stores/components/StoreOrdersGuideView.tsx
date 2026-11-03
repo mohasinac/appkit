@@ -10,6 +10,8 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /* Phase 9 — one definition of the refund timeline. */
 const { refundBusinessDaysMin: REFUND_DAYS_MIN, refundBusinessDaysMax: REFUND_DAYS_MAX } =
@@ -333,9 +335,12 @@ function CommonFAQs() {
 
 // -- Main view -----------------------------------------------------------------
 
-export type StoreOrdersGuideViewProps = Record<string, never>;
+export interface StoreOrdersGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
+export function StoreOrdersGuideView({ pageRegionCards = [] }: StoreOrdersGuideViewProps) {
   return (
     <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
@@ -361,6 +366,8 @@ export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
           Processing orders, shipping, cancellations, returns, and collector drop orders.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="store-guide-orders" initialCards={pageRegionCards} />
 
       {/* Sections */}
       <GuideSection title="1. Order lifecycle">

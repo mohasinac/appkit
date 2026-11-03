@@ -9,6 +9,8 @@ import { TextLink } from "../../../ui/components/TextLink";
 import type { AttentionCounts } from "../../../_internal/server/features/dashboard/attention";
 import type { DashboardHubSection } from "../../../_internal/shared/features/dashboard/hub-sections";
 import { HiddenHubCardGate, HiddenHubCardsRestoreBar } from "./HiddenHubCardGate";
+import { AdminComposableRegion } from "./AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * The dashboard hub — one component, two modes, zero copy of its own.
@@ -97,6 +99,15 @@ export interface DashboardHubViewProps {
    * itself to become a client component (RSC composition, not a hook here).
    */
   hideScope?: string;
+  /**
+   * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
+   * by four distinct routes (`/admin`, and the three `{portal}/sections/[section]`
+   * hubs), so every caller computes its own route-template-derived id rather
+   * than this component guessing one.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -203,6 +214,8 @@ export function DashboardHubView({
   emptyMessage,
   showScreenCount = true,
   hideScope,
+  pageId,
+  pageRegionCards = [],
 }: DashboardHubViewProps) {
   const hasAny = sections.some((section) => section.items.length > 0);
 
@@ -222,6 +235,8 @@ export function DashboardHubView({
       )}
 
       {above}
+
+      <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
 
       {!hasAny && (
         <Alert variant="info" title="Nothing here yet">

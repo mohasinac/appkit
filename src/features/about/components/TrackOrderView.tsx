@@ -15,12 +15,17 @@ import { Grid, Stack } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 
 export interface TrackOrderViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function TrackOrderView({
+  pageRegionCards = [],
 }: TrackOrderViewProps = {}) {
   const themed = {
     bgPrimary: THEMED_BG_PRIMARY,
@@ -71,6 +76,7 @@ export async function TrackOrderView({
 
       <Div className={page.container.md} padding="y-4xl">
         <Stack gap="hero">
+        <AdminComposableRegion pageId="track" initialCards={pageRegionCards} />
         {/* Sign-in prompt */}
         <Section
           className={`text-center`} border="default" surface="subtle" rounded="2xl" padding="xl"

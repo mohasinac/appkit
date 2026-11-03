@@ -6,6 +6,8 @@ import { Caption, Heading, Text } from "../../../ui/components/Typography";
 import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;
@@ -18,9 +20,12 @@ const CLS_RATE_CELL = "py-[var(--appkit-space-3)] px-[var(--appkit-space-4)] fon
 const CLS_HIGHLIGHT = "font-bold text-green-700 dark:text-green-400";
 
 export interface FeesViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function FeesView({
+  pageRegionCards = [],
 }: FeesViewProps = {}) {
   const themed = { bgPrimary: THEMED_BG_PRIMARY, bgSecondary: THEMED_BG_SECONDARY };
   const page = { container: PAGE_CONTAINER };
@@ -114,6 +119,7 @@ export async function FeesView({
         {renderFeeTableSection(t, themed, FEE_ROWS)}
         {renderPayoutExampleSection(t, themed, OFFER_PAYOUT_ROWS)}
         {renderDisclaimerSection(t, themed)}
+        <AdminComposableRegion pageId="fees" initialCards={pageRegionCards} />
       </Stack>
     </Div>
   );

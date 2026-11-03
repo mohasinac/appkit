@@ -30,6 +30,8 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { QuickEditMenu } from "../../admin/components/QuickEditMenu";
 import type { QuickFieldDef } from "../../shell/QuickFormDrawer";
 import type { FormValues } from "../../../schemas/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -258,6 +260,8 @@ function AlertCard({
 
 export interface SellerAnalyticsAlertsViewProps {
   labels?: { title?: string };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface CreateAlertDraft {
@@ -321,6 +325,7 @@ function ChannelChips({
 
 export function SellerAnalyticsAlertsView({
   labels = {},
+  pageRegionCards = [],
 }: SellerAnalyticsAlertsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -453,6 +458,8 @@ export function SellerAnalyticsAlertsView({
       <Text size="sm" color="muted">
         Get notified when a key metric crosses a threshold. Alerts check the metric over the selected window and fire through your chosen channels.
       </Text>
+
+      <AdminComposableRegion pageId="store-analytics-alerts" initialCards={pageRegionCards} />
 
       {showForm && (
         <Section className={`${__P.p5} space-y-[1rem]`} rounded="xl" border="default">

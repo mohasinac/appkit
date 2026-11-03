@@ -5,6 +5,8 @@ import { DateInput } from "../../../ui/components/DateInput";
 import { Label, Text } from "../../../ui/components/Typography";
 import { Row } from "../../../ui/components/Layout";
 import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface SellerAnalyticsViewProps extends Omit<
   StackedViewShellProps,
@@ -20,6 +22,8 @@ export interface SellerAnalyticsViewProps extends Omit<
   renderCharts?: () => React.ReactNode;
   renderTopProducts?: () => React.ReactNode;
   isLoading?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 function DefaultDateRange({
@@ -62,6 +66,7 @@ export function SellerAnalyticsView({
   renderCharts,
   renderTopProducts,
   isLoading = false,
+  pageRegionCards = [],
   ...rest
 }: SellerAnalyticsViewProps) {
   const [from, setFrom] = React.useState("");
@@ -92,6 +97,7 @@ export function SellerAnalyticsView({
         statsSection,
         chartsSection,
         topProducts,
+        <AdminComposableRegion key="page-region" pageId="store-analytics" initialCards={pageRegionCards} />,
       ]}
     />
   );

@@ -8,6 +8,8 @@ import {
   parsePublicProductParams,
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -17,9 +19,14 @@ const DEFAULT_SORT = "-createdAt";
 
 export interface PreOrdersListViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function PreOrdersListView({ searchParams = {} }: PreOrdersListViewProps) {
+export async function PreOrdersListView({
+  searchParams = {},
+  pageRegionCards = [],
+}: PreOrdersListViewProps) {
   // Shared with /api/products, and derived rather than hardcoded. This view
   // carried a literal `hideSoldByDefault: true` until 2026-08-24 even though
   // pre-order's registered hide-default is "closed" — so /pre-orders and
@@ -40,6 +47,7 @@ export async function PreOrdersListView({ searchParams = {} }: PreOrdersListView
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Pre-Orders
           </Heading>
+          <AdminComposableRegion pageId="pre-orders-index" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <PreOrdersIndexListing initialData={result ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

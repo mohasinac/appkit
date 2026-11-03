@@ -53,6 +53,8 @@ import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
 import { getBrandName, getBrandDomain, getBrandSupportEmail, getBrandNoreplyEmail } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -63,6 +65,8 @@ const __O = {
 export interface AdminSiteSettingsViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   labels?: { title?: string };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // --- Helpers -----------------------------------------------------------------
@@ -187,6 +191,7 @@ function SaveAllBar({ isPending, onSave }: { isPending: boolean; onSave: () => v
 
 export function AdminSiteSettingsView({
   labels = {},
+  pageRegionCards = [],
   ...rest
 }: AdminSiteSettingsViewProps) {
   const queryClient = useQueryClient();
@@ -1126,7 +1131,9 @@ export function AdminSiteSettingsView({
   };
 
   return (
-    <StackedViewShell
+    <>
+      <AdminComposableRegion pageId="admin-site" initialCards={pageRegionCards} />
+      <StackedViewShell
       portal="admin"
       {...rest}
       title={labels.title ?? "Site Settings"}
@@ -2484,6 +2491,7 @@ export function AdminSiteSettingsView({
         <SaveAllBar isPending={saveAllMutation.isPending} onSave={handleSaveAll} />
         </FormShellContext.Provider>,
       ]}
-    />
+      />
+    </>
   );
 }

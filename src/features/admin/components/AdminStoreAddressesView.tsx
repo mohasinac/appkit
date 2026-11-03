@@ -11,6 +11,8 @@ import type { ListingViewConfig } from "./DataListingView";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { RecordDetailModal } from "../../../ui/components/RecordDetailModal";
 import type { JsonValue } from "../../../schemas/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminStoreAddressesResponse {
   items?: JsonArray;
@@ -66,14 +68,17 @@ const ADMIN_STORE_ADDRESSES_CONFIG: ListingViewConfig<AdminStoreAddressesRespons
 
 export interface AdminStoreAddressesViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminStoreAddressesView(_props: AdminStoreAddressesViewProps) {
+export function AdminStoreAddressesView({ pageRegionCards = [] }: AdminStoreAddressesViewProps) {
   const [selected, setSelected] = useState<StoreAddressRow | null>(null);
   const raw = selected?._raw ?? {};
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-store-addresses" initialCards={pageRegionCards} />
       <DataListingView
         config={{ ...ADMIN_STORE_ADDRESSES_CONFIG, onRowClick: (row) => setSelected(row) }}
       />

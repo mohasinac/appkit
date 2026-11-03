@@ -25,9 +25,15 @@ import { useShipment } from "../hooks/useShipments";
 import type { ShipmentDocument, ShipmentLot } from "../schemas/firestore";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface AdminShipmentEditorViewProps {
   shipmentId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   embedded?: boolean;
 }
@@ -79,7 +85,12 @@ function toDateInput(value: string | Date | undefined): string {
   return new Date(value).toISOString().slice(0, 10);
 }
 
-export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEditorViewProps) {
+export function AdminShipmentEditorView({
+  shipmentId,
+  pageId,
+  pageRegionCards = [],
+  onSaved,
+}: AdminShipmentEditorViewProps) {
   const isCreate = !shipmentId;
   const queryClient = useQueryClient();
   const { shipment, lots, refetchLots } = useShipment(shipmentId);
@@ -176,6 +187,7 @@ export function AdminShipmentEditorView({ shipmentId, onSaved }: AdminShipmentEd
 
   return (
     <Stack gap="md">
+      <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
       <FormShellContext.Provider value={shellCtx}>
         <FormErrorSummary />
         <SectionForm<ShipmentValues>

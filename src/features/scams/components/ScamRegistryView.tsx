@@ -34,6 +34,8 @@ import type { ScammerDocument } from "../schemas/firestore";
 import { withBrand } from "../../../core/brand-text";
 import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
 import { SCAM_TYPES, SCAM_TYPE_LABELS } from "../constants/scam-types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest Reports" },
@@ -115,9 +117,11 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
 
 export interface ScamRegistryViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewProps) {
+export async function ScamRegistryView({ searchParams = {}, pageRegionCards = [] }: ScamRegistryViewProps) {
   const query = sp(searchParams, "q");
   const sort = sp(searchParams, "sort") || "-createdAt";
   const scamType = sp(searchParams, "scamType");
@@ -204,6 +208,8 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
               the rows, so a disclaimer below them qualifies nothing.
             */}
             <Disclaimer id="scam-registry" />
+
+            <AdminComposableRegion pageId="scams" initialCards={pageRegionCards} />
 
             {/* Search + sort + type filter form (GET — SSR-friendly) */}
             <Form method="GET">

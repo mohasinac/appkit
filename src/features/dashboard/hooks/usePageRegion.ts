@@ -47,6 +47,27 @@ export function usePageRegion(pageId: string, initialCards: DashboardCard[]): Us
     [],
   );
 
+  // Phase 12 — a `"use client"` page.tsx has no server component to seed
+  // `initialCards` via `getPageRegion()`, so it always calls this hook with
+  // `[]`. Self-fetch exactly once, only when nothing was seeded — an SSR
+  // page that DID seed real cards never pays a redundant round trip, and a
+  // page that genuinely has no cards yet fetches once, finds `[]`, and
+  // stops (the dependency array omits `initialCards` on purpose: it is a
+  // snapshot from the first render, not a value this effect should re-run
+  // on every reference change of).
+  const hasFetchedRef = useRef(initialCards.length > 0);
+  useEffect(() => {
+    if (hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
+    fetch(ADMIN_ENDPOINTS.PAGE_REGION_BY_ID(encodeURIComponent(pageId)))
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body) => {
+        const fetched = body?.data?.cards;
+        if (Array.isArray(fetched) && fetched.length > 0) setCards(fetched);
+      })
+      .catch((err) => void normalizeError(err));
+  }, [pageId]);
+
   const persist = useCallback(
     (next: DashboardCard[]) => {
       if (debounceRef.current) clearTimeout(debounceRef.current);

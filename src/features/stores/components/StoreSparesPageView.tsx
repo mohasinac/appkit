@@ -4,6 +4,8 @@ import { sortBy } from "../../../constants/sort";
 import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { ProductsIndexListing } from "../../products/components/ProductsIndexListing";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -14,6 +16,8 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 export interface StoreSparesPageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -35,7 +39,7 @@ export interface StoreSparesPageViewProps {
  * one type, so the facet would render a single checkbox that changes nothing.
  * `ProductFilters` already guards on an empty option list.
  */
-export async function StoreSparesPageView({ storeSlug, searchParams }: StoreSparesPageViewProps) {
+export async function StoreSparesPageView({ storeSlug, searchParams, pageRegionCards = [] }: StoreSparesPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, unknown> | null)?.id;
   if (typeof storeId !== "string" || !storeId) return null;
@@ -49,14 +53,17 @@ export async function StoreSparesPageView({ storeSlug, searchParams }: StoreSpar
   });
 
   return (
-    <ProductsIndexListing
-      // `undefined`, not `null` — React Query treats `null` as defined data, so
-      // a failed query would freeze an empty grid under `staleTime: Infinity`.
-      initialData={result ?? undefined}
-      listingTypes={LISTING_TYPES}
-      typeTabs={[]}
-      storeId={storeId}
-      searchPlaceholder="Search this store's spares..."
-    />
+    <>
+      <AdminComposableRegion pageId="stores-storeslug-spares" initialCards={pageRegionCards} />
+      <ProductsIndexListing
+        // `undefined`, not `null` — React Query treats `null` as defined data, so
+        // a failed query would freeze an empty grid under `staleTime: Infinity`.
+        initialData={result ?? undefined}
+        listingTypes={LISTING_TYPES}
+        typeTabs={[]}
+        storeId={storeId}
+        searchPlaceholder="Search this store's spares..."
+      />
+    </>
   );
 }

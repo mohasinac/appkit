@@ -14,6 +14,8 @@ import { LotteryPullForm } from "./LotteryPullForm";
 import { RandomLotsCollage } from "../../../../features/products/components/RandomLotsCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
+import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
 interface ClientProduct {
   id: string;
@@ -29,6 +31,8 @@ interface RandomLotsLotteryDetailViewProps {
   product: ClientProduct;
   user?: { uid: string; displayName?: string | null } | null;
   currentEntry?: { userLotteryNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -39,6 +43,7 @@ export function RandomLotsLotteryDetailView({
   product,
   user,
   currentEntry,
+  pageRegionCards = [],
 }: RandomLotsLotteryDetailViewProps) {
   const [pulledEntry, setPulledEntry] = useState<{
     userLotteryNumber: number;
@@ -89,6 +94,8 @@ export function RandomLotsLotteryDetailView({
               <Text color="muted">{product.description}</Text>
             ) : null}
           </Stack>
+
+          <AdminComposableRegion pageId="random-lots-slug" initialCards={pageRegionCards} />
 
           {/* Prize previews — only the slots that actually have a photo. The
               numbered grid below stays the complete slot map. */}

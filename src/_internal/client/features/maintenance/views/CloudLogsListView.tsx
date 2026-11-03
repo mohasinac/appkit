@@ -6,6 +6,8 @@ import type { CloudLogEntry } from "../../../../server/features/maintenance/clou
 import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";
 import { normalizeError } from "../../../../../errors/normalize";
 import { toUserMessage } from "../../../../../errors/error-display-map";
+import { AdminComposableRegion } from "../../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../../shared/features/dashboard/recent-entry";
 
 const BORDER_STYLE = "1px solid var(--appkit-color-border)";
 
@@ -32,6 +34,8 @@ export interface CloudLogsListViewProps {
   subtitle?: string;
   initialEntries: CloudLogEntry[];
   initialNextPageToken: string | null;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function CloudLogsListView({
@@ -39,6 +43,7 @@ export function CloudLogsListView({
   subtitle,
   initialEntries,
   initialNextPageToken,
+  pageRegionCards = [],
 }: CloudLogsListViewProps): React.JSX.Element {
   const [entries, setEntries] = React.useState<CloudLogEntry[]>(initialEntries);
   const [nextPageToken, setNextPageToken] = React.useState<string | null>(initialNextPageToken);
@@ -80,6 +85,8 @@ export function CloudLogsListView({
       {subtitle ? (
         <Text as="p" style={{ color: "var(--appkit-color-text-muted)", marginBottom: "1rem" }}>{subtitle}</Text>
       ) : null}
+
+      <AdminComposableRegion pageId="admin-maintenance-cloud-logs" initialCards={pageRegionCards} />
 
       <Span style={{ fontSize: "0.85rem", color: "var(--appkit-color-text-muted)" }}>
         {entries.length} entries loaded

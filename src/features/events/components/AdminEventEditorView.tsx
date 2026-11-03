@@ -43,6 +43,8 @@ import type { SectionDef } from "../../shell/SectionForm";
 import { eventDraftSchema } from "../schemas/event-form";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // Covers the cross-type required fields plus the two conditional rules the
 // "Settings" step already hand-enforces (offer coupon/code, poll min-2
@@ -64,6 +66,10 @@ const __O = {
 
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   eventId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   embedded?: boolean;
   /** When provided, restricts the event type dropdown to these values only. */
@@ -633,6 +639,8 @@ function eventToDraft(event: Record<string, any>): EventDraft {
 
 export function AdminEventEditorView({
   eventId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   embedded,
   allowedTypes,
@@ -1208,7 +1216,10 @@ export function AdminEventEditorView({
       portal="admin"
       {...rest}
       title={isEdit ? "Edit Event" : "Create Event"}
-      sections={[formContent]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+        formContent,
+      ]}
     />
   );
 }

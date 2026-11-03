@@ -59,6 +59,8 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { MediaImage } from "../../../ui/components/MediaImage";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -328,6 +330,8 @@ interface SellerOrdersResponse {
 
 export interface SellerOrdersViewProps {
   orderDetailApiBase?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -1005,6 +1009,7 @@ function OrderDetailDrawer({
 
 export function SellerOrdersView({
   orderDetailApiBase = SELLER_ENDPOINTS.ORDERS,
+  pageRegionCards = [],
 }: SellerOrdersViewProps) {
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [setLocationOpen, setSetLocationOpen] = useState(false);
@@ -1384,6 +1389,7 @@ export function SellerOrdersView({
 
   return (
     <>
+      <AdminComposableRegion pageId="store-orders" initialCards={pageRegionCards} />
       <DataListingView config={config} />
 
       {selectedOrderId && (

@@ -7,8 +7,15 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-export function AdminUsersGuideView() {
+export interface AdminUsersGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminUsersGuideView({ pageRegionCards = [] }: AdminUsersGuideViewProps) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -21,6 +28,8 @@ export function AdminUsersGuideView() {
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Users &amp; Accounts</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Managing users, roles, sessions, and employee accounts on {getBrandName()}.</Text>
       </Section>
+
+      <AdminComposableRegion pageId="admin-guide-users" initialCards={pageRegionCards} />
 
       {[
         {

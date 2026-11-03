@@ -9,6 +9,8 @@ import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandSupportEmail } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -220,9 +222,12 @@ function VisibilityStatesSection() {
 
 // -- Main view -----------------------------------------------------------------
 
-export type StoreSettingsGuideViewProps = Record<string, never>;
+export interface StoreSettingsGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
+export function StoreSettingsGuideView({ pageRegionCards = [] }: StoreSettingsGuideViewProps) {
   return (
     <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
@@ -248,6 +253,8 @@ export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
           Store profile, shipping, returns, vacation mode, WhatsApp, and visibility.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="store-guide-settings" initialCards={pageRegionCards} />
 
       {/* Sections */}
       <GuideSection title="1. Store profile">

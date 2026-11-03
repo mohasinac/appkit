@@ -7,6 +7,8 @@ import { Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
 
@@ -119,7 +121,12 @@ const SECTIONS: ShoppingSection[] = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function BuyerShoppingGuideView() {
+export interface BuyerShoppingGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function BuyerShoppingGuideView({ pageRegionCards = [] }: BuyerShoppingGuideViewProps = {}) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -146,6 +153,8 @@ export function BuyerShoppingGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
+
+      <AdminComposableRegion pageId="help-shopping" initialCards={pageRegionCards} />
     </Stack>
   );
 }

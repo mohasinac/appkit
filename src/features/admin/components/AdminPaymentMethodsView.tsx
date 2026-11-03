@@ -20,6 +20,8 @@ import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { QuickEditMenu } from "./QuickEditMenu";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const BAN_STATUS_TABS = [
   { id: "", label: "All" },
@@ -165,9 +167,11 @@ function buildConfig(
 
 export interface AdminPaymentMethodsViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
+export function AdminPaymentMethodsView({ pageRegionCards = [] }: AdminPaymentMethodsViewProps) {
   const [detail, setDetail] = useState<PaymentMethodRow | null>(null);
   // Independent useUrlTable() against the same URL param the listing reads
   // via filterKeys (Root Cause #35 pattern).
@@ -226,6 +230,7 @@ export function AdminPaymentMethodsView(_props: AdminPaymentMethodsViewProps) {
           onChange={(v) => chipTable.set("banStatus", v)}
         />
       </Div>
+      <AdminComposableRegion pageId="admin-payment-methods" initialCards={pageRegionCards} />
       <DataListingView config={config} />
     </Stack>
   );

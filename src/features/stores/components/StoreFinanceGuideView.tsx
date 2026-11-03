@@ -9,6 +9,8 @@ import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -252,9 +254,12 @@ function TaxesSection() {
 
 // -- Main view -----------------------------------------------------------------
 
-export type StoreFinanceGuideViewProps = Record<string, never>;
+export interface StoreFinanceGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function StoreFinanceGuideView(_props: StoreFinanceGuideViewProps) {
+export function StoreFinanceGuideView({ pageRegionCards = [] }: StoreFinanceGuideViewProps) {
   return (
     <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
@@ -280,6 +285,8 @@ export function StoreFinanceGuideView(_props: StoreFinanceGuideViewProps) {
           Payouts, commissions, coupons, and promoted listings.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="store-guide-finance" initialCards={pageRegionCards} />
 
       {/* Sections */}
       <GuideSection title="1. Commission structure">

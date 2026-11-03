@@ -7,6 +7,8 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { EmptyState } from "../../../ui/components/EmptyState";
 import type { ConversationDocument } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 function formatRelative(at: Date | string): string {
   const d = typeof at === "string" ? new Date(at) : at;
@@ -93,7 +95,12 @@ function ConversationRow({ conversation, selfId }: { conversation: ConversationD
   );
 }
 
-export function ConversationsInboxView() {
+export interface ConversationsInboxViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function ConversationsInboxView({ pageRegionCards = [] }: ConversationsInboxViewProps = {}) {
   const { user, loading } = useAuth();
   const { data, isPending, isError } = useConversations(20, Boolean(user));
 
@@ -116,6 +123,8 @@ export function ConversationsInboxView() {
           Messages
         </Heading>
       </Div>
+
+      <AdminComposableRegion pageId="messages" initialCards={pageRegionCards} />
 
       {isPending && (
         <Div padding="lg">

@@ -7,6 +7,8 @@ import { Main, Section } from "../../../ui/components/Semantic";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
 import type { SearchParamsRecord } from "../../../utils/search-params";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface CategoriesIndexPageViewProps {
   /**
@@ -14,6 +16,8 @@ export interface CategoriesIndexPageViewProps {
    * either way; remove once no caller passes it.
    */
   searchParams?: SearchParamsRecord;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -38,7 +42,9 @@ export interface CategoriesIndexPageViewProps {
  * was already client-rendered, so there was never a server-rendered grid to
  * lose (contrast `/products`, where the grid IS in the SSR HTML and must stay).
  */
-export async function CategoriesIndexPageView(_props: CategoriesIndexPageViewProps = {}) {
+export async function CategoriesIndexPageView({
+  pageRegionCards = [],
+}: CategoriesIndexPageViewProps = {}) {
   return (
     <Main>
       <Section padding="y-2xl">
@@ -46,6 +52,7 @@ export async function CategoriesIndexPageView(_props: CategoriesIndexPageViewPro
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Categories
           </Heading>
+          <AdminComposableRegion pageId="categories-index" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <CategoriesIndexListing />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

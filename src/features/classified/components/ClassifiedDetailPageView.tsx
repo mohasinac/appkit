@@ -41,11 +41,15 @@ import {
 import { ListingBottomActions } from "../../products/components/ListingBottomActions";
 import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface ClassifiedDetailPageViewProps {
   slug: string;
   /** Pre-fetched product document — dedupes with generateMetadata() via React.cache(). */
   initialProduct?: ProductDocument | null;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   /**
    * Render prop for the offer UI — which, on a classified, IS the purchase path.
    *
@@ -71,7 +75,7 @@ export interface ClassifiedDetailPageViewProps {
   }) => React.ReactNode;
 }
 
-export async function ClassifiedDetailPageView({ slug, initialProduct, renderOfferAction }: ClassifiedDetailPageViewProps) {
+export async function ClassifiedDetailPageView({ slug, initialProduct, renderOfferAction, pageRegionCards = [] }: ClassifiedDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
     // The listing IS this page's subject — a read failure must surface rather
@@ -362,6 +366,7 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                   storeLabel={storeName ?? undefined}
                 />
               </SectionVisibilityGate>
+              <AdminComposableRegion pageId="classified-slug" initialCards={pageRegionCards} />
             </Stack>
           )}
         />

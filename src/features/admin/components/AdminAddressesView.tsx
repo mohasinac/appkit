@@ -20,6 +20,8 @@ import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ROUTES } from "../../../next/routing/route-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const BAN_STATUS_TABS = [
   { id: "", label: "All" },
@@ -162,9 +164,11 @@ function buildAddressConfig(
 
 export interface AdminAddressesViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminAddressesView(_props: AdminAddressesViewProps) {
+export function AdminAddressesView({ pageRegionCards = [] }: AdminAddressesViewProps) {
   // Independent useUrlTable() against the same URL param DataListingView's own
   // table reads via filterKeys — safe because useUrlTable holds no local state
   // (the documented Root Cause #35 pattern).
@@ -200,6 +204,7 @@ export function AdminAddressesView(_props: AdminAddressesViewProps) {
           onChange={(v) => chipTable.set("banStatus", v)}
         />
       </Div>
+      <AdminComposableRegion pageId="admin-banned-addresses" initialCards={pageRegionCards} />
       <DataListingView config={config} />
     </Stack>
   );

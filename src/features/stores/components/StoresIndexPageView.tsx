@@ -10,6 +10,8 @@ import { hidePublicTestData } from "../../../_internal/server/features/tester/vi
 import { STORE_FIELDS } from "../../../constants/field-names";
 import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface StoresIndexPageViewProps {
   searchParams?: SearchParamsRecord;
@@ -28,12 +30,21 @@ export interface StoresIndexPageViewProps {
    */
   verifiedOnly?: boolean;
   heading?: string;
+  /**
+   * Admin-curated page-region cards (Phase 12). Omit for no extra content.
+   * This view is shared by `/stores` AND `/sellers` (the latter via
+   * `verifiedOnly`) — the page-id is derived from that flag below so each
+   * route gets its own stored region without `/sellers/page.tsx` (out of
+   * this chunk's scope) needing any change to stay correct.
+   */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function StoresIndexPageView({
   searchParams = {},
   verifiedOnly = false,
   heading = "Stores",
+  pageRegionCards = [],
 }: StoresIndexPageViewProps) {
   const sort = firstParam(searchParams, "sort") || "-createdAt";
   const page = Number(firstParam(searchParams, "page")) || 1;
@@ -101,6 +112,7 @@ export async function StoresIndexPageView({
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             {heading}
           </Heading>
+          <AdminComposableRegion pageId={verifiedOnly ? "sellers" : "stores"} initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <StoresIndexListing initialData={publicResult ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

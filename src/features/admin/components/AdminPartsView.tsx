@@ -37,6 +37,8 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface PartRow {
   id: string;
@@ -192,9 +194,12 @@ const ADMIN_PARTS_CONFIG: ListingViewConfig<JsonValue, PartRow> = {
   rowHrefTemplate: (row) => String(ROUTES.ADMIN.PARTS_EDIT(row.id)),
 };
 
-export type AdminPartsViewProps = ListingLayoutProps;
+export interface AdminPartsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminPartsView({ children, ...props }: AdminPartsViewProps) {
+export function AdminPartsView({ children, pageRegionCards = [], ...props }: AdminPartsViewProps) {
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -205,5 +210,10 @@ export function AdminPartsView({ children, ...props }: AdminPartsViewProps) {
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_PARTS_CONFIG} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-parts" initialCards={pageRegionCards} />
+      <DataListingView config={ADMIN_PARTS_CONFIG} />
+    </>
+  );
 }

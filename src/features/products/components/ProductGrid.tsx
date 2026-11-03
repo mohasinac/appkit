@@ -96,6 +96,116 @@ interface ProductCardProps<T extends ProductItem = ProductItem> {
 
 const PRODUCT_CARD_BLOCK_IDS = ["title", "brand", "notes", "storeLine", "rating", "priceRow"] as const;
 
+/**
+ * The price-row block's content — extracted to a standalone function
+ * (rather than an inline closure inside `ProductCard`) purely to keep
+ * `ProductCard` under this codebase's `max-lines-per-function` lint cap.
+ * No behavior change; every value it reads was already a `ProductCard`
+ * prop or a value derived from one, now passed explicitly.
+ */
+function renderProductCardPriceRow<T extends ProductItem>(params: {
+  product: T;
+  listingPlugin: ReturnType<typeof pluginFor>;
+  featuresList: ReturnType<typeof useProductFeatures>;
+  onAddToCart?: (product: T) => void;
+  onBuyNow?: (product: T) => void;
+}) {
+  const { product, listingPlugin, featuresList, onAddToCart, onBuyNow } = params;
+  return (
+    <Div className="mt-auto" padding="t-xs">
+      <PriceDisplay
+        amount={product.price}
+        originalAmount={product.originalPrice}
+        currency={getDefaultCurrency()}
+        variant="compact"
+      />
+
+      {(() => {
+        const stock =
+          product.stockCount ?? product.stockQuantity ?? product.availableQuantity;
+        if (stock === undefined || !listingPlugin.showsStockQuantity) return null;
+        if (stock <= 0) {
+          return (
+            <Text className={CLS_DISCOUNT_TEXT}>
+              Out of stock
+            </Text>
+          );
+        }
+        const low = stock <= 5;
+        return (
+          <Text
+            className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-[var(--appkit-color-text-faint)]" }`} weight="medium"
+          >
+            {low ? `Only ${stock} left` : `${stock} in stock`}
+          </Text>
+        );
+      })()}
+
+      {/* Feature badges (FI6) — gated on ProductFeaturesProvider */}
+      {featuresList && product.features && product.features.length > 0 && (
+        <FeatureBadgeList
+          productFeatureIds={product.features}
+          features={featuresList}
+          maxVisible={PRODUCT_FEATURE_CARD_MAX_VISIBLE}
+          className="mt-2"
+        />
+      )}
+
+      {/*
+        ── Action buttons: TEXT ONLY ──────────────────────────────────────
+
+        🛑 BOTH HAND-ROLLED INLINE SVGs ARE GONE — a lightning bolt on
+        "Buy Now" and a trolley on "Cart". Not replaced with `<Icon>`,
+        which is the usual fix (Root Cause #80, and the wishlist button a
+        few lines up records doing exactly that): removed, because the goal
+        here is FEWER atoms and an icon beside a two-word label inside a
+        half-width button is decoration. "Buy Now" and "Cart" are already
+        unambiguous; the glyph adds an element per button per card in every
+        grid and tells the shopper nothing the word did not.
+
+        It also removes the last two hand-written `<path d="…">` in this
+        card — and the bolt had no registry entry, so keeping it would have
+        meant either adding an icon to the catalogue for one decorative use
+        or leaving a raw SVG behind.
+      */}
+      {(onAddToCart || onBuyNow) && (
+        <Div layout="grid" gap="1" className={`mt-2 ${onBuyNow && onAddToCart ? "grid-cols-2" : "grid-cols-1"}`}>
+          {onBuyNow && (
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onBuyNow(product);
+              }}
+              className="justify-center text-[length:var(--appkit-text-xs)] btn-glow"
+            >
+              Buy Now
+            </Button>
+          )}
+          {onAddToCart && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onAddToCart(product);
+              }}
+              className="justify-center text-[length:var(--appkit-text-xs)]"
+            >
+              Cart
+            </Button>
+          )}
+        </Div>
+      )}
+    </Div>
+  );
+}
+
 export function ProductCard<T extends ProductItem = ProductItem>({
   product,
   href,
@@ -192,99 +302,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
     ? (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }
     : onClick && !href ? () => onClick(product) : undefined;
 
-  const renderPriceRow = () => (
-    <Div className="mt-auto" padding="t-xs">
-      <PriceDisplay
-        amount={product.price}
-        originalAmount={product.originalPrice}
-        currency={getDefaultCurrency()}
-        variant="compact"
-      />
-
-      {(() => {
-        const stock =
-          product.stockCount ?? product.stockQuantity ?? product.availableQuantity;
-        if (stock === undefined || !listingPlugin.showsStockQuantity) return null;
-        if (stock <= 0) {
-          return (
-            <Text className={CLS_DISCOUNT_TEXT}>
-              Out of stock
-            </Text>
-          );
-        }
-        const low = stock <= 5;
-        return (
-          <Text
-            className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-[var(--appkit-color-text-faint)]" }`} weight="medium"
-          >
-            {low ? `Only ${stock} left` : `${stock} in stock`}
-          </Text>
-        );
-      })()}
-
-      {/* Feature badges (FI6) — gated on ProductFeaturesProvider */}
-      {featuresList && product.features && product.features.length > 0 && (
-        <FeatureBadgeList
-          productFeatureIds={product.features}
-          features={featuresList}
-          maxVisible={PRODUCT_FEATURE_CARD_MAX_VISIBLE}
-          className="mt-2"
-        />
-      )}
-
-      {/*
-        ── Action buttons: TEXT ONLY ──────────────────────────────────────
-
-        🛑 BOTH HAND-ROLLED INLINE SVGs ARE GONE — a lightning bolt on
-        "Buy Now" and a trolley on "Cart". Not replaced with `<Icon>`,
-        which is the usual fix (Root Cause #80, and the wishlist button a
-        few lines up records doing exactly that): removed, because the goal
-        here is FEWER atoms and an icon beside a two-word label inside a
-        half-width button is decoration. "Buy Now" and "Cart" are already
-        unambiguous; the glyph adds an element per button per card in every
-        grid and tells the shopper nothing the word did not.
-
-        It also removes the last two hand-written `<path d="…">` in this
-        card — and the bolt had no registry entry, so keeping it would have
-        meant either adding an icon to the catalogue for one decorative use
-        or leaving a raw SVG behind.
-      */}
-      {(onAddToCart || onBuyNow) && (
-        <Div layout="grid" gap="1" className={`mt-2 ${onBuyNow && onAddToCart ? "grid-cols-2" : "grid-cols-1"}`}>
-          {onBuyNow && (
-            <Button
-              type="button"
-              variant="primary"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                onBuyNow(product);
-              }}
-              className="justify-center text-[length:var(--appkit-text-xs)] btn-glow"
-            >
-              Buy Now
-            </Button>
-          )}
-          {onAddToCart && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                onAddToCart(product);
-              }}
-              className="justify-center text-[length:var(--appkit-text-xs)]"
-            >
-              Cart
-            </Button>
-          )}
-        </Div>
-      )}
-    </Div>
-  );
+  const renderPriceRow = () =>
+    renderProductCardPriceRow({ product, listingPlugin, featuresList, onAddToCart, onBuyNow });
 
   const cardBody = (
     <Div

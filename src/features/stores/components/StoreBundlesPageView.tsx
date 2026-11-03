@@ -4,10 +4,14 @@ import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { CategoryBundlesListing } from "../../categories/components/CategoryBundlesListing";
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface StoreBundlesPageViewProps {
   storeSlug: string;
   onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -21,6 +25,7 @@ export interface StoreBundlesPageViewProps {
 export async function StoreBundlesPageView({
   storeSlug,
   onBuyNow,
+  pageRegionCards = [],
 }: StoreBundlesPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, any>)?.id;
@@ -42,9 +47,12 @@ export async function StoreBundlesPageView({
   );
 
   return (
-    <CategoryBundlesListing
-      initialBundles={hidePublicTestData(bundles)}
-      onBuyNow={onBuyNow}
-    />
+    <>
+      <AdminComposableRegion pageId="stores-storeslug-bundles" initialCards={pageRegionCards} />
+      <CategoryBundlesListing
+        initialBundles={hidePublicTestData(bundles)}
+        onBuyNow={onBuyNow}
+      />
+    </>
   );
 }

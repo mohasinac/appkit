@@ -7,12 +7,17 @@ import { Heading, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
 } as const;
 
-export interface SpotAFakeViewProps {}
+export interface SpotAFakeViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 /**
  * D6 — the spot-a-fake guide.
@@ -40,7 +45,7 @@ export interface SpotAFakeViewProps {}
  * weight" without somewhere to check it against would be advice shaped like
  * help, so each signal links to the surface that answers it.
  */
-export async function SpotAFakeView({}: SpotAFakeViewProps = {}) {
+export async function SpotAFakeView({ pageRegionCards = [] }: SpotAFakeViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const themed = { bgPrimary: THEMED_BG_PRIMARY, bgSecondary: THEMED_BG_SECONDARY };
   const { getTranslations } = await import("next-intl/server");
@@ -65,6 +70,12 @@ export async function SpotAFakeView({}: SpotAFakeViewProps = {}) {
           <Text size="lg" color="muted" className="max-w-3xl">
             {t("intro")}
           </Text>
+        </Div>
+      </Section>
+
+      <Section padding="y-lg">
+        <Div className={page.container.lg}>
+          <AdminComposableRegion pageId="spot-a-fake" initialCards={pageRegionCards} />
         </Div>
       </Section>
 

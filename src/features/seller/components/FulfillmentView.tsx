@@ -20,10 +20,14 @@ import { normalizeError } from "../../../errors/normalize";
 import { useToast } from "../../../ui/components/toast-context";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface FulfillmentViewProps {
   currentUserId?: string;
   currentUserName?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 type ViewMode = "scan" | "list";
@@ -44,6 +48,7 @@ function statusBadgeVariant(
 
 export function FulfillmentView({
   currentUserId,
+  pageRegionCards = [],
 }: FulfillmentViewProps) {
   const [mode, setMode] = useState<ViewMode>("scan");
   const [orders, setOrders] = useState<OrderPlain[]>([]);
@@ -178,6 +183,8 @@ export function FulfillmentView({
           </Button>
         </Row>
       </Row>
+
+      <AdminComposableRegion pageId="store-fulfillment" initialCards={pageRegionCards} />
 
       {mode === "scan" && (
         <Stack gap="md">

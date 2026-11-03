@@ -20,6 +20,8 @@ import { AdminBrandEditorView } from "./AdminBrandEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { Span } from "../../../ui/components/Typography";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminBrandsResponse {
   items?: JsonArray;
@@ -153,14 +155,18 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
       onSaved={closePanel}
       onDeleted={closePanel}
       embedded
+      pageId={editId ? "admin-brands-id-edit" : "admin-brands-new"}
     />
   ),
   resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Brand" : "Edit Brand"),
 };
 
-export type AdminBrandsViewProps = ListingLayoutProps;
+export interface AdminBrandsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminBrandsView({ children, ...props }: AdminBrandsViewProps) {
+export function AdminBrandsView({ children, pageRegionCards = [], ...props }: AdminBrandsViewProps) {
   // Backward-compat passthrough — some page shims wrap with custom children.
   if (React.Children.count(children) > 0) {
     return (
@@ -169,5 +175,12 @@ export function AdminBrandsView({ children, ...props }: AdminBrandsViewProps) {
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_BRANDS_CONFIG} />;
+  return (
+    <DataListingView
+      config={{
+        ...ADMIN_BRANDS_CONFIG,
+        renderAboveContent: () => <AdminComposableRegion pageId="admin-brands" initialCards={pageRegionCards} />,
+      }}
+    />
+  );
 }

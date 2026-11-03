@@ -30,6 +30,8 @@ import {
   SCAMMER_STATUS_LABEL,
   toScammerStatus,
 } from "../../scams/constants/scammer-status-display";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 
 interface AdminScammersResponse {
@@ -82,9 +84,12 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
   },
 ];
 
-export type AdminScammersViewProps = ListingLayoutProps;
+export type AdminScammersViewProps = ListingLayoutProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function AdminScammersView({ children, ...props }: AdminScammersViewProps) {
+export function AdminScammersView({ children, pageRegionCards = [], ...props }: AdminScammersViewProps) {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ScammerRow | null>(null);
@@ -186,6 +191,7 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-scammers" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminScammerEditorView
         open={drawerOpen}

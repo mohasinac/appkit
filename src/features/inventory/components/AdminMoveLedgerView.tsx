@@ -24,6 +24,8 @@ import {
   MovementKindValues,
   type InventoryMovementDocument,
 } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface MovementRow {
   id: string;
@@ -67,7 +69,12 @@ function endpoints(m: InventoryMovementDocument): string {
   return "—";
 }
 
-export function AdminMoveLedgerView() {
+export interface AdminMoveLedgerViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminMoveLedgerView({ pageRegionCards = [] }: AdminMoveLedgerViewProps = {}) {
   /*
    * 🛑 Declared BEFORE the `useMemo` that closes over `setSelected`. The memo
    * factory runs during this render, so a `useState` below it would leave the
@@ -162,6 +169,7 @@ export function AdminMoveLedgerView() {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-inventory-movements" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <RecordDetailModal
         isOpen={selected !== null}

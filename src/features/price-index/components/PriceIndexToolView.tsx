@@ -26,6 +26,8 @@ import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { PRICE_LOOKUP_INDEX_TYPES, priceLookupTargetFor } from "../lookup-target";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * The realised-price lookup — a SEARCH tool, not a list.
@@ -696,12 +698,15 @@ export interface PriceIndexToolViewProps {
   initialData?: PriceIndexToolResponse | null;
   /** `siteSettings.search?.indexEnabled`. Read as `!== false`. */
   searchIndexEnabled?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function PriceIndexToolView({
   initialQuery = "",
   initialData = null,
   searchIndexEnabled,
+  pageRegionCards = [],
 }: PriceIndexToolViewProps) {
   const [draft, setDraft] = useState(initialQuery);
   /**
@@ -996,6 +1001,8 @@ export function PriceIndexToolView({
               are asking for the same thing.
             </Text>
           </Stack>
+
+          <AdminComposableRegion pageId="tools-price-index" initialCards={pageRegionCards} />
 
           {/*
             🛑 A SEARCHABLE DROPDOWN, not a text box, and the reason is a

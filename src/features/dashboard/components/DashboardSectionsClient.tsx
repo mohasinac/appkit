@@ -109,6 +109,13 @@ export function DashboardSectionsClient({
       counts={{}}
       above={above}
       emptyMessage={emptyMessage}
+      // Phase 12 — `portal` already uniquely identifies this component's two
+      // real callers (`/store`, `/user`; admin never renders this client
+      // variant), so the id is derived here rather than asking both callers
+      // to invent and pass one. Distinct from each page's OWN top-level
+      // region id ("store"/"user", wired directly in page.tsx) — this one
+      // scopes to the section-cards grid specifically, not the whole page.
+      pageId={`${portal}-sections-grid`}
       /*
        * 🛑 Withheld deliberately. `/store`'s entitlement filter lives in the
        * layout and on the hub pages, not here, so a count rendered from these

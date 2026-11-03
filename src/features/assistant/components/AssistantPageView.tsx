@@ -15,6 +15,8 @@ import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { PublicSiteSettings } from "../../../_internal/shared/features/site-settings/types";
 import { ASSISTANT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { askAssistantSchema } from "../schemas/ask";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * The customer assistant's dedicated full-chat page — the "expand" target
@@ -39,7 +41,12 @@ interface Exchange {
   answer: string;
 }
 
-export function AssistantPageView() {
+export interface AssistantPageViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AssistantPageView({ pageRegionCards = [] }: AssistantPageViewProps = {}) {
   const { user, loading } = useAuth();
   const [question, setQuestion] = useState("");
   const [exchanges, setExchanges] = useState<readonly Exchange[]>([]);
@@ -106,6 +113,8 @@ export function AssistantPageView() {
           Questions about shipping, returns, or what we stock — answered from our FAQs,
           live catalogue, and your own order history.
         </Text>
+
+        <AdminComposableRegion pageId="assistant" initialCards={pageRegionCards} />
 
         {exchanges.length > 0 && (
           <Stack gap="md">

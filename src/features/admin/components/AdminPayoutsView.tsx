@@ -30,6 +30,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminPayoutsResponse {
   items?: JsonArray;
@@ -44,9 +46,12 @@ interface PayoutRow {
   updatedAt: string;
 }
 
-export type AdminPayoutsViewProps = ListingLayoutProps;
+export type AdminPayoutsViewProps = ListingLayoutProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) {
+export function AdminPayoutsView({ children, pageRegionCards = [], ...props }: AdminPayoutsViewProps) {
   const router = useRouter();
   const [markPaidOpen, setMarkPaidOpen] = useState(false);
   const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);
@@ -232,6 +237,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-payouts" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminPayoutMarkPaidModal
         isOpen={markPaidOpen}

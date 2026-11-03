@@ -81,6 +81,8 @@ import {
 import { formatMoney } from "../../../utils/number.formatter";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminGatewayEventsResponse {
   items?: JsonArray;
@@ -106,9 +108,12 @@ const STATUS_LABEL: Record<string, string> = {
   ignored: "Recorded, no handler for this type",
 };
 
-export type AdminGatewayEventsViewProps = ListingLayoutProps;
+export interface AdminGatewayEventsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminGatewayEventsView({ children, ...props }: AdminGatewayEventsViewProps) {
+export function AdminGatewayEventsView({ children, pageRegionCards = [], ...props }: AdminGatewayEventsViewProps) {
   const [detail, setDetail] = useState<Record<string, JsonValue> | null>(null);
   const [reopenId, setReopenId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -244,6 +249,7 @@ export function AdminGatewayEventsView({ children, ...props }: AdminGatewayEvent
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-maintenance-gateway-events" initialCards={pageRegionCards} />
       <DataListingView config={config} />
 
       <RecordDetailModal

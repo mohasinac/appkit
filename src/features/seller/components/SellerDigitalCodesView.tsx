@@ -17,9 +17,19 @@ import {
   SellerListingTypeView,
   type SellerListingTypeViewProps,
 } from "./SellerListingTypeView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-export type SellerDigitalCodesViewProps = SellerListingTypeViewProps;
+export type SellerDigitalCodesViewProps = SellerListingTypeViewProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function SellerDigitalCodesView(props: SellerDigitalCodesViewProps) {
-  return <SellerListingTypeView type="digital-code" {...props} />;
+export function SellerDigitalCodesView({ pageRegionCards = [], ...props }: SellerDigitalCodesViewProps) {
+  return (
+    <>
+      <SellerListingTypeView type="digital-code" {...props} />
+      <AdminComposableRegion pageId="store-digital-codes" initialCards={pageRegionCards} />
+    </>
+  );
 }

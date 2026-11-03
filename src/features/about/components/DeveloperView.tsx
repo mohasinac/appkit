@@ -15,6 +15,8 @@ import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import type { AboutTeamMember, AboutMilestone } from "../schemas/firestore";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface DeveloperViewProps {
   labels?: {
@@ -24,6 +26,8 @@ export interface DeveloperViewProps {
     backToTeam?: string;
     empty?: string;
   };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -32,7 +36,7 @@ export interface DeveloperViewProps {
  * filtered to `isDeveloper` members — rather than inventing a separate
  * content model just for this page. See CLAUDE.md's About-family notes.
  */
-export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
+export async function DeveloperView({ labels = {}, pageRegionCards = [] }: DeveloperViewProps) {
   const page = { container: PAGE_CONTAINER };
 
   let teamMembers: AboutTeamMember[] = [];
@@ -119,6 +123,10 @@ export async function DeveloperView({ labels = {} }: DeveloperViewProps) {
           <TextLink href={String(ROUTES.PUBLIC.ABOUT)} variant="muted" size="sm">
             {labels.backToTeam ?? "← Meet the whole team"}
           </TextLink>
+        </Div>
+
+        <Div className="mt-10">
+          <AdminComposableRegion pageId="developer" initialCards={pageRegionCards} />
         </Div>
       </Div>
     </Div>

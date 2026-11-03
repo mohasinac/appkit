@@ -14,6 +14,8 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface ClusterAddress {
   id: string;
@@ -42,9 +44,11 @@ const BAN_BADGE: Record<string, "danger" | "warning" | "secondary"> = {
 
 export interface AdminAddressClustersViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminAddressClustersView(_props: AdminAddressClustersViewProps) {
+export function AdminAddressClustersView({ pageRegionCards = [] }: AdminAddressClustersViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -96,6 +100,8 @@ export function AdminAddressClustersView(_props: AdminAddressClustersViewProps) 
           Users sharing the same physical address. Flagging is informational only — users are not blocked.
         </Text>
       </Stack>
+
+      <AdminComposableRegion pageId="admin-address-clusters" initialCards={pageRegionCards} />
 
       {isLoading && (
         <Row justify="center" padding="y-4xl">

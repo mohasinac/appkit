@@ -10,6 +10,8 @@ import {
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
 import { RandomLotsIndexListing } from "./RandomLotsIndexListing";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -19,6 +21,8 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 export interface RandomLotsListingViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -32,6 +36,7 @@ export interface RandomLotsListingViewProps {
  */
 export async function RandomLotsListingView({
   searchParams = {},
+  pageRegionCards = [],
 }: RandomLotsListingViewProps) {
   // Routed through the shared query (2026-08-21). The hand-rolled builder this
   // replaces had its own Root Cause #30 divergence: it applied the price range
@@ -64,6 +69,7 @@ export async function RandomLotsListingView({
             Pokémon, Hot Wheels Super Treasure Hunts, Gundam kits and more,
             allocated by crypto.randomInt with proof on GitHub.
           </Text>
+          <AdminComposableRegion pageId="random-lots-index" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <RandomLotsIndexListing initialData={result ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

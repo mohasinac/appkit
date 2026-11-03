@@ -7,6 +7,8 @@ import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -16,7 +18,10 @@ const __O = {
   xAuto: "overflow-x-auto",
 } as const;
 
-export interface GstExplainerViewProps {}
+export interface GstExplainerViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 /**
  * D6b — how GST works on LetItRip, for buyers and for sellers.
@@ -43,7 +48,7 @@ export interface GstExplainerViewProps {}
  * Every figure traces to the model written down in the plan's C0b/C0c and to
  * `taxCodes` — nothing here is an invented rate.
  */
-export async function GstExplainerView({}: GstExplainerViewProps = {}) {
+export async function GstExplainerView({ pageRegionCards = [] }: GstExplainerViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const themed = { bgPrimary: THEMED_BG_PRIMARY, bgSecondary: THEMED_BG_SECONDARY };
   const { getTranslations } = await import("next-intl/server");
@@ -184,6 +189,12 @@ export async function GstExplainerView({}: GstExplainerViewProps = {}) {
             <TextLink href={String(ROUTES.PUBLIC.HOW_PAYOUTS_WORK)}>{t("linkPayouts")}</TextLink>
             <TextLink href={String(ROUTES.PUBLIC.FAQS)}>{t("linkFaqs")}</TextLink>
           </Row>
+        </Div>
+      </Section>
+
+      <Section padding="y-xl">
+        <Div className={page.container.lg}>
+          <AdminComposableRegion pageId="gst" initialCards={pageRegionCards} />
         </Div>
       </Section>
     </Div>

@@ -1,6 +1,8 @@
 import React from "react";
 import { StackedViewShell } from "../../../ui/components/StackedViewShell";
 import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface OrderDetailViewLabels {
   title?: string;
@@ -20,6 +22,8 @@ export interface OrderDetailViewProps extends Omit<
   renderActions?: () => React.ReactNode;
   isLoading?: boolean;
   isNotFound?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function OrderDetailView({
@@ -30,6 +34,7 @@ export function OrderDetailView({
   renderAddress,
   renderPayment,
   renderActions,
+  pageRegionCards = [],
   ...rest
 }: OrderDetailViewProps) {
   return (
@@ -44,6 +49,7 @@ export function OrderDetailView({
         renderItems?.(),
         renderAddress?.(),
         renderPayment?.(),
+        <AdminComposableRegion key="page-region" pageId="user-orders-id" initialCards={pageRegionCards} />,
       ]}
     />
   );

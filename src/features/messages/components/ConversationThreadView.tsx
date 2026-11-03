@@ -20,6 +20,8 @@ import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { isListingType } from "../../../_internal/shared/listing-types/feature-flags";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { MessageDocument } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 function newClientMessageId(): string {
   // crypto.randomUUID is available in every browser this app targets; a
@@ -110,7 +112,14 @@ function MessageBubble({ message, isSelf }: { message: MessageDocument; isSelf: 
   );
 }
 
-export function ConversationThreadView({ conversationId }: { conversationId: string }) {
+export function ConversationThreadView({
+  conversationId,
+  pageRegionCards = [],
+}: {
+  conversationId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}) {
   const { user, loading } = useAuth();
   const { data, isPending, isError, channelError } = useConversationThread(
     user ? conversationId : null,
@@ -198,6 +207,8 @@ export function ConversationThreadView({ conversationId }: { conversationId: str
           Block
         </Button>
       </Row>
+
+      <AdminComposableRegion pageId="messages-conversationid" initialCards={pageRegionCards} />
 
       {channelError && (
         <Div padding="sm" surface="warning-surface">

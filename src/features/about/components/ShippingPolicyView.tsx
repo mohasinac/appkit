@@ -11,13 +11,18 @@ import { Stack } from "../../../ui/components/Layout";
 import { FlowDiagram } from "../../../ui/components/FlowDiagram";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
 import { TextLink } from "../../../ui/components/TextLink";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const CLS_FOOTER_LINK = "text-sky-600 dark:text-sky-400 hover:underline";
 
 export interface ShippingPolicyViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function ShippingPolicyView({
+  pageRegionCards = [],
 }: ShippingPolicyViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
@@ -127,6 +132,7 @@ export async function ShippingPolicyView({
       />
 
       <Div className={`${page.container.sm}`} padding="content-banner">
+        <AdminComposableRegion pageId="shipping-policy" initialCards={pageRegionCards} />
         {adminHtml ? (
           /*
             Admin-set HTML replaces the WHOLE body — subtitle, sections,

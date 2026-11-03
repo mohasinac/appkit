@@ -15,10 +15,14 @@ import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { CatalogueItemDocument } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface PublicCatalogueItemDetailViewProps {
   ownerSlug: string;
   itemId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const __O = {
@@ -30,7 +34,7 @@ const __O = {
  * no route or view at all; the public catalogue grid rendered bare, unlinked
  * cards (see Recurrent Root Cause sweep, 2026-08-20 session).
  */
-export function PublicCatalogueItemDetailView({ ownerSlug, itemId }: PublicCatalogueItemDetailViewProps) {
+export function PublicCatalogueItemDetailView({ ownerSlug, itemId, pageRegionCards = [] }: PublicCatalogueItemDetailViewProps) {
   const { data, isLoading, isError } = useQuery<{
     owner: { displayName: string | null; photoURL: string | null };
     item: CatalogueItemDocument;
@@ -156,6 +160,8 @@ export function PublicCatalogueItemDetailView({ ownerSlug, itemId }: PublicCatal
             )}
           </Stack>
         </Grid>
+
+        <AdminComposableRegion pageId="catalogue-ownerslug-itemid" initialCards={pageRegionCards} />
       </Container>
     </Main>
   );

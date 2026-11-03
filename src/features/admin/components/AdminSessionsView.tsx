@@ -23,6 +23,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 function maskIp(ip?: string): string {
   if (!ip) return "—";
@@ -53,9 +55,12 @@ interface SessionRow {
   updatedAt: string;
 }
 
-export type AdminSessionsViewProps = ListingLayoutProps;
+export type AdminSessionsViewProps = ListingLayoutProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps) {
+export function AdminSessionsView({ children, pageRegionCards = [], ...props }: AdminSessionsViewProps) {
   const [detail, setDetail] = useState<SessionRow | null>(null);
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -160,6 +165,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-sessions" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       {/*
         A row that could be seen and never opened. Two of these listings offered

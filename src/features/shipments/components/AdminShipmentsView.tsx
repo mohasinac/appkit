@@ -24,6 +24,8 @@ import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { AdminShipmentEditorView } from "./AdminShipmentEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const STATUS_OPTIONS = [
   { id: "All", label: "All" },
@@ -53,9 +55,12 @@ interface ShipmentRow {
   recalculating: boolean;
 }
 
-export type AdminShipmentsViewProps = ListingLayoutProps;
+export type AdminShipmentsViewProps = ListingLayoutProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewProps) {
+export function AdminShipmentsView({ children, pageRegionCards = [], ...props }: AdminShipmentsViewProps) {
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -138,10 +143,20 @@ export function AdminShipmentsView({ children, ...props }: AdminShipmentsViewPro
       </TextLink>
     ),
     renderEditor: ({ editId, closePanel }) => (
-      <AdminShipmentEditorView shipmentId={editId ?? undefined} onSaved={closePanel} embedded />
+      <AdminShipmentEditorView
+        shipmentId={editId ?? undefined}
+        onSaved={closePanel}
+        embedded
+        pageId={editId ? "admin-shipments-id-edit" : "admin-shipments-new"}
+      />
     ),
     resolveEditorTitle: ({ isCreate }) => (isCreate ? "New Shipment" : "Edit Shipment"),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-shipments" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

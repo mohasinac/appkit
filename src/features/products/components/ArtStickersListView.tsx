@@ -15,6 +15,8 @@ import {
   parsePublicProductParams,
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -23,9 +25,11 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 export interface ArtStickersListViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function ArtStickersListView({ searchParams = {} }: ArtStickersListViewProps) {
+export async function ArtStickersListView({ searchParams = {}, pageRegionCards = [] }: ArtStickersListViewProps) {
   // Filter semantics live in `listPublicProducts`, shared verbatim with
   // /api/products — so the SSR first paint and the client's refetch can never
   // disagree about what the default view means (Root Cause #30).
@@ -54,6 +58,7 @@ export async function ArtStickersListView({ searchParams = {} }: ArtStickersList
       </Section>
 
       <Container size="xl" padding="x-md">
+        <AdminComposableRegion pageId="art-index" initialCards={pageRegionCards} />
         <AdSlot id="listing-sidebar-top" className="mb-4 mt-4" />
         <ProductsIndexListing
           // `undefined`, not `null` — React Query treats null as defined data,

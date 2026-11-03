@@ -5,6 +5,8 @@ import { listStoreProducts } from "../../../_internal/server/features/products/l
 import { ART_STICKERS_LISTING_TYPES } from "../../products/constants/listing-tabs";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreProductsListing } from "./StoreProductsListing";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -14,6 +16,8 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 export interface StoreArtStickersPageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -32,6 +36,7 @@ export interface StoreArtStickersPageViewProps {
 export async function StoreArtStickersPageView({
   storeSlug,
   searchParams,
+  pageRegionCards = [],
 }: StoreArtStickersPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, unknown> | null)?.id;
@@ -45,10 +50,13 @@ export async function StoreArtStickersPageView({
   );
 
   return (
-    <StoreProductsListing
-      storeId={storeId}
-      listingTypes={ART_STICKERS_LISTING_TYPES}
-      initialData={result ?? undefined}
-    />
+    <>
+      <AdminComposableRegion pageId="stores-storeslug-art" initialCards={pageRegionCards} />
+      <StoreProductsListing
+        storeId={storeId}
+        listingTypes={ART_STICKERS_LISTING_TYPES}
+        initialData={result ?? undefined}
+      />
+    </>
   );
 }

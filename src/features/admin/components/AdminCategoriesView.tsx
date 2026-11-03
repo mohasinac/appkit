@@ -20,6 +20,8 @@ import type { ListingViewConfig } from "./DataListingView";
 import { AdminCategoryEditorView } from "./AdminCategoryEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * `apiClient.get()` UNWRAPS the `{success, data}` envelope and returns `data`
@@ -218,10 +220,14 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
   resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Category" : "Edit Category"),
 };
 
-export type AdminCategoriesViewProps = ListingLayoutProps;
+export interface AdminCategoriesViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 export function AdminCategoriesView({
   children,
+  pageRegionCards = [],
   ...props
 }: AdminCategoriesViewProps) {
   if (React.Children.count(children) > 0) {
@@ -234,5 +240,12 @@ export function AdminCategoriesView({
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_CATEGORIES_CONFIG} />;
+  return (
+    <DataListingView
+      config={{
+        ...ADMIN_CATEGORIES_CONFIG,
+        renderAboveContent: () => <AdminComposableRegion pageId="admin-categories" initialCards={pageRegionCards} />,
+      }}
+    />
+  );
 }

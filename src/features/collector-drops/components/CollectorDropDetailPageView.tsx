@@ -69,6 +69,8 @@ import { SublistingCarouselSection } from "../../products/components/SublistingC
 import { isFinalSale } from "../../products/constants/final-sale";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface CollectorDropDetailPageViewProps {
   id: string;
@@ -88,6 +90,8 @@ export interface CollectorDropDetailPageViewProps {
   onBuyNow?: () => Promise<BidActionEnvelope<BuyNowSuccess>>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface CollectorDropInfoPanelProps {
@@ -494,7 +498,7 @@ function toRelatedCollectorDropCards(
     }));
 }
 
-export async function CollectorDropDetailPageView({ id, initialCollectorDrop, onPlaceBid, onBuyNow, productFeatures }: CollectorDropDetailPageViewProps) {
+export async function CollectorDropDetailPageView({ id, initialCollectorDrop, onPlaceBid, onBuyNow, productFeatures, pageRegionCards = [] }: CollectorDropDetailPageViewProps) {
   // The collector drop IS this page's subject. A read failure must surface rather than
   // become the same `undefined` a genuinely missing slug produces — the
   // "Collector Drop Not Found" branch below still handles that real case.
@@ -791,6 +795,10 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
             {renderCollectorDropStoreReviews(storeId)}
           </SectionVisibilityGate>
         )}
+
+        <Div className="mt-8">
+          <AdminComposableRegion pageId="collector-drops-id" initialCards={pageRegionCards} />
+        </Div>
 
         {/* Mobile actions registered via useBottomActions(). It owns its own
             bid modal — it used to scroll to `#collectordrop-bid-form`, which lives

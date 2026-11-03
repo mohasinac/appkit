@@ -17,6 +17,8 @@ import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { sortBy } from "../../../constants/sort";
 import type { ShipmentLot } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SORT_OPTIONS: { value: string; label: string }[] = [
   { value: sortBy("projectedProfit", "DESC"), label: "Highest projected profit" },
@@ -32,7 +34,12 @@ const SORT_OPTIONS: { value: string; label: string }[] = [
  * resolved" note in the shipments plan for why this is dynamic-query, not
  * materialized, and why it's still "saved" rather than computed live.
  */
-export function AdminShipmentProjectionsView() {
+export interface AdminShipmentProjectionsViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminShipmentProjectionsView({ pageRegionCards = [] }: AdminShipmentProjectionsViewProps = {}) {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
   const [sorts, setSorts] = React.useState(SORT_OPTIONS[0].value);
@@ -51,6 +58,8 @@ export function AdminShipmentProjectionsView() {
           options={SORT_OPTIONS}
         />
       </Div>
+
+      <AdminComposableRegion pageId="admin-shipments-projections" initialCards={pageRegionCards} />
 
       {isLoading ? (
         <Stack gap="sm">

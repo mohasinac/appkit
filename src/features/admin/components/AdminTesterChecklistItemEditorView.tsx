@@ -35,6 +35,8 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { checklistItemFormSchema } from "../../tester/schemas/checklist-item-form";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -47,6 +49,10 @@ const __O = {
 export interface AdminTesterChecklistItemEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   itemId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
@@ -107,6 +113,8 @@ function slugifyKey(str: string): string {
 
 export function AdminTesterChecklistItemEditorView({
   itemId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -327,7 +335,10 @@ export function AdminTesterChecklistItemEditorView({
       portal="admin"
       {...rest}
       title={isEdit ? "Edit checklist item" : "New checklist item"}
-      sections={[formSection]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+        formSection,
+      ]}
     />
   );
 }

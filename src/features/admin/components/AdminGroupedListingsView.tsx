@@ -27,6 +27,8 @@ import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminGroupedListingsResponse {
   items?: JsonArray;
@@ -102,10 +104,14 @@ function ReassignProductsDrawer({
   );
 }
 
-export type AdminGroupedListingsViewProps = ListingLayoutProps;
+export interface AdminGroupedListingsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 export function AdminGroupedListingsView({
   children,
+  pageRegionCards = [],
   ...props
 }: AdminGroupedListingsViewProps) {
   const [reassign, setReassign] = useState<ReassignDrawerState | null>(null);
@@ -209,6 +215,7 @@ export function AdminGroupedListingsView({
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-grouped-listings" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <SideDrawer
         isOpen={reassign !== null}

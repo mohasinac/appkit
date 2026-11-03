@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { StackedViewShell } from "../../../ui/components/StackedViewShell";
 import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface UserOrderTrackViewLabels {
   title?: string;
@@ -18,6 +20,8 @@ export interface UserOrderTrackViewProps extends Omit<
   renderTracking?: () => ReactNode;
   renderNotFound?: () => ReactNode;
   isNotFound?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function UserOrderTrackView({
@@ -25,6 +29,7 @@ export function UserOrderTrackView({
   renderTracking,
   renderNotFound,
   isNotFound = false,
+  pageRegionCards = [],
   ...rest
 }: UserOrderTrackViewProps) {
   return (
@@ -34,6 +39,7 @@ export function UserOrderTrackView({
       sections={[
         renderBack?.(),
         isNotFound ? renderNotFound?.() : renderTracking?.(),
+        <AdminComposableRegion key="page-region" pageId="user-orders-id-track" initialCards={pageRegionCards} />,
       ]}
     />
   );

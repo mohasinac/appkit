@@ -11,12 +11,16 @@ import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
 import { ReviewCard } from "./ReviewsList";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface ReviewDetailPageViewProps {
   id: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
+export async function ReviewDetailPageView({ id, pageRegionCards = [] }: ReviewDetailPageViewProps) {
   // The review IS this page's subject — a read failure must surface rather than
   // become the same `null` a removed review produces, which the "Review not
   // found" branch below already handles.
@@ -118,6 +122,8 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
           editHref={String(ROUTES.USER.REVIEW_EDIT(review.id))}
         />
       </Row>
+
+      <AdminComposableRegion pageId="reviews-id" initialCards={pageRegionCards} />
 
       <ReviewDetailShell
         review={review}

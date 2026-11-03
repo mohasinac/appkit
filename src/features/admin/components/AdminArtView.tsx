@@ -17,6 +17,8 @@ import { buildListingTypeListingConfig } from "../../products/config/listing-typ
 import { DataListingView } from "./DataListingView";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import type { ListingType } from "../../products/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const LISTING_TYPES: readonly ListingType[] = ["art"];
 const CONFIG_OPTS = {
@@ -25,9 +27,12 @@ const CONFIG_OPTS = {
   emptyLabel: "No art listings",
 };
 
-export type AdminArtViewProps = ListingLayoutProps;
+export interface AdminArtViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminArtView({ children, ...props }: AdminArtViewProps) {
+export function AdminArtView({ children, pageRegionCards = [], ...props }: AdminArtViewProps) {
   const scope = useAvailabilityScope(LISTING_TYPES);
   if (React.Children.count(children) > 0) {
     return (
@@ -38,9 +43,18 @@ export function AdminArtView({ children, ...props }: AdminArtViewProps) {
   }
   // Built per-render rather than at module scope: the availability scope
   // reads the URL through a hook, which cannot run outside a component.
+  const config = buildListingTypeListingConfig("art", { ...CONFIG_OPTS, scope });
   return (
     <DataListingView
-      config={buildListingTypeListingConfig("art", { ...CONFIG_OPTS, scope })}
+      config={{
+        ...config,
+        renderAboveContent: () => (
+          <>
+            {config.renderAboveContent?.()}
+            <AdminComposableRegion pageId="admin-art" initialCards={pageRegionCards} />
+          </>
+        ),
+      }}
     />
   );
 }

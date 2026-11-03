@@ -22,6 +22,8 @@ import { apiClient } from "../../../http";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const DEFAULT_SORT = "displayOrder";
 const SORT_OPTIONS = [
@@ -52,6 +54,8 @@ export interface SellerStoreCategoriesViewProps {
   onBulkDelete?: (ids: string[]) => Promise<void>;
   onBulkActivate?: (ids: string[]) => Promise<void>;
   onBulkDeactivate?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const COLUMNS: AdminTableColumn<CategoryRow>[] = [
@@ -88,6 +92,7 @@ export function SellerStoreCategoriesView({
   onBulkDelete,
   onBulkActivate,
   onBulkDeactivate,
+  pageRegionCards = [],
 }: SellerStoreCategoriesViewProps) {
   /*
    * 🛑 `isActive` was a READ-ONLY badge here, and the update schema was built
@@ -200,6 +205,7 @@ export function SellerStoreCategoriesView({
   return (
     <>
       <DataListingView config={config} />
+      <AdminComposableRegion pageId="store-categories" initialCards={pageRegionCards} />
       {deleteTargetId && (
         <ConfirmDeleteModal
           isOpen

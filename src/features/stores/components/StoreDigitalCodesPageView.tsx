@@ -4,6 +4,8 @@ import { sortBy } from "../../../constants/sort";
 import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreDigitalCodesListing } from "./StoreDigitalCodesListing";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -14,9 +16,11 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 export interface StoreDigitalCodesPageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function StoreDigitalCodesPageView({ storeSlug, searchParams }: StoreDigitalCodesPageViewProps) {
+export async function StoreDigitalCodesPageView({ storeSlug, searchParams, pageRegionCards = [] }: StoreDigitalCodesPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, unknown> | null)?.id;
   if (typeof storeId !== "string" || !storeId) return null;
@@ -30,5 +34,10 @@ export async function StoreDigitalCodesPageView({ storeSlug, searchParams }: Sto
     sorts: DEFAULT_SORT,
   });
 
-  return <StoreDigitalCodesListing storeId={storeId} initialData={result ?? undefined} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="stores-storeslug-digital-codes" initialCards={pageRegionCards} />
+      <StoreDigitalCodesListing storeId={storeId} initialData={result ?? undefined} />
+    </>
+  );
 }

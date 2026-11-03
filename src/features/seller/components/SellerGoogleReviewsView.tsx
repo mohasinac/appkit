@@ -16,6 +16,8 @@ import { SectionForm, useSectionFormNav, buildSectionsFromSchema, visibleValues 
 import { sellerGoogleReviewsFormSchema } from "../../store-extensions/schemas/google-config-form";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface GoogleConfigDraft {
   placeId: string;
@@ -35,11 +37,14 @@ const EMPTY_DRAFT: GoogleConfigDraft = {
 export interface SellerGoogleReviewsViewProps {
   onSave?: (data: Partial<GoogleConfigDraft>) => Promise<void>;
   onSync?: () => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function SellerGoogleReviewsView({
   onSave,
   onSync,
+  pageRegionCards = [],
 }: SellerGoogleReviewsViewProps) {
   const [draft, setDraft] = useState<GoogleConfigDraft>(EMPTY_DRAFT);
   const [loading, setLoading] = useState(true);
@@ -250,6 +255,8 @@ export function SellerGoogleReviewsView({
             {ACTIONS.STORE["google-reviews-sync"].label}
           </Button>
         </Row>
+
+        <AdminComposableRegion pageId="store-google-reviews" initialCards={pageRegionCards} />
       </Stack>
     </Div>
     </FormShellContext.Provider>

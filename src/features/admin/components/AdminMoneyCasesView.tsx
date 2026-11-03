@@ -94,6 +94,8 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminMoneyCasesResponse {
   items?: JsonArray;
@@ -136,7 +138,10 @@ function money(value: JsonValue | undefined): string | null {
   return typeof value === "number" ? formatMoney(value) : null;
 }
 
-export type AdminMoneyCasesViewProps = ListingLayoutProps;
+export interface AdminMoneyCasesViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 /**
  * Narrow a JSON value to status-history entries.
@@ -159,7 +164,7 @@ function toStatusHistory(value: unknown): StatusChangeEntry[] | undefined {
   return ok ? (value as StatusChangeEntry[]) : undefined;
 }
 
-export function AdminMoneyCasesView({ children, ...props }: AdminMoneyCasesViewProps) {
+export function AdminMoneyCasesView({ children, pageRegionCards = [], ...props }: AdminMoneyCasesViewProps) {
   const [detail, setDetail] = useState<Record<string, JsonValue> | null>(null);
   const [resolveTargetId, setResolveTargetId] = useState<string | null>(null);
   const [dismissTargetId, setDismissTargetId] = useState<string | null>(null);
@@ -332,6 +337,7 @@ export function AdminMoneyCasesView({ children, ...props }: AdminMoneyCasesViewP
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-money-cases" initialCards={pageRegionCards} />
       <DataListingView config={config} />
 
       <RecordDetailModal

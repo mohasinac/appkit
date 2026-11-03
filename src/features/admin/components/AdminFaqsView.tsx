@@ -19,6 +19,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminFaqEditorView } from "./AdminFaqEditorView";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminFaqsResponse {
   items?: JsonArray;
@@ -73,12 +75,15 @@ export interface AdminFaqsViewProps extends ListingLayoutProps {
   actionHref?: string;
   onBulkArchive?: (ids: string[]) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminFaqsView({
   children,
   onBulkArchive,
   onBulkDelete,
+  pageRegionCards = [],
   ...props
 }: AdminFaqsViewProps) {
   const config = useMemo<ListingViewConfig<AdminFaqsResponse, FaqRow>>(
@@ -183,5 +188,10 @@ export function AdminFaqsView({
       </ListingLayout>
     );
   }
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-faqs" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

@@ -19,6 +19,8 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { AdminNavEditorView, type NavItemData } from "./AdminNavEditorView";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -29,6 +31,8 @@ const __O = {
 export interface AdminNavigationViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   labels?: { title?: string };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // --- Helpers -----------------------------------------------------------------
@@ -90,6 +94,7 @@ function NavItemRow({
 
 export function AdminNavigationView({
   labels = {},
+  pageRegionCards = [],
   ...rest
 }: AdminNavigationViewProps) {
   const queryClient = useQueryClient();
@@ -167,6 +172,7 @@ export function AdminNavigationView({
         {...rest}
         title={labels.title ?? "Navigation"}
         sections={[
+          <AdminComposableRegion key="page-region" pageId="admin-navigation" initialCards={pageRegionCards} />,
           isLoading ? (
             <Alert key="loading" variant="info" title="Loading">
               Fetching nav items…

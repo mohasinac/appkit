@@ -17,9 +17,20 @@ import {
   SellerListingTypeView,
   type SellerListingTypeViewProps,
 } from "./SellerListingTypeView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-export type SellerLiveViewProps = SellerListingTypeViewProps;
+export type SellerLiveViewProps = SellerListingTypeViewProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function SellerLiveView(props: SellerLiveViewProps) {
-  return <SellerListingTypeView type="live" {...props} />;
+export function SellerLiveView({ pageRegionCards = [], ...props }: SellerLiveViewProps) {
+  return (
+    <>
+      <SellerListingTypeView type="live" {...props} />
+      <AdminComposableRegion pageId="store-live" initialCards={pageRegionCards} />
+    </>
+  );
 }
+

@@ -46,6 +46,8 @@ import {
 import { SCAM_TYPE_LABELS, getScamType } from "../constants/scam-types";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 function formatDate(d: Date | string | undefined): string {
   if (!d) return "";
@@ -394,6 +396,8 @@ export interface ScamProfileViewProps {
   comments?: ScammerCommentDocument[];
   relatedScammers?: ScammerDocument[];
   similarScamReports?: ScammerDocument[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function ScamProfileView({
@@ -403,6 +407,7 @@ export function ScamProfileView({
   comments = [],
   relatedScammers = [],
   similarScamReports = [],
+  pageRegionCards = [],
 }: ScamProfileViewProps) {
   const reportHref = String(ROUTES.PUBLIC.SCAM_REPORT);
   const registryHref = String(ROUTES.PUBLIC.SCAMS);
@@ -424,6 +429,10 @@ export function ScamProfileView({
           />
         </Container>
       </Div>
+
+      <Container size="xl" padding="y-sm">
+        <AdminComposableRegion pageId="scams-id" initialCards={pageRegionCards} />
+      </Container>
 
       <Section padding="y-2xl">
         <Container size="xl">

@@ -10,6 +10,8 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { Icon } from "../../../ui/components/Icon";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * Admin → Finance → Invoicing: the GSTR-1 draft export (Phase 7d).
@@ -52,7 +54,12 @@ function defaultFyStartYear(): number {
   return now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
 }
 
-export function AdminInvoicingView() {
+export interface AdminInvoicingViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminInvoicingView({ pageRegionCards = [] }: AdminInvoicingViewProps = {}) {
   const [fyStart, setFyStart] = useState(String(defaultFyStartYear()));
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -79,6 +86,8 @@ export function AdminInvoicingView() {
           for your accountant.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="admin-invoicing" initialCards={pageRegionCards} />
 
       <Card padding="md">
         <Stack gap="md">

@@ -29,6 +29,8 @@ import type { ListingViewConfig, ListingSelectionContext } from "../../admin/com
 import type { AdminTableColumn } from "../../admin/types";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const DEFAULT_SORT = "-bidDate";
 const SORT_OPTIONS = [
@@ -91,9 +93,11 @@ interface SellerBidsResponse {
 
 export interface SellerBidsViewProps {
   endpoint?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsViewProps) {
+export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS, pageRegionCards = [] }: SellerBidsViewProps) {
   const [detail, setDetail] = useState<BidRow | null>(null);
   const { showToast } = useToast();
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
@@ -284,6 +288,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   return (
     <>
       <DataListingView config={config} />
+      <AdminComposableRegion pageId="store-bids" initialCards={pageRegionCards} />
       <RecordDetailModal
         isOpen={detail !== null}
         onClose={() => setDetail(null)}

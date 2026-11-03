@@ -11,6 +11,8 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { OrderCard } from "../../orders/components/OrdersList";
 import type { Order } from "../../orders/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SORT_OPTIONS = [
   { value: sortBy("updatedAt", "DESC"), label: "Recently updated" },
@@ -28,9 +30,11 @@ export interface UserReturnsViewProps {
    * Optional override. When omitted the card still opens — see below.
    */
   onOrderClick?: (order: Order) => void;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function UserReturnsView({ onOrderClick }: UserReturnsViewProps) {
+export function UserReturnsView({ onOrderClick, pageRegionCards = [] }: UserReturnsViewProps) {
   const router = useRouter();
   // Client-side navigation, not a full reload — the row is a link in behaviour
   // even though the card itself contains its own controls, so wrapping it in
@@ -92,5 +96,10 @@ export function UserReturnsView({ onOrderClick }: UserReturnsViewProps) {
     },
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <DataListingView config={config} />
+      <AdminComposableRegion pageId="user-returns" initialCards={pageRegionCards} />
+    </>
+  );
 }

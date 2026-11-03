@@ -33,6 +33,8 @@ import { computeBundleDiscount } from "../../../_internal/shared/features/catego
 import { CategoryGrid } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { RecordOwnerQuickActions } from "../../../features/admin/components/RecordOwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -57,6 +59,8 @@ export interface BundleDetailViewProps {
   onAddToCart?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
   /** Other active bundles, excluding this one — renders a "Related Bundles" section when non-empty. */
   relatedBundles?: CategoryDocument[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function BundleDetailView({
@@ -65,6 +69,7 @@ export function BundleDetailView({
   onBuyNow,
   onAddToCart,
   relatedBundles = [],
+  pageRegionCards = [],
 }: BundleDetailViewProps) {
   const memberCount = members.length || bundle.bundleProductIds?.length || 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
@@ -208,6 +213,12 @@ export function BundleDetailView({
               )}
             </Stack>
           </Stack>
+        </Container>
+      </Section>
+
+      <Section padding="y-md">
+        <Container size="xl">
+          <AdminComposableRegion pageId="bundles-slug" initialCards={pageRegionCards} />
         </Container>
       </Section>
 

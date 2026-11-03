@@ -11,6 +11,8 @@ import { Text } from "../../../ui/components/Typography";
 import { Textarea } from "../../../ui/components/Textarea";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
   p4: "p-[var(--appkit-space-4)]",
@@ -34,6 +36,8 @@ export interface SellerPayoutRequestViewProps {
   payoutSettingsApiBase?: string;
   requestApiBase?: string;
   onRequested?: () => void;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /*
@@ -55,6 +59,7 @@ export function SellerPayoutRequestView({
   payoutSettingsApiBase = SELLER_ENDPOINTS.PAYOUT_SETTINGS,
   requestApiBase = SELLER_ENDPOINTS.PAYOUT_REQUEST,
   onRequested,
+  pageRegionCards = [],
 }: SellerPayoutRequestViewProps) {
   const [summary, setSummary] = useState<PayoutSummary | null>(null);
   const [payoutDetails, setPayoutDetails] = useState<PayoutDetails | null>(null);
@@ -109,6 +114,7 @@ export function SellerPayoutRequestView({
 
   return (
     <>
+      <AdminComposableRegion pageId="store-payouts" initialCards={pageRegionCards} />
       <Div className={`${__P.p4} border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]`} rounded="lg">
         <Row align="center" justify="between" gap="3" wrap>
           <Div>

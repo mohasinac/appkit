@@ -13,8 +13,15 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { AdminTesterFeedbackReportView } from "./AdminTesterFeedbackReportView";
 import { AdminTesterFeedbackIssuesView } from "./AdminTesterFeedbackIssuesView";
 import { AdminTesterFeedbackListView } from "./AdminTesterFeedbackListView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-export function AdminTesterFeedbackView() {
+export interface AdminTesterFeedbackViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminTesterFeedbackView({ pageRegionCards = [] }: AdminTesterFeedbackViewProps = {}) {
   const { showToast } = useToast();
 
   const handleExportReport = async () => {
@@ -38,6 +45,7 @@ export function AdminTesterFeedbackView() {
         <Heading level={1}>Tester Feedback</Heading>
         <Button variant="ghost" action={ACTIONS.ADMIN["export-tester-feedback"]} onClick={handleExportReport} />
       </Row>
+      <AdminComposableRegion pageId="admin-tester-feedback" initialCards={pageRegionCards} />
       <Tabs defaultValue="report">
         <TabsList>
           <TabsTrigger value="report">Report</TabsTrigger>

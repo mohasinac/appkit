@@ -36,6 +36,8 @@ import {
  * client component. The toolbar needs the session, so it owns that itself.
  */
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface PartsIndexPageViewProps {
   hrefForClassification: (slot: string) => string;
@@ -48,11 +50,17 @@ export interface PartsIndexPageViewProps {
    * reads a CDN object, never Firestore, and the index page stays static.
    */
   renderSearch?: () => React.ReactNode;
+  /** Stable, hand-chosen page-region id (Phase 12) for `/parts`. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function PartsIndexPageView({
   hrefForClassification,
   renderSearch,
+  pageId,
+  pageRegionCards = [],
 }: PartsIndexPageViewProps) {
   return (
     <Section padding="y-lg">
@@ -68,6 +76,7 @@ export function PartsIndexPageView({
             </Text>
           </Stack>
           {renderSearch?.()}
+          <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
           <Grid cols="navTiles" gap="sm" className="min-w-0">
             {ALL_PART_SLOTS.map((slot) => (
               <Div
@@ -97,6 +106,10 @@ export interface PartClassificationPageViewProps {
   truncated?: boolean;
   hrefForPart: (slot: string, tail: string) => string;
   partsIndexHref: string;
+  /** Stable, hand-chosen page-region id (Phase 12) for `/parts/[classification]`. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /** `performance-tip--rf` → `rf`. The id's tail IS the URL segment. */
@@ -111,6 +124,8 @@ export function PartClassificationPageView({
   truncated,
   hrefForPart,
   partsIndexHref,
+  pageId,
+  pageRegionCards = [],
 }: PartClassificationPageViewProps) {
   const label = PART_SLOT_LABEL[slot] ?? slot;
   return (
@@ -128,6 +143,7 @@ export function PartClassificationPageView({
                 : `${parts.length}${truncated ? "+" : ""} recorded.`}
             </Text>
           </Stack>
+          <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
           {parts.length > 0 && (
             <Stack gap="xs" className="min-w-0">
               {parts.map((p) => (

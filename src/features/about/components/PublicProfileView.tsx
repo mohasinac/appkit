@@ -23,6 +23,8 @@ import { normalizeListingType } from "../../products/utils/listing-type";
 import { isAdminUser, isSellerUser } from "../../auth/role-predicates";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -45,6 +47,15 @@ export interface PublicProfileViewProps {
    * or unrecognized.
    */
   tab?: string;
+  /**
+   * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
+   * by three distinct routes (`/profile/[userId]`, `/profile/[userId]/[tab]`,
+   * `/sellers/[id]`), so every caller computes its own route-template-derived
+   * id rather than this component guessing one.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 function toProductItem(p: ProductDocument): ProductItem {
@@ -94,6 +105,8 @@ function getProductHref(p: ProductDocument): string {
 export async function PublicProfileView({
   userId,
   tab,
+  pageId,
+  pageRegionCards = [],
 }: PublicProfileViewProps) {
   const page = { container: PAGE_CONTAINER };
   const flex = { center: FLEX_CENTER };
@@ -161,6 +174,7 @@ export async function PublicProfileView({
     <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
       <Stack gap="2xl" className={`${page.container.md}`} paddingY="y-3xl">
+        <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
         {/*
           Admin quick-link to this person's record. Placed here rather than in
           `renderProfileHero`, which is a pure presenter that never receives

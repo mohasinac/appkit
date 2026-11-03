@@ -7,12 +7,19 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const STILL_ALLOWED = "✓ Still allowed";
 /** Named because it is used on three rows in the seller-trust table. */
 const ROW_BORDER = "border-b border-[var(--appkit-color-border)]";
 
-export function AdminTrustGuideView() {
+export interface AdminTrustGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminTrustGuideView({ pageRegionCards = [] }: AdminTrustGuideViewProps) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -25,6 +32,8 @@ export function AdminTrustGuideView() {
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Trust &amp; Safety</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Bans, scam registry, support tickets, moderation, and reports on {getBrandName()}.</Text>
       </Section>
+
+      <AdminComposableRegion pageId="admin-guide-trust" initialCards={pageRegionCards} />
 
       {[
         {

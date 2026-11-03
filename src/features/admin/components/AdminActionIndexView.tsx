@@ -48,6 +48,8 @@ import {
   ACTION_INDEX_OVERRIDE_FIELDS,
 } from "../schemas/action-index-form";
 import type { ActionIndexControl, ActionIndexEntry } from "../../search/action-index/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const ENDPOINT = ADMIN_ENDPOINTS.ACTION_INDEX;
 
@@ -76,9 +78,11 @@ interface Row {
 export interface AdminActionIndexViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   labels?: { title?: string };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps) {
+export function AdminActionIndexView({ labels = {}, pageRegionCards = [] }: AdminActionIndexViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -205,6 +209,8 @@ export function AdminActionIndexView({ labels = {} }: AdminActionIndexViewProps)
           them when convenient.
         </Alert>
       )}
+
+      <AdminComposableRegion pageId="admin-action-index" initialCards={pageRegionCards} />
 
       <DataListingView<ActionIndexResponse, Row>
         config={{

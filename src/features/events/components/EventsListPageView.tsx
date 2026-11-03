@@ -2,6 +2,7 @@ import React from "react";
 import { eventRepository } from "../../../repositories";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { Container } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { PageHeroHeading } from "../../../ui/components/PageHeroHeading";
 import { EventsIndexListing } from "./EventsIndexListing";
@@ -13,6 +14,8 @@ import { hidePublicTestData } from "../../../_internal/server/features/tester/vi
 import { sortPinnedFirst } from "../utils/sort-pinned";
 import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 function buildEventFilters(params: SearchParamsRecord): string {
   const statusRaw = firstParam(params, "status");
@@ -44,9 +47,11 @@ function buildEventFilters(params: SearchParamsRecord): string {
 
 export interface EventsListPageViewProps {
   searchParams?: SearchParamsRecord;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function EventsListPageView({ searchParams = {} }: EventsListPageViewProps) {
+export async function EventsListPageView({ searchParams = {}, pageRegionCards = [] }: EventsListPageViewProps) {
   const sort = firstParam(searchParams, "sort") || sortBy(EVENT_FIELDS.STARTS_AT, "ASC");
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
@@ -98,6 +103,9 @@ export async function EventsListPageView({ searchParams = {} }: EventsListPageVi
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
+          <Div className="mt-8">
+            <AdminComposableRegion pageId="events" initialCards={pageRegionCards} />
+          </Div>
         </Container>
       </Section>
     </Main>

@@ -3,6 +3,7 @@ import { toProductItem } from "../../../_internal/shared/features/products/to-pr
 import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { Container, Row, Stack } from "../../../ui/components/Layout";
+import { Div } from "../../../ui/components/Div";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { MediaImage } from "../../../ui/components/MediaImage";
@@ -10,6 +11,8 @@ import { ProductGrid } from "../../products/components/ProductGrid";
 import { Alert } from "../../../ui/components/Alert";
 import type { CategoryDocument } from "../schemas";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * A FRANCHISE page — every listing from one IP.
@@ -33,6 +36,8 @@ import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuick
 export interface FranchiseDetailPageViewProps {
   slug: string;
   franchise: CategoryDocument;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const PAGE_SIZE = 24;
@@ -40,6 +45,7 @@ const PAGE_SIZE = 24;
 export async function FranchiseDetailPageView({
   slug,
   franchise,
+  pageRegionCards = [],
 }: FranchiseDetailPageViewProps) {
   const result = await safeRead(
     () =>
@@ -151,6 +157,10 @@ export async function FranchiseDetailPageView({
               <ProductGrid products={products} emptyLabel="No listings yet." />
             </>
           )}
+
+          <Div className="mt-8">
+            <AdminComposableRegion pageId="franchise-slug" initialCards={pageRegionCards} />
+          </Div>
         </Container>
       </Section>
     </Main>

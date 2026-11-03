@@ -20,6 +20,8 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AddressRecord {
   id: string;
@@ -46,9 +48,11 @@ const OWNER_TYPE_OPTIONS = [
 
 export interface AdminAddressBookViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminAddressBookView(_props: AdminAddressBookViewProps) {
+export function AdminAddressBookView({ pageRegionCards = [] }: AdminAddressBookViewProps) {
   const [ownerType, setOwnerType] = React.useState<"user" | "store">("user");
   const [ownerIdInput, setOwnerIdInput] = React.useState("");
   const [searchedOwnerId, setSearchedOwnerId] = React.useState<string | null>(null);
@@ -77,6 +81,8 @@ export function AdminAddressBookView(_props: AdminAddressBookViewProps) {
           <Button type="button">+ New address</Button>
         </TextLink>
       </Row>
+
+      <AdminComposableRegion pageId="admin-addresses" initialCards={pageRegionCards} />
 
       <Card variant="outlined" padding="md">
         <Row gap="md" align="end" wrap>

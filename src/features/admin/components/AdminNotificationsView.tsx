@@ -27,6 +27,8 @@ import { apiClient } from "../../../http";
 import { NOTIFICATION_TYPES } from "../../../constants/notification-types";
 import { ViewNotificationModal, type NotificationEntryDetail } from "./ViewNotificationModal";
 import type { JsonValue } from "../../../schemas/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // W1-33 — sourced from shared NOTIFICATION_TYPES registry, prefixed with "All".
 const NOTIF_TYPES = ["All", ...NOTIFICATION_TYPES] as const;
@@ -46,9 +48,12 @@ interface NotifRow {
   _raw: Record<string, JsonValue>;
 }
 
-export type AdminNotificationsViewProps = ListingLayoutProps;
+export interface AdminNotificationsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminNotificationsView({ children, ...props }: AdminNotificationsViewProps) {
+export function AdminNotificationsView({ children, pageRegionCards = [], ...props }: AdminNotificationsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [deleteTarget, setDeleteTarget] = useState<NotifRow | null>(null);
@@ -225,6 +230,7 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-notifications" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <ConfirmDeleteModal
         isOpen={Boolean(deleteTarget) || Boolean(bulkDeleteIds)}

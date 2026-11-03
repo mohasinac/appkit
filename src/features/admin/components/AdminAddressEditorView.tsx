@@ -40,6 +40,8 @@ import { adminAddressCreateSchema } from "../../addresses/schemas/address-form";
 import { AddressLocationFields } from "../../addresses/components/AddressLocationFields";
 import { usePostalLookup } from "../../addresses/hooks/usePostalLookup";
 import { COUNTRIES, DEFAULT_COUNTRY } from "../../../constants/geo/countries";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const COUNTRY_OPTIONS = Object.values(COUNTRIES).map((c) => ({
   value: c.code,
@@ -54,6 +56,10 @@ const OWNER_TYPE_OPTIONS = [
 export interface AdminAddressEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   addressId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
 }
@@ -94,6 +100,8 @@ const EMPTY: AddressValues = {
 
 export function AdminAddressEditorView({
   addressId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   ...rest
@@ -239,6 +247,11 @@ export function AdminAddressEditorView({
       {...rest}
       title={isEdit ? "Edit address" : "New address"}
       sections={[
+        <AdminComposableRegion
+          key="page-region"
+          pageId={pageId}
+          initialCards={pageRegionCards}
+        />,
         <Stack gap="md" key="address-form">
           <FormShellContext.Provider value={shellCtx}>
             <FormErrorSummary />

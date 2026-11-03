@@ -22,6 +22,8 @@ import {
 } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * `/api/store/offers` returns `{ items, total, … }` via `successResponse`, and
@@ -53,6 +55,8 @@ export interface SellerOffersViewProps extends ListingLayoutProps {
    * old `(id) => void` shape, which left every consumer to invent its own input.
    */
   onCounterOffer?: (id: string, counterAmount: number, sellerNote?: string) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function SellerOffersView({
@@ -60,6 +64,7 @@ export function SellerOffersView({
   onAcceptOffer,
   onRejectOffer,
   onCounterOffer,
+  pageRegionCards = [],
   ...props
 }: SellerOffersViewProps) {
   const [detailRow, setDetailRow] = React.useState<OfferRow | null>(null);
@@ -146,6 +151,7 @@ export function SellerOffersView({
 
   return (
     <>
+      <AdminComposableRegion pageId="store-offers" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <RecordDetailModal
         isOpen={detailRow !== null}

@@ -52,6 +52,8 @@ import { toStoreListItem } from "../../../_internal/server/features/stores/adapt
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { productImageUrls } from "../../products/schemas/firestore";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -164,9 +166,11 @@ const STORE_CATEGORY_SLUG_MAX = 120;
 
 export interface CategoryDetailPageViewProps {
   slug: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewProps) {
+export async function CategoryDetailPageView({ slug, pageRegionCards = [] }: CategoryDetailPageViewProps) {
   // The category IS this page's subject — a read failure must surface rather
   // than render an anonymous, empty category page. `undefined` still means
   // "no such category slug".
@@ -1113,6 +1117,12 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </Container>
         </Section>
       )}
+
+      <Section padding="y-md">
+        <Container size="xl">
+          <AdminComposableRegion pageId="categories-slug-tab-sort-sortkey-page-page" initialCards={pageRegionCards} />
+        </Container>
+      </Section>
 
       {/* ── Related categories ───────────────────────────────────────────── */}
       {relatedCategories.length > 0 && (

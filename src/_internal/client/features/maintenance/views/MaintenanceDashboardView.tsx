@@ -3,10 +3,14 @@ import { Anchor, Div, Heading, Li, Nav, Section, Span, Text, Ul } from "@mohasin
 import type { MaintenanceDashboardCounts } from "../../../../server/features/maintenance/data";
 import { CacheInvalidationPanel } from "./CacheInvalidationPanel";
 import { RepositoryCacheStatusPanel } from "./RepositoryCacheStatusPanel";
+import { AdminComposableRegion } from "../../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../../shared/features/dashboard/recent-entry";
 
 export interface MaintenanceDashboardViewProps {
   counts: MaintenanceDashboardCounts;
   basePath: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const card: React.CSSProperties = {
@@ -19,6 +23,7 @@ const card: React.CSSProperties = {
 export function MaintenanceDashboardView({
   counts,
   basePath,
+  pageRegionCards = [],
 }: MaintenanceDashboardViewProps): React.JSX.Element {
   return (
     <Div style={{ padding: "1.5rem", maxWidth: "1200px", margin: "0 auto" }}>
@@ -26,6 +31,8 @@ export function MaintenanceDashboardView({
       <Text as="p" style={{ color: "var(--appkit-color-text-muted)", marginBottom: "1.25rem" }}>
         Errors and failures across the platform — server, client, and Cloud Functions.
       </Text>
+
+      <AdminComposableRegion pageId="admin-maintenance" initialCards={pageRegionCards} />
 
       {/*
         🛑 `auto-fill`, NEVER `auto-fit` — and this was `auto-fit`.

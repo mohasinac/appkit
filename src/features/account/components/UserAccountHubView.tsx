@@ -1,6 +1,8 @@
 import React from "react";
 import { StackedViewShell } from "../../../ui/components/StackedViewShell";
 import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface UserAccountHubViewLabels {
   title?: string;
@@ -15,6 +17,8 @@ export interface UserAccountHubViewProps extends Omit<
   renderProfile?: () => React.ReactNode;
   renderNav?: () => React.ReactNode;
   renderRecentOrders?: () => React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function UserAccountHubView({
@@ -22,6 +26,7 @@ export function UserAccountHubView({
   renderProfile,
   renderNav,
   renderRecentOrders,
+  pageRegionCards = [],
   ...rest
 }: UserAccountHubViewProps) {
   return (
@@ -29,7 +34,12 @@ export function UserAccountHubView({
       portal="user"
       {...rest}
       title={labels.title}
-      sections={[renderProfile?.(), renderNav?.(), renderRecentOrders?.()]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId="user" initialCards={pageRegionCards} />,
+        renderProfile?.(),
+        renderNav?.(),
+        renderRecentOrders?.(),
+      ]}
     />
   );
 }

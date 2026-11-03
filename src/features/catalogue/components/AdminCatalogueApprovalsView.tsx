@@ -24,6 +24,8 @@ import {
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminCatalogueApiResponse {
   items?: JsonArray;
@@ -47,7 +49,12 @@ function toPhotoEntries(raw: Record<string, JsonValue>): RecordDetailItem[] {
     .map((url, i) => ({ image: url, title: `Photo ${i + 1}` }));
 }
 
-export function AdminCatalogueApprovalsView() {
+export interface AdminCatalogueApprovalsViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminCatalogueApprovalsView({ pageRegionCards = [] }: AdminCatalogueApprovalsViewProps = {}) {
   const queryClient = useQueryClient();
   const [rejectTarget, setRejectTarget] = React.useState<string | null>(null);
   const [rejectReason, setRejectReason] = React.useState("");
@@ -92,6 +99,7 @@ export function AdminCatalogueApprovalsView() {
       })),
     getTotal: (response, mappedRows) => (typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length),
     buildFilters: () => undefined,
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-catalogue-approvals" initialCards={pageRegionCards} />,
     // Approve/Reject used to be the ONLY row affordance — an admin was asked
     // to accept or refuse a submission whose photos, description and price
     // were never rendered anywhere. "View" opens those first.

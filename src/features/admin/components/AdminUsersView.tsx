@@ -46,6 +46,8 @@ import { RTDB_PATHS } from "../../../providers/db-firebase/rtdb-paths";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
 import { hardBanReasonSchema } from "../schemas/admin-ops-forms";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminUsersResponse {
   items?: JsonArray;
@@ -63,9 +65,12 @@ interface UserRow {
   _raw?: Record<string, JsonValue>;
 }
 
-export type AdminUsersViewProps = ListingLayoutProps;
+export interface AdminUsersViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
+export function AdminUsersView({ children, pageRegionCards = [], ...props }: AdminUsersViewProps) {
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -337,6 +342,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-users" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminUserEditorView
         open={drawerOpen}

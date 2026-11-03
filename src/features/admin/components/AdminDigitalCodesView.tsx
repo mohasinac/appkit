@@ -17,6 +17,8 @@ import { buildListingTypeListingConfig } from "../../products/config/listing-typ
 import { DataListingView } from "./DataListingView";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import type { ListingType } from "../../products/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const LISTING_TYPES: readonly ListingType[] = ["digital-code"];
 const CONFIG_OPTS = {
@@ -25,9 +27,12 @@ const CONFIG_OPTS = {
   emptyLabel: "No digital code listings",
 };
 
-export type AdminDigitalCodesViewProps = ListingLayoutProps;
+export interface AdminDigitalCodesViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminDigitalCodesView({ children, ...props }: AdminDigitalCodesViewProps) {
+export function AdminDigitalCodesView({ children, pageRegionCards = [], ...props }: AdminDigitalCodesViewProps) {
   const scope = useAvailabilityScope(LISTING_TYPES);
   if (React.Children.count(children) > 0) {
     return (
@@ -39,8 +44,11 @@ export function AdminDigitalCodesView({ children, ...props }: AdminDigitalCodesV
   // Built per-render rather than at module scope: the availability scope
   // reads the URL through a hook, which cannot run outside a component.
   return (
-    <DataListingView
-      config={buildListingTypeListingConfig("digital-code", { ...CONFIG_OPTS, scope })}
-    />
+    <>
+      <AdminComposableRegion pageId="admin-digital-codes" initialCards={pageRegionCards} />
+      <DataListingView
+        config={buildListingTypeListingConfig("digital-code", { ...CONFIG_OPTS, scope })}
+      />
+    </>
   );
 }

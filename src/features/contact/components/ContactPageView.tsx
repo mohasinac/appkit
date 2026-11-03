@@ -12,6 +12,8 @@ import { ContactForm } from "./ContactForm";
 import { ContactInfoSidebar } from "./ContactInfoSidebar";
 import { apiClient } from "../../../http";
 import { CONTACT_ENDPOINTS } from "../../../constants/api-endpoints";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type ContactSubmitInput = {
   name: string;
@@ -56,9 +58,11 @@ export interface ContactBusinessInfo {
 
 export interface ContactPageViewProps {
   business: ContactBusinessInfo;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function ContactPageView({ business }: ContactPageViewProps) {
+export function ContactPageView({ business, pageRegionCards = [] }: ContactPageViewProps) {
   /*
    * Built from `business` rather than hardcoded. Every one of these was a
    * literal in this file until 2026-10-19 — `support@letitrip.in`,
@@ -190,6 +194,8 @@ export function ContactPageView({ business }: ContactPageViewProps) {
               </Stack>
             </Div>
           </Div>
+
+          <AdminComposableRegion pageId="contact" initialCards={pageRegionCards} />
 
           <AdSlot id="detail-below-price" />
           </Stack>

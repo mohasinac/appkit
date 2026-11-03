@@ -19,6 +19,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminOrdersResponse {
   items?: JsonArray;
@@ -35,9 +37,11 @@ interface ReturnRow {
 
 export interface AdminReturnRequestsViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
+export function AdminReturnRequestsView({ pageRegionCards = [] }: AdminReturnRequestsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [approveOpen, setApproveOpen] = useState(false);
@@ -128,6 +132,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-return-requests" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <ConfirmDeleteModal
         isOpen={approveOpen}

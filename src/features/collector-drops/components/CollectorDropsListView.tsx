@@ -8,6 +8,8 @@ import {
   parsePublicProductParams,
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -17,9 +19,14 @@ const DEFAULT_SORT = "collectorDropEndDate";
 
 export interface CollectorDropsListViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function CollectorDropsListView({ searchParams = {} }: CollectorDropsListViewProps) {
+export async function CollectorDropsListView({
+  searchParams = {},
+  pageRegionCards = [],
+}: CollectorDropsListViewProps) {
   // Shared with /api/products, and derived rather than hardcoded — this view
   // carried a literal `hideEndedByDefault: true` until 2026-08-24, which is
   // exactly the mirrored-literal shape Root Cause #30 is written as.
@@ -39,6 +46,7 @@ export async function CollectorDropsListView({ searchParams = {} }: CollectorDro
           <Heading level={1} className="mb-8" color="primary" size="3xl" weight="semibold">
             Live Collector Drops
           </Heading>
+          <AdminComposableRegion pageId="collector-drops-index" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <CollectorDropsIndexListing initialData={initial} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

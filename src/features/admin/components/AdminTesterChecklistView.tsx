@@ -24,6 +24,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminTesterChecklistItemEditorView } from "./AdminTesterChecklistItemEditorView";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const LISTING_QUERY_KEY = ["admin", "tester-checklist-items", "listing"];
 
@@ -87,11 +89,14 @@ const COLUMNS: AdminTableColumn<ChecklistItemRow>[] = [
 
 export interface AdminTesterChecklistViewProps extends ListingLayoutProps {
   onBulkDelete?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminTesterChecklistView({
   children,
   onBulkDelete,
+  pageRegionCards = [],
   ...props
 }: AdminTesterChecklistViewProps) {
   const queryClient = useQueryClient();
@@ -234,6 +239,7 @@ export function AdminTesterChecklistView({
           onSaved={closePanel}
           onDeleted={closePanel}
           embedded
+          pageId={editId ? "admin-tester-checklist-id-edit" : "admin-tester-checklist-new"}
         />
       ),
       resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Test Case" : "Edit Test Case"),
@@ -251,5 +257,10 @@ export function AdminTesterChecklistView({
       </ListingLayout>
     );
   }
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-tester-checklist" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

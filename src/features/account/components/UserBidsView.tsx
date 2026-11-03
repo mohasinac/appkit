@@ -16,6 +16,8 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { BidDocument } from "../../collector-drops/schemas/firestore";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SORT_OPTIONS = [
   { value: sortBy("bidDate", "DESC"), label: "Newest first" },
@@ -37,7 +39,12 @@ interface UserBidsResponse {
   total?: number;
 }
 
-export function UserBidsView() {
+export interface UserBidsViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function UserBidsView({ pageRegionCards = [] }: UserBidsViewProps = {}) {
   // A bid could be seen in this list and never opened — no row click, no row
   // action, no detail page. The "Browse collector drops" link in the empty state is
   // not an affordance: it is not row-scoped, and it only shows when there are
@@ -118,6 +125,7 @@ export function UserBidsView() {
   return (
     <>
       <DataListingView config={config} />
+      <AdminComposableRegion pageId="user-bids" initialCards={pageRegionCards} />
       <RecordDetailModal
         isOpen={detail !== null}
         onClose={() => setDetail(null)}

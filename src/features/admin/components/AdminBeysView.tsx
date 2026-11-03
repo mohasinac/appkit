@@ -37,6 +37,8 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface BeyRow {
   id: string;
@@ -212,9 +214,12 @@ const ADMIN_BEYS_CONFIG: ListingViewConfig<JsonValue, BeyRow> = {
   rowHrefTemplate: (row) => String(ROUTES.ADMIN.BEYS_EDIT(row.id)),
 };
 
-export type AdminBeysViewProps = ListingLayoutProps;
+export interface AdminBeysViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminBeysView({ children, ...props }: AdminBeysViewProps) {
+export function AdminBeysView({ children, pageRegionCards = [], ...props }: AdminBeysViewProps) {
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -225,5 +230,12 @@ export function AdminBeysView({ children, ...props }: AdminBeysViewProps) {
       </ListingLayout>
     );
   }
-  return <DataListingView config={ADMIN_BEYS_CONFIG} />;
+  return (
+    <DataListingView
+      config={{
+        ...ADMIN_BEYS_CONFIG,
+        renderAboveContent: () => <AdminComposableRegion pageId="admin-beys" initialCards={pageRegionCards} />,
+      }}
+    />
+  );
 }

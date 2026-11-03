@@ -8,6 +8,8 @@ import { Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Row, Stack } from "../../../ui/components/Layout";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
 import { TextLink } from "../../../ui/components/TextLink";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -16,9 +18,12 @@ const __P = {
 } as const;
 
 export interface HowOffersWorkViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function HowOffersWorkView({
+  pageRegionCards = [],
 }: HowOffersWorkViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
@@ -94,6 +99,7 @@ export async function HowOffersWorkView({
         </Section>
         {renderOffersRulesSection(t, RULES)}
         {renderOffersCtaSection(t)}
+        <AdminComposableRegion pageId="how-offers-work" initialCards={pageRegionCards} />
       </Stack>
     </Div>
   );

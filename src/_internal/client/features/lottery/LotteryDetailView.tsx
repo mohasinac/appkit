@@ -15,6 +15,8 @@ import { LotteryPullForm } from "./LotteryPullForm";
 import { RandomLotsCollage } from "../../../../features/products/components/RandomLotsCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
+import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
 interface ClientLotteryEvent {
   id: string;
@@ -36,13 +38,15 @@ interface LotteryDetailViewProps {
   event: ClientLotteryEvent;
   user?: { uid: string; displayName?: string | null } | null;
   currentEntry?: { userLotteryNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
  * Full lottery detail page view.
  * Shows cover + description + slot grid + pull form (if active + logged in).
  */
-export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailViewProps) {
+export function LotteryDetailView({ event, user, currentEntry, pageRegionCards = [] }: LotteryDetailViewProps) {
   /*
    * 🛑 Viewer identity is read on the CLIENT, not taken from the `user` prop.
    *
@@ -121,6 +125,8 @@ export function LotteryDetailView({ event, user, currentEntry }: LotteryDetailVi
               </Text>
             ) : null}
           </Stack>
+
+          <AdminComposableRegion pageId="lottery-id" initialCards={pageRegionCards} />
 
           {/* Prize previews — only the slots that actually have a photo. The
               numbered grid below stays the complete slot map. */}

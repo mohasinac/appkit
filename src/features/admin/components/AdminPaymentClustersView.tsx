@@ -14,6 +14,8 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "@mohasinac/appkit/client";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface ClusterMethod {
   id: string;
@@ -39,9 +41,11 @@ const BAN_BADGE: Record<string, "danger" | "warning" | "secondary"> = {
 
 export interface AdminPaymentClustersViewProps {
   children?: React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminPaymentClustersView(_props: AdminPaymentClustersViewProps) {
+export function AdminPaymentClustersView({ pageRegionCards = [] }: AdminPaymentClustersViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
@@ -91,6 +95,8 @@ export function AdminPaymentClustersView(_props: AdminPaymentClustersViewProps) 
           Multiple accounts sharing the same payment identifier. Flagging is informational only — users are not blocked.
         </Text>
       </Stack>
+
+      <AdminComposableRegion pageId="admin-payment-methods-clusters" initialCards={pageRegionCards} />
 
       {isLoading && (
         <Row justify="center" padding="y-4xl">

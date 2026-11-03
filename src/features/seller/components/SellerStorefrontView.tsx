@@ -15,6 +15,8 @@ import {
 import { FormShellContext, useFormShellState, applyZodIssues, FormErrorSummary } from "../../../ui/forms";
 import { ImageUpload, useMediaUpload } from "../../media";
 import { SectionDef, SectionForm, useSectionFormNav, useFormShell } from "../../shell";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // Small local schema for the storefront form-input shape (not the broader
 // `sellerStoreSchema`, which requires id/storeSlug/ownerId/status/createdAt —
@@ -62,6 +64,8 @@ export interface SellerStorefrontViewProps {
   onSave: (data: StorefrontDraft) => Promise<StorefrontSaveResult>;
   isLoading?: boolean;
   storeSlug?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function SellerStorefrontView({
@@ -69,6 +73,7 @@ export function SellerStorefrontView({
   onSave,
   isLoading = false,
   storeSlug = "store",
+  pageRegionCards = [],
 }: SellerStorefrontViewProps) {
   const [draft, setDraft] = useState<StorefrontDraft>(initialValues ?? {});
   const [saving, setSaving] = useState(false);
@@ -344,7 +349,9 @@ export function SellerStorefrontView({
   }, [draft, validate]);
 
   return (
-    <StackedViewShell
+    <>
+      <AdminComposableRegion pageId="store-storefront" initialCards={pageRegionCards} />
+      <StackedViewShell
       portal="seller"
       title="Storefront Settings"
       sections={[
@@ -371,5 +378,6 @@ export function SellerStorefrontView({
         </Div>,
       ]}
     />
+    </>
   );
 }

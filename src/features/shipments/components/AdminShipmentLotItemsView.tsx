@@ -38,10 +38,14 @@ import { useShipmentItems } from "../hooks/useShipments";
 import { ShipmentItemLinkModal } from "./ShipmentItemLinkModal";
 import type { BulkShipmentItemsInput } from "../schemas/validation";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface AdminShipmentLotItemsViewProps {
   shipmentId: string;
   lotId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface ParsedBulkRow {
@@ -96,7 +100,7 @@ const SHIPMENT_ITEM_QUICK_FIELDS: QuickFieldDef[] = [
     helperText: "Feeds this lot's projected revenue, and every profit figure on the projections screen.",
   },
 ];
-export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLotItemsViewProps) {
+export function AdminShipmentLotItemsView({ shipmentId, lotId, pageRegionCards = [] }: AdminShipmentLotItemsViewProps) {
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(50);
   const { items, meta, isLoading, refetch } = useShipmentItems(shipmentId, lotId, { page, pageSize });
@@ -238,6 +242,8 @@ export function AdminShipmentLotItemsView({ shipmentId, lotId }: AdminShipmentLo
           </Button>
         </Div>
       </Div>
+
+      <AdminComposableRegion pageId="admin-shipments-id-lots-lotid-items" initialCards={pageRegionCards} />
 
       <Alert variant="info">
         Only individually notable "main" items need a row here — everything else in the lot can be captured

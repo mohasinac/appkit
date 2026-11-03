@@ -19,11 +19,15 @@ import { normalizeError } from "../../../errors/normalize";
 import { useToast } from "../../../ui/components/toast-context";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface AdminFulfillmentViewProps {
   /** Pre-selected store ID — skips the store picker when provided. */
   initialStoreId?: string;
   initialStoreName?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 interface StoreOption {
@@ -56,6 +60,7 @@ function statusBadgeVariant(
 export function AdminFulfillmentView({
   initialStoreId,
   initialStoreName,
+  pageRegionCards = [],
 }: AdminFulfillmentViewProps) {
   const [storeId, setStoreId] = useState<string | null>(initialStoreId ?? null);
   const [orders, setOrders] = useState<OrderPlain[]>([]);
@@ -152,6 +157,8 @@ export function AdminFulfillmentView({
           </Button>
         )}
       </Row>
+
+      <AdminComposableRegion pageId="admin-fulfillment" initialCards={pageRegionCards} />
 
       {!storeId && (
         <Stack gap="sm">

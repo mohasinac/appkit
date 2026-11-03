@@ -21,6 +21,8 @@ import { parseSelectedListingTypes } from "../utils/listing-type";
 import { isListingTypeEnabled } from "../../../_internal/shared/listing-types/feature-flags";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { safeRead } from "../../../errors/safe-read";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -29,9 +31,14 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 export interface ProductsIndexPageViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndexPageViewProps) {
+export async function ProductsIndexPageView({
+  searchParams = {},
+  pageRegionCards = [],
+}: ProductsIndexPageViewProps) {
   // The availability scope is derived from the same helper the client reads
   // its default from — a hardcoded default here would disagree with the
   // client, and `staleTime: Infinity` would freeze that disagreement
@@ -149,6 +156,7 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
 
       {/* Listing with sticky toolbar */}
       <Container size="xl" padding="x-md">
+        <AdminComposableRegion pageId="products-index" initialCards={pageRegionCards} />
         <AdSlot id="listing-sidebar-top" className="mb-4 mt-4" />
         {/* `?? undefined`, never `null`. React Query treats `null` as DEFINED
             data, so a failed query rendered an empty grid instead of fetching,

@@ -17,9 +17,19 @@ import {
   SellerListingTypeView,
   type SellerListingTypeViewProps,
 } from "./SellerListingTypeView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-export type SellerStickersViewProps = SellerListingTypeViewProps;
+export type SellerStickersViewProps = SellerListingTypeViewProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function SellerStickersView(props: SellerStickersViewProps) {
-  return <SellerListingTypeView type="stickers" {...props} />;
+export function SellerStickersView({ pageRegionCards = [], ...props }: SellerStickersViewProps) {
+  return (
+    <>
+      <SellerListingTypeView type="stickers" {...props} />
+      <AdminComposableRegion pageId="store-stickers" initialCards={pageRegionCards} />
+    </>
+  );
 }

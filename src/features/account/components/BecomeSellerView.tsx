@@ -1,6 +1,8 @@
 import React from "react";
 import { Div } from "../../../ui/components/Div";
 import { Heading } from "../../../ui/components/Typography";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface BecomeSellerViewLabels {
   title?: string;
@@ -29,6 +31,8 @@ export interface BecomeSellerViewProps {
   /** Which state to render. Shell exposes all four slots; consumer controls which is active. */
   state?: BecomeSellerState;
   className?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function BecomeSellerView({
@@ -39,6 +43,7 @@ export function BecomeSellerView({
   renderAlreadySeller,
   state = "guide",
   className = "",
+  pageRegionCards = [],
 }: BecomeSellerViewProps) {
   return (
     <Div className={className}>
@@ -51,6 +56,7 @@ export function BecomeSellerView({
       {state === "success" && renderSuccess?.()}
       {state === "create-store" && renderCreateStore?.()}
       {state === "already-seller" && renderAlreadySeller?.()}
+      <AdminComposableRegion pageId="user-become-seller" initialCards={pageRegionCards} />
     </Div>
   );
 }

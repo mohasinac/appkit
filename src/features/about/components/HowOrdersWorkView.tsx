@@ -9,6 +9,8 @@ import { Section } from "../../../ui/components/Semantic";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
 import { TextLink } from "../../../ui/components/TextLink";
 import { PackageSearch, MapPinned, FileText, XCircle } from "lucide-react";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -18,9 +20,12 @@ const __P = {
 
 
 export interface HowOrdersWorkViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function HowOrdersWorkView({
+  pageRegionCards = [],
 }: HowOrdersWorkViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
@@ -171,6 +176,7 @@ export async function HowOrdersWorkView({
           byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
       <ProseHero title={t("title")} subtitle={t("subtitle")} />
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
+        <AdminComposableRegion pageId="how-orders-work" initialCards={pageRegionCards} />
         {renderOrderStatusesSection(t, ORDER_STATUSES)}
         <Section>
           <FlowDiagram title={`📦 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />

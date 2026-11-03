@@ -26,6 +26,8 @@ import {
 } from "../../../_internal/shared/listing-types/route-gating";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 import { safeRead } from "../../../errors/safe-read";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p6: "p-[var(--appkit-space-6)]",
@@ -34,10 +36,20 @@ const __P = {
 
 
 export interface HelpPageViewProps {
+  /**
+   * Stable, hand-chosen id for this page's admin-composable region (Phase
+   * 12). Follows the ROUTE — every caller computes and passes its own
+   * distinct id (e.g. `help`, `support`).
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function HelpPageView({
-}: HelpPageViewProps = {}) {
+  pageId,
+  pageRegionCards = [],
+}: HelpPageViewProps) {
   const page = { container: PAGE_CONTAINER };
   const flex = { row: FLEX_ROW };
   const { getTranslations } = await import("next-intl/server");
@@ -124,6 +136,7 @@ export async function HelpPageView({
           byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
       <ProseHero title={t("title")} subtitle={t("subtitle")} />
       <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
+        <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
         {renderTopicsGrid(t, flex, TOPICS.filter((x) => !isClosedHref(x.href, closedSurfaces)))}
         {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t)}

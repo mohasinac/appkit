@@ -31,6 +31,8 @@ import type {
   ProductFeatureProductType,
   ProductFeatureScope,
 } from "../../products/schemas/product-features";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -96,6 +98,10 @@ export interface AdminFeatureEditorViewProps
   fixedScope?: ProductFeatureScope;
   /** Force a fixed storeId (store editor passes the seller's store). */
   fixedStoreId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   /** When true, omit StackedViewShell wrapper (SideDrawer body). */
   embedded?: boolean;
   /** Override the create/update endpoint set (used by store API path). */
@@ -111,6 +117,8 @@ export function AdminFeatureEditorView({
   featureId,
   fixedScope,
   fixedStoreId,
+  pageId,
+  pageRegionCards = [],
   embedded,
   endpointOverride,
   onSaved,
@@ -378,7 +386,10 @@ export function AdminFeatureEditorView({
         portal="admin"
         {...rest}
         title={isEdit ? "Edit Feature" : "New Feature"}
-        sections={[formSection]}
+        sections={[
+          <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+          formSection,
+        ]}
       />
       {deleteModal}
     </>

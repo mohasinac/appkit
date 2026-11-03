@@ -26,6 +26,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
 import { AdminSupportTicketDetailView } from "./AdminSupportTicketDetailView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const PRIORITY_BADGE: Record<string, string> = {
   urgent: "bg-error-surface text-error",
@@ -118,9 +120,12 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
   },
 ];
 
-export type AdminSupportTicketsViewProps = ListingLayoutProps;
+export interface AdminSupportTicketsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminSupportTicketsView({ children, ...props }: AdminSupportTicketsViewProps) {
+export function AdminSupportTicketsView({ children, pageRegionCards = [], ...props }: AdminSupportTicketsViewProps) {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<TicketRow | null>(null);
@@ -265,6 +270,7 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-support-tickets" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminSupportTicketDetailView
         open={drawerOpen}

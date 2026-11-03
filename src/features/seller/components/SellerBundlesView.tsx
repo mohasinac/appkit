@@ -28,6 +28,8 @@ import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { formatMoney } from "../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface BundlesResponse {
   items?: JsonArray;
@@ -95,9 +97,11 @@ export interface SellerBundlesViewProps {
   /** Plain string with an `{id}` placeholder — safe to build in a Server Component page.tsx. */
   editHrefTemplate: string;
   newHref: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesViewProps) {
+export function SellerBundlesView({ editHrefTemplate, newHref, pageRegionCards = [] }: SellerBundlesViewProps) {
   /*
    * 🛑 `isActive` was a READ-ONLY badge here, and the update schema was built
    * to take it on its own — shipping-config's even says so in a comment: "a
@@ -241,5 +245,10 @@ export function SellerBundlesView({ editHrefTemplate, newHref }: SellerBundlesVi
     ),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <DataListingView config={config} />
+      <AdminComposableRegion pageId="store-bundles" initialCards={pageRegionCards} />
+    </>
+  );
 }

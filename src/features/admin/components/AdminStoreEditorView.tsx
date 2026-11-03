@@ -22,6 +22,7 @@ import type { StoreStatus } from "../../stores/schemas/firestore";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { SectionForm, useSectionFormNav, buildSectionsFromSchema } from "../../shell";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 
 /** Matches `adminStoreUpdateSchema`; the draft always holds a concrete value. */
 interface AdminStoreFormValues {
@@ -370,6 +371,7 @@ export function AdminStoreEditorView({
     >
       <FormShellContext.Provider value={shellCtx}>
         <Div padding="md">
+          <AdminComposableRegion pageId="admin-stores-id-view" initialCards={[]} />
           <FormErrorSummary />
           <SectionForm<AdminStoreFormValues>
             sections={sections}

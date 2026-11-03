@@ -20,6 +20,8 @@ import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -29,6 +31,10 @@ export interface AdminAdEditorViewProps extends Omit<StackedViewShellProps, "sec
   adId?: string;
   endpointBase?: string;
   labels?: { title?: string };
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
 }
 
@@ -173,6 +179,8 @@ export function AdminAdEditorView({
   adId,
   endpointBase = ADMIN_ENDPOINTS.ADS,
   labels = {},
+  pageId,
+  pageRegionCards = [],
   onSaved,
   ...rest
 }: AdminAdEditorViewProps) {
@@ -419,6 +427,7 @@ export function AdminAdEditorView({
       {...rest}
       title={labels.title ?? (adId ? "Edit Ad" : "Create Ad")}
       sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
         metaQuery.error ? (
           <Alert variant="error" title="Could not load ad metadata">
             {metaQuery.error instanceof Error ? metaQuery.error.message : "Unknown error"}

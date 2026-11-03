@@ -20,6 +20,8 @@ import { AdminFeatureEditorView } from "../../admin/components/AdminFeatureEdito
 import { MAX_STORE_CUSTOM_FEATURES } from "../../products/schemas/product-features";
 import type { ProductFeatureDocument } from "../../products/schemas/product-features";
 import type { JsonValue } from "@mohasinac/appkit/client";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const TOAST = {
   ENABLED: "Feature enabled.",
@@ -46,7 +48,12 @@ function unwrap(res: unknown): SellerFeaturesResponse {
   return ((res as { data?: JsonValue })?.data ?? res) as SellerFeaturesResponse;
 }
 
-export function SellerFeaturesView() {
+export interface SellerFeaturesViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function SellerFeaturesView({ pageRegionCards = [] }: SellerFeaturesViewProps = {}) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const {
@@ -121,6 +128,8 @@ export function SellerFeaturesView() {
         </Button>
       </Row>
 
+      <AdminComposableRegion pageId="store-features" initialCards={pageRegionCards} />
+
       {isFull && (
         <Text as="div" className={CAP_BANNER_CLASS}>
           You have reached the {limit}-feature limit for your store. Delete an
@@ -188,6 +197,10 @@ export function SellerFeaturesView() {
             }}
             onSaved={onSaved}
             onDeleted={onSaved}
+            // Same page-id as the dedicated /store/features/new and
+            // /store/features/[id]/edit routes — same logical screen,
+            // reached from the list instead of a full navigation.
+            pageId={editId ? "store-features-id-edit" : "store-features-new"}
           />
         )}
       </SideDrawer>

@@ -9,6 +9,8 @@ import { Section } from "../../../ui/components/Semantic";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
 import { TextLink } from "../../../ui/components/TextLink";
 import { Gavel, Clock, Trophy, CreditCard } from "lucide-react";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -17,9 +19,12 @@ const __P = {
 
 
 export interface HowCollectorDropsWorkViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function HowCollectorDropsWorkView({
+  pageRegionCards = [],
 }: HowCollectorDropsWorkViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
@@ -126,6 +131,7 @@ export async function HowCollectorDropsWorkView({
         </Section>
         {renderCollectorDropInfoCardsSection(INFO_CARDS)}
         {renderCollectorDropCtaSection(t)}
+        <AdminComposableRegion pageId="how-collector-drops-work" initialCards={pageRegionCards} />
       </Stack>
     </Div>
   );

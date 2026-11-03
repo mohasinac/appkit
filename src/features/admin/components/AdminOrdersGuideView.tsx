@@ -7,6 +7,8 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /*
  * Phase 9 — read from the published-value registry rather than restated.
@@ -22,7 +24,12 @@ const {
   refundBusinessDaysMax: REFUND_DAYS_MAX,
 } = resolvePublishedValues();
 
-export function AdminOrdersGuideView() {
+export interface AdminOrdersGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminOrdersGuideView({ pageRegionCards = [] }: AdminOrdersGuideViewProps) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -35,6 +42,8 @@ export function AdminOrdersGuideView() {
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Orders &amp; Finance</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Order statuses, payouts, disputes, returns, and commission math on {getBrandName()}.</Text>
       </Section>
+
+      <AdminComposableRegion pageId="admin-guide-orders" initialCards={pageRegionCards} />
 
       {[
         {

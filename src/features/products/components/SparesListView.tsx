@@ -39,6 +39,8 @@ import {
   parsePublicProductParams,
   defaultAvailabilityForListingTypes,
 } from "../../../_internal/server/features/products/list-public";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -50,9 +52,14 @@ const SPARES_LISTING_TYPES: readonly ListingType[] = ["spares"];
 
 export interface SparesListViewProps {
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function SparesListView({ searchParams = {} }: SparesListViewProps) {
+export async function SparesListView({
+  searchParams = {},
+  pageRegionCards = [],
+}: SparesListViewProps) {
   /*
    * Filter semantics live in `listPublicProducts`, shared verbatim with
    * `/api/products`, so the SSR first paint and the client's refetch cannot
@@ -101,6 +108,7 @@ export async function SparesListView({ searchParams = {} }: SparesListViewProps)
       </Section>
 
       <Container size="xl" padding="x-md">
+        <AdminComposableRegion pageId="spares-index" initialCards={pageRegionCards} />
         <AdSlot id="listing-sidebar-top" className="mb-4 mt-4" />
         <ProductsIndexListing
           // `undefined`, not `null` — React Query treats `null` as defined

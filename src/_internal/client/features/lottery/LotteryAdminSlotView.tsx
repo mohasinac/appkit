@@ -9,6 +9,8 @@ import { DataTable } from "../../../../ui/DataTable";
 import type { DataTableColumn } from "../../../../ui/DataTable";
 import type { ClientLotterySlot } from "../../../../features/lottery/types";
 import { formatMoney } from "../../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
 interface AdminLotterySlot extends ClientLotterySlot {
   price: number;
@@ -17,13 +19,15 @@ interface AdminLotterySlot extends ClientLotterySlot {
 
 interface LotteryAdminSlotViewProps {
   slots: AdminLotterySlot[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
  * Admin-only view showing slots with price + weight + % chance.
  * Separate from LotterySlotGrid (public) which never shows price/weight.
  */
-export function LotteryAdminSlotView({ slots }: LotteryAdminSlotViewProps) {
+export function LotteryAdminSlotView({ slots, pageRegionCards = [] }: LotteryAdminSlotViewProps) {
   const totalWeight = slots.reduce((s, sl) => s + sl.weight, 0);
 
   const columns: DataTableColumn<AdminLotterySlot>[] = [
@@ -76,6 +80,7 @@ export function LotteryAdminSlotView({ slots }: LotteryAdminSlotViewProps) {
           <Text size="sm" color="muted">
             Price and weight data is never exposed to store owners or users.
           </Text>
+          <AdminComposableRegion pageId="admin-lotteries-id-edit" initialCards={pageRegionCards} />
           <DataTable
             data={slots}
             columns={columns}

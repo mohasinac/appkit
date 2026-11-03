@@ -13,6 +13,8 @@ import { siteSettingsRepository } from "../../admin/repository/site-settings.rep
 import type { SiteSettingsDocument } from "../../admin/schemas/firestore";
 import { getCompositeSentence } from "../../../_internal/shared/content/composite-sentences";
 import { getFragmentedParagraph } from "../../../_internal/shared/content/fragmented-paragraphs";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 
 export type PolicyKey =
@@ -28,6 +30,14 @@ export type PolicyKey =
 export interface PolicyPageViewProps {
   /** Which policy to render */
   policy: PolicyKey;
+  /**
+   * Stable, hand-chosen id for this page's admin-composable region (Phase
+   * 12). Follows the ROUTE, not the `policy` value — every caller computes
+   * and passes its own distinct id (e.g. `cancellation-policy`, `terms`).
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   /**
    * Rendered after the policy sections and before the related links.
    *
@@ -127,6 +137,8 @@ const POLICY_KEYS = Object.keys(POLICY_META) as PolicyKey[];
 
 export async function PolicyPageView({
   policy,
+  pageId,
+  pageRegionCards = [],
   children,
 }: PolicyPageViewProps) {
   const page = { container: PAGE_CONTAINER };
@@ -200,6 +212,8 @@ export async function PolicyPageView({
       />
 
       <Div className={`${page.container.sm}`} padding="content-banner">
+        <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
+
         {adminHtml ? (
           /* Admin-set HTML takes priority */
           <Div

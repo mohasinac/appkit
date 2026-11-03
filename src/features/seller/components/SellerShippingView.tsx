@@ -11,6 +11,8 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const shippingDraftSchema = z.object({
   customCarrierName: z.string().min(1, "Carrier name is required"),
@@ -43,6 +45,8 @@ interface ShippingConfig {
 
 export interface SellerShippingViewProps {
   apiBase?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const DEFAULT_DRAFT: ShippingDraft = {
@@ -53,7 +57,7 @@ const DEFAULT_DRAFT: ShippingDraft = {
   fragileSurcharge: "",
 };
 
-export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: SellerShippingViewProps) {
+export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING, pageRegionCards = [] }: SellerShippingViewProps) {
   const [draft, setDraft] = useState<ShippingDraft>(DEFAULT_DRAFT);
   const [current, setCurrent] = useState<ShippingConfig | null>(null);
   const [loading, setLoading] = useState(true);
@@ -250,7 +254,9 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
   }, [draft, validate]);
 
   return (
-    <StackedViewShell portal="seller" title="Shipping Configuration" sections={[
+    <>
+      <AdminComposableRegion pageId="store-shipping" initialCards={pageRegionCards} />
+      <StackedViewShell portal="seller" title="Shipping Configuration" sections={[
       <Div key="shipping">
         {error && <Alert variant="error" className="mb-4">{error}</Alert>}
         {success && <Alert variant="success" className="mb-4">Shipping configuration saved.</Alert>}
@@ -270,5 +276,6 @@ export function SellerShippingView({ apiBase = SELLER_ENDPOINTS.SHIPPING }: Sell
         </FormShellContext.Provider>
       </Div>,
     ]} />
+    </>
   );
 }

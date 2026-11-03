@@ -9,12 +9,16 @@ import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const DEFAULT_LIMIT = 200;
 
 export interface BundlesListViewProps {
   searchParams?: SearchParamsRecord;
   onBuyNow?: (input: { bundleSlug: string; quantity: number }) => Promise<unknown>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -27,6 +31,7 @@ export interface BundlesListViewProps {
 export async function BundlesListView({
   searchParams = {},
   onBuyNow,
+  pageRegionCards = [],
 }: BundlesListViewProps) {
   const storeId = firstParam(searchParams, "storeId");
 
@@ -59,6 +64,7 @@ export async function BundlesListView({
             tournament packs, Hot Wheels collector boxes and more. One price,
             one checkout, one shipment.
           </Text>
+          <AdminComposableRegion pageId="bundles-index" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <CategoryBundlesListing initialBundles={bundles} onBuyNow={onBuyNow} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

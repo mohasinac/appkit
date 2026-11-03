@@ -44,6 +44,8 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import type { Order } from "../types";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface RefundRequestSubmission {
   reasonCode: ReturnReason;
@@ -66,6 +68,8 @@ export interface RefundRequestViewProps {
   onSubmitRequest: (submission: RefundRequestSubmission) => Promise<void>;
   isLoading?: boolean;
   className?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const ACK_COUNT = REFUND_COPY.request.acknowledgments.length;
@@ -102,6 +106,7 @@ export function RefundRequestView({
   onSubmitRequest,
   isLoading = false,
   className = "",
+  pageRegionCards = [],
 }: RefundRequestViewProps) {
   /*
    * Does anything in this order carry the final-sale term? Read from the
@@ -330,6 +335,7 @@ export function RefundRequestView({
           submitLabel={REFUND_COPY.request.submitLabel}
           isLoading={isLoading}
         />
+        <AdminComposableRegion pageId="user-orders-id-return" initialCards={pageRegionCards} />
       </Stack>
     </FormShellContext.Provider>
   );

@@ -28,6 +28,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminNewsletterResponse {
   items?: JsonArray;
@@ -53,11 +55,14 @@ interface NewsletterRow {
 
 export interface AdminNewsletterViewProps extends ListingLayoutProps {
   onBulkUnsubscribe?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminNewsletterView({
   children,
   onBulkUnsubscribe,
+  pageRegionCards = [],
   ...props
 }: AdminNewsletterViewProps) {
   const [detail, setDetail] = useState<NewsletterRow | null>(null);
@@ -211,6 +216,7 @@ export function AdminNewsletterView({
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-newsletter" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       {/*
         A row that could be seen and never opened. Two of these listings offered

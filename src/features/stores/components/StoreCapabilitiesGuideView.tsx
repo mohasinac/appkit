@@ -9,6 +9,8 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SellerStandingPanel } from "./SellerStandingPanel";
 import { getBrandName, getBrandDomain, getBrandSupportEmail } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -281,9 +283,12 @@ function MultipleStoresSection() {
 
 // -- Main view -----------------------------------------------------------------
 
-export type StoreCapabilitiesGuideViewProps = Record<string, never>;
+export interface StoreCapabilitiesGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function StoreCapabilitiesGuideView(_props: StoreCapabilitiesGuideViewProps) {
+export function StoreCapabilitiesGuideView({ pageRegionCards = [] }: StoreCapabilitiesGuideViewProps) {
   return (
     <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
@@ -309,6 +314,8 @@ export function StoreCapabilitiesGuideView(_props: StoreCapabilitiesGuideViewPro
           Per-store feature flags — what they unlock, defaults, and how to request access.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="store-guide-capabilities" initialCards={pageRegionCards} />
 
       {/* Sections */}
       <GuideSection title="1. What are capabilities?">

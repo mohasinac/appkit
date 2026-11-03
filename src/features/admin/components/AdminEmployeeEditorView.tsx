@@ -22,6 +22,7 @@ import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -346,6 +347,7 @@ export function AdminEmployeeEditorView({
         title={mode === "invite" ? "Invite Employee" : `Edit — ${displayName ?? "Employee"}`}
       >
         <Div padding="md">
+          <AdminComposableRegion pageId="admin-team-new" initialCards={[]} />
           <FormShellContext.Provider value={shellCtx}>
             <FormErrorSummary />
             <SectionForm<EmployeeValues>

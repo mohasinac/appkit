@@ -20,6 +20,8 @@ import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import { AdminEventEditorView } from "./AdminEventEditorView";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * Derived from the `EventType` union (2026-08-24).
@@ -50,9 +52,12 @@ interface EventRow {
   updatedAt: string;
 }
 
-export type AdminEventsViewProps = ListingLayoutProps;
+export interface AdminEventsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
+export function AdminEventsView({ children, pageRegionCards = [], ...props }: AdminEventsViewProps) {
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -158,10 +163,20 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
       </>
     ),
     renderEditor: ({ editId, closePanel }) => (
-      <AdminEventEditorView eventId={editId ?? undefined} onSaved={closePanel} embedded />
+      <AdminEventEditorView
+        eventId={editId ?? undefined}
+        onSaved={closePanel}
+        embedded
+        pageId={editId ? "admin-events-id-edit" : "admin-events-new"}
+      />
     ),
     resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Event" : "Edit Event"),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-events" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

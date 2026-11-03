@@ -10,6 +10,13 @@ import { MediaImage } from "../../../ui/components/MediaImage";
 import { Alert } from "../../../ui/components/Alert";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { CategoryDocument } from "../schemas";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+
+export interface FranchisesIndexViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
 /**
  * The FRANCHISE index — the IPs we carry.
@@ -24,7 +31,7 @@ import type { CategoryDocument } from "../schemas";
  * @tag layer:view
  * @tag access:server-only
  */
-export async function FranchisesIndexView() {
+export async function FranchisesIndexView({ pageRegionCards = [] }: FranchisesIndexViewProps = {}) {
   const franchises = await safeRead(() => listActiveFranchises().then(hidePublicTestData), {
     route: "/franchise",
     key: "franchises.list",
@@ -42,6 +49,8 @@ export async function FranchisesIndexView() {
             The universes we stock. A franchise is what a collectible is from — a brand
             is who made it.
           </Text>
+
+          <AdminComposableRegion pageId="franchise-index" initialCards={pageRegionCards} />
 
           {/* A read failure must not render as "we carry nothing". */}
           {franchises === null ? (

@@ -18,6 +18,8 @@ import type { Order } from "../../orders/types";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 import { ORDER_LANE_TABS } from "../../orders/constants/order-lane-tabs";
 import { useSearchParams } from "next/navigation";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const CANCELLABLE_STATUSES = new Set(["pending", "confirmed", "processing"]);
 /*
@@ -115,9 +117,11 @@ interface OrdersListResponse {
 
 export interface UserOrdersViewProps {
   onOrderClick?: (order: Order) => void;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
+export function UserOrdersView({ onOrderClick, pageRegionCards = [] }: UserOrdersViewProps) {
   const orderScope = useOrderScope();
 
   /*
@@ -275,5 +279,10 @@ export function UserOrdersView({ onOrderClick }: UserOrdersViewProps) {
     },
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <DataListingView config={config} />
+      <AdminComposableRegion pageId="user-orders" initialCards={pageRegionCards} />
+    </>
+  );
 }

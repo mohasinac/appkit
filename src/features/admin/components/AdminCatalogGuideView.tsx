@@ -7,10 +7,17 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const CLS_CODE = "text-[length:var(--appkit-text-xs)] bg-amber-100 dark:bg-amber-900/30 px-[var(--appkit-space-1)] rounded";
 
-export function AdminCatalogGuideView() {
+export interface AdminCatalogGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminCatalogGuideView({ pageRegionCards = [] }: AdminCatalogGuideViewProps) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -23,6 +30,8 @@ export function AdminCatalogGuideView() {
         <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">Catalog</Heading>
         <Text className="text-[var(--appkit-color-text-muted)]">Products, categories, brands, and reviews — how the {getBrandName()} catalog is structured and managed.</Text>
       </Section>
+
+      <AdminComposableRegion pageId="admin-guide-catalog" initialCards={pageRegionCards} />
 
       {[
         {

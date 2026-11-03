@@ -29,6 +29,8 @@ import type { AdminTableColumn } from "../types";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import type { ListingType } from "../../products/types";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const RANDOM_LOTS_TYPES: readonly ListingType[] = ["random-lots"];
 
@@ -103,9 +105,12 @@ const RANDOM_LOTS_COLUMNS: AdminTableColumn<RandomLotsAdminRow>[] = [
   },
 ];
 
-export type AdminRandomLotsViewProps = ListingLayoutProps;
+export type AdminRandomLotsViewProps = ListingLayoutProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function AdminRandomLotsView({ children, ...props }: AdminRandomLotsViewProps) {
+export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }: AdminRandomLotsViewProps) {
   /*
    * 🛑 Before the early return, not after.
    *
@@ -225,5 +230,10 @@ export function AdminRandomLotsView({ children, ...props }: AdminRandomLotsViewP
     ),
   };
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-random-lots" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

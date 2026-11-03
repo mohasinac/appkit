@@ -8,6 +8,8 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { GC } from "../../_guide-cls";
 import { resolvePublishedValues } from "../../../_internal/shared/content/published-values";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /* Phase 9 — one definition of the refund timeline. See the 🛑 at the call site. */
 const { refundBusinessDaysMin: REFUND_DAYS_MIN, refundBusinessDaysMax: REFUND_DAYS_MAX } =
@@ -118,7 +120,12 @@ const SECTIONS: CollectorDropSection[] = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function BuyerCollectorDropsGuideView() {
+export interface BuyerCollectorDropsGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function BuyerCollectorDropsGuideView({ pageRegionCards = [] }: BuyerCollectorDropsGuideViewProps = {}) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -145,6 +152,8 @@ export function BuyerCollectorDropsGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
+
+      <AdminComposableRegion pageId="help-collector-drops" initialCards={pageRegionCards} />
     </Stack>
   );
 }

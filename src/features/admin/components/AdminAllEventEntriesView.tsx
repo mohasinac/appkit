@@ -23,6 +23,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminEventEntriesResponse {
   items?: JsonArray;
@@ -39,9 +41,12 @@ interface EntryRow {
   _raw: Record<string, JsonValue>;
 }
 
-export type AdminAllEventEntriesViewProps = ListingLayoutProps;
+export interface AdminAllEventEntriesViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEntriesViewProps) {
+export function AdminAllEventEntriesView({ children, pageRegionCards = [], ...props }: AdminAllEventEntriesViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [selected, setSelected] = React.useState<EntryRow | null>(null);
@@ -135,6 +140,7 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-event-entries" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <RecordDetailModal
         isOpen={Boolean(selected)}

@@ -23,6 +23,8 @@ import type { EventEntryItem, EventEntryListResponse } from "../types";
 import { buildEventEntryDetailFields } from "./event-entry-detail-fields";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const CLS_RESPONSE_TEXT = "whitespace-pre-wrap break-words";
 
@@ -53,6 +55,8 @@ export interface AdminEventEntriesViewProps {
   entriesEndpoint?: (eventId: string) => string;
   entryReviewEndpoint?: (eventId: string, entryId: string) => string;
   statsEndpoint?: (eventId: string) => string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminEventEntriesView({
@@ -60,6 +64,7 @@ export function AdminEventEntriesView({
   entriesEndpoint,
   entryReviewEndpoint,
   statsEndpoint,
+  pageRegionCards = [],
 }: AdminEventEntriesViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -332,6 +337,7 @@ export function AdminEventEntriesView({
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-events-id-entries" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <RecordDetailModal
         isOpen={detail !== null}

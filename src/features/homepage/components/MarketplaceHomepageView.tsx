@@ -138,6 +138,8 @@ import type { ProductItem } from "../../products/types";
 import type { CategoryItem } from "../../categories/types";
 import type { BlogPost } from "../../blog/types";
 import type { EventItem } from "../../events/types";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export type { MarketplaceHomepageViewAdSlots } from "../lib/section-renderer";
 
@@ -154,6 +156,8 @@ export interface MarketplaceHomepageViewProps {
    * renderer no longer hardcodes "LIR" or "LetItRip".
    */
   brand?: import("../lib/section-renderer").HomepageBrand;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function MarketplaceHomepageView({
@@ -161,6 +165,7 @@ export async function MarketplaceHomepageView({
   newsletterFormSlot,
   onBannerDismiss,
   brand,
+  pageRegionCards = [],
 }: MarketplaceHomepageViewProps = {}) {
   // Every read on this page is a RAIL: the homepage must still render when one
   // fails, but a failure has to be distinguishable from an empty catalogue —
@@ -460,6 +465,7 @@ export async function MarketplaceHomepageView({
         {orderedSections.map((section) =>
           renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData, brand, siteSettings),
         )}
+        <AdminComposableRegion pageId="home" initialCards={pageRegionCards} />
       </Div>
     </Main>
   );

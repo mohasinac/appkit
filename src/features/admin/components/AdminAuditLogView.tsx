@@ -27,6 +27,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { ViewAuditLogEntryModal, type AuditLogEntryDetail } from "./ViewAuditLogEntryModal";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminAuditLogResponse {
   items?: JsonArray;
@@ -54,9 +56,12 @@ const ACTION_LABELS: Record<string, string> = {
   user_role_change: "User role changed",
 };
 
-export type AdminAuditLogViewProps = ListingLayoutProps;
+export interface AdminAuditLogViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminAuditLogView({ children, ...props }: AdminAuditLogViewProps) {
+export function AdminAuditLogView({ children, pageRegionCards = [], ...props }: AdminAuditLogViewProps) {
   const [viewEntry, setViewEntry] = useState<AuditLogEntryDetail | null>(null);
 
   if (React.Children.count(children) > 0) {
@@ -125,6 +130,7 @@ export function AdminAuditLogView({ children, ...props }: AdminAuditLogViewProps
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
     onRowClick: (row) => openEntry(row),
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-audit-log" initialCards={pageRegionCards} />,
     buildFilters: (state) => {
       const parts: string[] = [];
       if (state.action && state.action !== "All") parts.push(sieveFilter("action", SIEVE_OP.EQ, state.action));

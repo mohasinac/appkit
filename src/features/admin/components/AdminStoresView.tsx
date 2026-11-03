@@ -27,6 +27,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { AdminStoreEditorView } from "./AdminStoreEditorView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminStoresResponse {
   items?: JsonArray;
@@ -43,9 +45,12 @@ interface StoreRow {
   _raw?: Record<string, JsonValue>;
 }
 
-export type AdminStoresViewProps = ListingLayoutProps;
+export interface AdminStoresViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
+export function AdminStoresView({ children, pageRegionCards = [], ...props }: AdminStoresViewProps) {
   const [editorRow, setEditorRow] = useState<StoreRow | null>(null);
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -242,6 +247,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-stores" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminStoreEditorView
         open={Boolean(editorRow)}

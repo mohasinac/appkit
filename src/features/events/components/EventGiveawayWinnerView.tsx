@@ -4,6 +4,8 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -43,6 +45,8 @@ export interface EventGiveawayWinnerViewProps {
     notDrawnYet?: string;
     anonymous?: string;
   };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 const CLS_PANEL = "rounded-2xl border border-warning bg-warning-surface/60 dark:border-warning dark:bg-warning-surface p-[var(--appkit-space-6)] space-y-3";
@@ -59,7 +63,7 @@ const DEFAULT_LABELS: Required<NonNullable<EventGiveawayWinnerViewProps["labels"
   anonymous: "Anonymous participant",
 };
 
-export function EventGiveawayWinnerView({ event, currentUserIsWinner, labels }: EventGiveawayWinnerViewProps) {
+export function EventGiveawayWinnerView({ event, currentUserIsWinner, labels, pageRegionCards = [] }: EventGiveawayWinnerViewProps) {
   const l = { ...DEFAULT_LABELS, ...(labels ?? {}) };
 
   /*
@@ -172,6 +176,8 @@ export function EventGiveawayWinnerView({ event, currentUserIsWinner, labels }: 
           </TextLink>
         </Div>
       ) : null}
+
+      <AdminComposableRegion pageId="events-id-winner" initialCards={pageRegionCards} />
       </Stack>
     </Article>
   );

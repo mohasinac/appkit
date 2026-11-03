@@ -4,6 +4,8 @@ import { sortBy } from "../../../constants/sort";
 import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { RandomLotsIndexListing } from "../../products/components/RandomLotsIndexListing";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -14,9 +16,11 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 export interface StoreRandomLotsPageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function StoreRandomLotsPageView({ storeSlug, searchParams }: StoreRandomLotsPageViewProps) {
+export async function StoreRandomLotsPageView({ storeSlug, searchParams, pageRegionCards = [] }: StoreRandomLotsPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, unknown> | null)?.id;
   if (typeof storeId !== "string" || !storeId) return null;
@@ -30,5 +34,10 @@ export async function StoreRandomLotsPageView({ storeSlug, searchParams }: Store
     sorts: DEFAULT_SORT,
   });
 
-  return <RandomLotsIndexListing storeId={storeId} initialData={result ?? undefined} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="stores-storeslug-random-lots" initialCards={pageRegionCards} />
+      <RandomLotsIndexListing storeId={storeId} initialData={result ?? undefined} />
+    </>
+  );
 }

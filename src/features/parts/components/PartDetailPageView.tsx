@@ -37,6 +37,8 @@ import {
   type PartGlossaryDocument,
   type ModelCompositionDocument,
 } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * The buyer-facing label for each WBO tournament format, in the order a
@@ -117,6 +119,8 @@ export interface PartDetailPageViewProps {
   /** A model's own page, when the composition resolved to a category. */
   hrefForModel: (categoryId: string) => string;
   hrefForClassification: (slot: string) => string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function PartDetailPageView({
@@ -129,6 +133,7 @@ export function PartDetailPageView({
   exactListingsTruncated,
   hrefForModel,
   hrefForClassification,
+  pageRegionCards = [],
 }: PartDetailPageViewProps) {
   const classification = PART_SLOT_LABEL[part.slot] ?? part.classification ?? part.slot;
   /*
@@ -236,6 +241,8 @@ export function PartDetailPageView({
               </Text>
             )}
           </Stack>
+
+          <AdminComposableRegion pageId="parts-classification-code" initialCards={pageRegionCards} />
 
           {/* ── specifications ───────────────────────────────────────────── */}
           {specRows.length > 1 && (

@@ -6,6 +6,8 @@ import { Grid } from "../../../ui/components/Layout";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -36,9 +38,12 @@ const __P = {
  * Every href is a `ROUTES` constant, so `audit-nav-page-wiring` fails the build
  * if any of them stops resolving to a real page.
  */
-export interface GuidesHubViewProps {}
+export interface GuidesHubViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export async function GuidesHubView({}: GuidesHubViewProps = {}) {
+export async function GuidesHubView({ pageRegionCards = [] }: GuidesHubViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("guidesHub");
@@ -137,6 +142,12 @@ export async function GuidesHubView({}: GuidesHubViewProps = {}) {
           </Div>
         </Section>
       ))}
+
+      <Section padding="y-xl">
+        <Div className={page.container.lg}>
+          <AdminComposableRegion pageId="guides" initialCards={pageRegionCards} />
+        </Div>
+      </Section>
     </Div>
   );
 }

@@ -11,12 +11,16 @@ import { safeRead } from "../../../errors/safe-read";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { firstParam } from "../../../utils/search-params";
 import type { SearchParamsRecord } from "../../../utils/search-params";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface BlogIndexPageViewProps {
   searchParams?: SearchParamsRecord;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageViewProps) {
+export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [] }: BlogIndexPageViewProps) {
   const sort = firstParam(searchParams, "sort") || BLOG_DEFAULT_PUBLIC_SORT;
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
@@ -74,6 +78,7 @@ export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageView
             description="Buying guides, release notes and what we have learned importing and grading Beyblades."
             meta={initialData?.meta?.total ? `${initialData.meta.total} articles` : undefined}
           />
+          <AdminComposableRegion pageId="blog" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <BlogIndexListing initialData={initialData} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

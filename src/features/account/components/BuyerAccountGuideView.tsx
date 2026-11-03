@@ -9,6 +9,8 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
 
@@ -140,7 +142,12 @@ const SECTIONS: AccountSection[] = [
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function BuyerAccountGuideView() {
+export interface BuyerAccountGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function BuyerAccountGuideView({ pageRegionCards = [] }: BuyerAccountGuideViewProps = {}) {
   return (
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
@@ -167,6 +174,8 @@ export function BuyerAccountGuideView() {
           <Div className={GC.sectionBody}>{content}</Div>
         </Section>
       ))}
+
+      <AdminComposableRegion pageId="help-account" initialCards={pageRegionCards} />
     </Stack>
   );
 }

@@ -18,6 +18,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminBlogEditorView } from "./AdminBlogEditorView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const FEATURED_TABS = [
   { id: "", label: "All" },
@@ -38,9 +40,12 @@ interface BlogRow {
   image?: string;
 }
 
-export type AdminBlogViewProps = ListingLayoutProps;
+export interface AdminBlogViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
+export function AdminBlogView({ children, pageRegionCards = [], ...props }: AdminBlogViewProps) {
   if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
@@ -138,6 +143,7 @@ export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
       />
     ),
     resolveEditorTitle: ({ isCreate }) => (isCreate ? "New Post" : "Edit Post"),
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-blog" initialCards={pageRegionCards} />,
   };
 
   return <DataListingView config={config} />;

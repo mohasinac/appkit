@@ -11,6 +11,8 @@ import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
 import { TextLink } from "../../../ui/components/TextLink";
 import { CalendarClock, Wallet, TrendingUp, ShieldCheck } from "lucide-react";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -22,9 +24,12 @@ const __O = {
 } as const;
 
 export interface HowEmiWorksViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export async function HowEmiWorksView({
+  pageRegionCards = [],
 }: HowEmiWorksViewProps = {}) {
   const page = { container: PAGE_CONTAINER };
   const themed = { bgPrimary: THEMED_BG_PRIMARY, bgSecondary: THEMED_BG_SECONDARY };
@@ -130,6 +135,7 @@ export async function HowEmiWorksView({
         {renderEmiInfoCards(INFO_CARDS)}
         {renderEmiExample(t, themed, EXAMPLE_ROWS)}
         {renderEmiCta(t)}
+        <AdminComposableRegion pageId="how-emi-works" initialCards={pageRegionCards} />
       </Stack>
     </Div>
   );

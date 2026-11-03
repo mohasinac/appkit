@@ -40,6 +40,8 @@ import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -48,9 +50,11 @@ const __O = {
 export interface BrandDetailPageViewProps {
   slug: string;
   initialBrand?: CategoryDocument | null;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPageViewProps) {
+export async function BrandDetailPageView({ slug, initialBrand, pageRegionCards = [] }: BrandDetailPageViewProps) {
   // The brand IS this page's subject — a read failure must surface rather than
   // render an anonymous, empty brand page. `undefined` still means "no such
   // brand slug".
@@ -450,6 +454,12 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           </Container>
         </Section>
       )}
+
+      <Section padding="y-md">
+        <Container size="xl">
+          <AdminComposableRegion pageId="brands-slug" initialCards={pageRegionCards} />
+        </Container>
+      </Section>
 
       {/* ── Related brands ───────────────────────────────────────────────── */}
       {relatedBrands.length > 0 && (

@@ -25,6 +25,8 @@ import {
   useMediaUpload,
 } from "../../media";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -381,11 +383,14 @@ export interface AdminMediaViewProps extends Omit<
   labels?: {
     title?: string;
   };
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminMediaView({
   labels = {},
   children,
+  pageRegionCards = [],
   ...rest
 }: AdminMediaViewProps) {
   const hasChildren = React.Children.count(children) > 0;
@@ -468,6 +473,7 @@ export function AdminMediaView({
       {...rest}
       title={labels.title ?? "Media Library"}
       sections={[
+        <AdminComposableRegion key="page-region" pageId="admin-media" initialCards={pageRegionCards} />,
         <Alert key="media-info" variant="info" title="Media Library">
           Upload new files in the sandbox below, or browse the existing Storage bucket via the grid.
         </Alert>,

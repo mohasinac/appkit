@@ -16,6 +16,8 @@ import { Row } from "../../ui/components/Layout";
 import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
+import { AdminComposableRegion } from "../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../_internal/shared/features/dashboard/recent-entry";
 
 import { Stack } from "@mohasinac/appkit/client";
 export interface UnauthorizedViewProps {
@@ -31,6 +33,8 @@ export interface UnauthorizedViewProps {
   homeLabel?: string;
   /** href for the home link. */
   homeHref?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function UnauthorizedView({
@@ -40,6 +44,7 @@ export function UnauthorizedView({
   loginHref = DEFAULT_ROUTE_MAP.AUTH.LOGIN,
   homeLabel = "Go home",
   homeHref = DEFAULT_ROUTE_MAP.HOME,
+  pageRegionCards = [],
 }: UnauthorizedViewProps) {
   return (
     <Stack justify="center" className="min-h-[60vh] text-center" padding="x-xl" align="center">
@@ -56,6 +61,7 @@ export function UnauthorizedView({
         <TextLink href={loginHref}>{loginLabel}</TextLink>
         <TextLink href={homeHref}>{homeLabel}</TextLink>
       </Row>
+      <AdminComposableRegion pageId="unauthorized" initialCards={pageRegionCards} />
     </Stack>
   );
 }

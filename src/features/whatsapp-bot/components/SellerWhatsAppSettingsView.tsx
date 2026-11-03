@@ -50,6 +50,8 @@ import { useToast } from "../../../ui/components/toast-context";
 import { normalizeError } from "../../../errors/normalize";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface SellerWhatsAppSettingsViewProps {
   /** Is this store currently subscribed? Server-resolved from the store document. */
@@ -68,6 +70,8 @@ export interface SellerWhatsAppSettingsViewProps {
   onToggleSubscription: (next: boolean) => Promise<void>;
   /** Gate from the store's capabilities; false renders a read-only explanation. */
   hasCapability?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function SellerWhatsAppSettingsView({
@@ -77,6 +81,7 @@ export function SellerWhatsAppSettingsView({
   channelEnabled,
   onToggleSubscription,
   hasCapability = true,
+  pageRegionCards = [],
 }: SellerWhatsAppSettingsViewProps) {
   const [isOn, setIsOn] = useState(subscribed);
   const [saving, setSaving] = useState(false);
@@ -121,6 +126,8 @@ export function SellerWhatsAppSettingsView({
           {getBrandName()}&apos;s verified business number. You don&apos;t need a WhatsApp Business
           account of your own, and nothing is installed on your phone.
         </Text>
+
+        <AdminComposableRegion pageId="store-whatsapp" initialCards={pageRegionCards} />
 
         {!channelEnabled && (
           <Alert variant="warning" className="mb-4">

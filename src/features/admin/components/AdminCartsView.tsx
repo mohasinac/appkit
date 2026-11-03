@@ -18,6 +18,8 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminCartsResponse {
   items?: JsonArray;
@@ -109,9 +111,12 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   ),
 };
 
-export type AdminCartsViewProps = ListingLayoutProps;
+export interface AdminCartsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
+export function AdminCartsView({ children, pageRegionCards = [], ...props }: AdminCartsViewProps) {
   const [selected, setSelected] = useState<CartRow | null>(null);
 
   if (React.Children.count(children) > 0) {
@@ -128,7 +133,11 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
   return (
     <>
       <DataListingView
-        config={{ ...ADMIN_CARTS_CONFIG, onRowClick: (row) => setSelected(row) }}
+        config={{
+          ...ADMIN_CARTS_CONFIG,
+          onRowClick: (row) => setSelected(row),
+          renderAboveContent: () => <AdminComposableRegion pageId="admin-carts" initialCards={pageRegionCards} />,
+        }}
       />
       <RecordDetailModal
         isOpen={Boolean(selected)}

@@ -9,6 +9,8 @@ import { Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
 const LIST_DISC = "list-disc leading-relaxed";
@@ -354,9 +356,12 @@ function CommonMistakes() {
 
 // -- Main view -----------------------------------------------------------------
 
-export type StoreListingsGuideViewProps = Record<string, never>;
+export interface StoreListingsGuideViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
+export function StoreListingsGuideView({ pageRegionCards = [] }: StoreListingsGuideViewProps) {
   return (
     <Stack gap="lg" padding="b-2xl">
       {/* Back nav */}
@@ -382,6 +387,8 @@ export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
           Products, collector drops, and pre-orders — create and manage your listings.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="store-guide-listings" initialCards={pageRegionCards} />
 
       {/* Sections */}
       <GuideSection title="1. Three listing types">

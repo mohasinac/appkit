@@ -35,6 +35,8 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { sortBy, sieveFilter, SIEVE_OP } from "../../../utils/sieve-builder";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -73,6 +75,14 @@ interface ReviewsListResponse {
 export interface SellerReviewsViewProps {
   reviewsApiBase?: string;
   replyApiBase?: string;
+  /**
+   * Admin-curated page-region cards (Phase 12). Omit for no extra content.
+   * This view's host page.tsx (`/store/reviews`) is "use client" with no
+   * Server Component boundary to fetch `getPageRegion()` from, so this
+   * always defaults to `[]` here — same reasoning as `DataListingView`'s
+   * own default.
+   */
+  pageRegionCards?: DashboardCard[];
 }
 
 const STAR = "★";
@@ -161,6 +171,7 @@ function ReviewTextForm<T extends object>({
 export function SellerReviewsView({
   reviewsApiBase = SELLER_ENDPOINTS.REVIEWS,
   replyApiBase = SELLER_ENDPOINTS.REVIEWS,
+  pageRegionCards = [],
 }: SellerReviewsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -407,6 +418,7 @@ export function SellerReviewsView({
 
   return (
     <>
+      <AdminComposableRegion pageId="store-reviews" initialCards={pageRegionCards} />
       <DataListingView config={config} />
 
       <SideDrawer

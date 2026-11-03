@@ -30,6 +30,8 @@ import type { ListingViewConfig } from "./DataListingView";
 import { ViewReviewModal } from "../../reviews/components/ReviewModal";
 import type { Review, ReviewStatus } from "../../reviews/types";
 import { apiClient } from "../../../http";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminReviewsResponse {
   items?: JsonArray;
@@ -46,9 +48,12 @@ interface ReviewRow {
   _raw?: Record<string, JsonValue>;
 }
 
-export type AdminReviewsViewProps = ListingLayoutProps;
+export type AdminReviewsViewProps = ListingLayoutProps & {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+};
 
-export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) {
+export function AdminReviewsView({ children, pageRegionCards = [], ...props }: AdminReviewsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [viewReview, setViewReview] = useState<Review | null>(null);
@@ -238,6 +243,7 @@ export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) 
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-reviews" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <ViewReviewModal
         review={viewReview}

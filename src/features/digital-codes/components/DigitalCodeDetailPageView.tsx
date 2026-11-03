@@ -35,6 +35,8 @@ import { ListingBottomActions } from "../../products/components/ListingBottomAct
 import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface DigitalCodeDetailPageViewProps {
   slug: string;
@@ -52,9 +54,11 @@ export interface DigitalCodeDetailPageViewProps {
     storeName?: string;
     inStock: boolean;
   }) => React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPrimaryActions }: DigitalCodeDetailPageViewProps) {
+export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPrimaryActions, pageRegionCards = [] }: DigitalCodeDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
     // The listing IS this page's subject — a read failure must surface rather
@@ -310,6 +314,10 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
             </Stack>
           )}
         />
+
+        <Div className="mt-8">
+          <AdminComposableRegion pageId="digital-codes-slug" initialCards={pageRegionCards} />
+        </Div>
 
         {/* Sticky CTA — registers into the layout-level BottomActions bar. */}
         <ListingBottomActions

@@ -22,6 +22,8 @@ import { normalizeError } from "../../../errors/normalize";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 const __O = {
   xAuto: "overflow-x-auto",
 } as const;
@@ -65,6 +67,8 @@ interface AddressDraft {
 
 export interface SellerAddressesViewProps {
   apiBase?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // ---------------------------------------------------------------------------
@@ -200,6 +204,7 @@ function AddressCard({
 
 export function SellerAddressesView({
   apiBase = SELLER_ENDPOINTS.STORE_ADDRESSES,
+  pageRegionCards = [],
 }: SellerAddressesViewProps) {
   const [addresses, setAddresses] = useState<AddressDoc[]>([]);
   const [listView, setListView] = useState<"cards" | "table">("table");
@@ -347,6 +352,10 @@ export function SellerAddressesView({
           </Row>
         </Row>
       </StickyToolbar>
+
+      <Div paddingX="x-md-lg" className="max-w-2xl" padding="t-md">
+        <AdminComposableRegion pageId="store-addresses" initialCards={pageRegionCards} />
+      </Div>
 
       <Div paddingX="x-md-lg" className="max-w-2xl" padding="y-lg">
         {errorMessage && (

@@ -38,6 +38,8 @@ import { ListingBottomActions } from "../../products/components/ListingBottomAct
 import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface LiveItemDetailPageViewProps {
   slug: string;
@@ -45,9 +47,11 @@ export interface LiveItemDetailPageViewProps {
   initialProduct?: ProductDocument | null;
   /** Render-prop for the add-to-cart CTA — wired by the page shim (carries the vendor-verification gate). */
   renderActions?: (product: ProductDocument) => React.ReactNode;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export async function LiveItemDetailPageView({ slug, initialProduct, renderActions }: LiveItemDetailPageViewProps) {
+export async function LiveItemDetailPageView({ slug, initialProduct, renderActions, pageRegionCards = [] }: LiveItemDetailPageViewProps) {
   const product = initialProduct !== undefined
     ? (initialProduct ?? undefined)
     // The listing IS this page's subject — a read failure must surface rather
@@ -144,6 +148,8 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
           </Nav>
           <ShareButton title={title} />
         </Row>
+
+        <AdminComposableRegion pageId="live-slug" initialCards={pageRegionCards} />
 
         <PreOrderDetailView
           renderGallery={() => (

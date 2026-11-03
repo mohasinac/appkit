@@ -82,6 +82,8 @@ import {
   resolveOfferBounds,
   type OfferBounds,
 } from "../../../_internal/shared/features/offers/config";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -176,6 +178,8 @@ export interface ProductDetailPageViewProps {
    * badge they were correctly showing.
    */
   returnsEnabled?: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // ---------------------------------------------------------------------------
@@ -219,6 +223,7 @@ export async function ProductDetailPageView({
   codEnabled,
   emiEnabled,
   returnsEnabled = true,
+  pageRegionCards = [],
 }: ProductDetailPageViewProps) {
   // Use pre-fetched data when available to avoid a redundant repository call.
   // The page layer wraps getProductForDetail in React.cache(), so both
@@ -1381,6 +1386,8 @@ export async function ProductDetailPageView({
             </Stack>
           )}
         />
+
+        <AdminComposableRegion pageId="products-slug" initialCards={pageRegionCards} />
 
         {/* Mobile actions registered via useBottomActions() in ProductDetailActions variant="mobile" */}
         {renderPrimaryActions

@@ -23,6 +23,8 @@ import { GroupMemberPicker, type GroupPickerMember } from "../../products/compon
 import type { GroupedListingDocument } from "../schemas/firestore";
 import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";
 import { RecordOwnerQuickActions } from "../../../features/admin/components/RecordOwnerQuickActions";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = { hidden: "overflow-hidden" } as const;
 
@@ -39,9 +41,11 @@ export interface GroupedListingDetailViewProps {
   group: GroupedListingDocument;
   /** Members, already projected for public consumption. */
   members: GroupPickerMember[];
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function GroupedListingDetailView({ group, members }: GroupedListingDetailViewProps) {
+export function GroupedListingDetailView({ group, members, pageRegionCards = [] }: GroupedListingDetailViewProps) {
   return (
     <Section padding="section">
       <Container>
@@ -102,6 +106,8 @@ export function GroupedListingDetailView({ group, members }: GroupedListingDetai
               Nothing in this group is available right now.
             </Text>
           )}
+
+          <AdminComposableRegion pageId="groups-slug" initialCards={pageRegionCards} />
         </Stack>
       </Container>
     </Section>

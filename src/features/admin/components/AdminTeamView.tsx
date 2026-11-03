@@ -24,6 +24,8 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminEmployeeEditorView } from "./AdminEmployeeEditorView";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const GROUP_TABS: readonly AdminFilterTab[] = [
   ALL_TAB,
@@ -70,9 +72,11 @@ interface EmployeeRow {
 
 export interface AdminTeamViewProps extends ListingLayoutProps {
   onBulkRemove?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamViewProps) {
+export function AdminTeamView({ children, onBulkRemove, pageRegionCards = [], ...props }: AdminTeamViewProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<EmployeeRow | null>(null);
   const [inviteMode, setInviteMode] = useState(false);
@@ -196,6 +200,7 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-team" initialCards={pageRegionCards} />
       <DataListingView config={config} />
       <AdminEmployeeEditorView
         open={drawerOpen}

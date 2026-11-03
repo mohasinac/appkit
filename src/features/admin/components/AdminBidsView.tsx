@@ -30,6 +30,8 @@ import { apiClient } from "../../../http";
 import { RecordStatusTimeline } from "../../status-history/components/RecordStatusTimeline";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../constants/index";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminBidsResponse {
   items?: JsonArray;
@@ -53,9 +55,12 @@ interface BidRow {
   detail: JsonObject;
 }
 
-export type AdminBidsViewProps = ListingLayoutProps;
+export interface AdminBidsViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
+export function AdminBidsView({ children, pageRegionCards = [], ...props }: AdminBidsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [cancelOpen, setCancelOpen] = useState(false);
@@ -115,6 +120,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) =>
       state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : undefined,
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-bids" initialCards={pageRegionCards} />,
     buildBulkActions: (selection): BulkActionItem[] => [
       {
         id: ROW_ACTION_ID.CANCEL,

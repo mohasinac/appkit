@@ -27,6 +27,8 @@ import {
   STORAGE_BOX_FIELDS,
   type StorageBoxDocument,
 } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface BoxRow {
   id: string;
@@ -153,7 +155,12 @@ export function RegisterBoxForm({ onCreated }: { onCreated: () => void }) {
   );
 }
 
-export function AdminStorageBoxesView() {
+export interface AdminStorageBoxesViewProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
+
+export function AdminStorageBoxesView({ pageRegionCards = [] }: AdminStorageBoxesViewProps = {}) {
   const config: ListingViewConfig<BoxesResponse, BoxRow> = React.useMemo(
     () => ({
       portal: "admin",
@@ -257,5 +264,10 @@ export function AdminStorageBoxesView() {
     [],
   );
 
-  return <DataListingView config={config} />;
+  return (
+    <>
+      <AdminComposableRegion pageId="admin-inventory-boxes" initialCards={pageRegionCards} />
+      <DataListingView config={config} />
+    </>
+  );
 }

@@ -26,6 +26,8 @@ import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { AdminCouponEditorView } from "./AdminCouponEditorView";
 import { CouponCard } from "../../promotions/components/CouponCard";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminCouponsResponse {
   items?: JsonArray;
@@ -40,12 +42,15 @@ interface CouponRow {
 export interface AdminCouponsViewProps extends ListingLayoutProps {
   onBulkArchive?: (ids: string[]) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 export function AdminCouponsView({
   children,
   onBulkArchive,
   onBulkDelete,
+  pageRegionCards = [],
   ...props
 }: AdminCouponsViewProps) {
   const { showToast } = useToast();
@@ -130,6 +135,7 @@ export function AdminCouponsView({
       if (state.showExpired !== "true") parts.push(sieveFilter("validity.isActive", SIEVE_OP.EQ, true));
       return parts.join(",") || undefined;
     },
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-coupons" initialCards={pageRegionCards} />,
     primaryAction: {
       label: "Add Coupon",
       onClick: ({ openCreatePanel }) => openCreatePanel(),

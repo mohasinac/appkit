@@ -1,11 +1,15 @@
 import * as React from "react";
 import { Anchor, Div, Heading, Li, Pre, Section, Text, Ul } from "@mohasinac/appkit/client";
 import type { ServerErrorDocument } from "../../../../../features/server-errors/schemas/firestore";
+import { AdminComposableRegion } from "../../../../../features/dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../../shared/features/dashboard/recent-entry";
 
 export interface ServerErrorDetailViewProps {
   doc: ServerErrorDocument;
   related: ServerErrorDocument[];
   backHref: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 function fmt(t: number): string {
@@ -16,6 +20,7 @@ export function ServerErrorDetailView({
   doc,
   related,
   backHref,
+  pageRegionCards = [],
 }: ServerErrorDetailViewProps): React.JSX.Element {
   return (
     <Div style={{ padding: "1.5rem", maxWidth: "1200px", margin: "0 auto" }}>
@@ -28,6 +33,8 @@ export function ServerErrorDetailView({
         {doc.code} <Text size="xs" style={{ fontSize: "1rem", color: "var(--appkit-color-text-muted)" }}>{doc.source}</Text>
       </Heading>
       <Text as="p" style={{ color: "var(--appkit-color-text-muted)" }}>{fmt(doc.occurredAt)} — {doc.method ?? "—"} {doc.route}</Text>
+
+      <AdminComposableRegion pageId="admin-maintenance-server-errors-id" initialCards={pageRegionCards} />
 
       <Section style={{ marginTop: "1.25rem" }}>
         <Heading level={2} style={{ fontSize: "1rem", fontWeight: 600, marginBottom: "0.5rem" }}>Message</Heading>

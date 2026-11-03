@@ -29,6 +29,8 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import type { AdminTableColumn } from "../types";
 import { formatMoney } from "../../../utils/number.formatter";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface BundlesResponse {
   items?: JsonArray;
@@ -96,9 +98,11 @@ export interface AdminBundlesViewProps {
   /** Plain string with an `{id}` placeholder — safe to build in a Server Component page.tsx. */
   editHrefTemplate: string;
   newHref: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
-export function AdminBundlesView({ editHrefTemplate, newHref }: AdminBundlesViewProps) {
+export function AdminBundlesView({ editHrefTemplate, newHref, pageRegionCards = [] }: AdminBundlesViewProps) {
   const [rebuildingId, setRebuildingId] = useState<string | null>(null);
   const toast = useToast();
   // Phase 10 ("widget descriptors") — BUNDLE is one of the 5 real
@@ -170,6 +174,7 @@ export function AdminBundlesView({ editHrefTemplate, newHref }: AdminBundlesView
       return parts.join(",") || undefined;
     },
     rowHrefTemplate: editHrefTemplate,
+    renderAboveContent: () => <AdminComposableRegion pageId="admin-bundles" initialCards={pageRegionCards} />,
     toolbarExtra: (
       <Button asChild size="sm" variant="primary">
         <TextLink href={newHref} layout="flex" align="center" gap="xs">

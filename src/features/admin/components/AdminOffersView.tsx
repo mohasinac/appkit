@@ -60,6 +60,8 @@ import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 interface AdminOffersResponse {
   items?: JsonArray;
@@ -79,9 +81,12 @@ interface OfferRow {
 /** Terminal states — an offer here has nothing left to cancel. */
 const TERMINAL_STATUSES = new Set(["paid", "declined", "expired", "withdrawn"]);
 
-export type AdminOffersViewProps = ListingLayoutProps;
+export interface AdminOffersViewProps extends ListingLayoutProps {
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
+}
 
-export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
+export function AdminOffersView({ children, pageRegionCards = [], ...props }: AdminOffersViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [detailRow, setDetailRow] = useState<OfferRow | null>(null);
@@ -226,6 +231,7 @@ export function AdminOffersView({ children, ...props }: AdminOffersViewProps) {
 
   return (
     <>
+      <AdminComposableRegion pageId="admin-offers" initialCards={pageRegionCards} />
       <DataListingView config={config} />
 
       <RecordDetailModal

@@ -15,6 +15,8 @@ import { MEETUP_CITIES, type MeetupCity } from "../constants/meetup-cities";
 import { ProductGrid } from "./ProductGrid";
 import type { ProductItem } from "../types";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
@@ -25,6 +27,8 @@ const CITY_LISTING_LIMIT = 24;
 
 export interface CityCollectiblesViewProps {
   city: MeetupCity;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /**
@@ -53,7 +57,7 @@ export interface CityCollectiblesViewProps {
  * city heading. Padding the page with shippable national inventory is what
  * turns a local page into the same page six times.
  */
-export async function CityCollectiblesView({ city }: CityCollectiblesViewProps) {
+export async function CityCollectiblesView({ city, pageRegionCards = [] }: CityCollectiblesViewProps) {
   const page = { container: PAGE_CONTAINER };
 
   const result = await safeRead(
@@ -162,6 +166,8 @@ export async function CityCollectiblesView({ city }: CityCollectiblesViewProps) 
               </Row>
             </Div>
           </Stack>
+
+          <AdminComposableRegion pageId="collectibles-city" initialCards={pageRegionCards} />
 
           <Heading level={2} size="lg" weight="semibold" className="mt-8 mb-3">
             Other cities

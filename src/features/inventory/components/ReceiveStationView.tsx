@@ -47,6 +47,8 @@ import {
   ErrorSeverity,
 } from "../../../monitoring/error-tracking";
 import { MAX_RECEIVE_ROWS } from "../schemas/firestore";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /** A shipment item that can actually be received — i.e. one that is linked. */
 export interface ReceivableItem {
@@ -98,6 +100,8 @@ export interface ReceiveStationViewProps {
   boxes: BoxOption[];
   itemsFailed: boolean;
   boxesFailed: boolean;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 /** `boxId::productId` — the staging table's natural key, mirroring `placementId`. */
@@ -113,6 +117,7 @@ export function ReceiveStationView({
   boxes,
   itemsFailed,
   boxesFailed,
+  pageRegionCards = [],
 }: ReceiveStationViewProps) {
   const { showToast } = useToast();
   const [armed, setArmed] = useState<BoxOption | null>(null);
@@ -535,6 +540,8 @@ export function ReceiveStationView({
           Shipment {shipmentNumber}. Scan a box code to arm it, then scan items.
         </Text>
       </Div>
+
+      <AdminComposableRegion pageId="admin-shipments-id-receive" initialCards={pageRegionCards} />
 
       {boxesFailed && (
         <Alert variant="warning">
