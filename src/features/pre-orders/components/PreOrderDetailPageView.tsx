@@ -35,7 +35,8 @@ import { PreOrderDetailView } from "../../products/components/PreOrderDetailView
 import { PreOrderBottomActions } from "./PreOrderBottomActions";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";
-import { PreOrderActionsClient } from "./PreOrderActionsClient";
+import { PreOrderActionsClient, PRE_ORDER_TRUST_BADGES } from "./PreOrderActionsClient";
+import { TrustBadgeRow } from "../../products/components/TrustBadgeRow";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { isFinalSale } from "../../products/constants/final-sale";
@@ -376,18 +377,7 @@ function PreOrderBuyBarPanel({
           )}
           <Div border="default" className="border-t" padding="t-md">
             {/* audit-content-alignment-ok: icon+label badge cluster, not page content */}
-            <Row wrap gap="sm" justify="center" className="text-center">
-              {[
-                { icon: "🔒", label: "Secure\nPayment" },
-                { icon: "📅", label: "Guaranteed\nDelivery" },
-                { icon: "↩", label: "Free\nCancellation" },
-              ].map(({ icon, label }) => (
-                <Stack color="muted" textSize="xs" key={label} className="min-w-[60px]" align="center" gap="xs">
-                  <Span size="base">{icon}</Span>
-                  <Span className="whitespace-pre-line leading-tight">{label}</Span>
-                </Stack>
-              ))}
-            </Row>
+            <TrustBadgeRow badges={PRE_ORDER_TRUST_BADGES} />
           </Div>
         </>
       )}

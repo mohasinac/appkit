@@ -403,7 +403,7 @@ export default function SideActionDock() {
           onClick={scrollToAnchor}
           aria-label={`Back to ${primaryAction?.label ?? "the buy button"}`}
         >
-          <ChevronUp aria-hidden="true" size={ICON_SIZE.sm} />
+          <ChevronUp aria-hidden="true" className={ICON_SIZE.sm} />
           {`Back to ${primaryAction?.label ?? "buy"}`}
         </Button>
       </Div>

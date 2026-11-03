@@ -10,6 +10,14 @@ import { Span, Text } from "../../../ui/components/Typography";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
+import { TrustBadgeRow } from "../../products/components/TrustBadgeRow";
+
+/** Shared with `PreOrderDetailPageView`'s read-only preview panel. */
+export const PRE_ORDER_TRUST_BADGES = [
+  { icon: "🔒", label: "Secure\nPayment" },
+  { icon: "📅", label: "Guaranteed\nDelivery" },
+  { icon: "↩", label: "Free\nCancellation" },
+];
 
 export interface PreOrderActionsClientProps {
   productId: string;
@@ -118,18 +126,7 @@ export function PreOrderActionsClient({
 
       <Div border="default" className="border-t" padding="t-md">
         {/* audit-content-alignment-ok: icon+label badge cluster, not page content */}
-        <Row className="text-center" justify="center" gap="md" wrap>
-          {[
-            { icon: "🔒", label: "Secure\nPayment" },
-            { icon: "📅", label: "Guaranteed\nDelivery" },
-            { icon: "↩", label: "Free\nCancellation" },
-          ].map(({ icon, label }) => (
-            <Stack color="muted" textSize="xs" key={label} className="min-w-[60px]" align="center" gap="xs">
-              <Span size="base">{icon}</Span>
-              <Span className="whitespace-pre-line leading-tight">{label}</Span>
-            </Stack>
-          ))}
-        </Row>
+        <TrustBadgeRow badges={PRE_ORDER_TRUST_BADGES} />
       </Div>
     </Stack>
   );

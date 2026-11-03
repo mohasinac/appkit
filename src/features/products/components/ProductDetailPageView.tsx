@@ -56,6 +56,7 @@ import { isFinalSale } from "../constants/final-sale";
 import { FeatureBadgeList } from "./FeatureBadge";
 import type { ProductFeatureDocument } from "../schemas/product-features";
 import { ShareButton } from "./ShareButton";
+import { TrustBadgeRow } from "./TrustBadgeRow";
 import { PdpSectionJumpNav } from "./PdpSectionJumpNav";
 import { toCustomSectionTabs } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
@@ -1202,18 +1203,13 @@ export async function ProductDetailPageView({
               {/* Trust badges */}
               <Div border="default" className="border-t" padding="t-md">
                 {/* audit-content-alignment-ok: icon+label badge cluster, not page content */}
-                <Row wrap gap="sm" justify="center" className="text-center">
-                  {[
+                <TrustBadgeRow
+                  badges={[
                     { icon: "🔒", label: "Secure\nPayment" },
                     { icon: "✓", label: "Verified\nSeller" },
                     { icon: "⭐", label: "Quality\nGuarantee" },
-                  ].map(({ icon, label }) => (
-                    <Stack color="muted" textSize="xs" key={label} className="min-w-[60px]" align="center" gap="xs">
-                      <Span size="base">{icon}</Span>
-                      <Span className="whitespace-pre-line leading-tight">{label}</Span>
-                    </Stack>
-                  ))}
-                </Row>
+                  ]}
+                />
               </Div>
             </Stack>
             </SectionVisibilityGate>
