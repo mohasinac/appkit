@@ -41,6 +41,17 @@ const SUPPRESS_RE = /\/\/\s*audit-field-contract-ok\b/;
 // resolved error value into a child element, rather than only rendering its
 // own error <Text> block.
 const FORWARDS_ERROR_RE = /\berror=\{/;
+/*
+ * 🛑 WORD-BOUNDARY, not `content.includes("showError")`. A plain substring
+ * check matches `showErrors` (plural) too — found live when
+ * useFormBottomActions.tsx moved into ui/forms/ and got scanned for the
+ * first time: it reads FormShellContext for an aggregate submit-error
+ * COUNT across the whole form (`showErrors`), which has no single field to
+ * call clearFieldError(name) on. The `\b` boundaries are what keep this
+ * audit scoped to the actual per-field `showError` flag the Field* family
+ * uses, not any identifier that happens to contain it.
+ */
+const SHOW_ERROR_RE = /\bshowError\b/;
 
 function listFiles(dir) {
   return readdirSync(dir, { withFileTypes: true })
@@ -55,7 +66,7 @@ for (const file of listFiles(FORMS_DIR)) {
   const content = readFileSync(file, "utf8");
   // Only files that actually participate in the FormShell error contract.
   if (!content.includes("FormShellContext")) continue;
-  if (!content.includes("showError")) continue;
+  if (!SHOW_ERROR_RE.test(content)) continue;
   if (SUPPRESS_RE.test(content)) continue;
 
   const rel = relative(FORMS_DIR, file);
