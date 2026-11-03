@@ -52,13 +52,12 @@
  */
 
 import React from "react";
-import { Badge } from "../components/Badge";
+import { Badge, type BadgeVariant } from "../components/Badge";
 import { Row, Stack } from "../components/Layout";
 import { Div } from "../components/Div";
 import { Span, Text } from "../components/Typography";
 import { MediaImage } from "../components/MediaImage";
 import { getStatusTone, renderCurrency, type StatusTone } from "./column-renderers";
-import { listingBadgeVariant } from "../../features/products/utils/listing-badge-variant";
 
 /**
  * The single tone→class map.
@@ -281,17 +280,18 @@ export function renderCountPill(
 /**
  * A listing type as its registry badge.
  *
- * Goes through `listingBadgeVariant()`, not `LISTING_BADGE_VARIANT[kind]` — the
- * accessor tolerates a non-`ListingType` string (a raw API value, a UI
- * sentinel like `"all"`) while the map itself stays exhaustively typed, so a
- * new listing type is a compile error there rather than a silent fallthrough.
+ * Takes the Badge variant pre-resolved rather than importing the
+ * listingType -> variant mapping function itself — that mapping is a
+ * products-feature concern (`listingBadgeVariant()` in
+ * `features/products/utils/listing-badge-variant.ts`), and a ui/ primitive
+ * reaching into features/ for it is exactly the cross-layer edge the
+ * appkit barrel-perf plan's Phase 4 removes. Callers resolve the variant
+ * themselves and pass it in.
  */
 export function renderTypeChip(
   listingType: string | null | undefined,
-  opts?: { label?: string },
+  opts: { variant: BadgeVariant; label?: string },
 ): React.ReactNode {
   if (!listingType) return null;
-  return (
-    <Badge variant={listingBadgeVariant(listingType)}>{opts?.label ?? listingType}</Badge>
-  );
+  return <Badge variant={opts.variant}>{opts.label ?? listingType}</Badge>;
 }
