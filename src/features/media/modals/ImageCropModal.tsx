@@ -15,12 +15,9 @@ import { Modal } from "../../../ui/components/Modal";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { MediaSlider } from "../components/MediaSlider";
+import type { ImageCropData } from "../../../ui/types/image-crop";
 
-export interface ImageCropData {
-  url: string;
-  position: { x: number; y: number };
-  zoom: number;
-}
+export type { ImageCropData } from "../../../ui/types/image-crop";
 
 export interface ImageCropModalProps {
   isOpen: boolean;

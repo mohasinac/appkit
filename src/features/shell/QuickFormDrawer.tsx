@@ -24,18 +24,9 @@ import { Text } from "../../ui/components/Typography";
 import { FormShellContext, FormErrorSummary, type FormShellContextValue } from "../../ui/forms";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
 import { useHandMode } from "../../_internal/client/hand-mode";
-export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
+import type { QuickFieldType, QuickFieldDef } from "../../ui/types/quick-field";
 
-export interface QuickFieldDef {
-  name: string;
-  label: string;
-  type: QuickFieldType;
-  options?: { value: string; label: string }[];
-  required?: boolean;
-  placeholder?: string;
-  helperText?: string;
-  defaultValue?: FormFieldValue;
-}
+export type { QuickFieldType, QuickFieldDef } from "../../ui/types/quick-field";
 
 export interface QuickFormDrawerProps {
   isOpen: boolean;

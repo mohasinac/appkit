@@ -1,6 +1,6 @@
 import React from "react";
 import { Span } from "./Typography";
-import type { ImageCropData } from "../../features/media";
+import type { ImageCropData } from "../types/image-crop";
 
 export interface AvatarDisplayProps {
   cropData: ImageCropData | null;

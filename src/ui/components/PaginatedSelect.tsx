@@ -7,7 +7,7 @@ import { FormShellContext } from "../forms/FormShell";
 import { SideDrawer } from "./SideDrawer";
 import { Button } from "./Button";
 import { QuickFormDrawer } from "../../features/shell/QuickFormDrawer";
-import type { QuickFieldDef } from "../../features/shell/QuickFormDrawer";
+import type { QuickFieldDef } from "../types/quick-field";
 import type { FirestoreDocument, FormValues } from "../../schemas/types";
 import { normalizeError } from "../../errors/normalize";
 
