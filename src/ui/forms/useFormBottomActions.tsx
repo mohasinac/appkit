@@ -1,4 +1,8 @@
 "use client";
+// audit-field-contract-ok: not a Field* input wrapper -- aggregates the
+// whole form's submit-error COUNT (`showErrors`) into the bottom bar's info
+// panel. There is no single field here to call clearFieldError(name) on;
+// `showErrors` just happens to contain the substring the audit greps for.
 import { useContext, useMemo } from "react";
 import { FormShellContext, type FormShellContextValue } from "./FormShell";
 import { FormErrorList } from "./FormErrorList";
