@@ -33,13 +33,23 @@ import { Div } from "../../../ui/components/Div";
 import { Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { FormShellContext, FormErrorSummary, useFormShellState } from "../../../ui/forms";
-import { SectionForm, buildSectionsFromSchema, useSectionFormNav } from "../../shell";
+import { SectionForm, buildSectionsFromSchema, useFieldVisibility, useSectionFormNav } from "../../shell";
 import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import { loadCategoryOptions } from "../../categories/utils/load-category-options";
 import { storeCreateSchema, type StoreCreateInput } from "../schemas/store-create";
 import { normalizeError } from "../../../errors/normalize";
 import { toUserMessage } from "../../../errors/error-display-map";
 import { useTranslations } from "next-intl";
+import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
+
+/**
+ * Admin field-visibility surface id for this form — a stable, hand-chosen
+ * string (`useFieldVisibility`'s own "not route-derived" rule), the first
+ * real proof case for the Phase 3B mechanism. An admin browsing this page
+ * with Phase 3's edit mode on sees every field plus a hide/show toggle; a
+ * real seller filling the form out sees only what's currently visible.
+ */
+const FIELD_VISIBILITY_SURFACE_ID = "store-create";
 
 export interface StoreCreateFormResult {
   ok: boolean;
@@ -70,6 +80,9 @@ export function StoreCreateForm({ onSubmit, onCreated }: StoreCreateFormProps) {
 
   const { shellCtx, setFieldError, clearErrors, markSubmitAttempted } =
     useFormShellState(storeCreateSchema);
+
+  const { editMode } = useEditMode();
+  const fieldVisibility = useFieldVisibility(FIELD_VISIBILITY_SURFACE_ID);
 
   const handleChange = React.useCallback((partial: Partial<StoreCreateInput>) => {
     setValues((prev) => Object.assign({}, prev, partial));
@@ -102,8 +115,11 @@ export function StoreCreateForm({ onSubmit, onCreated }: StoreCreateFormProps) {
             />
           ),
         },
+        fieldVisibility: fieldVisibility.fields,
+        editMode,
+        onToggleFieldVisibility: (fieldName, nextVisible) => fieldVisibility.setVisible(fieldName, nextVisible),
       }),
-    [],
+    [fieldVisibility.fields, editMode, fieldVisibility.setVisible],
   );
 
   // Declared AFTER `sections`, because it takes them — it derives the ordered

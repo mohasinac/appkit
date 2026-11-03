@@ -39,9 +39,12 @@ import { groupRank, resolveSectionGroup } from "./form-sections";
 import { Fragment, type ReactNode } from "react";
 import type { ZodTypeAny } from "zod";
 import type { FormValues } from "../../schemas/types";
+import { Div } from "../../ui/components/Div";
 import { FormGroup } from "../../ui/components/Form";
+import { Icon } from "../../ui/components/Icon";
+import { IconButton } from "../../ui/components/IconButton";
 import { PaginatedSelect } from "../../ui/components/PaginatedSelect";
-import { Stack } from "../../ui/components/Layout";
+import { Row, Stack } from "../../ui/components/Layout";
 import { Text } from "../../ui/components/Typography";
 import { FieldInput } from "../../ui/forms/FieldInput";
 import { FieldSelect } from "../../ui/forms/FieldSelect";
@@ -89,6 +92,33 @@ export interface BuildSectionsOptions<T extends object> {
    * in first-declaration order. `sectionRequired` still sorts first regardless.
    */
   sectionOrder?: string[];
+  /**
+   * Admin-authored per-field visibility override (Phase 3B widget system,
+   * `_internal/shared/features/forms/field-visibility.ts`), keyed by field
+   * name. `false` hides the field; absent or `true` leaves it to `when`
+   * alone. Optional and additive — every existing caller that doesn't pass
+   * this renders byte-identically to before.
+   *
+   * 🛑 Combines with `FieldUiMeta.when` by AND, `when` evaluated first,
+   * NEVER the reverse: an admin override may only hide a field `when`
+   * would otherwise show, never resurrect one `when` has ruled out. Forcing
+   * a `when`-gated field back on is a genuinely harder problem — see this
+   * field's own usage site in `render` below for why — and is deliberately
+   * not supported here.
+   */
+  fieldVisibility?: Record<string, boolean>;
+  /**
+   * Shows every field regardless of `fieldVisibility` (an admin re-enabling
+   * a field has to be able to SEE it first) plus a small toggle beside
+   * each one — "inline on the page itself, same pattern as page regions"
+   * (owner's own instruction on where this control lives). Pass the
+   * viewer's own `EditModeProvider` state; `build-sections.tsx` does not
+   * read it itself, so this stays usable in a context with no edit-mode
+   * concept at all. Ignored when `fieldVisibility` is not supplied.
+   */
+  editMode?: boolean;
+  /** Required when `editMode` is `true` — flips one field's stored visibility. */
+  onToggleFieldVisibility?: (fieldName: string, nextVisible: boolean) => void;
 }
 
 /**
@@ -290,17 +320,41 @@ export function buildSectionsFromSchema<T extends object>(
            * the CURRENT values, so a field appears the moment its condition
            * becomes true. Rows are packed after filtering so a hidden field
            * does not leave a gap in a two-up row.
+           *
+           * `when` evaluates FIRST, `fieldVisibility` only narrows further —
+           * see `BuildSectionsOptions.fieldVisibility`'s own doc comment for
+           * why the order is not interchangeable.
            */
-          const visible = sectionFields.filter(
+          const whenVisible = sectionFields.filter(
             (f) => !f.meta.when || f.meta.when(values as FormValues),
           );
+          const visible = opts.editMode
+            ? whenVisible
+            : whenVisible.filter((f) => opts.fieldVisibility?.[f.name] !== false);
           return (
             <>
               {packRows(visible).map((row, i) => (
                 <FormGroup key={`${sectionId}-row-${i}`} columns={ROW_COLUMNS[row[0].meta.row ?? "pair"]}>
-                  {row.map((field) =>
-                    renderField<T>(field, { values, onChange, errors }, opts),
-                  )}
+                  {row.map((field) => {
+                    const node = renderField<T>(field, { values, onChange, errors }, opts);
+                    if (!opts.editMode) return node;
+                    const hidden = opts.fieldVisibility?.[field.name] === false;
+                    return (
+                      <FieldVisibilityEditWrapper
+                        key={`${field.name}-visibility`}
+                        hidden={hidden}
+                        // The stored value IS the new `isVisible()` result
+                        // (`true` = shown, `false` = hidden), and `hidden`
+                        // is true exactly when the stored value is `false`
+                        // — so the value to store on toggle equals `hidden`
+                        // itself: hidden→store true (becomes shown),
+                        // shown→store false (becomes hidden).
+                        onToggle={() => opts.onToggleFieldVisibility?.(field.name, hidden)}
+                      >
+                        {node}
+                      </FieldVisibilityEditWrapper>
+                    );
+                  })}
                 </FormGroup>
               ))}
             </>
@@ -308,6 +362,40 @@ export function buildSectionsFromSchema<T extends object>(
         },
       } satisfies SectionDef<T>;
     });
+}
+
+/**
+ * Edit-mode-only chrome around one field — a small eye/eye-off toggle, and a
+ * dimmed "Hidden from form" label when the admin has switched the field off
+ * for everyone else. Only ever rendered when `BuildSectionsOptions.editMode`
+ * is `true`; every other caller never mounts this and sees byte-identical
+ * output to before this mechanism existed.
+ */
+function FieldVisibilityEditWrapper({
+  hidden,
+  onToggle,
+  children,
+}: {
+  hidden: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <Div className={hidden ? "opacity-50" : undefined}>
+      <Row gap="xs" align="center" justify="between" className="mb-1">
+        {hidden && <Text size="xs" color="muted">Hidden from form</Text>}
+        <IconButton
+          aria-label={hidden ? "Show this field" : "Hide this field"}
+          icon={<Icon name={hidden ? "hide" : "view"} size="sm" />}
+          size="sm"
+          variant="ghost"
+          className="ml-auto"
+          onClick={onToggle}
+        />
+      </Row>
+      {children}
+    </Div>
+  );
 }
 
 function renderField<T extends object>(

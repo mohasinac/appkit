@@ -249,6 +249,8 @@ export const ADMIN_ENDPOINTS = {
   ASSISTANT_ASK: "/api/admin/assistant/ask",
   /** Admin-composable page regions — Phase 3B (overhaul brief), first slice. `pageId` is a stable, hand-chosen id, not route-derived. */
   PAGE_REGION_BY_ID: (pageId: string) => `/api/admin/page-regions/${pageId}`,
+  /** Admin field-visibility override — Phase 3B. `surfaceId` is a stable, hand-chosen id identifying a form/display surface, same convention as `PAGE_REGION_BY_ID`. */
+  FIELD_VISIBILITY_BY_ID: (surfaceId: string) => `/api/admin/field-visibility/${surfaceId}`,
   SHIPMENTS: "/api/admin/shipments",
   SHIPMENT_BY_ID: (id: string) => `/api/admin/shipments/${id}`,
   SHIPMENT_LOTS: (id: string) => `/api/admin/shipments/${id}/lots`,

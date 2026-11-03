@@ -70,6 +70,9 @@ export {
   visibleValues,
 } from "./build-sections";
 
+export type { UseFieldVisibilityResult } from "./useFieldVisibility";
+export { useFieldVisibility } from "./useFieldVisibility";
+
 // Field-group primitives (W1-15)
 export type {
   TitleDescriptionGroupProps,

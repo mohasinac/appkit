@@ -1,0 +1,94 @@
+"use client";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ADMIN_ENDPOINTS } from "../../constants/api-endpoints";
+import { normalizeError } from "../../errors/normalize";
+
+const PERSIST_DEBOUNCE_MS = 600;
+
+export interface UseFieldVisibilityResult {
+  /** The raw map — pass directly as `BuildSectionsOptions.fieldVisibility`. */
+  fields: Record<string, boolean>;
+  isVisible: (fieldName: string) => boolean;
+  setVisible: (fieldName: string, next: boolean) => void;
+  /** True while a debounced write is in flight. */
+  saving: boolean;
+}
+
+/**
+ * Admin field-visibility override (Phase 3B widget system) — the write-side
+ * counterpart to `getFieldVisibility()` (appkit `server.ts`). Same
+ * debounced-persist shape as `usePageRegion` for writes. Reads differ
+ * deliberately: `usePageRegion`'s caller is always SSR (an admin dashboard
+ * page), so it only ever needs `initialCards` server-rendered. This hook's
+ * real first consumer (`StoreCreateForm`, mounted from a fully `"use
+ * client"` page with no SSR data-fetch opportunity) has no such option, so
+ * this hook fetches on mount via `GET /api/admin/field-visibility/{id}`
+ * (open to any signed-in viewer — reading "what's hidden" is not
+ * sensitive) whenever `initial` is omitted. An SSR caller that DOES have a
+ * server-rendered value may still pass it as `initial` to skip the fetch
+ * and avoid a loading flash, same as `usePageRegion`'s own contract.
+ *
+ * `surfaceId` identifies which `fieldVisibility/{surfaceId}` document this
+ * hook reads and writes — a stable, hand-chosen id per form/display
+ * surface (e.g. `"store-create"`, `"admin-site-settings"`), same
+ * "not route-derived" rule `usePageRegion`'s own doc comment states.
+ *
+ * Consumed directly by `buildSectionsFromSchema`'s `fieldVisibility` option
+ * (`features/shell/build-sections.tsx`) for FORM fields, and by any
+ * read-only display surface that wants to hide a field row, via
+ * `isVisible(fieldName)` directly.
+ */
+export function useFieldVisibility(surfaceId: string, initial?: Record<string, boolean>): UseFieldVisibilityResult {
+  const [fields, setFields] = useState<Record<string, boolean>>(initial ?? {});
+  const [saving, setSaving] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (initial !== undefined) return;
+    let cancelled = false;
+    fetch(ADMIN_ENDPOINTS.FIELD_VISIBILITY_BY_ID(encodeURIComponent(surfaceId)))
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { data?: { fields?: Record<string, boolean> } } | null) => {
+        if (!cancelled && data?.data?.fields) setFields(data.data.fields);
+      })
+      .catch((err) => void normalizeError(err));
+    return () => {
+      cancelled = true;
+    };
+    // `initial`'s presence (not its value) decides whether this fetches at
+    // all — re-running on every `surfaceId` change only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [surfaceId]);
+
+  const persist = useCallback(
+    (next: Record<string, boolean>) => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        setSaving(true);
+        fetch(ADMIN_ENDPOINTS.FIELD_VISIBILITY_BY_ID(encodeURIComponent(surfaceId)), {
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ fields: next }),
+        })
+          .catch((err) => void normalizeError(err))
+          .finally(() => setSaving(false));
+      }, PERSIST_DEBOUNCE_MS);
+    },
+    [surfaceId],
+  );
+
+  const setVisible = useCallback(
+    (fieldName: string, next: boolean) => {
+      setFields((prev) => {
+        const updated = { ...prev, [fieldName]: next };
+        persist(updated);
+        return updated;
+      });
+    },
+    [persist],
+  );
+
+  const isVisible = useCallback((fieldName: string) => fields[fieldName] !== false, [fields]);
+
+  return { fields, isVisible, setVisible, saving };
+}
