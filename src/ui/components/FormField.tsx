@@ -37,6 +37,7 @@ import { FormShellContext } from "../forms/FormShell";
  * optimization — see ensureMediaFormFieldRenderers below.
  */
 import { getFormFieldRenderer } from "./form-field-registry";
+import { normalizeError } from "../../errors/normalize";
 
 let mediaRenderersPromise: Promise<unknown> | null = null;
 /**
@@ -181,8 +182,9 @@ export function FormField({
         if (!cancelled) forceRerender((n) => n + 1);
       })
       .catch((err) => {
+        const normalized = normalizeError(err);
         if (process.env.NODE_ENV !== "production") {
-          console.error("[FormField] failed to load the image/media renderer:", err);
+          console.error("[FormField] failed to load the image/media renderer:", normalized.message);
         }
       });
     return () => {
