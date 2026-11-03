@@ -9,7 +9,9 @@ import { BulkActionBar } from "../../../ui/components/BulkActionBar";
 import { Div } from "../../../ui/components/Div";
 import { Grid } from "../../../ui/components/Layout";
 import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
-import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { ListingToolbar, applyToggleVisibility } from "../../../ui/components/ListingToolbar";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 import { Pagination } from "../../../ui/components/Pagination";
 import { Text } from "../../../ui/components/Typography";
 import { StickyToolbar } from "../../../ui/components/StickyToolbar";
@@ -52,6 +54,9 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const { editMode } = useEditMode();
+  const { fields: toolbarVisibilityFields, fieldOrder: toolbarFieldOrder } =
+    useFieldVisibility("stores-index-toolbar");
   const [view, setView] = useState<"grid" | "list">(
     (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
@@ -211,13 +216,17 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         bulkTotalCount={stores.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
-        toggles={[
-          // Inline quick-filter: the highest-frequency drawer-only facet promoted
-          // to the sticky toolbar so it doesn't require open-drawer → check → Apply
-          // → close for every toggle. The full facet set (category/rating/product
-          // count) remains in <ListingFilterDrawer> below.
-          { label: "Featured", active: featured === "true", onChange: (next) => table.set(TABLE_KEYS.FEATURED, next ? "true" : "") },
-        ]}
+        toggles={applyToggleVisibility(
+          [
+            // Inline quick-filter: the highest-frequency drawer-only facet promoted
+            // to the sticky toolbar so it doesn't require open-drawer → check → Apply
+            // → close for every toggle. The full facet set (category/rating/product
+            // count) remains in <ListingFilterDrawer> below.
+            { label: "Featured", active: featured === "true", onChange: (next) => table.set(TABLE_KEYS.FEATURED, next ? "true" : "") },
+          ],
+          editMode ? {} : toolbarVisibilityFields,
+          toolbarFieldOrder,
+        )}
       />
 
       {/* ── Bulk action bar ───────────────────────────────────────────── */}

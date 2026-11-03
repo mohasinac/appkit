@@ -16,7 +16,9 @@ import { Grid } from "../../../ui/components/Layout";
 import { Label, Span, Text } from "../../../ui/components/Typography";
 import { Toggle } from "../../../ui/components/Toggle";
 import { StickyToolbar } from "../../../ui/components/StickyToolbar";
-import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { ListingToolbar, applyToggleVisibility } from "../../../ui/components/ListingToolbar";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 import { Pagination } from "../../../ui/components/Pagination";
 import { FilterDrawer } from "../../../ui/components/FilterDrawer";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
@@ -56,6 +58,9 @@ export function CategoryBundlesListing({
   const table = useUrlTable({ defaults: { sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const { editMode } = useEditMode();
+  const { fields: toolbarVisibilityFields, fieldOrder: toolbarFieldOrder } =
+    useFieldVisibility("category-bundles-toolbar");
   const [pendingShowOutOfStock, setPendingShowOutOfStock] = useState(
     table.get("showOutOfStock") === "true",
   );
@@ -141,13 +146,17 @@ export function CategoryBundlesListing({
         onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
-        toggles={[
-          // Inline quick-filter: the single facet this page has is promoted to
-          // the sticky toolbar so it doesn't require open-drawer → check →
-          // Apply → close. <FilterDrawer> below stays available for parity
-          // with every other listing page's filter affordance.
-          { label: "Show out-of-stock", active: showOutOfStock, onChange: (next) => table.setMany({ showOutOfStock: next ? "true" : "", page: "1" }) },
-        ]}
+        toggles={applyToggleVisibility(
+          [
+            // Inline quick-filter: the single facet this page has is promoted to
+            // the sticky toolbar so it doesn't require open-drawer → check →
+            // Apply → close. <FilterDrawer> below stays available for parity
+            // with every other listing page's filter affordance.
+            { label: "Show out-of-stock", active: showOutOfStock, onChange: (next) => table.setMany({ showOutOfStock: next ? "true" : "", page: "1" }) },
+          ],
+          editMode ? {} : toolbarVisibilityFields,
+          toolbarFieldOrder,
+        )}
       />
 
       {totalPages > 1 && (

@@ -12,7 +12,9 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
-import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { ListingToolbar, applyToggleVisibility } from "../../../ui/components/ListingToolbar";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 import { OverflowRow } from "../../../ui/components/OverflowRow";
 import { Pagination } from "../../../ui/components/Pagination";
 import { Text } from "../../../ui/components/Typography";
@@ -156,6 +158,12 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
 
   const sort = table.get(TABLE_KEYS.SORT) || DEFAULT_SORT;
   const page = table.getNumber(TABLE_KEYS.PAGE, 1);
+
+  // 3B item 1b, toolbars subsystem — see ProductsIndexListing.tsx's own
+  // comment for the full reasoning; same mechanism, same pilot pattern.
+  const { editMode } = useEditMode();
+  const { fields: toolbarVisibilityFields, fieldOrder: toolbarFieldOrder } =
+    useFieldVisibility("categories-index-toolbar");
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -361,9 +369,13 @@ export function CategoriesIndexListing({ brandsOnly = false }: CategoriesIndexLi
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
-        toggles={[
-          { label: "Featured only", active: table.get(TABLE_KEYS.IS_FEATURED) === "true", onChange: (next) => table.set(TABLE_KEYS.IS_FEATURED, next ? "true" : "") },
-        ]}
+        toggles={applyToggleVisibility(
+          [
+            { label: "Featured only", active: table.get(TABLE_KEYS.IS_FEATURED) === "true", onChange: (next) => table.set(TABLE_KEYS.IS_FEATURED, next ? "true" : "") },
+          ],
+          editMode ? {} : toolbarVisibilityFields,
+          toolbarFieldOrder,
+        )}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
