@@ -75,6 +75,7 @@
  */
 
 import type { RowSpan } from "../../../../utils/pack-by-span";
+import type { ContentTag } from "../content-tags/registry";
 
 export type RecentEntry =
   | { kind: "page"; href: string; label: string; visitedAt: string }
@@ -241,6 +242,21 @@ export interface DashboardCard {
    * `CardElementSpan`'s own doc comment.
    */
   spans?: Record<string, CardElementSpan>;
+  /**
+   * Whole-card content-tag gate — the SAME `ContentTag`/`isContentVisible`
+   * mechanism Phase 1A already wired into FAQ/nav/blog/support/scam/events/
+   * legal content (`_internal/shared/features/content-tags/registry.ts`),
+   * applied to a widget card for the first time (owner's instruction,
+   * 2026-11-03: "all of these widgets are used to be enabled disabled with
+   * tags... from the admin"). Absent/empty means always visible, same as
+   * every other `contentTags` consumer. Card-level, not per-element —
+   * matches the existing convention of tagging at the DOCUMENT a reader
+   * sees, not a sub-fragment of it (fragment-level gating already exists
+   * separately, via `answerFragments`/`resolveFragmentedAnswer`, for
+   * content that only PARTLY depends on a flag — a card is small enough
+   * that whole-card gating is the right grain here).
+   */
+  contentTags?: ContentTag[];
   saved: boolean;
   createdAt: string;
   updatedAt: string;

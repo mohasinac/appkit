@@ -7021,7 +7021,7 @@ export type {
 // Content tagging — does a stored document's own governing flag still allow
 // it to be shown. Same barrel choice as the feature-flag helpers above.
 export { isContentVisible } from "./_internal/shared/features/content-tags/registry";
-export type { ContentTag } from "./_internal/shared/features/content-tags/registry";
+export type { ContentTag, ContentFlagSnapshot } from "./_internal/shared/features/content-tags/registry";
 // Toggle catalog (1A-vi, formerly COMMON_TOGGLES) — the closed list of
 // site-settings booleans the admin dashboard-landing quick-jump (Phase 9,
 // overhaul brief) can search and flip directly, mirroring the

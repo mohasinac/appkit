@@ -17,7 +17,7 @@ export interface UsePageRegionResult {
   cards: DashboardCard[];
   createCard: (initial?: { title?: string; color?: string; elements?: CardElement[] }) => string;
   removeCard: (id: string) => void;
-  updateCard: (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans">>) => void;
+  updateCard: (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans" | "contentTags">>) => void;
   /** True while a debounced write is in flight — not a loading-skeleton signal, just a small "saving…" affordance if the caller wants one. */
   saving: boolean;
 }
@@ -102,7 +102,7 @@ export function usePageRegion(pageId: string, initialCards: DashboardCard[]): Us
   );
 
   const updateCard = useCallback(
-    (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans">>) => {
+    (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans" | "contentTags">>) => {
       setCards((prev) => {
         const next = prev.map((c) => (c.id === id ? { ...c, ...patch, updatedAt: new Date().toISOString() } : c));
         persist(next);

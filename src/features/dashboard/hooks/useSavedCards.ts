@@ -75,7 +75,7 @@ export interface UseSavedCardsResult {
   /** Remove a saved card entirely. */
   removeCard: (id: string) => void;
   /** Patch one saved card's title/color/elements in place. */
-  updateCard: (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans">>) => void;
+  updateCard: (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans" | "contentTags">>) => void;
 }
 
 /** `scope`: `"{portal}:hub"`, e.g. `"admin:hub"` — same namespacing as `useRecentlyVisited`. */
@@ -179,7 +179,7 @@ export function useSavedCards(scope: string): UseSavedCardsResult {
   );
 
   const updateCard = useCallback(
-    (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans">>) => {
+    (id: string, patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans" | "contentTags">>) => {
       setLocalItems((prev) => {
         const current = prev ?? items;
         const next = current.map((c) =>

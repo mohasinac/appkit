@@ -23,6 +23,8 @@ import { ADMIN_ROW_HREF_BY_RESOURCE } from "../../../_internal/shared/features/a
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { ROW_COLUMNS, packBySpan } from "../../../utils/pack-by-span";
+import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
+import { humaniseFieldName } from "../../shell/entity-form";
 
 /**
  * Extracted from `DashboardQuickJump.tsx` (Phase 3B) — the card
@@ -114,6 +116,21 @@ const SPAN_OPTIONS: SelectOption[] = [
 ];
 
 /**
+ * Whole-card content-tag gate — first cut covers `governs: "listingType"`
+ * only (the common case: "hide this widget when collector-drop is
+ * disabled"). `categoryType`/`browsePage` tags are real, valid
+ * `ContentTag.governs` values too (the server schema accepts all three,
+ * `isContentVisible` handles all three) — just not reachable from this
+ * picker yet. A card can still be tagged with either via direct API use;
+ * widening this `<Select>` to a kind+value pair is a follow-up, not a
+ * blocker for the listing-type case this was built for.
+ */
+const CONTENT_TAG_OPTIONS: SelectOption[] = [
+  { value: "", label: "No tag — always visible" },
+  ...ALL_LISTING_TYPES.map((t) => ({ value: t, label: humaniseFieldName(t) })),
+];
+
+/**
  * `text`/`image`/`richText` carry no REQUIRED label (free prose, and a
  * media/rich-text block whose label is purely decorative) — falls back to
  * "card" rather than rendering `undefined` in an aria-label.
@@ -133,7 +150,7 @@ export interface DashboardCardViewProps {
   settingsPreviews: SettingPreviewLookup[];
   onToggle: (toggleId: string, label: string) => Promise<void>;
   onRemove: () => void;
-  onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans">>) => void;
+  onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans" | "contentTags">>) => void;
   /**
    * Defaults `true` (the per-user "Saved" grid's existing behavior, always
    * editable by the user it belongs to — unchanged by this prop's
@@ -249,7 +266,7 @@ function DashboardCardEditPanel({
   onDone,
 }: {
   card: DashboardCard;
-  onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans">>) => void;
+  onUpdate: (patch: Partial<Pick<DashboardCard, "title" | "color" | "elements" | "spans" | "contentTags">>) => void;
   onDone: () => void;
 }) {
   const toast = useToastSafe();
@@ -338,6 +355,17 @@ function DashboardCardEditPanel({
         </Row>
       </Div>
       <Div>
+        <Text size="xs" weight="semibold" color="muted" className="mb-1">Visible when listing type is on</Text>
+        <Select
+          aria-label="Gate this card by listing type"
+          options={CONTENT_TAG_OPTIONS}
+          value={card.contentTags?.[0]?.value ?? ""}
+          onValueChange={(value) =>
+            onUpdate({ contentTags: value ? [{ governs: "listingType", value }] : undefined })
+          }
+        />
+      </Div>
+      <Div>
         <Text size="xs" weight="semibold" color="muted" className="mb-1">Elements</Text>
         <Stack gap="sm">
           {card.elements.map((el, i) => (
@@ -415,7 +443,6 @@ function DashboardCardEditPanel({
                       options={SPAN_OPTIONS}
                       value={card.spans?.[String(i)] ?? "full"}
                       onValueChange={(value) => setElementSpan(i, value as CardElementSpan)}
-                      className="text-xs"
                     />
                   </Row>
                 </Div>
@@ -431,7 +458,7 @@ function DashboardCardEditPanel({
             </Div>
           ))}
         </Stack>
-        <Row gap="xs" className="mt-2 flex-wrap">
+        <Row gap="xs" wrap padding="t-xs">
           <Button variant="ghost" size="sm" type="button" onClick={addTextElement}>
             <Icon name="create" size="sm" /> Text
           </Button>

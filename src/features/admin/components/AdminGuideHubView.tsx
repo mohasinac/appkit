@@ -10,6 +10,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandName } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { ContentFlagSnapshot } from "../../../_internal/shared/features/content-tags/registry";
 
 const CLS_WARN_PANEL = "rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-[var(--appkit-space-6)]";
 const CLS_WARN_HEAD = "font-semibold text-amber-800 dark:text-amber-300 mb-1";
@@ -105,9 +106,11 @@ export interface AdminGuideHubViewProps {
   isFullAdmin?: boolean;
   /** Phase 3B's first slice — admin-curated cards shared across every admin viewing this page. `[]` or omitted renders nothing extra. */
   pageRegionCards?: DashboardCard[];
+  /** Passed straight through to `AdminComposableRegion` — see that component's own doc comment. */
+  flagSnapshot?: ContentFlagSnapshot | null;
 }
 
-export function AdminGuideHubView({ permissions = [], isFullAdmin = false, pageRegionCards = [] }: AdminGuideHubViewProps) {
+export function AdminGuideHubView({ permissions = [], isFullAdmin = false, pageRegionCards = [], flagSnapshot = null }: AdminGuideHubViewProps) {
   const hasPermission = (perm: string) => isFullAdmin || permissions.includes(perm);
   const visibleCards = GUIDE_CARDS.filter((c) => hasPermission(c.permission));
   const hasAny = visibleCards.length > 0;
@@ -142,7 +145,7 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false, pageR
       </Alert>
 
       {/* Admin-composable region (Phase 3B, first slice) — renders nothing when empty and not in edit mode */}
-      <AdminComposableRegion pageId="admin-guide" initialCards={pageRegionCards} title="Pinned Notes" />
+      <AdminComposableRegion pageId="admin-guide" initialCards={pageRegionCards} title="Pinned Notes" flagSnapshot={flagSnapshot} />
 
       {/* No permissions fallback */}
       {!hasAny && (

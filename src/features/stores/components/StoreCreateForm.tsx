@@ -82,7 +82,7 @@ export function StoreCreateForm({ onSubmit, onCreated }: StoreCreateFormProps) {
     useFormShellState(storeCreateSchema);
 
   const { editMode } = useEditMode();
-  const fieldVisibility = useFieldVisibility(FIELD_VISIBILITY_SURFACE_ID);
+  const { fields: visibilityFields, setVisible: setFieldVisible } = useFieldVisibility(FIELD_VISIBILITY_SURFACE_ID);
 
   const handleChange = React.useCallback((partial: Partial<StoreCreateInput>) => {
     setValues((prev) => Object.assign({}, prev, partial));
@@ -115,11 +115,11 @@ export function StoreCreateForm({ onSubmit, onCreated }: StoreCreateFormProps) {
             />
           ),
         },
-        fieldVisibility: fieldVisibility.fields,
+        fieldVisibility: visibilityFields,
         editMode,
-        onToggleFieldVisibility: (fieldName, nextVisible) => fieldVisibility.setVisible(fieldName, nextVisible),
+        onToggleFieldVisibility: setFieldVisible,
       }),
-    [fieldVisibility.fields, editMode, fieldVisibility.setVisible],
+    [visibilityFields, editMode, setFieldVisible],
   );
 
   // Declared AFTER `sections`, because it takes them — it derives the ordered

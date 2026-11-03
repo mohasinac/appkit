@@ -19,7 +19,6 @@ import { rankNavSearchResults, type NavSearchGroupedItem } from "../../shell/sea
 import { useRecentlyVisited } from "../hooks/useRecentlyVisited";
 import { useSavedCards } from "../hooks/useSavedCards";
 import type {
-  DashboardCard,
   RecentEntry,
   RecentEntryInput,
 } from "../../../_internal/shared/features/dashboard/recent-entry";
