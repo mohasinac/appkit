@@ -105,6 +105,16 @@ export interface ShippingConfigDocument extends BaseDocument {
   expressSurcharge?: number;
   estimatedDays?: number;
   zones?: string[];
+  /**
+   * Values for admin-defined custom fields with no schema presence (3B
+   * item 1b, Universal Template System pilot — see
+   * `features/shell/field-ui-meta.ts`'s `CustomFieldDef`). Never read by
+   * any typed computation (shipping-cost resolution reads the named
+   * fields above only) and never merged into them — see the storage rule
+   * in the mega-overhaul plan's 3B-1b section for why this bag must stay
+   * bounded to scalars and separate from the real schema.
+   */
+  customFieldValues?: Record<string, string | number | boolean>;
 }
 
 export const SHIPPING_CONFIGS_COLLECTION = "shippingConfigs" as const;

@@ -493,6 +493,25 @@ export function inferFieldUiMeta(name: string, schema: ZodTypeAny): Partial<Fiel
 }
 
 /**
+ * An admin-defined field with NO presence in the owning Zod schema — part of
+ * the Universal Template System (3B item 1b). Its VALUE never becomes a
+ * typed schema property; it lands in the document's `customFieldValues`
+ * bag, validated only against this definition (type/required/maxLength),
+ * same reasoning `FieldUiMeta` already uses for everything else here: one
+ * small, closed set of control kinds, never `unknown`.
+ */
+export interface CustomFieldDef {
+  /** Key inside `customFieldValues`. Never a real schema property name. */
+  key: string;
+  label: string;
+  type: "text" | "number" | "select" | "boolean" | "date";
+  required?: boolean;
+  /** For `type: "select"`. */
+  options?: string[];
+  maxLength?: number;
+}
+
+/**
  * Above this many options a select becomes a searchable `<PaginatedSelect>`.
  * The standing UI rule (CLAUDE.md § UI Primitive Rules): more than five options
  * and a plain dropdown is unscannable.

@@ -2916,7 +2916,8 @@ export { getPageRegion, setPageRegion } from "./_internal/server/features/dashbo
  * Admin field-visibility override (Phase 3B widget system) — same
  * `_internal` boundary reasoning as `getPageRegion`/`setPageRegion` above.
  */
-export { getFieldVisibility, setFieldVisibility } from "./_internal/server/features/forms/field-visibility";
+export { getFieldVisibility, getSurfaceFieldConfig, setFieldVisibility } from "./_internal/server/features/forms/field-visibility";
+export type { SurfaceFieldConfig } from "./_internal/server/features/forms/field-visibility";
 
 // Auto-hide: the measured "does this browse surface hold anything" document.
 // Server-only (firebase-admin via getAdminDb); the PREDICATE that reads it is

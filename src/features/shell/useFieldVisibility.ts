@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ADMIN_ENDPOINTS } from "../../constants/api-endpoints";
 import { normalizeError } from "../../errors/normalize";
+import type { CustomFieldDef } from "./field-ui-meta";
 
 const PERSIST_DEBOUNCE_MS = 600;
 
@@ -10,6 +11,12 @@ export interface UseFieldVisibilityResult {
   fields: Record<string, boolean>;
   isVisible: (fieldName: string) => boolean;
   setVisible: (fieldName: string, next: boolean) => void;
+  /** Field names in admin-chosen render order. Pass to `BuildSectionsOptions.fieldOrder`. */
+  fieldOrder: string[];
+  setFieldOrder: (next: string[]) => void;
+  /** Admin-defined fields with no schema presence. Pass to `BuildSectionsOptions.customFields`. */
+  customFields: CustomFieldDef[];
+  setCustomFields: (next: CustomFieldDef[]) => void;
   /** True while a debounced write is in flight. */
   saving: boolean;
 }
@@ -40,6 +47,8 @@ export interface UseFieldVisibilityResult {
  */
 export function useFieldVisibility(surfaceId: string, initial?: Record<string, boolean>): UseFieldVisibilityResult {
   const [fields, setFields] = useState<Record<string, boolean>>(initial ?? {});
+  const [fieldOrder, setFieldOrderState] = useState<string[]>([]);
+  const [customFields, setCustomFieldsState] = useState<CustomFieldDef[]>([]);
   const [saving, setSaving] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -60,9 +69,18 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
     let cancelled = false;
     fetch(ADMIN_ENDPOINTS.FIELD_VISIBILITY_BY_ID(encodeURIComponent(surfaceId)))
       .then((res) => (res.ok ? res.json() : null))
-      .then((data: { data?: { fields?: Record<string, boolean> } } | null) => {
-        if (!cancelled && data?.data?.fields) setFields(data.data.fields);
-      })
+      .then(
+        (
+          data: {
+            data?: { fields?: Record<string, boolean>; fieldOrder?: string[]; customFields?: CustomFieldDef[] };
+          } | null,
+        ) => {
+          if (cancelled) return;
+          if (data?.data?.fields) setFields(data.data.fields);
+          if (data?.data?.fieldOrder) setFieldOrderState(data.data.fieldOrder);
+          if (data?.data?.customFields) setCustomFieldsState(data.data.customFields);
+        },
+      )
       .catch((err) => void normalizeError(err));
     return () => {
       cancelled = true;
@@ -72,15 +90,23 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surfaceId]);
 
+  /**
+   * One debounced writer for all three keys — each setter below sends its
+   * OWN field plus whatever the other two currently hold, so two fields
+   * edited in quick succession (e.g. reordering, then adding a custom
+   * field) don't race each other's debounce window and overwrite one
+   * with a stale value. `merge: true` on the server side means sending
+   * all three every time is always safe, never destructive.
+   */
   const persist = useCallback(
-    (next: Record<string, boolean>) => {
+    (next: { fields: Record<string, boolean>; fieldOrder: string[]; customFields: CustomFieldDef[] }) => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         setSaving(true);
         fetch(ADMIN_ENDPOINTS.FIELD_VISIBILITY_BY_ID(encodeURIComponent(surfaceId)), {
           method: "PATCH",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ fields: next }),
+          body: JSON.stringify(next),
         })
           .catch((err) => void normalizeError(err))
           .finally(() => setSaving(false));
@@ -93,14 +119,39 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
     (fieldName: string, next: boolean) => {
       setFields((prev) => {
         const updated = { ...prev, [fieldName]: next };
-        persist(updated);
+        persist({ fields: updated, fieldOrder, customFields });
         return updated;
       });
     },
-    [persist],
+    [persist, fieldOrder, customFields],
+  );
+
+  const setFieldOrder = useCallback(
+    (next: string[]) => {
+      setFieldOrderState(next);
+      persist({ fields, fieldOrder: next, customFields });
+    },
+    [persist, fields, customFields],
+  );
+
+  const setCustomFields = useCallback(
+    (next: CustomFieldDef[]) => {
+      setCustomFieldsState(next);
+      persist({ fields, fieldOrder, customFields: next });
+    },
+    [persist, fields, fieldOrder],
   );
 
   const isVisible = useCallback((fieldName: string) => fields[fieldName] !== false, [fields]);
 
-  return { fields, isVisible, setVisible, saving };
+  return {
+    fields,
+    isVisible,
+    setVisible,
+    fieldOrder,
+    setFieldOrder,
+    customFields,
+    setCustomFields,
+    saving,
+  };
 }

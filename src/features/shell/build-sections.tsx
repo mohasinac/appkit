@@ -36,7 +36,7 @@
  */
 
 import { groupRank, resolveSectionGroup } from "./form-sections";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useState, type ReactNode } from "react";
 import type { ZodTypeAny } from "zod";
 import type { FormValues } from "../../schemas/types";
 import { Div } from "../../ui/components/Div";
@@ -60,9 +60,13 @@ import {
   schemaIsOptional,
   ui,
   PAGINATED_SELECT_THRESHOLD,
+  type CustomFieldDef,
   type FieldRow,
   type FieldUiMeta,
 } from "./field-ui-meta";
+
+/** The scalar shape a `CustomFieldDef` value can hold — never nested, never `unknown`. */
+export type CustomFieldValue = string | number | boolean;
 
 /** One field, resolved: its name, its schema, and its final metadata. */
 export interface ResolvedField {
@@ -120,7 +124,38 @@ export interface BuildSectionsOptions<T extends object> {
   editMode?: boolean;
   /** Required when `editMode` is `true` — flips one field's stored visibility. */
   onToggleFieldVisibility?: (fieldName: string, nextVisible: boolean) => void;
+  /**
+   * Admin-chosen render order (3B item 1b, `useFieldVisibility().fieldOrder`).
+   * Fields named here render first, in this order; fields not named keep
+   * their schema-declared relative order, appended after. Optional and
+   * additive — omit it and every field sorts exactly as before.
+   */
+  fieldOrder?: string[];
+  /**
+   * Admin-defined fields with no presence in the schema (3B item 1b). They
+   * render as their OWN section, after every schema-derived section, via a
+   * small fixed `type → control` map — never through `renderers`, which is
+   * keyed by a real schema field name these are not. Empty/omitted renders
+   * nothing extra, so an unconfigured surface is byte-identical to before
+   * this option existed.
+   */
+  customFields?: CustomFieldDef[];
+  /** Current values for `customFields`, keyed by `CustomFieldDef.key`. */
+  customFieldValues?: Record<string, CustomFieldValue>;
+  /** Required when `customFields` is non-empty. */
+  onCustomFieldChange?: (key: string, value: CustomFieldValue | undefined) => void;
+  /**
+   * Edit-mode-only — defines a new field with no schema presence. Rendered
+   * as a small "Add field" row at the end of the custom-fields section,
+   * same "inline on the page itself" placement as the field-visibility
+   * eye-icons. Ignored when `editMode` is not `true`.
+   */
+  onAddCustomField?: (field: CustomFieldDef) => void;
+  /** Edit-mode-only — removes a custom field definition AND its stored value. */
+  onRemoveCustomField?: (key: string) => void;
 }
+
+const CUSTOM_FIELDS_SECTION_ID = "__customFields";
 
 /**
  * Enum members as `<FieldSelect>` options.
@@ -269,6 +304,18 @@ export function buildSectionsFromSchema<T extends object>(
   opts: BuildSectionsOptions<T> = {},
 ): SectionDef<T>[] {
   const fields = resolveFields(schema);
+  // Admin `fieldOrder` (3B item 1b) overrides `meta.order` only for the
+  // fields it names, each getting its index as its new order — low enough
+  // to sort before every unset field (whose order stays `undefined`, i.e.
+  // MAX_SAFE_INTEGER). Fields it does NOT name are untouched, so they keep
+  // their existing relative order and simply render after the named ones.
+  if (opts.fieldOrder && opts.fieldOrder.length > 0) {
+    const position = new Map(opts.fieldOrder.map((name, i) => [name, i]));
+    for (const field of fields) {
+      const i = position.get(field.name);
+      if (i !== undefined) field.meta = { ...field.meta, order: i };
+    }
+  }
   const bySection = groupFieldsBySection(fields);
 
   const declarationOrder = [...bySection.keys()];
@@ -295,7 +342,7 @@ export function buildSectionsFromSchema<T extends object>(
     return explicitOrder.length + groupRank(group) * 1000 + declarationOrder.indexOf(id);
   };
 
-  return declarationOrder
+  const sections: SectionDef<T>[] = declarationOrder
     .slice()
     .sort((a, b) => rank(a) - rank(b))
     .map((sectionId) => {
@@ -363,6 +410,208 @@ export function buildSectionsFromSchema<T extends object>(
         },
       } satisfies SectionDef<T>;
     });
+
+  // Admin-defined fields with no schema presence (3B item 1b) — always
+  // LAST, never interleaved with a schema-derived section. Omitted entirely
+  // for a non-admin viewer with none defined, so an unconfigured surface
+  // renders this function's output byte-identical to before this option
+  // existed. Rendered (empty, with just the "Add field" row) in edit mode
+  // even with zero custom fields — otherwise there is no way to define the
+  // FIRST one.
+  const hasCustomFields = (opts.customFields?.length ?? 0) > 0;
+  if (hasCustomFields || (opts.editMode && opts.onAddCustomField)) {
+    sections.push(buildCustomFieldsSection(opts.customFields ?? [], opts));
+  }
+
+  return sections;
+}
+
+/**
+ * The one section every `customFields`-carrying surface gets, rendering
+ * each definition through a small fixed `type → control` map — never
+ * through `renderers`, which is keyed by a real schema field name these are
+ * not.
+ */
+function buildCustomFieldsSection<T extends object>(
+  customFields: CustomFieldDef[],
+  opts: BuildSectionsOptions<T>,
+): SectionDef<T> {
+  return {
+    id: CUSTOM_FIELDS_SECTION_ID,
+    label: "Custom fields",
+    required: false,
+    quick: false,
+    // Holds the "Add field" draft's own uncommitted input — collapsing
+    // must not discard it, same reasoning media sections already use.
+    keepMounted: true,
+    fields: customFields.map((f) => f.key),
+    render: () => (
+      <>
+        {customFields.map((field) => (
+          <FormGroup key={field.key} columns={opts.editMode ? 1 : 1}>
+            {opts.editMode ? (
+              <Row gap="xs" align="start">
+                <Div className="flex-1">{renderCustomField(field, opts)}</Div>
+                <IconButton
+                  aria-label={`Remove custom field "${field.label}"`}
+                  icon={<Icon name="delete" size="sm" />}
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => opts.onRemoveCustomField?.(field.key)}
+                />
+              </Row>
+            ) : (
+              renderCustomField(field, opts)
+            )}
+          </FormGroup>
+        ))}
+        {opts.editMode && opts.onAddCustomField && (
+          <FormGroup columns={1}>
+            <AddCustomFieldRow existingKeys={customFields.map((f) => f.key)} onAdd={opts.onAddCustomField} />
+          </FormGroup>
+        )}
+      </>
+    ),
+  };
+}
+
+/**
+ * Edit-mode-only — the small form that defines a brand-new field with no
+ * schema presence. Its own local state (the draft key/label/type) is
+ * uncommitted input belonging to the EDITOR, not to the surface's real
+ * form values, so it lives here rather than threading through `T`.
+ */
+function AddCustomFieldRow({
+  existingKeys,
+  onAdd,
+}: {
+  existingKeys: string[];
+  onAdd: (field: CustomFieldDef) => void;
+}) {
+  const [draft, setDraft] = useState({ key: "", label: "", type: "text" as CustomFieldDef["type"] });
+  const [error, setError] = useState<string | undefined>();
+
+  const submit = () => {
+    const key = draft.key.trim();
+    const label = draft.label.trim();
+    if (!key || !label) {
+      setError("Give the field a key and a label.");
+      return;
+    }
+    if (existingKeys.includes(key)) {
+      setError(`"${key}" already exists on this surface.`);
+      return;
+    }
+    onAdd({ key, label, type: draft.type });
+    setDraft({ key: "", label: "", type: "text" });
+    setError(undefined);
+  };
+
+  return (
+    <Stack gap="xs" surface="subtle" padding="sm" rounded="md">
+      <Text size="xs" weight="medium" color="muted">Add a custom field</Text>
+      <Row gap="xs" wrap>
+        <FieldInput
+          name="newCustomFieldKey"
+          label="Key"
+          hint="Storage key — letters/numbers only"
+          value={draft.key}
+          onChange={(v) => setDraft((d) => ({ ...d, key: v.replace(/[^a-zA-Z0-9_]/g, "") }))}
+        />
+        <FieldInput
+          name="newCustomFieldLabel"
+          label="Label"
+          value={draft.label}
+          onChange={(v) => setDraft((d) => ({ ...d, label: v }))}
+        />
+        <FieldSelect
+          name="newCustomFieldType"
+          label="Type"
+          value={draft.type}
+          options={[
+            { value: "text", label: "Text" },
+            { value: "number", label: "Number" },
+            { value: "select", label: "Select" },
+            { value: "boolean", label: "Toggle" },
+            { value: "date", label: "Date" },
+          ]}
+          onChange={(v) => setDraft((d) => ({ ...d, type: v as CustomFieldDef["type"] }))}
+        />
+      </Row>
+      {error && <Text size="xs" color="error">{error}</Text>}
+      <IconButton aria-label="Add field" icon={<Icon name="create" size="sm" />} size="sm" variant="outline" onClick={submit} />
+    </Stack>
+  );
+}
+
+function renderCustomField<T extends object>(
+  field: CustomFieldDef,
+  opts: BuildSectionsOptions<T>,
+): ReactNode {
+  const value = opts.customFieldValues?.[field.key];
+  const set = (v: CustomFieldValue | undefined) => opts.onCustomFieldChange?.(field.key, v);
+
+  switch (field.type) {
+    case "boolean":
+      return (
+        <FieldCheckbox
+          key={field.key}
+          name={field.key}
+          label={field.label}
+          checked={Boolean(value)}
+          onChange={set}
+        />
+      );
+    case "select":
+      return (
+        <FieldSelect
+          key={field.key}
+          name={field.key}
+          label={field.label}
+          required={field.required}
+          value={typeof value === "string" ? value : ""}
+          options={(field.options ?? []).map((o) => ({ value: o, label: o }))}
+          onChange={set}
+        />
+      );
+    case "number":
+      return (
+        <FieldInput
+          key={field.key}
+          name={field.key}
+          type="number"
+          label={field.label}
+          required={field.required}
+          value={value == null ? "" : String(value)}
+          onChange={(v) => set(v === "" ? undefined : Number(v))}
+        />
+      );
+    case "date":
+      return (
+        <FieldInput
+          key={field.key}
+          name={field.key}
+          type="date"
+          label={field.label}
+          required={field.required}
+          value={typeof value === "string" ? value.slice(0, 10) : ""}
+          onChange={set}
+        />
+      );
+    default:
+      return (
+        <FieldInput
+          key={field.key}
+          name={field.key}
+          type="text"
+          label={field.label}
+          required={field.required}
+          maxLength={field.maxLength}
+          value={typeof value === "string" ? value : value == null ? "" : String(value)}
+          onChange={set}
+        />
+      );
+  }
 }
 
 /**

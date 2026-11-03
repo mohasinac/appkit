@@ -112,6 +112,20 @@ export const shippingConfigFormSchema = z
     isActive: annotate(z.boolean(), {
       section: "visibility", order: 2, row: "quarter",
     }),
+
+    /*
+     * Admin-defined fields with no presence above (3B item 1b pilot). Never
+     * rendered through this schema's own derived sections — `build-sections`
+     * renders `customFields` as its OWN trailing section via
+     * `BuildSectionsOptions.customFields`/`customFieldValues`. Present here
+     * only so the schema accepts and round-trips the bag; `.catchall` is
+     * deliberately NOT used — see the module header on why this stays a
+     * closed, separately-typed field rather than `.passthrough()`.
+     */
+    customFieldValues: annotate(
+      z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
+      { section: "__customFieldValues", derived: true },
+    ),
   })
   .superRefine((v, ctx) => {
     // A rate rule with no rate is not a rule. Checked per method, because the
@@ -152,5 +166,6 @@ export const shippingConfigUpdateSchema = z
     zones: z.array(z.string()).optional(),
     isDefault: z.boolean().optional(),
     isActive: z.boolean().optional(),
+    customFieldValues: z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])).optional(),
   })
   .strict();
