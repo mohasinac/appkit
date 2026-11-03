@@ -26,7 +26,7 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
 import { COLLECTOR_DROP_PUBLIC_SORT_OPTIONS } from "../constants/sieve";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { AvailabilityTabs } from "./AvailabilityTabs";
 import type { ListingType } from "../types";

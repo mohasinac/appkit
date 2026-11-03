@@ -55,17 +55,17 @@ export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSide
 export {
   BottomActionsProvider,
   useBottomActionsContext,
-} from "./BottomActionsContext";
+} from "../../ui/chrome/BottomActionsContext";
 export type {
   BottomAction,
   BottomBulkConfig,
   BottomActionsState,
   BottomActionsDesktopMode,
-} from "./BottomActionsContext";
-export { useBottomActions } from "./hooks/useBottomActions";
-export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
-export { useFormBottomActions } from "./hooks/useFormBottomActions";
-export type { UseFormBottomActionsOptions } from "./hooks/useFormBottomActions";
+} from "../../ui/chrome/BottomActionsContext";
+export { useBottomActions } from "../../ui/chrome/useBottomActions";
+export type { UseBottomActionsOptions } from "../../ui/chrome/useBottomActions";
+export { useFormBottomActions } from "../../ui/forms/useFormBottomActions";
+export type { UseFormBottomActionsOptions } from "../../ui/forms/useFormBottomActions";
 
 /*
  * The two presentations of one control. `AppLayoutShell` mounts both and

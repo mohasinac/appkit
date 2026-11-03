@@ -1,6 +1,6 @@
 "use client";
 
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { ACTION_META, MOBILE_PRIMARY_ACTIONS } from "../constants/action-defs";

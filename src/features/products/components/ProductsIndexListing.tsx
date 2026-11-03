@@ -36,7 +36,7 @@ import { useProductFeatures } from "./ProductFeaturesContext";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { GENERIC_PRODUCT_LISTING_TYPES, PRODUCT_TYPE_FILTER_TABS } from "../constants/listing-tabs";
 import { parseSelectedListingTypes } from "../utils/listing-type";
 import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";

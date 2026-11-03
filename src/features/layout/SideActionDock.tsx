@@ -50,8 +50,8 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, ChevronUp, Check, X } from "lucide-react";
-import { useBottomActionsContext } from "./BottomActionsContext";
-import type { BottomAction } from "./BottomActionsContext";
+import { useBottomActionsContext } from "../../ui/chrome/BottomActionsContext";
+import type { BottomAction } from "../../ui/chrome/BottomActionsContext";
 import { useClickOutside } from "../../react";
 import { useHandMode } from "../../_internal/client/hand-mode";
 import { useCtaReveal } from "./useCtaReveal";

@@ -23,7 +23,7 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { STORE_FIELDS } from "../../../constants/field-names";
 import { ACTION_ID } from "../../products/constants/action-defs";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",

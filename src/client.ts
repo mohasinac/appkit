@@ -490,8 +490,8 @@ export { RecordStatusTimeline } from "./features/status-history/components/Recor
 export type { SerialisedStatusChangeEntry } from "./_internal/shared/history/types";
 export type { FormErrorListProps } from "./ui/forms/FormErrorList";
 export { FormErrorList } from "./ui/forms/FormErrorList";
-export { useFormBottomActions } from "./features/layout/hooks/useFormBottomActions";
-export type { UseFormBottomActionsOptions } from "./features/layout/hooks/useFormBottomActions";
+export { useFormBottomActions } from "./ui/forms/useFormBottomActions";
+export type { UseFormBottomActionsOptions } from "./ui/forms/useFormBottomActions";
 export { OverlayContext, useIsInsideOverlay } from "./ui/components/overlay-context";
 export { Select } from "./ui/components/Select";
 export type { SelectOption, SelectProps } from "./ui/components/Select";
@@ -508,8 +508,8 @@ export { GlobalError } from "./next/components/GlobalError";
 export { AppLayoutShell } from "./features/layout/AppLayoutShell";
 export { LocaleSwitcher } from "./features/layout/LocaleSwitcher";
 export { useDashboardNav, DashboardNavProvider } from "./features/layout/DashboardNavContext";
-export { BottomActionsProvider } from "./features/layout/BottomActionsContext";
-export { useBottomActions } from "./features/layout/hooks/useBottomActions";
+export { BottomActionsProvider } from "./ui/chrome/BottomActionsContext";
+export { useBottomActions } from "./ui/chrome/useBottomActions";
 export { LayoutClient } from "./features/layout/LayoutClient";
 /**
  * A page declares its own inline primary CTA so the floating action control

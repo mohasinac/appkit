@@ -45,7 +45,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import type { ButtonProps } from "../../ui/components/Button";
+import type { ButtonProps } from "../components/Button";
 
 // --- Types --------------------------------------------------------------------
 

@@ -14,7 +14,7 @@ import { addToGuestWishlist } from "../../wishlist/utils/guest-wishlist";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 

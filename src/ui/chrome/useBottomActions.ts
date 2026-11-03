@@ -6,7 +6,7 @@ import {
   type BottomAction,
   type BottomActionsDesktopMode,
   type BottomBulkConfig,
-} from "../BottomActionsContext";
+} from "./BottomActionsContext";
 
 export interface UseBottomActionsOptions {
   actions?: BottomAction[];

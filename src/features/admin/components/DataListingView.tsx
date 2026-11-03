@@ -39,7 +39,7 @@ import { StickyToolbar } from "../../../ui/components/StickyToolbar";
 import { TextLink } from "../../../ui/components/TextLink";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROW_ACTION_ID, ROW_ACTION_META } from "../../products/constants/action-defs";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { useAdminListing } from "../hooks/useAdminListing";
 import type { AdminListingConfig } from "../hooks/useAdminListing";
 import type { AdminTableColumn } from "../types";

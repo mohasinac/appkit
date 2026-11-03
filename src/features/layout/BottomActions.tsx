@@ -53,8 +53,8 @@
 
 import { useState, useRef, useEffect, useId } from "react";
 import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
-import { useBottomActionsContext } from "./BottomActionsContext";
-import type { BottomAction } from "./BottomActionsContext";
+import { useBottomActionsContext } from "../../ui/chrome/BottomActionsContext";
+import type { BottomAction } from "../../ui/chrome/BottomActionsContext";
 import { useClickOutside } from "../../react";
 import { useCtaReveal } from "./useCtaReveal";
 import { useIsDesktop } from "./useIsDesktop";

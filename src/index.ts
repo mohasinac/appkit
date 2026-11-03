@@ -5952,7 +5952,7 @@ export { SideActionDock } from "./features/layout/index";
 export { ctaAnchorProps, CTA_ANCHOR_ATTR } from "./features/layout/cta-anchor";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BottomActionsProvider - Component for bottom actions provider.
-export { BottomActionsProvider } from "./features/layout/BottomActionsContext";
+export { BottomActionsProvider } from "./ui/chrome/BottomActionsContext";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BottomNavItem - Model for bottom nav item.
 export { BottomNavItem } from "./features/layout/BottomNavItem";
@@ -6014,16 +6014,16 @@ export type {
 } from "./contracts/client-live-edit";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActions - React hook for use bottom actions.
-export { useBottomActions } from "./features/layout/hooks/useBottomActions";
+export { useBottomActions } from "./ui/chrome/useBottomActions";
 export { RecordStatusTimeline } from "./features/status-history/components/RecordStatusTimeline";
 
 // useFormBottomActions - pins a form's Save/Cancel row + error sheet to the mobile bottom-chrome tier.
-export { useFormBottomActions } from "./features/layout/hooks/useFormBottomActions";
+export { useFormBottomActions } from "./ui/forms/useFormBottomActions";
 export { FormErrorList } from "./ui/forms/FormErrorList";
 export { OverlayContext, useIsInsideOverlay } from "./ui/components/overlay-context";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useBottomActionsContext - React hook for use bottom actions context.
-export { useBottomActionsContext } from "./features/layout/BottomActionsContext";
+export { useBottomActionsContext } from "./ui/chrome/BottomActionsContext";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useDashboardNav - React hook for use dashboard nav.
 export { useDashboardNav } from "./features/layout/DashboardNavContext";
@@ -6038,13 +6038,13 @@ export type { AutoBreadcrumbsProps } from "./features/layout/AutoBreadcrumbs";
 export type { BackToTopProps } from "./features/layout/BackToTop";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BottomAction - Type contract for bottom action.
-export type { BottomAction } from "./features/layout/BottomActionsContext";
+export type { BottomAction } from "./ui/chrome/BottomActionsContext";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BottomActionsState - Type contract for bottom actions state.
-export type { BottomActionsState } from "./features/layout/BottomActionsContext";
+export type { BottomActionsState } from "./ui/chrome/BottomActionsContext";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BottomBulkConfig - Type contract for bottom bulk config.
-export type { BottomBulkConfig } from "./features/layout/BottomActionsContext";
+export type { BottomBulkConfig } from "./ui/chrome/BottomActionsContext";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BottomNavItemProps - Type contract for bottom nav item props.
 export type { BottomNavItemProps } from "./features/layout/BottomNavItem";
@@ -6119,7 +6119,7 @@ export type { TitleBarProps } from "./features/layout/TitleBar";
 export type { TitleBarUser } from "./features/layout/TitleBarLayout";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // UseBottomActionsOptions - Type contract for use bottom actions options.
-export type { UseBottomActionsOptions } from "./features/layout/hooks/useBottomActions";
+export type { UseBottomActionsOptions } from "./ui/chrome/useBottomActions";
 
 // ./features/media/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

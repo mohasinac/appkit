@@ -31,7 +31,7 @@ import { useBrands } from "../../products/hooks/useBrands";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { PREORDER_SORT_OPTIONS } from "../../products/constants/sieve";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants/field-names";
 import { AvailabilityTabs } from "../../products/components/AvailabilityTabs";
 import type { ListingType } from "../../products/types";

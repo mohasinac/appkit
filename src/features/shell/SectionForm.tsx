@@ -14,7 +14,7 @@ import {
   LabelPlacementContext,
   type LabelPlacement,
 } from "../../ui/forms/FieldLabel";
-import { useFormBottomActions } from "../layout/hooks/useFormBottomActions";
+import { useFormBottomActions } from "../../ui/forms/useFormBottomActions";
 import { useIsDesktop } from "../layout/useIsDesktop";
 import { useSectionState } from "../account/hooks/useCollapsedSections";
 import { FormSchemaContext } from "./FormShell";

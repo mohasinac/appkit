@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { useBottomActions } from "../../../ui/chrome/useBottomActions";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTION_ID, ACTION_META } from "../../products/constants/action-defs";

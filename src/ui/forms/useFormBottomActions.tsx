@@ -1,11 +1,11 @@
 "use client";
 import { useContext, useMemo } from "react";
-import { FormShellContext, type FormShellContextValue } from "../../../ui/forms/FormShell";
-import { FormErrorList } from "../../../ui/forms/FormErrorList";
-import { Div } from "../../../ui/components/Div";
-import { useIsInsideOverlay } from "../../../ui/components/overlay-context";
-import { useBottomActions } from "./useBottomActions";
-import type { BottomAction } from "../BottomActionsContext";
+import { FormShellContext, type FormShellContextValue } from "./FormShell";
+import { FormErrorList } from "./FormErrorList";
+import { Div } from "../components/Div";
+import { useIsInsideOverlay } from "../components/overlay-context";
+import { useBottomActions } from "../chrome/useBottomActions";
+import type { BottomAction } from "../chrome/BottomActionsContext";
 
 export interface UseFormBottomActionsOptions {
   /** Runs when the pinned primary button is pressed. */
