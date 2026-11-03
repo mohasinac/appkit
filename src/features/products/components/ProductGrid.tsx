@@ -27,6 +27,8 @@ import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -72,7 +74,26 @@ interface ProductCardProps<T extends ProductItem = ProductItem> {
    * the wrong one.
    */
   renderOwnerActions?: () => React.ReactNode;
+  /**
+   * 3B item 1b, catalogue-cards subsystem (2026-11-04) — admin hide/reorder
+   * of this card's named content blocks (title/brand/notes/storeLine/
+   * rating/priceRow). `ProductGrid` fetches these ONCE per grid via
+   * `useFieldVisibility("product-card")` and passes them down — a
+   * per-CARD fetch would mean one request per card in every grid on the
+   * site. Direct `<ProductCard>` callers outside `ProductGrid` simply omit
+   * these and render exactly as before (unconfigured defaults apply).
+   *
+   * Deliberately hide/reorder of EXISTING blocks only — no admin-defined
+   * new block, same reasoning as toolbars/bottom-bars: each block's
+   * internal guards (the "a review must exist" check, the stock-quantity
+   * gate) stay exactly as coded; only whether the WHOLE block shows, and
+   * where, is admin-controlled.
+   */
+  cardContentFields?: Record<string, boolean>;
+  cardContentOrder?: string[];
 }
+
+const PRODUCT_CARD_BLOCK_IDS = ["title", "brand", "notes", "storeLine", "rating", "priceRow"] as const;
 
 export function ProductCard<T extends ProductItem = ProductItem>({
   product,
@@ -87,7 +108,17 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   isSelected = false,
   onSelect,
   renderOwnerActions,
+  cardContentFields = {},
+  cardContentOrder = [],
 }: ProductCardProps<T>) {
+  const isBlockVisible = (id: string) => cardContentFields[id] !== false;
+  const blockOrder = cardContentOrder.length > 0
+    ? [...PRODUCT_CARD_BLOCK_IDS].sort(
+        (a, b) =>
+          (cardContentOrder.indexOf(a) === -1 ? Number.MAX_SAFE_INTEGER : cardContentOrder.indexOf(a)) -
+          (cardContentOrder.indexOf(b) === -1 ? Number.MAX_SAFE_INTEGER : cardContentOrder.indexOf(b)),
+      )
+    : PRODUCT_CARD_BLOCK_IDS;
   const discount =
     product.originalPrice && product.originalPrice > product.price
       ? Math.round(
@@ -165,6 +196,100 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   const handleCardClick = selectionMode
     ? (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }
     : onClick && !href ? () => onClick(product) : undefined;
+
+  const renderPriceRow = () => (
+    <Div className="mt-auto" padding="t-xs">
+      <PriceDisplay
+        amount={product.price}
+        originalAmount={product.originalPrice}
+        currency={getDefaultCurrency()}
+        variant="compact"
+      />
+
+      {(() => {
+        const stock =
+          product.stockCount ?? product.stockQuantity ?? product.availableQuantity;
+        if (stock === undefined || !listingPlugin.showsStockQuantity) return null;
+        if (stock <= 0) {
+          return (
+            <Text className={CLS_DISCOUNT_TEXT}>
+              Out of stock
+            </Text>
+          );
+        }
+        const low = stock <= 5;
+        return (
+          <Text
+            className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-[var(--appkit-color-text-faint)]" }`} weight="medium"
+          >
+            {low ? `Only ${stock} left` : `${stock} in stock`}
+          </Text>
+        );
+      })()}
+
+      {/* Feature badges (FI6) — gated on ProductFeaturesProvider */}
+      {featuresList && product.features && product.features.length > 0 && (
+        <FeatureBadgeList
+          productFeatureIds={product.features}
+          features={featuresList}
+          maxVisible={PRODUCT_FEATURE_CARD_MAX_VISIBLE}
+          className="mt-2"
+        />
+      )}
+
+      {/*
+        ── Action buttons: TEXT ONLY ──────────────────────────────────────
+
+        🛑 BOTH HAND-ROLLED INLINE SVGs ARE GONE — a lightning bolt on
+        "Buy Now" and a trolley on "Cart". Not replaced with `<Icon>`,
+        which is the usual fix (Root Cause #80, and the wishlist button a
+        few lines up records doing exactly that): removed, because the goal
+        here is FEWER atoms and an icon beside a two-word label inside a
+        half-width button is decoration. "Buy Now" and "Cart" are already
+        unambiguous; the glyph adds an element per button per card in every
+        grid and tells the shopper nothing the word did not.
+
+        It also removes the last two hand-written `<path d="…">` in this
+        card — and the bolt had no registry entry, so keeping it would have
+        meant either adding an icon to the catalogue for one decorative use
+        or leaving a raw SVG behind.
+      */}
+      {(onAddToCart || onBuyNow) && (
+        <Div layout="grid" gap="1" className={`mt-2 ${onBuyNow && onAddToCart ? "grid-cols-2" : "grid-cols-1"}`}>
+          {onBuyNow && (
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onBuyNow(product);
+              }}
+              className="justify-center text-[length:var(--appkit-text-xs)] btn-glow"
+            >
+              Buy Now
+            </Button>
+          )}
+          {onAddToCart && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                onAddToCart(product);
+              }}
+              className="justify-center text-[length:var(--appkit-text-xs)]"
+            >
+              Cart
+            </Button>
+          )}
+        </Div>
+      )}
+    </Div>
+  );
 
   const cardBody = (
     <Div
@@ -286,159 +411,90 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
       </Div>
 
-      {/* Content area */}
+      {/*
+        Content area — rendered as named, admin-togglable/reorderable BLOCKS
+        (3B item 1b). Each block's own internal guard (brand presence, the
+        "a review must exist" rating check, stock-quantity gating inside
+        priceRow) is UNCHANGED from the fixed-order version this replaced —
+        only whether the whole block renders, and in what order, is
+        admin-controlled. `blockOrder`/`isBlockVisible` default to the
+        exact original fixed order with everything visible, so an
+        unconfigured grid is byte-identical to before this existed.
+      */}
       <Stack className={`flex-1 ${__P.p3} pt-[0.625rem]`}>
-        <Text className={`leading-snug`} truncate={2} size="sm" weight="semibold" color="primary">
-          {product.title}
-        </Text>
-
-        {/*
-          ── Brand only. CATEGORY CHIPS ARE GONE. ─────────────────────────
-
-          🛑 This was an IIFE computing up to three category chips plus a
-          "+N" overflow chip plus a brand chip, each a pill carrying its own
-          inline SVG — five elements and two hand-written icons on every card
-          in every grid. The categories were the bulk of it and the least
-          useful part: a shopper on a category page is already IN that
-          category, so the chip repeats back the page they are standing on,
-          and on a search grid three truncated taxonomy names crowd out the
-          title.
-
-          Brand survives as PLAIN TEXT because it is a real shopping signal
-          and the one thing people filter by in this catalogue — but not as a
-          pill, and not clickable: the whole card is already a Link, so the
-          chip had to fake navigation with preventDefault + stopPropagation +
-          router.push to avoid nesting an anchor inside an anchor. A control
-          that has to fight its own container is a control in the wrong place;
-          the brand page is one click away via the detail page.
-        */}
-        {product.brand && (
-          <Text className="mt-1" size="xs" color="muted" truncate={1}>
-            {product.brand}
-          </Text>
-        )}
-
-        {/*
-          The five badges demoted from the image corner, as words. See the
-          `cardNotes` block above for why each one lost its pill.
-        */}
-        {cardNotes.length > 0 && (
-          <Text className="mt-1" size="xs" color="muted" truncate={1} title={cardNotes.join(" · ")}>
-            {cardNotes.join(" · ")}
-          </Text>
-        )}
-
-        <CardStoreLine storeName={product.storeName} storeId={product.storeId} />
-
-        {/*
-          🛑 A REVIEW MUST EXIST. `rating !== undefined` passes for
-          `rating: 0` — what a product nobody has reviewed stores — and then
-          the card shows a star and "0.0", which reads as a product rated
-          zero rather than one with no rating. Zero reviews is not zero stars,
-          and on a grid of cards the difference is the whole impression.
-        */}
-        {product.rating !== undefined && (product.reviewCount ?? 0) > 0 && (
-          <Row className="mt-1" gap="xs">
-            <Span className={CLS_STAR}>★</Span>
-            <Span className="text-[11px]" color="muted">
-              {product.rating.toFixed(1)}
-              {product.reviewCount ? ` (${product.reviewCount})` : ""}
-            </Span>
-          </Row>
-        )}
-
-        {/* Price row */}
-        <Div className="mt-auto" padding="t-xs">
-          <PriceDisplay
-            amount={product.price}
-            originalAmount={product.originalPrice}
-            currency={getDefaultCurrency()}
-            variant="compact"
-          />
-
-          {(() => {
-            const stock =
-              product.stockCount ?? product.stockQuantity ?? product.availableQuantity;
-            if (stock === undefined || !listingPlugin.showsStockQuantity) return null;
-            if (stock <= 0) {
+        {blockOrder.filter(isBlockVisible).map((blockId) => {
+          switch (blockId) {
+            case "title":
               return (
-                <Text className={CLS_DISCOUNT_TEXT}>
-                  Out of stock
+                <Text key="title" className="leading-snug" truncate={2} size="sm" weight="semibold" color="primary">
+                  {product.title}
                 </Text>
               );
-            }
-            const low = stock <= 5;
-            return (
-              <Text
-                className={`mt-1 text-[11px] ${ low ? "text-warning" : "text-[var(--appkit-color-text-faint)]" }`} weight="medium"
-              >
-                {low ? `Only ${stock} left` : `${stock} in stock`}
-              </Text>
-            );
-          })()}
 
-          {/* Feature badges (FI6) — gated on ProductFeaturesProvider */}
-          {featuresList && product.features && product.features.length > 0 && (
-            <FeatureBadgeList
-              productFeatureIds={product.features}
-              features={featuresList}
-              maxVisible={PRODUCT_FEATURE_CARD_MAX_VISIBLE}
-              className="mt-2"
-            />
-          )}
+            case "brand":
+              /*
+               * ── Brand only. CATEGORY CHIPS ARE GONE. ─────────────────────
+               *
+               * 🛑 This was an IIFE computing up to three category chips plus a
+               * "+N" overflow chip plus a brand chip, each a pill carrying its own
+               * inline SVG — five elements and two hand-written icons on every card
+               * in every grid. The categories were the bulk of it and the least
+               * useful part: a shopper on a category page is already IN that
+               * category, so the chip repeats back the page they are standing on,
+               * and on a search grid three truncated taxonomy names crowd out the
+               * title.
+               *
+               * Brand survives as PLAIN TEXT because it is a real shopping signal
+               * and the one thing people filter by in this catalogue — but not as a
+               * pill, and not clickable: the whole card is already a Link, so the
+               * chip had to fake navigation with preventDefault + stopPropagation +
+               * router.push to avoid nesting an anchor inside an anchor. A control
+               * that has to fight its own container is a control in the wrong place;
+               * the brand page is one click away via the detail page.
+               */
+              return product.brand ? (
+                <Text key="brand" className="mt-1" size="xs" color="muted" truncate={1}>
+                  {product.brand}
+                </Text>
+              ) : null;
 
-          {/*
-            ── Action buttons: TEXT ONLY ──────────────────────────────────────
+            case "notes":
+              // The five badges demoted from the image corner, as words. See the
+              // `cardNotes` block above for why each one lost its pill.
+              return cardNotes.length > 0 ? (
+                <Text key="notes" className="mt-1" size="xs" color="muted" truncate={1} title={cardNotes.join(" · ")}>
+                  {cardNotes.join(" · ")}
+                </Text>
+              ) : null;
 
-            🛑 BOTH HAND-ROLLED INLINE SVGs ARE GONE — a lightning bolt on
-            "Buy Now" and a trolley on "Cart". Not replaced with `<Icon>`,
-            which is the usual fix (Root Cause #80, and the wishlist button a
-            few lines up records doing exactly that): removed, because the goal
-            here is FEWER atoms and an icon beside a two-word label inside a
-            half-width button is decoration. "Buy Now" and "Cart" are already
-            unambiguous; the glyph adds an element per button per card in every
-            grid and tells the shopper nothing the word did not.
+            case "storeLine":
+              return <CardStoreLine key="storeLine" storeName={product.storeName} storeId={product.storeId} />;
 
-            It also removes the last two hand-written `<path d="…">` in this
-            card — and the bolt had no registry entry, so keeping it would have
-            meant either adding an icon to the catalogue for one decorative use
-            or leaving a raw SVG behind.
-          */}
-          {(onAddToCart || onBuyNow) && (
-            <Div layout="grid" gap="1" className={`mt-2 ${onBuyNow && onAddToCart ? "grid-cols-2" : "grid-cols-1"}`}>
-              {onBuyNow && (
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    onBuyNow(product);
-                  }}
-                  className="justify-center text-[length:var(--appkit-text-xs)] btn-glow"
-                >
-                  Buy Now
-                </Button>
-              )}
-              {onAddToCart && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    onAddToCart(product);
-                  }}
-                  className="justify-center text-[length:var(--appkit-text-xs)]"
-                >
-                  Cart
-                </Button>
-              )}
-            </Div>
-          )}
-        </Div>
+            case "rating":
+              /*
+               * 🛑 A REVIEW MUST EXIST. `rating !== undefined` passes for
+               * `rating: 0` — what a product nobody has reviewed stores — and then
+               * the card shows a star and "0.0", which reads as a product rated
+               * zero rather than one with no rating. Zero reviews is not zero stars,
+               * and on a grid of cards the difference is the whole impression.
+               */
+              return product.rating !== undefined && (product.reviewCount ?? 0) > 0 ? (
+                <Row key="rating" className="mt-1" gap="xs">
+                  <Span className={CLS_STAR}>★</Span>
+                  <Span className="text-[11px]" color="muted">
+                    {product.rating.toFixed(1)}
+                    {product.reviewCount ? ` (${product.reviewCount})` : ""}
+                  </Span>
+                </Row>
+              ) : null;
+
+            case "priceRow":
+              return <React.Fragment key="priceRow">{renderPriceRow()}</React.Fragment>;
+
+            default:
+              return null;
+          }
+        })}
       </Stack>
     </Div>
   );
@@ -766,6 +822,12 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
 }: ProductGridProps<T>) {
   const isEmpty = products.length === 0;
 
+  // 3B item 1b, catalogue-cards subsystem — fetched ONCE per grid, not per
+  // card. See `ProductCardProps.cardContentFields`'s own doc comment.
+  const { editMode: cardEditMode } = useEditMode();
+  const { fields: cardContentFields, fieldOrder: cardContentOrder } = useFieldVisibility("product-card");
+  const effectiveCardFields = cardEditMode ? {} : cardContentFields;
+
   // Slot resolution: explicit props win over `slots` object
   const resolvedHeader =
     headerSlot ??
@@ -840,6 +902,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
                 selectionMode={selectionMode}
                 isSelected={selectedIds?.has(p.id) ?? false}
                 onSelect={onToggleSelect}
+                cardContentFields={effectiveCardFields}
+                cardContentOrder={cardContentOrder}
               />
             );
           })}
@@ -871,6 +935,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
               selectionMode={selectionMode}
               isSelected={selectedIds?.has(p.id) ?? false}
               onSelect={onToggleSelect}
+              cardContentFields={effectiveCardFields}
+              cardContentOrder={cardContentOrder}
             />
           );
         })}
