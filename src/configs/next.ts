@@ -1,5 +1,5 @@
 import path from "path";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../schemas/types";
 
 /**
  * defineNextConfig — appkit-aware Next.js config factory.

@@ -11,7 +11,7 @@
  */
 
 import type { PaginatedSelectOption, AsyncPage } from "../../../../ui/components/PaginatedSelect";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import type { FacetOption } from "../../../../features/filters/FilterFacetSection";
 import { apiClient } from "../../../../http/ApiClient";
 import { normalizeError } from "../../../../errors/normalize";

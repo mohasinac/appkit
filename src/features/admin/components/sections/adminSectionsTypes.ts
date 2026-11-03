@@ -1,4 +1,4 @@
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 import { ROUTES } from "../../../../next/routing/route-map";
 import type { SectionType as CanonicalSectionType } from "../../../homepage/schemas/firestore";
 /* The canonical category→label map. `FAQ_CATEGORY_OPTIONS` is derived from it

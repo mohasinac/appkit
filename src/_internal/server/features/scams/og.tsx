@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import type { JsonArray } from "@mohasinac/appkit";
+import type { JsonArray } from "../../../../schemas/types";
 
 export interface ScamOgData {
   displayName: string;

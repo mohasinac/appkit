@@ -1,5 +1,5 @@
 import { ValidationError } from "../../../../errors";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type {

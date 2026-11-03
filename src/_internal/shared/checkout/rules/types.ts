@@ -12,7 +12,7 @@
  */
 
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import type { OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 import type { OrderType } from "../../../../features/orders/utils/order-splitter";

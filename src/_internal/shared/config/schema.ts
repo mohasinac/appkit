@@ -1,4 +1,4 @@
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 /**
  * AppkitConfig — consumer's contract with all appkit CLI binaries.
  *

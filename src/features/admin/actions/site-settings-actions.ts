@@ -6,7 +6,7 @@
  */
 
 import { siteSettingsRepository } from "../repository/site-settings.repository";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { serverLogger } from "../../../monitoring/index";
 
 export async function getSiteSettings(): Promise<unknown> {

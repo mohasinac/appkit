@@ -21,7 +21,7 @@ import {
   triggerEventRaffleHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 
 const REGION = "asia-south1";
 // Consumer-specific env var name — chosen at consumer install time, not appkit.

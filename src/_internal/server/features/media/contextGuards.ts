@@ -23,7 +23,7 @@ import {
   type MediaFilenameContext,
 } from "../../../../utils/id-generators";
 import { normalizeError } from "../../../../errors/normalize";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 
 /**
  * W1-51 — validate the generated filename before returning ok:true so a

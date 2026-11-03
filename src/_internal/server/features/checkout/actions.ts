@@ -196,7 +196,7 @@ import {
 } from "../../../shared/checkout/coupon-discount";
 import { revalidateGroupLines } from "./group-rule-revalidation";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 import { processRefundAction } from "../refunds/actions";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { resolveDisplayedUpiId } from "./upi-resolution";

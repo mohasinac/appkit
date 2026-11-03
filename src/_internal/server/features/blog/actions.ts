@@ -17,7 +17,7 @@ import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { blogPostInputSchema, blogPostUpdateSchema } from "../../../shared/features/blog/schema";
 import { assertBlogPostExists, assertBlogSlugUnique, computeReadTime } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 
 export async function createBlogPostAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {

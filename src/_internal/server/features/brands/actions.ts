@@ -12,7 +12,7 @@
  * .wasm files, naming none of the responsible files. Root Cause #18.
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { categoriesRepository } from "../../../../features/categories/repository/categories.repository";
 import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
 import { brandInputSchema, brandUpdateSchema, type BrandInput, type BrandUpdate } from "../../../shared/features/brands/schema";

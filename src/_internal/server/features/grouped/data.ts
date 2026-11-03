@@ -1,5 +1,5 @@
 import { cache } from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { normalizeError } from "../../../../errors/normalize";
 import { safeRead } from "../../../../errors/safe-read";

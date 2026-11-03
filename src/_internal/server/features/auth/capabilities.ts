@@ -6,7 +6,7 @@
  */
 
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 import {
   DEFAULT_STORE_CAPABILITIES,
   resolveStoreCapabilities,

@@ -1,4 +1,4 @@
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 /**
  * Hydration helpers — narrow the gap between Firestore document shapes
  * (which contain Timestamps, server FieldValues, undefined fields, etc.)

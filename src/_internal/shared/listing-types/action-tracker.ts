@@ -1,4 +1,4 @@
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { normalizeError } from "../../../errors/normalize";
 /**
  * Action telemetry sink — SB-UNI-X5 2026-05-13.

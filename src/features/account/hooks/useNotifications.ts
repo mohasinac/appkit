@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
 import { apiClient } from "../../../http";
 import { NOTIFICATIONS_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 
 export interface BaseNotificationItem {
   id: string;

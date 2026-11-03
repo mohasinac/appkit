@@ -1,5 +1,5 @@
 import { eventRepository } from "../../../../repositories";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import {
   EventNotFoundError,
   EventNotActiveError,

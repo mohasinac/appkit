@@ -1,5 +1,5 @@
 import type { UserAddress } from "../types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Stack } from "../../../ui/components/Layout";

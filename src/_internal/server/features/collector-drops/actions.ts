@@ -24,7 +24,7 @@ import {
   computeExtendedEndDate,
 } from "./service";
 import { ValidationError } from "../../../shared/errors/index";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../../schemas/types";
 
 export async function placeBidAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {

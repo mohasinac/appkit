@@ -1,5 +1,5 @@
 import { ROUTES } from "../../../constants";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { ProseHero } from "./ProseHero";
 import { FLEX_ROW } from "../../../_internal/shared/styles/themed";
 import { Aside, Nav, Section } from "../../../ui/components/Semantic";
