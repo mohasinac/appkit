@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
+import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
 import { listBidsByProduct } from "../../collector-drops/actions/bid-actions";
 import { safeRead } from "../../../errors/safe-read";

@@ -40,7 +40,7 @@ import {
   type CategoryMoveInput,
   type CategoryTreeNode,
 } from "../schemas";
-import type { FirestoreDocument, JsonValue } from "@mohasinac/appkit";
+import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
 
 /** One pending document write, for `commitChunked`. */
 type CategoryWrite = { id: string; data: FirestoreDocument };

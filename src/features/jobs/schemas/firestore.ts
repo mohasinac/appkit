@@ -17,7 +17,7 @@
  */
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 
 export const JOBS_COLLECTION = "jobs";
 

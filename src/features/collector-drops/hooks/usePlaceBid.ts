@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { BID_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 
 export interface BidResult {
   id: string;

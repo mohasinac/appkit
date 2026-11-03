@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import type { FirestoreValue } from "@mohasinac/appkit";
+import type { FirestoreValue } from "../../../schemas/types";
 
 interface UseCartQueryOptions<TData> {
   endpoint: string;

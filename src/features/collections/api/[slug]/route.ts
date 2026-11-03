@@ -10,7 +10,7 @@
  */
 
 import { NextResponse } from "next/server.js";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../../schemas/types";
 import { getProviders } from "../../../../contracts";
 import { normalizeError } from "../../../../errors/normalize";
 

@@ -3,7 +3,7 @@
  */
 
 import type { MediaField } from "../../media/types";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { EventType, EventStatus, EntryReviewStatus, SaleConfig, OfferConfig, PollConfig, SurveyConfig, FeedbackConfig, RaffleType, SpinPrize } from "../types";
 import type { LotteryConfig } from "../../lottery/types";

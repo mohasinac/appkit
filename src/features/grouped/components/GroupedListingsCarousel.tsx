@@ -12,7 +12,7 @@ import type { GroupedListingWithItems } from "../../../_internal/server/features
 import { CAROUSEL_PER_VIEW } from "../../homepage/constants/carousel-per-view";
 import { Stack } from "../../../ui/components/Layout";
 import { ROUTES } from "../../../next/routing/route-map";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 
 const GROUP_THEME_TITLE: Record<GroupedListingWithItems["groupTheme"], string> = {
   related: "Other listings you might like",

@@ -1,5 +1,5 @@
 import type { MediaField } from "../../media/types/index";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import type { ClientLotteryConfig } from "../../lottery/types";
 
 // --- Enums / union types ------------------------------------------------------

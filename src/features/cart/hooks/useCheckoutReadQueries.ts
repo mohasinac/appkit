@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
-import type { JsonArray } from "@mohasinac/appkit";
+import type { JsonArray } from "../../../schemas/types";
 
 interface UseCheckoutReadQueriesOptions<TAddress, TCart> {
   addressesEndpoint: string;

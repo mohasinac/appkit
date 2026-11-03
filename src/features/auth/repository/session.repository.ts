@@ -20,7 +20,7 @@ import {
   type SessionPlain,
   type SessionUpdateInput,
 } from "../schemas";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 
 export class SessionRepository extends BaseRepository<SessionDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {

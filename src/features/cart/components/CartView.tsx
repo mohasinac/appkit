@@ -3,7 +3,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading } from "../../../ui/components/Typography";
 import { Stack } from "../../../ui/components/Layout";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import type { JsonArray } from "@mohasinac/appkit";
+import type { JsonArray } from "../../../schemas/types";
 
 /** Minimal shape of a per-store/per-type order group surfaced to the slot. */
 export interface CartOrderGroup {

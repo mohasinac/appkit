@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { getClassifiedForDetail } from "../../../_internal/server/features/classified/data";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 dark:hover:text-primary-400 transition-colors";

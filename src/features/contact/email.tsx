@@ -8,7 +8,7 @@ import { normalizeError } from "../../errors/normalize";
 import { guardSend, logSuppressedSend } from "../../_internal/server/notifications/send-guard";
 import { recordSendAttempt } from "../../_internal/server/notifications/send-recorder";
 import type { SendGuardContext } from "../../_internal/shared/features/messaging/config";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 import { getProviders } from "../../contracts";
 import type { EmailOptions, IEmailProvider } from "../../contracts/email";
 import { createResendProvider } from "../../providers/email-resend/provider";

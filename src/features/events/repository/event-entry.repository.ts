@@ -24,7 +24,7 @@ import {
   type EventEntryDocument,
   type EventEntryPlain,
 } from "../schemas";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import type { JsonValue } from "../../../schemas/types";
 
 /** Extracted from getExportReport's poll branch to stay under the max nesting depth. */

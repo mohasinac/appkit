@@ -5,7 +5,7 @@
  */
 
 import { DatabaseError } from "../../../errors";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { HOMEPAGE_SECTION_FIELDS } from "../../../constants/field-names";
 import {
   BaseRepository,
