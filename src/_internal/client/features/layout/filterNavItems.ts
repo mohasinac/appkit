@@ -1,6 +1,29 @@
 import type { SidebarNavGroup } from "../../../shared/features/layout/types";
+import { sortByFieldOrder } from "../../../../features/shell/field-ui-meta";
 
 type FilterableItem = { id?: string; requiredPermission?: string };
+
+type NavConfigMap = Record<string, { enabled: boolean; order?: number }> | undefined;
+
+/**
+ * Derives a `sortByFieldOrder`-shaped `fieldOrder: string[]` from
+ * `navConfig`'s own `order: number` entries — reorder, same as hide, reuses
+ * the canonical 3B-1b hide/reorder primitive rather than a bespoke sort.
+ *
+ * `navConfig` stores a sparse per-item `order` (not a `fieldOrder: string[]`
+ * array like `field-visibility.ts`) because it predates 3B-1b and is its
+ * OWN, already-live, already-generic per-item override store — see the plan's
+ * "🛑 THE CANONICAL PATTERN" section for why this subsystem deliberately
+ * does not move its storage onto `field-visibility.ts`. Only the SORT LOGIC
+ * is shared, not the storage shape.
+ */
+function navConfigFieldOrder(navConfig: NavConfigMap): string[] {
+  if (!navConfig) return [];
+  return Object.entries(navConfig)
+    .filter((entry): entry is [string, { enabled: boolean; order: number }] => typeof entry[1].order === "number")
+    .sort((a, b) => a[1].order - b[1].order)
+    .map(([id]) => id);
+}
 
 /**
  * Filters nav items by:
@@ -32,7 +55,7 @@ type FilterableItem = { id?: string; requiredPermission?: string };
  */
 export function filterNavItems<T extends FilterableItem>(
   items: T[],
-  navConfig: Record<string, { enabled: boolean }> | undefined,
+  navConfig: NavConfigMap,
   userPermissions: string[] | undefined,
   isAdmin = false,
 ): T[] {
@@ -70,18 +93,29 @@ export function filterNavItems<T extends FilterableItem>(
  * An empty group is dropped rather than rendered as a heading with nothing
  * under it — on a hub that is a section card claiming "0 screens", which reads
  * as a fault rather than as "not for you".
+ *
+ * REORDER (added 2026-11-04, 3B-1b backlog item 4) applies AFTER visibility
+ * filtering, same "filter then sort" order every other `applyXVisibility`
+ * wrapper in this codebase uses — an item hidden by `navConfig` never
+ * occupies a position in the reordered list to begin with.
  */
 export function filterNavGroups<T extends SidebarNavGroup>(
   groups: T[],
-  navConfig: Record<string, { enabled: boolean }> | undefined,
+  navConfig: NavConfigMap,
   permissions: string[] | null | undefined,
 ): T[] {
   const isAdmin = permissions === null;
   if (isAdmin && !navConfig) return groups;
+  const fieldOrder = navConfigFieldOrder(navConfig);
   return groups
-    .map((group) => ({
-      ...group,
-      items: filterNavItems(group.items, navConfig, permissions ?? undefined, isAdmin),
-    }))
+    .map((group) => {
+      const visible = filterNavItems(group.items, navConfig, permissions ?? undefined, isAdmin);
+      return {
+        ...group,
+        items: fieldOrder.length > 0
+          ? sortByFieldOrder(visible, fieldOrder, (item) => item.id ?? "")
+          : visible,
+      };
+    })
     .filter((group) => group.items.length > 0) as T[];
 }

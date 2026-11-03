@@ -2057,7 +2057,7 @@ export {
 export { callFirebaseIdentityToolkit } from "./_internal/server/features/auth/firebase-identity";
 
 // -- Site-settings domain actions (updateActionConfig / updateNavConfig) --
-export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/server/features/site-settings/actions";
+export { updateActionConfigDomain, updateNavConfigDomain, updateNavOrderDomain } from "./_internal/server/features/site-settings/actions";
 
 // ── Classified listing — data + adapters + metadata + OG ─────────────────────
 export { getClassifiedForDetail } from "./_internal/server/features/classified/data";

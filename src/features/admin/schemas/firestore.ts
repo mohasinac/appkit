@@ -1388,11 +1388,16 @@ export interface SiteSettingsDocument extends BaseDocument {
    */
   actionConfig?: Partial<Record<string, { enabled: boolean }>>;
   /**
-   * Per-nav-item runtime enable/disable overrides.
+   * Per-nav-item runtime enable/disable + reorder overrides.
    * Key = NavItem.id (nav-* slug, e.g. "nav-products").
-   * Absent key = nav item is enabled by default.
+   * Absent key = nav item is enabled by default, at its original position.
+   * `order` (added 2026-11-04, 3B-1b backlog item 4) is a sparse per-item
+   * number — items without one keep their original relative order, appended
+   * after the explicitly-ordered ones. See `filterNavGroups` in
+   * `filterNavItems.ts` for the derivation (`navConfigFieldOrder` + the
+   * shared `sortByFieldOrder` primitive) — never hand-sort this map.
    */
-  navConfig?: Record<string, { enabled: boolean }>;
+  navConfig?: Record<string, { enabled: boolean; order?: number }>;
   /**
    * Derived hrefs of disabled nav items — written by updateNavConfigAction
    * alongside navConfig. Read by RSC public layouts to block disabled routes.

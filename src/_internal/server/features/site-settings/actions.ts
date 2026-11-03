@@ -17,6 +17,10 @@ export async function updateActionConfigDomain(
  * Toggle a single nav item's enabled state in siteSettings.navConfig.
  * Also recomputes the derived disabledRoutes[] array from all current nav items.
  * The `allNavItems` argument is the full { id, href } list so we can derive disabledRoutes.
+ *
+ * Preserves the item's existing `order` (3B-1b backlog item 4) — this only
+ * ever writes `enabled`, so a plain `{ enabled }` replacement would silently
+ * drop a prior reorder every time an item is hidden/shown again.
  */
 export async function updateNavConfigDomain(
   navId: string,
@@ -24,9 +28,10 @@ export async function updateNavConfigDomain(
   allNavItems: Array<{ id: string; href: string }>,
 ): Promise<void> {
   const current = await siteSettingsRepository.getSingleton();
-  const merged: Record<string, { enabled: boolean }> = {
+  const existingOrder = (current.navConfig as Record<string, { enabled: boolean; order?: number }> | undefined)?.[navId]?.order;
+  const merged: Record<string, { enabled: boolean; order?: number }> = {
     ...(current.navConfig ?? {}),
-    [navId]: { enabled },
+    [navId]: { enabled, ...(existingOrder !== undefined ? { order: existingOrder } : {}) },
   };
 
   const disabledRoutes = allNavItems
@@ -36,5 +41,35 @@ export async function updateNavConfigDomain(
   await siteSettingsRepository.updateSingleton({
     navConfig: merged,
     disabledRoutes,
+  } as any);
+}
+
+/**
+ * Bulk-write per-item `order` into siteSettings.navConfig, for one nav
+ * group's reordered item list. Writes the WHOLE ordered list at once (like
+ * `fieldOrder: string[]` elsewhere) rather than one id at a time, because
+ * "move item X up" is a change to every sibling's relative order, not just
+ * X's — a single-item patch would need the caller to already know the new
+ * order of every other item anyway.
+ *
+ * Preserves each item's existing `enabled` state — reordering must never
+ * silently re-enable (or disable) an item. Does NOT touch `disabledRoutes`:
+ * that array is derived from PUBLIC nav items only (see
+ * `updateNavConfigDomain` above), and reorder is dashboard-sidebar-only
+ * today (3B-1b backlog item 4) — a dashboard item was never eligible to
+ * appear in `disabledRoutes` in the first place.
+ */
+export async function updateNavOrderDomain(
+  orderedIds: string[],
+): Promise<void> {
+  const current = await siteSettingsRepository.getSingleton();
+  const merged: Record<string, { enabled: boolean; order?: number }> = {
+    ...(current.navConfig ?? {}),
+  };
+  orderedIds.forEach((id, index) => {
+    merged[id] = { enabled: merged[id]?.enabled ?? true, order: index };
+  });
+  await siteSettingsRepository.updateSingleton({
+    navConfig: merged,
   } as any);
 }
