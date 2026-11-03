@@ -20,7 +20,7 @@
 
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
-import { blogPostCategorySchema } from "./index";
+import { blogPostCategorySchema } from "./blog-category.schema";
 import { attachedCouponIdsSchema } from "../../promotions/schemas/attached-coupons";
 
 /**

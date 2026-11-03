@@ -4,6 +4,7 @@ import { mediaUrlSchema } from "../../../validation/schemas";
 import { mediaFieldSchema } from "../../media/types/index";
 import { auditTimestampsShape, firestoreDateSchema } from "../../../schemas/firestore-helpers";
 import { attachedCouponIdsSchema } from "../../promotions/schemas/attached-coupons";
+import { blogPostCategorySchema } from "./blog-category.schema";
 
 // ─── Firestore document schema (W2) ───────────────────────────────────────────
 // Mirrors BlogPostDocument in ./firestore.ts. Registered into SCHEMAS.firestore.blogPosts.
@@ -49,13 +50,8 @@ const blogCoverImageSchema = z
 
 // --- Sub-schemas --------------------------------------------------------------
 
-export const blogPostCategorySchema = z.enum([
-  "news",
-  "tips",
-  "guides",
-  "updates",
-  "community",
-]);
+export { blogPostCategorySchema } from "./blog-category.schema";
+// (also imported above for local use in blogPostSchema/blogListParamsSchema below)
 
 export const blogPostStatusSchema = z.enum(["draft", "published", "archived"]);
 
