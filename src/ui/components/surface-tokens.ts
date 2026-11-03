@@ -110,6 +110,8 @@ export const PADDING_MAP = {
   "b-lg": "pb-[var(--appkit-space-6)]",
   "b-xl": "pb-[var(--appkit-space-8)]",
   "b-2xl": "pb-[var(--appkit-space-10)]",
+  /** Right-only — clears room for an absolutely-positioned icon cluster overlaid on a card's top-right corner. */
+  "r-xl": "pr-[var(--appkit-space-14)]",
   // Fill-in vertical sizes.
   "y-2-5xl": "py-[var(--appkit-space-14)]",
   "y-5xl": "py-[var(--appkit-space-20)]",

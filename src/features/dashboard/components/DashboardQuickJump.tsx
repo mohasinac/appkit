@@ -765,7 +765,7 @@ function SavedCardEditPanel({
   }
 
   return (
-    <Stack gap="sm" className="pr-14">
+    <Stack gap="sm" padding="r-xl">
       <FieldInput
         name={`card-title-${card.id}`}
         label="Title"
@@ -776,13 +776,13 @@ function SavedCardEditPanel({
         <Text size="xs" weight="semibold" color="muted" className="mb-1">Color</Text>
         <Row gap="xs">
           {CARD_COLOR_OPTIONS.map((key) => (
-            <button
+            <IconButton
               key={key}
-              type="button"
               aria-label={`Set card color to ${key}`}
               aria-pressed={card.color === key}
               onClick={() => onUpdate({ color: card.color === key ? undefined : key })}
-              className={`h-6 w-6 rounded-full border-2 ${SURFACE_MAP[key] || "bg-[var(--appkit-color-surface)]"} ${
+              rounded="full"
+              className={`h-6 w-6 min-h-0 min-w-0 border-2 ${SURFACE_MAP[key] || "bg-[var(--appkit-color-surface)]"} ${
                 card.color === key ? "border-[var(--appkit-color-primary)]" : "border-[var(--appkit-color-border)]"
               }`}
             />

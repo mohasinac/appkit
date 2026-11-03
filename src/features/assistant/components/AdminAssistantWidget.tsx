@@ -113,6 +113,7 @@ export function AdminAssistantWidget() {
 
   return (
     <>
+      {/* audit-bottom-offset-ok: desktop-primary admin tool, stacked a fixed offset above the buyer widget's own FAB — not bottom-nav-relative, see the comment above */}
       <Div className={`fixed bottom-[7rem] ${edge} z-[var(--appkit-z-popover)]`}>
         <IconButton
           type="button"
