@@ -1,30 +1,55 @@
 "use client";
-import React, { useContext, useId } from "react";
+import React, { useContext, useEffect, useId, useState } from "react";
 import { Input } from "./Input";
 import { Select, type SelectOption } from "./Select";
 import { Textarea } from "./Textarea";
 import { Text } from "./Typography";
 import { FieldLabel } from "../forms/FieldLabel";
-/*
- * 🛑 FROM THE DEFINING MODULES, NOT the `features/media` barrel.
- *
- * This is a UI PRIMITIVE reaching into a feature barrel, and the barrel pulls
- * the whole media surface — including ImageEditor, which imports
- * `react-advanced-cropper/dist/style.css`. Node cannot load CSS at any path,
- * so that one line put a third-party stylesheet in appkit's SERVER graph:
- *   server.js -> GoogleReviewsSection -> ui/index -> FormField
- *             -> features/media/index -> ImageEditor -> …/style.css
- * which is what made `serverExternalPackages` fail with
- * ERR_UNKNOWN_FILE_EXTENSION.
- *
- * It is also one of the edges in the 43-module `ui` <-> `features/media`
- * import cycle that audit-import-cycles.mjs tracks — a UI primitive and a
- * feature importing each other. Root Cause #18: import from the file that
- * defines the symbol.
- */
-import { ImageUpload } from "../../features/media/upload/ImageUpload";
-import { MediaUploadField } from "../../features/media/upload/MediaUploadField";
 import { FormShellContext } from "../forms/FormShell";
+/*
+ * 🛑 NO STATIC IMPORT OF ImageUpload/MediaUploadField HERE, EVER.
+ *
+ * This is a UI PRIMITIVE; those two are a features/media concern (crop,
+ * trim, YouTube embed). A prior static import reaching into the
+ * features/media barrel pulled in ImageEditor, which imports
+ * `react-advanced-cropper/dist/style.css` — Node cannot load CSS at any
+ * path, so that one line put a third-party stylesheet in appkit's SERVER
+ * graph: server.js -> GoogleReviewsSection -> ui/index -> FormField ->
+ * features/media/index -> ImageEditor -> …/style.css, which is what made
+ * `serverExternalPackages` fail with ERR_UNKNOWN_FILE_EXTENSION. It was
+ * also one of the edges in the 43-module `ui` <-> `features/media` import
+ * cycle audit-import-cycles.mjs tracks.
+ *
+ * getFormFieldRenderer() calls into a runtime registry instead — zero
+ * STATIC imports from features/.
+ *
+ * 🛑 THE REGISTRY IS FILLED BY A DYNAMIC import() BELOW, NOT BY SOME OTHER
+ * MODULE'S TOP-LEVEL SIDE EFFECT. That was the first design (wired from
+ * client.ts, then from ui/index.ts) and it does not survive Turbopack in
+ * the browser: confirmed live with a planted console.log that a barrel
+ * re-exporting FormField — even one with its OWN explicit top-level call to
+ * the registration function — never executes that call when the browser
+ * resolves FormField through it. A direct Node ESM import of the same
+ * compiled file runs it correctly, so this is specifically a bundler
+ * barrel-transparency optimization (consistent with this package's
+ * `"sideEffects": false`), not a module-evaluation-order bug. A dynamic
+ * `import()` called from inside a function body cannot be elided by that
+ * optimization — see ensureMediaFormFieldRenderers below.
+ */
+import { getFormFieldRenderer } from "./form-field-registry";
+
+let mediaRenderersPromise: Promise<unknown> | null = null;
+/**
+ * Loads features/media's register-form-field-renderers module (which
+ * populates the registry as its own side effect) at most once, and caches
+ * the in-flight promise so concurrent FormField instances share one load.
+ */
+function ensureMediaFormFieldRenderers(): Promise<unknown> {
+  if (!mediaRenderersPromise) {
+    mediaRenderersPromise = import("../../features/media/upload/register-form-field-renderers");
+  }
+  return mediaRenderersPromise;
+}
 
 export interface FormFieldProps {
   label?: string;
@@ -139,6 +164,32 @@ export function FormField({
   const errorId = `${inputId}-error`;
   const describedBy = showError ? errorId : undefined;
 
+  // Kicks off the dynamic import the first time this instance needs a
+  // renderer the registry doesn't have yet, then re-renders once it
+  // resolves. A no-op on every render after the registry is populated —
+  // `ensureMediaFormFieldRenderers()` caches its promise, so N mounted
+  // FormField instances share ONE dynamic import, not one each.
+  const [, forceRerender] = useState(0);
+  const needsMediaRenderer = (type === "image" || type === "media") && !!onUpload;
+  useEffect(() => {
+    if (!needsMediaRenderer) return;
+    const alreadyRegistered = type === "image" ? getFormFieldRenderer("image") : getFormFieldRenderer("media");
+    if (alreadyRegistered) return;
+    let cancelled = false;
+    ensureMediaFormFieldRenderers()
+      .then(() => {
+        if (!cancelled) forceRerender((n) => n + 1);
+      })
+      .catch((err) => {
+        if (process.env.NODE_ENV !== "production") {
+          console.error("[FormField] failed to load the image/media renderer:", err);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [needsMediaRenderer, type]);
+
   function handleFieldChange(newValue: string) {
     onChange?.(newValue);
     if (showError) ctx?.clearFieldError(name);
@@ -150,6 +201,14 @@ export function FormField({
   }
 
   if (type === "image" && onUpload) {
+    const ImageRenderer = getFormFieldRenderer("image");
+    if (!ImageRenderer) {
+      // Brief and expected on first mount — the useEffect above just kicked
+      // off the dynamic import; a failure already logged to console.error
+      // there. Not an error state: a form can render several times before
+      // the registry is populated, same as any other lazy-loaded chunk.
+      return <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-505" />;
+    }
     return (
       <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-505">
         {/* ImageUpload has no disabled prop of its own — every other type
@@ -161,7 +220,7 @@ export function FormField({
           aria-disabled={disabled || undefined}
           className={disabled ? "pointer-events-none opacity-60" : undefined}
         >
-          <ImageUpload
+          <ImageRenderer
             currentImage={value || undefined}
             onUpload={onUpload}
             onChange={(url) => handleFieldChange(url)}
@@ -188,9 +247,14 @@ export function FormField({
   }
 
   if (type === "media" && onUpload) {
+    const MediaRenderer = getFormFieldRenderer("media");
+    if (!MediaRenderer) {
+      // See the "image" branch above — same brief, expected lazy-load gap.
+      return <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-506" />;
+    }
     return (
       <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-506">
-        <MediaUploadField
+        <MediaRenderer
           label={`${label || name}${required ? " *" : ""}`}
           value={value}
           onChange={(url) => handleFieldChange(url)}
