@@ -245,6 +245,8 @@ export const ADMIN_ENDPOINTS = {
   MAINTENANCE_GATEWAY_EVENTS: "/api/admin/maintenance/gateway-events",
   MAINTENANCE_OBLIGATIONS: "/api/admin/maintenance/obligations",
   MAINTENANCE_CACHE: "/api/admin/maintenance/cache",
+  /** Admin-facing assistant — Phase 2E-ii (overhaul brief). Distinct from `ASSISTANT_ENDPOINTS.ASK`, which is the buyer-scoped one. */
+  ASSISTANT_ASK: "/api/admin/assistant/ask",
   SHIPMENTS: "/api/admin/shipments",
   SHIPMENT_BY_ID: (id: string) => `/api/admin/shipments/${id}`,
   SHIPMENT_LOTS: (id: string) => `/api/admin/shipments/${id}/lots`,

@@ -5937,6 +5937,8 @@ export { BackToTop } from "./features/layout/BackToTop";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AssistantWidget - the site-wide floating "chat with us" bubble for the customer assistant.
 export { AssistantWidget, type AssistantWidgetProps } from "./features/assistant/components/AssistantWidget";
+// AdminAssistantWidget - the admin-only floating assistant launcher (Phase 2E-ii, overhaul brief).
+export { AdminAssistantWidget } from "./features/assistant/components/AdminAssistantWidget";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AssistantPageView - the assistant's dedicated full-chat page, the widget's "expand" target.
 export { AssistantPageView } from "./features/assistant/components/AssistantPageView";

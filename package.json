@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "4.71.0",
+  "version": "4.71.1",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -72,11 +72,11 @@
       "import": "./dist/contracts/registry.js"
     },
     "./cli": {
-   "types": "./dist/cli/index.d.ts",
-   "import": "./dist/cli/index.js",
-   "require": "./dist/cli/index.js"
-  },
-  "./core/baseline-resolver": {
+      "types": "./dist/cli/index.d.ts",
+      "import": "./dist/cli/index.js",
+      "require": "./dist/cli/index.js"
+    },
+    "./core/baseline-resolver": {
       "types": "./dist/core/baseline-resolver.d.ts",
       "import": "./dist/core/baseline-resolver.js"
     },
@@ -93,34 +93,34 @@
       "import": "./dist/providers/email-resend/index.js"
     },
     "./providers/tax-india-gst": {
-   "types": "./dist/providers/tax-india-gst/index.d.ts",
-   "import": "./dist/providers/tax-india-gst/index.js"
-  },
-  "./providers/shipping-shiprocket": {
-   "types": "./dist/providers/shipping-shiprocket/index.d.ts",
-   "import": "./dist/providers/shipping-shiprocket/index.js"
-  },
-  "./providers/payment-manual": {
-    "types": "./dist/providers/payment-manual/index.d.ts",
-    "import": "./dist/providers/payment-manual/index.js"
-  },
-  "./providers/shipping-manual": {
-    "types": "./dist/providers/shipping-manual/index.d.ts",
-    "import": "./dist/providers/shipping-manual/index.js"
-  },
-  "./providers/payment-razorpay": {
-    "types": "./dist/providers/payment-razorpay/index.d.ts",
-    "import": "./dist/providers/payment-razorpay/index.js"
-  },
-  "./providers/payment-phonepe": {
-    "types": "./dist/providers/payment-phonepe/index.d.ts",
-    "import": "./dist/providers/payment-phonepe/index.js"
-  },
-  "./providers/payment-cashfree": {
-    "types": "./dist/providers/payment-cashfree/index.d.ts",
-    "import": "./dist/providers/payment-cashfree/index.js"
-  },
-  "./providers/storage-firebase": {
+      "types": "./dist/providers/tax-india-gst/index.d.ts",
+      "import": "./dist/providers/tax-india-gst/index.js"
+    },
+    "./providers/shipping-shiprocket": {
+      "types": "./dist/providers/shipping-shiprocket/index.d.ts",
+      "import": "./dist/providers/shipping-shiprocket/index.js"
+    },
+    "./providers/payment-manual": {
+      "types": "./dist/providers/payment-manual/index.d.ts",
+      "import": "./dist/providers/payment-manual/index.js"
+    },
+    "./providers/shipping-manual": {
+      "types": "./dist/providers/shipping-manual/index.d.ts",
+      "import": "./dist/providers/shipping-manual/index.js"
+    },
+    "./providers/payment-razorpay": {
+      "types": "./dist/providers/payment-razorpay/index.d.ts",
+      "import": "./dist/providers/payment-razorpay/index.js"
+    },
+    "./providers/payment-phonepe": {
+      "types": "./dist/providers/payment-phonepe/index.d.ts",
+      "import": "./dist/providers/payment-phonepe/index.js"
+    },
+    "./providers/payment-cashfree": {
+      "types": "./dist/providers/payment-cashfree/index.d.ts",
+      "import": "./dist/providers/payment-cashfree/index.js"
+    },
+    "./providers/storage-firebase": {
       "types": "./dist/providers/storage-firebase/index.d.ts",
       "import": "./dist/providers/storage-firebase/index.js"
     },
