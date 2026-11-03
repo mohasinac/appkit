@@ -7,7 +7,7 @@ import { RichText } from "../../../ui/rich-text/RichText";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Skeleton } from "../../../ui/components/Skeleton";
 import { StarRating } from "../../../ui/components/StarRating";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type { Review } from "../types";
 
 import { maskName } from "../../../security";

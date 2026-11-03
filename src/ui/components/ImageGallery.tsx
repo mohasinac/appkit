@@ -9,7 +9,7 @@ import { HorizontalScroller } from "./HorizontalScroller";
 // by barrel hops, none of which needed the barrel.
 import { useSwipe } from "../../react/hooks/useSwipe";
 import { useGesture } from "../../react/hooks/useGesture";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 import {
   FLEX_CENTER,
   THEMED_BG_SECONDARY,

@@ -15,7 +15,7 @@ import { Dl, Dt, Dd, Main, Nav, Section } from "../../../ui/components/Semantic"
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import { CategoryGrid } from "./CategoryGrid";

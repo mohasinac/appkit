@@ -7,8 +7,8 @@ import { Div } from "../../../ui/components/Div";
 import { Label, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Spinner } from "../../../ui/components/Spinner";
-import { MediaImage } from "../MediaImage";
-import { MediaVideo } from "../MediaVideo";
+import { MediaImage } from "../../../ui/components/MediaImage";
+import { MediaVideo } from "../../../ui/components/MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
 import { normalizeError } from "../../../errors/normalize";

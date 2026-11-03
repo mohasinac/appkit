@@ -10,7 +10,7 @@ import type { PerViewConfig } from "../../../ui/components/HorizontalScroller";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
 import { useHandMode } from "../../../_internal/client/hand-mode";
 

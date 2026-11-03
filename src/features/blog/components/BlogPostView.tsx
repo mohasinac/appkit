@@ -7,7 +7,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { Scrim } from "../../../ui/components/Scrim";
 import { Iframe } from "../../../ui/components/Iframe";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { blogCategoryBadge } from "../constants/category-badge";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";

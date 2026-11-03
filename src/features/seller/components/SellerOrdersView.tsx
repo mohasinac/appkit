@@ -58,7 +58,7 @@ import { toRelativeDate } from "../../admin/hooks/useAdminListingData";
 import { DataListingView } from "../../admin/components/DataListingView";
 import type { ListingViewConfig, ListingSelectionContext } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 
 const __O = {
   yAuto: "overflow-y-auto",

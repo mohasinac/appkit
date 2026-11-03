@@ -12,7 +12,7 @@ import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import { PublicCatalogueView } from "../../catalogue/components/PublicCatalogueView";

@@ -27,7 +27,7 @@ import {
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { BundleBuyNowCta } from "./BundleBuyNowCta";
 import { BundleCollage } from "./BundleCollage";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { CategoryGrid } from "./CategoryGrid";

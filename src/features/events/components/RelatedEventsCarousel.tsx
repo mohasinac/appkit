@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SectionCarousel } from "../../homepage/components/SectionCarousel";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { Div } from "../../../ui/components/Div";
 import { Heading } from "../../../ui/components/Typography";
 import { Stack } from "../../../ui/components/Layout";

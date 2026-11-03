@@ -8,7 +8,7 @@ import { Heading, Span } from "../../../ui/components/Typography";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem } from "../types";
 import { EVENT_FIELDS } from "../schemas";

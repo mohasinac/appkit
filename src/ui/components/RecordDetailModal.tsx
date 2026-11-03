@@ -42,7 +42,7 @@ import { Div } from "./Div";
 import { Modal } from "./Modal";
 import { Row, Stack } from "./Layout";
 import { Text } from "./Typography";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 import type { JsonValue } from "../../schemas/types";
 
 export interface RecordDetailField {

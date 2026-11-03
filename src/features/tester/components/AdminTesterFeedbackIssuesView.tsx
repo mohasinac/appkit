@@ -10,7 +10,7 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { apiClient } from "../../../http";
 import { useApiMutation } from "../../../client/api/useApiMutation";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";

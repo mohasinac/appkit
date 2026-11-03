@@ -4,7 +4,7 @@ import { Pagination } from "../../../ui/components/Pagination";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { shortOrderRef } from "../utils/order-ref";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";

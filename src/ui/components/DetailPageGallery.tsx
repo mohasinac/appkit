@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, type ReactNode } from "react";
 import { Div } from "./Div";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 
 const __O = {
   xAuto: "overflow-x-auto",

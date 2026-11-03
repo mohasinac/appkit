@@ -21,7 +21,7 @@
  * className overrides on primitive components.
  */
 import { useId } from "react";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 
 export type SiteLogoSize = "sm" | "md" | "lg" | "xl" | "hero";
 export type SiteLogoTone = "brand" | "mono" | "inverse" | "on-primary";

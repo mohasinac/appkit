@@ -13,7 +13,7 @@ import { Div } from "../../../ui/components/Div";
 import { Modal } from "../../../ui/components/Modal";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 
 export interface NotificationEntryDetail {
   id: string;

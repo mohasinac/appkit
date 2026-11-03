@@ -1,0 +1,48 @@
+import { MediaImage } from "./MediaImage";
+import { Div } from "./Div";
+
+export interface MediaAvatarProps {
+  /** Avatar image URL. Shows a 👤 fallback when undefined. */
+  src: string | undefined;
+  /** Descriptive alt text — required for accessibility. */
+  alt: string;
+  /** Circular size preset. Defaults to `'md'`. */
+  size?: "sm" | "md" | "lg" | "xl";
+  /** Additional classes applied to the outer circle wrapper. */
+  className?: string;
+}
+
+const sizeClasses: Record<NonNullable<MediaAvatarProps["size"]>, string> = {
+  sm: "w-8 h-8",
+  md: "w-10 h-10",
+  lg: "w-14 h-14",
+  xl: "w-20 h-20",
+};
+
+export function MediaAvatar({
+  src,
+  alt,
+  size = "md",
+  className = "",
+}: MediaAvatarProps) {
+  return (
+    <Div
+      className={`relative ${sizeClasses[size]} overflow-hidden flex-shrink-0 ${className}`} rounded="full"
+    >
+      {/*
+        🛑 `cover`, against MediaImage's `contain` default. The wrapper is a
+        `rounded-full` circle, so a contained portrait would sit as a narrow
+        strip inside a circle with bare surface above and below it — the one
+        shape a face crop must never take. Filling the box IS the contract
+        here, not a preference about cropping.
+      */}
+      {/*
+        `fill` for the same reason: the wrapper above is already a fixed-size
+        circle, so the box comes from it rather than from the `avatar` size.
+      */}
+      <MediaImage src={src} alt={alt} size="avatar" objectFit="cover" fill />
+    </Div>
+  );
+}
+
+export default MediaAvatar;

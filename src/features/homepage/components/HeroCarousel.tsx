@@ -7,8 +7,8 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Scrim } from "../../../ui/components/Scrim";
 import { Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
-import { MediaVideo } from "../../media/MediaVideo";
+import { MediaImage } from "../../../ui/components/MediaImage";
+import { MediaVideo } from "../../../ui/components/MediaVideo";
 import { useHeroCarousel } from "../hooks/useHeroCarousel";
 import { POSITION_FILL, FLEX_CENTER, HERO_PLACEHOLDER_BG } from "../constants/hero-carousel-styles";
 /* The one carousel position/navigation control. The dot and arrow class

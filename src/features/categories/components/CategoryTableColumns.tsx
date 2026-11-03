@@ -5,7 +5,7 @@ import { Row } from "../../../ui/components/Layout";
 import { Span } from "../../../ui/components/Typography";
 import { StatusBadge } from "../../../ui/components/StatusBadge";
 import type { Category } from "../types";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 
 const __O = {

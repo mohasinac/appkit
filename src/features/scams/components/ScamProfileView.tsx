@@ -30,7 +30,7 @@ import { Div } from "../../../ui/components/Div";
 import { EmptyState } from "../../../ui/components/EmptyState";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type {
   ScammerDocument,
   ScammerIncidentDocument,

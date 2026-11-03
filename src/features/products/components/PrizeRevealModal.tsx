@@ -17,7 +17,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Modal } from "../../../ui/components/Modal";
 import { PricesOnly } from "../../../ui/components/GatedPrice";
 import { Stack } from "../../../ui/components/Layout";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { AnimatePresence, ScaleIn, FadeIn } from "../../../ui/components/Motion";
 import { Disclaimer } from "../../../ui/components/Disclaimer";
 import { RandomLotsCollage } from "./RandomLotsCollage";

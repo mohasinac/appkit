@@ -56,7 +56,7 @@ import { Badge } from "../components/Badge";
 import { Row, Stack } from "../components/Layout";
 import { Div } from "../components/Div";
 import { Span, Text } from "../components/Typography";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "../components/MediaImage";
 import { getStatusTone, renderCurrency, type StatusTone } from "./column-renderers";
 import { listingBadgeVariant } from "../../features/products/utils/listing-badge-variant";
 

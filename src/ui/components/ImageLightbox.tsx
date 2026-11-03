@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2, Min
 import { Button } from "./Button";
 import { Div } from "./Div";
 import { Text, Span } from "./Typography";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 import { getYouTubeVideoId } from "../../utils/media-url";
 
 const CLS_CLOSE_BTN = "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-error-solid text-error-on-solid flex items-center justify-center";

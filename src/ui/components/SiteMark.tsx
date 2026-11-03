@@ -10,7 +10,7 @@
  */
 import { useId } from "react";
 import { getBrandName } from "../../core/brand-resolver";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 
 export type SiteMarkSize = "sm" | "md" | "lg" | "xl" | "hero";
 export type SiteMarkTone = "brand" | "mono" | "inverse" | "on-primary";

@@ -5,7 +5,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Badge } from "../../../ui/components/Badge";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type { ProductGrading } from "../schemas/firestore";
 
 const __O = {

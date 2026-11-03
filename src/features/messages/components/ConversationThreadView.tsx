@@ -14,7 +14,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Button } from "../../../ui/components/Button";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { EmptyState } from "../../../ui/components/EmptyState";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { TextLink } from "../../../ui/components/TextLink";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { isListingType } from "../../../_internal/shared/listing-types/feature-flags";

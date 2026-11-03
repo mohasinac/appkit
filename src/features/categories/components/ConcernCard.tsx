@@ -2,7 +2,7 @@ import type { CategoryItem } from "../types";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 
 interface ConcernCardProps {
   concern: CategoryItem;

@@ -8,7 +8,7 @@ import { GatedPrice } from "../../../ui/components/GatedPrice";
 import { Grid } from "../../../ui/components/Layout";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Skeleton } from "../../../ui/components/Skeleton";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";

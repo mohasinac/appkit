@@ -11,7 +11,7 @@ import { Input } from "../../../ui/components/Input";
 import { Li, Nav, Ul } from "../../../ui/components/Semantic";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 import { useSidebarSearch } from "../../../_internal/client/features/layout/useSidebarSearch";

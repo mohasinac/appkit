@@ -9,7 +9,7 @@ import { Span, Text } from "../../../ui/components/Typography";
 import { Modal } from "../../../ui/components/Modal";
 import { SideDrawer } from "../../../ui/components/SideDrawer";
 import { Button } from "../../../ui/components/Button";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { GroupMemberPicker } from "./GroupMemberPicker";
 import { resolveGroupMemberImage } from "../utils/group-member-image";
 import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";

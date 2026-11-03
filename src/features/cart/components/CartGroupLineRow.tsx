@@ -24,7 +24,7 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

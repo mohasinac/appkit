@@ -18,7 +18,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 
 export interface RandomLotsWinnerMappingRow {

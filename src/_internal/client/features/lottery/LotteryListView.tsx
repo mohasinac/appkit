@@ -8,7 +8,7 @@ import { Card } from "../../../../ui/components/Card";
 import { Section } from "../../../../ui/components/Semantic";
 import { Anchor } from "../../../../ui/components/Anchor";
 import { Div } from "../../../../ui/components/Div";
-import { MediaImage } from "../../../../features/media/MediaImage";
+import { MediaImage } from "../../../../ui/components/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 

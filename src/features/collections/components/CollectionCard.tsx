@@ -3,7 +3,7 @@ import { Div } from "../../../ui/components/Div";
 import { Grid } from "../../../ui/components/Layout";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { LAYOUT } from "../../../tokens";
 import type { CollectionListItem } from "../types";
 

@@ -10,7 +10,7 @@ import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { listingBadgeVariant } from "../../products/utils/listing-badge-variant";

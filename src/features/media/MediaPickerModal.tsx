@@ -8,7 +8,7 @@ import { Input } from "../../ui/components/Input";
 import { Label, Text } from "../../ui/components/Typography";
 import { Row, Stack } from "../../ui/components/Layout";
 import { Alert } from "../../ui/components/Alert";
-import { MediaImage } from "./MediaImage";
+import { MediaImage } from "../../ui/components/MediaImage";
 import { MediaUploadField } from "./upload/MediaUploadField";
 /*
  * The DEFINING module, not `./index` — Root Cause #18. The barrel re-exports

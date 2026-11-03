@@ -8,7 +8,7 @@ import type { ActiveAdRecord } from "../hooks/useActiveAd";
 import { Anchor } from "../../../ui/components/Anchor";
 import { Div } from "../../../ui/components/Div";
 import { Span, Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 
 // ---------------------------------------------------------------------------
 // Props

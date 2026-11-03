@@ -17,7 +17,7 @@ import { Main, Section } from "../../../ui/components/Semantic";
 import { SplitTile } from "../../../ui/components/SplitTile";
 import { TextLink } from "../../../ui/components/TextLink";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { resolveTaxonomyVisual } from "../utils/taxonomy-visual";
 import { SubcategoryCardRow, type SubcategoryCardItem } from "./SubcategoryCardRow";

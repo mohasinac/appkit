@@ -9,7 +9,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { OverflowRow } from "../../../ui/components/OverflowRow";
 import type { OverflowRowItem } from "../../../ui/components/OverflowRow";
 import { Pagination } from "../../../ui/components/Pagination";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { blogCategoryBadge } from "../constants/category-badge";
 
 import { getDefaultLocale } from "../../../core/baseline-resolver";

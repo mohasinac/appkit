@@ -1,5 +1,5 @@
 import type { ReactNode, MouseEvent } from "react";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 
 import { Span } from "./Typography";
 

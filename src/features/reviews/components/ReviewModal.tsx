@@ -6,7 +6,7 @@ import { Heading, Text } from "../../../ui/components/Typography";
 import { Modal } from "../../../ui/components/Modal";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { Row, Stack } from "../../../ui/components/Layout";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { StarRating } from "../../../ui/components/StarRating";
 import type { Review } from "../types";
 import { maskName } from "../../../security";

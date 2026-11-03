@@ -13,7 +13,7 @@
  * proven client reader is how the endpoint drifted in the first place.
  */
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
-import type { MediaVideoWatermark } from "../../../../features/media/MediaVideo";
+import type { MediaVideoWatermark } from "../../../../ui/components/MediaVideo";
 
 /** The only notification-channel facts a browser is given: is each channel on. */
 export interface PublicNotificationChannels {

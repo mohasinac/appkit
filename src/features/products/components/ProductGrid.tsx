@@ -10,7 +10,7 @@ import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { PriceDisplay } from "../../../ui/components/PriceDisplay";
 import { Span, Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 
 import type { ViewMode } from "../../../ui/components/ViewToggle";
 import type { ProductItem } from "../types";

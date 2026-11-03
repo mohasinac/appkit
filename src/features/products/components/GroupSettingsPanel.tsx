@@ -18,7 +18,7 @@ import { useToast } from "../../../ui/components/toast-context";
 import { FormShellContext, useFormShellState, FormErrorSummary } from "../../../ui/forms";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import type { GroupRules } from "../../../_internal/shared/features/products/group-rules";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { apiClient } from "../../../http";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";

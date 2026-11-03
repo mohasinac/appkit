@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import type { ProductItem } from "../../products/types";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { useWishlistToggle } from "../../wishlist/hooks/useWishlistToggle";
 import type { WishlistToggleActions } from "../../wishlist/hooks/useWishlistToggle";
 import { ROUTES } from "../../../next/routing/route-map";

@@ -1,7 +1,7 @@
 import { Anchor } from "./Anchor";
 import { Div } from "./Div";
 import { Heading, Span } from "./Typography";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 
 export interface SplitTilePane {
   href: string;

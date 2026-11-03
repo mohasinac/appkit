@@ -7,7 +7,7 @@ import { Div } from "../../../ui/components/Div";
 import { PricesOnly } from "../../../ui/components/GatedPrice";
 import { Row } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";

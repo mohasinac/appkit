@@ -30,7 +30,7 @@
  * subset.
  */
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
-import type { MediaVideoWatermark } from "../../../../features/media/MediaVideo";
+import type { MediaVideoWatermark } from "../../../../ui/components/MediaVideo";
 import type { PublicSiteSettings } from "../../../shared/features/site-settings/types";
 import {
   closedSurfacePrefixes,

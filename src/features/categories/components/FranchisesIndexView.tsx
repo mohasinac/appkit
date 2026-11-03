@@ -6,7 +6,7 @@ import { Main, Section } from "../../../ui/components/Semantic";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Div } from "../../../ui/components/Div";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { Alert } from "../../../ui/components/Alert";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { CategoryDocument } from "../schemas";

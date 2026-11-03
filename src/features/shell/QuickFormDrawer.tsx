@@ -24,7 +24,7 @@ import { Text } from "../../ui/components/Typography";
 import { FormShellContext, FormErrorSummary, type FormShellContextValue } from "../../ui/forms";
 import type { FormFieldValue, FormValues } from "../../schemas/types";
 import { useHandMode } from "../../_internal/client/hand-mode";
-import type { QuickFieldType, QuickFieldDef } from "../../ui/types/quick-field";
+import type { QuickFieldDef } from "../../ui/types/quick-field";
 
 export type { QuickFieldType, QuickFieldDef } from "../../ui/types/quick-field";
 

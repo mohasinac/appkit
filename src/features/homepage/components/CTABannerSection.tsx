@@ -6,7 +6,7 @@ import { Icon } from "../../../ui/components/Icon";
 import { Row } from "../../../ui/components/Layout";
 import { Scrim } from "../../../ui/components/Scrim";
 import { Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SECTION_TITLE, SECTION_COPY } from "../constants/section-copy";
 

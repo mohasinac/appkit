@@ -1,5 +1,5 @@
 import React from "react";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 
 export interface AvatarProps {
   src?: string | null;

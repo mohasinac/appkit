@@ -13,7 +13,7 @@ import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { PaginatedSelect, type PaginatedSelectOption } from "../../../ui/components/PaginatedSelect";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { TOOL_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http/ApiClient";
 import { useSiteSearch } from "../../search/hooks/useSiteSearch";

@@ -3,7 +3,7 @@ import { Container, Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import type {
   CollectionCardsSectionConfig,

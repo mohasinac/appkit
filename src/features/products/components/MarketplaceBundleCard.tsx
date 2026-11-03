@@ -17,7 +17,7 @@ import { GatedPrice, PricesOnly } from "../../../ui/components/GatedPrice";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { computeBundleDiscount } from "../../../_internal/shared/features/categories/bundle-pricing";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";

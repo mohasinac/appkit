@@ -7,7 +7,7 @@ import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 
 const __O = {
   hidden: "overflow-hidden",

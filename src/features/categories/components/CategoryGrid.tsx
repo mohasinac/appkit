@@ -5,7 +5,7 @@ import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 

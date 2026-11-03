@@ -1,5 +1,5 @@
 import React from "react";
-import { MediaImage } from "../../features/media/MediaImage";
+import { MediaImage } from "./MediaImage";
 import { Div } from "./Div";
 
 /** How many tiles the mosaic draws. More than five reads as a grid, not a hero. */

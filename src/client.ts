@@ -680,7 +680,7 @@ export type { AddressCardAddress, AddressCardProps } from "./features/account/co
 export { useCurrentProfile as useProfile, useUpdateCurrentProfile as useUpdateProfile } from "./features/account/hooks/useProfile";
 export { updateProfileSchema } from "./features/account/schemas/index";
 export type { CategoryItem } from "./features/categories/types/index";
-export { MediaImage } from "./features/media/MediaImage";
+export { MediaImage } from "./ui/components/MediaImage";
 export { StoreSidebar } from "./features/seller/components/SellerSidebar";
 export type { StoreNavItem, StoreNavGroup } from "./features/seller/components/SellerSidebar";
 export { StoreProductsView } from "./features/stores/components/StoreProductsView";

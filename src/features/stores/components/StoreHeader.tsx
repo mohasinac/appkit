@@ -4,7 +4,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { Row } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ShareButton } from "../../products/components/ShareButton";
 import { SellerTrustBadge } from "../../scams/components/SellerTrustBadge";

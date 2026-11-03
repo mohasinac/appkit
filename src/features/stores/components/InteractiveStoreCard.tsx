@@ -8,7 +8,7 @@ import { Heading, Span } from "../../../ui/components/Typography";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Scrim } from "../../../ui/components/Scrim";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { SellerTierBadge } from "./SellerTierBadge";

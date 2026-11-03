@@ -28,7 +28,7 @@ import { Select } from "../../../ui/components/Select";
 import { Span, Text } from "../../../ui/components/Typography";
 import { useToast } from "../../../ui/components/toast-context";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";

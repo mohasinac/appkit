@@ -16,8 +16,8 @@ import { normalizeError } from "../../../errors/normalize";
 import type { StackedViewShellProps } from "../../../ui/components/StackedViewShell";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import {
-  MediaImage,
   MediaUploadField,
   MediaUploadList,
   type MediaField,

@@ -6139,13 +6139,13 @@ export { ImageEditor } from "./features/media/modals/ImageEditor";
 export { ImageUpload } from "./features/media/upload/ImageUpload";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // MediaAvatar - Shared export for media avatar.
-export { MediaAvatar } from "./features/media/MediaAvatar";
+export { MediaAvatar } from "./ui/components/MediaAvatar";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // MediaImage - Shared export for media image.
-export { MediaImage } from "./features/media/MediaImage";
+export { MediaImage } from "./ui/components/MediaImage";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // MediaLightbox - Shared export for media lightbox.
-export { MediaLightbox } from "./features/media/MediaLightbox";
+export { MediaLightbox } from "./ui/components/MediaLightbox";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // MediaSlider - Shared export for media slider.
 export { MediaSlider } from "./features/media/components/MediaSlider";
@@ -6160,7 +6160,7 @@ export { MediaUploadField } from "./features/media/upload/MediaUploadField";
 export { MediaUploadList } from "./features/media/upload/MediaUploadList";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // MediaVideo - Shared export for media video.
-export { MediaVideo } from "./features/media/MediaVideo";
+export { MediaVideo } from "./ui/components/MediaVideo";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // VideoThumbnailSelector - Shared export for video thumbnail selector.
 export { VideoThumbnailSelector } from "./features/media/modals/VideoThumbnailSelector";
@@ -6202,25 +6202,25 @@ export type { ImageCropModalProps } from "./features/media/modals/ImageCropModal
 export type { ImageUploadProps } from "./features/media/upload/ImageUpload";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // LightboxItem - Type contract for lightbox item.
-export type { LightboxItem } from "./features/media/MediaLightbox";
+export type { LightboxItem } from "./ui/components/MediaLightbox";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // LightboxLabels - Type contract for lightbox labels.
-export type { LightboxLabels } from "./features/media/MediaLightbox";
+export type { LightboxLabels } from "./ui/components/MediaLightbox";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaAvatarProps - Type contract for media avatar props.
-export type { MediaAvatarProps } from "./features/media/MediaAvatar";
+export type { MediaAvatarProps } from "./ui/components/MediaAvatar";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaCropInput - Type contract for media crop input.
 export type { MediaCropInput } from "./features/media/hooks/useMedia";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaImageProps - Type contract for media image props.
-export type { MediaImageProps } from "./features/media/MediaImage";
+export type { MediaImageProps } from "./ui/components/MediaImage";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaImageSize - Type contract for media image size.
-export type { MediaImageSize } from "./features/media/MediaImage";
+export type { MediaImageSize } from "./ui/components/MediaImage";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaLightboxProps - Type contract for media lightbox props.
-export type { MediaLightboxProps } from "./features/media/MediaLightbox";
+export type { MediaLightboxProps } from "./ui/components/MediaLightbox";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaSliderProps - Type contract for media slider props.
 export type { MediaSliderProps } from "./features/media/components/MediaSlider";
@@ -6238,7 +6238,7 @@ export type { MediaUploadListProps } from "./features/media/upload/MediaUploadLi
 export type { MediaUploadResult } from "./features/media/hooks/useMedia";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // MediaVideoProps - Type contract for media video props.
-export type { MediaVideoProps } from "./features/media/MediaVideo";
+export type { MediaVideoProps } from "./ui/components/MediaVideo";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // VideoThumbnailSelectorProps - Type contract for video thumbnail selector props.
 export type { VideoThumbnailSelectorProps } from "./features/media/modals/VideoThumbnailSelector";

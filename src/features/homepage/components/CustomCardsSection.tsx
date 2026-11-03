@@ -11,7 +11,7 @@ import { THEMED_TEXT_PRIMARY } from "../../../_internal/shared/styles/themed";
 /* Not re-exported from `ui/index` — import from the defining module (Root Cause #18). */
 import { Iframe } from "../../../ui/components/Iframe";
 import { SectionCarousel } from "./SectionCarousel";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
 
 // --- Constants ---------------------------------------------------------------

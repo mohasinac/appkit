@@ -36,7 +36,7 @@ import { Progress } from "../../../ui/components/Progress";
 import { Spinner } from "../../../ui/components/Spinner";
 import { Label, Text } from "../../../ui/components/Typography";
 import { useToast } from "../../../ui/components/toast-context";
-import { MediaImage } from "../MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type { ImageCropData } from "../modals/ImageCropModal";
 import CameraCapture from "./CameraCapture";
 

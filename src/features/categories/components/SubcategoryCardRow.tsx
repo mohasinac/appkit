@@ -47,7 +47,7 @@ import { HorizontalScroller } from "../../../ui/components/HorizontalScroller";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { FieldInput } from "../../../ui/forms";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { TextLink } from "../../../ui/components/TextLink";
 
 export interface SubcategoryCardItem {

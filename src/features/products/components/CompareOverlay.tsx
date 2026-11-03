@@ -37,7 +37,7 @@ import { GatedPrice } from "../../../ui/components/GatedPrice";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { IconButton } from "../../../ui/components/IconButton";
 import { Row, Stack } from "../../../ui/components/Layout";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { useSwipe } from "../../../react/hooks/useSwipe";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { COMPARE_MAX_ITEMS } from "../constants/action-defs";

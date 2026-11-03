@@ -24,7 +24,7 @@ import { PricesOnly } from "../../../ui/components/GatedPrice";
 import { Scrim } from "../../../ui/components/Scrim";
 import { Text } from "../../../ui/components/Typography";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import type { PrizeDrawItem } from "../schemas/firestore";

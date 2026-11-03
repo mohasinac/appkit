@@ -17,7 +17,7 @@ import { Div } from "../../../ui/components/Div";
 import { GatedPrice } from "../../../ui/components/GatedPrice";
 import { Grid, Row } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
 import { ROUTES } from "../../../next/routing/route-map";

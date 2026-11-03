@@ -7,7 +7,7 @@ import { GRID_MAP, Row, Stack } from "../../../ui/components/Layout";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { HandModeRow } from "../../../ui/components/HandModeRow";
 import { Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { fetchGoogleReviews } from "../lib/google-reviews-fetcher";
 import type { GoogleReview } from "../lib/google-reviews-fetcher";

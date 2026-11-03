@@ -5,7 +5,7 @@ import { hidePublicTestData } from "../../../_internal/server/features/tester/vi
 import { Container, Row, Stack } from "../../../ui/components/Layout";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { Heading, Text } from "../../../ui/components/Typography";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { ProductGrid } from "../../products/components/ProductGrid";
 import { Alert } from "../../../ui/components/Alert";
 import type { CategoryDocument } from "../schemas";

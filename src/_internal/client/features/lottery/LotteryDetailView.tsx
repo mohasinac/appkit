@@ -7,7 +7,7 @@ import { Badge } from "../../../../ui/components/Badge";
 import { Section } from "../../../../ui/components/Semantic";
 import { Div } from "../../../../ui/components/Div";
 import { Anchor } from "../../../../ui/components/Anchor";
-import { MediaImage } from "../../../../features/media/MediaImage";
+import { MediaImage } from "../../../../ui/components/MediaImage";
 import { useOptionalSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";

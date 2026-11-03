@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Clock, Gavel, Play, ShoppingBag, Star } from "lucide-react";
 import { WishlistHeartButton } from "../../wishlist/components/WishlistHeartButton";
 import { useLongPress } from "../../../react/hooks/useLongPress";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { useWishlistToggle } from "../../wishlist/hooks/useWishlistToggle";
 import type { WishlistToggleActions } from "../../wishlist/hooks/useWishlistToggle";
 import { useCountdown, type CountdownRemaining } from "../../../react";

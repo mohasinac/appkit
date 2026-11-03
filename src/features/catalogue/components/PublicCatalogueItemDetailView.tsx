@@ -9,7 +9,7 @@ import { GatedPrice } from "../../../ui/components/GatedPrice";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { Skeleton } from "../../../ui/components/Skeleton";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { formatCurrency } from "../../../utils/number.formatter";

@@ -16,7 +16,7 @@ import { SideDrawer } from "../../../ui/components/SideDrawer";
 import { Stack } from "../../../ui/components/Layout";
 import { Textarea } from "../../../ui/components/Textarea";
 import { useToast } from "../../../ui/components/toast-context";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

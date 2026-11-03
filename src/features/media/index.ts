@@ -1,21 +1,7 @@
 // Public API for @mohasinac/feat-media
 
-// Core media display components
-export { MediaImage } from "./MediaImage";
-export type { MediaImageProps, MediaImageSize } from "./MediaImage";
-
-export { MediaVideo } from "./MediaVideo";
-export type { MediaVideoProps } from "./MediaVideo";
-
-export { MediaAvatar } from "./MediaAvatar";
-export type { MediaAvatarProps } from "./MediaAvatar";
-
-export { MediaLightbox } from "./MediaLightbox";
-export type {
-  MediaLightboxProps,
-  LightboxItem,
-  LightboxLabels,
-} from "./MediaLightbox";
+// MediaImage/MediaVideo/MediaAvatar/MediaLightbox moved to ui/components/
+// (appkit barrel-perf plan, Phase 4b) -- import them from there directly.
 
 // Internal slider (re-exported for advanced use)
 export { MediaSlider } from "./components/MediaSlider";

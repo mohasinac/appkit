@@ -7,7 +7,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { TextLink } from "../../../ui/components/TextLink";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { QuantityStepper } from "../../../ui/components/QuantityStepper";
 import { GatedPrice } from "../../../ui/components/GatedPrice";
 import { formatCurrency } from "../../../utils/number.formatter";

@@ -10,7 +10,7 @@ import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { SideDrawer } from "../../../ui/components/SideDrawer";
 import { Skeleton } from "../../../ui/components/Skeleton";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { apiClient } from "../../../http";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CatalogueItemEditorView } from "./CatalogueItemEditorView";

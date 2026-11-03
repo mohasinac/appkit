@@ -18,7 +18,7 @@ import { Container, Stack } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
-import { MediaImage } from "../../media/MediaImage";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import { GroupMemberPicker, type GroupPickerMember } from "../../products/components/GroupMemberPicker";
 import type { GroupedListingDocument } from "../schemas/firestore";
 import { readGroupRules } from "../../../_internal/shared/features/products/group-rules";
