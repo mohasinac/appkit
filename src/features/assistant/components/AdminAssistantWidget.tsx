@@ -105,16 +105,19 @@ export function AdminAssistantWidget() {
    * surface this narrow.
    *
    * Same EDGE as the buyer-facing `AssistantWidget` (hand === "left" ?
-   * "left-4" : "right-4"), stacked a fixed `bottom-28` (7rem) above its own
-   * `bottom-14` (3.5rem) base — two widgets deep on one edge, never the
-   * dev-indicator corner.
+   * "left-4" : "right-4"). 🛑 No longer stacked above it — `LayoutShellClient`
+   * now skips mounting the buyer widget under `/admin`, specifically so this
+   * is the only floating assistant bubble an admin ever sees (two stacked
+   * bubbles for two separate tools read as a bug, not a feature — flagged
+   * directly by the owner). Uses the buyer widget's own base offset
+   * (`bottom-14` / 3.5rem) now that there is nothing left to clear.
    */
   const edge = hand === "left" ? "left-4" : "right-4";
 
   return (
     <>
-      {/* audit-bottom-offset-ok: desktop-primary admin tool, stacked a fixed offset above the buyer widget's own FAB — not bottom-nav-relative, see the comment above */}
-      <Div className={`fixed bottom-[7rem] ${edge} z-[var(--appkit-z-popover)]`}>
+      {/* audit-bottom-offset-ok: desktop-primary admin tool, not bottom-nav-relative — see the comment above */}
+      <Div className={`fixed bottom-14 ${edge} z-[var(--appkit-z-popover)]`}>
         <IconButton
           type="button"
           variant="primary"
@@ -133,7 +136,7 @@ export function AdminAssistantWidget() {
           rounded="lg"
           border="default"
           shadow="lg"
-          className={`fixed bottom-[11.25rem] ${edge} z-[var(--appkit-z-popover)] w-[min(22rem,calc(100vw-2rem))] max-h-[70vh] overflow-y-auto`}
+          className={`fixed bottom-32 ${edge} z-[var(--appkit-z-popover)] w-[min(22rem,calc(100vw-2rem))] max-h-[70vh] overflow-y-auto`}
         >
           <Stack gap="sm">
             <Heading level={3} size="base">

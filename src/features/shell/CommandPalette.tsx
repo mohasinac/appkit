@@ -196,6 +196,98 @@ export function CommandPalette({ isOpen, onClose, groups, placeholder = "Jump to
 }
 
 /**
+ * InlineNavSearch — the SAME ranked nav search as `CommandPalette`, rendered
+ * as an always-visible bar embedded in a page body instead of a `⌘K` popup.
+ * Reuses `rankNavSearchResults` and the `CommandPaletteGroup`/`Item` shapes
+ * directly — this is a second RENDERING of one search concern (inline vs.
+ * overlay), not a second search mechanism, the same relationship `Modal` has
+ * to an inline `Dialog`. Built for a dashboard landing page that wants one
+ * search bar at the top with zero clicks to reach it, rather than requiring
+ * `⌘K` or a header icon first.
+ */
+export function InlineNavSearch({ groups, placeholder = "Search…" }: { groups: CommandPaletteGroup[]; placeholder?: string }) {
+  const router = useRouter();
+  const toast = useToastSafe();
+  const [query, setQuery] = useState("");
+  const [togglingKey, setTogglingKey] = useState<string | null>(null);
+
+  const flatItems = useMemo<FlatItem[]>(
+    () =>
+      groups.flatMap((g) =>
+        g.items.map((item) => ({
+          ...item,
+          groupTitle: g.title,
+          key: item.kind === "toggle" ? `${g.title}:${item.label}` : item.href,
+        })),
+      ),
+    [groups],
+  );
+
+  const results = useMemo(() => (query.trim() ? rankNavSearchResults(flatItems, query) : []), [flatItems, query]);
+
+  const activate = useCallback(
+    async (item: FlatItem) => {
+      if (item.kind === "toggle") {
+        if (togglingKey) return;
+        setTogglingKey(item.key);
+        try {
+          await item.onToggle();
+        } catch (err) {
+          void normalizeError(err);
+          toast?.showToast(`Couldn't update "${item.label}" — please try again.`, "error");
+        } finally {
+          setTogglingKey(null);
+        }
+        return;
+      }
+      router.push(item.href);
+    },
+    [router, toast, togglingKey],
+  );
+
+  return (
+    <Div>
+      <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        className="w-full"
+      />
+      {results.length > 0 && (
+        <Div className="mt-2 max-h-80" overflow="y-auto" border="default" rounded="lg" surface="elevated" shadow="md">
+          <Stack gap="none">
+            {results.map((item) => (
+              <Button
+                variant="ghost"
+                key={item.key}
+                type="button"
+                onClick={() => void activate(item)}
+                justify="between"
+                rounded="none"
+                paddingX="sm"
+                paddingY="xs"
+                disabled={item.kind === "toggle" && togglingKey === item.key}
+                className="w-full text-left hover:bg-[var(--appkit-color-surface-elevated)]"
+              >
+                <Span size="sm">{item.label}</Span>
+                {item.kind === "toggle" ? (
+                  <Span size="xs" color={item.isOn ? "success" : "muted"}>
+                    {togglingKey === item.key ? "Saving…" : item.isOn ? "On" : "Off"}
+                  </Span>
+                ) : (
+                  <Span size="xs" color="muted">{item.groupTitle}</Span>
+                )}
+              </Button>
+            ))}
+          </Stack>
+        </Div>
+      )}
+    </Div>
+  );
+}
+
+/**
  * useCommandPaletteHotkey — opens the palette on `⌘K`/`Ctrl+K` anywhere on
  * the page (ignored while typing in another input/textarea/contenteditable).
  */
