@@ -43,6 +43,18 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
   const [saving, setSaving] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Same cleanup `usePageRegion` has — without it, a debounced write still
+  // fires its `setTimeout` callback after the component unmounts (e.g. the
+  // admin navigates away inside the 600ms window), calling `setSaving` on
+  // state nobody reads any more. Harmless in practice (React tolerates a
+  // state update on an unmounted hook; it just warns), but free to avoid.
+  useEffect(
+    () => () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    },
+    [],
+  );
+
   useEffect(() => {
     if (initial !== undefined) return;
     let cancelled = false;

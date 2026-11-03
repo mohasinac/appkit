@@ -82,9 +82,13 @@ function resolveCardColor(color: string | undefined): SurfaceKey | undefined {
  * rather than imported, since that map is module-private inside a `"use
  * client"` component this shared card-rendering module already imports
  * `Button` from directly (so the KEYS are a safe hand-copy, not a new
- * dependency). The PATCH route's own `cardElementSchema` spells the same
- * list out a second time for the same reason (it cannot import `Button.tsx`
- * at all) — if a variant is ever added to `Button.tsx`, update both.
+ * dependency).
+ *
+ * 🛑 THREE copies exist, not two — found by review 2026-11-03. Both
+ * `page-regions/[pageId]/route.ts` AND `user/profile/route.ts` spell the
+ * same 7 values out again in their own `cardElementSchema`'s `cta.variant`
+ * enum (neither can import `Button.tsx`). If a variant is ever added to
+ * `Button.tsx`, update all THREE, not "the other place."
  */
 const CTA_VARIANT_OPTIONS: SelectOption[] = [
   { value: "primary", label: "Primary" },
@@ -109,10 +113,17 @@ const SPAN_OPTIONS: SelectOption[] = [
   { value: "quarter", label: "Quarter (4 per row)" },
 ];
 
-/** `text` is the one `CardElement` kind with no `label` (free prose has no identity to label). */
+/**
+ * `text`/`image`/`richText` carry no REQUIRED label (free prose, and a
+ * media/rich-text block whose label is purely decorative) — falls back to
+ * "card" rather than rendering `undefined` in an aria-label.
+ */
 function elementDisplayLabel(el: CardElement | undefined): string {
   if (!el) return "card";
-  return el.kind === "text" ? "card" : el.label;
+  if (el.kind === "text" || el.kind === "image" || el.kind === "richText") {
+    return ("label" in el ? el.label : undefined) || "card";
+  }
+  return el.label;
 }
 
 export interface DashboardCardViewProps {

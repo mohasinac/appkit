@@ -73,6 +73,9 @@
  * `Record<string, string[]>` — a missed variant member compiles silently on
  * whichever side was not updated.
  */
+
+import type { RowSpan } from "../../../../utils/pack-by-span";
+
 export type RecentEntry =
   | { kind: "page"; href: string; label: string; visitedAt: string }
   | { kind: "toggle"; toggleId: string; label: string; visitedAt: string }
@@ -209,7 +212,7 @@ export type CardElement =
  * caller (see that function's doc comment for why the default differs from
  * forms').
  */
-export type { RowSpan as CardElementSpan } from "../../../../utils/pack-by-span";
+export type CardElementSpan = RowSpan;
 
 /**
  * `DashboardCard` — the composable unit a user's dashboard landing is made

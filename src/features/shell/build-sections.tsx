@@ -94,10 +94,11 @@ export interface BuildSectionsOptions<T extends object> {
   sectionOrder?: string[];
   /**
    * Admin-authored per-field visibility override (Phase 3B widget system,
-   * `_internal/shared/features/forms/field-visibility.ts`), keyed by field
-   * name. `false` hides the field; absent or `true` leaves it to `when`
-   * alone. Optional and additive — every existing caller that doesn't pass
-   * this renders byte-identically to before.
+   * `_internal/server/features/forms/field-visibility.ts` +
+   * `features/shell/useFieldVisibility.ts`), keyed by field name. `false`
+   * hides the field; absent or `true` leaves it to `when` alone. Optional
+   * and additive — every existing caller that doesn't pass this renders
+   * byte-identically to before.
    *
    * 🛑 Combines with `FieldUiMeta.when` by AND, `when` evaluated first,
    * NEVER the reverse: an admin override may only hide a field `when`

@@ -25,9 +25,21 @@
 import { cache } from "react";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { safeRead } from "../../../../errors/safe-read";
-import type { FieldVisibilityDoc } from "../../../shared/features/forms/field-visibility";
 
 const FIELD_VISIBILITY_COLLECTION = "fieldVisibility";
+
+/**
+ * The document AS STORED, local to this file — same split
+ * `page-regions.ts`'s own `PageRegionDoc` uses: `updatedAt` is a real
+ * Firestore `Timestamp` once written, which is a different type than any
+ * JSON wire shape would carry. Nothing outside this file reads this
+ * document directly, so there is no shared type to keep it in sync with.
+ */
+interface FieldVisibilityStoredDoc {
+  surfaceId: string;
+  fields: Record<string, boolean>;
+  updatedAt: FirebaseFirestore.Timestamp;
+}
 
 /**
  * Cached on `surfaceId` alone — the narrowest shared argument, same
@@ -40,7 +52,7 @@ export const getFieldVisibility = cache(async (surfaceId: string): Promise<Recor
     async () => {
       const snap = await getAdminDb().collection(FIELD_VISIBILITY_COLLECTION).doc(surfaceId).get();
       if (!snap.exists) return {};
-      const data = snap.data() as FieldVisibilityDoc;
+      const data = snap.data() as FieldVisibilityStoredDoc;
       return data.fields && typeof data.fields === "object" ? data.fields : {};
     },
     {
