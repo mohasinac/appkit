@@ -1,4 +1,4 @@
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../schemas/types";
 /**
  * deriveFormFields — @mohasinac/appkit/utils
  *

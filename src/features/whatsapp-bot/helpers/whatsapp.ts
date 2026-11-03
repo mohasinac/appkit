@@ -1,5 +1,5 @@
 import { normalizeError } from "../../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { createHmac, timingSafeEqual } from "crypto";
 import {
   getDefaultCurrencySymbol,

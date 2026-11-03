@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../schemas/types";
 
 interface PanelState {
   panelId: string | null;

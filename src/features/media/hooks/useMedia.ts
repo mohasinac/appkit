@@ -12,7 +12,7 @@
  */
 
 import { useMutation } from "@tanstack/react-query";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { apiClient } from "../../../http";
 import {
   classifyMime,

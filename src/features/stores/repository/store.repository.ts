@@ -26,7 +26,7 @@ import {
 import { DatabaseError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
 
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { STORE_PII_FIELDS } from "../../../security/pii-schemas";
 import { decryptPii } from "../../../security/pii-encrypt";
 import type { StoreSettlementVendor } from "../schemas/firestore";

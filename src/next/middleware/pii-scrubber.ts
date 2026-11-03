@@ -1,7 +1,7 @@
 // appkit/src/next/middleware/pii-scrubber.ts
 import type { NextRequest, NextResponse as NR } from "next/server";
 import { normalizeError } from "../../errors/normalize";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 import { NextResponse } from "next/server";
 import type { BaseRequestContext, Middleware } from "./types";
 import { hasEncPrefix } from "../../security/pii-mask";

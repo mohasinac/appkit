@@ -1,4 +1,4 @@
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 export type PaymentStatus =
   | "pending"
   | "processing"

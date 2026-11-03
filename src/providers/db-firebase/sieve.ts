@@ -147,7 +147,7 @@ import {
   type SieveFilterAlias,
   type SieveFilterAliases,
 } from "./filter-aliases";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 
 // Re-export the pure alias helper + types so consumers that already imported
 // from `./sieve` keep working. Anyone who only needs the alias machinery

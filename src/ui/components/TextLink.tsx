@@ -1,5 +1,5 @@
 import React from "react";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 import Link from "next/link";
 import { SHADOW_MAP } from "./surface-tokens";
 import type { ShadowKey } from "./surface-tokens";

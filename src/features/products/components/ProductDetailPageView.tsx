@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { productRepository } from "../repository/products.repository";
 import { priceIndexRepository } from "../../categories/repository/price-index.repository";
 import { MarketPriceAnchor } from "./MarketPriceAnchor";

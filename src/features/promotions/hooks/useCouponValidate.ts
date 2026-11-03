@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { PROMOTION_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import type { ListingType } from "../../products/types";
 
 interface ValidateCouponPayload {

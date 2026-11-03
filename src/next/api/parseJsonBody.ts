@@ -1,5 +1,5 @@
 import { ValidationError } from "../../errors";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../schemas/types";
 
 /**
  * Strict JSON body parser for createRouteHandler handlers that need a body

@@ -45,7 +45,7 @@ import {
   MetaInfo,
   Env,
 } from "phonepe-pg-sdk-node";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 import { IPaymentProvider } from "../../contracts";
 import type {
   CheckoutIntentMetadata,

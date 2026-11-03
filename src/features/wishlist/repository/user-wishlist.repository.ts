@@ -11,7 +11,7 @@
 
 import { normalizeError } from "../../../errors/normalize";
 import { getAdminDb } from "../../../providers/db-firebase";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../../schemas/types";
 import { serverLogger } from "../../../monitoring";
 import {
   WISHLIST_COLLECTION,

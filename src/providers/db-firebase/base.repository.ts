@@ -1,7 +1,7 @@
 import { normalizeError } from "../../errors/normalize";
 // Types only — `encrypted.ts` has no runtime imports (Root Cause #24).
 import type { Plaintext } from "../../security/encrypted";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../schemas/types";
 import type {
   CollectionReference,
   DocumentData,

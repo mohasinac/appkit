@@ -29,7 +29,7 @@ import type {
   ProductDocument,
 } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { RelatedItemsSection } from "./RelatedItemsSection";
 import { computeRelatedItems } from "../../../_internal/server/features/products/data";
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";

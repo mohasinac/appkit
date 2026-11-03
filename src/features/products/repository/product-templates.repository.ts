@@ -12,7 +12,7 @@ import {
   type ProductTemplateUpdateInput,
 } from "../schemas/product-templates";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 
 function slugify(name: string): string {
   return name

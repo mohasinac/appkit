@@ -1,5 +1,5 @@
 import type { AlertMetric } from "../constants/alert-metrics";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
 /**

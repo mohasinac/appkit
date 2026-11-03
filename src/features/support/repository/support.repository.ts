@@ -35,7 +35,7 @@ import {
   type TicketMessage,
   type TicketStatus,
 } from "../schemas/firestore";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { withHistory, type HistoryActor, type HistoryActorRole } from "../../../_internal/shared/history/index";
 
 /** Who/why for a write that lands in `statusHistory`. */

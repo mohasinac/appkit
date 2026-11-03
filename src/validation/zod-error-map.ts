@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { JsonValue, JsonArray } from "@mohasinac/appkit";
+import type { JsonArray, JsonValue } from "../schemas/types";
 
 /**
  * Custom Zod v4 error map that replaces machine-y messages with human-friendly strings.

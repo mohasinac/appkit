@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { FirestoreDocument } from "@mohasinac/appkit";
+import type { FirestoreDocument } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
 
 const __P = {

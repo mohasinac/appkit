@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from "next/server";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 import type { ApiIssue } from "../../client/api/ApiError";
 import {
   buildErrorEnvelope,

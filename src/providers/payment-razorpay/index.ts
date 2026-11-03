@@ -52,7 +52,7 @@
  */
 
 import Razorpay from "razorpay";
-import type { JsonValue } from "@mohasinac/appkit";
+import type { JsonValue } from "../../schemas/types";
 import { IPaymentProvider } from "../../contracts";
 import type {
   PaymentOrder,
