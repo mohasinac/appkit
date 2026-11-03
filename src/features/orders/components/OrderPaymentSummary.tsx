@@ -22,6 +22,7 @@ const METHOD_LABEL: Record<OrderPaymentRecord["method"], string> = {
   manual: "Manual (Cash / UPI)",
   phonepe: "PhonePe",
   razorpay: "Razorpay",
+  cashfree: "Cashfree",
   cod: "Cash on Delivery",
 };
 

@@ -3621,9 +3621,15 @@ async function createPhonePeGroupOrder(
     userEmail: string;
     /** Our own generated order id — stored as `order.paymentId`, the durable reference for refunds/lookups. */
     merchantOrderId: string;
-    /** PhonePe's own order id (distinct from merchantOrderId). */
-    phonepeOrderId?: string;
-    /** PhonePe's transaction id for the completed payment attempt, if available. */
+    /**
+     * The active gateway's own order id (distinct from `merchantOrderId`) —
+     * named `phonepeOrderId` until this function's own `method`/`gatewayRef`
+     * routing was found to silently mislabel every Cashfree order as
+     * "phonepe"; the value itself was always gateway-agnostic
+     * (`gatewayOrder.gatewayOrderId` at the call site), only the name lied.
+     */
+    gatewayOrderId?: string;
+    /** The active gateway's transaction id for the completed payment attempt, if available. */
     transactionId?: string;
   /** LEGACY free text. Still written so old readers keep working; never read for booking. */
   shippingAddress?: string;
@@ -3692,7 +3698,7 @@ async function createPhonePeGroupOrder(
     userName,
     userEmail,
     merchantOrderId,
-    phonepeOrderId,
+    gatewayOrderId,
     transactionId,
     shippingAddress,
     notes,
@@ -4061,7 +4067,23 @@ async function createPhonePeGroupOrder(
      */
     paymentId: merchantOrderId,
     paymentRecord: {
-      method: gatewayName === "razorpay" ? "razorpay" : "phonepe",
+      /*
+       * 🛑 Was a 2-way ternary (`razorpay` / else `phonepe`) with no `cashfree`
+       * branch — exactly the bug a 2-value check always risks once a third
+       * provider registers. Every Cashfree-settled order recorded
+       * `method: "phonepe"` and no `cashfreeOrderId`, which is wrong audit
+       * trail for a real, live gateway (Cashfree is the one this project
+       * uses specifically for collector-drop/random-lots compliance — see
+       * CLAUDE.md § payment-cashfree). `gatewayName` is read off the
+       * REGISTERED provider three lines above this function's own top, so
+       * this is never a value the caller could get wrong.
+       */
+      method:
+        gatewayName === "razorpay"
+          ? "razorpay"
+          : gatewayName === "cashfree"
+            ? "cashfree"
+            : "phonepe",
       transactionId: transactionId ?? merchantOrderId,
       /*
        * 🛑 What the gateway actually CAPTURED, which is `amountDue` once points
@@ -4079,7 +4101,9 @@ async function createPhonePeGroupOrder(
         merchantOrderId,
         ...(gatewayName === "razorpay"
           ? { razorpayOrderId: merchantOrderId, razorpayPaymentId: transactionId }
-          : { phonepeOrderId }),
+          : gatewayName === "cashfree"
+            ? { cashfreeOrderId: gatewayOrderId }
+            : { phonepeOrderId: gatewayOrderId }),
         transactionId,
       },
     },
@@ -5121,7 +5145,7 @@ export async function verifyAndPlaceGatewayOrderAction(
       userName,
       userEmail,
       merchantOrderId,
-      phonepeOrderId: gatewayOrder.gatewayOrderId,
+      gatewayOrderId: gatewayOrder.gatewayOrderId,
       transactionId: gatewayOrder.transactionId,
       shippingAddress,
       /*

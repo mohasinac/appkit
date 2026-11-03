@@ -1596,7 +1596,7 @@ export interface OrderDocument extends BaseDocument {
   isTestData?: boolean;
 }
 
-export type OrderPaymentRecordMethod = "manual" | "phonepe" | "razorpay" | "cod";
+export type OrderPaymentRecordMethod = "manual" | "phonepe" | "razorpay" | "cashfree" | "cod";
 export type OrderPaymentVerificationMethod = "manual_review" | "webhook" | "cod_collection" | "order_status";
 
 export interface OrderPaymentRecord {
@@ -1624,6 +1624,7 @@ export interface OrderPaymentRecord {
     razorpayOrderId?: string;
     /** Razorpay's payment id (`pay_…`) — the key its refund API needs. */
     razorpayPaymentId?: string;
+    cashfreeOrderId?: string;
     transactionId?: string;
   };
 }
