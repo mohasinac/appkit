@@ -3,6 +3,8 @@ import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
 import { listBidsByProduct } from "../../collector-drops/actions/bid-actions";
 import { safeRead } from "../../../errors/safe-read";
+import { getFieldVisibility } from "../../../_internal/server/features/forms/field-visibility";
+import { SectionVisibilityGate } from "../../shell/SectionVisibilityGate";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -204,6 +206,216 @@ function renderCollectorDropInfoPanel(props: CollectorDropInfoPanelProps) {
   );
 }
 
+interface CollectorDropBidPanelProps {
+  productId: string;
+  currentBid: number;
+  startingBid: number;
+  currency: string;
+  bidCount: number;
+  isEnded: boolean;
+  endDate: Date | null;
+  buyNowPrice: number | null;
+  buyNowAvailable: boolean;
+  initialMinBid: number;
+  initialMinBidIncrement: number;
+  bidIncrementTiers: BidIncrementTier[];
+  minBidIncrementOverride?: number;
+  tags: string[];
+  onPlaceBid?: (input: PlaceBidInput) => Promise<BidActionEnvelope<unknown>>;
+  onBuyNow?: () => Promise<BidActionEnvelope<BuyNowSuccess>>;
+}
+
+/** Desktop bid panel — the live-SSE form when `onPlaceBid` is wired, else a read-only preview. Extracted so the page body stays under the lint line cap. */
+function renderCollectorDropBidPanel(props: CollectorDropBidPanelProps) {
+  const { productId, currentBid, startingBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, initialMinBid, initialMinBidIncrement, bidIncrementTiers, minBidIncrementOverride, tags, onPlaceBid, onBuyNow } = props;
+  return onPlaceBid ? (
+    <Stack id="collectordrop-bid-form" gap="3">
+      {/* Compact summary card — modal owns the form */}
+      <Stack className={`${__P.p5}`} border="subtle" gap="3" rounded="xl" surface="muted">
+        <Row justify="between" align="baseline">
+          <LiveBidPrice
+            productId={productId}
+            currentBid={currentBid}
+            bidCount={bidCount}
+            currency={currency}
+            isEnded={isEnded}
+            priceSize="xl"
+            badgeSize="xs"
+          />
+          {!isEnded && (
+            <LiveMinIncrement
+              productId={productId}
+              currentBid={currentBid}
+              bidCount={bidCount}
+              currency={currency}
+              isEnded={isEnded}
+              tiers={bidIncrementTiers}
+              minBidIncrementOverride={minBidIncrementOverride}
+            />
+          )}
+        </Row>
+        {!isEnded && endDate && (
+          <Text align="center" size="xs" color="muted">
+            Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+          </Text>
+        )}
+        <PlaceBidModalButton
+          productId={productId}
+          currentBid={currentBid}
+          startingBid={startingBid}
+          tiers={bidIncrementTiers}
+          minBidIncrementOverride={minBidIncrementOverride}
+          currency={currency}
+          isEnded={isEnded}
+          collectorDropEndDate={endDate}
+          buyNowPrice={buyNowPrice}
+          bidCount={bidCount}
+          tags={tags}
+          onPlaceBid={onPlaceBid}
+          onBuyNow={onBuyNow}
+          triggerClassName="w-full"
+        />
+      </Stack>
+    </Stack>
+  ) : (
+    /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
+    <Stack className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
+      <Stack gap="xs">
+        <Text size="xs" color="muted">
+          <GatedPrice label="Sign in to see the starting bid">
+            Starting bid: {formatCurrency(startingBid, currency)}
+            {!isEnded && <> · min increment {formatCurrency(initialMinBidIncrement, currency)}</>}
+          </GatedPrice>
+        </Text>
+      </Stack>
+      <Stack gap="sm">
+        <Input
+          type="number"
+          // The minimum is stated in the gated line above rather than
+          // in the placeholder: a placeholder is a plain string prop,
+          // so it cannot be gated in place and would print the bid
+          // floor to signed-out visitors.
+          placeholder="Enter your bid"
+          min={initialMinBid}
+          aria-label="Your bid amount"
+          disabled={isEnded}
+        />
+        {!isEnded && endDate && (
+          <Text align="center" size="xs" color="muted">
+            Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+          </Text>
+        )}
+        <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
+          {isEnded ? "Collector Drop Ended" : "Place Bid"}
+        </Button>
+        {/* A permanently-`disabled` Buy Now button used to sit here.
+            This whole branch is the no-action preview (the live route
+            always passes onPlaceBid + onBuyNow), so it rendered a CTA
+            that could never be clicked and explained nothing — the
+            dead-affordance shape Root Cause #56 is about. The price
+            is stated instead. */}
+        {buyNowAvailable && buyNowPrice !== null && (
+          // Hidden rather than prompted: the Buy Now chip at the top
+          // of the panel already carries the gate, so repeating the
+          // prompt here would be the same affordance twice.
+          <PricesOnly>
+            <Text align="center" size="xs" color="muted">
+              Buy Now available at {formatCurrency(buyNowPrice, currency)}
+            </Text>
+          </PricesOnly>
+        )}
+      </Stack>
+      {tags.length > 0 && (
+        <Div border="default" className="border-t" padding="t-md">
+          <Row wrap gap="xs">
+            {tags.map((tag) => (
+              <Span key={tag} size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">
+                {tag}
+              </Span>
+            ))}
+          </Row>
+        </Div>
+      )}
+    </Stack>
+  );
+}
+
+interface CollectorDropMobileBidPanelProps {
+  productId: string;
+  currentBid: number;
+  startingBid: number;
+  currency: string;
+  bidCount: number;
+  isEnded: boolean;
+  endDate: Date | null;
+  buyNowPrice: number | null;
+  bidIncrementTiers: BidIncrementTier[];
+  minBidIncrementOverride?: number;
+  tags: string[];
+  onPlaceBid?: (input: PlaceBidInput) => Promise<BidActionEnvelope<unknown>>;
+  onBuyNow?: () => Promise<BidActionEnvelope<BuyNowSuccess>>;
+}
+
+/** The `lg:hidden` mobile counterpart of `renderCollectorDropBidPanel` — a separate render prop because the two panels occupy different positions in the responsive layout, not different content. */
+function renderCollectorDropMobileBidPanel(props: CollectorDropMobileBidPanelProps) {
+  const { productId, currentBid, startingBid, currency, bidCount, isEnded, endDate, buyNowPrice, bidIncrementTiers, minBidIncrementOverride, tags, onPlaceBid, onBuyNow } = props;
+  if (!isEnded && onPlaceBid) {
+    return (
+      <Stack className={`lg:hidden ${__P.p4}`} border="subtle" gap="3" rounded="xl" surface="muted">
+        <LiveBidPrice
+          productId={productId}
+          currentBid={currentBid}
+          bidCount={bidCount}
+          currency={currency}
+          isEnded={isEnded}
+          priceSize="base"
+          badgeSize="xs"
+        />
+        {endDate && (
+          <Text align="center" size="xs" color="muted">
+            Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+          </Text>
+        )}
+        <PlaceBidModalButton
+          productId={productId}
+          currentBid={currentBid}
+          startingBid={startingBid}
+          tiers={bidIncrementTiers}
+          minBidIncrementOverride={minBidIncrementOverride}
+          currency={currency}
+          isEnded={isEnded}
+          collectorDropEndDate={endDate}
+          buyNowPrice={buyNowPrice}
+          bidCount={bidCount}
+          tags={tags}
+          onPlaceBid={onPlaceBid}
+          onBuyNow={onBuyNow}
+          triggerClassName="w-full"
+        />
+      </Stack>
+    );
+  }
+  if (isEnded) return null;
+  return (
+    <Div className={`${__P.p4} lg:hidden`} border="subtle" rounded="xl" surface="muted">
+      <Row align="center" gap="sm" className="mb-3">
+        <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
+          <GatedPrice label="Sign in to see the current bid">{formatCurrency(currentBid, currency)}</GatedPrice>
+        </Span>
+        <Span size="xs" color="muted">{bidCount} bids</Span>
+      </Row>
+      {endDate && (
+        <Text align="center" className="mb-3" size="xs" color="muted">
+          Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
+        </Text>
+      )}
+      <Button variant="primary" size="md" className="w-full">
+        Place Bid
+      </Button>
+    </Div>
+  );
+}
+
 /**
  * Store reviews for the collector drop's seller.
  *
@@ -400,10 +612,17 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
     },
   )) as FirestoreDocument[];
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, siteSettings, pdpSectionVisibility] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
     getSiteSettingsGlobal(),
+    // Same shared "pdp-sections" surface as every other listing type's
+    // detail-page component — one admin decision applies across all of them.
+    // Two extra keys here (bid-history, store-reviews) beyond the shared
+    // gallery/info/actions/tabs/grouped-listings/related vocabulary — the
+    // mechanism is generic, so a listing type with its own sections just
+    // uses its own keys.
+    getFieldVisibility("pdp-sections"),
   ]);
   const bidIncrementTiers: BidIncrementTier[] = siteSettings.collectorDropConfig?.bidIncrementTiers ?? [];
   const initialMinBidIncrement = resolveMinBidIncrement(currentBid, bidIncrementTiers, minBidIncrementOverride);
@@ -451,174 +670,34 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
 
         <CollectorDropDetailView
           renderGallery={() => (
-            <ProductGalleryClient images={images} video={productVideo} productName={title} />
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
+              <ProductGalleryClient images={images} video={productVideo} productName={title} />
+            </SectionVisibilityGate>
           )}
-          renderInfo={() => renderCollectorDropInfoPanel({ productId: String(product.id), storeId: product.storeId ? String(product.storeId) : undefined, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale: isFinalSale(p), category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
-          renderBidForm={() =>
-            onPlaceBid ? (
-              <Stack id="collectordrop-bid-form" gap="3">
-                {/* Compact summary card — modal owns the form */}
-                <Stack className={`${__P.p5}`} border="subtle" gap="3" rounded="xl" surface="muted">
-                  <Row justify="between" align="baseline">
-                    <LiveBidPrice
-                      productId={String(product.id)}
-                      currentBid={currentBid}
-                      bidCount={bidCount}
-                      currency={currency}
-                      isEnded={isEnded}
-                      priceSize="xl"
-                      badgeSize="xs"
-                    />
-                    {!isEnded && (
-                      <LiveMinIncrement
-                        productId={String(product.id)}
-                        currentBid={currentBid}
-                        bidCount={bidCount}
-                        currency={currency}
-                        isEnded={isEnded}
-                        tiers={bidIncrementTiers}
-                        minBidIncrementOverride={minBidIncrementOverride}
-                      />
-                    )}
-                  </Row>
-                  {!isEnded && endDate && (
-                    <Text align="center" size="xs" color="muted">
-                      Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
-                    </Text>
-                  )}
-                  <PlaceBidModalButton
-                    productId={String(product.id)}
-                    currentBid={currentBid}
-                    startingBid={startingBid}
-                    tiers={bidIncrementTiers}
-                    minBidIncrementOverride={minBidIncrementOverride}
-                    currency={currency}
-                    isEnded={isEnded}
-                    collectorDropEndDate={endDate}
-                    buyNowPrice={buyNowPrice}
-                    bidCount={bidCount}
-                    tags={tags}
-                    onPlaceBid={onPlaceBid}
-                    onBuyNow={onBuyNow}
-                    triggerClassName="w-full"
-                  />
-                </Stack>
-              </Stack>
-            ) : (
-              /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
-              <Stack className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
-                <Stack gap="xs">
-                  <Text size="xs" color="muted">
-                    <GatedPrice label="Sign in to see the starting bid">
-                      Starting bid: {formatCurrency(startingBid, currency)}
-                      {!isEnded && <> · min increment {formatCurrency(initialMinBidIncrement, currency)}</>}
-                    </GatedPrice>
-                  </Text>
-                </Stack>
-                <Stack gap="sm">
-                  <Input
-                    type="number"
-                    // The minimum is stated in the gated line above rather than
-                    // in the placeholder: a placeholder is a plain string prop,
-                    // so it cannot be gated in place and would print the bid
-                    // floor to signed-out visitors.
-                    placeholder="Enter your bid"
-                    min={initialMinBid}
-                    aria-label="Your bid amount"
-                    disabled={isEnded}
-                  />
-                  {!isEnded && endDate && (
-                    <Text align="center" size="xs" color="muted">
-                      Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
-                    </Text>
-                  )}
-                  <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
-                    {isEnded ? "Collector Drop Ended" : "Place Bid"}
-                  </Button>
-                  {/* A permanently-`disabled` Buy Now button used to sit here.
-                      This whole branch is the no-action preview (the live route
-                      always passes onPlaceBid + onBuyNow), so it rendered a CTA
-                      that could never be clicked and explained nothing — the
-                      dead-affordance shape Root Cause #56 is about. The price
-                      is stated instead. */}
-                  {buyNowAvailable && buyNowPrice !== null && (
-                    // Hidden rather than prompted: the Buy Now chip at the top
-                    // of the panel already carries the gate, so repeating the
-                    // prompt here would be the same affordance twice.
-                    <PricesOnly>
-                      <Text align="center" size="xs" color="muted">
-                        Buy Now available at {formatCurrency(buyNowPrice, currency)}
-                      </Text>
-                    </PricesOnly>
-                  )}
-                </Stack>
-                {tags.length > 0 && (
-                  <Div border="default" className="border-t" padding="t-md">
-                    <Row wrap gap="xs">
-                      {tags.map((tag) => (
-                        <Span key={tag} size="xs" rounded="full" padding="pill-sm-tall" surface="subtle" color="muted">
-                          {tag}
-                        </Span>
-                      ))}
-                    </Row>
-                  </Div>
-                )}
-              </Stack>
-            )
-          }
-          renderMobileBidForm={() =>
-            !isEnded && onPlaceBid ? (
-              <Stack className={`lg:hidden ${__P.p4}`} border="subtle" gap="3" rounded="xl" surface="muted">
-                <LiveBidPrice
-                  productId={String(product.id)}
-                  currentBid={currentBid}
-                  bidCount={bidCount}
-                  currency={currency}
-                  isEnded={isEnded}
-                  priceSize="base"
-                  badgeSize="xs"
-                />
-                {endDate && (
-                  <Text align="center" size="xs" color="muted">
-                    Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
-                  </Text>
-                )}
-                <PlaceBidModalButton
-                  productId={String(product.id)}
-                  currentBid={currentBid}
-                  startingBid={startingBid}
-                  tiers={bidIncrementTiers}
-                  minBidIncrementOverride={minBidIncrementOverride}
-                  currency={currency}
-                  isEnded={isEnded}
-                  collectorDropEndDate={endDate}
-                  buyNowPrice={buyNowPrice}
-                  bidCount={bidCount}
-                  tags={tags}
-                  onPlaceBid={onPlaceBid}
-                  onBuyNow={onBuyNow}
-                  triggerClassName="w-full"
-                />
-              </Stack>
-            ) : !isEnded ? (
-              <Div className={`${__P.p4} lg:hidden`} border="subtle" rounded="xl" surface="muted">
-                <Row align="center" gap="sm" className="mb-3">
-                  <Span size="base" weight="bold" className="text-primary-600 dark:text-primary-400">
-                    <GatedPrice label="Sign in to see the current bid">{formatCurrency(currentBid, currency)}</GatedPrice>
-                  </Span>
-                  <Span size="xs" color="muted">{bidCount} bids</Span>
-                </Row>
-                {endDate && (
-                  <Text align="center" className="mb-3" size="xs" color="muted">
-                    Ends in <CountdownDisplay targetDate={endDate} format="auto" expiredLabel="Ended" />
-                  </Text>
-                )}
-                <Button variant="primary" size="md" className="w-full">
-                  Place Bid
-                </Button>
-              </Div>
-            ) : null
-          }
+          renderInfo={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="info" initialVisible={pdpSectionVisibility.info !== false}>
+              {renderCollectorDropInfoPanel({ productId: String(product.id), storeId: product.storeId ? String(product.storeId) : undefined, title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, buyNowAvailable, featured, freeShipping, condition, finalSale: isFinalSale(p), category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
+            </SectionVisibilityGate>
+          )}
+          renderBidForm={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
+              {renderCollectorDropBidPanel({
+                productId: String(product.id),
+                currentBid, startingBid, currency, bidCount, isEnded, endDate,
+                buyNowPrice, buyNowAvailable, initialMinBid, initialMinBidIncrement,
+                bidIncrementTiers, minBidIncrementOverride, tags, onPlaceBid, onBuyNow,
+              })}
+            </SectionVisibilityGate>
+          )}
+          renderMobileBidForm={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
+              {renderCollectorDropMobileBidPanel({
+                productId: String(product.id),
+                currentBid, startingBid, currency, bidCount, isEnded, endDate,
+                buyNowPrice, bidIncrementTiers, minBidIncrementOverride, tags, onPlaceBid, onBuyNow,
+              })}
+            </SectionVisibilityGate>
+          )}
           renderSublistingSection={
             sublistingCategoryId
               ? () => (
@@ -630,6 +709,7 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
               : undefined
           }
           renderTabs={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="tabs" initialVisible={pdpSectionVisibility.tabs !== false}>
             <ProductTabsShell
               descriptionContent={
                 descriptionHtml ? (
@@ -647,31 +727,24 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
               }
               customTabs={toCustomSectionTabs(p.customSections)}
             />
+            </SectionVisibilityGate>
           )}
           renderBidHistory={() => {
             if (!bidsResult) return null;
             return (
-              <CollapsibleBidHistory
-                productId={String(product.id)}
-                initialData={bidsResult}
-                currency={currency}
-              />
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="bid-history" initialVisible={pdpSectionVisibility["bid-history"] !== false}>
+                <CollapsibleBidHistory
+                  productId={String(product.id)}
+                  initialData={bidsResult}
+                  currency={currency}
+                />
+              </SectionVisibilityGate>
             );
           }}
           renderRelated={() => {
             const related = toRelatedCollectorDropCards(relatedDocs, product.id, new Date());
             return (
               <Stack gap="xl">
-                {related.length > 0 && (
-                  <RelatedProducts
-                    labels={{ title: "Similar Collector Drops" }}
-                    renderGrid={() => (
-                      <MarketplaceCollectorDropGrid
-                        collectorDrops={related}
-                      />
-                    )}
-                  />
-                )}
                 {/*
                   The buyer's own order and review for THIS item. Self-gating: renders
                   nothing until auth resolves, because SessionProvider mounts
@@ -683,23 +756,41 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
                   productId={String(product.id)}
                   storeId={product.storeId ? String(product.storeId) : undefined}
                 />
-                <GroupedListingsCarousel groups={groups} />
-                <RelatedItemsSection
-                  relatedItems={relatedItems}
-                  relatedByBrand={relatedByBrand}
-                  relatedByTags={relatedByTags}
-                  relatedByStore={relatedByStore}
-                  categoryLabel={categoryName || category || undefined}
-                  brandLabel={brand || undefined}
-                  storeLabel={storeName || undefined}
-                />
+                <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="grouped-listings" initialVisible={pdpSectionVisibility["grouped-listings"] !== false}>
+                  <GroupedListingsCarousel groups={groups} />
+                </SectionVisibilityGate>
+                <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="related" initialVisible={pdpSectionVisibility.related !== false}>
+                  {related.length > 0 && (
+                    <RelatedProducts
+                      labels={{ title: "Similar Collector Drops" }}
+                      renderGrid={() => (
+                        <MarketplaceCollectorDropGrid
+                          collectorDrops={related}
+                        />
+                      )}
+                    />
+                  )}
+                  <RelatedItemsSection
+                    relatedItems={relatedItems}
+                    relatedByBrand={relatedByBrand}
+                    relatedByTags={relatedByTags}
+                    relatedByStore={relatedByStore}
+                    categoryLabel={categoryName || category || undefined}
+                    brandLabel={brand || undefined}
+                    storeLabel={storeName || undefined}
+                  />
+                </SectionVisibilityGate>
               </Stack>
             );
           }}
         />
 
         {/* Store reviews section */}
-        {renderCollectorDropStoreReviews(storeId)}
+        {storeId && (
+          <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="store-reviews" initialVisible={pdpSectionVisibility["store-reviews"] !== false}>
+            {renderCollectorDropStoreReviews(storeId)}
+          </SectionVisibilityGate>
+        )}
 
         {/* Mobile actions registered via useBottomActions(). It owns its own
             bid modal — it used to scroll to `#collectordrop-bid-form`, which lives

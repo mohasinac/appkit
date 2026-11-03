@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
 import { orderRepository, productRepository } from "../../../repositories";
+import { getFieldVisibility } from "../../../_internal/server/features/forms/field-visibility";
+import { SectionVisibilityGate } from "../../shell/SectionVisibilityGate";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -188,9 +190,12 @@ export async function RandomLotsDetailPageView({
   const categoryName = Array.isArray(p.categoryNames) && p.categoryNames.length > 0 ? String(p.categoryNames[0]) : undefined;
   const brand = typeof p.brand === "string" ? p.brand : undefined;
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, pdpSectionVisibility] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
+    // Same shared "pdp-sections" surface as every other listing type's
+    // detail-page component — one admin decision applies across all of them.
+    getFieldVisibility("pdp-sections"),
   ]);
 
   return (
@@ -233,9 +238,12 @@ export async function RandomLotsDetailPageView({
 
         <PreOrderDetailView
           renderGallery={() => (
-            <RandomLotsCollage items={items} hideWonState />
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
+              <RandomLotsCollage items={items} hideWonState />
+            </SectionVisibilityGate>
           )}
           renderInfo={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="info" initialVisible={pdpSectionVisibility.info !== false}>
             <Stack gap="md">
               {/*
                 Owner quick-actions, rendered directly — the component self-gates on
@@ -357,8 +365,10 @@ export async function RandomLotsDetailPageView({
               */}
               <Disclaimer id="random-lots" />
             </Stack>
+            </SectionVisibilityGate>
           )}
           renderTabs={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="tabs" initialVisible={pdpSectionVisibility.tabs !== false}>
             <ProductTabsShell
               descriptionContent={
                 descriptionHtml ? (
@@ -370,9 +380,11 @@ export async function RandomLotsDetailPageView({
                 ) : undefined
               }
             />
+            </SectionVisibilityGate>
           )}
           renderBuyBar={() => (
-            <Div padding="5" 
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
+            <Div padding="5"
               id="prize-draw-buy-bar" border="subtle" surface="muted" rounded="xl"
             >
               <RandomLotsEntryActions
@@ -386,6 +398,7 @@ export async function RandomLotsDetailPageView({
                 prizeGithubFileUrl={githubUrl}
               />
             </Div>
+            </SectionVisibilityGate>
           )}
           renderRelated={() => (
             <Stack gap="xl">
@@ -400,16 +413,20 @@ export async function RandomLotsDetailPageView({
                 productId={String(product.id)}
                 storeId={product.storeId ? String(product.storeId) : undefined}
               />
-              <GroupedListingsCarousel groups={groups} />
-              <RelatedItemsSection
-                relatedItems={relatedItems}
-                relatedByBrand={relatedByBrand}
-                relatedByTags={relatedByTags}
-                relatedByStore={relatedByStore}
-                categoryLabel={categoryName}
-                brandLabel={brand}
-                storeLabel={storeName ?? undefined}
-              />
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="grouped-listings" initialVisible={pdpSectionVisibility["grouped-listings"] !== false}>
+                <GroupedListingsCarousel groups={groups} />
+              </SectionVisibilityGate>
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="related" initialVisible={pdpSectionVisibility.related !== false}>
+                <RelatedItemsSection
+                  relatedItems={relatedItems}
+                  relatedByBrand={relatedByBrand}
+                  relatedByTags={relatedByTags}
+                  relatedByStore={relatedByStore}
+                  categoryLabel={categoryName}
+                  brandLabel={brand}
+                  storeLabel={storeName ?? undefined}
+                />
+              </SectionVisibilityGate>
             </Stack>
           )}
         />

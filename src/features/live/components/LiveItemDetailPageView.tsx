@@ -2,6 +2,8 @@ import Link from "next/link";
 import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuickActions";
 import type { FirestoreDocument } from "../../../schemas/types";
 import { getLiveItemForDetail } from "../../../_internal/server/features/live/data";
+import { getFieldVisibility } from "../../../_internal/server/features/forms/field-visibility";
+import { SectionVisibilityGate } from "../../shell/SectionVisibilityGate";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 dark:hover:text-primary-400 transition-colors";
 const CLS_LIVE_ITEM_BADGE = "inline-block rounded-full bg-lime-100 dark:bg-lime-900/30 px-[var(--appkit-space-2-5)] py-[var(--appkit-space-0-5)] text-lime-700 dark:text-lime-300";
@@ -101,10 +103,13 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications) ? (p.specifications as { name: string; value: string; unit?: string }[]) : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, initialReviews] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, initialReviews, pdpSectionVisibility] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
     getReviewPageForProduct(product.id),
+    // Same shared "pdp-sections" surface as every other listing type's
+    // detail-page component — one admin decision applies across all of them.
+    getFieldVisibility("pdp-sections"),
   ]);
 
   return (
@@ -141,8 +146,13 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
         </Row>
 
         <PreOrderDetailView
-          renderGallery={() => <ProductGalleryClient images={images} video={productVideo} productName={title} />}
+          renderGallery={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
+              <ProductGalleryClient images={images} video={productVideo} productName={title} />
+            </SectionVisibilityGate>
+          )}
           renderInfo={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="info" initialVisible={pdpSectionVisibility.info !== false}>
             <Stack gap="md">
               <Div>
                 <Row gap="xs" wrap className="mb-2">
@@ -247,8 +257,10 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
                 </Div>
               )}
             </Stack>
+            </SectionVisibilityGate>
           )}
           renderTabs={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="tabs" initialVisible={pdpSectionVisibility.tabs !== false}>
             <ProductTabsShell
               descriptionContent={
                 descriptionHtml ? (
@@ -275,8 +287,13 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
               }
               customTabs={toCustomSectionTabs(p.customSections)}
             />
+            </SectionVisibilityGate>
           )}
-          renderBuyBar={() => <Div id="live-item-buy-bar">{renderActions?.(product)}</Div>}
+          renderBuyBar={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
+              <Div id="live-item-buy-bar">{renderActions?.(product)}</Div>
+            </SectionVisibilityGate>
+          )}
           renderRelated={() => (
             <Stack gap="xl">
               {/*
@@ -290,16 +307,20 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
                 productId={String(product.id)}
                 storeId={product.storeId ? String(product.storeId) : undefined}
               />
-              <GroupedListingsCarousel groups={groups} />
-              <RelatedItemsSection
-                relatedItems={relatedItems}
-                relatedByBrand={relatedByBrand}
-                relatedByTags={relatedByTags}
-                relatedByStore={relatedByStore}
-                categoryLabel={categoryName || category || undefined}
-                brandLabel={brand}
-                storeLabel={storeName ?? undefined}
-              />
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="grouped-listings" initialVisible={pdpSectionVisibility["grouped-listings"] !== false}>
+                <GroupedListingsCarousel groups={groups} />
+              </SectionVisibilityGate>
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="related" initialVisible={pdpSectionVisibility.related !== false}>
+                <RelatedItemsSection
+                  relatedItems={relatedItems}
+                  relatedByBrand={relatedByBrand}
+                  relatedByTags={relatedByTags}
+                  relatedByStore={relatedByStore}
+                  categoryLabel={categoryName || category || undefined}
+                  brandLabel={brand}
+                  storeLabel={storeName ?? undefined}
+                />
+              </SectionVisibilityGate>
             </Stack>
           )}
         />
