@@ -66,6 +66,8 @@ import { computeRelatedItems, getReviewPageForProduct } from "../../../_internal
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
+import { getFieldVisibility } from "../../../_internal/server/features/forms/field-visibility";
+import { SectionVisibilityGate } from "../../shell/SectionVisibilityGate";
 import { safeRead } from "../../../errors/safe-read";
 import { canMakeOffer } from "../../../_internal/shared/listing-types/capabilities";
 import {
@@ -522,7 +524,7 @@ export async function ProductDetailPageView({
 
   // -- Fetch reviews + the shared 4-signal related-items computation + grouped listings in parallel --
   // Only page 1 of reviews is fetched here; <ReviewsListingPanel> pages the rest client-side.
-  const [initialReviews, related, groups, siteSettings, priceBand] = await Promise.all([
+  const [initialReviews, related, groups, siteSettings, priceBand, pdpSectionVisibility] = await Promise.all([
     getReviewPageForProduct(product.id),
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
@@ -545,6 +547,17 @@ export async function ProductDetailPageView({
           fallback: null,
         })
       : Promise.resolve(null),
+    /*
+     * A sixth parallel read, same reasoning as the price-band comment above
+     * — the admin field-visibility override for this page's own sections
+     * (gallery/info/actions/tabs/related), one SHARED `"pdp-sections"`
+     * surface applying to every product (a site-wide template decision,
+     * not per-product — same granularity the owner's own examples implied:
+     * "if I wish for detail screen cta buttons that is a widget"). Degrades
+     * to `{}` (= show everything) on any failure via `getFieldVisibility`'s
+     * own `safeRead`, so a visibility-store outage never blanks the page.
+     */
+    getFieldVisibility("pdp-sections"),
   ]);
 
   const { relatedItems, relatedByBrand, relatedByTags, relatedByStore } = related;
@@ -635,10 +648,21 @@ export async function ProductDetailPageView({
             // section" nav + pdpSection RecentEntry href resolution. Mirrors
             // PdpSectionId's "gallery" 1:1 (appkit/.../dashboard/recent-entry.ts).
             <Div id="section-gallery">
-              <ProductGalleryClient images={images} video={productVideo} productName={title || undefined} />
+              <SectionVisibilityGate
+                surfaceId="pdp-sections"
+                sectionKey="gallery"
+                initialVisible={pdpSectionVisibility.gallery !== false}
+              >
+                <ProductGalleryClient images={images} video={productVideo} productName={title || undefined} />
+              </SectionVisibilityGate>
             </Div>
           )}
           renderInfo={() => (
+            <SectionVisibilityGate
+              surfaceId="pdp-sections"
+              sectionKey="info"
+              initialVisible={pdpSectionVisibility.info !== false}
+            >
             <Stack gap="md" id="section-info">
               {/*
                 Owner quick-actions — pencil, admin-only clone, bin.
@@ -910,8 +934,14 @@ export async function ProductDetailPageView({
                 </Div>
               )}
             </Stack>
+            </SectionVisibilityGate>
           )}
           renderActions={() => (
+            <SectionVisibilityGate
+              surfaceId="pdp-sections"
+              sectionKey="actions"
+              initialVisible={pdpSectionVisibility.actions !== false}
+            >
             <Stack id="section-actions" className={`${__P.p5}`} border="subtle" gap="md" rounded="xl" surface="muted">
               {/* Price + discount */}
               {price !== null && (
@@ -1186,6 +1216,7 @@ export async function ProductDetailPageView({
                 </Row>
               </Div>
             </Stack>
+            </SectionVisibilityGate>
           )}
           renderSublistingSection={
             sublistingCategoryId
@@ -1210,6 +1241,11 @@ export async function ProductDetailPageView({
               : undefined
           }
           renderTabs={() => (
+            <SectionVisibilityGate
+              surfaceId="pdp-sections"
+              sectionKey="tabs"
+              initialVisible={pdpSectionVisibility.tabs !== false}
+            >
             <Div id="section-tabs">
             <ProductTabsShell
               partsContent={compositionContent}
@@ -1280,6 +1316,7 @@ export async function ProductDetailPageView({
               customTabs={toCustomSectionTabs(p.customSections)}
             />
             </Div>
+            </SectionVisibilityGate>
           )}
           renderBundleSection={
             bundleMemberships.length > 0
@@ -1317,16 +1354,34 @@ export async function ProductDetailPageView({
           }
           renderRelated={() => (
             <Stack gap="xl" id="section-related">
-              <GroupedListingsCarousel groups={groups} />
-              <RelatedItemsSection
-                relatedItems={relatedItems}
-                relatedByBrand={relatedByBrand}
-                relatedByTags={relatedByTags}
-                relatedByStore={relatedByStore}
-                categoryLabel={categoryNames[0] || categoryName || category || undefined}
-                brandLabel={brand || undefined}
-                storeLabel={sellerName ? storeName || undefined : undefined}
-              />
+              {/*
+                * Gated independently, not as one "related" block — the owner's
+                * own examples named grouped listings and related items as two
+                * separate widgets ("the related listings is, the grouped
+                * listing is"), not one combined section.
+                */}
+              <SectionVisibilityGate
+                surfaceId="pdp-sections"
+                sectionKey="grouped-listings"
+                initialVisible={pdpSectionVisibility["grouped-listings"] !== false}
+              >
+                <GroupedListingsCarousel groups={groups} />
+              </SectionVisibilityGate>
+              <SectionVisibilityGate
+                surfaceId="pdp-sections"
+                sectionKey="related"
+                initialVisible={pdpSectionVisibility.related !== false}
+              >
+                <RelatedItemsSection
+                  relatedItems={relatedItems}
+                  relatedByBrand={relatedByBrand}
+                  relatedByTags={relatedByTags}
+                  relatedByStore={relatedByStore}
+                  categoryLabel={categoryNames[0] || categoryName || category || undefined}
+                  brandLabel={brand || undefined}
+                  storeLabel={sellerName ? storeName || undefined : undefined}
+                />
+              </SectionVisibilityGate>
             </Stack>
           )}
         />
