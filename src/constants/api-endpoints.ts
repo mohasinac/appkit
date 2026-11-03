@@ -247,6 +247,8 @@ export const ADMIN_ENDPOINTS = {
   MAINTENANCE_CACHE: "/api/admin/maintenance/cache",
   /** Admin-facing assistant — Phase 2E-ii (overhaul brief). Distinct from `ASSISTANT_ENDPOINTS.ASK`, which is the buyer-scoped one. */
   ASSISTANT_ASK: "/api/admin/assistant/ask",
+  /** Admin-composable page regions — Phase 3B (overhaul brief), first slice. `pageId` is a stable, hand-chosen id, not route-derived. */
+  PAGE_REGION_BY_ID: (pageId: string) => `/api/admin/page-regions/${pageId}`,
   SHIPMENTS: "/api/admin/shipments",
   SHIPMENT_BY_ID: (id: string) => `/api/admin/shipments/${id}`,
   SHIPMENT_LOTS: (id: string) => `/api/admin/shipments/${id}/lots`,

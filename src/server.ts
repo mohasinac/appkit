@@ -2907,6 +2907,12 @@ export type {
 export { getDashboardHubData } from "./_internal/server/features/dashboard/data";
 export type { DashboardHubData } from "./_internal/server/features/dashboard/data";
 
+/*
+ * Admin-composable page regions (Phase 3B, overhaul brief) — same
+ * `_internal` boundary reasoning as `getDashboardHubData` above.
+ */
+export { getPageRegion, setPageRegion } from "./_internal/server/features/dashboard/page-regions";
+
 // Auto-hide: the measured "does this browse surface hold anything" document.
 // Server-only (firebase-admin via getAdminDb); the PREDICATE that reads it is
 // client-safe and lives in client.ts/index.ts beside the other visibility gates.
