@@ -8,7 +8,9 @@ import { BulkActionBar } from "../../../ui/components/BulkActionBar";
 import { Div } from "../../../ui/components/Div";
 import { FilterDrawer } from "../../../ui/components/FilterDrawer";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
-import { ListingToolbar } from "../../../ui/components/ListingToolbar";
+import { ListingToolbar, applyToggleVisibility } from "../../../ui/components/ListingToolbar";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { useEditMode } from "../../../edit-mode";
 import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
 import { Pagination } from "../../../ui/components/Pagination";
 import { useToast } from "../../../ui/components/toast-context";
@@ -129,6 +131,17 @@ export function ProductsIndexListing({
   const [view, setView] = useState<ViewMode>(
     (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
+
+  /*
+   * 3B item 1b, toolbars subsystem (2026-11-03). This page's toggle row has
+   * exactly one hand-coded toggle today ("Free shipping") — `fields`/
+   * `fieldOrder` are both empty until an admin customizes this surface, so
+   * `applyToggleVisibility` is a no-op and the row renders byte-identical
+   * to before this existed.
+   */
+  const { editMode } = useEditMode();
+  const { fields: toolbarVisibilityFields, fieldOrder: toolbarFieldOrder } =
+    useFieldVisibility("products-index-toolbar");
 
   /*
    * ── What this page actually spans ────────────────────────────────────────
@@ -435,18 +448,25 @@ export function ProductsIndexListing({
         bulkTotalCount={products.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
-        toggles={[
-          // "Show sold" / "Show ended" used to live here. They WIDENED the
-          // list rather than scoping it, so live and dead rows arrived mixed
-          // together and the archive was unbrowsable — replaced by the
-          // <AvailabilityTabs> scope bar below.
-          //
-          // Inline quick-filter: the highest-frequency drawer-only facet promoted
-          // to the sticky toolbar so it doesn't require open-drawer → check → Apply
-          // → close for every toggle. The full facet set (category/price/brand/…)
-          // remains in <FilterDrawer> below.
-          { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next: boolean) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
-        ]}
+        toggles={applyToggleVisibility(
+          [
+            // "Show sold" / "Show ended" used to live here. They WIDENED the
+            // list rather than scoping it, so live and dead rows arrived mixed
+            // together and the archive was unbrowsable — replaced by the
+            // <AvailabilityTabs> scope bar below.
+            //
+            // Inline quick-filter: the highest-frequency drawer-only facet promoted
+            // to the sticky toolbar so it doesn't require open-drawer → check → Apply
+            // → close for every toggle. The full facet set (category/price/brand/…)
+            // remains in <FilterDrawer> below.
+            { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next: boolean) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
+          ],
+          // Edit mode shows every toggle regardless of stored visibility —
+          // same reasoning build-sections.tsx's own editMode branch uses: an
+          // admin re-enabling a toggle has to be able to see it first.
+          editMode ? {} : toolbarVisibilityFields,
+          toolbarFieldOrder,
+        )}
       />
 
       {/* ── Availability scope — Available / Sold & Ended / All ─────────── */}

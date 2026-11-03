@@ -30,6 +30,39 @@ export interface ListingToolbarToggle {
   onChange: (next: boolean) => void;
 }
 
+/**
+ * 3B item 1b, toolbars subsystem (2026-11-03). `toggles` is a plain data
+ * array each caller hand-constructs (confirmed — `ProductsIndexListing.tsx`
+ * builds a one-item array for "Free shipping"), unlike `renderFilterPanel`'s
+ * hand-written JSX, so admin hide/reorder needs no new derivation layer:
+ * `label` is already the toggle's stable identity (`key={t.label}` in this
+ * file's own render loop), so the SAME `field-visibility.ts` mechanism
+ * `fieldOrder`/`customFields` already use for forms applies here unchanged
+ * — just filter-then-sort the array a caller was going to pass anyway.
+ *
+ * Deliberately does NOT support admin-DEFINED new toggles (no
+ * `customFields`-equivalent here): a toggle needs a real `onChange`
+ * handler tied to real behavior that only the owning view can supply — an
+ * admin cannot author one generically the way they can type a text field's
+ * label. Hide/reorder of the EXISTING, hand-coded set is the whole scope.
+ *
+ * `fields`/`fieldOrder` come straight from `useFieldVisibility(surfaceId)` —
+ * callers pass the same two values they already compute for any other
+ * SurfaceTemplate-driven part of the same view.
+ */
+export function applyToggleVisibility(
+  toggles: ListingToolbarToggle[],
+  fields: Record<string, boolean>,
+  fieldOrder: string[],
+): ListingToolbarToggle[] {
+  const visible = toggles.filter((t) => fields[t.label] !== false);
+  if (fieldOrder.length === 0) return visible;
+  const position = new Map(fieldOrder.map((label, i) => [label, i]));
+  return [...visible].sort(
+    (a, b) => (position.get(a.label) ?? Number.MAX_SAFE_INTEGER) - (position.get(b.label) ?? Number.MAX_SAFE_INTEGER),
+  );
+}
+
 export interface ListingToolbarLabels {
   search?: string;
   filters?: string;
