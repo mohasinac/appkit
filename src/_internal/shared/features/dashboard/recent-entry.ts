@@ -148,6 +148,28 @@ export type RecentEntryInput = DistributiveOmit<RecentEntry, "visitedAt">;
  * either), and `form` (an inline quick-edit, reusing `<QuickFormDrawer>`'s
  * `schema`+`fields` contract rendered in-card instead of in a drawer).
  *
+ * Phase 3B (2026-11-03, "Shopify/Webflow-like widget system") adds 3 more,
+ * for the widget-on-every-page rollout rather than the dashboard-only
+ * original set:
+ * - `image` — `mediaUrl` MUST be a `/media/<slug>` URL (Media Architecture
+ *   rule), never a raw Storage URL. `alt` is REQUIRED, not optional — an
+ *   image element with no alt text is exactly the a11y gap the rest of this
+ *   codebase's primitives already refuse to allow.
+ * - `richText` — `html` is pre-sanitized at authoring time by the same
+ *   `<RichTextEditor>` every other rich-text surface in this codebase uses;
+ *   this type does not re-sanitize, it trusts the editor that produced it.
+ * - `cta` — a real styled button, not a styled label. `variant` is loosely
+ *   typed `string` here on purpose, matching `DashboardCard.color`'s own
+ *   convention just below: this is a shared, UI-framework-agnostic type
+ *   file, so it must not import `Button.tsx`'s module-private
+ *   `UI_BUTTON.variants`. The real, closed variant check lives at the one
+ *   place that already imports `Button` — `DashboardCardRenderer.tsx`.
+ *
+ * `variant`/`mediaUrl`/`html` are all capped in the PATCH route's Zod schema
+ * (`appkit/src/_internal/shared/features/dashboard/cardElementSchema`-shaped
+ * validation in `src/app/api/admin/page-regions/[pageId]/route.ts`), not
+ * here — this file stays schema-free, matching every other type in it.
+ *
  * A card's `elements` array can mix several of the SAME kind — "multiple
  * charts, multiple toggles, multiple links" was the owner's own example —
  * which is exactly why this is a per-element union nested inside
@@ -163,7 +185,31 @@ export type CardElement =
   | { kind: "pdpSection"; productId: string; sectionId: PdpSectionId; label: string }
   | { kind: "text"; body: string }
   | { kind: "link"; href: string; label: string }
-  | { kind: "form"; formId: string; label: string };
+  | { kind: "form"; formId: string; label: string }
+  | { kind: "image"; mediaUrl: string; alt: string; label?: string; href?: string }
+  | { kind: "richText"; html: string; label?: string }
+  | { kind: "cta"; href: string; label: string; variant?: string };
+
+/**
+ * A card element's claimed width within its row — reuses `RowSpan`
+ * (`appkit/src/utils/pack-by-span.ts`), the same closed full/pair/third/
+ * quarter vocabulary `field-ui-meta.ts`'s `FieldRow` already uses for form
+ * fields. Owner's own instruction: *"support resize... on the widgets
+ * too"*, then correcting the first-draft idea of a free per-element
+ * stretch: *"the resize should be in breakpoints not on stretching as per
+ * needs"* — answered with the SAME discrete, breakpoint-driven packing
+ * forms already use (full width on mobile, N-up from `sm`/`lg`), via a
+ * `<Select>` of 4 options, never a drag handle or a continuous slider (see
+ * `DashboardCardEditPanel`).
+ *
+ * Keyed by element INDEX in a separate, optional `DashboardCard.spans` map
+ * rather than added to `CardElement` itself, so every existing stored card
+ * (none of which have ever had a span) continues to parse unchanged —
+ * absent means `"full"`, matching `packBySpan`'s own default for this
+ * caller (see that function's doc comment for why the default differs from
+ * forms').
+ */
+export type { RowSpan as CardElementSpan } from "../../../../utils/pack-by-span";
 
 /**
  * `DashboardCard` — the composable unit a user's dashboard landing is made
@@ -178,6 +224,20 @@ export interface DashboardCard {
   title?: string;
   color?: string;
   elements: CardElement[];
+  /**
+   * Optional per-element width override, keyed by the element's own index in
+   * `elements` — as a STRING key (`"0"`, `"1"`, …), not a number. JSON (and
+   * therefore both the Firestore document and the Zod schema validating the
+   * PATCH body) has no numeric object keys at the wire level; typing this
+   * `Record<number, …>` would make a perfectly valid `{ "0": "pair" }`
+   * payload fail a strict assignability check for a reason that is a
+   * TypeScript artifact, not a real data problem. Absent (the common case —
+   * every card before Phase 3B's widget-system rollout) means every element
+   * renders `"full"`, identical to today's single vertical `<Stack>`
+   * layout. A sparse map rather than a field on `CardElement` itself — see
+   * `CardElementSpan`'s own doc comment.
+   */
+  spans?: Record<string, CardElementSpan>;
   saved: boolean;
   createdAt: string;
   updatedAt: string;
