@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { FirestoreDocument } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
+import { getFieldVisibility } from "../../../_internal/server/features/forms/field-visibility";
+import { SectionVisibilityGate } from "../../shell/SectionVisibilityGate";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -521,9 +523,14 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
   const isGroupParent = p.isGroupParent === true;
   const groupTitle = typeof p.groupTitle === "string" ? p.groupTitle : undefined;
 
-  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups] = await Promise.all([
+  const [{ relatedItems, relatedByBrand, relatedByTags, relatedByStore }, groups, pdpSectionVisibility] = await Promise.all([
     computeRelatedItems(product),
     getGroupsWithItemsForProduct(product.id),
+    // Same shared "pdp-sections" surface as the standard-product detail
+    // page — ONE admin decision ("hide the gallery") applies across every
+    // listing type's own detail-page component, matching a template-level
+    // mental model rather than needing N separate per-type configs.
+    getFieldVisibility("pdp-sections"),
   ]);
 
   return (
@@ -563,9 +570,12 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
 
         <PreOrderDetailView
           renderGallery={() => (
-            <ProductGalleryClient images={images} video={productVideo} productName={title} />
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
+              <ProductGalleryClient images={images} video={productVideo} productName={title} />
+            </SectionVisibilityGate>
           )}
           renderInfo={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="info" initialVisible={pdpSectionVisibility.info !== false}>
             <PreOrderInfoSection
               title={title}
               productId={String(product.id)}
@@ -588,6 +598,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               safeSeller={safeSeller}
               storeHref={storeHref}
             />
+            </SectionVisibilityGate>
           )}
           renderSublistingSection={
             sublistingCategoryId
@@ -612,6 +623,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               : undefined
           }
           renderTabs={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="tabs" initialVisible={pdpSectionVisibility.tabs !== false}>
             <ProductTabsShell
               descriptionContent={
                 descriptionHtml ? (
@@ -629,8 +641,10 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               }
               customTabs={toCustomSectionTabs(p.customSections)}
             />
+            </SectionVisibilityGate>
           )}
           renderBuyBar={() => (
+            <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
             <PreOrderBuyBarPanel
               reserveTarget={reserveTarget}
               reservedCount={reservedCount}
@@ -644,6 +658,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               tags={tags}
               onReserveNow={onReserveNow}
             />
+            </SectionVisibilityGate>
           )}
           renderRelated={() => (
             <Stack gap="xl">
@@ -658,16 +673,20 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
                 productId={String(product.id)}
                 storeId={product.storeId ? String(product.storeId) : undefined}
               />
-              <GroupedListingsCarousel groups={groups} />
-              <RelatedItemsSection
-                relatedItems={relatedItems}
-                relatedByBrand={relatedByBrand}
-                relatedByTags={relatedByTags}
-                relatedByStore={relatedByStore}
-                categoryLabel={categoryName || category || undefined}
-                brandLabel={brand || undefined}
-                storeLabel={storeName || undefined}
-              />
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="grouped-listings" initialVisible={pdpSectionVisibility["grouped-listings"] !== false}>
+                <GroupedListingsCarousel groups={groups} />
+              </SectionVisibilityGate>
+              <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="related" initialVisible={pdpSectionVisibility.related !== false}>
+                <RelatedItemsSection
+                  relatedItems={relatedItems}
+                  relatedByBrand={relatedByBrand}
+                  relatedByTags={relatedByTags}
+                  relatedByStore={relatedByStore}
+                  categoryLabel={categoryName || category || undefined}
+                  brandLabel={brand || undefined}
+                  storeLabel={storeName || undefined}
+                />
+              </SectionVisibilityGate>
             </Stack>
           )}
         />
