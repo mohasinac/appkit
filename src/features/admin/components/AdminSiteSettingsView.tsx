@@ -105,6 +105,11 @@ import {
   siteSettingsWhatsappFormSchema,
   type SiteSettingsWhatsappFormValues,
 } from "../schemas/site-settings-whatsapp-form";
+import {
+  siteSettingsIntegrationsFormSchema,
+  type SiteSettingsIntegrationsFormValues,
+  MASKED_CREDENTIAL_FIELDS,
+} from "../schemas/site-settings-integrations-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -112,7 +117,7 @@ import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { swapFieldOrder } from "../../shell/field-ui-meta";
 import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import { useFormShellState, FormShellContext, applyZodIssues, FieldInput, FieldTextarea } from "../../../ui/forms";
-import { getBrandName, getBrandDomain, getBrandNoreplyEmail } from "../../../core/brand-resolver";
+import { getBrandName, getBrandDomain } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
@@ -200,6 +205,19 @@ const CARRIER_OPTIONS: SelectOption[] = [
   { label: "Delhivery", value: "delhivery" },
   { label: "Bluedart", value: "bluedart" },
   { label: "FedEx", value: "fedex" },
+];
+
+/*
+ * Shared by every gateway that has a sandbox/production split (PhonePe,
+ * Cashfree). Was `PHONEPE_ENVIRONMENT_OPTIONS`; renamed when the second
+ * gateway needed the identical two options, because a provider-named
+ * constant used by two providers is how a name stops meaning anything.
+ * Module scope for the same eager-evaluation reason as `CARRIER_OPTIONS`
+ * above (2026-11-04, Integrations tab migration).
+ */
+const GATEWAY_ENVIRONMENT_OPTIONS: SelectOption[] = [
+  { label: "Sandbox (test)", value: "sandbox" },
+  { label: "Production (live)", value: "production" },
 ];
 
 /** Single persistent save action for the whole settings form — every tab writes
@@ -831,40 +849,72 @@ export function AdminSiteSettingsView({
     [feesVisibilityFields, editMode, setFeesFieldVisible, feesFieldOrder, setFeesFieldOrder],
   );
 
-  // ⑧ Integrations
-  const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
-  const [razorpayKeySecret, setRazorpayKeySecret] = React.useState("");
-  const [razorpayWebhookSecret, setRazorpayWebhookSecret] = React.useState("");
-  const [cashfreeAppId, setCashfreeAppId] = React.useState("");
-  const [cashfreeSecretKey, setCashfreeSecretKey] = React.useState("");
-  const [cashfreeEnvironment, setCashfreeEnvironment] = React.useState("sandbox");
-  const [cashfreeWebhookSecret, setCashfreeWebhookSecret] = React.useState("");
-  const [phonepeClientId, setPhonepeClientId] = React.useState("");
-  const [phonepeClientSecret, setPhonepeClientSecret] = React.useState("");
-  const [phonepeClientVersion, setPhonepeClientVersion] = React.useState("1");
-  const [phonepeEnvironment, setPhonepeEnvironment] = React.useState("sandbox");
-  const [phonepeWebhookUsername, setPhonepeWebhookUsername] = React.useState("");
-  const [phonepeWebhookPassword, setPhonepeWebhookPassword] = React.useState("");
-  const [smtpHost, setSmtpHost] = React.useState("");
-  const [smtpPort, setSmtpPort] = React.useState("587");
-  const [smtpUser, setSmtpUser] = React.useState("");
-  const [smtpFrom, setSmtpFrom] = React.useState("");
-  const [googleMapsApiKey, setGoogleMapsApiKey] = React.useState("");
-  const [googlePlaceId, setGooglePlaceId] = React.useState("");
-  const [gaMeasurementId, setGaMeasurementId] = React.useState("");
-  const [fbPixelId, setFbPixelId] = React.useState("");
-  const [gtmContainerId, setGtmContainerId] = React.useState("");
-  // D7b — Microsoft Clarity. Blank keeps it OFF; there is no enable toggle, and
-  // the absence of an id IS the off state (the same shape as the other three).
-  const [clarityProjectId, setClarityProjectId] = React.useState("");
-  // Social platform API credentials (for Social Feed section)
-  const [metaPageAccessToken, setMetaPageAccessToken] = React.useState("");
-  const [metaPageId, setMetaPageId] = React.useState("");
-  const [tiktokClientKey, setTiktokClientKey] = React.useState("");
-  const [tiktokClientSecret, setTiktokClientSecret] = React.useState("");
-  const [tiktokAccessToken, setTiktokAccessToken] = React.useState("");
-  const [deviantartClientId, setDeviantartClientId] = React.useState("");
-  const [deviantartClientSecret, setDeviantartClientSecret] = React.useState("");
+  // ⑧ Integrations — fifteenth tab migrated to the Universal Template
+  // System, 2026-11-04, and the largest by field count (30). Thirty
+  // useState calls collapsed into one combined object.
+  //
+  // D7b — Microsoft Clarity. Blank keeps it OFF; there is no enable toggle,
+  // and the absence of an id IS the off state (the same shape as the other
+  // three analytics fields).
+  const [integrationsForm, setIntegrationsForm] = React.useState<SiteSettingsIntegrationsFormValues>({
+    razorpayKeyId: "", razorpayKeySecret: "", razorpayWebhookSecret: "",
+    cashfreeAppId: "", cashfreeSecretKey: "", cashfreeEnvironment: "sandbox", cashfreeWebhookSecret: "",
+    phonepeClientId: "", phonepeClientSecret: "", phonepeClientVersion: "1",
+    phonepeEnvironment: "sandbox", phonepeWebhookUsername: "", phonepeWebhookPassword: "",
+    smtpHost: "", smtpPort: "587", smtpUser: "", smtpFrom: "",
+    googleMapsApiKey: "", googlePlaceId: "",
+    gaMeasurementId: "", fbPixelId: "", gtmContainerId: "", clarityProjectId: "",
+    metaPageAccessToken: "", metaPageId: "",
+    tiktokClientKey: "", tiktokClientSecret: "", tiktokAccessToken: "",
+    deviantartClientId: "", deviantartClientSecret: "",
+  });
+  const {
+    fields: integrationsVisibilityFields,
+    setVisible: setIntegrationsFieldVisible,
+    fieldOrder: integrationsFieldOrder,
+    setFieldOrder: setIntegrationsFieldOrder,
+  } = useFieldVisibility("admin-site-settings-integrations");
+  const integrationsSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsIntegrationsFormValues>(siteSettingsIntegrationsFormSchema, {
+        renderers: {
+          ...Object.fromEntries(
+            MASKED_CREDENTIAL_FIELDS.map(({ name, label, placeholder }) => [
+              name,
+              ({ values, onChange }: {
+                values: SiteSettingsIntegrationsFormValues;
+                onChange: (partial: Partial<SiteSettingsIntegrationsFormValues>) => void;
+              }) => (
+                <MaskedInput
+                  label={label}
+                  value={(values[name] as string) ?? ""}
+                  onChange={(v) => onChange({ [name]: v } as Partial<SiteSettingsIntegrationsFormValues>)}
+                  placeholder={placeholder}
+                />
+              ),
+            ]),
+          ),
+        },
+        options: {
+          phonepeEnvironment: GATEWAY_ENVIRONMENT_OPTIONS,
+          cashfreeEnvironment: GATEWAY_ENVIRONMENT_OPTIONS,
+        },
+        fieldVisibility: integrationsVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setIntegrationsFieldVisible,
+        fieldOrder: integrationsFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setIntegrationsFieldOrder(
+            swapFieldOrder(
+              integrationsFieldOrder,
+              resolveFields(siteSettingsIntegrationsFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [integrationsVisibilityFields, editMode, setIntegrationsFieldVisible, integrationsFieldOrder, setIntegrationsFieldOrder],
+  );
 
   // ⑨ Shipping (Payment methods + Shipping Defaults + Seller shipping charge
   // defaults) — tenth tab migrated to the Universal Template System,
@@ -1320,36 +1370,38 @@ export function AdminSiteSettingsView({
       gstAddress: s.gst?.address ?? "",
     });
 
-    setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
-    setRazorpayKeySecret(s.credentialsMasked?.razorpayKeySecret ?? "");
-    setRazorpayWebhookSecret(s.credentialsMasked?.razorpayWebhookSecret ?? "");
-    setCashfreeAppId(s.credentialsMasked?.cashfreeAppId ?? "");
-    setCashfreeSecretKey(s.credentialsMasked?.cashfreeSecretKey ?? "");
-    setCashfreeEnvironment(s.credentialsMasked?.cashfreeEnvironment ?? "sandbox");
-    setCashfreeWebhookSecret(s.credentialsMasked?.cashfreeWebhookSecret ?? "");
-    setPhonepeClientId(s.credentialsMasked?.phonepeClientId ?? "");
-    setPhonepeClientSecret(s.credentialsMasked?.phonepeClientSecret ?? "");
-    setPhonepeClientVersion(s.credentialsMasked?.phonepeClientVersion ?? "1");
-    setPhonepeEnvironment(s.credentialsMasked?.phonepeEnvironment ?? "sandbox");
-    setPhonepeWebhookUsername(s.credentialsMasked?.phonepeWebhookUsername ?? "");
-    setPhonepeWebhookPassword(s.credentialsMasked?.phonepeWebhookPassword ?? "");
-    setGoogleMapsApiKey(s.credentialsMasked?.googleMapsApiKey ?? "");
-    setGooglePlaceId(s.credentialsMasked?.googlePlaceId ?? "");
-    setSmtpHost(s.emailSettings?.host ?? "");
-    setSmtpPort(String(s.emailSettings?.port ?? 587));
-    setSmtpUser(s.emailSettings?.user ?? "");
-    setSmtpFrom(s.emailSettings?.fromAddress ?? "");
-    setGaMeasurementId(s.integrations?.googleAnalyticsId ?? "");
-    setFbPixelId(s.integrations?.facebookPixelId ?? "");
-    setGtmContainerId(s.integrations?.gtmContainerId ?? "");
-    setClarityProjectId(s.integrations?.clarityProjectId ?? "");
-    setMetaPageAccessToken(s.credentialsMasked?.metaPageAccessToken ?? "");
-    setMetaPageId(s.credentialsMasked?.metaPageId ?? "");
-    setTiktokClientKey(s.credentialsMasked?.tiktokClientKey ?? "");
-    setTiktokClientSecret(s.credentialsMasked?.tiktokClientSecret ?? "");
-    setTiktokAccessToken(s.credentialsMasked?.tiktokAccessToken ?? "");
-    setDeviantartClientId(s.credentialsMasked?.deviantartClientId ?? "");
-    setDeviantartClientSecret(s.credentialsMasked?.deviantartClientSecret ?? "");
+    setIntegrationsForm({
+      razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
+      razorpayKeySecret: s.credentialsMasked?.razorpayKeySecret ?? "",
+      razorpayWebhookSecret: s.credentialsMasked?.razorpayWebhookSecret ?? "",
+      cashfreeAppId: s.credentialsMasked?.cashfreeAppId ?? "",
+      cashfreeSecretKey: s.credentialsMasked?.cashfreeSecretKey ?? "",
+      cashfreeEnvironment: s.credentialsMasked?.cashfreeEnvironment ?? "sandbox",
+      cashfreeWebhookSecret: s.credentialsMasked?.cashfreeWebhookSecret ?? "",
+      phonepeClientId: s.credentialsMasked?.phonepeClientId ?? "",
+      phonepeClientSecret: s.credentialsMasked?.phonepeClientSecret ?? "",
+      phonepeClientVersion: s.credentialsMasked?.phonepeClientVersion ?? "1",
+      phonepeEnvironment: s.credentialsMasked?.phonepeEnvironment ?? "sandbox",
+      phonepeWebhookUsername: s.credentialsMasked?.phonepeWebhookUsername ?? "",
+      phonepeWebhookPassword: s.credentialsMasked?.phonepeWebhookPassword ?? "",
+      googleMapsApiKey: s.credentialsMasked?.googleMapsApiKey ?? "",
+      googlePlaceId: s.credentialsMasked?.googlePlaceId ?? "",
+      smtpHost: s.emailSettings?.host ?? "",
+      smtpPort: String(s.emailSettings?.port ?? 587),
+      smtpUser: s.emailSettings?.user ?? "",
+      smtpFrom: s.emailSettings?.fromAddress ?? "",
+      gaMeasurementId: s.integrations?.googleAnalyticsId ?? "",
+      fbPixelId: s.integrations?.facebookPixelId ?? "",
+      gtmContainerId: s.integrations?.gtmContainerId ?? "",
+      clarityProjectId: s.integrations?.clarityProjectId ?? "",
+      metaPageAccessToken: s.credentialsMasked?.metaPageAccessToken ?? "",
+      metaPageId: s.credentialsMasked?.metaPageId ?? "",
+      tiktokClientKey: s.credentialsMasked?.tiktokClientKey ?? "",
+      tiktokClientSecret: s.credentialsMasked?.tiktokClientSecret ?? "",
+      tiktokAccessToken: s.credentialsMasked?.tiktokAccessToken ?? "",
+      deviantartClientId: s.credentialsMasked?.deviantartClientId ?? "",
+      deviantartClientSecret: s.credentialsMasked?.deviantartClientSecret ?? "",
+    });
 
     /*
      * 🛑 The HYDRATE leg, and skipping it is the live risk this file's own
@@ -1609,28 +1661,28 @@ export function AdminSiteSettingsView({
       // "" field, so an unedited tab never overwrites a real secret with its
       // own masked display string.
       credentials: {
-        razorpayKeyId: maskedOrReal("razorpayKeyId", razorpayKeyId),
-        razorpayKeySecret: maskedOrReal("razorpayKeySecret", razorpayKeySecret),
-        razorpayWebhookSecret: maskedOrReal("razorpayWebhookSecret", razorpayWebhookSecret),
-        cashfreeAppId: maskedOrReal("cashfreeAppId", cashfreeAppId),
-        cashfreeSecretKey: maskedOrReal("cashfreeSecretKey", cashfreeSecretKey),
-        cashfreeEnvironment: maskedOrReal("cashfreeEnvironment", cashfreeEnvironment),
-        cashfreeWebhookSecret: maskedOrReal("cashfreeWebhookSecret", cashfreeWebhookSecret),
-        phonepeClientId: maskedOrReal("phonepeClientId", phonepeClientId),
-        phonepeClientSecret: maskedOrReal("phonepeClientSecret", phonepeClientSecret),
-        phonepeClientVersion: maskedOrReal("phonepeClientVersion", phonepeClientVersion),
-        phonepeEnvironment: maskedOrReal("phonepeEnvironment", phonepeEnvironment),
-        phonepeWebhookUsername: maskedOrReal("phonepeWebhookUsername", phonepeWebhookUsername),
-        phonepeWebhookPassword: maskedOrReal("phonepeWebhookPassword", phonepeWebhookPassword),
-        googleMapsApiKey: maskedOrReal("googleMapsApiKey", googleMapsApiKey),
-        googlePlaceId: maskedOrReal("googlePlaceId", googlePlaceId),
-        metaPageAccessToken: maskedOrReal("metaPageAccessToken", metaPageAccessToken),
-        metaPageId: maskedOrReal("metaPageId", metaPageId),
-        tiktokClientKey: maskedOrReal("tiktokClientKey", tiktokClientKey),
-        tiktokClientSecret: maskedOrReal("tiktokClientSecret", tiktokClientSecret),
-        tiktokAccessToken: maskedOrReal("tiktokAccessToken", tiktokAccessToken),
-        deviantartClientId: maskedOrReal("deviantartClientId", deviantartClientId),
-        deviantartClientSecret: maskedOrReal("deviantartClientSecret", deviantartClientSecret),
+        razorpayKeyId: maskedOrReal("razorpayKeyId", integrationsForm.razorpayKeyId ?? ""),
+        razorpayKeySecret: maskedOrReal("razorpayKeySecret", integrationsForm.razorpayKeySecret ?? ""),
+        razorpayWebhookSecret: maskedOrReal("razorpayWebhookSecret", integrationsForm.razorpayWebhookSecret ?? ""),
+        cashfreeAppId: maskedOrReal("cashfreeAppId", integrationsForm.cashfreeAppId ?? ""),
+        cashfreeSecretKey: maskedOrReal("cashfreeSecretKey", integrationsForm.cashfreeSecretKey ?? ""),
+        cashfreeEnvironment: maskedOrReal("cashfreeEnvironment", integrationsForm.cashfreeEnvironment ?? ""),
+        cashfreeWebhookSecret: maskedOrReal("cashfreeWebhookSecret", integrationsForm.cashfreeWebhookSecret ?? ""),
+        phonepeClientId: maskedOrReal("phonepeClientId", integrationsForm.phonepeClientId ?? ""),
+        phonepeClientSecret: maskedOrReal("phonepeClientSecret", integrationsForm.phonepeClientSecret ?? ""),
+        phonepeClientVersion: maskedOrReal("phonepeClientVersion", integrationsForm.phonepeClientVersion ?? ""),
+        phonepeEnvironment: maskedOrReal("phonepeEnvironment", integrationsForm.phonepeEnvironment ?? ""),
+        phonepeWebhookUsername: maskedOrReal("phonepeWebhookUsername", integrationsForm.phonepeWebhookUsername ?? ""),
+        phonepeWebhookPassword: maskedOrReal("phonepeWebhookPassword", integrationsForm.phonepeWebhookPassword ?? ""),
+        googleMapsApiKey: maskedOrReal("googleMapsApiKey", integrationsForm.googleMapsApiKey ?? ""),
+        googlePlaceId: maskedOrReal("googlePlaceId", integrationsForm.googlePlaceId ?? ""),
+        metaPageAccessToken: maskedOrReal("metaPageAccessToken", integrationsForm.metaPageAccessToken ?? ""),
+        metaPageId: maskedOrReal("metaPageId", integrationsForm.metaPageId ?? ""),
+        tiktokClientKey: maskedOrReal("tiktokClientKey", integrationsForm.tiktokClientKey ?? ""),
+        tiktokClientSecret: maskedOrReal("tiktokClientSecret", integrationsForm.tiktokClientSecret ?? ""),
+        tiktokAccessToken: maskedOrReal("tiktokAccessToken", integrationsForm.tiktokAccessToken ?? ""),
+        deviantartClientId: maskedOrReal("deviantartClientId", integrationsForm.deviantartClientId ?? ""),
+        deviantartClientSecret: maskedOrReal("deviantartClientSecret", integrationsForm.deviantartClientSecret ?? ""),
         whatsappPhoneNumberId: maskedOrReal("whatsappPhoneNumberId", whatsappForm.waPhoneNumberId ?? ""),
         whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", whatsappForm.waCloudApiToken ?? ""),
         whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", whatsappForm.waAdminNotifyNumbers ?? ""),
@@ -1644,7 +1696,10 @@ export function AdminSiteSettingsView({
         resendApiKey: maskedOrReal("resendApiKey", notificationsForm.resendApiKey ?? ""),
       },
       emailSettings: {
-        host: smtpHost, port: Number(smtpPort), user: smtpUser, fromAddress: smtpFrom,
+        host: integrationsForm.smtpHost,
+        port: Number(integrationsForm.smtpPort),
+        user: integrationsForm.smtpUser,
+        fromAddress: integrationsForm.smtpFrom,
         fromEmail: notificationsForm.notifFromEmail, fromName: notificationsForm.notifFromName,
         dailyDigest: {
           enabled: notificationsForm.digestEnabled,
@@ -1666,7 +1721,12 @@ export function AdminSiteSettingsView({
           sms: 50,
         },
       },
-      integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
+      integrations: {
+        googleAnalyticsId: integrationsForm.gaMeasurementId,
+        facebookPixelId: integrationsForm.fbPixelId,
+        gtmContainerId: integrationsForm.gtmContainerId,
+        clarityProjectId: integrationsForm.clarityProjectId,
+      },
       shipping: {
         freeShippingThreshold: shippingForm.freeShippingThreshold,
         defaultCarrier: shippingForm.defaultCarrier,
@@ -1765,16 +1825,6 @@ export function AdminSiteSettingsView({
     { label: "Gradient", value: "gradient" },
     { label: "Image", value: "image" },
     { label: "Video", value: "video" },
-  ];
-  /*
-   * Shared by every gateway that has a sandbox/production split (PhonePe,
-   * Cashfree). Was `PHONEPE_ENVIRONMENT_OPTIONS`; renamed when the second
-   * gateway needed the identical two options, because a provider-named
-   * constant used by two providers is how a name stops meaning anything.
-   */
-  const GATEWAY_ENVIRONMENT_OPTIONS = [
-    { label: "Sandbox (test)", value: "sandbox" },
-    { label: "Production (live)", value: "production" },
   ];
   /*
    * 🛑 DERIVED. This was a hand-written literal and it had drifted in both
@@ -2320,130 +2370,16 @@ export function AdminSiteSettingsView({
             </SettingsTabForm>
           </TabsContent>
 
-          {/* ⑧ Integrations & Keys */}
+          {/* ⑧ Integrations & Keys — fifteenth tab migrated to the Universal Template System. */}
           <TabsContent value="integrations">
-            <SettingsTabForm id="integrations" label="Integrations">
-              <Text size="xs" color="muted">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Razorpay</Text>
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="Razorpay Key ID" value={razorpayKeyId} onChange={setRazorpayKeyId} placeholder="rzp_test_… / rzp_live_…" />
-                  <MaskedInput label="Razorpay Key Secret" value={razorpayKeySecret} onChange={setRazorpayKeySecret} placeholder="••••••••" />
-                  <MaskedInput label="Razorpay Webhook Secret" value={razorpayWebhookSecret} onChange={setRazorpayWebhookSecret} placeholder="••••••••" />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">PhonePe</Text>
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="PhonePe Client ID" value={phonepeClientId} onChange={setPhonepeClientId} placeholder="MERCHANTID_…" />
-                  <MaskedInput label="PhonePe Client Secret" value={phonepeClientSecret} onChange={setPhonepeClientSecret} placeholder="••••••••" />
-                  <Input label="PhonePe Client Version" value={phonepeClientVersion} onChange={(e) => setPhonepeClientVersion(e.target.value)} placeholder="1" />
-                  <Select label="PhonePe Environment" options={GATEWAY_ENVIRONMENT_OPTIONS} value={phonepeEnvironment} onValueChange={setPhonepeEnvironment} />
-                  <MaskedInput label="PhonePe Webhook Username" value={phonepeWebhookUsername} onChange={setPhonepeWebhookUsername} placeholder="••••••••" />
-                  <MaskedInput label="PhonePe Webhook Password" value={phonepeWebhookPassword} onChange={setPhonepeWebhookPassword} placeholder="••••••••" />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Cashfree Payments</Text>
-                {/*
-                  🛑 The App ID is NOT publishable, unlike Razorpay's Key ID —
-                  Cashfree hands the browser a per-order payment_session_id, so
-                  no Cashfree credential ever leaves the server. Both fields are
-                  masked for that reason.
-                */}
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="Cashfree App ID" value={cashfreeAppId} onChange={setCashfreeAppId} placeholder="••••••••" />
-                  <MaskedInput label="Cashfree Secret Key" value={cashfreeSecretKey} onChange={setCashfreeSecretKey} placeholder="••••••••" />
-                  {/*
-                    🛑 This Select shows NO selection once a value has been
-                    stored, and that is the safe behaviour — do not "fix" it by
-                    defaulting the hydrate to "sandbox".
-
-                    Everything in `credentials` is masked generically, and
-                    `maskSecret` returns "****" for anything under 12 chars — so
-                    both "sandbox" and "production" come back as "****", which
-                    matches no option. Because the state then equals
-                    `originalMaskedRef`, `maskedOrReal` sends "" and the stored
-                    value is PRESERVED.
-
-                    Defaulting the display to "sandbox" instead would make the
-                    state differ from the mask, so the next save of any tab would
-                    write "sandbox" over a stored "production" — i.e. silently
-                    point a live gateway at the sandbox API. Same shape as the
-                    saved-but-never-hydrated hazard documented on
-                    `SiteSettingsDocument.contact.upiVpa`. PhonePe's Environment
-                    select above behaves identically, for the same reason.
-                  */}
-                  <Select label="Cashfree Environment" options={GATEWAY_ENVIRONMENT_OPTIONS} value={cashfreeEnvironment} onValueChange={setCashfreeEnvironment} />
-                  <MaskedInput label="Cashfree Webhook Secret" value={cashfreeWebhookSecret} onChange={setCashfreeWebhookSecret} placeholder="••••••••" />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">SMTP / Email</Text>
-                <Grid cols={2} gap="md">
-                  <Input label="SMTP host" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} placeholder="smtp.sendgrid.net" />
-                  <Input label="SMTP port" value={smtpPort} onChange={(e) => setSmtpPort(e.target.value)} type="number" placeholder="587" />
-                  <Input label="SMTP user" value={smtpUser} onChange={(e) => setSmtpUser(e.target.value)} placeholder="apikey" />
-                </Grid>
-                <Input label="From address" value={smtpFrom} onChange={(e) => setSmtpFrom(e.target.value)} placeholder={getBrandNoreplyEmail()} type="email" />
-                <Text size="xs" color="muted">
-                  Transactional email is delivered through Resend — set the Resend API key below.
-                  These SMTP fields are stored but not currently used for delivery.
-                </Text>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Google Places (store reviews)</Text>
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="Google Maps API key" value={googleMapsApiKey} onChange={setGoogleMapsApiKey} placeholder="••••••••" />
-                  <Input label="Default Google Place ID" value={googlePlaceId} onChange={(e) => setGooglePlaceId(e.target.value)} placeholder="ChIJ…" />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Analytics & Tracking</Text>
-                <Grid cols={2} gap="md">
-                  <Input label="Google Analytics ID" value={gaMeasurementId} onChange={(e) => setGaMeasurementId(e.target.value)} placeholder="G-XXXXXXXXXX" />
-                  <Input label="Facebook Pixel ID" value={fbPixelId} onChange={(e) => setFbPixelId(e.target.value)} placeholder="XXXXXXXXXXXXXXXX" />
-                  <Input label="GTM Container ID" value={gtmContainerId} onChange={(e) => setGtmContainerId(e.target.value)} placeholder="GTM-XXXXXXX" />
-                  {/* 🛑 The help text states the masking, because an admin
-                      pasting an id here is switching on SESSION RECORDING on a
-                      site with no consent gate. It ships masked (no text, no
-                      input values) and the field should say so where the
-                      decision is made, not only in a code comment. */}
-                  <Input
-                    label="Microsoft Clarity Project ID"
-                    value={clarityProjectId}
-                    onChange={(e) => setClarityProjectId(e.target.value)}
-                    placeholder="abcdefghij"
-                    helperText="Heatmaps and session replay. Recording is strictly masked — no text or input values are captured. Leave blank to keep Clarity off."
-                  />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">Meta (Instagram &amp; Facebook Social Feed)</Text>
-                <Text size="xs" color="muted">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</Text>
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="Page Access Token" value={metaPageAccessToken} onChange={setMetaPageAccessToken} placeholder="EAAxxxxxxx…" />
-                  <Input label="Page ID (or handle)" value={metaPageId} onChange={(e) => setMetaPageId(e.target.value)} placeholder="yourbrand" />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">TikTok for Developers (Social Feed)</Text>
-                <Text size="xs" color="muted">Client credentials + long-lived access token from TikTok for Developers. Used to list your account's public videos.</Text>
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="Client Key" value={tiktokClientKey} onChange={setTiktokClientKey} placeholder="aw…" />
-                  <MaskedInput label="Client Secret" value={tiktokClientSecret} onChange={setTiktokClientSecret} placeholder="••••••••" />
-                  <MaskedInput label="Access Token (long-lived)" value={tiktokAccessToken} onChange={setTiktokAccessToken} placeholder="••••••••" />
-                </Grid>
-              </Stack>
-              <Stack gap="sm">
-                <Text size="sm" weight="medium" color="muted">DeviantArt OAuth2 (Social Feed)</Text>
-                <Text size="xs" color="muted">Client credentials for DeviantArt gallery fetching (client-credentials OAuth2 flow — no user login required).</Text>
-                <Grid cols={2} gap="md">
-                  <MaskedInput label="Client ID" value={deviantartClientId} onChange={setDeviantartClientId} placeholder="1234" />
-                  <MaskedInput label="Client Secret" value={deviantartClientSecret} onChange={setDeviantartClientSecret} placeholder="••••••••" />
-                </Grid>
-              </Stack>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsIntegrationsFormValues>
+              sections={integrationsSections}
+              values={integrationsForm}
+              onChange={(partial) => setIntegrationsForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsIntegrationsFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑨ Shipping Defaults — tenth tab migrated to the Universal Template System. */}
