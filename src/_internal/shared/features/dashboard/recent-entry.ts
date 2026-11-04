@@ -120,6 +120,23 @@ export type AdminRowResource =
  */
 export type PdpSectionId = "gallery" | "info" | "actions" | "tabs" | "related";
 
+/**
+ * Closed vocabulary for `functionalSlot` elements (below) — a REAL,
+ * developer-wired functional control (not free-floating admin content) that
+ * a composed card can opt into. Grows only by a code change, same as
+ * `AdminRowResource`/`PdpSectionId` above — never admin-typed input, because
+ * the id is the ONLY thing standing between an admin picking from a short,
+ * pre-vetted list and an admin naming arbitrary code to execute.
+ *
+ * `"pdp-offer-action"` is the one entry as of 2026-11-05 — the standard
+ * PDP's `renderOfferAction` slot (the "Make an Offer" button). Deliberately
+ * NOT `renderPrimaryActions` (Buy Now/Add to Cart/Wishlist) as the pilot: a
+ * misconfigured or removed offer-action override leaves the PRIMARY purchase
+ * path untouched, where a primary-actions override would not. See the
+ * `functionalSlot` doc comment below for why this exists at all.
+ */
+export type FunctionalSlotId = "pdp-offer-action";
+
 /** Per-user recently-visited/used cards, namespaced by `"{portal}:hub"` scope — same convention as `hiddenHubCards`. */
 export type RecentlyVisitedMap = Record<string, RecentEntry[]>;
 
@@ -201,7 +218,33 @@ export type CardElement =
   | { kind: "form"; formId: string; label: string; context?: string }
   | { kind: "image"; mediaUrl: string; alt: string; label?: string; href?: string }
   | { kind: "richText"; html: string; label?: string }
-  | { kind: "cta"; href: string; label: string; variant?: string };
+  | { kind: "cta"; href: string; label: string; variant?: string }
+  /**
+   * `functionalSlot` — added 2026-11-05 (owner's direct instruction, after
+   * investigating the PDP widget-ization item: "build a new, riskier card
+   * kind for functional slots... so an admin could genuinely replace the
+   * offer/buy buttons at runtime"). STRUCTURALLY DIFFERENT from every other
+   * kind above: every other kind either carries its own content inline
+   * (`text.body`, `image.mediaUrl`, `cta.href`) or resolves an id through a
+   * STATIC, context-free lookup (`adminRow` → a URL template,
+   * `pdpSection`/`productCard` → a route, never live price/stock/session
+   * state). `functionalSlot` is the first kind whose rendered content is
+   * supplied by the PAGE ITSELF at render time, through a page-specific
+   * `functionalSlots` map threaded down from whatever mounts
+   * `AdminComposableRegion` for that surface — see `DashboardCardRenderer.tsx`'s
+   * `DashboardCardElementBody` for the resolution, and `ProductDetailPageView.tsx`
+   * for the one real producer. An admin can only ever pick WHICH closed,
+   * pre-vetted `slotId` to place and WHERE — never author or alter what that
+   * slot actually renders.
+   *
+   * Confirmed with the owner (2026-11-05) that this is TEMPLATE-WIDE, not
+   * per-product: `AdminComposableRegion`'s `pageId` is a single static
+   * literal shared by every product of a listing type (`"products-slug"`,
+   * not `"products-slug-${slug}"`), so placing this element affects the
+   * offer-action slot on EVERY standard product simultaneously, not one —
+   * the same scope every other card on these pages already has.
+   */
+  | { kind: "functionalSlot"; slotId: FunctionalSlotId; label: string };
 
 /**
  * A card element's claimed width within its row — reuses `RowSpan`

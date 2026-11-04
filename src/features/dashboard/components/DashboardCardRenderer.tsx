@@ -19,7 +19,8 @@ import { Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { Toggle } from "../../../ui/components/Toggle";
 import { useToastSafe } from "../../../ui/components/toast-context";
-import type { CardElement, CardElementSpan, DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { CardElement, CardElementSpan, DashboardCard, FunctionalSlotId } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { ReactNode } from "react";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ROW_HREF_BY_RESOURCE } from "../../../_internal/shared/features/admin/row-widget-resources";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -68,6 +69,17 @@ interface SettingPreviewLookup {
   value: string;
   href: string;
 }
+
+/**
+ * The live `ReactNode` a `functionalSlot` element resolves to — supplied by
+ * whatever mounts `AdminComposableRegion` for a given surface (the only
+ * producer today is `ProductDetailPageView`, via its own `renderOfferAction`
+ * closure). Absent/missing key means the composed region is mounted on a
+ * surface that doesn't declare this slot (or doesn't currently meet the
+ * slot's own eligibility conditions, e.g. offers disabled for this product)
+ * — rendered as an honest "not available here" note, never a broken control.
+ */
+type FunctionalSlotLookup = Partial<Record<FunctionalSlotId, ReactNode>>;
 
 /**
  * 9H's color picker — a small, curated subset of `SURFACE_MAP`, never a raw
@@ -257,6 +269,13 @@ export interface DashboardCardViewProps {
    * sees exactly what a buyer/seller sees" guarantee.
    */
   editable?: boolean;
+  /**
+   * Live content for any `functionalSlot` elements this card holds — see
+   * `FunctionalSlotLookup`'s own doc comment. Defaults to `{}` (every
+   * existing caller predates this kind); a `functionalSlot` element with no
+   * matching key renders its "not available here" fallback, never throws.
+   */
+  functionalSlots?: FunctionalSlotLookup;
 }
 
 export function DashboardCardView({
@@ -268,6 +287,7 @@ export function DashboardCardView({
   onRemove,
   onUpdate,
   editable = true,
+  functionalSlots = {},
 }: DashboardCardViewProps) {
   const [editing, setEditing] = useState(false);
   const baseClass =
@@ -302,6 +322,7 @@ export function DashboardCardView({
           charts={charts}
           settingsPreviews={settingsPreviews}
           onToggle={onToggle}
+          functionalSlots={functionalSlots}
         />
       ) : (
         // Packed by span, breakpoint-driven — full width on mobile, N-up
@@ -326,6 +347,7 @@ export function DashboardCardView({
                   charts={charts}
                   settingsPreviews={settingsPreviews}
                   onToggle={onToggle}
+                  functionalSlots={functionalSlots}
                 />
               ))}
             </FormGroup>
@@ -429,6 +451,15 @@ function DashboardCardEditPanel({
     // comment explains why) — a direct add, not a picker. Widen to a
     // `<Select>` of `formId`s the moment a second entry exists.
     onUpdate({ elements: [...card.elements, { kind: "form", formId: "quick-add-faq", label: "Quick add FAQ" }] });
+  }
+  function addFunctionalSlotElement() {
+    // Same reasoning as `addFormElement` — exactly one `FunctionalSlotId`
+    // exists today (`recent-entry.ts`'s own doc comment), so this is a
+    // direct add rather than a picker. Widen to a `<Select>` the moment a
+    // second slot id exists.
+    onUpdate({
+      elements: [...card.elements, { kind: "functionalSlot", slotId: "pdp-offer-action", label: "Make an Offer button" }],
+    });
   }
 
   return (
@@ -546,6 +577,21 @@ function DashboardCardEditPanel({
                       value={el.label}
                       onChange={(value) => updateElement(i, { label: value })}
                     />
+                  ) : el.kind === "functionalSlot" ? (
+                    // `slotId` stays fixed — the admin picks a label only.
+                    // What actually renders is entirely developer-wired (see
+                    // `recent-entry.ts`'s `functionalSlot` doc comment); this
+                    // panel deliberately gives no way to point it at
+                    // anything else.
+                    <Stack gap="xs">
+                      <Text size="xs" color="muted">Functional slot: {el.slotId}</Text>
+                      <FieldInput
+                        name={`card-element-${card.id}-${i}-label`}
+                        label="Label"
+                        value={el.label}
+                        onChange={(value) => updateElement(i, { label: value })}
+                      />
+                    </Stack>
                   ) : (
                     <Text size="sm" color="muted">{el.label} ({el.kind})</Text>
                   )}
@@ -587,6 +633,9 @@ function DashboardCardEditPanel({
           <Button variant="ghost" size="sm" type="button" onClick={addFormElement}>
             <Icon name="create" size="sm" /> Quick form
           </Button>
+          <Button variant="ghost" size="sm" type="button" onClick={addFunctionalSlotElement}>
+            <Icon name="create" size="sm" /> Functional slot
+          </Button>
         </Row>
       </Div>
       {isUploading && (
@@ -605,12 +654,14 @@ function DashboardCardElementBody({
   charts,
   settingsPreviews,
   onToggle,
+  functionalSlots = {},
 }: {
   element: CardElement;
   toggles: ToggleLookup[];
   charts: ChartLookup[];
   settingsPreviews: SettingPreviewLookup[];
   onToggle: (toggleId: string, label: string) => Promise<void>;
+  functionalSlots?: FunctionalSlotLookup;
 }) {
   if (element.kind === "toggle") {
     const live = toggles.find((t) => t.toggleId === element.toggleId);
@@ -664,6 +715,14 @@ function DashboardCardElementBody({
       </TextLink>
     ) : (
       <Text weight="semibold">{element.label}</Text>
+    );
+  }
+  if (element.kind === "functionalSlot") {
+    const live = functionalSlots[element.slotId];
+    return live ? (
+      <>{live}</>
+    ) : (
+      <Text size="sm" color="muted">{element.label} (not available on this page)</Text>
     );
   }
   if (element.kind === "productCard") {

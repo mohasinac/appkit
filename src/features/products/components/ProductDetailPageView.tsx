@@ -500,6 +500,39 @@ export async function ProductDetailPageView({
       ? (p.minOfferPercent as number)
       : DEFAULT_MIN_OFFER_PERCENT;
 
+  /*
+   * `functionalSlot` (2026-11-05) — hoisted OUTSIDE both the fixed-position
+   * render below and the `AdminComposableRegion` mount, since an admin can
+   * now compose a `{kind:"functionalSlot", slotId:"pdp-offer-action"}` card
+   * that takes over this position instead. Computed once, consumed twice:
+   * the fixed slot renders it only when NOT overridden (so the control never
+   * doubles up), and the composed region always receives it so a
+   * `functionalSlot` card has something real to resolve to. `pageRegionCards`
+   * is template-wide for this listing type (see `recent-entry.ts`'s
+   * `functionalSlot` doc comment) — this check and this render use the same
+   * eligibility condition the fixed position always has, so an admin cannot
+   * surface an offer control for a product that isn't actually offer-eligible.
+   */
+  const offerActionNode =
+    allowOffers && offerableType && price !== null
+      ? renderOfferAction?.({
+          productId: product.id,
+          price,
+          currency,
+          minOfferPercent,
+          listingStoreId: typeof p.storeId === "string" ? (p.storeId as string) : undefined,
+          bounds: resolveOfferBounds({
+            listingType: normalizeListingType(p as never),
+            listedPrice: price,
+            minOfferPercent,
+            allowOffers,
+          }),
+        })
+      : undefined;
+  const hasOfferSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-offer-action"),
+  );
+
   const shippingInfo =
     typeof p.shippingInfo === "string" ? (p.shippingInfo as string) : null;
   const returnPolicy =
@@ -1116,20 +1149,7 @@ export async function ProductDetailPageView({
                     </Button>
                   </>
                 )}
-                {allowOffers && offerableType && price !== null && renderOfferAction?.({
-                  productId: product.id,
-                  price,
-                  currency,
-                  minOfferPercent,
-                  listingStoreId:
-                    typeof p.storeId === "string" ? (p.storeId as string) : undefined,
-                  bounds: resolveOfferBounds({
-                    listingType: normalizeListingType(p as never),
-                    listedPrice: price,
-                    minOfferPercent,
-                    allowOffers,
-                  }),
-                })}
+                {!hasOfferSlotOverride && offerActionNode}
               </Stack>
 
               {/*
@@ -1387,7 +1407,11 @@ export async function ProductDetailPageView({
           )}
         />
 
-        <AdminComposableRegion pageId="products-slug" initialCards={pageRegionCards} />
+        <AdminComposableRegion
+          pageId="products-slug"
+          initialCards={pageRegionCards}
+          functionalSlots={{ "pdp-offer-action": offerActionNode }}
+        />
 
         {/* Mobile actions registered via useBottomActions() in ProductDetailActions variant="mobile" */}
         {renderPrimaryActions

@@ -7,7 +7,8 @@ import { Text } from "../../../ui/components/Typography";
 import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import { usePageRegion } from "../hooks/usePageRegion";
 import { DashboardCardView } from "./DashboardCardRenderer";
-import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { DashboardCard, FunctionalSlotId } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { ReactNode } from "react";
 import { isContentVisible, type ContentFlagSnapshot } from "../../../_internal/shared/features/content-tags/registry";
 
 export interface AdminComposableRegionProps {
@@ -30,6 +31,15 @@ export interface AdminComposableRegionProps {
    * unconditionally, identical to before this prop existed.
    */
   flagSnapshot?: ContentFlagSnapshot | null;
+  /**
+   * Live content for any `functionalSlot` cards composed into this region —
+   * see `recent-entry.ts`'s `functionalSlot` doc comment and
+   * `FunctionalSlotLookup` in `DashboardCardRenderer.tsx`. Omit on a page
+   * that declares no functional slots; a `functionalSlot` element with no
+   * matching key renders its own "not available here" fallback rather than
+   * breaking.
+   */
+  functionalSlots?: Partial<Record<FunctionalSlotId, ReactNode>>;
 }
 
 /**
@@ -47,7 +57,7 @@ export interface AdminComposableRegionProps {
  * shift. Mount this anywhere a page's template has room for admin-curated
  * content; it does not replace or wrap the page's own existing content.
  */
-export function AdminComposableRegion({ pageId, initialCards, title, flagSnapshot }: AdminComposableRegionProps) {
+export function AdminComposableRegion({ pageId, initialCards, title, flagSnapshot, functionalSlots }: AdminComposableRegionProps) {
   const { editMode } = useEditMode();
   const { cards: allCards, createCard, removeCard, updateCard } = usePageRegion(pageId, initialCards);
 
@@ -96,6 +106,7 @@ export function AdminComposableRegion({ pageId, initialCards, title, flagSnapsho
                   onToggle={async () => {}}
                   onRemove={() => removeCard(card.id)}
                   onUpdate={(patch) => updateCard(card.id, patch)}
+                  functionalSlots={functionalSlots}
                 />
               </Div>
             );
