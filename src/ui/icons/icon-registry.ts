@@ -42,7 +42,9 @@
 
 import {
   Archive,
+  ArrowDown,
   ArrowLeft,
+  ArrowUp,
   Ban,
   Coins,
   Bell,
@@ -160,6 +162,12 @@ export const ICONS = {
   filter: Filter,
   settings: Settings,
   expand: ChevronDown,
+  // Reorder — a discrete up/down BUTTON pair, never drag-and-drop
+  // (`NavPermissionsManager.tsx`'s own ▲/▼ precedent, and the project-wide
+  // "no drag-and-drop" constraint). Added for `build-sections.tsx`'s
+  // `onMoveField` edit-mode controls, 2026-11-04.
+  "arrow-up": ArrowUp,
+  "arrow-down": ArrowDown,
   user: User,
   /** A group of people — "join the community", never a single-user context (use `user`). */
   users: Users,
