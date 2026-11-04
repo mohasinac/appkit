@@ -118,6 +118,11 @@ import {
   siteSettingsListingsFormSchema,
   type SiteSettingsListingsFormValues,
 } from "../schemas/site-settings-listings-form";
+import {
+  siteSettingsAppearanceFormSchema,
+  type SiteSettingsAppearanceFormValues,
+  type BackgroundModeValue,
+} from "../schemas/site-settings-appearance-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -381,20 +386,112 @@ export function AdminSiteSettingsView({
     [brandingVisibilityFields, editMode, setBrandingFieldVisible, brandingFieldOrder, setBrandingFieldOrder, upload],
   );
 
-  // ② Appearance — background image/gradient/color/video (light + dark).
+  // ② Appearance — eighteenth tab migrated to the Universal Template
+  // System, 2026-11-04. Ten useState calls collapsed into two combined
+  // objects (`lightBg`/`darkBg`), each a structured value rather than a
+  // scalar — see site-settings-appearance-form.ts's header for why.
+  //
   // The old primaryColor/secondaryColor/accentColor/fontFamily/defaultTheme
   // fields here were dead (saved to Firestore, never read back anywhere —
   // redundant with the working Theme Manager tab below). Removed 2026-08-09.
-  const [lightBgType, setLightBgType] = React.useState<"color" | "gradient" | "image" | "video">("color");
-  const [lightBgValue, setLightBgValue] = React.useState("");
-  const [lightBgOverlayEnabled, setLightBgOverlayEnabled] = React.useState(false);
-  const [lightBgOverlayColor, setLightBgOverlayColor] = React.useState("#000000");
-  const [lightBgOverlayOpacity, setLightBgOverlayOpacity] = React.useState(30);
-  const [darkBgType, setDarkBgType] = React.useState<"color" | "gradient" | "image" | "video">("color");
-  const [darkBgValue, setDarkBgValue] = React.useState("");
-  const [darkBgOverlayEnabled, setDarkBgOverlayEnabled] = React.useState(false);
-  const [darkBgOverlayColor, setDarkBgOverlayColor] = React.useState("#000000");
-  const [darkBgOverlayOpacity, setDarkBgOverlayOpacity] = React.useState(30);
+  const [appearanceForm, setAppearanceForm] = React.useState<SiteSettingsAppearanceFormValues>({
+    lightBg: { type: "color", value: "", overlayEnabled: false, overlayColor: "#000000", overlayOpacity: 30 },
+    darkBg: { type: "color", value: "", overlayEnabled: false, overlayColor: "#000000", overlayOpacity: 30 },
+  });
+  const {
+    fields: appearanceVisibilityFields,
+    setVisible: setAppearanceFieldVisible,
+    fieldOrder: appearanceFieldOrder,
+    setFieldOrder: setAppearanceFieldOrder,
+  } = useFieldVisibility("admin-site-settings-appearance");
+  /*
+   * Shared by both `lightBg` and `darkBg` — the original JSX was already
+   * byte-structurally identical for both modes apart from the default
+   * swatch color and the `<BackgroundRenderer mode>` prop, so this is the
+   * ONE renderer, parameterized, rather than two hand-written copies.
+   */
+  const buildBackgroundModeRenderer = React.useCallback(
+    (mode: "light" | "dark", defaultColor: string) =>
+      ({ values, onChange }: {
+        values: SiteSettingsAppearanceFormValues;
+        onChange: (partial: Partial<SiteSettingsAppearanceFormValues>) => void;
+      }) => {
+        const fieldName = mode === "light" ? "lightBg" : "darkBg";
+        const bg = values[fieldName] as BackgroundModeValue;
+        const setBg = (patch: Partial<BackgroundModeValue>) => onChange({ [fieldName]: { ...bg, ...patch } } as Partial<SiteSettingsAppearanceFormValues>);
+        return (
+          <Stack gap="sm" rounded="lg" border="default" padding="md">
+            <Text size="sm" weight="semibold">{mode === "light" ? "Light mode" : "Dark mode"}</Text>
+            <Select
+              label="Type"
+              options={BG_TYPE_OPTIONS}
+              value={bg.type}
+              onValueChange={(v) => setBg({ type: v as BackgroundModeValue["type"] })}
+            />
+            {bg.type === "color" ? (
+              <Input type="color" label="Color" value={bg.value || defaultColor} onChange={(e) => setBg({ value: e.target.value })} className="h-10 w-full cursor-pointer" bare /> /* audit-hex-tokens-ok: native color picker requires literal hex string fallback */
+            ) : bg.type === "gradient" ? (
+              <Textarea label="CSS gradient expression" rows={2} value={bg.value} onChange={(e) => setBg({ value: e.target.value })} placeholder="linear-gradient(...)" />
+            ) : (
+              <MediaUploadField
+                label={bg.type === "video" ? "Background video" : "Background image"}
+                kind={bg.type === "video" ? "video" : "image"}
+                value={bg.value}
+                onChange={(v) => setBg({ value: v })}
+                onUpload={(file: File) => upload(file, "store")}
+              />
+            )}
+            <Toggle label="Dim overlay" checked={bg.overlayEnabled} onChange={(v) => setBg({ overlayEnabled: v })} />
+            {bg.overlayEnabled && (
+              <>
+                <Input type="color" label="Overlay color" value={bg.overlayColor} onChange={(e) => setBg({ overlayColor: e.target.value })} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+                <Slider label="Overlay opacity" min={0} max={100} value={bg.overlayOpacity} onChange={(v) => setBg({ overlayOpacity: v })} />
+              </>
+            )}
+            <Text size="xs" color="muted">Preview</Text>
+            <Div className="relative h-24 w-full" overflow="hidden" rounded="md" border="default">
+              <BackgroundRenderer
+                mode={mode}
+                lightMode={
+                  mode === "light"
+                    ? { type: bg.type, value: bg.value, overlay: { enabled: bg.overlayEnabled, color: bg.overlayColor, opacity: bg.overlayOpacity / 100 } }
+                    : { type: "color", value: "" }
+                }
+                darkMode={
+                  mode === "dark"
+                    ? { type: bg.type, value: bg.value, overlay: { enabled: bg.overlayEnabled, color: bg.overlayColor, opacity: bg.overlayOpacity / 100 } }
+                    : { type: "color", value: "" }
+                }
+              />
+            </Div>
+          </Stack>
+        );
+      },
+    [upload],
+  );
+  const appearanceSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsAppearanceFormValues>(siteSettingsAppearanceFormSchema, {
+        renderers: {
+          lightBg: buildBackgroundModeRenderer("light", "#ffffff"),
+          darkBg: buildBackgroundModeRenderer("dark", "#000000"),
+        },
+        fieldVisibility: appearanceVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setAppearanceFieldVisible,
+        fieldOrder: appearanceFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setAppearanceFieldOrder(
+            swapFieldOrder(
+              appearanceFieldOrder,
+              resolveFields(siteSettingsAppearanceFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [appearanceVisibilityFields, editMode, setAppearanceFieldVisible, appearanceFieldOrder, setAppearanceFieldOrder, buildBackgroundModeRenderer],
+  );
 
   // Theme registry (custom themes + default-light / default-dark pointers).
   const [themeRegistry, setThemeRegistry] = React.useState<ThemeManagerValue>({
@@ -1431,16 +1528,22 @@ export function AdminSiteSettingsView({
       assistantEnabled: s.assistant?.enabled ?? true,
     });
 
-    setLightBgType(s.background?.light?.type ?? "color");
-    setLightBgValue(s.background?.light?.value ?? "");
-    setLightBgOverlayEnabled(s.background?.light?.overlay?.enabled ?? false);
-    setLightBgOverlayColor(s.background?.light?.overlay?.color ?? "#000000");
-    setLightBgOverlayOpacity(Math.round((s.background?.light?.overlay?.opacity ?? 0.3) * 100));
-    setDarkBgType(s.background?.dark?.type ?? "color");
-    setDarkBgValue(s.background?.dark?.value ?? "");
-    setDarkBgOverlayEnabled(s.background?.dark?.overlay?.enabled ?? false);
-    setDarkBgOverlayColor(s.background?.dark?.overlay?.color ?? "#000000");
-    setDarkBgOverlayOpacity(Math.round((s.background?.dark?.overlay?.opacity ?? 0.3) * 100));
+    setAppearanceForm({
+      lightBg: {
+        type: (s.background?.light?.type ?? "color") as BackgroundModeValue["type"],
+        value: s.background?.light?.value ?? "",
+        overlayEnabled: s.background?.light?.overlay?.enabled ?? false,
+        overlayColor: s.background?.light?.overlay?.color ?? "#000000",
+        overlayOpacity: Math.round((s.background?.light?.overlay?.opacity ?? 0.3) * 100),
+      },
+      darkBg: {
+        type: (s.background?.dark?.type ?? "color") as BackgroundModeValue["type"],
+        value: s.background?.dark?.value ?? "",
+        overlayEnabled: s.background?.dark?.overlay?.enabled ?? false,
+        overlayColor: s.background?.dark?.overlay?.color ?? "#000000",
+        overlayOpacity: Math.round((s.background?.dark?.overlay?.opacity ?? 0.3) * 100),
+      },
+    });
 
     const themeBlock = (s as FirestoreDocument).theme as
       | {
@@ -1773,14 +1876,22 @@ export function AdminSiteSettingsView({
       assistant: { enabled: brandingForm.assistantEnabled },
       background: {
         light: {
-          type: lightBgType,
-          value: lightBgValue,
-          overlay: { enabled: lightBgOverlayEnabled, color: lightBgOverlayColor, opacity: lightBgOverlayOpacity / 100 },
+          type: appearanceForm.lightBg.type,
+          value: appearanceForm.lightBg.value,
+          overlay: {
+            enabled: appearanceForm.lightBg.overlayEnabled,
+            color: appearanceForm.lightBg.overlayColor,
+            opacity: appearanceForm.lightBg.overlayOpacity / 100,
+          },
         },
         dark: {
-          type: darkBgType,
-          value: darkBgValue,
-          overlay: { enabled: darkBgOverlayEnabled, color: darkBgOverlayColor, opacity: darkBgOverlayOpacity / 100 },
+          type: appearanceForm.darkBg.type,
+          value: appearanceForm.darkBg.value,
+          overlay: {
+            enabled: appearanceForm.darkBg.overlayEnabled,
+            color: appearanceForm.darkBg.overlayColor,
+            opacity: appearanceForm.darkBg.overlayOpacity / 100,
+          },
         },
       },
       theme: {
@@ -2241,99 +2352,16 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}
+          {/* ② Appearance — eighteenth tab migrated to the Universal Template System. */}
           <TabsContent value="appearance">
-            <SettingsTabForm id="appearance" label="Appearance">
-              <Text size="xs" color="muted">
-                Sets the background behind the public shell, dashboard sidebars, and any
-                Section/Card that opts into it. Leave the value blank for a plain surface.
-              </Text>
-              <Grid cols={2} gap="lg">
-                <Stack gap="sm" rounded="lg" border="default" padding="md">
-                  <Text size="sm" weight="semibold">Light mode</Text>
-                  <Select
-                    label="Type"
-                    options={BG_TYPE_OPTIONS}
-                    value={lightBgType}
-                    onValueChange={(v) => setLightBgType(v as typeof lightBgType)}
-                  />
-                  {lightBgType === "color" ? (
-                    <Input type="color" label="Color" value={lightBgValue || "#ffffff"} onChange={(e) => setLightBgValue(e.target.value)} className="h-10 w-full cursor-pointer" bare /> /* audit-hex-tokens-ok: native color picker requires literal hex string fallback */
-                  ) : lightBgType === "gradient" ? (
-                    <Textarea label="CSS gradient expression" rows={2} value={lightBgValue} onChange={(e) => setLightBgValue(e.target.value)} placeholder="linear-gradient(...)" />
-                  ) : (
-                    <MediaUploadField
-                      label={lightBgType === "video" ? "Background video" : "Background image"}
-                      kind={lightBgType === "video" ? "video" : "image"}
-                      value={lightBgValue}
-                      onChange={setLightBgValue}
-                      onUpload={(file: File) => upload(file, "store")}
-                    />
-                  )}
-                  <Toggle label="Dim overlay" checked={lightBgOverlayEnabled} onChange={setLightBgOverlayEnabled} />
-                  {lightBgOverlayEnabled && (
-                    <>
-                      <Input type="color" label="Overlay color" value={lightBgOverlayColor} onChange={(e) => setLightBgOverlayColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
-                      <Slider label="Overlay opacity" min={0} max={100} value={lightBgOverlayOpacity} onChange={setLightBgOverlayOpacity} />
-                    </>
-                  )}
-                  <Text size="xs" color="muted">Preview</Text>
-                  <Div className="relative h-24 w-full" overflow="hidden" rounded="md" border="default">
-                    <BackgroundRenderer
-                      mode="light"
-                      lightMode={{
-                        type: lightBgType,
-                        value: lightBgValue,
-                        overlay: { enabled: lightBgOverlayEnabled, color: lightBgOverlayColor, opacity: lightBgOverlayOpacity / 100 },
-                      }}
-                      darkMode={{ type: "color", value: "" }}
-                    />
-                  </Div>
-                </Stack>
-
-                <Stack gap="sm" rounded="lg" border="default" padding="md">
-                  <Text size="sm" weight="semibold">Dark mode</Text>
-                  <Select
-                    label="Type"
-                    options={BG_TYPE_OPTIONS}
-                    value={darkBgType}
-                    onValueChange={(v) => setDarkBgType(v as typeof darkBgType)}
-                  />
-                  {darkBgType === "color" ? (
-                    <Input type="color" label="Color" value={darkBgValue || "#000000"} onChange={(e) => setDarkBgValue(e.target.value)} className="h-10 w-full cursor-pointer" bare /> /* audit-hex-tokens-ok: native color picker requires literal hex string fallback */
-                  ) : darkBgType === "gradient" ? (
-                    <Textarea label="CSS gradient expression" rows={2} value={darkBgValue} onChange={(e) => setDarkBgValue(e.target.value)} placeholder="linear-gradient(...)" />
-                  ) : (
-                    <MediaUploadField
-                      label={darkBgType === "video" ? "Background video" : "Background image"}
-                      kind={darkBgType === "video" ? "video" : "image"}
-                      value={darkBgValue}
-                      onChange={setDarkBgValue}
-                      onUpload={(file: File) => upload(file, "store")}
-                    />
-                  )}
-                  <Toggle label="Dim overlay" checked={darkBgOverlayEnabled} onChange={setDarkBgOverlayEnabled} />
-                  {darkBgOverlayEnabled && (
-                    <>
-                      <Input type="color" label="Overlay color" value={darkBgOverlayColor} onChange={(e) => setDarkBgOverlayColor(e.target.value)} className="h-10 w-full cursor-pointer" bare /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
-                      <Slider label="Overlay opacity" min={0} max={100} value={darkBgOverlayOpacity} onChange={setDarkBgOverlayOpacity} />
-                    </>
-                  )}
-                  <Text size="xs" color="muted">Preview</Text>
-                  <Div className="relative h-24 w-full" overflow="hidden" rounded="md" border="default">
-                    <BackgroundRenderer
-                      mode="dark"
-                      lightMode={{ type: "color", value: "" }}
-                      darkMode={{
-                        type: darkBgType,
-                        value: darkBgValue,
-                        overlay: { enabled: darkBgOverlayEnabled, color: darkBgOverlayColor, opacity: darkBgOverlayOpacity / 100 },
-                      }}
-                    />
-                  </Div>
-                </Stack>
-              </Grid>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsAppearanceFormValues>
+              sections={appearanceSections}
+              values={appearanceForm}
+              onChange={(partial) => setAppearanceForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsAppearanceFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ②ᵃ Themes — admin-authored theme records */}
