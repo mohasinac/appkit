@@ -72,6 +72,10 @@ import {
   siteSettingsFeesFormSchema,
   type SiteSettingsFeesFormValues,
 } from "../schemas/site-settings-fees-form";
+import {
+  siteSettingsProcurementFormSchema,
+  type SiteSettingsProcurementFormValues,
+} from "../schemas/site-settings-procurement-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -569,9 +573,36 @@ export function AdminSiteSettingsView({
     el.style.opacity = String(watermarkForm.watermarkOpacity / 100);
   }, [watermarkForm.watermarkSize, watermarkForm.watermarkOpacity]);
 
-  // ⑦ Fees — all read/written under commissions key
-  const [laborHourlyRate, setLaborHourlyRate] = React.useState(200);
-  const [laborMaxHoursPerDay, setLaborMaxHoursPerDay] = React.useState(6);
+  // ⑮ Procurement — seventh tab migrated to the Universal Template System,
+  // 2026-11-04. Two useState calls collapsed into one combined object.
+  const [procurementForm, setProcurementForm] = React.useState<SiteSettingsProcurementFormValues>({
+    laborHourlyRate: 200, laborMaxHoursPerDay: 6,
+  });
+  const {
+    fields: procurementVisibilityFields,
+    setVisible: setProcurementFieldVisible,
+    fieldOrder: procurementFieldOrder,
+    setFieldOrder: setProcurementFieldOrder,
+  } = useFieldVisibility("admin-site-settings-procurement");
+  const procurementSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsProcurementFormValues>(siteSettingsProcurementFormSchema, {
+        fieldVisibility: procurementVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setProcurementFieldVisible,
+        fieldOrder: procurementFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setProcurementFieldOrder(
+            swapFieldOrder(
+              procurementFieldOrder,
+              resolveFields(siteSettingsProcurementFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [procurementVisibilityFields, editMode, setProcurementFieldVisible, procurementFieldOrder, setProcurementFieldOrder],
+  );
 
   // ⑯ EMI — site-wide installment settings
   const [emiEnabled, setEmiEnabled] = React.useState(false);
@@ -957,8 +988,10 @@ export function AdminSiteSettingsView({
     setPlatformShippingPercent(s.commissions?.platformShippingPercent ?? 10);
     setPlatformShippingFixedMin(s.commissions?.platformShippingFixedMin ?? 0);
 
-    setLaborHourlyRate(s.laborRate?.hourlyRate ?? 200);
-    setLaborMaxHoursPerDay(s.laborRate?.maxHoursPerDay ?? 6);
+    setProcurementForm({
+      laborHourlyRate: s.laborRate?.hourlyRate ?? 200,
+      laborMaxHoursPerDay: s.laborRate?.maxHoursPerDay ?? 6,
+    });
 
     setEmiEnabled(s.emi?.enabled ?? false);
     setEmiMinOrderValue(s.emi?.minOrderValue ?? 10000);
@@ -1221,7 +1254,7 @@ export function AdminSiteSettingsView({
         offsetY: watermarkForm.watermarkOffsetY,
       },
       commissions: { ...feesForm, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
-      laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
+      laborRate: { hourlyRate: procurementForm.laborHourlyRate, maxHoursPerDay: procurementForm.laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
         minOrderValue: emiMinOrderValue,
@@ -1802,33 +1835,20 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑮ Procurement — labor rate feeding Feature A shipment cost calc */}
+          {/* ⑮ Procurement — seventh tab migrated to the Universal Template System. */}
           <TabsContent value="procurement">
-            <SettingsTabForm id="procurement" label="Procurement">
-              <Text size="xs" color="muted">
-                Used to compute each procurement shipment's labor cost (hours spent × hourly rate) and its
-                estimated processing time (hours spent ÷ max hours/day).
-              </Text>
-              <Grid cols={2} gap="md">
-                <Input
-                  label="Hourly rate (₹)"
-                  helperText="Your effective hourly wage for sorting/categorizing/listing a shipment."
-                  value={String(laborHourlyRate)}
-                  onChange={(e) => setLaborHourlyRate(Math.round((parseFloat(e.target.value) || 0) * 100) / 100)}
-                  type="number"
-                  min={0}
-                />
-                <Input
-                  label="Max hours per day"
-                  helperText="Used only to project how many days a shipment's tracked hours will take."
-                  value={String(laborMaxHoursPerDay)}
-                  onChange={(e) => setLaborMaxHoursPerDay(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  max={24}
-                />
-              </Grid>
-            </SettingsTabForm>
+            <Text size="xs" color="muted" className="mb-2">
+              Used to compute each procurement shipment's labor cost (hours spent × hourly rate) and its
+              estimated processing time (hours spent ÷ max hours/day).
+            </Text>
+            <SectionForm<SiteSettingsProcurementFormValues>
+              sections={procurementSections}
+              values={procurementForm}
+              onChange={(partial) => setProcurementForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsProcurementFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑯ EMI — site-wide installment financing settings */}
