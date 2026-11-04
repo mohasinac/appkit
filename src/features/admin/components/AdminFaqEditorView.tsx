@@ -1,18 +1,20 @@
 "use client";
 
 import type { JsonValue } from "@mohasinac/appkit/client";
-import { useApiMutation } from "@mohasinac/appkit/client";
+import { useApiMutation, ALL_LISTING_TYPES, ALL_CATEGORY_TYPES, ALL_BROWSE_PAGES } from "@mohasinac/appkit/client";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
 import { Div } from "../../../ui/components/Div";
 import { Input } from "../../../ui/components/Input";
+import { Repeater } from "../../../ui/components/Repeater";
 import { RichTextEditor } from "../../../ui/components/RichTextEditor";
 import { Select } from "../../../ui/components/Select";
 import { Stack } from "../../../ui/components/Layout";
 import { StackedViewShell } from "../../../ui/components/StackedViewShell";
 import { TagInput } from "../../../ui/components/TagInput";
+import { Textarea } from "../../../ui/components/Textarea";
 import { Text } from "../../../ui/components/Typography";
 import { Toggle } from "../../../ui/components/Toggle";
 import { useToast } from "../../../ui/components/toast-context";
@@ -53,7 +55,87 @@ const faqFormSchema = z.object({
   isPinned: z.boolean().optional(),
   showOnHomepage: z.boolean().optional(),
   showInFooter: z.boolean().optional(),
+  // The form's own draft shape (`FragmentDraft`), not the wire shape sent to
+  // the API — `toWireFragment` converts at submit time. Unconstrained beyond
+  // its own shape: the real content boundary is the server's
+  // `answerFragmentsSchema` (`.text.min(1)` etc.), and a blank added-then-
+  // abandoned row here is dropped by `toWireFragment`, not rejected here.
+  answerFragments: z
+    .array(
+      z.object({
+        governsKind: z.enum(["", "listingType", "categoryType", "browsePage"]),
+        governsValue: z.string(),
+        text: z.string(),
+        whenHidden: z.string(),
+      }),
+    )
+    .optional(),
 });
+
+/**
+ * Item 7 (2026-11-04) — the form's own draft shape for one `answerFragments`
+ * row. Two string fields (`governsKind`/`governsValue`) rather than the wire
+ * shape's single nested `governs?: {governs, value}` object: an empty-string
+ * controlled `<Select>` pair is simpler to bind than an optional nested
+ * object, and `toWireFragment`/`fromWireFragment` below are the one place
+ * that converts between the two — never duplicated at the call sites.
+ */
+interface FragmentDraft {
+  [key: string]: JsonValue;
+  governsKind: "" | "listingType" | "categoryType" | "browsePage";
+  governsValue: string;
+  text: string;
+  whenHidden: string;
+}
+
+/** Wire shape — matches `ContentFragment` (`_internal/shared/content/fragments.ts`) exactly. */
+interface WireFragment {
+  governs?: { governs: "listingType" | "categoryType" | "browsePage"; value: string };
+  text: string;
+  whenHidden?: string;
+}
+
+function blankFragment(): FragmentDraft {
+  return { governsKind: "", governsValue: "", text: "", whenHidden: "" };
+}
+
+function fromWireFragment(f: WireFragment): FragmentDraft {
+  return {
+    governsKind: f.governs?.governs ?? "",
+    governsValue: f.governs?.value ?? "",
+    text: f.text ?? "",
+    whenHidden: f.whenHidden ?? "",
+  };
+}
+
+/** Drops a row with no text — the Zod boundary requires `text.min(1)`, and a blank added-then-abandoned row is noise, not an intended empty fragment. */
+function toWireFragment(f: FragmentDraft): WireFragment | null {
+  if (!f.text.trim()) return null;
+  return {
+    ...(f.governsKind ? { governs: { governs: f.governsKind, value: f.governsValue } } : {}),
+    text: f.text.trim(),
+    ...(f.whenHidden.trim() ? { whenHidden: f.whenHidden.trim() } : {}),
+  };
+}
+
+const GOVERNS_KIND_OPTIONS: { value: FragmentDraft["governsKind"]; label: string }[] = [
+  { value: "", label: "— Always shown —" },
+  { value: "listingType", label: "Listing type" },
+  { value: "categoryType", label: "Category type" },
+  { value: "browsePage", label: "Browse page" },
+];
+
+function humanize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1).replace(/-/g, " ");
+}
+
+/** Dropdown source per `governsKind` — the real unions, never a hand-typed list (Root Cause #61). */
+function governsValueOptions(kind: FragmentDraft["governsKind"]): { value: string; label: string }[] {
+  if (kind === "listingType") return ALL_LISTING_TYPES.map((t) => ({ value: t, label: humanize(t) }));
+  if (kind === "categoryType") return ALL_CATEGORY_TYPES.map((t) => ({ value: t, label: humanize(t) }));
+  if (kind === "browsePage") return ALL_BROWSE_PAGES.map((p) => ({ value: p, label: humanize(p) }));
+  return [];
+}
 
 interface FaqFormValues {
   [key: string]: JsonValue;
@@ -68,6 +150,7 @@ interface FaqFormValues {
   isPinned: boolean;
   showOnHomepage: boolean;
   showInFooter: boolean;
+  answerFragments: FragmentDraft[];
 }
 
 const EMPTY_FAQ: FaqFormValues = {
@@ -82,6 +165,7 @@ const EMPTY_FAQ: FaqFormValues = {
   isPinned: false,
   showOnHomepage: false,
   showInFooter: false,
+  answerFragments: [],
 };
 
 const __P = {
@@ -194,6 +278,9 @@ export function AdminFaqEditorView({
       isPinned: f.isPinned ?? false,
       showOnHomepage: f.showOnHomepage ?? false,
       showInFooter: f.showInFooter ?? false,
+      answerFragments: Array.isArray(f.answerFragments)
+        ? f.answerFragments.map(fromWireFragment)
+        : [],
     });
   }, [faqQuery.data]);
 
@@ -213,6 +300,9 @@ export function AdminFaqEditorView({
         isPinned: values.isPinned,
         showOnHomepage: values.showOnHomepage,
         showInFooter: values.showInFooter,
+        answerFragments: values.answerFragments
+          .map(toWireFragment)
+          .filter((f): f is WireFragment => f !== null) as unknown as JsonValue,
       };
       if (isEdit) {
         return apiClient.put(ADMIN_ENDPOINTS.FAQ_BY_ID(faqId!), payload);
@@ -284,6 +374,77 @@ export function AdminFaqEditorView({
           </Stack>
         </Stack>
       ),
+    },
+    {
+      id: "fragments",
+      label: "Conditional phrasing",
+      fields: ["answerFragments"],
+      render: ({ values: v, onChange }) => {
+        const rows = Array.isArray(v.answerFragments) ? v.answerFragments : [];
+        return (
+          <Stack gap="md">
+            <Text size="sm" color="muted">
+              Optional. Use this only when the answer MENTIONS something that
+              can be switched off site-wide (a listing type, category type,
+              or browse page) and omitting that clause would leave an abrupt
+              gap — e.g. &ldquo;Reserve upcoming drops via our pre-order
+              system&rdquo; needs different wording when pre-orders are off,
+              not just silence. Most FAQs need none of these; the rich-text
+              answer above already covers ordinary content.
+            </Text>
+            <Repeater<FragmentDraft>
+              rows={rows}
+              onChange={(next) => onChange({ answerFragments: next })}
+              blank={blankFragment}
+              addLabel="Add fragment"
+              max={20}
+              renderRow={(row, set) => (
+                <Stack gap="xs">
+                  <Div layout="grid" gap="4" className="grid-cols-2">
+                    <Select
+                      label="Governed by"
+                      options={GOVERNS_KIND_OPTIONS}
+                      value={row.governsKind}
+                      onValueChange={(val) =>
+                        set({
+                          governsKind: val as FragmentDraft["governsKind"],
+                          governsValue: "",
+                        })
+                      }
+                    />
+                    {row.governsKind ? (
+                      <Select
+                        label="Value"
+                        options={governsValueOptions(row.governsKind)}
+                        value={row.governsValue}
+                        onValueChange={(val) => set({ governsValue: val })}
+                      />
+                    ) : null}
+                  </Div>
+                  <Textarea
+                    label={row.governsKind ? "Text (shown while enabled)" : "Text (always shown)"}
+                    value={row.text}
+                    onChange={(e) => set({ text: e.target.value })}
+                    maxLength={2000}
+                    showCharCount
+                    rows={2}
+                  />
+                  {row.governsKind ? (
+                    <Textarea
+                      label="Replacement text when disabled (optional — leave blank to omit this clause instead)"
+                      value={row.whenHidden}
+                      onChange={(e) => set({ whenHidden: e.target.value })}
+                      maxLength={2000}
+                      showCharCount
+                      rows={2}
+                    />
+                  ) : null}
+                </Stack>
+              )}
+            />
+          </Stack>
+        );
+      },
     },
     {
       id: "classification",
