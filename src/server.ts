@@ -2918,6 +2918,15 @@ export type { DashboardHubData } from "./_internal/server/features/dashboard/dat
  * `_internal` boundary reasoning as `getDashboardHubData` above.
  */
 export { getPageRegion, setPageRegion } from "./_internal/server/features/dashboard/page-regions";
+/*
+ * Composite-sentence content-tag resolver (1A-ii static-copy half) — same
+ * `_internal` boundary reasoning as `getPageRegion` above. Lets a consumer
+ * page.tsx resolve a compound sentence naming 2+ governable listing types
+ * against the live flag snapshot, dropping exactly the clause(s) naming a
+ * disabled type (CLAUDE.md § "Fact 1 (content-tag governance)").
+ */
+export { getCompositeSentence } from "./_internal/shared/content/composite-sentences";
+export type { CompositeSentenceId, ContentFlagSnapshot } from "./_internal/shared/content/composite-sentences";
 /**
  * Admin field-visibility override (Phase 3B widget system) — same
  * `_internal` boundary reasoning as `getPageRegion`/`setPageRegion` above.

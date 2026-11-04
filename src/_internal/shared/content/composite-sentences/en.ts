@@ -32,7 +32,9 @@ export type CompositeSentenceId =
   | "homepage.howItWorksStep2Desc"
   | "search.metaDescription"
   | "helpPage.topicCollectorDropsDesc"
-  | "cancellationPolicy.sections.3.heading";
+  | "cancellationPolicy.sections.3.heading"
+  | "sellPage.listingStepDesc"
+  | "sellPage.everyKindOfListingDesc";
 
 export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
   "homepage.howItWorksStep2Desc": {
@@ -93,5 +95,43 @@ export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
     conjunction: "and",
     leadSeparator: ": ",
     terminator: "",
+  },
+  /*
+   * /sell — step 3's body sentence ("Add items with photos and a price.
+   * Sell outright, run a collector drop, take pre-orders, or list spare
+   * parts — whatever fits the item."). Found as a real Fact-1 gap
+   * (page-foundation-coverage, 2026-11-04): this sentence was a hardcoded
+   * TS literal in the page file, so `find-composite-listing-sentences.mjs`
+   * (which only scans `messages/en.json`) never saw it — disabling a type
+   * via the admin toggle would leave the page claiming it's still supported.
+   */
+  "sellPage.listingStepDesc": {
+    id: "sellPage.listingStepDesc",
+    lead: "Sell outright",
+    clauses: [
+      { governs: { governs: "listingType", value: "collector-drop" }, text: "run a collector drop" },
+      { governs: { governs: "listingType", value: "pre-order" }, text: "take pre-orders" },
+      { governs: { governs: "listingType", value: "spares" }, text: "list spare parts" },
+    ],
+    conjunction: "or",
+    terminator: " — whatever fits the item.",
+  },
+  /*
+   * /sell — the "Every kind of listing" benefit body. Same Fact-1 gap class
+   * as above, same page.
+   */
+  "sellPage.everyKindOfListingDesc": {
+    id: "sellPage.everyKindOfListingDesc",
+    lead: "Fixed price",
+    clauses: [
+      { governs: { governs: "listingType", value: "collector-drop" }, text: "collector drops" },
+      { governs: { governs: "listingType", value: "pre-order" }, text: "pre-orders" },
+      { governs: { governs: "listingType", value: "random-lots" }, text: "prize draws" },
+      { governs: { governs: "listingType", value: "spares" }, text: "spare parts" },
+      { governs: { governs: "listingType", value: "art" }, text: "art" },
+      { governs: { governs: "listingType", value: "stickers" }, text: "sticker sheets" },
+    ],
+    conjunction: "and",
+    terminator: " — all supported, each with the right chrome.",
   },
 };
