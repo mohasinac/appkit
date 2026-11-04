@@ -210,6 +210,34 @@ export async function RandomLotsDetailPageView({
     getFieldVisibility("pdp-sections"),
   ]);
 
+  /*
+   * `functionalSlot` (2026-11-05) — `RandomLotsEntryActions` is rendered
+   * directly by this page (no external render-prop parameterizing it,
+   * unlike every other listing type) — same shape as Pre-order's
+   * `PreOrderBuyBarPanel`/Collector Drop's `renderCollectorDropBidPanel`:
+   * an internally-composed element, not a bare callback. No new page-level
+   * prop was needed — contrary to this item's own earlier "needs new
+   * infrastructure" framing, which (like Pre-order's) turned out to be
+   * overstated once the actual JSX was read. `RandomLotsBottomActions`
+   * (the sticky mobile bar, registered separately via `useBottomActions()`)
+   * is left untouched, same reasoning as every other extension.
+   */
+  const primaryActionsNode = (
+    <RandomLotsEntryActions
+      productId={String(product.id)}
+      productSlug={slug}
+      title={title}
+      pricePerEntry={pricePerEntry}
+      currency={currency}
+      remainingEntries={remaining}
+      revealStatus={revealStatus}
+      prizeGithubFileUrl={githubUrl}
+    />
+  );
+  const hasPrimaryActionsSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-primary-actions"),
+  );
+
   return (
     <Main>
       <HistoryTracker
@@ -399,16 +427,7 @@ export async function RandomLotsDetailPageView({
             <Div padding="5"
               id="prize-draw-buy-bar" border="subtle" surface="muted" rounded="xl"
             >
-              <RandomLotsEntryActions
-                productId={String(product.id)}
-                productSlug={slug}
-                title={title}
-                pricePerEntry={pricePerEntry}
-                currency={currency}
-                remainingEntries={remaining}
-                revealStatus={revealStatus}
-                prizeGithubFileUrl={githubUrl}
-              />
+              {!hasPrimaryActionsSlotOverride && primaryActionsNode}
             </Div>
             </SectionVisibilityGate>
           )}
@@ -439,7 +458,11 @@ export async function RandomLotsDetailPageView({
                   storeLabel={storeName ?? undefined}
                 />
               </SectionVisibilityGate>
-              <AdminComposableRegion pageId="random-lots-slug" initialCards={pageRegionCards} />
+              <AdminComposableRegion
+                pageId="random-lots-slug"
+                initialCards={pageRegionCards}
+                functionalSlots={{ "pdp-primary-actions": primaryActionsNode }}
+              />
             </Stack>
           )}
         />
