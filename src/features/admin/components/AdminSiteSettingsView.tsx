@@ -92,6 +92,10 @@ import {
   siteSettingsGstFormSchema,
   type SiteSettingsGstFormValues,
 } from "../schemas/site-settings-gst-form";
+import {
+  siteSettingsEmiFormSchema,
+  type SiteSettingsEmiFormValues,
+} from "../schemas/site-settings-emi-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -635,14 +639,38 @@ export function AdminSiteSettingsView({
     [procurementVisibilityFields, editMode, setProcurementFieldVisible, procurementFieldOrder, setProcurementFieldOrder],
   );
 
-  // ⑯ EMI — site-wide installment settings
-  const [emiEnabled, setEmiEnabled] = React.useState(false);
-  const [emiMinOrderValue, setEmiMinOrderValue] = React.useState(10000);
-  const [emiTenureOptionsText, setEmiTenureOptionsText] = React.useState("2,3,4,5,6");
-  const [emiTokenPercent, setEmiTokenPercent] = React.useState(20);
-  const [emiBillingDay, setEmiBillingDay] = React.useState(5);
-  const [emiSurchargePercentPerMonth, setEmiSurchargePercentPerMonth] = React.useState(2);
-  const [emiSurchargeSellerSharePercent, setEmiSurchargeSellerSharePercent] = React.useState(50);
+  // ⑯ EMI — twelfth tab migrated to the Universal Template System,
+  // 2026-11-04. Seven useState calls collapsed into one combined object.
+  const [emiForm, setEmiForm] = React.useState<SiteSettingsEmiFormValues>({
+    emiEnabled: false, emiMinOrderValue: 10000, emiTenureOptionsText: "2,3,4,5,6",
+    emiTokenPercent: 20, emiBillingDay: 5,
+    emiSurchargePercentPerMonth: 2, emiSurchargeSellerSharePercent: 50,
+  });
+  const {
+    fields: emiVisibilityFields,
+    setVisible: setEmiFieldVisible,
+    fieldOrder: emiFieldOrder,
+    setFieldOrder: setEmiFieldOrder,
+  } = useFieldVisibility("admin-site-settings-emi");
+  const emiSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsEmiFormValues>(siteSettingsEmiFormSchema, {
+        fieldVisibility: emiVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setEmiFieldVisible,
+        fieldOrder: emiFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setEmiFieldOrder(
+            swapFieldOrder(
+              emiFieldOrder,
+              resolveFields(siteSettingsEmiFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [emiVisibilityFields, editMode, setEmiFieldVisible, emiFieldOrder, setEmiFieldOrder],
+  );
 
   // ⑰ GST — eleventh tab migrated to the Universal Template System,
   // 2026-11-04. Four useState calls collapsed into one combined object.
@@ -1194,13 +1222,15 @@ export function AdminSiteSettingsView({
       laborMaxHoursPerDay: s.laborRate?.maxHoursPerDay ?? 6,
     });
 
-    setEmiEnabled(s.emi?.enabled ?? false);
-    setEmiMinOrderValue(s.emi?.minOrderValue ?? 10000);
-    setEmiTenureOptionsText((s.emi?.tenureOptions ?? [2, 3, 4, 5, 6]).join(","));
-    setEmiTokenPercent(s.emi?.tokenPercent ?? 20);
-    setEmiBillingDay(s.emi?.billingDay ?? 5);
-    setEmiSurchargePercentPerMonth(s.emi?.surchargePercentPerMonth ?? 2);
-    setEmiSurchargeSellerSharePercent(s.emi?.surchargeSellerSharePercent ?? 50);
+    setEmiForm({
+      emiEnabled: s.emi?.enabled ?? false,
+      emiMinOrderValue: s.emi?.minOrderValue ?? 10000,
+      emiTenureOptionsText: (s.emi?.tenureOptions ?? [2, 3, 4, 5, 6]).join(","),
+      emiTokenPercent: s.emi?.tokenPercent ?? 20,
+      emiBillingDay: s.emi?.billingDay ?? 5,
+      emiSurchargePercentPerMonth: s.emi?.surchargePercentPerMonth ?? 2,
+      emiSurchargeSellerSharePercent: s.emi?.surchargeSellerSharePercent ?? 50,
+    });
 
     setGstForm({
       gstEnabled: s.gst?.enabled ?? false,
@@ -1472,16 +1502,16 @@ export function AdminSiteSettingsView({
       },
       laborRate: { hourlyRate: procurementForm.laborHourlyRate, maxHoursPerDay: procurementForm.laborMaxHoursPerDay },
       emi: {
-        enabled: emiEnabled,
-        minOrderValue: emiMinOrderValue,
-        tenureOptions: emiTenureOptionsText
+        enabled: emiForm.emiEnabled,
+        minOrderValue: emiForm.emiMinOrderValue,
+        tenureOptions: (emiForm.emiTenureOptionsText ?? "")
           .split(",")
           .map((v) => parseInt(v.trim(), 10))
           .filter((v) => !isNaN(v) && v > 0),
-        tokenPercent: emiTokenPercent,
-        billingDay: emiBillingDay,
-        surchargePercentPerMonth: emiSurchargePercentPerMonth,
-        surchargeSellerSharePercent: emiSurchargeSellerSharePercent,
+        tokenPercent: emiForm.emiTokenPercent,
+        billingDay: emiForm.emiBillingDay,
+        surchargePercentPerMonth: emiForm.emiSurchargePercentPerMonth,
+        surchargeSellerSharePercent: emiForm.emiSurchargeSellerSharePercent,
       },
       gst: {
         enabled: gstForm.gstEnabled,
@@ -2086,70 +2116,16 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑯ EMI — site-wide installment financing settings */}
+          {/* ⑯ EMI — twelfth tab migrated to the Universal Template System. */}
           <TabsContent value="emi">
-            <SettingsTabForm id="emi" label="Emi">
-              <Text size="xs" color="muted">
-                A seller must also opt in via their own Payout Settings for EMI to appear at
-                checkout on their items. See the "How EMI Works" public page for buyer-facing copy.
-              </Text>
-              <Toggle
-                checked={emiEnabled}
-                onChange={setEmiEnabled}
-                label="Enable EMI platform-wide"
-              />
-              <Grid cols={2} gap="md">
-                <Input
-                  label="Minimum order value (₹)"
-                  helperText="A seller's cart subtotal must exceed this for EMI to appear as an option."
-                  value={String(emiMinOrderValue)}
-                  onChange={(e) => setEmiMinOrderValue(Math.round((parseFloat(e.target.value) || 0) * 100) / 100)}
-                  type="number"
-                  min={0}
-                />
-                <Input
-                  label="Tenure options (months, comma-separated)"
-                  helperText="e.g. 2,3,4,5,6"
-                  value={emiTenureOptionsText}
-                  onChange={(e) => setEmiTenureOptionsText(e.target.value)}
-                />
-                <Input
-                  label="Token / down-payment (%)"
-                  helperText="Collected upfront at checkout."
-                  value={String(emiTokenPercent)}
-                  onChange={(e) => setEmiTokenPercent(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-                <Input
-                  label="Billing day (1–10)"
-                  helperText="Day of month each installment is due."
-                  value={String(emiBillingDay)}
-                  onChange={(e) => setEmiBillingDay(parseFloat(e.target.value) || 1)}
-                  type="number"
-                  min={1}
-                  max={10}
-                />
-                <Input
-                  label="Surcharge (% of principal per month)"
-                  helperText="The 'excess EMI fee' the buyer pays for spreading payment."
-                  value={String(emiSurchargePercentPerMonth)}
-                  onChange={(e) => setEmiSurchargePercentPerMonth(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                />
-                <Input
-                  label="Seller's share of surcharge (%)"
-                  helperText="The rest of the surcharge goes to the platform."
-                  value={String(emiSurchargeSellerSharePercent)}
-                  onChange={(e) => setEmiSurchargeSellerSharePercent(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  max={100}
-                />
-              </Grid>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsEmiFormValues>
+              sections={emiSections}
+              values={emiForm}
+              onChange={(partial) => setEmiForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsEmiFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑰ GST — eleventh tab migrated to the Universal Template System. */}
