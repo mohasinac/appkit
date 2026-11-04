@@ -6,16 +6,16 @@ import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { UserPlus } from "lucide-react";
 import { Button } from "../../../ui/components/Button";
-import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { Label } from "../../../ui/components/Typography";
 import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { Stack } from "../../../ui/components/Layout";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META } from "../../products/constants/action-defs";
-import { ALL_TAB } from "../constants/filter-tabs";
-import type { AdminFilterTab } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -23,33 +23,23 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
-import { AdminEmployeeEditorView } from "./AdminEmployeeEditorView";
+import { AdminEmployeeEditorView, GROUP_OPTIONS } from "./AdminEmployeeEditorView";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-const GROUP_TABS: readonly AdminFilterTab[] = [
-  ALL_TAB,
-  { id: "content_moderator", label: "Content Mod" },
-  { id: "review_manager", label: "Reviews" },
-  { id: "blog_poster", label: "Blog" },
-  { id: "community_manager", label: "Community" },
-  { id: "event_handler", label: "Events" },
-  { id: "newsletter_manager", label: "Newsletter" },
-  { id: "seo_manager", label: "SEO" },
-  { id: "ad_manager", label: "Ads" },
-  { id: "site_manager", label: "Site" },
-  { id: "catalog_manager", label: "Catalog" },
-  { id: "finance_manager", label: "Finance" },
-  { id: "data_analyst", label: "Analytics" },
-  { id: "customer_support", label: "Support" },
-  { id: "support_agent", label: "Agent" },
-  { id: "store_onboarding", label: "Onboarding" },
-  { id: "trust_and_safety", label: "T&S" },
-  // 🛑 `collector_drop_monitor` is a stored team-role value — frozen.
-  { id: "collector_drop_monitor", label: "Collector Drops" },
-  { id: "scam_moderator", label: "Scams" },
-  { id: "custom", label: "Custom" },
-];
+/**
+ * RS13 (2026-11-04) — this used to be a hand-written 20-chip `FilterChipGroup`
+ * (19 permission groups + "All"), which CLAUDE.md's "Overflowing Pill & Tab
+ * Rows" / "Select / Dropdown Rules" sections both name as the >5-option
+ * SELECTING case (a role picker, their own named example), not the small
+ * closed-set SCOPING case pill rows are for. Migrated to `<PaginatedSelect>`,
+ * reusing `AdminEmployeeEditorView`'s `GROUP_OPTIONS` — the real, derived
+ * `PERMISSION_GROUPS` list — rather than this file's own stale hand-copy
+ * (raw snake_case labels, no `GROUP_LABEL_OVERRIDES`, Root Cause #61 shape).
+ * "All" is prepended here only, since it is a filter-scope concept the
+ * single-employee editor's own picker has no use for.
+ */
+const GROUP_FILTER_OPTIONS = [{ value: "All", label: "All" }, ...GROUP_OPTIONS];
 
 function formatGroup(group: string): string {
   return group.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -189,12 +179,15 @@ export function AdminTeamView({ children, onBulkRemove, pageRegionCards = [], ..
       />
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <FilterChipGroup
-        label="Permission Group"
-        tabs={GROUP_TABS}
-        value={pendingFilters.group ?? ""}
-        onChange={(id) => setPendingFilters((p) => ({ ...p, group: id }))}
-      />
+      <Stack gap="xs">
+        <Label size="sm" color="muted">Permission Group</Label>
+        <PaginatedSelect
+          ariaLabel="Permission Group"
+          options={GROUP_FILTER_OPTIONS}
+          value={pendingFilters.group || "All"}
+          onChange={(v) => setPendingFilters((p) => ({ ...p, group: v ?? "All" }))}
+        />
+      </Stack>
     ),
   };
 

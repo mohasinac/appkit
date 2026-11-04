@@ -7,8 +7,11 @@ import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { ConfirmDeleteModal } from "../../../ui/components/ConfirmDeleteModal";
 import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { Label } from "../../../ui/components/Typography";
 import { ListingLayout } from "../../../ui/components/ListingLayout";
+import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
 import { RowActionMenu } from "../../../ui/components/RowActionMenu";
+import { Stack } from "../../../ui/components/Layout";
 import { useToast } from "../../../ui/components/toast-context";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
@@ -24,14 +27,22 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
-import { NOTIFICATION_TYPES } from "../../../constants/notification-types";
+import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
 import { ViewNotificationModal, type NotificationEntryDetail } from "./ViewNotificationModal";
 import type { JsonValue } from "../../../schemas/types";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-// W1-33 — sourced from shared NOTIFICATION_TYPES registry, prefixed with "All".
-const NOTIF_TYPES = ["All", ...NOTIFICATION_TYPES] as const;
+/**
+ * RS13 (2026-11-04) — this "Type" filter used to be a hand-written
+ * `FilterChipGroup` wall of 32 chips (31 `NOTIFICATION_TYPE_VALUES` + "All"),
+ * each labelled with its own raw snake_case id (`order_shipped`, not "Order
+ * shipped"). CLAUDE.md's "Select / Dropdown Rules" names exactly this
+ * >5-option SELECTING case for `<PaginatedSelect>`, and `NOTIFICATION_TYPE_TABS`
+ * (`constants/notification-types.ts`) already derives proper human-readable
+ * labels via `notificationTypeLabel` — this file just wasn't using it.
+ */
+const NOTIF_TYPE_OPTIONS = NOTIFICATION_TYPE_TABS.map((t) => ({ value: t.id, label: t.label }));
 
 interface AdminNotificationsResponse {
   items?: JsonArray;
@@ -207,12 +218,15 @@ export function AdminNotificationsView({ children, pageRegionCards = [], ...prop
     ),
     renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
       <>
-        <FilterChipGroup
-          label="Type"
-          tabs={NOTIF_TYPES.map((opt) => ({ id: opt, label: opt }))}
-          value={pendingFilters.type || "All"}
-          onChange={(v) => setPendingFilters((p) => ({ ...p, type: v }))}
-        />
+        <Stack gap="xs">
+          <Label size="sm" color="muted">Type</Label>
+          <PaginatedSelect
+            ariaLabel="Type"
+            options={NOTIF_TYPE_OPTIONS}
+            value={pendingFilters.type || "All"}
+            onChange={(v) => setPendingFilters((p) => ({ ...p, type: v ?? "All" }))}
+          />
+        </Stack>
         <FilterChipGroup
           label="Read state"
           tabs={[

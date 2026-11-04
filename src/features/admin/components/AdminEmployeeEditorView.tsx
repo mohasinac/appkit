@@ -60,7 +60,14 @@ const GROUP_LABEL_OVERRIDES: Record<string, string> = {
  * renders it as a `PaginatedSelect`: it was a native `<Select>` with no
  * `name`, which is both unsearchable and unreachable by `applyZodIssues`.
  */
-const GROUP_OPTIONS: { label: string; value: string }[] = [
+/**
+ * Exported (RS13, 2026-11-04) so `AdminTeamView`'s "Permission Group" filter
+ * can read the same derived list instead of its own hand-written 20-entry
+ * array — which had drifted from this one in cosmetics (raw snake_case
+ * labels, no `GROUP_LABEL_OVERRIDES`) even though both describe the exact
+ * same `PERMISSION_GROUPS` registry. One definition, two consumers.
+ */
+export const GROUP_OPTIONS: { label: string; value: string }[] = [
   ...Object.keys(PERMISSION_GROUPS).map((value) => ({
     value,
     label:
