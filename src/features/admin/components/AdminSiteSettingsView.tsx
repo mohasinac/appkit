@@ -101,6 +101,10 @@ import {
   type SiteSettingsLegalFormValues,
   LEGAL_PAGE_FIELDS,
 } from "../schemas/site-settings-legal-form";
+import {
+  siteSettingsWhatsappFormSchema,
+  type SiteSettingsWhatsappFormValues,
+} from "../schemas/site-settings-whatsapp-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -1012,17 +1016,51 @@ export function AdminSiteSettingsView({
     [legalVisibilityFields, editMode, setLegalFieldVisible, legalFieldOrder, setLegalFieldOrder],
   );
 
-  // ⑬ WhatsApp Business Cloud API (platform-level)
-  const [waPhoneNumberId, setWaPhoneNumberId] = React.useState("");
-  const [waCloudApiToken, setWaCloudApiToken] = React.useState("");
-  const [waAdminNotifyNumbers, setWaAdminNotifyNumbers] = React.useState("");
-  const [waTemplateLanguage, setWaTemplateLanguage] = React.useState("en");
-  const [waTemplateOrderPlaced, setWaTemplateOrderPlaced] = React.useState("");
-  const [waTemplateOrderConfirmed, setWaTemplateOrderConfirmed] = React.useState("");
-  const [waTemplateOrderShipped, setWaTemplateOrderShipped] = React.useState("");
-  const [waTemplateOrderDelivered, setWaTemplateOrderDelivered] = React.useState("");
-  const [waTemplateOrderCancelled, setWaTemplateOrderCancelled] = React.useState("");
-  const [waTemplateRefundInitiated, setWaTemplateRefundInitiated] = React.useState("");
+  // ⑬ WhatsApp Business Cloud API (platform-level) — fourteenth tab
+  // migrated to the Universal Template System, 2026-11-04. Ten useState
+  // calls collapsed into one combined object.
+  const [whatsappForm, setWhatsappForm] = React.useState<SiteSettingsWhatsappFormValues>({
+    waPhoneNumberId: "", waCloudApiToken: "", waAdminNotifyNumbers: "",
+    waTemplateLanguage: "en", waTemplateOrderPlaced: "", waTemplateOrderConfirmed: "",
+    waTemplateOrderShipped: "", waTemplateOrderDelivered: "",
+    waTemplateOrderCancelled: "", waTemplateRefundInitiated: "",
+  });
+  const {
+    fields: whatsappVisibilityFields,
+    setVisible: setWhatsappFieldVisible,
+    fieldOrder: whatsappFieldOrder,
+    setFieldOrder: setWhatsappFieldOrder,
+  } = useFieldVisibility("admin-site-settings-whatsapp");
+  const whatsappSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsWhatsappFormValues>(siteSettingsWhatsappFormSchema, {
+        renderers: {
+          waCloudApiToken: ({ values, onChange }) => (
+            <MaskedInput
+              label="Cloud API System User Token"
+              value={(values.waCloudApiToken as string) ?? ""}
+              onChange={(v) => onChange({ waCloudApiToken: v })}
+              placeholder="EAAxxxxxxxx…"
+              helperText="Long-lived system user access token with WhatsApp Business permissions"
+            />
+          ),
+        },
+        fieldVisibility: whatsappVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setWhatsappFieldVisible,
+        fieldOrder: whatsappFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setWhatsappFieldOrder(
+            swapFieldOrder(
+              whatsappFieldOrder,
+              resolveFields(siteSettingsWhatsappFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [whatsappVisibilityFields, editMode, setWhatsappFieldVisible, whatsappFieldOrder, setWhatsappFieldOrder],
+  );
 
   // ⓪ About
   const [aboutTitle, setAboutTitle] = React.useState("");
@@ -1381,16 +1419,18 @@ export function AdminSiteSettingsView({
     setAboutCtaSell(s.aboutContent?.ctaSell ?? "");
     setAboutCtaShop(s.aboutContent?.ctaShop ?? "");
 
-    setWaPhoneNumberId(s.credentialsMasked?.whatsappPhoneNumberId ?? "");
-    setWaCloudApiToken(s.credentialsMasked?.whatsappCloudApiToken ?? "");
-    setWaAdminNotifyNumbers(s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "");
-    setWaTemplateLanguage(s.credentialsMasked?.whatsappTemplateLanguage ?? "en");
-    setWaTemplateOrderPlaced(s.credentialsMasked?.whatsappTemplateOrderPlaced ?? "");
-    setWaTemplateOrderConfirmed(s.credentialsMasked?.whatsappTemplateOrderConfirmed ?? "");
-    setWaTemplateOrderShipped(s.credentialsMasked?.whatsappTemplateOrderShipped ?? "");
-    setWaTemplateOrderDelivered(s.credentialsMasked?.whatsappTemplateOrderDelivered ?? "");
-    setWaTemplateOrderCancelled(s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "");
-    setWaTemplateRefundInitiated(s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "");
+    setWhatsappForm({
+      waPhoneNumberId: s.credentialsMasked?.whatsappPhoneNumberId ?? "",
+      waCloudApiToken: s.credentialsMasked?.whatsappCloudApiToken ?? "",
+      waAdminNotifyNumbers: s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "",
+      waTemplateLanguage: s.credentialsMasked?.whatsappTemplateLanguage ?? "en",
+      waTemplateOrderPlaced: s.credentialsMasked?.whatsappTemplateOrderPlaced ?? "",
+      waTemplateOrderConfirmed: s.credentialsMasked?.whatsappTemplateOrderConfirmed ?? "",
+      waTemplateOrderShipped: s.credentialsMasked?.whatsappTemplateOrderShipped ?? "",
+      waTemplateOrderDelivered: s.credentialsMasked?.whatsappTemplateOrderDelivered ?? "",
+      waTemplateOrderCancelled: s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "",
+      waTemplateRefundInitiated: s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "",
+    });
 
     setNotificationsForm({
       notifEmailEnabled: s.notificationChannels?.email?.enabled ?? false,
@@ -1591,16 +1631,16 @@ export function AdminSiteSettingsView({
         tiktokAccessToken: maskedOrReal("tiktokAccessToken", tiktokAccessToken),
         deviantartClientId: maskedOrReal("deviantartClientId", deviantartClientId),
         deviantartClientSecret: maskedOrReal("deviantartClientSecret", deviantartClientSecret),
-        whatsappPhoneNumberId: maskedOrReal("whatsappPhoneNumberId", waPhoneNumberId),
-        whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", waCloudApiToken),
-        whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", waAdminNotifyNumbers),
-        whatsappTemplateLanguage: maskedOrReal("whatsappTemplateLanguage", waTemplateLanguage),
-        whatsappTemplateOrderPlaced: maskedOrReal("whatsappTemplateOrderPlaced", waTemplateOrderPlaced),
-        whatsappTemplateOrderConfirmed: maskedOrReal("whatsappTemplateOrderConfirmed", waTemplateOrderConfirmed),
-        whatsappTemplateOrderShipped: maskedOrReal("whatsappTemplateOrderShipped", waTemplateOrderShipped),
-        whatsappTemplateOrderDelivered: maskedOrReal("whatsappTemplateOrderDelivered", waTemplateOrderDelivered),
-        whatsappTemplateOrderCancelled: maskedOrReal("whatsappTemplateOrderCancelled", waTemplateOrderCancelled),
-        whatsappTemplateRefundInitiated: maskedOrReal("whatsappTemplateRefundInitiated", waTemplateRefundInitiated),
+        whatsappPhoneNumberId: maskedOrReal("whatsappPhoneNumberId", whatsappForm.waPhoneNumberId ?? ""),
+        whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", whatsappForm.waCloudApiToken ?? ""),
+        whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", whatsappForm.waAdminNotifyNumbers ?? ""),
+        whatsappTemplateLanguage: maskedOrReal("whatsappTemplateLanguage", whatsappForm.waTemplateLanguage ?? ""),
+        whatsappTemplateOrderPlaced: maskedOrReal("whatsappTemplateOrderPlaced", whatsappForm.waTemplateOrderPlaced ?? ""),
+        whatsappTemplateOrderConfirmed: maskedOrReal("whatsappTemplateOrderConfirmed", whatsappForm.waTemplateOrderConfirmed ?? ""),
+        whatsappTemplateOrderShipped: maskedOrReal("whatsappTemplateOrderShipped", whatsappForm.waTemplateOrderShipped ?? ""),
+        whatsappTemplateOrderDelivered: maskedOrReal("whatsappTemplateOrderDelivered", whatsappForm.waTemplateOrderDelivered ?? ""),
+        whatsappTemplateOrderCancelled: maskedOrReal("whatsappTemplateOrderCancelled", whatsappForm.waTemplateOrderCancelled ?? ""),
+        whatsappTemplateRefundInitiated: maskedOrReal("whatsappTemplateRefundInitiated", whatsappForm.waTemplateRefundInitiated ?? ""),
         resendApiKey: maskedOrReal("resendApiKey", notificationsForm.resendApiKey ?? ""),
       },
       emailSettings: {
@@ -2505,58 +2545,16 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑬ WhatsApp Business Cloud API */}
+          {/* ⑬ WhatsApp Business Cloud API — fourteenth tab migrated to the Universal Template System. */}
           <TabsContent value="whatsapp">
-            <SettingsTabForm id="whatsapp" label="Whatsapp">
-              <Text size="xs" color="muted">
-                Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
-                announcements to admin numbers when orders are placed. Store owners configure their
-                own credentials in Store → WhatsApp.
-              </Text>
-              <Input
-                label="Phone Number ID"
-                value={waPhoneNumberId}
-                onChange={(e) => setWaPhoneNumberId(e.target.value)}
-                placeholder="987654321098765"
-                helperText="From Meta for Developers → App → WhatsApp → API Setup"
-              />
-              <MaskedInput
-                label="Cloud API System User Token"
-                value={waCloudApiToken}
-                onChange={setWaCloudApiToken}
-                placeholder="EAAxxxxxxxx…"
-                helperText="Long-lived system user access token with WhatsApp Business permissions"
-              />
-              <Input
-                label="Admin Notify Numbers"
-                value={waAdminNotifyNumbers}
-                onChange={(e) => setWaAdminNotifyNumbers(e.target.value)}
-                placeholder="919876543210,918765432109"
-                helperText="Comma-separated, digits-only, include country code. These receive a WhatsApp message when any order is placed."
-              />
-              <Text size="xs" color="muted">
-                Approved Meta message templates for the buyer-facing WhatsApp order-updates addon
-                (Fees tab). Meta rejects business-initiated free-text WhatsApp messages outside a 24h
-                customer-service window — a real template name here is required for that notification
-                type to actually deliver. Leave blank to skip WhatsApp for that type (in-app + email
-                still fire).
-              </Text>
-              <Input
-                label="Template language code"
-                value={waTemplateLanguage}
-                onChange={(e) => setWaTemplateLanguage(e.target.value)}
-                placeholder="en"
-                helperText="BCP-47 code the templates below were approved in, e.g. en or en_US."
-              />
-              <Grid cols={2} gap="md">
-                <Input label="Order placed template name" value={waTemplateOrderPlaced} onChange={(e) => setWaTemplateOrderPlaced(e.target.value)} placeholder="order_placed_update" />
-                <Input label="Order confirmed template name" value={waTemplateOrderConfirmed} onChange={(e) => setWaTemplateOrderConfirmed(e.target.value)} placeholder="order_confirmed_update" />
-                <Input label="Order shipped template name" value={waTemplateOrderShipped} onChange={(e) => setWaTemplateOrderShipped(e.target.value)} placeholder="order_shipped_update" />
-                <Input label="Order delivered template name" value={waTemplateOrderDelivered} onChange={(e) => setWaTemplateOrderDelivered(e.target.value)} placeholder="order_delivered_update" />
-                <Input label="Order cancelled template name" value={waTemplateOrderCancelled} onChange={(e) => setWaTemplateOrderCancelled(e.target.value)} placeholder="order_cancelled_update" />
-                <Input label="Refund initiated template name" value={waTemplateRefundInitiated} onChange={(e) => setWaTemplateRefundInitiated(e.target.value)} placeholder="refund_initiated_update" />
-              </Grid>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsWhatsappFormValues>
+              sections={whatsappSections}
+              values={whatsappForm}
+              onChange={(partial) => setWhatsappForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsWhatsappFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑭ Notification Channels */}
