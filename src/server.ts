@@ -1666,6 +1666,8 @@ export { removeFromWishlist } from "./features/wishlist/actions/wishlist-actions
 export { siteSettingsRepository } from "./features/admin/repository/site-settings.repository";
 // storeRepository - Shared export for store repository.
 export { storeRepository } from "./features/stores/repository/store.repository";
+// sellerProfileRepository - sidecar to users/{uid}, seller-only fields (storeId/storeSlug/storeStatus/shippingConfig/payoutDetails).
+export { sellerProfileRepository } from "./features/seller/repository/seller-profile.repository";
 // orderRepository - Shared export for order repository (needed by consumer Firebase Functions, e.g. invoice PDF generation).
 export { orderRepository } from "./features/orders/repository/orders.repository";
 // taxCodesRepository (B3) — resolved by deriveTaxonomy on every product write

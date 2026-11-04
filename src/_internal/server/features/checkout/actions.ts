@@ -23,6 +23,7 @@ import {
   siteSettingsRepository,
   userRepository,
   storeRepository,
+  sellerProfileRepository,
   couponsRepository,
   claimedCouponsRepository,
   addressesRepository,
@@ -783,8 +784,9 @@ async function legacyFlatPolicy(
   storeOwnerId: string | undefined,
 ): Promise<StoreShippingPolicy> {
   if (!storeOwnerId) return DEFAULT_STORE_SHIPPING_POLICY;
-  const sellerUser = await userRepository.findById(storeOwnerId);
-  const legacy = sellerUser?.shippingConfig;
+  // shippingConfig is seller-only data — sellerProfiles, not users.
+  const sellerProfile = await sellerProfileRepository.findById(storeOwnerId);
+  const legacy = sellerProfile ? sellerProfileRepository.revealProfile(sellerProfile).shippingConfig : undefined;
   if (!legacy?.isConfigured) return DEFAULT_STORE_SHIPPING_POLICY;
   const amount = legacy.customShippingPrice ?? 0;
   if (!(amount > 0)) return DEFAULT_STORE_SHIPPING_POLICY;

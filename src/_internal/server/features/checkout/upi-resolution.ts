@@ -1,5 +1,6 @@
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { userRepository } from "../../../../features/auth/repository/user.repository";
+import { sellerProfileRepository } from "../../../../features/seller/repository/seller-profile.repository";
 import { isSellerUser } from "../../../../features/auth/role-predicates";
 
 /**
@@ -25,7 +26,13 @@ export async function resolveDisplayedUpiId(
   const owner = await userRepository.findById(store.ownerId);
   if (!owner || !isSellerUser(owner)) return siteDefault;
 
-  const payoutDetails = owner.payoutDetails;
+  // payoutDetails is seller-only data — sellerProfiles, not users. Decrypted
+  // via revealProfile — a prior direct `owner.payoutDetails.upiId` read here
+  // (pre-dating the sellerProfiles split) returned ciphertext, since
+  // UserRepository.mapDoc is ciphertext-by-default; reading unrevealed would
+  // have stored an unreadable `order.displayedUpiId`.
+  const ownerProfile = await sellerProfileRepository.findById(store.ownerId);
+  const payoutDetails = ownerProfile ? sellerProfileRepository.revealProfile(ownerProfile).payoutDetails : undefined;
   if (payoutDetails?.method === "upi" && payoutDetails.upiId) {
     return payoutDetails.upiId;
   }

@@ -65,6 +65,10 @@ export {
   StoreRepository,
   storeRepository,
 } from "../features/stores/repository/store.repository";
+export {
+  SellerProfileRepository,
+  sellerProfileRepository,
+} from "../features/seller/repository/seller-profile.repository";
 // SB-UNI-A 2026-05-13 — storeAddressRepository deleted. Use addressesRepository
 // with ownerType:"store" instead.
 export { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";

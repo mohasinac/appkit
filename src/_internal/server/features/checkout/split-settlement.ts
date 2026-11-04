@@ -47,7 +47,7 @@
  * @tag sideEffects:writes payouts
  */
 
-import { payoutRepository, storeRepository, userRepository } from "../../../../repositories";
+import { payoutRepository, storeRepository, userRepository, sellerProfileRepository } from "../../../../repositories";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 import { getDefaultCurrency } from "../../../../core/baseline-resolver";
@@ -202,6 +202,9 @@ export async function recordSplitSettlementPayouts(
       const store = await storeRepository.findById(split.storeId);
       const owner = store?.ownerId ? await userRepository.findById(store.ownerId) : null;
       const ownerPlain = owner ? userRepository.revealUser(owner) : null;
+      // payoutDetails is seller-only data — sellerProfiles, not users.
+      const ownerProfile = store?.ownerId ? await sellerProfileRepository.findById(store.ownerId) : null;
+      const ownerProfilePlain = ownerProfile ? sellerProfileRepository.revealProfile(ownerProfile) : null;
 
       await payoutRepository.createSplitSettlementPayout({
         payeeType: "store",
@@ -235,7 +238,7 @@ export async function recordSplitSettlementPayouts(
          * not make is cosmetic, whereas failing the capture is not.
          */
         paymentMethod:
-          ownerPlain?.payoutDetails?.method === "upi" ? "upi" : "bank_transfer",
+          ownerProfilePlain?.payoutDetails?.method === "upi" ? "upi" : "bank_transfer",
         /*
          * 🛑 The UPI id is NOT copied onto this row. A manual payout row carries
          * it because an admin reads it to make the transfer; nobody will ever

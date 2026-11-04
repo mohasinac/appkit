@@ -15,12 +15,8 @@ import {
 import {
   USER_PII_FIELDS,
   USER_PII_INDEX_MAP,
-  decryptPayoutDetails,
   maskPii,
   revealPii,
-  decryptShippingConfig,
-  encryptPayoutDetails,
-  encryptShippingConfig,
   piiBlindIndex,
 } from "../../../security";
 import type { UserRole } from "../types";
@@ -78,22 +74,15 @@ export class UserRepository extends BaseRepository<UserDocument> {
    */
 
   /**
-   * Plaintext PII. **Opt-in and named** — for the account's own settings page,
-   * the payout run, and any mail that has to reach the person.
+   * Plaintext PII. **Opt-in and named** — for the account's own settings page
+   * and any mail that has to reach the person.
+   *
+   * 🛑 `payoutDetails`/`shippingConfig` moved to `sellerProfiles/{uid}`
+   * (2026-11-05) — `SellerProfileRepository.revealProfile` is their
+   * equivalent now, not this method.
    */
   revealUser(doc: UserDocument): UserPlain {
-    const revealed = revealPii<UserPlain>(doc, USER_PII_FIELDS);
-    if (revealed.payoutDetails) {
-      revealed.payoutDetails = decryptPayoutDetails(
-        revealed.payoutDetails,
-      ) as typeof revealed.payoutDetails;
-    }
-    if (revealed.shippingConfig) {
-      revealed.shippingConfig = decryptShippingConfig(
-        revealed.shippingConfig,
-      ) as typeof revealed.shippingConfig;
-    }
-    return revealed;
+    return revealPii<UserPlain>(doc, USER_PII_FIELDS);
   }
 
   /** As `revealUser`, for a list read. */
@@ -103,50 +92,18 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   /**
    * Masked PII — **the default for every admin list and every public
-   * surface.** Decrypts first, then masks, because the mask helpers refuse
-   * ciphertext by design.
+   * surface.**
    *
-   * `payoutDetails` and `shippingConfig` are decrypted and then masked
-   * member-by-member: a UPI handle or account number reaching an admin table
-   * unmasked is the most damaging value this document carries.
+   * 🛑 `payoutDetails`/`shippingConfig` moved to `sellerProfiles/{uid}` —
+   * `SellerProfileRepository.maskedProfile` is their equivalent now.
    */
   maskedUser(doc: UserDocument): UserPlain {
-    const masked = maskPii<UserPlain>(doc, USER_PII_FIELDS);
-    if (masked.payoutDetails) {
-      masked.payoutDetails = this.maskNested(
-        decryptPayoutDetails(masked.payoutDetails),
-      ) as typeof masked.payoutDetails;
-    }
-    if (masked.shippingConfig) {
-      masked.shippingConfig = this.maskNested(
-        decryptShippingConfig(masked.shippingConfig),
-      ) as typeof masked.shippingConfig;
-    }
-    return masked;
+    return maskPii<UserPlain>(doc, USER_PII_FIELDS);
   }
 
   /** As `maskedUser`, for a list read. */
   maskedUsers(docs: readonly UserDocument[]): UserPlain[] {
     return docs.map((d) => this.maskedUser(d));
-  }
-
-  /**
-   * Mask every string member of an already-decrypted nested object.
-   *
-   * The field list is derived from the object rather than hard-coded, because
-   * `USER_PII_FIELDS` does not name these members and a second list here would
-   * have to be kept in step with `decryptPayoutDetails`'s own (Root Cause #42).
-   * Every string in a payout or shipping block is sensitive, so "all of them"
-   * is the correct list, not an approximation.
-   */
-  private maskNested<T extends object>(value: T | null | undefined): T | undefined {
-    if (!value) return undefined;
-    return maskPii<T>(
-      value,
-      Object.entries(value)
-        .filter(([, v]) => typeof v === "string")
-        .map(([k]) => k),
-    );
   }
 
   /**
@@ -183,21 +140,13 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return { nameTokensIndex: buildTokensIndex(displayName, email) };
   }
 
-  /**
-   * The base hook, plus the nested objects it cannot see.
-   *
-   * `piiFields` is a flat list of top-level names, so a nested blob has to be
-   * encrypted separately. Calling `super.applyWriteHooks` FIRST keeps a single
-   * encryption path with one extra step on top, rather than two parallel paths
-   * that have to agree — which is what the hand-rolled override was.
+  /*
+   * 🛑 The nested-object encryption override that used to live here
+   * (`payoutDetails`/`shippingConfig`, via `encryptPayoutDetails`/
+   * `encryptShippingConfig`) moved to `SellerProfileRepository` with the
+   * fields themselves (2026-11-05). `BaseRepository.applyWriteHooks` (the
+   * flat `piiFields` hook below) is sufficient here now.
    */
-  protected override applyWriteHooks<D extends object>(data: D): D {
-    const out = super.applyWriteHooks(data);
-    const access = out as { payoutDetails?: object | null; shippingConfig?: object | null };
-    if (access.payoutDetails) access.payoutDetails = encryptPayoutDetails(access.payoutDetails);
-    if (access.shippingConfig) access.shippingConfig = encryptShippingConfig(access.shippingConfig);
-    return out;
-  }
 
   /*
    * Takes PLAINTEXT, like the base it overrides — the three real signup paths
@@ -498,37 +447,23 @@ export class UserRepository extends BaseRepository<UserDocument> {
     });
   }
 
-  async findByStoreSlug(storeSlug: string): Promise<UserDocument | null> {
-    return this.findOneBy(USER_FIELDS.STORE_SLUG, storeSlug);
-  }
-
+  /*
+   * 🛑 `storeStatus` MOVED to `sellerProfiles/{uid}` — this method now
+   * writes there via `sellerProfileRepository`, imported lazily to avoid a
+   * cross-feature top-level import cycle (auth <-> seller). Still returns
+   * `Promise<UserDocument>` (the account doc, unchanged) for both real
+   * callers, which only cared that the call succeeded and read the user
+   * fresh afterward anyway.
+   */
   async updateStoreApproval(
     uid: string,
     storeStatus: "pending" | "approved" | "rejected",
   ): Promise<UserDocument> {
-    return this.update(uid, { storeStatus });
-  }
-
-  async listSellers(
-    model: SieveModel,
-  ): Promise<FirebaseSieveResult<UserDocument>> {
-    return this.sieveQuery<UserDocument>(model, UserRepository.SIEVE_FIELDS, {
-      baseQuery: this.getCollection()
-        .where(USER_FIELDS.ROLE, "==", "seller")
-        .where(USER_FIELDS.STORE_STATUS, "==", "approved"),
-      defaultPageSize: 24,
-      maxPageSize: 100,
-    });
-  }
-
-  async listSellersForAdmin(
-    model: SieveModel,
-  ): Promise<FirebaseSieveResult<UserDocument>> {
-    return this.sieveQuery<UserDocument>(model, UserRepository.SIEVE_FIELDS, {
-      baseQuery: this.getCollection().where(USER_FIELDS.ROLE, "==", "seller"),
-      defaultPageSize: 24,
-      maxPageSize: 100,
-    });
+    const { sellerProfileRepository } = await import(
+      "../../seller/repository/seller-profile.repository"
+    );
+    await sellerProfileRepository.upsertForOwner(uid, { storeStatus });
+    return this.findByIdOrFail(uid);
   }
 }
 

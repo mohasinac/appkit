@@ -23,6 +23,7 @@ import {
 import { assertListingTypeAllowed } from "../../../_internal/shared/listing-types/tiers";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
+import { sellerProfileRepository } from "../repository/seller-profile.repository";
 import type { JsonValue } from "../../../schemas/types";
 import { productRepository } from "../../products/repository/products.repository";
 import { ProductStatusValues } from "../../products/schemas";
@@ -231,6 +232,7 @@ export async function becomeSeller(
 ): Promise<BecomeSellerResult> {
   const profile = await userRepository.findById(userId);
   const isTester = isTesterUser(profile);
+  const sellerProfile = await sellerProfileRepository.findById(userId);
 
   /*
    * 🛑 `isStrictSellerUser`, not `isSellerUser`.
@@ -249,14 +251,12 @@ export async function becomeSeller(
     profile &&
     (isStrictSellerUser(profile) ||
       isAdminUser(profile) ||
-      (isTester && Boolean(profile.storeStatus)));
+      (isTester && Boolean(sellerProfile?.storeStatus)));
 
   if (alreadyOnboarded) {
     return {
       alreadySeller: true,
-      storeStatus:
-        (profile.storeStatus as "pending" | "approved" | "rejected") ??
-        "pending",
+      storeStatus: sellerProfile?.storeStatus ?? "pending",
     };
   }
 
@@ -269,8 +269,9 @@ export async function becomeSeller(
     // the test-data visibility their whole programme depends on — the first
     // time they opened a store.
     ...(isTester ? {} : { role: "seller" as const }),
-    storeStatus,
   } as Partial<UserPlain>);
+  // storeStatus is seller-only data — lives in sellerProfiles, not users.
+  await sellerProfileRepository.upsertForOwner(userId, { storeStatus });
 
   serverLogger.info("becomeSeller: application submitted", { userId, storeStatus });
   return { storeStatus };
@@ -313,11 +314,13 @@ export async function createStore(
     status: isTester ? StoreStatusValues.ACTIVE : StoreStatusValues.PENDING,
   });
 
-  await userRepository.update(userId, {
+  // storeId/storeSlug/storeStatus are seller-only data — sellerProfiles,
+  // not users. `role`/`isTester` etc. stay on the user doc untouched.
+  await sellerProfileRepository.upsertForOwner(userId, {
     storeId: store.id,
     storeSlug: store.storeSlug,
     storeStatus: isTester ? "approved" : "pending",
-  } as Parameters<typeof userRepository.update>[1]);
+  });
 
   serverLogger.info("createStore: store created", {
     userId,
@@ -467,7 +470,7 @@ export async function updatePayoutSettings(
   }
   payoutDetails.isConfigured = payoutDestinationIsWellFormed(payoutDetails);
 
-  await userRepository.update(userId, { payoutDetails });
+  await sellerProfileRepository.upsertForOwner(userId, { payoutDetails });
 
   serverLogger.info("updatePayoutSettings: payout details updated", {
     userId,
@@ -652,11 +655,14 @@ export async function bulkSellerOrder(
    * encrypts `upiId` again (`PAYOUT_PII_FIELDS`), so the seller-initiated path
    * wrote a permanently unreadable payee address too.
    *
-   * `payoutDetails` is encrypted by `encryptPayoutDetails`, a separate scheme
-   * from the `piiFields` path, which is why `revealUser` unwraps it explicitly.
+   * `payoutDetails` lives on `sellerProfiles` now, encrypted by
+   * `encryptPayoutDetails` there (same scheme as before, moved with the
+   * field) — `revealProfile` unwraps it explicitly, same reasoning as
+   * `UserRepository.revealUser` had.
    */
-  const userPlain = userRepository.revealUser(userDoc);
-  if (!userDoc.payoutDetails?.isConfigured) {
+  const sellerProfileDoc = await sellerProfileRepository.findById(userId);
+  const sellerProfilePlain = sellerProfileDoc ? sellerProfileRepository.revealProfile(sellerProfileDoc) : null;
+  if (!sellerProfilePlain?.payoutDetails?.isConfigured) {
     throw new ValidationError(
       "Payout details are not set up. Please configure your payout method before requesting a payout.",
     );
@@ -751,12 +757,12 @@ export async function bulkSellerOrder(
     gstRate: bulkSiteSettings.commissions.gstPercent / 100,
     currency: getDefaultCurrency(),
     paymentMethod:
-      userPlain.payoutDetails?.method === "upi"
+      sellerProfilePlain.payoutDetails?.method === "upi"
         ? ("upi" as const)
         : ("bank_transfer" as const),
     upiId:
-      userPlain.payoutDetails?.method === "upi"
-        ? userPlain.payoutDetails.upiId
+      sellerProfilePlain.payoutDetails?.method === "upi"
+        ? sellerProfilePlain.payoutDetails.upiId
         : undefined,
     /*
      * 🛑 Only the MASKED subset, matching both payout crons.
@@ -770,13 +776,13 @@ export async function bulkSellerOrder(
      * A payout does not need the full number; it needs to identify the account.
      */
     bankAccount:
-      userPlain.payoutDetails?.method === "bank_transfer" &&
-      userPlain.payoutDetails.bankAccount
+      sellerProfilePlain.payoutDetails?.method === "bank_transfer" &&
+      sellerProfilePlain.payoutDetails.bankAccount
         ? {
-            accountHolderName: userPlain.payoutDetails.bankAccount.accountHolderName,
-            accountNumberMasked: userPlain.payoutDetails.bankAccount.accountNumberMasked,
-            ifscCode: userPlain.payoutDetails.bankAccount.ifscCode,
-            bankName: userPlain.payoutDetails.bankAccount.bankName,
+            accountHolderName: sellerProfilePlain.payoutDetails.bankAccount.accountHolderName,
+            accountNumberMasked: sellerProfilePlain.payoutDetails.bankAccount.accountNumberMasked,
+            ifscCode: sellerProfilePlain.payoutDetails.bankAccount.ifscCode,
+            bankName: sellerProfilePlain.payoutDetails.bankAccount.bankName,
           }
         : undefined,
     notes: `Payout request for ${eligible.length} custom-shipped delivered order(s)`,
@@ -895,15 +901,15 @@ export async function getSellerStore(
 }
 
 export async function getSellerShipping(userId: string) {
-  const userData = await userRepository.findById(userId);
-  if (!userData) return null;
-  return userData.shippingConfig ?? null;
+  const profile = await sellerProfileRepository.findById(userId);
+  if (!profile?.shippingConfig) return null;
+  return sellerProfileRepository.revealProfile(profile).shippingConfig ?? null;
 }
 
 export async function getSellerPayoutSettings(userId: string) {
-  const userData = await userRepository.findById(userId);
-  if (!userData?.payoutDetails) return { method: "upi", isConfigured: false };
-  const details = userData.payoutDetails;
+  const profile = await sellerProfileRepository.findById(userId);
+  if (!profile?.payoutDetails) return { method: "upi", isConfigured: false };
+  const details = sellerProfileRepository.revealProfile(profile).payoutDetails!;
   if (!details.bankAccount) return details;
   const { accountNumber: _removed, ...safeBank } = details.bankAccount;
   return { ...details, bankAccount: safeBank };

@@ -109,10 +109,14 @@ export interface UserDocument extends BaseDocument {
   /** Hard-ban flag — disables Firebase Auth login. Distinct from `disabled` (used elsewhere); read alongside `hardBanReason`/`hardBannedAt`/`hardBannedBy`. Set by `hardBanCascade`, cleared by `hardBanReinstatement` for temporary bans. */
   isDisabled?: boolean;
 
-  // Store identity (populated when user is granted seller role)
-  storeId?: string;
-  storeSlug?: string;
-  storeStatus?: "pending" | "approved" | "rejected";
+  /*
+   * 🛑 `storeId`/`storeSlug`/`storeStatus` MOVED to `sellerProfiles/{uid}`
+   * (2026-11-05, owner's direct instruction: "split the seller and user
+   * collections do not mix them together"). See
+   * `appkit/src/features/seller/schemas/seller-profile-firestore.ts`.
+   * `role` stays HERE — it does not move, it's the universal discriminator
+   * every account (buyer/seller/admin/tester/employee/moderator) carries.
+   */
   /**
    * Denormalised sum of this user's `pointsLedger` entries. 1 point = ₹1.
    *
@@ -207,8 +211,15 @@ export interface UserDocument extends BaseDocument {
     loginCount?: number;
   };
 
-  shippingConfig?: SellerShippingConfig;
-  payoutDetails?: SellerPayoutDetails;
+  /*
+   * 🛑 `shippingConfig`/`payoutDetails` MOVED to `sellerProfiles/{uid}` —
+   * see the `storeId`/`storeSlug`/`storeStatus` note above. Both carried
+   * real PII (bank account numbers, UPI ids, pickup addresses) — the
+   * encryption (`encryptPayoutDetails`/`encryptShippingConfig`) moved WITH
+   * the fields, in `SellerProfileRepository.applyWriteHooks`, not left
+   * behind. `SellerShippingConfig`/`SellerPayoutDetails` type definitions
+   * stay here — only the document FIELD that stored them moved.
+   */
 
   // ── Employee permissions (only populated when role === "employee") ──────────
   /** Explicit permission set for this employee. admin role bypasses this field entirely. */

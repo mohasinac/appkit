@@ -3,6 +3,7 @@ import {
   payoutRepository,
   storeRepository,
   userRepository,
+  sellerProfileRepository,
   siteSettingsRepository,
 } from "../../../../repositories";
 import { getDefaultCurrency } from "../../../../core/baseline-resolver";
@@ -129,6 +130,8 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
      * `revealUser` handles it explicitly.
      */
     const sellerPlain = userRepository.revealUser(seller);
+    const sellerProfile = await sellerProfileRepository.findById(store!.ownerId);
+    const sellerProfilePlain = sellerProfile ? sellerProfileRepository.revealProfile(sellerProfile) : null;
     const sellerId = store!.ownerId;
 
     /*
@@ -188,12 +191,12 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
       currency: getDefaultCurrency(),
       status: "pending" as const,
       paymentMethod:
-        sellerPlain.payoutDetails?.method === "upi"
+        sellerProfilePlain?.payoutDetails?.method === "upi"
           ? ("upi" as const)
           : ("bank_transfer" as const),
       upiId:
-        sellerPlain.payoutDetails?.method === "upi"
-          ? sellerPlain.payoutDetails.upiId
+        sellerProfilePlain?.payoutDetails?.method === "upi"
+          ? sellerProfilePlain.payoutDetails.upiId
           : undefined,
       /*
        * Only the MASKED account fields are copied, which is why this block
@@ -202,13 +205,13 @@ export async function runAutoPayoutEligibility(ctx: JobContext): Promise<void> {
        * `accountNumber` is deliberately not carried onto the payout.
        */
       bankAccount:
-        sellerPlain.payoutDetails?.method === "bank_transfer" &&
-        sellerPlain.payoutDetails.bankAccount
+        sellerProfilePlain?.payoutDetails?.method === "bank_transfer" &&
+        sellerProfilePlain.payoutDetails.bankAccount
           ? {
-              accountHolderName: sellerPlain.payoutDetails.bankAccount.accountHolderName,
-              accountNumberMasked: sellerPlain.payoutDetails.bankAccount.accountNumberMasked,
-              ifscCode: sellerPlain.payoutDetails.bankAccount.ifscCode,
-              bankName: sellerPlain.payoutDetails.bankAccount.bankName,
+              accountHolderName: sellerProfilePlain.payoutDetails.bankAccount.accountHolderName,
+              accountNumberMasked: sellerProfilePlain.payoutDetails.bankAccount.accountNumberMasked,
+              ifscCode: sellerProfilePlain.payoutDetails.bankAccount.ifscCode,
+              bankName: sellerProfilePlain.payoutDetails.bankAccount.bankName,
             }
           : undefined,
       /*

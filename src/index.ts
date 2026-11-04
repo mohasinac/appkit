@@ -1849,6 +1849,9 @@ export { smsCounterRepository } from "./features/auth/repository/sms-counter.rep
 // storeRepository - Shared export for store repository.
 export { storeRepository } from "./features/stores/repository/store.repository";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// sellerProfileRepository - sidecar to users/{uid}, seller-only fields (storeId/storeSlug/storeStatus/shippingConfig/payoutDetails).
+export { sellerProfileRepository } from "./features/seller/repository/seller-profile.repository";
+// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // scammerRepository - Shared export for scammer profiles repository.
 export { scammerRepository } from "./features/scams/repository/scammer.repository";
 // supportRepository - Server-only repository for support tickets (BAN1).

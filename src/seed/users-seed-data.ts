@@ -68,9 +68,8 @@ export const usersSeedData: Partial<UserPlain>[] = [
     role: USER_FIELDS.ROLE_VALUES.ADMIN,
     emailVerified: true,
     disabled: false,
-    storeId: "store-letitrip-official",
-    storeSlug: "store-letitrip-official",
-    storeStatus: "approved",
+    // 🛑 storeId/storeSlug/storeStatus MOVED to sellerProfilesSeedData
+    // (2026-11-05) — see seller-profiles-seed-data.ts.
     publicProfile: {
       isPublic: true,
       showEmail: false,
@@ -225,9 +224,8 @@ export const usersSeedData: Partial<UserPlain>[] = [
      * check; `storeId`/`storeSlug`/`storeStatus` match the restored store.
      */
     role: USER_FIELDS.ROLE_VALUES.SELLER,
-    storeId: "store-beyblade-arena",
-    storeSlug: "store-beyblade-arena",
-    storeStatus: "approved",
+    // 🛑 storeId/storeSlug/storeStatus MOVED to sellerProfilesSeedData
+    // (2026-11-05) — see seller-profiles-seed-data.ts.
     emailVerified: true,
     disabled: false,
     publicProfile: {

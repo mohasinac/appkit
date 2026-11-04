@@ -16,6 +16,7 @@ import { ProductStatusValues } from "../../products/schemas";
 import { reviewRepository } from "../../reviews/repository/reviews.repository";
 import { orderRepository } from "../../orders/repository/orders.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
+import { sellerProfileRepository } from "../../seller/repository/seller-profile.repository";
 import type { UserDocument } from "../schemas";
 import type { Review } from "../../reviews/types";
 
@@ -131,15 +132,21 @@ export const getBuyerActivityStats = cache(async function getBuyerActivityStats(
  * buyer's view of their own account: see `AppLayoutShell`.
  */
 export async function getProfileStats(
-  user: Pick<UserDocument, "uid" | "id" | "storeId">,
+  user: Pick<UserDocument, "uid" | "id">,
 ): Promise<BuyerActivityStats & { itemsSold?: number }> {
   const uid = user.uid ?? user.id;
+  // storeId is seller-only data — sellerProfiles, not users.
+  const sellerProfile = await safeRead(() => sellerProfileRepository.findById(uid), {
+    route: "profile:store-items-sold",
+    key: "sellerProfile:findById",
+    fallback: null,
+  });
   const [activity, itemsSold] = await Promise.all([
     getBuyerActivityStats(uid),
-    user.storeId
+    sellerProfile?.storeId
       ? safeRead(
           async () =>
-            (await storeRepository.findById(user.storeId as string))?.stats
+            (await storeRepository.findById(sellerProfile.storeId as string))?.stats
               ?.itemsSold,
           {
             route: "profile:store-items-sold",
@@ -207,14 +214,18 @@ export const getPublicUserProfile = cache(async function getPublicUserProfile(
       | "photoURL"
       | "role"
       | "createdAt"
-      | "storeId"
-      | "storeSlug"
       | "publicProfile"
-    > & { stats: BuyerActivityStats & { itemsSold?: number } })
+    > & {
+      storeId?: string;
+      storeSlug?: string;
+      stats: BuyerActivityStats & { itemsSold?: number };
+    })
   | null
 > {
   const user = await resolveProfileUser(userId);
   if (!user) return null;
+  // storeId/storeSlug are seller-only data — sellerProfiles, not users.
+  const sellerProfile = await sellerProfileRepository.findById(user.id);
   return {
     id: user.id,
     slug: user.slug,
@@ -222,8 +233,8 @@ export const getPublicUserProfile = cache(async function getPublicUserProfile(
     photoURL: user.photoURL,
     role: user.role,
     createdAt: user.createdAt,
-    storeId: user.storeId,
-    storeSlug: user.storeSlug,
+    storeId: sellerProfile?.storeId,
+    storeSlug: sellerProfile?.storeSlug,
     publicProfile: user.publicProfile,
     stats: await getProfileStats(user),
   };

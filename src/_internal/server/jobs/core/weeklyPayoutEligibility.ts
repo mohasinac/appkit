@@ -9,6 +9,7 @@ import {
   orderRepository,
   payoutRepository,
   siteSettingsRepository,
+  sellerProfileRepository,
 } from "../../../../repositories";
 import { BATCH_LIMIT } from "../handlers/messages";
 import { getDefaultCurrency } from "../../../../core/baseline-resolver";
@@ -109,6 +110,7 @@ export async function runWeeklyPayoutEligibility(
   for (const [storeId, orders] of byStore.entries()) {
     const store = await storeRepository.findBySlug(storeId);
     const seller = store ? await userRepository.findById(store.ownerId) : null;
+    const sellerProfile = store ? await sellerProfileRepository.findById(store.ownerId) : null;
     if (!store || !seller) {
       ctx.logger.warn(`Store/seller ${storeId} not found — skipping ${orders.length} order(s)`);
       continue;
@@ -151,6 +153,7 @@ export async function runWeeklyPayoutEligibility(
      * HMAC'd `sellerEmailIndex` could never match a real lookup.
      */
     const sellerPlain = userRepository.revealUser(seller);
+    const sellerProfilePlain = sellerProfile ? sellerProfileRepository.revealProfile(sellerProfile) : null;
 
     const payoutInput = {
       /* Every row this job writes settles a SELLER liability. */
@@ -171,16 +174,16 @@ export async function runWeeklyPayoutEligibility(
       currency: defaultCurrency,
       status: "pending" as const,
       paymentMethod:
-        sellerPlain.payoutDetails?.method === "upi" ? ("upi" as const) : ("bank_transfer" as const),
+        sellerProfilePlain?.payoutDetails?.method === "upi" ? ("upi" as const) : ("bank_transfer" as const),
       upiId:
-        sellerPlain.payoutDetails?.method === "upi" ? sellerPlain.payoutDetails.upiId : undefined,
+        sellerProfilePlain?.payoutDetails?.method === "upi" ? sellerProfilePlain.payoutDetails.upiId : undefined,
       bankAccount:
-        sellerPlain.payoutDetails?.method === "bank_transfer" && sellerPlain.payoutDetails.bankAccount
+        sellerProfilePlain?.payoutDetails?.method === "bank_transfer" && sellerProfilePlain.payoutDetails.bankAccount
           ? {
-              accountHolderName: sellerPlain.payoutDetails.bankAccount.accountHolderName,
-              accountNumberMasked: sellerPlain.payoutDetails.bankAccount.accountNumberMasked,
-              ifscCode: sellerPlain.payoutDetails.bankAccount.ifscCode,
-              bankName: sellerPlain.payoutDetails.bankAccount.bankName,
+              accountHolderName: sellerProfilePlain.payoutDetails.bankAccount.accountHolderName,
+              accountNumberMasked: sellerProfilePlain.payoutDetails.bankAccount.accountNumberMasked,
+              ifscCode: sellerProfilePlain.payoutDetails.bankAccount.ifscCode,
+              bankName: sellerProfilePlain.payoutDetails.bankAccount.bankName,
             }
           : undefined,
       notes: `Automated weekly payout — ${orders.length} delivered order(s)`,

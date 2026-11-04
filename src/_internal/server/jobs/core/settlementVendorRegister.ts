@@ -43,6 +43,7 @@ import type { JobContext } from "../runtime/types";
 import type { JobRunResult } from "./jobRunners";
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { userRepository } from "../../../../features/auth/repository/user.repository";
+import { sellerProfileRepository } from "../../../../features/seller/repository/seller-profile.repository";
 import {
   SettlementVendorStatusValues,
   StoreStatusValues,
@@ -259,7 +260,10 @@ export async function runSettlementVendorRegister(
     });
   }
   const ownerPlain = userRepository.revealUser(owner);
-  const details = ownerPlain.payoutDetails;
+  // payoutDetails is seller-only data — sellerProfiles, not users. Same
+  // ciphertext-by-default / revealProfile reasoning as the comment above.
+  const ownerProfile = store.ownerId ? await sellerProfileRepository.findById(store.ownerId) : null;
+  const details = ownerProfile ? sellerProfileRepository.revealProfile(ownerProfile).payoutDetails : undefined;
 
   const destinationIssues = payoutDestinationIssues(details);
   if (destinationIssues.length > 0) {
@@ -426,7 +430,8 @@ export async function runSettlementVendorRegister(
    */
   if (details) {
     try {
-      await userRepository.update(store.ownerId, {
+      // payoutDetails is seller-only data — sellerProfiles, not users.
+      await sellerProfileRepository.upsertForOwner(store.ownerId, {
         payoutDetails: {
           ...details,
           verificationStatus: VERIFICATION_BY_OUTCOME[result.outcome],
