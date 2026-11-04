@@ -110,6 +110,10 @@ import {
   type SiteSettingsIntegrationsFormValues,
   MASKED_CREDENTIAL_FIELDS,
 } from "../schemas/site-settings-integrations-form";
+import {
+  siteSettingsCollectorDropFormSchema,
+  type SiteSettingsCollectorDropFormValues,
+} from "../schemas/site-settings-collector-drop-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -968,10 +972,107 @@ export function AdminSiteSettingsView({
   const [categoryTypeFlags, setCategoryTypeFlags] = React.useState<Record<string, boolean>>({});
   const [browsePageFlags, setBrowsePageFlags] = React.useState<Record<string, boolean>>({});
 
-  // ⑩ Collector Drop
-  const [bidIncrementTiers, setBidIncrementTiers] = React.useState<BidIncrementTier[]>(DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS);
-  const [autoExtendWindow, setAutoExtendWindow] = React.useState(5);
-  const [settlementGrace, setSettlementGrace] = React.useState(24);
+  // ⑩ Collector Drop — sixteenth tab migrated to the Universal Template
+  // System, 2026-11-04. Three useState calls collapsed into one combined
+  // object. `bidIncrementTiers` keeps its original hand-written add/remove
+  // UI as a custom renderer — see site-settings-collector-drop-form.ts's
+  // header for why it does not fit the generic `<Repeater>` primitive.
+  const [collectorDropForm, setCollectorDropForm] = React.useState<SiteSettingsCollectorDropFormValues>({
+    bidIncrementTiers: DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
+    autoExtendWindow: 5, settlementGrace: 24,
+  });
+  const {
+    fields: collectorDropVisibilityFields,
+    setVisible: setCollectorDropFieldVisible,
+    fieldOrder: collectorDropFieldOrder,
+    setFieldOrder: setCollectorDropFieldOrder,
+  } = useFieldVisibility("admin-site-settings-collector-drop");
+  const collectorDropSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsCollectorDropFormValues>(siteSettingsCollectorDropFormSchema, {
+        renderers: {
+          bidIncrementTiers: ({ values, onChange }) => {
+            const tiers = (values.bidIncrementTiers as BidIncrementTier[]) ?? [];
+            const setTiers = (next: BidIncrementTier[]) => onChange({ bidIncrementTiers: next });
+            return (
+              <Stack gap="sm">
+                {tiers.map((tier, i) => {
+                  const isLast = i === tiers.length - 1;
+                  return (
+                    <Grid align="end" key={i} gap="xs" className="grid-cols-12">
+                      <Div className="col-span-5">
+                        {isLast ? (
+                          <>
+                            <Text size="xs" weight="medium" className="mb-1">Up to (₹)</Text>
+                            <Text size="sm" color="muted">and above</Text>
+                          </>
+                        ) : (
+                          <Input
+                            label="Up to (₹)"
+                            type="number"
+                            min={1}
+                            value={String(tier.upTo ?? "")}
+                            onChange={(e) => setTiers(tiers.map((t, j) => (j === i ? { ...t, upTo: parseInt(e.target.value) || 0 } : t)))}
+                          />
+                        )}
+                      </Div>
+                      <Div className="col-span-5">
+                        <Input
+                          label="Increment (₹)"
+                          type="number"
+                          min={1}
+                          value={String(tier.increment)}
+                          onChange={(e) => setTiers(tiers.map((t, j) => (j === i ? { ...t, increment: parseInt(e.target.value) || 0 } : t)))}
+                        />
+                      </Div>
+                      <Row centered className="col-span-2" padding="b-xs">
+                        <Button
+                          variant="ghost"
+                          type="button"
+                          disabled={tiers.length <= 1}
+                          onClick={() => setTiers(tiers.filter((_, j) => j !== i))}
+                          aria-label="Remove tier"
+                        >
+                          ×
+                        </Button>
+                      </Row>
+                    </Grid>
+                  );
+                })}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    setTiers([
+                      ...tiers.slice(0, -1),
+                      { upTo: 100, increment: 10 },
+                      tiers[tiers.length - 1] ?? { upTo: null, increment: 1000 },
+                    ])
+                  }
+                >
+                  + Add tier
+                </Button>
+              </Stack>
+            );
+          },
+        },
+        fieldVisibility: collectorDropVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setCollectorDropFieldVisible,
+        fieldOrder: collectorDropFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setCollectorDropFieldOrder(
+            swapFieldOrder(
+              collectorDropFieldOrder,
+              resolveFields(siteSettingsCollectorDropFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [collectorDropVisibilityFields, editMode, setCollectorDropFieldVisible, collectorDropFieldOrder, setCollectorDropFieldOrder],
+  );
 
   // ⑪ Platform Limits — eighth tab migrated to the Universal Template
   // System, 2026-11-04. Three useState calls collapsed into one combined
@@ -1431,9 +1532,11 @@ export function AdminSiteSettingsView({
     setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
     setBrowsePageFlags((s.listings?.browsePages as Record<string, boolean> | undefined) ?? {});
 
-    setBidIncrementTiers(s.collectorDropConfig?.bidIncrementTiers ?? DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS);
-    setAutoExtendWindow(s.collectorDropConfig?.autoExtendWindowMinutes ?? 5);
-    setSettlementGrace(s.collectorDropConfig?.settlementGracePeriodHours ?? 24);
+    setCollectorDropForm({
+      bidIncrementTiers: s.collectorDropConfig?.bidIncrementTiers ?? DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
+      autoExtendWindow: s.collectorDropConfig?.autoExtendWindowMinutes ?? 5,
+      settlementGrace: s.collectorDropConfig?.settlementGracePeriodHours ?? 24,
+    });
 
     setLimitsForm({
       maxProductsPerStore: s.platformLimits?.maxProductsPerStore ?? 100,
@@ -1749,7 +1852,11 @@ export function AdminSiteSettingsView({
         codMaxOrderValue: shippingForm.codMaxOrderValue,
         otpCheckoutThreshold: shippingForm.otpCheckoutThreshold,
       },
-      collectorDropConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
+      collectorDropConfig: {
+        bidIncrementTiers: collectorDropForm.bidIncrementTiers as unknown as FirestoreDocument[],
+        autoExtendWindowMinutes: collectorDropForm.autoExtendWindow,
+        settlementGracePeriodHours: collectorDropForm.settlementGrace,
+      },
       platformLimits: {
         maxProductsPerStore: limitsForm.maxProductsPerStore,
         maxCustomFieldsPerProduct: limitsForm.maxCustomFields,
@@ -2394,73 +2501,16 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑩ Collector Drop Config */}
+          {/* ⑩ Collector Drop Config — sixteenth tab migrated to the Universal Template System. */}
           <TabsContent value="collector-drop">
-            <SettingsTabForm id="collector-drop" label="Collector Drop">
-              <Stack gap="sm" rounded="lg" border="default" padding="sm">
-                <Text size="xs" weight="medium" color="muted">Bid increment tiers</Text>
-                <Text size="xs" color="muted">
-                  The minimum jump a new bid must clear, based on the current bid amount. A seller's per-listing override can require more than the matching tier, but can never undercut it.
-                </Text>
-                {bidIncrementTiers.map((tier, i) => {
-                  const isLast = i === bidIncrementTiers.length - 1;
-                  return (
-                    <Grid align="end" key={i} gap="xs" className="grid-cols-12">
-                      <Div className="col-span-5">
-                        {isLast ? (
-                          <>
-                            <Text size="xs" weight="medium" className="mb-1">Up to (₹)</Text>
-                            <Text size="sm" color="muted">and above</Text>
-                          </>
-                        ) : (
-                          <Input
-                            label="Up to (₹)"
-                            type="number"
-                            min={1}
-                            value={String(tier.upTo ?? "")}
-                            onChange={(e) => setBidIncrementTiers(bidIncrementTiers.map((t, j) => j === i ? { ...t, upTo: parseInt(e.target.value) || 0 } : t))}
-                          />
-                        )}
-                      </Div>
-                      <Div className="col-span-5">
-                        <Input
-                          label="Increment (₹)"
-                          type="number"
-                          min={1}
-                          value={String(tier.increment)}
-                          onChange={(e) => setBidIncrementTiers(bidIncrementTiers.map((t, j) => j === i ? { ...t, increment: parseInt(e.target.value) || 0 } : t))}
-                        />
-                      </Div>
-                      <Row centered className="col-span-2" padding="b-xs">
-                        <Button
-                          variant="ghost"
-                          type="button"
-                          disabled={bidIncrementTiers.length <= 1}
-                          onClick={() => setBidIncrementTiers(bidIncrementTiers.filter((_, j) => j !== i))}
-                          aria-label="Remove tier"
-                        >
-                          ×
-                        </Button>
-                      </Row>
-                    </Grid>
-                  );
-                })}
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setBidIncrementTiers([
-                    ...bidIncrementTiers.slice(0, -1),
-                    { upTo: 100, increment: 10 },
-                    bidIncrementTiers[bidIncrementTiers.length - 1] ?? { upTo: null, increment: 1000 },
-                  ])}
-                >
-                  + Add tier
-                </Button>
-              </Stack>
-              <Input label="Auto-extend window (minutes before end)" value={String(autoExtendWindow)} onChange={(e) => setAutoExtendWindow(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Extend collector drop end time if a bid arrives within this window." />
-              <Input label="Settlement grace period (hours)" value={String(settlementGrace)} onChange={(e) => setSettlementGrace(parseInt(e.target.value) || 0)} type="number" min={1} helperText="Time winner has to pay before the collector drop is re-listed." />
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsCollectorDropFormValues>
+              sections={collectorDropSections}
+              values={collectorDropForm}
+              onChange={(partial) => setCollectorDropForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsCollectorDropFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑪ Platform Limits — eighth tab migrated to the Universal Template System. */}
