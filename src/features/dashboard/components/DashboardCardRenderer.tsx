@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { z } from "zod";
 import { Button, type ButtonProps } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { FormGroup } from "../../../ui/components/Form";
@@ -7,6 +8,7 @@ import { Icon } from "../../../ui/components/Icon";
 import { IconButton } from "../../../ui/components/IconButton";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { MediaImage } from "../../../ui/components/MediaImage";
+import { QuickFormDrawer, type QuickFieldDef } from "../../shell/QuickFormDrawer";
 import { RichTextEditor } from "../../../ui/components/RichTextEditor";
 import { RichTextRenderer } from "../../../ui/rich-text/RichTextRenderer";
 import { Select, type SelectOption } from "../../../ui/components/Select";
@@ -20,11 +22,17 @@ import { useToastSafe } from "../../../ui/components/toast-context";
 import type { CardElement, CardElementSpan, DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ROW_HREF_BY_RESOURCE } from "../../../_internal/shared/features/admin/row-widget-resources";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { apiClient } from "../../../http";
+import { FAQ_CATEGORY_LABELS } from "../../faq/schemas/firestore";
+import type { FAQCategory } from "../../faq/types";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { ROW_COLUMNS, packBySpan } from "../../../utils/pack-by-span";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { humaniseFieldName } from "../../shell/entity-form";
+import type { FormValues } from "../../../schemas/types";
+import { normalizeError } from "../../../errors/normalize";
 
 /**
  * Extracted from `DashboardQuickJump.tsx` (Phase 3B) — the card
@@ -129,6 +137,94 @@ const CONTENT_TAG_OPTIONS: SelectOption[] = [
   { value: "", label: "No tag — always visible" },
   ...ALL_LISTING_TYPES.map((t) => ({ value: t, label: humaniseFieldName(t) })),
 ];
+
+const FAQ_CATEGORY_OPTIONS = (
+  Object.entries(FAQ_CATEGORY_LABELS) as Array<[FAQCategory, string]>
+).map(([value, label]) => ({ value, label }));
+
+const quickFaqSchema = z.object({
+  question: z.string().min(5, "Question must be at least 5 characters"),
+  answer: z.string().min(20, "Answer must be at least 20 characters"),
+  category: z.string().min(1, "Category is required"),
+});
+
+/**
+ * `form` CardElement kind registry (2026-11-04) — resolves `formId` to a
+ * real, runnable quick-create form. ONE entry, deliberately: the plan's own
+ * investigation found every candidate form tied to a specific record except
+ * FAQ creation, so adding a second, speculative entry here would repeat the
+ * exact "registry almost nothing uses" pattern this codebase already
+ * retired once (`route-schema-registry`). Add the next entry when a second
+ * real, context-free quick-create need exists — not before.
+ */
+interface FormWidgetDef {
+  title: string;
+  fields: QuickFieldDef[];
+  schema: z.ZodType<FormValues>;
+  submit: (values: FormValues, context?: string) => Promise<void>;
+}
+
+const FORM_WIDGET_REGISTRY: Record<string, FormWidgetDef> = {
+  "quick-add-faq": {
+    title: "Quick add FAQ",
+    fields: [
+      { name: "question", label: "Question", type: "text", required: true },
+      { name: "answer", label: "Answer", type: "textarea", required: true },
+      { name: "category", label: "Category", type: "select", required: true, options: FAQ_CATEGORY_OPTIONS },
+    ],
+    schema: quickFaqSchema as z.ZodType<FormValues>,
+    // `context` unused — FAQ creation has no owning store/record. Kept on
+    // the signature so every registry entry has the same shape.
+    submit: async (values) => {
+      await apiClient.post(ADMIN_ENDPOINTS.FAQS, values);
+    },
+  },
+};
+
+/**
+ * The `form` CardElement's render target — a button that opens a
+ * `QuickFormDrawer` built from the resolved registry entry. Unknown
+ * `formId`s (a stale pin from a removed registry entry) render the same
+ * honest "not editable here" text the placeholder used, rather than a
+ * broken button.
+ */
+function FormWidgetButton({ formId, label, context }: { formId: string; label: string; context?: string }) {
+  const [open, setOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const toast = useToastSafe();
+  const widget = FORM_WIDGET_REGISTRY[formId];
+  if (!widget) {
+    return <Text size="sm" color="muted">{label} (form — unknown formId &ldquo;{formId}&rdquo;)</Text>;
+  }
+  return (
+    <>
+      <Button variant="secondary" size="sm" type="button" onClick={() => setOpen(true)}>
+        {label}
+      </Button>
+      <QuickFormDrawer
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title={widget.title}
+        fields={widget.fields}
+        schema={widget.schema}
+        onSubmit={async (values) => {
+          setSubmitting(true);
+          try {
+            await widget.submit(values, context);
+            toast?.showToast(`${widget.title} — saved.`, "success");
+            setOpen(false);
+          } catch (err) {
+            void normalizeError(err);
+            toast?.showToast(`Couldn't save "${widget.title}" — please try again.`, "error");
+          } finally {
+            setSubmitting(false);
+          }
+        }}
+        isLoading={submitting}
+      />
+    </>
+  );
+}
 
 /**
  * `text`/`image`/`richText` carry no REQUIRED label (free prose, and a
@@ -328,6 +424,12 @@ function DashboardCardEditPanel({
     // than a file picker opening as a side effect of this click.
     onUpdate({ elements: [...card.elements, { kind: "image", mediaUrl: "", alt: "" }] });
   }
+  function addFormElement() {
+    // Single registry entry today (`FORM_WIDGET_REGISTRY`'s own doc
+    // comment explains why) — a direct add, not a picker. Widen to a
+    // `<Select>` of `formId`s the moment a second entry exists.
+    onUpdate({ elements: [...card.elements, { kind: "form", formId: "quick-add-faq", label: "Quick add FAQ" }] });
+  }
 
   return (
     <Stack gap="sm" padding="r-xl">
@@ -433,6 +535,17 @@ function DashboardCardEditPanel({
                         onValueChange={(value) => updateElement(i, { variant: value })}
                       />
                     </Stack>
+                  ) : el.kind === "form" ? (
+                    // `formId` stays fixed to the registry entry this was
+                    // added as — only the button's own label is editable.
+                    // Widen when a second registry entry makes `formId`
+                    // itself a real choice.
+                    <FieldInput
+                      name={`card-element-${card.id}-${i}-label`}
+                      label="Button label"
+                      value={el.label}
+                      onChange={(value) => updateElement(i, { label: value })}
+                    />
                   ) : (
                     <Text size="sm" color="muted">{el.label} ({el.kind})</Text>
                   )}
@@ -470,6 +583,9 @@ function DashboardCardEditPanel({
           </Button>
           <Button variant="ghost" size="sm" type="button" onClick={addCtaElement}>
             <Icon name="create" size="sm" /> Button
+          </Button>
+          <Button variant="ghost" size="sm" type="button" onClick={addFormElement}>
+            <Icon name="create" size="sm" /> Quick form
           </Button>
         </Row>
       </Div>
@@ -585,28 +701,12 @@ function DashboardCardElementBody({
     );
   }
   /*
-   * 🛑 "form" (9H's inline quick-edit) still has no render target — NOT
-   * extended in the same pass as `image`/`richText`/`cta`, on purpose.
-   * Investigated 2026-11-03: the plan's own proposal (express
-   * `QuickProductForm`'s field set as `QuickFieldDef[]`, resolved by a
-   * `formId` registry) runs into two real gaps, not a quick wire-up —
-   *
-   * 1. `QuickFieldDef`/`QuickFormDrawer` had no `"image"` field type at all
-   *    (fixed here — see `ui/types/quick-field.ts`'s updated doc comment —
-   *    but `QuickFormDrawer`'s own field loop still doesn't render it; only
-   *    a NEW inline renderer would).
-   * 2. Every real short form that already exists in this codebase
-   *    (`QuickProductForm`, `SellerOffersView`'s counter-offer drawer) is
-   *    tied to a specific record/store the bare `{kind:"form"; formId;
-   *    label}` shape has nowhere to carry — "which store does a pinned
-   *    quick-create-product widget create under" has no answer from a
-   *    formId string alone. Building a registry now would mean inventing a
-   *    fake, speculative first entry with no real consumer, which is the
-   *    exact "registry almost nothing uses" pattern this codebase already
-   *    retired once (`route-schema-registry`). Left as the honest
-   *    placeholder below until a real, genuinely context-free quick form
-   *    exists, or the `CardElement` `form` variant gains a `context`
-   *    field to carry a store/record id.
+   * 🛑 2026-11-04 — the gap this comment used to describe is closed.
+   * `FormWidgetButton` resolves `formId` against `FORM_WIDGET_REGISTRY`;
+   * the `context` field the old comment named as the missing piece was
+   * added to the `CardElement` `form` variant (`recent-entry.ts`) the same
+   * pass. See `FORM_WIDGET_REGISTRY`'s own doc comment for why it still
+   * has exactly one entry.
    */
-  return <Text size="sm" color="muted">{element.label} (form — not yet editable here)</Text>;
+  return <FormWidgetButton formId={element.formId} label={element.label} context={element.context} />;
 }

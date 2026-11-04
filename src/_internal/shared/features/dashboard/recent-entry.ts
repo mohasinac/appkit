@@ -189,7 +189,16 @@ export type CardElement =
   | { kind: "pdpSection"; productId: string; sectionId: PdpSectionId; label: string }
   | { kind: "text"; body: string }
   | { kind: "link"; href: string; label: string }
-  | { kind: "form"; formId: string; label: string }
+  /**
+   * `context` added 2026-11-04, resolving the gap `DashboardCardRenderer.tsx`'s
+   * own doc comment named: a bare `formId` string has nowhere to carry
+   * "which store/record this quick-create happens under". Optional and
+   * unused by the first real registry entry (`quick-add-faq`, which has no
+   * owning record) — present so a future store-scoped form (e.g. "quick
+   * add product under THIS store") has an answer from day one rather than
+   * needing a second type change.
+   */
+  | { kind: "form"; formId: string; label: string; context?: string }
   | { kind: "image"; mediaUrl: string; alt: string; label?: string; href?: string }
   | { kind: "richText"; html: string; label?: string }
   | { kind: "cta"; href: string; label: string; variant?: string };
