@@ -68,6 +68,10 @@ import {
   siteSettingsWatermarkFormSchema,
   type SiteSettingsWatermarkFormValues,
 } from "../schemas/site-settings-watermark-form";
+import {
+  siteSettingsFeesFormSchema,
+  type SiteSettingsFeesFormValues,
+} from "../schemas/site-settings-fees-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -605,43 +609,52 @@ export function AdminSiteSettingsView({
       }),
     [gstEnabled, gstin, gstLegalName, gstAddress],
   );
-  const [platformFeePercent, setPlatformFeePercent] = React.useState(5);
-  const [gstPercent, setGstPercent] = React.useState(18);
-  const [minimumTransactionFee, setMinimumTransactionFee] = React.useState(0);
-  const [platformFeeMax, setPlatformFeeMax] = React.useState(10);
-  const [gatewayFeePercent, setGatewayFeePercent] = React.useState(2);
-  const [payoutHoldDays, setPayoutHoldDays] = React.useState(7);
-  const [minPayoutAmount, setMinPayoutAmount] = React.useState(100);
-  const [collectorDropListingFee, setCollectorDropListingFee] = React.useState(0);
-  const [preOrderListingFee, setPreOrderListingFee] = React.useState(0);
-  const [featuredSlotFee, setFeaturedSlotFee] = React.useState(999);
-  const [promotedSlotFee, setPromotedSlotFee] = React.useState(499);
-  const [whatsappNotifyFeeEnabled, setWhatsappNotifyFeeEnabled] = React.useState(false);
-  const [whatsappNotifyFee, setWhatsappNotifyFee] = React.useState(10);
-  const [giftWrapFeeEnabled, setGiftWrapFeeEnabled] = React.useState(false);
-  const [giftWrapFee, setGiftWrapFee] = React.useState(49);
-  const [shipmentProtectionFeeEnabled, setShipmentProtectionFeeEnabled] = React.useState(false);
-  /*
-   * 🛑 D13 — these five had NO state, NO field and NO control, while
-   * `updateSingleton` replaced the whole `commissions` map on every save. So
-   * the first save of any commissions field DELETED them: sale protection
-   * stopped being sold (a product we charge 3%, min ₹49 for) and COD handling
-   * silently reverted to code defaults, both with no error.
-   *
-   * The repository now writes dotted paths, so an omitted key survives — but
-   * the controls still have to exist, or CLAUDE.md's stated remediation
-   * ("enable them at Admin → Site Settings → Commissions") remains impossible.
-   * Defaults mirror the schema: sale protection ON at platform level, because
-   * the platform tier defaults true and the SELLER tier is the opt-in.
-   */
-  const [saleProtectionFeeEnabled, setSaleProtectionFeeEnabled] = React.useState(true);
-  const [saleProtectionFeePercent, setSaleProtectionFeePercent] = React.useState(3);
-  const [saleProtectionFeeMin, setSaleProtectionFeeMin] = React.useState(49);
-  const [codHandlingFeePercent, setCodHandlingFeePercent] = React.useState(10);
-  const [codHandlingFeeCap, setCodHandlingFeeCap] = React.useState(200);
-  const [shipmentProtectionFeePercent, setShipmentProtectionFeePercent] = React.useState(2);
-  const [shipmentProtectionFeeMin, setShipmentProtectionFeeMin] = React.useState(30);
-  const [codDepositPercent, setCodDepositPercent] = React.useState(10);
+  // ⑦ Fees & Commissions — sixth tab migrated to the Universal Template
+  // System, 2026-11-04. Twenty-four useState calls collapsed into one
+  // combined object. 🛑 D13 — `saleProtectionFee*`/`codHandlingFee*` had NO
+  // state, NO field and NO control at all until that fix, while
+  // `updateSingleton` replaced the whole `commissions` map on every save —
+  // so the first save of any commissions field silently deleted them (sale
+  // protection stopped being sold, COD handling reverted to code defaults).
+  // The repository now writes dotted paths, so an omitted key survives, but
+  // the controls still have to exist. `saleProtectionFeeEnabled` defaults
+  // true to match the platform-tier default (the SELLER tier is the opt-in).
+  const [feesForm, setFeesForm] = React.useState<SiteSettingsFeesFormValues>({
+    platformFeePercent: 5, gstPercent: 18, minimumTransactionFee: 0, platformFeeMax: 10,
+    gatewayFeePercent: 2, payoutHoldDays: 7, minPayoutAmount: 100,
+    collectorDropListingFee: 0, preOrderListingFee: 0, featuredSlotFee: 999, promotedSlotFee: 499,
+    codDepositPercent: 10,
+    whatsappNotifyFeeEnabled: false, whatsappNotifyFee: 10,
+    giftWrapFeeEnabled: false, giftWrapFee: 49,
+    shipmentProtectionFeeEnabled: false, shipmentProtectionFeePercent: 2, shipmentProtectionFeeMin: 30,
+    saleProtectionFeeEnabled: true, saleProtectionFeePercent: 3, saleProtectionFeeMin: 49,
+    codHandlingFeePercent: 10, codHandlingFeeCap: 200,
+  });
+  const {
+    fields: feesVisibilityFields,
+    setVisible: setFeesFieldVisible,
+    fieldOrder: feesFieldOrder,
+    setFieldOrder: setFeesFieldOrder,
+  } = useFieldVisibility("admin-site-settings-fees");
+  const feesSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsFeesFormValues>(siteSettingsFeesFormSchema, {
+        fieldVisibility: feesVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setFeesFieldVisible,
+        fieldOrder: feesFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setFeesFieldOrder(
+            swapFieldOrder(
+              feesFieldOrder,
+              resolveFields(siteSettingsFeesFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [feesVisibilityFields, editMode, setFeesFieldVisible, feesFieldOrder, setFeesFieldOrder],
+  );
   const [sellerShippingFixed, setSellerShippingFixed] = React.useState(0);
   const [platformShippingPercent, setPlatformShippingPercent] = React.useState(10);
   const [platformShippingFixedMin, setPlatformShippingFixedMin] = React.useState(0);
@@ -903,40 +916,43 @@ export function AdminSiteSettingsView({
       watermarkOffsetY: s.watermark?.offsetY ?? 0,
     });
 
-    setPlatformFeePercent(s.commissions?.platformFeePercent ?? 5);
-    setGstPercent(s.commissions?.gstPercent ?? 18);
-    setMinimumTransactionFee(s.commissions?.minimumTransactionFee ?? 0);
-    setPlatformFeeMax(s.commissions?.platformFeeMax ?? 10);
-    setGatewayFeePercent(s.commissions?.gatewayFeePercent ?? 2);
-    /*
-     * 🛑 Clamped UP to the floor on load, deliberately.
-     *
-     * The live document is seeded `2`, and the payload Zod schema now refuses
-     * anything below `PAYOUT_HOLD_FLOOR_DAYS` (7) — so without this clamp an
-     * admin opening this tab would load 2, change something unrelated, and be
-     * blocked from saving by a field they never touched. The honoured value is
-     * already 7 (`resolvePayoutHoldDays` clamps at read time), so showing 7 is
-     * showing the truth, not silently overriding them.
-     */
-    setPayoutHoldDays(Math.max(s.commissions?.payoutHoldDays ?? 7, PAYOUT_HOLD_FLOOR_DAYS));
-    setMinPayoutAmount(s.commissions?.minPayoutAmount ?? 100);
-    setCollectorDropListingFee(s.commissions?.collectorDropListingFee ?? 0);
-    setPreOrderListingFee(s.commissions?.preOrderListingFee ?? 0);
-    setFeaturedSlotFee(s.commissions?.featuredSlotFee ?? 999);
-    setPromotedSlotFee(s.commissions?.promotedSlotFee ?? 499);
-    setWhatsappNotifyFeeEnabled(s.commissions?.whatsappNotifyFeeEnabled ?? false);
-    setWhatsappNotifyFee(s.commissions?.whatsappNotifyFee ?? 10);
-    setGiftWrapFeeEnabled(s.commissions?.giftWrapFeeEnabled ?? false);
-    setGiftWrapFee(s.commissions?.giftWrapFee ?? 49);
-    setShipmentProtectionFeeEnabled(s.commissions?.shipmentProtectionFeeEnabled ?? false);
-    setSaleProtectionFeeEnabled(s.commissions?.saleProtectionFeeEnabled ?? true);
-    setSaleProtectionFeePercent(s.commissions?.saleProtectionFeePercent ?? 3);
-    setSaleProtectionFeeMin(s.commissions?.saleProtectionFeeMin ?? 49);
-    setCodHandlingFeePercent(s.commissions?.codHandlingFeePercent ?? 10);
-    setCodHandlingFeeCap(s.commissions?.codHandlingFeeCap ?? 200);
-    setShipmentProtectionFeePercent(s.commissions?.shipmentProtectionFeePercent ?? 2);
-    setShipmentProtectionFeeMin(s.commissions?.shipmentProtectionFeeMin ?? 30);
-    setCodDepositPercent(s.commissions?.codDepositPercent ?? 10);
+    setFeesForm({
+      platformFeePercent: s.commissions?.platformFeePercent ?? 5,
+      gstPercent: s.commissions?.gstPercent ?? 18,
+      minimumTransactionFee: s.commissions?.minimumTransactionFee ?? 0,
+      platformFeeMax: s.commissions?.platformFeeMax ?? 10,
+      gatewayFeePercent: s.commissions?.gatewayFeePercent ?? 2,
+      /*
+       * 🛑 Clamped UP to the floor on load, deliberately.
+       *
+       * The live document is seeded `2`, and the payload Zod schema now
+       * refuses anything below `PAYOUT_HOLD_FLOOR_DAYS` (7) — so without this
+       * clamp an admin opening this tab would load 2, change something
+       * unrelated, and be blocked from saving by a field they never touched.
+       * The honoured value is already 7 (`resolvePayoutHoldDays` clamps at
+       * read time), so showing 7 is showing the truth, not silently
+       * overriding them.
+       */
+      payoutHoldDays: Math.max(s.commissions?.payoutHoldDays ?? 7, PAYOUT_HOLD_FLOOR_DAYS),
+      minPayoutAmount: s.commissions?.minPayoutAmount ?? 100,
+      collectorDropListingFee: s.commissions?.collectorDropListingFee ?? 0,
+      preOrderListingFee: s.commissions?.preOrderListingFee ?? 0,
+      featuredSlotFee: s.commissions?.featuredSlotFee ?? 999,
+      promotedSlotFee: s.commissions?.promotedSlotFee ?? 499,
+      codDepositPercent: s.commissions?.codDepositPercent ?? 10,
+      whatsappNotifyFeeEnabled: s.commissions?.whatsappNotifyFeeEnabled ?? false,
+      whatsappNotifyFee: s.commissions?.whatsappNotifyFee ?? 10,
+      giftWrapFeeEnabled: s.commissions?.giftWrapFeeEnabled ?? false,
+      giftWrapFee: s.commissions?.giftWrapFee ?? 49,
+      shipmentProtectionFeeEnabled: s.commissions?.shipmentProtectionFeeEnabled ?? false,
+      shipmentProtectionFeePercent: s.commissions?.shipmentProtectionFeePercent ?? 2,
+      shipmentProtectionFeeMin: s.commissions?.shipmentProtectionFeeMin ?? 30,
+      saleProtectionFeeEnabled: s.commissions?.saleProtectionFeeEnabled ?? true,
+      saleProtectionFeePercent: s.commissions?.saleProtectionFeePercent ?? 3,
+      saleProtectionFeeMin: s.commissions?.saleProtectionFeeMin ?? 49,
+      codHandlingFeePercent: s.commissions?.codHandlingFeePercent ?? 10,
+      codHandlingFeeCap: s.commissions?.codHandlingFeeCap ?? 200,
+    });
     setSellerShippingFixed(s.commissions?.sellerShippingFixed ?? 0);
     setPlatformShippingPercent(s.commissions?.platformShippingPercent ?? 10);
     setPlatformShippingFixedMin(s.commissions?.platformShippingFixedMin ?? 0);
@@ -1204,7 +1220,7 @@ export function AdminSiteSettingsView({
         offsetX: watermarkForm.watermarkOffsetX,
         offsetY: watermarkForm.watermarkOffsetY,
       },
-      commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, whatsappNotifyFee, whatsappNotifyFeeEnabled, minPayoutAmount, collectorDropListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, saleProtectionFeeEnabled, saleProtectionFeePercent, saleProtectionFeeMin, codHandlingFeePercent, codHandlingFeeCap, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
+      commissions: { ...feesForm, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
@@ -1767,173 +1783,23 @@ export function AdminSiteSettingsView({
             </Stack>
           </TabsContent>
 
-          {/* ⑦ Fees & Commissions */}
+          {/* ⑦ Fees & Commissions — sixth tab migrated to the Universal Template System. */}
           <TabsContent value="fees">
-            <SettingsTabForm id="fees" label="Fees">
-              <Grid cols={2} gap="md">
-                <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-                <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-                <Input label="PhonePe gateway cost (%)" helperText="Gateway's own fee — absorbed by platform, not passed through." value={String(gatewayFeePercent)} onChange={(e) => setGatewayFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
-                <Input label="Minimum transaction fee (₹)" helperText="Per-transaction floor. Total charge will never be below base + this." value={String(minimumTransactionFee)} onChange={(e) => setMinimumTransactionFee(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
-                <Input label="Maximum platform fee (₹)" helperText="Ceiling on the buyer's platform commission, charged once per checkout on every payment method. GST is calculated on the capped amount." value={String(platformFeeMax)} onChange={(e) => setPlatformFeeMax(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
-                <Input label="Seller payout hold (days)" value={String(payoutHoldDays)} onChange={(e) => setPayoutHoldDays(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Minimum payout amount (₹)" value={String(minPayoutAmount)} onChange={(e) => setMinPayoutAmount(parseInt(e.target.value) || 0)} type="number" min={0} />
-              {/*
-                * 🛑 D57/D60 — THESE FOUR FEES CHARGE NOBODY. Verified: zero
-                * readers in any money path (the single grep hit is a comment
-                * in `fees.ts` listing them as EXCLUDED from the buyer-facing
-                * projection). `featuredSlotFee` defaults to ₹999 and
-                * `promotedSlotFee` to ₹499, and `/admin/deals` sets
-                * `isPromoted` for free — which is exactly what
-                * `promotedSlotFee` would bill for.
-                *
-                * `platformLimits`' own comment states the rule: "Do not
-                * re-add them without a reader: a control that silently does
-                * nothing is worse than an absent one."
-                *
-                * 🛑 I did NOT delete them, and the reasoning is the word
-                * SILENTLY. Deleting discards a price the owner deliberately
-                * chose; wiring them is a new seller-billing feature, not a
-                * defect fix. Labelling removes the LIE at no cost and
-                * destroys nothing — so an admin setting ₹999 now knows it
-                * records an intent rather than collecting money.
-                *
-                * Flagged for a real decision: delete, or build the billing.
-                */}
-                <Input label="Collector Drop listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(collectorDropListingFee)} onChange={(e) => setCollectorDropListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Pre-order listing fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it." value={String(preOrderListingFee)} onChange={(e) => setPreOrderListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Featured slot fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it. /admin/deals sets isPromoted for free today." value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Promoted slot fee (₹)" helperText="Not charged yet — no billing path exists for seller listing fees. Setting a value records the intended price; nothing collects it. /admin/deals sets isPromoted for free today." value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-                <Input label="COD deposit (%)" helperText="% of order collected upfront on COD orders; remainder paid on delivery." value={String(codDepositPercent)} onChange={(e) => setCodDepositPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-              </Grid>
-              <Toggle
-                checked={whatsappNotifyFeeEnabled}
-                onChange={setWhatsappNotifyFeeEnabled}
-                label="Offer the WhatsApp order-updates addon at checkout"
-              />
-              <Grid cols={2} gap="md">
-                <Input
-                  label="WhatsApp addon fee (₹)"
-                  helperText="Flat fee charged to the buyer when they opt in. Requires WhatsApp credentials + at least one approved template — see the WhatsApp tab."
-                  value={String(whatsappNotifyFee)}
-                  onChange={(e) => setWhatsappNotifyFee(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  disabled={!whatsappNotifyFeeEnabled}
-                />
-              </Grid>
-              <Toggle
-                checked={giftWrapFeeEnabled}
-                onChange={setGiftWrapFeeEnabled}
-                label="Offer the gift-wrap addon at checkout"
-              />
-              <Grid cols={2} gap="md">
-                <Input
-                  label="Gift wrap fee (₹)"
-                  helperText="Flat fee charged to the buyer when they opt in."
-                  value={String(giftWrapFee)}
-                  onChange={(e) => setGiftWrapFee(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  disabled={!giftWrapFeeEnabled}
-                />
-              </Grid>
-              <Toggle
-                checked={shipmentProtectionFeeEnabled}
-                onChange={setShipmentProtectionFeeEnabled}
-                label="Offer the shipment-protection addon at checkout"
-              />
-              <Grid cols={2} gap="md">
-                <Input
-                  label="Shipment protection (%)"
-                  helperText="% of order subtotal, charged when the buyer opts in."
-                  value={String(shipmentProtectionFeePercent)}
-                  onChange={(e) => setShipmentProtectionFeePercent(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  max={100}
-                  step={0.1}
-                  disabled={!shipmentProtectionFeeEnabled}
-                />
-                <Input
-                  label="Shipment protection minimum (₹)"
-                  helperText="Floor for the shipment-protection fee."
-                  value={String(shipmentProtectionFeeMin)}
-                  onChange={(e) => setShipmentProtectionFeeMin(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  disabled={!shipmentProtectionFeeEnabled}
-                />
-              </Grid>
-
-              {/*
-                * 🛑 D13 — SALE PROTECTION had no control here at all, while
-                * being charged at 3% (min ₹49) on every order where the buyer
-                * ticked it. It was also absent from the save payload, so the
-                * first save of any commissions field deleted its three keys and
-                * silently withdrew the product.
-                *
-                * Mirrors the shipment-protection block above deliberately: the
-                * two are the same shape and an admin reading one should be able
-                * to predict the other.
-                */}
-              <Toggle
-                checked={saleProtectionFeeEnabled}
-                onChange={setSaleProtectionFeeEnabled}
-                label="Offer the sale-protection addon at checkout"
-              />
-              <Grid cols={2} gap="md">
-                <Input
-                  label="Sale protection (%)"
-                  helperText="% of order subtotal, charged when the buyer opts in. Covers the item against not-as-described and counterfeit claims."
-                  value={String(saleProtectionFeePercent)}
-                  onChange={(e) => setSaleProtectionFeePercent(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  max={100}
-                  step={0.1}
-                  disabled={!saleProtectionFeeEnabled}
-                />
-                <Input
-                  label="Sale protection minimum (₹)"
-                  helperText="Floor for the sale-protection fee."
-                  value={String(saleProtectionFeeMin)}
-                  onChange={(e) => setSaleProtectionFeeMin(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  disabled={!saleProtectionFeeEnabled}
-                />
-              </Grid>
-
-              {/*
-                * 🛑 D13 — COD HANDLING had the same problem: both keys absent
-                * from the form and from the payload, so a save reverted the fee
-                * to code defaults. There is no enable toggle because COD
-                * handling is not an opt-in addon — it applies to every COD
-                * order, and whether COD is offered at all is
-                * `payment.codEnabled` on a different tab.
-                */}
-              <Grid cols={2} gap="md">
-                <Input
-                  label="COD handling fee (%)"
-                  helperText="% of order subtotal, charged on Cash-on-Delivery orders only."
-                  value={String(codHandlingFeePercent)}
-                  onChange={(e) => setCodHandlingFeePercent(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                  max={100}
-                  step={0.1}
-                />
-                <Input
-                  label="COD handling fee cap (₹)"
-                  helperText="Ceiling for the COD handling fee, however large the order."
-                  value={String(codHandlingFeeCap)}
-                  onChange={(e) => setCodHandlingFeeCap(parseFloat(e.target.value) || 0)}
-                  type="number"
-                  min={0}
-                />
-              </Grid>
-            </SettingsTabForm>
+            {/*
+              🛑 D57/D60 and D13's bug history (four fees that charge
+              nobody, sale-protection/COD-handling fields that used to have
+              no control at all) are preserved as `help` text on the
+              relevant fields in site-settings-fees-form.ts rather than
+              repeated here — read that schema file for the full context.
+            */}
+            <SectionForm<SiteSettingsFeesFormValues>
+              sections={feesSections}
+              values={feesForm}
+              onChange={(partial) => setFeesForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsFeesFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑮ Procurement — labor rate feeding Feature A shipment cost calc */}
