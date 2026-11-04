@@ -123,6 +123,11 @@ import {
   type SiteSettingsAppearanceFormValues,
   type BackgroundModeValue,
 } from "../schemas/site-settings-appearance-form";
+import {
+  siteSettingsAboutFormSchema,
+  type SiteSettingsAboutFormValues,
+} from "../schemas/site-settings-about-form";
+import { Repeater } from "../../../ui/components/Repeater";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -1402,24 +1407,133 @@ export function AdminSiteSettingsView({
     [whatsappVisibilityFields, editMode, setWhatsappFieldVisible, whatsappFieldOrder, setWhatsappFieldOrder],
   );
 
-  // ⓪ About
-  const [aboutTitle, setAboutTitle] = React.useState("");
-  const [aboutSubtitle, setAboutSubtitle] = React.useState("");
-  const [aboutMissionTitle, setAboutMissionTitle] = React.useState("");
-  const [aboutMissionText, setAboutMissionText] = React.useState("");
-  const [aboutHowItWorksTitle, setAboutHowItWorksTitle] = React.useState("");
-  const [aboutHowItems, setAboutHowItems] = React.useState<AboutHowItem[]>([]);
-  const [aboutValuesTitle, setAboutValuesTitle] = React.useState("");
-  const [aboutValuesSubtitle, setAboutValuesSubtitle] = React.useState("");
-  const [aboutValueItems, setAboutValueItems] = React.useState<AboutValueItem[]>([]);
-  const [aboutMilestonesTitle, setAboutMilestonesTitle] = React.useState("");
-  const [aboutMilestones, setAboutMilestones] = React.useState<AboutMilestone[]>([]);
-  const [aboutTeamTitle, setAboutTeamTitle] = React.useState("");
-  const [aboutTeamSubtitle, setAboutTeamSubtitle] = React.useState("");
-  const [aboutTeamMembers, setAboutTeamMembers] = React.useState<AboutTeamMember[]>([]);
-  const [aboutCtaTitle, setAboutCtaTitle] = React.useState("");
-  const [aboutCtaSell, setAboutCtaSell] = React.useState("");
-  const [aboutCtaShop, setAboutCtaShop] = React.useState("");
+  // ⓪ About — nineteenth (and last field-by-field) tab migrated to the
+  // Universal Template System, 2026-11-04. Seventeen useState calls
+  // collapsed into one combined object. The four list fields use the
+  // generic `<Repeater>` primitive — see site-settings-about-form.ts's
+  // header for why that's the right fit here (unlike Collector Drop's
+  // bid-tier array, none of these four carry special last-row rules).
+  const [aboutForm, setAboutForm] = React.useState<SiteSettingsAboutFormValues>({
+    aboutTitle: "", aboutSubtitle: "", aboutMissionTitle: "", aboutMissionText: "",
+    aboutHowItWorksTitle: "", aboutHowItems: [],
+    aboutValuesTitle: "", aboutValuesSubtitle: "", aboutValueItems: [],
+    aboutMilestonesTitle: "", aboutMilestones: [],
+    aboutTeamTitle: "", aboutTeamSubtitle: "", aboutTeamMembers: [],
+    aboutCtaTitle: "", aboutCtaSell: "", aboutCtaShop: "",
+  });
+  const {
+    fields: aboutVisibilityFields,
+    setVisible: setAboutFieldVisible,
+    fieldOrder: aboutFieldOrder,
+    setFieldOrder: setAboutFieldOrder,
+  } = useFieldVisibility("admin-site-settings-about");
+  const aboutSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsAboutFormValues>(siteSettingsAboutFormSchema, {
+        renderers: {
+          aboutHowItems: ({ values, onChange }) => {
+            const rows = (values.aboutHowItems as AboutHowItem[]) ?? [];
+            return (
+              <Repeater<AboutHowItem>
+                rows={rows}
+                onChange={(next) => onChange({ aboutHowItems: next })}
+                blank={() => ({ title: "", text: "", icon: "✨", tone: "indigo" })}
+                addLabel="+ Add step"
+                max={6}
+                renderRow={(row, set) => (
+                  <>
+                    <Input label="Icon (emoji)" value={row.icon} onChange={(e) => set({ icon: e.target.value })} placeholder="🛒" />
+                    <Input label="Title" value={row.title} onChange={(e) => set({ title: e.target.value })} />
+                    <Textarea value={row.text} onChange={(e) => set({ text: e.target.value })} rows={2} />
+                  </>
+                )}
+              />
+            );
+          },
+          aboutValueItems: ({ values, onChange }) => {
+            const rows = (values.aboutValueItems as AboutValueItem[]) ?? [];
+            return (
+              <Repeater<AboutValueItem>
+                rows={rows}
+                onChange={(next) => onChange({ aboutValueItems: next })}
+                blank={() => ({ title: "", text: "", icon: "✨" })}
+                addLabel="+ Add value"
+                max={8}
+                renderRow={(row, set) => (
+                  <>
+                    <Input label="Icon (emoji)" value={row.icon} onChange={(e) => set({ icon: e.target.value })} placeholder="🛡️" />
+                    <Input label="Title" value={row.title} onChange={(e) => set({ title: e.target.value })} />
+                    <Textarea label="Text" value={row.text} onChange={(e) => set({ text: e.target.value })} rows={2} />
+                    <Textarea label="Detail (optional)" value={row.detail ?? ""} onChange={(e) => set({ detail: e.target.value })} rows={2} placeholder="How this value is actually enforced" />
+                  </>
+                )}
+              />
+            );
+          },
+          aboutMilestones: ({ values, onChange }) => {
+            const rows = (values.aboutMilestones as AboutMilestone[]) ?? [];
+            return (
+              <Repeater<AboutMilestone>
+                rows={rows}
+                onChange={(next) => onChange({ aboutMilestones: next })}
+                blank={() => ({ year: "", text: "" })}
+                addLabel="+ Add milestone"
+                max={10}
+                renderRow={(row, set) => (
+                  <>
+                    <Input label="Year" value={row.year} onChange={(e) => set({ year: e.target.value })} placeholder="2024" />
+                    <Textarea value={row.text} onChange={(e) => set({ text: e.target.value })} rows={2} />
+                  </>
+                )}
+              />
+            );
+          },
+          aboutTeamMembers: ({ values, onChange }) => {
+            const rows = (values.aboutTeamMembers as AboutTeamMember[]) ?? [];
+            return (
+              <Repeater<AboutTeamMember>
+                rows={rows}
+                onChange={(next) => onChange({ aboutTeamMembers: next })}
+                blank={() => ({ name: "", role: "", bio: "" })}
+                addLabel="+ Add team member"
+                max={12}
+                renderRow={(row, set) => (
+                  <>
+                    <ImageUpload
+                      label="Photo"
+                      currentImage={row.photoUrl}
+                      onUpload={(file) => upload(file, "store")}
+                      onChange={(url) => set({ photoUrl: url })}
+                    />
+                    <Input label="Name" value={row.name} onChange={(e) => set({ name: e.target.value })} />
+                    <Input label="Role" value={row.role} onChange={(e) => set({ role: e.target.value })} placeholder="Founder & Developer" />
+                    <Textarea value={row.bio} onChange={(e) => set({ bio: e.target.value })} rows={3} />
+                    <Row gap="md">
+                      <Toggle label="Founder" checked={!!row.isFounder} onChange={(v) => set({ isFounder: v })} />
+                      <Toggle label="Developer" checked={!!row.isDeveloper} onChange={(v) => set({ isDeveloper: v })} />
+                    </Row>
+                  </>
+                )}
+              />
+            );
+          },
+        },
+        fieldVisibility: aboutVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setAboutFieldVisible,
+        fieldOrder: aboutFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setAboutFieldOrder(
+            swapFieldOrder(
+              aboutFieldOrder,
+              resolveFields(siteSettingsAboutFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [aboutVisibilityFields, editMode, setAboutFieldVisible, aboutFieldOrder, setAboutFieldOrder, upload],
+  );
 
   // ⑭ Notification channels — ninth tab migrated to the Universal Template
   // System, 2026-11-04. Eighteen useState calls collapsed into one combined
@@ -1753,23 +1867,25 @@ export function AdminSiteSettingsView({
       conductHtml: s.legalPages?.codeOfConduct ?? "",
     });
 
-    setAboutTitle(s.aboutContent?.title ?? "");
-    setAboutSubtitle(s.aboutContent?.subtitle ?? "");
-    setAboutMissionTitle(s.aboutContent?.missionTitle ?? "");
-    setAboutMissionText(s.aboutContent?.missionText ?? "");
-    setAboutHowItWorksTitle(s.aboutContent?.howItWorksTitle ?? "");
-    setAboutHowItems(s.aboutContent?.howItems ?? []);
-    setAboutValuesTitle(s.aboutContent?.valuesTitle ?? "");
-    setAboutValuesSubtitle(s.aboutContent?.valuesSubtitle ?? "");
-    setAboutValueItems(s.aboutContent?.valueItems ?? []);
-    setAboutMilestonesTitle(s.aboutContent?.milestonesTitle ?? "");
-    setAboutMilestones(s.aboutContent?.milestones ?? []);
-    setAboutTeamTitle(s.aboutContent?.teamTitle ?? "");
-    setAboutTeamSubtitle(s.aboutContent?.teamSubtitle ?? "");
-    setAboutTeamMembers(s.aboutContent?.teamMembers ?? []);
-    setAboutCtaTitle(s.aboutContent?.ctaTitle ?? "");
-    setAboutCtaSell(s.aboutContent?.ctaSell ?? "");
-    setAboutCtaShop(s.aboutContent?.ctaShop ?? "");
+    setAboutForm({
+      aboutTitle: s.aboutContent?.title ?? "",
+      aboutSubtitle: s.aboutContent?.subtitle ?? "",
+      aboutMissionTitle: s.aboutContent?.missionTitle ?? "",
+      aboutMissionText: s.aboutContent?.missionText ?? "",
+      aboutHowItWorksTitle: s.aboutContent?.howItWorksTitle ?? "",
+      aboutHowItems: s.aboutContent?.howItems ?? [],
+      aboutValuesTitle: s.aboutContent?.valuesTitle ?? "",
+      aboutValuesSubtitle: s.aboutContent?.valuesSubtitle ?? "",
+      aboutValueItems: s.aboutContent?.valueItems ?? [],
+      aboutMilestonesTitle: s.aboutContent?.milestonesTitle ?? "",
+      aboutMilestones: s.aboutContent?.milestones ?? [],
+      aboutTeamTitle: s.aboutContent?.teamTitle ?? "",
+      aboutTeamSubtitle: s.aboutContent?.teamSubtitle ?? "",
+      aboutTeamMembers: s.aboutContent?.teamMembers ?? [],
+      aboutCtaTitle: s.aboutContent?.ctaTitle ?? "",
+      aboutCtaSell: s.aboutContent?.ctaSell ?? "",
+      aboutCtaShop: s.aboutContent?.ctaShop ?? "",
+    });
 
     setWhatsappForm({
       waPhoneNumberId: s.credentialsMasked?.whatsappPhoneNumberId ?? "",
@@ -1851,23 +1967,23 @@ export function AdminSiteSettingsView({
   function buildFullPayload(): FirestoreDocument {
     return {
       aboutContent: {
-        title: aboutTitle,
-        subtitle: aboutSubtitle,
-        missionTitle: aboutMissionTitle,
-        missionText: aboutMissionText,
-        howItWorksTitle: aboutHowItWorksTitle,
-        howItems: aboutHowItems as unknown as FirestoreDocument[],
-        valuesTitle: aboutValuesTitle,
-        valuesSubtitle: aboutValuesSubtitle,
-        valueItems: aboutValueItems as unknown as FirestoreDocument[],
-        milestonesTitle: aboutMilestonesTitle,
-        milestones: aboutMilestones as unknown as FirestoreDocument[],
-        teamTitle: aboutTeamTitle,
-        teamSubtitle: aboutTeamSubtitle,
-        teamMembers: aboutTeamMembers as unknown as FirestoreDocument[],
-        ctaTitle: aboutCtaTitle,
-        ctaSell: aboutCtaSell,
-        ctaShop: aboutCtaShop,
+        title: aboutForm.aboutTitle,
+        subtitle: aboutForm.aboutSubtitle,
+        missionTitle: aboutForm.aboutMissionTitle,
+        missionText: aboutForm.aboutMissionText,
+        howItWorksTitle: aboutForm.aboutHowItWorksTitle,
+        howItems: aboutForm.aboutHowItems as unknown as FirestoreDocument[],
+        valuesTitle: aboutForm.aboutValuesTitle,
+        valuesSubtitle: aboutForm.aboutValuesSubtitle,
+        valueItems: aboutForm.aboutValueItems as unknown as FirestoreDocument[],
+        milestonesTitle: aboutForm.aboutMilestonesTitle,
+        milestones: aboutForm.aboutMilestones as unknown as FirestoreDocument[],
+        teamTitle: aboutForm.aboutTeamTitle,
+        teamSubtitle: aboutForm.aboutTeamSubtitle,
+        teamMembers: aboutForm.aboutTeamMembers as unknown as FirestoreDocument[],
+        ctaTitle: aboutForm.aboutCtaTitle,
+        ctaSell: aboutForm.aboutCtaSell,
+        ctaShop: aboutForm.aboutCtaShop,
       },
       siteName: brandingForm.siteName, tagline: brandingForm.tagline,
       logo: brandingForm.logoUrl, favicon: brandingForm.faviconUrl,
@@ -2226,103 +2342,21 @@ export function AdminSiteSettingsView({
 
           {/* ⓪ About Page */}
           <TabsContent value="about">
-            <SettingsTabForm id="about" label="About">
-              <Text size="xs" color="muted">
-                Override the About page content. Leave blank to use the platform defaults.
-              </Text>
-              <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder={`About ${getBrandName()}`} />
-              <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
-              <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
-              <>
-                <Textarea
-                  label="Mission text"
-                  value={aboutMissionText}
-                  onChange={(e) => setAboutMissionText(e.target.value)}
-                  placeholder={`${getBrandName()} was built to democratise commerce…`}
-                  rows={4}
-                />
-              </>
-
-              <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Input label={'"How it works" section title'} value={aboutHowItWorksTitle} onChange={(e) => setAboutHowItWorksTitle(e.target.value)} placeholder="How It Works" />
-                {aboutHowItems.map((item, i) => (
-                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
-                    <Row justify="between" align="center">
-                      <Text size="xs" weight="medium" color="muted">Step {i + 1}</Text>
-                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutHowItems(aboutHowItems.filter((_, idx) => idx !== i))}>✕</Button>
-                    </Row>
-                    <Input label="Icon (emoji)" value={item.icon} onChange={(e) => { const next = [...aboutHowItems]; next[i] = { ...item, icon: e.target.value }; setAboutHowItems(next); }} placeholder="🛒" />
-                    <Input label="Title" value={item.title} onChange={(e) => { const next = [...aboutHowItems]; next[i] = { ...item, title: e.target.value }; setAboutHowItems(next); }} />
-                    <Textarea value={item.text} onChange={(e) => { const next = [...aboutHowItems]; next[i] = { ...item, text: e.target.value }; setAboutHowItems(next); }} rows={2} />
-                  </Stack>
-                ))}
-                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutHowItems([...aboutHowItems, { title: "", text: "", icon: "✨", tone: "indigo" }])}>+ Add step</Button>
-              </Stack>
-
-              <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Input label="Values section title" value={aboutValuesTitle} onChange={(e) => setAboutValuesTitle(e.target.value)} placeholder="Our Values" />
-                <Input label="Values section subtitle" value={aboutValuesSubtitle} onChange={(e) => setAboutValuesSubtitle(e.target.value)} placeholder="Optional intro line under the heading" />
-                {aboutValueItems.map((item, i) => (
-                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
-                    <Row justify="between" align="center">
-                      <Text size="xs" weight="medium" color="muted">Value {i + 1}</Text>
-                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutValueItems(aboutValueItems.filter((_, idx) => idx !== i))}>✕</Button>
-                    </Row>
-                    <Input label="Icon (emoji)" value={item.icon} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, icon: e.target.value }; setAboutValueItems(next); }} placeholder="🛡️" />
-                    <Input label="Title" value={item.title} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, title: e.target.value }; setAboutValueItems(next); }} />
-                    <Textarea label="Text" value={item.text} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, text: e.target.value }; setAboutValueItems(next); }} rows={2} />
-                    <Textarea label="Detail (optional)" value={item.detail ?? ""} onChange={(e) => { const next = [...aboutValueItems]; next[i] = { ...item, detail: e.target.value }; setAboutValueItems(next); }} rows={2} placeholder="How this value is actually enforced" />
-                  </Stack>
-                ))}
-                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutValueItems([...aboutValueItems, { title: "", text: "", icon: "✨" }])}>+ Add value</Button>
-              </Stack>
-
-              <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Input label="Milestones section title" value={aboutMilestonesTitle} onChange={(e) => setAboutMilestonesTitle(e.target.value)} placeholder="Our Journey" />
-                {aboutMilestones.map((item, i) => (
-                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
-                    <Row justify="between" align="center">
-                      <Text size="xs" weight="medium" color="muted">Milestone {i + 1}</Text>
-                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutMilestones(aboutMilestones.filter((_, idx) => idx !== i))}>✕</Button>
-                    </Row>
-                    <Input label="Year" value={item.year} onChange={(e) => { const next = [...aboutMilestones]; next[i] = { ...item, year: e.target.value }; setAboutMilestones(next); }} placeholder="2024" />
-                    <Textarea value={item.text} onChange={(e) => { const next = [...aboutMilestones]; next[i] = { ...item, text: e.target.value }; setAboutMilestones(next); }} rows={2} />
-                  </Stack>
-                ))}
-                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutMilestones([...aboutMilestones, { year: "", text: "" }])}>+ Add milestone</Button>
-              </Stack>
-
-              <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Input label="Team section title" value={aboutTeamTitle} onChange={(e) => setAboutTeamTitle(e.target.value)} placeholder="Meet the Team" />
-                <Input label="Team section subtitle" value={aboutTeamSubtitle} onChange={(e) => setAboutTeamSubtitle(e.target.value)} placeholder={`The people building ${getBrandName()}`} />
-                {aboutTeamMembers.map((member, i) => (
-                  <Stack key={i} gap="sm" rounded="lg" border="default" padding="sm">
-                    <Row justify="between" align="center">
-                      <Text size="xs" weight="medium" color="muted">Team member {i + 1}</Text>
-                      <Button type="button" variant="ghost" size="sm" onClick={() => setAboutTeamMembers(aboutTeamMembers.filter((_, idx) => idx !== i))}>✕</Button>
-                    </Row>
-                    <ImageUpload
-                      label="Photo"
-                      currentImage={member.photoUrl}
-                      onUpload={(file) => upload(file, "store")}
-                      onChange={(url) => { const next = [...aboutTeamMembers]; next[i] = { ...member, photoUrl: url }; setAboutTeamMembers(next); }}
-                    />
-                    <Input label="Name" value={member.name} onChange={(e) => { const next = [...aboutTeamMembers]; next[i] = { ...member, name: e.target.value }; setAboutTeamMembers(next); }} />
-                    <Input label="Role" value={member.role} onChange={(e) => { const next = [...aboutTeamMembers]; next[i] = { ...member, role: e.target.value }; setAboutTeamMembers(next); }} placeholder="Founder & Developer" />
-                    <Textarea value={member.bio} onChange={(e) => { const next = [...aboutTeamMembers]; next[i] = { ...member, bio: e.target.value }; setAboutTeamMembers(next); }} rows={3} />
-                    <Row gap="md">
-                      <Toggle label="Founder" checked={!!member.isFounder} onChange={(v) => { const next = [...aboutTeamMembers]; next[i] = { ...member, isFounder: v }; setAboutTeamMembers(next); }} />
-                      <Toggle label="Developer" checked={!!member.isDeveloper} onChange={(v) => { const next = [...aboutTeamMembers]; next[i] = { ...member, isDeveloper: v }; setAboutTeamMembers(next); }} />
-                    </Row>
-                  </Stack>
-                ))}
-                <Button type="button" variant="secondary" size="sm" onClick={() => setAboutTeamMembers([...aboutTeamMembers, { name: "", role: "", bio: "" }])}>+ Add team member</Button>
-              </Stack>
-
-              <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />
-              <Input label="Sell CTA copy" value={aboutCtaSell} onChange={(e) => setAboutCtaSell(e.target.value)} placeholder="Start selling in minutes" />
-              <Input label="Shop CTA copy" value={aboutCtaShop} onChange={(e) => setAboutCtaShop(e.target.value)} placeholder="Browse the marketplace" />
-            </SettingsTabForm>
+            {/*
+              Nineteenth (and last field-by-field) tab migrated to the
+              Universal Template System. The four repeatable lists use the
+              generic `<Repeater>` primitive — see
+              site-settings-about-form.ts's header for why that's the right
+              fit here, and for the accepted "Step N" numbering trade-off.
+            */}
+            <SectionForm<SiteSettingsAboutFormValues>
+              sections={aboutSections}
+              values={aboutForm}
+              onChange={(partial) => setAboutForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsAboutFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ① Branding */}
