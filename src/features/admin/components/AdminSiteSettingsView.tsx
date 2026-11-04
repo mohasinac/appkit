@@ -84,6 +84,10 @@ import {
   siteSettingsNotificationsFormSchema,
   type SiteSettingsNotificationsFormValues,
 } from "../schemas/site-settings-notifications-form";
+import {
+  siteSettingsShippingFormSchema,
+  type SiteSettingsShippingFormValues,
+} from "../schemas/site-settings-shipping-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -163,6 +167,22 @@ const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Normal", value: "normal" },
   { label: "High", value: "high" },
   { label: "Critical only", value: "critical" },
+];
+
+/*
+ * Moved to module scope from inside the component body (2026-11-04,
+ * Shipping tab migration) — `buildSectionsFromSchema`'s `opts.options` is a
+ * plain object evaluated eagerly at the point the `useMemo` factory runs,
+ * unlike a `renderers` function value, so a component-scoped `const`
+ * declared textually AFTER that `useMemo` call would be a TDZ error at
+ * runtime. A module-level const has no such ordering constraint.
+ */
+const CARRIER_OPTIONS: SelectOption[] = [
+  { label: "Custom / Other", value: "custom" },
+  { label: "Shiprocket", value: "shiprocket" },
+  { label: "Delhivery", value: "delhivery" },
+  { label: "Bluedart", value: "bluedart" },
+  { label: "FedEx", value: "fedex" },
 ];
 
 /** Single persistent save action for the whole settings form — every tab writes
@@ -693,9 +713,6 @@ export function AdminSiteSettingsView({
       }),
     [feesVisibilityFields, editMode, setFeesFieldVisible, feesFieldOrder, setFeesFieldOrder],
   );
-  const [sellerShippingFixed, setSellerShippingFixed] = React.useState(0);
-  const [platformShippingPercent, setPlatformShippingPercent] = React.useState(10);
-  const [platformShippingFixedMin, setPlatformShippingFixedMin] = React.useState(0);
 
   // ⑧ Integrations
   const [razorpayKeyId, setRazorpayKeyId] = React.useState("");
@@ -732,29 +749,51 @@ export function AdminSiteSettingsView({
   const [deviantartClientId, setDeviantartClientId] = React.useState("");
   const [deviantartClientSecret, setDeviantartClientSecret] = React.useState("");
 
-  // ⑨ Shipping
-  const [freeShippingThreshold, setFreeShippingThreshold] = React.useState(999);
-  const [defaultCarrier, setDefaultCarrier] = React.useState("custom");
-  const [maxDeliveryRadius, setMaxDeliveryRadius] = React.useState(0);
-
-  // ⑨ Payment methods (siteSettings.payment — read by checkout for method eligibility)
-  const [razorpayEnabled, setRazorpayEnabled] = React.useState(false);
-  const [phonepeEnabled, setPhonepeEnabled] = React.useState(false);
-  const [cashfreeEnabled, setCashfreeEnabled] = React.useState(false);
-  /*
-   * 🛑 Defaults to EMPTY, which means "every store is third-party" and
-   * therefore refuses online collection for every cart. That is the
-   * fail-closed direction and it must not be "helpfully" defaulted to a store
-   * id here — a wrong guess would authorise collecting another seller's money
-   * into the platform's own account (the RBI commingling), and it would
-   * present as a completely successful checkout.
-   */
-  const [platformStoreId, setPlatformStoreId] = React.useState("");
-  const [upiManualEnabled, setUpiManualEnabled] = React.useState(true);
-  const [codEnabled, setCodEnabled] = React.useState(true);
-  const [otpCheckoutThreshold, setOtpCheckoutThreshold] = React.useState(5000);
-  const [codMaxOrderValue, setCodMaxOrderValue] = React.useState(
-    COD_MAX_ORDER_VALUE_FALLBACK,
+  // ⑨ Shipping (Payment methods + Shipping Defaults + Seller shipping charge
+  // defaults) — tenth tab migrated to the Universal Template System,
+  // 2026-11-04. Fourteen useState calls collapsed into one combined object,
+  // including the 3 `commissions.*` fields shared with the Fees tab (its
+  // buildFullPayload() spread now reads them from `shippingForm` instead of
+  // bare vars — see that schema's own header for the seam).
+  //
+  // 🛑 `platformStoreId` defaults to EMPTY, which means "every store is
+  // third-party" and therefore refuses online collection for every cart.
+  // That is the fail-closed direction and it must not be "helpfully"
+  // defaulted to a store id here — a wrong guess would authorise collecting
+  // another seller's money into the platform's own account (the RBI
+  // commingling), and it would present as a completely successful checkout.
+  const [shippingForm, setShippingForm] = React.useState<SiteSettingsShippingFormValues>({
+    razorpayEnabled: false, phonepeEnabled: false, cashfreeEnabled: false,
+    platformStoreId: "", upiManualEnabled: true, codEnabled: true,
+    freeShippingThreshold: 999, defaultCarrier: "custom", maxDeliveryRadius: 0,
+    codMaxOrderValue: COD_MAX_ORDER_VALUE_FALLBACK, otpCheckoutThreshold: 5000,
+    sellerShippingFixed: 0, platformShippingPercent: 10, platformShippingFixedMin: 0,
+  });
+  const {
+    fields: shippingVisibilityFields,
+    setVisible: setShippingFieldVisible,
+    fieldOrder: shippingFieldOrder,
+    setFieldOrder: setShippingFieldOrder,
+  } = useFieldVisibility("admin-site-settings-shipping");
+  const shippingSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsShippingFormValues>(siteSettingsShippingFormSchema, {
+        options: { defaultCarrier: CARRIER_OPTIONS },
+        fieldVisibility: shippingVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setShippingFieldVisible,
+        fieldOrder: shippingFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setShippingFieldOrder(
+            swapFieldOrder(
+              shippingFieldOrder,
+              resolveFields(siteSettingsShippingFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [shippingVisibilityFields, editMode, setShippingFieldVisible, shippingFieldOrder, setShippingFieldOrder],
   );
 
   // Per-listing-type / per-category-type visibility flags.
@@ -1069,9 +1108,6 @@ export function AdminSiteSettingsView({
       codHandlingFeePercent: s.commissions?.codHandlingFeePercent ?? 10,
       codHandlingFeeCap: s.commissions?.codHandlingFeeCap ?? 200,
     });
-    setSellerShippingFixed(s.commissions?.sellerShippingFixed ?? 0);
-    setPlatformShippingPercent(s.commissions?.platformShippingPercent ?? 10);
-    setPlatformShippingFixedMin(s.commissions?.platformShippingFixedMin ?? 0);
 
     setProcurementForm({
       laborHourlyRate: s.laborRate?.hourlyRate ?? 200,
@@ -1122,13 +1158,6 @@ export function AdminSiteSettingsView({
     setDeviantartClientId(s.credentialsMasked?.deviantartClientId ?? "");
     setDeviantartClientSecret(s.credentialsMasked?.deviantartClientSecret ?? "");
 
-    setFreeShippingThreshold(s.shipping?.freeShippingThreshold ?? 999);
-    setDefaultCarrier(s.shipping?.defaultCarrier ?? "custom");
-    setMaxDeliveryRadius(s.shipping?.maxDeliveryRadius ?? 0);
-
-    setRazorpayEnabled(s.payment?.razorpayEnabled ?? false);
-    setPhonepeEnabled(s.payment?.phonepeEnabled ?? false);
-    setCashfreeEnabled(s.payment?.cashfreeEnabled ?? false);
     /*
      * 🛑 The HYDRATE leg, and skipping it is the live risk this file's own
      * comments name: a key that is SAVED but never hydrated renders its
@@ -1136,11 +1165,22 @@ export function AdminSiteSettingsView({
      * over the stored value. For this field that silently turns online
      * collection off for the whole site on the first unrelated settings save.
      */
-    setPlatformStoreId(s.payment?.platformStoreId ?? "");
-    setUpiManualEnabled(s.payment?.upiManualEnabled ?? true);
-    setCodEnabled(s.payment?.codEnabled ?? true);
-    setOtpCheckoutThreshold(s.payment?.otpCheckoutThreshold ?? 5000);
-    setCodMaxOrderValue(s.payment?.codMaxOrderValue ?? COD_MAX_ORDER_VALUE_FALLBACK);
+    setShippingForm({
+      razorpayEnabled: s.payment?.razorpayEnabled ?? false,
+      phonepeEnabled: s.payment?.phonepeEnabled ?? false,
+      cashfreeEnabled: s.payment?.cashfreeEnabled ?? false,
+      platformStoreId: s.payment?.platformStoreId ?? "",
+      upiManualEnabled: s.payment?.upiManualEnabled ?? true,
+      codEnabled: s.payment?.codEnabled ?? true,
+      otpCheckoutThreshold: s.payment?.otpCheckoutThreshold ?? 5000,
+      codMaxOrderValue: s.payment?.codMaxOrderValue ?? COD_MAX_ORDER_VALUE_FALLBACK,
+      freeShippingThreshold: s.shipping?.freeShippingThreshold ?? 999,
+      defaultCarrier: s.shipping?.defaultCarrier ?? "custom",
+      maxDeliveryRadius: s.shipping?.maxDeliveryRadius ?? 0,
+      sellerShippingFixed: s.commissions?.sellerShippingFixed ?? 0,
+      platformShippingPercent: s.commissions?.platformShippingPercent ?? 10,
+      platformShippingFixedMin: s.commissions?.platformShippingFixedMin ?? 0,
+    });
 
     setListingTypeFlags((s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {});
     setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
@@ -1342,7 +1382,12 @@ export function AdminSiteSettingsView({
         offsetX: watermarkForm.watermarkOffsetX,
         offsetY: watermarkForm.watermarkOffsetY,
       },
-      commissions: { ...feesForm, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
+      commissions: {
+        ...feesForm,
+        sellerShippingFixed: shippingForm.sellerShippingFixed,
+        platformShippingPercent: shippingForm.platformShippingPercent,
+        platformShippingFixedMin: shippingForm.platformShippingFixedMin,
+      },
       laborRate: { hourlyRate: procurementForm.laborHourlyRate, maxHoursPerDay: procurementForm.laborMaxHoursPerDay },
       emi: {
         enabled: emiEnabled,
@@ -1425,7 +1470,11 @@ export function AdminSiteSettingsView({
         },
       },
       integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId, clarityProjectId },
-      shipping: { freeShippingThreshold, defaultCarrier, maxDeliveryRadius },
+      shipping: {
+        freeShippingThreshold: shippingForm.freeShippingThreshold,
+        defaultCarrier: shippingForm.defaultCarrier,
+        maxDeliveryRadius: shippingForm.maxDeliveryRadius,
+      },
       /*
        * `platformStoreId` is trimmed and sent as `undefined` when blank rather
        * than as `""` — the resolver treats an empty-ish value as unset anyway,
@@ -1433,7 +1482,16 @@ export function AdminSiteSettingsView({
        * is ours") where none was made, and a stored `""` reads differently
        * from an absent key to anyone inspecting the document.
        */
-      payment: { razorpayEnabled, phonepeEnabled, cashfreeEnabled, platformStoreId: platformStoreId.trim() || undefined, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
+      payment: {
+        razorpayEnabled: shippingForm.razorpayEnabled,
+        phonepeEnabled: shippingForm.phonepeEnabled,
+        cashfreeEnabled: shippingForm.cashfreeEnabled,
+        platformStoreId: (shippingForm.platformStoreId ?? "").trim() || undefined,
+        upiManualEnabled: shippingForm.upiManualEnabled,
+        codEnabled: shippingForm.codEnabled,
+        codMaxOrderValue: shippingForm.codMaxOrderValue,
+        otpCheckoutThreshold: shippingForm.otpCheckoutThreshold,
+      },
       collectorDropConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
       platformLimits: {
         maxProductsPerStore: limitsForm.maxProductsPerStore,
@@ -1500,13 +1558,6 @@ export function AdminSiteSettingsView({
     { label: "Gradient", value: "gradient" },
     { label: "Image", value: "image" },
     { label: "Video", value: "video" },
-  ];
-  const CARRIER_OPTIONS = [
-    { label: "Custom / Other", value: "custom" },
-    { label: "Shiprocket", value: "shiprocket" },
-    { label: "Delhivery", value: "delhivery" },
-    { label: "Bluedart", value: "bluedart" },
-    { label: "FedEx", value: "fedex" },
   ];
   /*
    * Shared by every gateway that has a sandbox/production split (PhonePe,
@@ -2278,66 +2329,16 @@ export function AdminSiteSettingsView({
             </SettingsTabForm>
           </TabsContent>
 
-          {/* ⑨ Shipping Defaults */}
+          {/* ⑨ Shipping Defaults — tenth tab migrated to the Universal Template System. */}
           <TabsContent value="shipping">
-            <SettingsTabForm id="shipping" label="Shipping">
-              <Text size="sm" weight="medium" color="muted">Payment methods</Text>
-              <Div id="setting-razorpay-enabled"><Toggle label="Razorpay (online card/UPI/netbanking) enabled — needs Key ID + Key Secret under Credentials" checked={razorpayEnabled} onChange={setRazorpayEnabled} /></Div>
-              <Div id="setting-phonepe-enabled"><Toggle label="PhonePe (online card/UPI) enabled — when several are on, the first in the Razorpay → PhonePe → Cashfree order is the DEFAULT; carts needing split settlement still go to Cashfree" checked={phonepeEnabled} onChange={setPhonepeEnabled} /></Div>
-              <Div id="setting-cashfree-enabled"><Toggle label="Cashfree Payments enabled — needs App ID + Secret Key under Credentials. Last in the default order, but REQUIRED for any cart holding another seller’s items: it is the only gateway that pays each seller directly at capture. Leave it off and those carts cannot be paid online at all" checked={cashfreeEnabled} onChange={setCashfreeEnabled} /></Div>
-              <Input
-                label="Platform's own store ID"
-                /*
-                  🛑 A free-text store id rather than a picker, deliberately.
-                  This view loads no store list, and the cost of a typo is
-                  FAIL-CLOSED and loud — an id naming no real store behaves
-                  exactly like a blank one, so every cart becomes third-party
-                  and online payment is refused with a reason, which an admin
-                  notices immediately. A picker would be nicer; a wrong default
-                  would be dangerous, and that is the trade this field is
-                  placed on.
-                */
-                helperText="The one store whose stock this business may collect payment for into its own account. LEAVE BLANK AND NO CART CAN BE PAID ONLINE: any cart holding another seller's items must be collected by a gateway that settles their share directly to them at capture (Cashfree Easy Split), because a non-splitting capture puts their money in this business's account first. Blank means every store counts as another seller's."
-                value={platformStoreId}
-                onChange={(e) => setPlatformStoreId(e.target.value)}
-                placeholder="store-your-official-slug"
-              />
-              <Div id="setting-manual-payment-enabled"><Toggle label="Manual UPI/bank transfer enabled" checked={upiManualEnabled} onChange={setUpiManualEnabled} /></Div>
-              <Div id="setting-cod-enabled"><Toggle label="Cash on delivery (COD) enabled" checked={codEnabled} onChange={setCodEnabled} /></Div>
-              <Input label="Free shipping threshold (₹)" value={String(freeShippingThreshold)} onChange={(e) => setFreeShippingThreshold(parseInt(e.target.value) || 0)} type="number" min={0} helperText="Orders above this amount get free shipping." />
-              <Select label="Default carrier" options={CARRIER_OPTIONS} value={defaultCarrier} onValueChange={setDefaultCarrier} />
-              <Input label="Max delivery radius (km, 0 = no limit)" value={String(maxDeliveryRadius)} onChange={(e) => setMaxDeliveryRadius(parseInt(e.target.value) || 0)} type="number" min={0} />
-              <Input
-                label="COD maximum order value (₹)"
-                /*
-                  🛑 A MAXIMUM, sitting directly above a THRESHOLD that is a
-                  minimum. The helper text says which way each one runs,
-                  because the two fields look identical and mean opposite
-                  things — and getting it backwards here either refuses every
-                  COD order or refuses none.
-                */
-                helperText="Carts ABOVE this subtotal cannot pay by cash on delivery; the option is shown disabled with the reason. 0 = COD off for every cart."
-                value={String(codMaxOrderValue)}
-                onChange={(e) => setCodMaxOrderValue(parseInt(e.target.value) || 0)}
-                type="number"
-                min={0}
-                disabled={!codEnabled}
-              />
-              <Input
-                label="High-value checkout OTP threshold (₹)"
-                helperText="Carts at or above this subtotal require an extra OTP verification step before payment (0 = disabled)."
-                value={String(otpCheckoutThreshold)}
-                onChange={(e) => setOtpCheckoutThreshold(parseInt(e.target.value) || 0)}
-                type="number"
-                min={0}
-              />
-              <Text size="sm" weight="medium" color="muted" className="pt-[var(--appkit-space-2)]">Seller shipping charge defaults</Text>
-              <Grid cols={2} gap="md">
-                <Input label="Seller shipping fixed (₹)" helperText="Flat shipping charge collected on the seller's behalf." value={String(sellerShippingFixed)} onChange={(e) => setSellerShippingFixed(parseFloat(e.target.value) || 0)} type="number" min={0} />
-                <Input label="Platform shipping (%)" helperText="Platform's own shipping markup, as a % of order value." value={String(platformShippingPercent)} onChange={(e) => setPlatformShippingPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-                <Input label="Platform shipping minimum (₹)" helperText="Floor for the platform shipping markup." value={String(platformShippingFixedMin)} onChange={(e) => setPlatformShippingFixedMin(parseFloat(e.target.value) || 0)} type="number" min={0} />
-              </Grid>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsShippingFormValues>
+              sections={shippingSections}
+              values={shippingForm}
+              onChange={(partial) => setShippingForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsShippingFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑩ Collector Drop Config */}
