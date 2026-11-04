@@ -56,6 +56,10 @@ import {
   siteSettingsAnnouncementFormSchema,
   type SiteSettingsAnnouncementFormValues,
 } from "../schemas/site-settings-announcement-form";
+import {
+  siteSettingsSeoFormSchema,
+  type SiteSettingsSeoFormValues,
+} from "../schemas/site-settings-seo-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -359,12 +363,45 @@ export function AdminSiteSettingsView({
     [announcementVisibilityFields, editMode, setAnnouncementFieldVisible, announcementFieldOrder, setAnnouncementFieldOrder],
   );
 
-  // ④ SEO
-  const [seoTitle, setSeoTitle] = React.useState("");
-  const [seoDescription, setSeoDescription] = React.useState("");
-  const [seoOgImage, setSeoOgImage] = React.useState("");
-  const [seoNoIndex, setSeoNoIndex] = React.useState(false);
-  const [canonicalUrl, setCanonicalUrl] = React.useState("");
+  // ④ SEO — third tab migrated to the Universal Template System, 2026-11-04.
+  const [seoForm, setSeoForm] = React.useState<SiteSettingsSeoFormValues>({
+    seoTitle: "", seoDescription: "", seoOgImage: "", canonicalUrl: "", seoNoIndex: false,
+  });
+  const {
+    fields: seoVisibilityFields,
+    setVisible: setSeoFieldVisible,
+    fieldOrder: seoFieldOrder,
+    setFieldOrder: setSeoFieldOrder,
+  } = useFieldVisibility("admin-site-settings-seo");
+  const seoSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsSeoFormValues>(siteSettingsSeoFormSchema, {
+        renderers: {
+          seoOgImage: ({ values, onChange }) => (
+            <ImageUpload
+              label="Default OG image"
+              currentImage={(values.seoOgImage as string) ?? ""}
+              onUpload={(file) => upload(file, "store")}
+              onChange={(url) => onChange({ seoOgImage: url })}
+            />
+          ),
+        },
+        fieldVisibility: seoVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setSeoFieldVisible,
+        fieldOrder: seoFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setSeoFieldOrder(
+            swapFieldOrder(
+              seoFieldOrder,
+              resolveFields(siteSettingsSeoFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [seoVisibilityFields, editMode, setSeoFieldVisible, seoFieldOrder, setSeoFieldOrder, upload],
+  );
 
   // ⑤ Contact & Social
   const [supportEmail, setSupportEmail] = React.useState("");
@@ -712,11 +749,13 @@ export function AdminSiteSettingsView({
       announcementBg: s.announcementBar?.backgroundColor ?? "",
     });
 
-    setSeoTitle(s.seo?.defaultTitle ?? "");
-    setSeoDescription(s.seo?.defaultDescription ?? "");
-    setSeoOgImage(s.seo?.defaultOgImage ?? "");
-    setSeoNoIndex(s.seo?.noIndex ?? false);
-    setCanonicalUrl(s.seo?.canonicalBaseUrl ?? "");
+    setSeoForm({
+      seoTitle: s.seo?.defaultTitle ?? "",
+      seoDescription: s.seo?.defaultDescription ?? "",
+      seoOgImage: s.seo?.defaultOgImage ?? "",
+      seoNoIndex: s.seo?.noIndex ?? false,
+      canonicalUrl: s.seo?.canonicalBaseUrl ?? "",
+    });
 
     setSupportEmail(s.contact?.email ?? "");
     setSupportPhone(s.contact?.phone ?? "");
@@ -1010,7 +1049,13 @@ export function AdminSiteSettingsView({
         link: announcementForm.announcementLink,
         backgroundColor: announcementForm.announcementBg,
       },
-      seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
+      seo: {
+        defaultTitle: seoForm.seoTitle,
+        defaultDescription: seoForm.seoDescription,
+        defaultOgImage: seoForm.seoOgImage,
+        noIndex: seoForm.seoNoIndex,
+        canonicalBaseUrl: seoForm.canonicalUrl,
+      },
       contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp, upiVpa },
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
       watermark: {
@@ -1527,13 +1572,15 @@ export function AdminSiteSettingsView({
 
           {/* ④ SEO */}
           <TabsContent value="seo">
-            <SettingsTabForm id="seo" label="Seo">
-              <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder={`${getBrandName()} — what you sell, where you sell it`} maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
-              <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
-              <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
-              <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder={`https://${getBrandDomain()}`} />
-              <Div id="setting-robots-noindex"><Toggle label="Robots noindex (disables search indexing — use carefully)" checked={seoNoIndex} onChange={setSeoNoIndex} /></Div>
-            </SettingsTabForm>
+            {/* Third tab migrated to the Universal Template System. */}
+            <SectionForm<SiteSettingsSeoFormValues>
+              sections={seoSections}
+              values={seoForm}
+              onChange={(partial) => setSeoForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsSeoFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑤ Contact & Social */}
