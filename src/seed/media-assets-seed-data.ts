@@ -1761,11 +1761,19 @@ export const mediaAssetsSeedData: Partial<MediaAssetDocument>[] = [
     contextType: "category-image",
   },
   {
+    // 🛑 Re-uploaded 2026-11-05 — the doc existed with a realistic-looking
+    // size (175808) but the storage object itself was never actually
+    // uploaded (storage object existence check returned false), so
+    // /media/category-ultimate-valkyrie-legacy-variable-9-image 404d.
+    // Re-fetched the real lead image from its own beyblade.fandom.com wiki
+    // page (exact title match, first try: "Ultimate Valkyrie Legacy
+    // Variable'-9"), visually verified, re-uploaded. size now reflects the
+    // real uploaded bytes.
     id: "category-ultimate-valkyrie-legacy-variable-9-image",
     storagePath: "media/categories/category-ultimate-valkyrie-legacy-variable-9-image.webp",
     uploadedBy: "user-admin-letitrip",
     contentType: "image/webp",
-    size: 175808,
+    size: 46254,
     isPublic: true,
     status: "finalized",
     contextType: "category-image",
