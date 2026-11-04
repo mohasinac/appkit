@@ -96,6 +96,11 @@ import {
   siteSettingsEmiFormSchema,
   type SiteSettingsEmiFormValues,
 } from "../schemas/site-settings-emi-form";
+import {
+  siteSettingsLegalFormSchema,
+  type SiteSettingsLegalFormValues,
+  LEGAL_PAGE_FIELDS,
+} from "../schemas/site-settings-legal-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -946,28 +951,66 @@ export function AdminSiteSettingsView({
     [limitsVisibilityFields, editMode, setLimitsFieldVisible, limitsFieldOrder, setLimitsFieldOrder],
   );
 
-  // ⑫ Legal
-  const [termsHtml, setTermsHtml] = React.useState("");
-  const [privacyHtml, setPrivacyHtml] = React.useState("");
-  const [refundHtml, setRefundHtml] = React.useState("");
-  const [shippingPolicyHtml, setShippingPolicyHtml] = React.useState("");
-  const [cookieHtml, setCookieHtml] = React.useState("");
-  const [ethicsHtml, setEthicsHtml] = React.useState("");
-  const [conductHtml, setConductHtml] = React.useState("");
-  /*
-   * 🛑 D19 — `cancellation` and `grievance` are declared on
-   * `SiteSettingsDocument.legalPages` and were omitted from BOTH the load and
-   * the payload here. Under the old wholesale-map replace that meant an
-   * override written to either key was ERASED on the next Legal-tab save —
-   * the same cause as D13, one group over, which is the evidence that the
-   * repository fix (dotted paths) was the right level to fix it at.
-   *
-   * The grievance page in particular is a statutory channel, so an override
-   * silently reverting to the bundled default is a compliance problem rather
-   * than a content one.
-   */
-  const [cancellationHtml, setCancellationHtml] = React.useState("");
-  const [grievanceHtml, setGrievanceHtml] = React.useState("");
+  // ⑫ Legal — thirteenth tab migrated to the Universal Template System,
+  // 2026-11-04. Nine useState calls collapsed into one combined object.
+  //
+  // 🛑 D19 — `cancellation` and `grievance` are declared on
+  // `SiteSettingsDocument.legalPages` and were once omitted from BOTH the
+  // load and the payload here. Under the old wholesale-map replace that
+  // meant an override written to either key was ERASED on the next
+  // Legal-tab save — the same cause as D13, one group over, which is the
+  // evidence that the repository fix (dotted paths) was the right level to
+  // fix it at. The grievance page in particular is a statutory channel, so
+  // an override silently reverting to the bundled default is a compliance
+  // problem rather than a content one. Both are carried unconditionally
+  // below, same as every other field.
+  const [legalForm, setLegalForm] = React.useState<SiteSettingsLegalFormValues>({
+    termsHtml: "", privacyHtml: "", refundHtml: "", shippingPolicyHtml: "",
+    cookieHtml: "", ethicsHtml: "", conductHtml: "", cancellationHtml: "", grievanceHtml: "",
+  });
+  const {
+    fields: legalVisibilityFields,
+    setVisible: setLegalFieldVisible,
+    fieldOrder: legalFieldOrder,
+    setFieldOrder: setLegalFieldOrder,
+  } = useFieldVisibility("admin-site-settings-legal");
+  const legalSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsLegalFormValues>(siteSettingsLegalFormSchema, {
+        renderers: Object.fromEntries(
+          LEGAL_PAGE_FIELDS.map(({ name, label }) => [
+            name,
+            ({ values, onChange }: {
+              values: SiteSettingsLegalFormValues;
+              onChange: (partial: Partial<SiteSettingsLegalFormValues>) => void;
+            }) => (
+              <Textarea
+                label={label}
+                value={(values[name] as string) ?? ""}
+                onChange={(e) => onChange({ [name]: e.target.value } as Partial<SiteSettingsLegalFormValues>)}
+                placeholder={`Enter ${label} HTML here…`}
+                rows={6}
+                className="font-mono"
+              />
+            ),
+          ]),
+        ),
+        fieldVisibility: legalVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setLegalFieldVisible,
+        fieldOrder: legalFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setLegalFieldOrder(
+            swapFieldOrder(
+              legalFieldOrder,
+              resolveFields(siteSettingsLegalFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [legalVisibilityFields, editMode, setLegalFieldVisible, legalFieldOrder, setLegalFieldOrder],
+  );
 
   // ⑬ WhatsApp Business Cloud API (platform-level)
   const [waPhoneNumberId, setWaPhoneNumberId] = React.useState("");
@@ -1308,15 +1351,17 @@ export function AdminSiteSettingsView({
       orderCancelWindow: s.platformLimits?.orderCancellationWindowHours ?? 24,
     });
 
-    setTermsHtml(s.legalPages?.terms ?? "");
-    setPrivacyHtml(s.legalPages?.privacy ?? "");
-    setRefundHtml(s.legalPages?.refundPolicy ?? "");
-    setShippingPolicyHtml(s.legalPages?.shipping ?? "");
-    setCookieHtml(s.legalPages?.cookies ?? "");
-    setEthicsHtml(s.legalPages?.ethics ?? "");
-    setCancellationHtml(s.legalPages?.cancellation ?? "");
-    setGrievanceHtml(s.legalPages?.grievance ?? "");
-    setConductHtml(s.legalPages?.codeOfConduct ?? "");
+    setLegalForm({
+      termsHtml: s.legalPages?.terms ?? "",
+      privacyHtml: s.legalPages?.privacy ?? "",
+      refundHtml: s.legalPages?.refundPolicy ?? "",
+      shippingPolicyHtml: s.legalPages?.shipping ?? "",
+      cookieHtml: s.legalPages?.cookies ?? "",
+      ethicsHtml: s.legalPages?.ethics ?? "",
+      cancellationHtml: s.legalPages?.cancellation ?? "",
+      grievanceHtml: s.legalPages?.grievance ?? "",
+      conductHtml: s.legalPages?.codeOfConduct ?? "",
+    });
 
     setAboutTitle(s.aboutContent?.title ?? "");
     setAboutSubtitle(s.aboutContent?.subtitle ?? "");
@@ -1610,7 +1655,17 @@ export function AdminSiteSettingsView({
         maxCustomFieldsPerProduct: limitsForm.maxCustomFields,
         orderCancellationWindowHours: limitsForm.orderCancelWindow,
       },
-      legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml, cancellation: cancellationHtml, grievance: grievanceHtml },
+      legalPages: {
+        terms: legalForm.termsHtml,
+        privacy: legalForm.privacyHtml,
+        refundPolicy: legalForm.refundHtml,
+        shipping: legalForm.shippingPolicyHtml,
+        cookies: legalForm.cookieHtml,
+        ethics: legalForm.ethicsHtml,
+        codeOfConduct: legalForm.conductHtml,
+        cancellation: legalForm.cancellationHtml,
+        grievance: legalForm.grievanceHtml,
+      },
       // Both keys are always sent: Firestore's update() replaces a nested map
       // wholesale, so omitting one here would wipe it. The load-time spread this
       // used to carry existed to preserve `adminCheckoutBypass`, which is now a
@@ -2534,31 +2589,16 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑫ Legal Policies */}
+          {/* ⑫ Legal Policies — thirteenth tab migrated to the Universal Template System. */}
           <TabsContent value="legal">
-            <SettingsTabForm id="legal" label="Legal">
-              {[
-                ["Terms of Service", termsHtml, setTermsHtml],
-                ["Privacy Policy", privacyHtml, setPrivacyHtml],
-                ["Refund Policy", refundHtml, setRefundHtml],
-                ["Shipping Policy", shippingPolicyHtml, setShippingPolicyHtml],
-                ["Cookie Policy", cookieHtml, setCookieHtml],
-                ["Our Ethics", ethicsHtml, setEthicsHtml],
-                ["Code of Conduct", conductHtml, setConductHtml],
-                ["Cancellation Policy", cancellationHtml, setCancellationHtml],
-                ["Grievance Redressal", grievanceHtml, setGrievanceHtml],
-              ].map(([label, value, setter]) => (
-                <Textarea
-                  key={label as string}
-                  label={label as string}
-                  value={value as string}
-                  onChange={(e) => (setter as React.Dispatch<React.SetStateAction<string>>)(e.target.value)}
-                  placeholder={`Enter ${label} HTML here…`}
-                  rows={6}
-                  className="font-mono"
-                />
-              ))}
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsLegalFormValues>
+              sections={legalSections}
+              values={legalForm}
+              onChange={(partial) => setLegalForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsLegalFormSchema}
+              hideActions
+            />
           </TabsContent>
         </Tabs>
         <SaveAllBar isPending={saveAllMutation.isPending} onSave={handleSaveAll} />
