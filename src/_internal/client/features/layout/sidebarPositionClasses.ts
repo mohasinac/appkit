@@ -12,17 +12,25 @@ export interface SidebarRailClasses {
 }
 
 export function getSidebarRailClasses(hand: HandMode): SidebarRailClasses {
+  // Collapsed state hides the panel FULLY off-screen (-translate-x-full /
+  // translate-x-full), not a partial `calc(100% - 1.25rem)` that left a
+  // ~20px sliver of the full-width, still-text-labelled panel bleeding into
+  // the viewport — read as a rendering bug, not a control, and flagged
+  // directly (owner screenshot, 2026-11-05). The toggle handle itself
+  // (SidebarCollapseToggle) is positioned relative to the panel's own edge
+  // via `position: absolute`, independent of this transform, so it stays
+  // fully visible and clickable in both states regardless.
   if (hand === "left") {
     return {
       edgeClass: "left-0",
       borderClass: "border-r",
-      collapsedTranslateClass: "-translate-x-[calc(100%-1.25rem)]",
+      collapsedTranslateClass: "-translate-x-full",
     };
   }
   return {
     edgeClass: "right-0",
     borderClass: "border-l",
-    collapsedTranslateClass: "translate-x-[calc(100%-1.25rem)]",
+    collapsedTranslateClass: "translate-x-full",
   };
 }
 
