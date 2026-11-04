@@ -481,8 +481,14 @@ export async function updatePayoutSettings(
 
 // --- Request Payout -----------------------------------------------------------
 
-async function computeSellerEarnings(sellerId: string) {
-  const products = await productRepository.findByStore(sellerId);
+// 🛑 `storeId` is the store's SLUG everywhere else in the codebase
+// (products/orders/payouts all query by it) — `sellerId` here is the
+// seller's Firebase Auth UID, a different id space. Callers must resolve
+// `storeRepository.findByOwnerId(sellerId)` first and pass the real slug;
+// passing the raw UID silently matches zero products/payouts (Root Cause
+// #108 — same identifier confusion in the same field name).
+async function computeSellerEarnings(storeId: string) {
+  const products = await productRepository.findByStore(storeId);
   const productIds = products.slice(0, 50).map((p) => p.id);
 
   let deliveredOrders: OrderDocument[] = [];
@@ -497,7 +503,7 @@ async function computeSellerEarnings(sellerId: string) {
       .filter((o) => o.status === OrderStatusValues.DELIVERED);
   }
 
-  const paidOutIds = await payoutRepository.getPaidOutOrderIds(sellerId);
+  const paidOutIds = await payoutRepository.getPaidOutOrderIds(storeId);
   const eligibleOrders = deliveredOrders.filter((o) => !paidOutIds.has(o.id));
 
   /*
@@ -577,7 +583,15 @@ export async function requestPayout(
   userEmail: string,
   input: RequestPayoutInput,
 ): Promise<unknown> {
-  const existing = await payoutRepository.findByStore(userId);
+  // 🛑 Fixed 2026-11-05 — this resolved nothing and every call below ran
+  // against the seller's raw UID instead of the store's slug, which is what
+  // products/orders/payouts are actually keyed by. `computeSellerEarnings`
+  // always found 0 products -> 0 eligible orders -> this threw "No eligible
+  // earnings available for payout." for every real seller, unconditionally.
+  const callerStore = await storeRepository.findByOwnerId(userId);
+  if (!callerStore) throw new AuthorizationError("No store found for this account.");
+
+  const existing = await payoutRepository.findByStore(callerStore.id);
   const hasPending = existing.some(
     (p) =>
       p.status === PAYOUT_FIELDS.STATUS_VALUES.PENDING ||
@@ -586,14 +600,14 @@ export async function requestPayout(
   if (hasPending)
     throw new ValidationError("A payout is already pending or processing.");
 
-  const earnings = await computeSellerEarnings(userId);
+  const earnings = await computeSellerEarnings(callerStore.id);
   if (earnings.netAmount <= 0 || earnings.eligibleOrders.length === 0)
     throw new ValidationError("No eligible earnings available for payout.");
 
   const payout = await payoutRepository.createPayout({
     /* A seller requesting their own earnings — a liability settlement. */
     payeeType: "store",
-    storeId: userId,
+    storeId: callerStore.id,
     sellerName: userName,
     sellerEmail: userEmail,
     amount: earnings.netAmount,
@@ -714,7 +728,16 @@ export async function bulkSellerOrder(
   const payoutDoc = await payoutRepository.createPayout({
     /* A seller requesting their own earnings — a liability settlement. */
     payeeType: "store",
-    storeId: userId,
+    // 🛑 Fixed 2026-11-05 — was `storeId: userId` (the UID), even though
+    // `callerStore` is already resolved above and used correctly for the
+    // eligibility check two screens up. Payouts are queried by the store's
+    // SLUG everywhere else (admin dashboard, the automated weekly/auto
+    // sweeps), so a payout written with the UID was invisible to all of
+    // them — not recognized as "already queued," a double-payout risk on
+    // the same orders. Admin callers keep the previous (unaudited) UID
+    // fallback, since `callerStore` is deliberately null for them and this
+    // fix's scope is the seller self-service path, not the admin one.
+    storeId: callerStore?.id ?? userId,
     sellerName: userDisplayName,
     sellerEmail: userEmail,
     orderIds: eligible.map((o) => o.id!),
@@ -973,7 +996,13 @@ export async function listSellerPayouts(
   userId: string,
   params?: { page?: number; pageSize?: number },
 ) {
-  const payouts = await payoutRepository.findByStore(userId);
+  // 🛑 Fixed 2026-11-05 — was `findByStore(userId)`, the seller's raw UID.
+  // It self-consistently showed a payout `bulkSellerOrder` wrote with the
+  // same wrong key (now also fixed), which is exactly what masked the bug:
+  // the one seller who created it could see it, while every automated sweep
+  // and the admin dashboard — both keyed on the real slug — could not.
+  const callerStore = await storeRepository.findByOwnerId(userId);
+  const payouts = callerStore ? await payoutRepository.findByStore(callerStore.id) : [];
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 20;
   const start = (page - 1) * pageSize;
