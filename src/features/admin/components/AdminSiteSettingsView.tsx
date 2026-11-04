@@ -88,13 +88,17 @@ import {
   siteSettingsShippingFormSchema,
   type SiteSettingsShippingFormValues,
 } from "../schemas/site-settings-shipping-form";
+import {
+  siteSettingsGstFormSchema,
+  type SiteSettingsGstFormValues,
+} from "../schemas/site-settings-gst-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
 import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { swapFieldOrder } from "../../shell/field-ui-meta";
 import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
-import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
+import { useFormShellState, FormShellContext, applyZodIssues, FieldInput, FieldTextarea } from "../../../ui/forms";
 import { getBrandName, getBrandDomain, getBrandNoreplyEmail } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
@@ -640,32 +644,108 @@ export function AdminSiteSettingsView({
   const [emiSurchargePercentPerMonth, setEmiSurchargePercentPerMonth] = React.useState(2);
   const [emiSurchargeSellerSharePercent, setEmiSurchargeSellerSharePercent] = React.useState(50);
 
-  // ⑰ GST — Indian tax compliance
-  const [gstEnabled, setGstEnabled] = React.useState(false);
-  const [gstin, setGstin] = React.useState("");
-  const [gstLegalName, setGstLegalName] = React.useState("");
-  const [gstAddress, setGstAddress] = React.useState("");
-  /*
-   * Shown inline, live, and ONLY while the toggle is on — the same rule the
-   * server enforces. `/api/admin/site` rejects the save, so without this the
-   * admin would get a generic "save failed" with no indication of which of the
-   * four fields it meant.
-   *
-   * Live rather than on-submit because the toggle is the action: an admin who
-   * flips it on sees immediately what else is needed, instead of discovering
-   * it after a round trip. Empty when the toggle is off, so an admin editing
-   * their address with GST disabled is never shown errors about it
-   * (Root Cause #74 — a summary that accuses before anything was attempted).
-   */
-  const gstProblems = React.useMemo(
+  // ⑰ GST — eleventh tab migrated to the Universal Template System,
+  // 2026-11-04. Four useState calls collapsed into one combined object.
+  //
+  // `validateGstEnablement()` is shown inline, live, and ONLY while the
+  // toggle is on — the same rule the server enforces. `/api/admin/site`
+  // rejects the save, so without this the admin would get a generic "save
+  // failed" with no indication of which of the four fields it meant. Live
+  // rather than on-submit because the toggle is the action: an admin who
+  // flips it on sees immediately what else is needed, instead of
+  // discovering it after a round trip. Empty when the toggle is off, so an
+  // admin editing their address with GST disabled is never shown errors
+  // about it (Root Cause #74 — a summary that accuses before anything was
+  // attempted). Computed LIVE inside each custom renderer below, against
+  // that renderer's own `values` parameter, rather than a separate
+  // `useMemo` — simpler, and provably reactive to exactly what's on screen.
+  const [gstForm, setGstForm] = React.useState<SiteSettingsGstFormValues>({
+    gstEnabled: false, gstin: "", gstLegalName: "", gstAddress: "",
+  });
+  const {
+    fields: gstVisibilityFields,
+    setVisible: setGstFieldVisible,
+    fieldOrder: gstFieldOrder,
+    setFieldOrder: setGstFieldOrder,
+  } = useFieldVisibility("admin-site-settings-gst");
+  const gstSections = React.useMemo(
     () =>
-      validateGstEnablement({
-        enabled: gstEnabled,
-        gstin,
-        legalName: gstLegalName,
-        address: gstAddress,
+      buildSectionsFromSchema<SiteSettingsGstFormValues>(siteSettingsGstFormSchema, {
+        renderers: {
+          gstin: ({ values, onChange }) => {
+            const problems = validateGstEnablement({
+              enabled: Boolean(values.gstEnabled),
+              gstin: values.gstin as string | undefined,
+              legalName: values.gstLegalName as string | undefined,
+              address: values.gstAddress as string | undefined,
+            });
+            return (
+              <FieldInput
+                name="gstin"
+                label="GSTIN"
+                hint="15-character GST Identification Number."
+                error={problems.gstin}
+                value={(values.gstin as string) ?? ""}
+                onChange={(v) => onChange({ gstin: v })}
+                placeholder="29AAAAA0000A1Z5"
+                maxLength={15}
+              />
+            );
+          },
+          gstLegalName: ({ values, onChange }) => {
+            const problems = validateGstEnablement({
+              enabled: Boolean(values.gstEnabled),
+              gstin: values.gstin as string | undefined,
+              legalName: values.gstLegalName as string | undefined,
+              address: values.gstAddress as string | undefined,
+            });
+            return (
+              <FieldInput
+                name="gstLegalName"
+                label="Legal name"
+                hint="Registered business name for invoices."
+                error={problems.legalName}
+                value={(values.gstLegalName as string) ?? ""}
+                onChange={(v) => onChange({ gstLegalName: v })}
+                placeholder={`${getBrandName()} Pvt Ltd`}
+              />
+            );
+          },
+          gstAddress: ({ values, onChange }) => {
+            const problems = validateGstEnablement({
+              enabled: Boolean(values.gstEnabled),
+              gstin: values.gstin as string | undefined,
+              legalName: values.gstLegalName as string | undefined,
+              address: values.gstAddress as string | undefined,
+            });
+            return (
+              <FieldTextarea
+                name="gstAddress"
+                label="Registered address"
+                error={problems.address}
+                value={(values.gstAddress as string) ?? ""}
+                onChange={(v) => onChange({ gstAddress: v })}
+                placeholder="Registered business address for GST invoices…"
+                rows={3}
+              />
+            );
+          },
+        },
+        fieldVisibility: gstVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setGstFieldVisible,
+        fieldOrder: gstFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setGstFieldOrder(
+            swapFieldOrder(
+              gstFieldOrder,
+              resolveFields(siteSettingsGstFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
       }),
-    [gstEnabled, gstin, gstLegalName, gstAddress],
+    [gstVisibilityFields, editMode, setGstFieldVisible, gstFieldOrder, setGstFieldOrder],
   );
   // ⑦ Fees & Commissions — sixth tab migrated to the Universal Template
   // System, 2026-11-04. Twenty-four useState calls collapsed into one
@@ -1122,10 +1202,12 @@ export function AdminSiteSettingsView({
     setEmiSurchargePercentPerMonth(s.emi?.surchargePercentPerMonth ?? 2);
     setEmiSurchargeSellerSharePercent(s.emi?.surchargeSellerSharePercent ?? 50);
 
-    setGstEnabled(s.gst?.enabled ?? false);
-    setGstin(s.gst?.gstin ?? "");
-    setGstLegalName(s.gst?.legalName ?? "");
-    setGstAddress(s.gst?.address ?? "");
+    setGstForm({
+      gstEnabled: s.gst?.enabled ?? false,
+      gstin: s.gst?.gstin ?? "",
+      gstLegalName: s.gst?.legalName ?? "",
+      gstAddress: s.gst?.address ?? "",
+    });
 
     setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
     setRazorpayKeySecret(s.credentialsMasked?.razorpayKeySecret ?? "");
@@ -1402,10 +1484,10 @@ export function AdminSiteSettingsView({
         surchargeSellerSharePercent: emiSurchargeSellerSharePercent,
       },
       gst: {
-        enabled: gstEnabled,
-        gstin: gstin.trim().toUpperCase(),
-        legalName: gstLegalName.trim(),
-        address: gstAddress.trim(),
+        enabled: gstForm.gstEnabled,
+        gstin: (gstForm.gstin ?? "").trim().toUpperCase(),
+        legalName: (gstForm.gstLegalName ?? "").trim(),
+        address: (gstForm.gstAddress ?? "").trim(),
       },
       // Masked credential fields resolve to "" when untouched — the repository's
       // mergeEncryptedCredentials preserves the existing encrypted value for any
@@ -2070,52 +2152,16 @@ export function AdminSiteSettingsView({
             </SettingsTabForm>
           </TabsContent>
 
-          {/* ⑰ GST — Indian tax compliance settings */}
+          {/* ⑰ GST — eleventh tab migrated to the Universal Template System. */}
           <TabsContent value="gst">
-            <SettingsTabForm id="gst" label="Gst">
-              <Text size="xs" color="muted">
-                Required before enabling GST-inclusive checkout (P-8). Also set a GST rate + HSN
-                code on each taxable product for the tax breakdown to appear.
-              </Text>
-              <Toggle
-                checked={gstEnabled}
-                onChange={setGstEnabled}
-                label="Enable GST on checkout"
-              />
-              <Grid cols={2} gap="md">
-                <Input
-                  label="GSTIN"
-                  helperText="15-character GST Identification Number."
-                  error={gstProblems.gstin}
-                  value={gstin}
-                  onChange={(e) => setGstin(e.target.value)}
-                  placeholder="29AAAAA0000A1Z5"
-                  maxLength={15}
-                />
-                <Input
-                  label="Legal name"
-                  helperText="Registered business name for invoices."
-                  error={gstProblems.legalName}
-                  value={gstLegalName}
-                  onChange={(e) => setGstLegalName(e.target.value)}
-                  placeholder={`${getBrandName()} Pvt Ltd`}
-                />
-              </Grid>
-              <Stack gap="xs">
-                <Textarea
-                  label="Registered address"
-                  value={gstAddress}
-                  onChange={(e) => setGstAddress(e.target.value)}
-                  placeholder="Registered business address for GST invoices…"
-                  rows={3}
-                />
-                {gstProblems.address ? (
-                  <Text size="sm" variant="error" role="alert">
-                    {gstProblems.address}
-                  </Text>
-                ) : null}
-              </Stack>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsGstFormValues>
+              sections={gstSections}
+              values={gstForm}
+              onChange={(partial) => setGstForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsGstFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑱ Listings — what the marketplace offers */}
