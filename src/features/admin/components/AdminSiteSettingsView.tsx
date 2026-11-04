@@ -76,6 +76,10 @@ import {
   siteSettingsProcurementFormSchema,
   type SiteSettingsProcurementFormValues,
 } from "../schemas/site-settings-procurement-form";
+import {
+  siteSettingsLimitsFormSchema,
+  type SiteSettingsLimitsFormValues,
+} from "../schemas/site-settings-limits-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -763,10 +767,37 @@ export function AdminSiteSettingsView({
   const [autoExtendWindow, setAutoExtendWindow] = React.useState(5);
   const [settlementGrace, setSettlementGrace] = React.useState(24);
 
-  // ⑪ Platform Limits
-  const [maxProductsPerStore, setMaxProductsPerStore] = React.useState(100);
-  const [maxCustomFields, setMaxCustomFields] = React.useState(50);
-  const [orderCancelWindow, setOrderCancelWindow] = React.useState(24);
+  // ⑪ Platform Limits — eighth tab migrated to the Universal Template
+  // System, 2026-11-04. Three useState calls collapsed into one combined
+  // object.
+  const [limitsForm, setLimitsForm] = React.useState<SiteSettingsLimitsFormValues>({
+    maxProductsPerStore: 100, maxCustomFields: 50, orderCancelWindow: 24,
+  });
+  const {
+    fields: limitsVisibilityFields,
+    setVisible: setLimitsFieldVisible,
+    fieldOrder: limitsFieldOrder,
+    setFieldOrder: setLimitsFieldOrder,
+  } = useFieldVisibility("admin-site-settings-limits");
+  const limitsSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsLimitsFormValues>(siteSettingsLimitsFormSchema, {
+        fieldVisibility: limitsVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setLimitsFieldVisible,
+        fieldOrder: limitsFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setLimitsFieldOrder(
+            swapFieldOrder(
+              limitsFieldOrder,
+              resolveFields(siteSettingsLimitsFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [limitsVisibilityFields, editMode, setLimitsFieldVisible, limitsFieldOrder, setLimitsFieldOrder],
+  );
 
   // ⑫ Legal
   const [termsHtml, setTermsHtml] = React.useState("");
@@ -1067,9 +1098,11 @@ export function AdminSiteSettingsView({
     setAutoExtendWindow(s.collectorDropConfig?.autoExtendWindowMinutes ?? 5);
     setSettlementGrace(s.collectorDropConfig?.settlementGracePeriodHours ?? 24);
 
-    setMaxProductsPerStore(s.platformLimits?.maxProductsPerStore ?? 100);
-    setMaxCustomFields(s.platformLimits?.maxCustomFieldsPerProduct ?? 50);
-    setOrderCancelWindow(s.platformLimits?.orderCancellationWindowHours ?? 24);
+    setLimitsForm({
+      maxProductsPerStore: s.platformLimits?.maxProductsPerStore ?? 100,
+      maxCustomFields: s.platformLimits?.maxCustomFieldsPerProduct ?? 50,
+      orderCancelWindow: s.platformLimits?.orderCancellationWindowHours ?? 24,
+    });
 
     setTermsHtml(s.legalPages?.terms ?? "");
     setPrivacyHtml(s.legalPages?.privacy ?? "");
@@ -1346,7 +1379,11 @@ export function AdminSiteSettingsView({
        */
       payment: { razorpayEnabled, phonepeEnabled, cashfreeEnabled, platformStoreId: platformStoreId.trim() || undefined, upiManualEnabled, codEnabled, codMaxOrderValue, otpCheckoutThreshold },
       collectorDropConfig: { bidIncrementTiers: bidIncrementTiers as unknown as FirestoreDocument[], autoExtendWindowMinutes: autoExtendWindow, settlementGracePeriodHours: settlementGrace },
-      platformLimits: { maxProductsPerStore, maxCustomFieldsPerProduct: maxCustomFields, orderCancellationWindowHours: orderCancelWindow },
+      platformLimits: {
+        maxProductsPerStore: limitsForm.maxProductsPerStore,
+        maxCustomFieldsPerProduct: limitsForm.maxCustomFields,
+        orderCancellationWindowHours: limitsForm.orderCancelWindow,
+      },
       legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml, ethics: ethicsHtml, codeOfConduct: conductHtml, cancellation: cancellationHtml, grievance: grievanceHtml },
       // Both keys are always sent: Firestore's update() replaces a nested map
       // wholesale, so omitting one here would wipe it. The load-time spread this
@@ -2307,42 +2344,22 @@ export function AdminSiteSettingsView({
             </SettingsTabForm>
           </TabsContent>
 
-          {/* ⑪ Platform Limits */}
+          {/* ⑪ Platform Limits — eighth tab migrated to the Universal Template System. */}
           <TabsContent value="limits">
-            <SettingsTabForm id="limits" label="Limits">
-              <Grid cols={2} gap="md">
-                <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
-                <Input label="Max custom fields per product" value={String(maxCustomFields)} onChange={(e) => setMaxCustomFields(parseInt(e.target.value) || 0)} type="number" min={0} />
-                {/*
-                 * 🛑 "Max custom sections per product" REMOVED 2026-10-19 — it
-                 * was fully inert. `platformLimits.maxCustomSectionsPerProduct`
-                 * had no declared default, no seeded value (`platformLimits`
-                 * was absent from the seeded site-settings document entirely),
-                 * and its ONLY read site was this component's own React state
-                 * fallback (`?? 3`). The REAL, enforced cap is the hard
-                 * constant `MAX_CUSTOM_SECTIONS = 3`
-                 * (`features/products/schemas/firestore.ts`), read only by
-                 * `CustomSectionsEditor.tsx` — this input changed a number
-                 * nothing downstream ever looked at.
-                 *
-                 * Following this document's own established rule for exactly
-                 * this situation (`SiteSettingsPlatformLimits`'s docstring:
-                 * "Do not re-add them without a reader") rather than wiring a
-                 * fake enforcement path through an editor component with no
-                 * site-settings access, which would have been a second,
-                 * unverifiable change layered on top of a provably dead one.
-                 *
-                 * 🛑 Its three siblings in this same Grid were checked and are
-                 * ALSO unread anywhere outside this file — `maxProductsPerStore`,
-                 * `maxCustomFieldsPerProduct` (directly above), and
-                 * `orderCancellationWindowHours` (directly below). That is a
-                 * real, larger finding — the entire "Platform Limits" tab may
-                 * be decorative — left exactly as found rather than silently
-                 * widening this fix to three more inputs nobody asked about.
-                 */}
-                <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />
-              </Grid>
-            </SettingsTabForm>
+            {/*
+              🛑 See site-settings-limits-form.ts's header for the preserved
+              "this whole tab may be decorative" finding (D-era investigation
+              into `maxCustomSectionsPerProduct`) — not acted on here, this
+              migration changes rendering only.
+            */}
+            <SectionForm<SiteSettingsLimitsFormValues>
+              sections={limitsSections}
+              values={limitsForm}
+              onChange={(partial) => setLimitsForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsLimitsFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑬ WhatsApp Business Cloud API */}
