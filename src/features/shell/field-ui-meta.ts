@@ -63,6 +63,24 @@ import type { FormValues } from "../../schemas/types";
 /** How much of a row a field claims on desktop. Everything is 1-up on mobile. */
 export type FieldRow = "full" | "pair" | "third" | "quarter";
 
+/**
+ * Wizard grouping (3B item 1b's `SurfaceTemplate.steps`, 2026-11-04) — an
+ * admin-authored grouping of an already-built `SectionDef[]` into
+ * next/back-gated pages. `fields` names which SCHEMA fields belong to this
+ * step; `groupSectionsByStep` (`build-sections.tsx`) resolves that to whole
+ * sections (a section is assigned to the step owning its FIRST-declared
+ * field, so a section is never split across two steps).
+ *
+ * Absent/empty `steps` is the default for every surface and renders exactly
+ * as before this existed — `<WizardFormSteps>` falls back to the
+ * unconditional `<SectionForm>` rendering `SectionForm.tsx`'s 25+ other
+ * callers already use, never gating navigation.
+ */
+export interface FormStep {
+  title: string;
+  fields: string[];
+}
+
 /** Which input primitive renders the field, and its default row span. */
 export type FieldKind =
   | "text"
@@ -536,6 +554,32 @@ export function sortByFieldOrder<T>(items: T[], fieldOrder: string[], getKey: (i
     const pb = position.get(getKey(b)) ?? Number.MAX_SAFE_INTEGER;
     return pa - pb;
   });
+}
+
+/**
+ * The reorder half of the same primitive — produces the NEXT `fieldOrder`
+ * array for a caller's `setFieldOrder`/persist call, given two item keys to
+ * swap. Completes `currentOrder` against `allKeys` first (in `allKeys`'
+ * own order) before swapping, so a swap always operates on every real item
+ * — swapping within a partial list would silently drop every unlisted
+ * item's position the moment the result is persisted.
+ *
+ * Callers resolve WHICH two keys are adjacent (e.g. `build-sections.tsx`
+ * resolves field adjacency within one section); this function only knows
+ * how to produce a valid full order from a swap, the one piece every
+ * caller would otherwise reimplement.
+ */
+export function swapFieldOrder(currentOrder: string[], allKeys: string[], a: string, b: string): string[] {
+  const complete =
+    currentOrder.length > 0
+      ? [...currentOrder, ...allKeys.filter((k) => !currentOrder.includes(k))]
+      : [...allKeys];
+  const ia = complete.indexOf(a);
+  const ib = complete.indexOf(b);
+  if (ia === -1 || ib === -1) return complete;
+  const next = [...complete];
+  [next[ia], next[ib]] = [next[ib], next[ia]];
+  return next;
 }
 
 /** The hide half of the same primitive — paired with `sortByFieldOrder` above. */

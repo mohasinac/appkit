@@ -38,7 +38,7 @@
 import { cache } from "react";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { safeRead } from "../../../../errors/safe-read";
-import type { CustomFieldDef } from "../../../../features/shell/field-ui-meta";
+import type { CustomFieldDef, FormStep } from "../../../../features/shell/field-ui-meta";
 
 const FIELD_VISIBILITY_COLLECTION = "fieldVisibility";
 
@@ -56,6 +56,8 @@ interface FieldVisibilityStoredDoc {
   fieldOrder?: string[];
   /** Admin-defined fields with no presence in the owning schema. Additive. */
   customFields?: CustomFieldDef[];
+  /** Wizard grouping. Additive — absent/empty renders single-page, as before. */
+  steps?: FormStep[];
   updatedAt: FirebaseFirestore.Timestamp;
 }
 
@@ -63,9 +65,10 @@ export interface SurfaceFieldConfig {
   fields: Record<string, boolean>;
   fieldOrder: string[];
   customFields: CustomFieldDef[];
+  steps: FormStep[];
 }
 
-const EMPTY_SURFACE_CONFIG: SurfaceFieldConfig = { fields: {}, fieldOrder: [], customFields: [] };
+const EMPTY_SURFACE_CONFIG: SurfaceFieldConfig = { fields: {}, fieldOrder: [], customFields: [], steps: [] };
 
 /**
  * The wide read — everything an admin has customized on this surface.
@@ -82,6 +85,7 @@ export const getSurfaceFieldConfig = cache(async (surfaceId: string): Promise<Su
         fields: data.fields && typeof data.fields === "object" ? data.fields : {},
         fieldOrder: Array.isArray(data.fieldOrder) ? data.fieldOrder : [],
         customFields: Array.isArray(data.customFields) ? data.customFields : [],
+        steps: Array.isArray(data.steps) ? data.steps : [],
       };
     },
     {
@@ -118,6 +122,7 @@ export async function setFieldVisibility(
     fields?: Record<string, boolean>;
     fieldOrder?: string[];
     customFields?: CustomFieldDef[];
+    steps?: FormStep[];
   },
 ): Promise<void> {
   await getAdminDb()

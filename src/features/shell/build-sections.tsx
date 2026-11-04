@@ -63,6 +63,7 @@ import {
   type CustomFieldDef,
   type FieldRow,
   type FieldUiMeta,
+  type FormStep,
 } from "./field-ui-meta";
 
 /** The scalar shape a `CustomFieldDef` value can hold — never nested, never `unknown`. */
@@ -131,6 +132,21 @@ export interface BuildSectionsOptions<T extends object> {
    * additive — omit it and every field sorts exactly as before.
    */
   fieldOrder?: string[];
+  /**
+   * Edit-mode-only reorder — renders move-up/move-down buttons beside each
+   * field's eye-toggle (RS13-adjacent decision, 2026-11-04: an up/down
+   * BUTTON pair, never drag-and-drop — matching this codebase's one other
+   * real reorder UI, `NavPermissionsManager.tsx`'s ▲/▼ pattern, and the
+   * project-wide "no drag-and-drop, discrete controls only" constraint that
+   * already governs the card-element span picker). This function resolves
+   * the ADJACENT field name itself (scoped to the current section's own
+   * visible order, matching how `fieldOrder` already only reorders WITHIN
+   * a field's schema-derived section, never across one) — the caller's job
+   * is only "persist a swap of these two names", via
+   * `swapFieldOrder(fieldOrder, allFieldNames, fieldName, neighborName)`
+   * (`field-ui-meta.ts`). Ignored when `editMode` is not `true`.
+   */
+  onMoveField?: (fieldName: string, neighborFieldName: string) => void;
   /**
    * Admin-defined fields with no presence in the schema (3B item 1b). They
    * render as their OWN section, after every schema-derived section, via a
@@ -387,6 +403,13 @@ export function buildSectionsFromSchema<T extends object>(
                     const node = renderField<T>(field, { values, onChange, errors }, opts);
                     if (!opts.editMode) return node;
                     const hidden = opts.fieldVisibility?.[field.name] === false;
+                    // Adjacency within THIS section's own visible order —
+                    // same scope `fieldOrder` already reorders within (see
+                    // `onMoveField`'s own doc comment for why cross-section
+                    // is out of scope).
+                    const idx = visible.indexOf(field);
+                    const upNeighbor = idx > 0 ? visible[idx - 1].name : undefined;
+                    const downNeighbor = idx < visible.length - 1 ? visible[idx + 1].name : undefined;
                     return (
                       <FieldVisibilityEditWrapper
                         key={`${field.name}-visibility`}
@@ -398,6 +421,8 @@ export function buildSectionsFromSchema<T extends object>(
                         // itself: hidden→store true (becomes shown),
                         // shown→store false (becomes hidden).
                         onToggle={() => opts.onToggleFieldVisibility?.(field.name, hidden)}
+                        onMoveUp={upNeighbor ? () => opts.onMoveField?.(field.name, upNeighbor) : undefined}
+                        onMoveDown={downNeighbor ? () => opts.onMoveField?.(field.name, downNeighbor) : undefined}
                       >
                         {node}
                       </FieldVisibilityEditWrapper>
@@ -424,6 +449,46 @@ export function buildSectionsFromSchema<T extends object>(
   }
 
   return sections;
+}
+
+/**
+ * Partition an already-built `SectionDef[]` into wizard pages, one per
+ * `FormStep`. A section is assigned to the step owning its FIRST-declared
+ * field (`SectionDef.fields`, in source-declaration order) — never split
+ * across two steps, since `<SectionForm>` renders a section as one unit.
+ *
+ * Sections with no field named in ANY step are appended as a final,
+ * untitled page rather than silently dropped — a step config that forgot
+ * the custom-fields section (added after `steps` was authored) must not
+ * make that section vanish.
+ *
+ * `steps.length === 0` returns `[{ title: "", sections }]` — one page
+ * holding everything, so a caller can unconditionally map over the result
+ * without a separate "no steps" branch.
+ */
+export function groupSectionsByStep<T extends object>(
+  sections: SectionDef<T>[],
+  steps: FormStep[],
+): { title: string; sections: SectionDef<T>[] }[] {
+  if (steps.length === 0) return [{ title: "", sections }];
+
+  const stepOfField = new Map<string, number>();
+  steps.forEach((step, i) => step.fields.forEach((name) => {
+    if (!stepOfField.has(name)) stepOfField.set(name, i);
+  }));
+
+  const pages: SectionDef<T>[][] = steps.map(() => []);
+  const unassigned: SectionDef<T>[] = [];
+  for (const section of sections) {
+    const firstNamed = section.fields?.find((name) => stepOfField.has(name));
+    const stepIndex = firstNamed !== undefined ? stepOfField.get(firstNamed) : undefined;
+    if (stepIndex !== undefined) pages[stepIndex].push(section);
+    else unassigned.push(section);
+  }
+
+  const out = steps.map((step, i) => ({ title: step.title, sections: pages[i] }));
+  if (unassigned.length > 0) out.push({ title: "", sections: unassigned });
+  return out;
 }
 
 /**
@@ -624,24 +689,47 @@ function renderCustomField<T extends object>(
 function FieldVisibilityEditWrapper({
   hidden,
   onToggle,
+  onMoveUp,
+  onMoveDown,
   children,
 }: {
   hidden: boolean;
   onToggle: () => void;
+  /** Omit to disable — already first in its section's visible order. */
+  onMoveUp?: () => void;
+  /** Omit to disable — already last in its section's visible order. */
+  onMoveDown?: () => void;
   children: ReactNode;
 }) {
   return (
     <Div className={hidden ? "opacity-50" : undefined}>
       <Row gap="xs" align="center" justify="between" className="mb-1">
         {hidden && <Text size="xs" color="muted">Hidden from form</Text>}
-        <IconButton
-          aria-label={hidden ? "Show this field" : "Hide this field"}
-          icon={<Icon name={hidden ? "hide" : "view"} size="sm" />}
-          size="sm"
-          variant="ghost"
-          className="ml-auto"
-          onClick={onToggle}
-        />
+        <Row gap="xs" className="ml-auto">
+          <IconButton
+            aria-label="Move this field up"
+            icon={<Icon name="arrow-up" size="sm" />}
+            size="sm"
+            variant="ghost"
+            disabled={!onMoveUp}
+            onClick={onMoveUp}
+          />
+          <IconButton
+            aria-label="Move this field down"
+            icon={<Icon name="arrow-down" size="sm" />}
+            size="sm"
+            variant="ghost"
+            disabled={!onMoveDown}
+            onClick={onMoveDown}
+          />
+          <IconButton
+            aria-label={hidden ? "Show this field" : "Hide this field"}
+            icon={<Icon name={hidden ? "hide" : "view"} size="sm" />}
+            size="sm"
+            variant="ghost"
+            onClick={onToggle}
+          />
+        </Row>
       </Row>
       {children}
     </Div>

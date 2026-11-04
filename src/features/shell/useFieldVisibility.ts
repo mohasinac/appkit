@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ADMIN_ENDPOINTS } from "../../constants/api-endpoints";
 import { normalizeError } from "../../errors/normalize";
-import type { CustomFieldDef } from "./field-ui-meta";
+import type { CustomFieldDef, FormStep } from "./field-ui-meta";
 
 const PERSIST_DEBOUNCE_MS = 600;
 
@@ -17,6 +17,9 @@ export interface UseFieldVisibilityResult {
   /** Admin-defined fields with no schema presence. Pass to `BuildSectionsOptions.customFields`. */
   customFields: CustomFieldDef[];
   setCustomFields: (next: CustomFieldDef[]) => void;
+  /** Wizard grouping. Pass to `<WizardFormSteps steps>`. Empty = single-page, unchanged. */
+  steps: FormStep[];
+  setSteps: (next: FormStep[]) => void;
   /** True while a debounced write is in flight. */
   saving: boolean;
 }
@@ -49,6 +52,7 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
   const [fields, setFields] = useState<Record<string, boolean>>(initial ?? {});
   const [fieldOrder, setFieldOrderState] = useState<string[]>([]);
   const [customFields, setCustomFieldsState] = useState<CustomFieldDef[]>([]);
+  const [steps, setStepsState] = useState<FormStep[]>([]);
   const [saving, setSaving] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -72,13 +76,19 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
       .then(
         (
           data: {
-            data?: { fields?: Record<string, boolean>; fieldOrder?: string[]; customFields?: CustomFieldDef[] };
+            data?: {
+              fields?: Record<string, boolean>;
+              fieldOrder?: string[];
+              customFields?: CustomFieldDef[];
+              steps?: FormStep[];
+            };
           } | null,
         ) => {
           if (cancelled) return;
           if (data?.data?.fields) setFields(data.data.fields);
           if (data?.data?.fieldOrder) setFieldOrderState(data.data.fieldOrder);
           if (data?.data?.customFields) setCustomFieldsState(data.data.customFields);
+          if (data?.data?.steps) setStepsState(data.data.steps);
         },
       )
       .catch((err) => void normalizeError(err));
@@ -99,7 +109,12 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
    * all three every time is always safe, never destructive.
    */
   const persist = useCallback(
-    (next: { fields: Record<string, boolean>; fieldOrder: string[]; customFields: CustomFieldDef[] }) => {
+    (next: {
+      fields: Record<string, boolean>;
+      fieldOrder: string[];
+      customFields: CustomFieldDef[];
+      steps: FormStep[];
+    }) => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
       debounceRef.current = setTimeout(() => {
         setSaving(true);
@@ -119,27 +134,35 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
     (fieldName: string, next: boolean) => {
       setFields((prev) => {
         const updated = { ...prev, [fieldName]: next };
-        persist({ fields: updated, fieldOrder, customFields });
+        persist({ fields: updated, fieldOrder, customFields, steps });
         return updated;
       });
     },
-    [persist, fieldOrder, customFields],
+    [persist, fieldOrder, customFields, steps],
   );
 
   const setFieldOrder = useCallback(
     (next: string[]) => {
       setFieldOrderState(next);
-      persist({ fields, fieldOrder: next, customFields });
+      persist({ fields, fieldOrder: next, customFields, steps });
     },
-    [persist, fields, customFields],
+    [persist, fields, customFields, steps],
   );
 
   const setCustomFields = useCallback(
     (next: CustomFieldDef[]) => {
       setCustomFieldsState(next);
-      persist({ fields, fieldOrder, customFields: next });
+      persist({ fields, fieldOrder, customFields: next, steps });
     },
-    [persist, fields, fieldOrder],
+    [persist, fields, fieldOrder, steps],
+  );
+
+  const setSteps = useCallback(
+    (next: FormStep[]) => {
+      setStepsState(next);
+      persist({ fields, fieldOrder, customFields, steps: next });
+    },
+    [persist, fields, fieldOrder, customFields],
   );
 
   const isVisible = useCallback((fieldName: string) => fields[fieldName] !== false, [fields]);
@@ -152,6 +175,8 @@ export function useFieldVisibility(surfaceId: string, initial?: Record<string, b
     setFieldOrder,
     customFields,
     setCustomFields,
+    steps,
+    setSteps,
     saving,
   };
 }
