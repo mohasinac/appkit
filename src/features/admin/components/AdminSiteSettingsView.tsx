@@ -80,6 +80,10 @@ import {
   siteSettingsLimitsFormSchema,
   type SiteSettingsLimitsFormValues,
 } from "../schemas/site-settings-limits-form";
+import {
+  siteSettingsNotificationsFormSchema,
+  type SiteSettingsNotificationsFormValues,
+} from "../schemas/site-settings-notifications-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -87,7 +91,7 @@ import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { swapFieldOrder } from "../../shell/field-ui-meta";
 import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
-import { getBrandName, getBrandDomain, getBrandSupportEmail, getBrandNoreplyEmail } from "../../../core/brand-resolver";
+import { getBrandName, getBrandDomain, getBrandNoreplyEmail } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
@@ -154,7 +158,6 @@ function MaskedInput({
   );
 }
 
-const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-[var(--appkit-color-border)]";
 const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Low (send all)", value: "low" },
   { label: "Normal", value: "normal" },
@@ -758,9 +761,6 @@ export function AdminSiteSettingsView({
   const [listingTypeFlags, setListingTypeFlags] = React.useState<Record<string, boolean>>({});
   const [categoryTypeFlags, setCategoryTypeFlags] = React.useState<Record<string, boolean>>({});
   const [browsePageFlags, setBrowsePageFlags] = React.useState<Record<string, boolean>>({});
-  // Per-channel notification-type allowlists — empty array means "all types".
-  const [notifEmailTypes, setNotifEmailTypes] = React.useState<string[]>([]);
-  const [notifWhatsappTypes, setNotifWhatsappTypes] = React.useState<string[]>([]);
 
   // ⑩ Collector Drop
   const [bidIncrementTiers, setBidIncrementTiers] = React.useState<BidIncrementTier[]>(DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS);
@@ -853,33 +853,87 @@ export function AdminSiteSettingsView({
   const [aboutCtaSell, setAboutCtaSell] = React.useState("");
   const [aboutCtaShop, setAboutCtaShop] = React.useState("");
 
-  // ⑭ Notification channels
-  const [notifEmailEnabled, setNotifEmailEnabled] = React.useState(false);
-  const [notifEmailMinPriority, setNotifEmailMinPriority] = React.useState("normal");
-  const [notifWhatsappEnabled, setNotifWhatsappEnabled] = React.useState(false);
-  const [notifWhatsappMinPriority, setNotifWhatsappMinPriority] = React.useState("high");
-  const [notifWhatsappOtpEnabled, setNotifWhatsappOtpEnabled] = React.useState(false);
-  const [notifSmsEnabled, setNotifSmsEnabled] = React.useState(false);
-  const [notifSmsMinPriority, setNotifSmsMinPriority] = React.useState("high");
-  // Resend API key + sender identity (used by the email channel)
-  const [resendApiKey, setResendApiKey] = React.useState("");
-  const [notifFromEmail, setNotifFromEmail] = React.useState("");
-  const [notifFromName, setNotifFromName] = React.useState("");
-  // Daily ops digest — recipients are edited as one-per-line text, split on save.
-  const [digestEnabled, setDigestEnabled] = React.useState(false);
-  const [digestRecipients, setDigestRecipients] = React.useState("");
-
-  /*
-   * Outbound messaging: the kill switch and the daily ceiling.
-   *
-   * `emailEnabled` suppresses USER-facing mail only. Staff mail — the daily
-   * digest, the payout summary — keeps flowing regardless, because switching
-   * off customer email must never also blind the operator.
-   */
-  const [msgEmailEnabled, setMsgEmailEnabled] = React.useState(false);
-  const [msgWhatsappEnabled, setMsgWhatsappEnabled] = React.useState(false);
-  const [msgCeilingEmail, setMsgCeilingEmail] = React.useState(80);
-  const [msgCeilingWhatsapp, setMsgCeilingWhatsapp] = React.useState(200);
+  // ⑭ Notification channels — ninth tab migrated to the Universal Template
+  // System, 2026-11-04. Eighteen useState calls collapsed into one combined
+  // object. Writes across FOUR save-payload groups in buildFullPayload()
+  // (`messaging`, `notificationChannels`, part of `emailSettings`, and
+  // `credentials.resendApiKey`) — see site-settings-notifications-form.ts's
+  // header for the full breakdown.
+  //
+  // `msgEmailEnabled`/`msgWhatsappEnabled` suppress USER-facing mail only.
+  // Staff mail — the daily digest, the payout summary — keeps flowing
+  // regardless, because switching off customer email must never also blind
+  // the operator.
+  const [notificationsForm, setNotificationsForm] = React.useState<SiteSettingsNotificationsFormValues>({
+    msgEmailEnabled: false, msgWhatsappEnabled: false, msgCeilingEmail: 80, msgCeilingWhatsapp: 200,
+    notifEmailEnabled: false, notifEmailMinPriority: "normal", resendApiKey: "",
+    notifFromEmail: "", notifFromName: "", notifEmailTypes: [],
+    digestEnabled: false, digestRecipients: "",
+    notifWhatsappEnabled: false, notifWhatsappMinPriority: "high",
+    notifWhatsappOtpEnabled: false, notifWhatsappTypes: [],
+    notifSmsEnabled: false, notifSmsMinPriority: "high",
+  });
+  const {
+    fields: notificationsVisibilityFields,
+    setVisible: setNotificationsFieldVisible,
+    fieldOrder: notificationsFieldOrder,
+    setFieldOrder: setNotificationsFieldOrder,
+  } = useFieldVisibility("admin-site-settings-notifications");
+  const notificationsSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsNotificationsFormValues>(siteSettingsNotificationsFormSchema, {
+        renderers: {
+          resendApiKey: ({ values, onChange }) => (
+            <MaskedInput
+              label="Resend API Key"
+              value={(values.resendApiKey as string) ?? ""}
+              onChange={(v) => onChange({ resendApiKey: v })}
+              placeholder="re_live_…"
+              helperText="Get your key at resend.com — used for all transactional notifications."
+            />
+          ),
+          notifEmailTypes: ({ values, onChange }) => (
+            <PaginatedSelect<string>
+              ariaLabel="Notification types"
+              multiple
+              options={NOTIF_TYPE_OPTIONS}
+              value={values.notifEmailTypes as string[]}
+              onChange={(v) => onChange({ notifEmailTypes: v })}
+              placeholder="All notification types"
+            />
+          ),
+          notifWhatsappTypes: ({ values, onChange }) => (
+            <PaginatedSelect<string>
+              multiple
+              ariaLabel="Notification types to send over WhatsApp"
+              options={NOTIF_TYPE_OPTIONS}
+              value={values.notifWhatsappTypes as string[]}
+              onChange={(v) => onChange({ notifWhatsappTypes: v })}
+              placeholder="All notification types"
+            />
+          ),
+        },
+        options: {
+          notifEmailMinPriority: PRIORITY_OPTIONS,
+          notifWhatsappMinPriority: PRIORITY_OPTIONS,
+          notifSmsMinPriority: PRIORITY_OPTIONS,
+        },
+        fieldVisibility: notificationsVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setNotificationsFieldVisible,
+        fieldOrder: notificationsFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setNotificationsFieldOrder(
+            swapFieldOrder(
+              notificationsFieldOrder,
+              resolveFields(siteSettingsNotificationsFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [notificationsVisibilityFields, editMode, setNotificationsFieldVisible, notificationsFieldOrder, setNotificationsFieldOrder],
+  );
 
   // Snapshot of the masked placeholder strings the server returned for every
   // credentials.* field, captured once per load. A combined single-save has
@@ -1091,8 +1145,6 @@ export function AdminSiteSettingsView({
     setListingTypeFlags((s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {});
     setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
     setBrowsePageFlags((s.listings?.browsePages as Record<string, boolean> | undefined) ?? {});
-    setNotifEmailTypes(s.notificationChannels?.email?.types ?? []);
-    setNotifWhatsappTypes(s.notificationChannels?.whatsapp?.types ?? []);
 
     setBidIncrementTiers(s.collectorDropConfig?.bidIncrementTiers ?? DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS);
     setAutoExtendWindow(s.collectorDropConfig?.autoExtendWindowMinutes ?? 5);
@@ -1143,25 +1195,29 @@ export function AdminSiteSettingsView({
     setWaTemplateOrderCancelled(s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "");
     setWaTemplateRefundInitiated(s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "");
 
-    setNotifEmailEnabled(s.notificationChannels?.email?.enabled ?? false);
-    setNotifEmailMinPriority(s.notificationChannels?.email?.minPriority ?? "normal");
-    setNotifWhatsappEnabled(s.notificationChannels?.whatsapp?.enabled ?? false);
-    setNotifWhatsappMinPriority(s.notificationChannels?.whatsapp?.minPriority ?? "high");
-    setNotifWhatsappOtpEnabled(s.notificationChannels?.whatsapp?.otpEnabled ?? false);
-    setNotifSmsEnabled(s.notificationChannels?.sms?.enabled ?? false);
-    setNotifSmsMinPriority(s.notificationChannels?.sms?.minPriority ?? "high");
-    setResendApiKey(s.credentialsMasked?.resendApiKey ?? "");
-    setNotifFromEmail(s.emailSettings?.fromEmail ?? "");
-    setNotifFromName(s.emailSettings?.fromName ?? "");
-    setDigestEnabled(s.emailSettings?.dailyDigest?.enabled ?? false);
-    setDigestRecipients((s.emailSettings?.dailyDigest?.recipients ?? []).join("\n"));
-    // Defaults mirror MESSAGE_BUDGET_DEFAULTS — both channels OFF, so a
-    // settings document written before this feature existed reads as quiet
-    // rather than as "on and unmetered".
-    setMsgEmailEnabled(s.messaging?.emailEnabled ?? false);
-    setMsgWhatsappEnabled(s.messaging?.whatsappEnabled ?? false);
-    setMsgCeilingEmail(s.messaging?.dailyCeiling?.email ?? 80);
-    setMsgCeilingWhatsapp(s.messaging?.dailyCeiling?.whatsapp ?? 200);
+    setNotificationsForm({
+      notifEmailEnabled: s.notificationChannels?.email?.enabled ?? false,
+      notifEmailMinPriority: s.notificationChannels?.email?.minPriority ?? "normal",
+      notifWhatsappEnabled: s.notificationChannels?.whatsapp?.enabled ?? false,
+      notifWhatsappMinPriority: s.notificationChannels?.whatsapp?.minPriority ?? "high",
+      notifWhatsappOtpEnabled: s.notificationChannels?.whatsapp?.otpEnabled ?? false,
+      notifSmsEnabled: s.notificationChannels?.sms?.enabled ?? false,
+      notifSmsMinPriority: s.notificationChannels?.sms?.minPriority ?? "high",
+      notifEmailTypes: s.notificationChannels?.email?.types ?? [],
+      notifWhatsappTypes: s.notificationChannels?.whatsapp?.types ?? [],
+      resendApiKey: s.credentialsMasked?.resendApiKey ?? "",
+      notifFromEmail: s.emailSettings?.fromEmail ?? "",
+      notifFromName: s.emailSettings?.fromName ?? "",
+      digestEnabled: s.emailSettings?.dailyDigest?.enabled ?? false,
+      digestRecipients: (s.emailSettings?.dailyDigest?.recipients ?? []).join("\n"),
+      // Defaults mirror MESSAGE_BUDGET_DEFAULTS — both channels OFF, so a
+      // settings document written before this feature existed reads as
+      // quiet rather than as "on and unmetered".
+      msgEmailEnabled: s.messaging?.emailEnabled ?? false,
+      msgWhatsappEnabled: s.messaging?.whatsappEnabled ?? false,
+      msgCeilingEmail: s.messaging?.dailyCeiling?.email ?? 80,
+      msgCeilingWhatsapp: s.messaging?.dailyCeiling?.whatsapp ?? 200,
+    });
 
     originalMaskedRef.current = {
       razorpayKeyId: s.credentialsMasked?.razorpayKeyId ?? "",
@@ -1343,14 +1399,14 @@ export function AdminSiteSettingsView({
         whatsappTemplateOrderDelivered: maskedOrReal("whatsappTemplateOrderDelivered", waTemplateOrderDelivered),
         whatsappTemplateOrderCancelled: maskedOrReal("whatsappTemplateOrderCancelled", waTemplateOrderCancelled),
         whatsappTemplateRefundInitiated: maskedOrReal("whatsappTemplateRefundInitiated", waTemplateRefundInitiated),
-        resendApiKey: maskedOrReal("resendApiKey", resendApiKey),
+        resendApiKey: maskedOrReal("resendApiKey", notificationsForm.resendApiKey ?? ""),
       },
       emailSettings: {
         host: smtpHost, port: Number(smtpPort), user: smtpUser, fromAddress: smtpFrom,
-        fromEmail: notifFromEmail, fromName: notifFromName,
+        fromEmail: notificationsForm.notifFromEmail, fromName: notificationsForm.notifFromName,
         dailyDigest: {
-          enabled: digestEnabled,
-          recipients: splitEmailList(digestRecipients),
+          enabled: notificationsForm.digestEnabled,
+          recipients: splitEmailList(notificationsForm.digestRecipients ?? ""),
           // Always empty — the CC field is gone (see the Notifications tab).
           // Sent explicitly rather than omitted so a save clears any CC list a
           // pre-existing document still carries.
@@ -1358,11 +1414,11 @@ export function AdminSiteSettingsView({
         },
       },
       messaging: {
-        emailEnabled: msgEmailEnabled,
-        whatsappEnabled: msgWhatsappEnabled,
+        emailEnabled: notificationsForm.msgEmailEnabled,
+        whatsappEnabled: notificationsForm.msgWhatsappEnabled,
         dailyCeiling: {
-          email: msgCeilingEmail,
-          whatsapp: msgCeilingWhatsapp,
+          email: notificationsForm.msgCeilingEmail,
+          whatsapp: notificationsForm.msgCeilingWhatsapp,
           // No SMS sender exists; the ceiling is carried so one cannot ship
           // uncapped if somebody adds a provider later.
           sms: 50,
@@ -1396,9 +1452,18 @@ export function AdminSiteSettingsView({
       },
       notificationChannels: {
         inApp: { enabled: true, readOnly: true },
-        email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority, types: notifEmailTypes },
-        whatsapp: { enabled: notifWhatsappEnabled, minPriority: notifWhatsappMinPriority, otpEnabled: notifWhatsappOtpEnabled, types: notifWhatsappTypes },
-        sms: { enabled: notifSmsEnabled, minPriority: notifSmsMinPriority },
+        email: {
+          enabled: notificationsForm.notifEmailEnabled,
+          minPriority: notificationsForm.notifEmailMinPriority,
+          types: notificationsForm.notifEmailTypes,
+        },
+        whatsapp: {
+          enabled: notificationsForm.notifWhatsappEnabled,
+          minPriority: notificationsForm.notifWhatsappMinPriority,
+          otpEnabled: notificationsForm.notifWhatsappOtpEnabled,
+          types: notificationsForm.notifWhatsappTypes,
+        },
+        sms: { enabled: notificationsForm.notifSmsEnabled, minPriority: notificationsForm.notifSmsMinPriority },
       },
     };
   }
@@ -2418,192 +2483,32 @@ export function AdminSiteSettingsView({
 
           {/* ⑭ Notification Channels */}
           <TabsContent value="notifications">
-            <SettingsTabForm id="notifications" label="Notifications">
-              <Text size="xs" color="muted">
-                In-app notifications are always on. Enable external channels below to let the platform
-                fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
-              </Text>
-
-              {/* Outbound budget — the kill switch and the daily ceiling. */}
-              <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Text size="sm" weight="semibold">Outbound messaging budget</Text>
-                <Text size="xs" color="muted">
-                  The master switches. These suppress <Span weight="semibold">user-facing</Span> messages
-                  only — the daily status digest always reaches staff, so turning customer email off
-                  never leaves the site unwatched. Transactional messages (checkout verification codes,
-                  order receipts) also keep sending, because suppressing those breaks checkout rather
-                  than quietening it.
-                </Text>
-                <Toggle
-                  label="Send user-facing email"
-                  checked={msgEmailEnabled}
-                  onChange={setMsgEmailEnabled}
-                />
-                <Toggle
-                  label="Send user-facing WhatsApp"
-                  checked={msgWhatsappEnabled}
-                  onChange={setMsgWhatsappEnabled}
-                />
-                <Grid cols={2} gap="md">
-                  <Input
-                    label="Daily email ceiling"
-                    type="number"
-                    value={String(msgCeilingEmail)}
-                    onChange={(e) => setMsgCeilingEmail(Number(e.target.value) || 0)}
-                    helperText="Resend's free tier is 100/day. 80 leaves headroom for password-reset mail and in-flight sends."
-                  />
-                  <Input
-                    label="Daily WhatsApp ceiling"
-                    type="number"
-                    value={String(msgCeilingWhatsapp)}
-                    onChange={(e) => setMsgCeilingWhatsapp(Number(e.target.value) || 0)}
-                    helperText="A sanity bound. Meta bills per conversation, not per message."
-                  />
-                </Grid>
-                <Text size="xs" color="muted">
-                  Some notification types never email regardless of these settings — losing a collector drop,
-                  being outbid, marketing, review activity and ticket updates are shown in the
-                  notification bell only. That is deliberate: those were the highest-volume sends and
-                  the ones most likely to exhaust the day&apos;s allowance. A support reply can still be
-                  emailed one-off from the ticket screen.
-                </Text>
-              </Stack>
-
-              {/* In-app — read-only */}
-              <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
-                <Row justify="between" gap="sm">
-                  <Text size="sm" weight="medium" color="muted">In-app (notification bell)</Text>
-                  <Span color="success" surface="success-surface" size="xs" weight="semibold" rounded="full" padding="pill-xs">Always on</Span>
-                </Row>
-                <Text size="xs" color="muted">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
-              </Stack>
-
-              {/* Email channel */}
-              <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Div id="setting-email-notifications"><Toggle label="Email notifications" checked={notifEmailEnabled} onChange={setNotifEmailEnabled} /></Div>
-                {notifEmailEnabled && (
-                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
-                    <Select
-                      label="Minimum priority to send email"
-                      options={PRIORITY_OPTIONS}
-                      value={notifEmailMinPriority}
-                      onValueChange={setNotifEmailMinPriority}
-                    />
-                    <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Resend API (for transactional email)</Text>
-                    <MaskedInput label="Resend API Key" value={resendApiKey} onChange={setResendApiKey} placeholder="re_live_…" helperText="Get your key at resend.com — used for all transactional notifications." />
-                    <Grid cols={2} gap="md">
-                      <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder={getBrandNoreplyEmail()} type="email" />
-                      <Input label="From name" value={notifFromName} onChange={(e) => setNotifFromName(e.target.value)} placeholder={getBrandName()} />
-                    </Grid>
-                    <Text size="xs" weight="medium" color="muted" className="pt-[0.25rem]">Notification types (leave empty to send all types)</Text>
-                    <PaginatedSelect<string>
-                      ariaLabel="Notification types"
-                      multiple
-                      options={NOTIF_TYPE_OPTIONS}
-                      value={notifEmailTypes}
-                      onChange={(values) => setNotifEmailTypes(values)}
-                      placeholder="All notification types"
-                    />
-                  </Stack>
-                )}
-              </Stack>
-
-              {/* Daily status digest */}
-              <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Div id="setting-daily-digest"><Toggle label="Daily status digest" checked={digestEnabled} onChange={setDigestEnabled} /></Div>
-                {digestEnabled && (
-                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
-                    <Text size="xs" color="muted">
-                      Sent every morning at 10:00 IST with the previous 24 hours of order activity. Its arrival doubles as the platform health check — if it stops landing, something needs a look.
-                    </Text>
-                    <Textarea
-                      label="Recipients (To)"
-                      value={digestRecipients}
-                      onChange={(e) => setDigestRecipients(e.target.value)}
-                      placeholder={getBrandSupportEmail()}
-                      rows={3}
-                      helperText="One address per line. Each address is billed as a separate send against the daily allowance — keep this list short."
-                    />
-                    {/*
-                      * The CC field was removed 2026-09. Resend bills a CC as a
-                      * separate delivery, so a 3-recipient TO plus one CC cost
-                      * FOUR of the day's 100 emails for one report — and the
-                      * digest is now the site's single most important message,
-                      * carrying the contact queue, ticket backlog and payment
-                      * proofs that used to be alerts of their own.
-                      * `dailyStatusDigest` no longer reads `ccRecipients`; the
-                      * field stays on the schema only so existing documents
-                      * still validate.
-                      */}
-                  </Stack>
-                )}
-              </Stack>
-
-              {/* WhatsApp channel */}
-              <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Div id="setting-whatsapp-notifications"><Toggle label="WhatsApp notifications" checked={notifWhatsappEnabled} onChange={setNotifWhatsappEnabled} /></Div>
-                {notifWhatsappEnabled && (
-                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
-                    <Select
-                      label="Minimum priority to send WhatsApp"
-                      options={PRIORITY_OPTIONS}
-                      value={notifWhatsappMinPriority}
-                      onValueChange={setNotifWhatsappMinPriority}
-                    />
-                    <Toggle
-                      label="Enable WhatsApp OTP (for login and verification)"
-                      checked={notifWhatsappOtpEnabled}
-                      onChange={setNotifWhatsappOtpEnabled}
-                    />
-                    <Text size="xs" color="muted">
-                      WhatsApp credentials are configured in the WhatsApp tab (⑬). OTP messages use the same phone number.
-                    </Text>
-                    {/*
-                      The label is a PROP, not a <Text> above the control. A
-                      <Text> renders a paragraph element, so the field looks
-                      labelled to a sighted reader and has no accessible name
-                      at all.
-
-                      🛑 "paragraph element" spelled out rather than as a tag,
-                      because `audit-html-wrappers` does not strip JSX comments
-                      — it matched the tag written here and reported this file
-                      as using a raw paragraph tag, which it does not. The
-                      audit is the thing that is wrong; rewording is the
-                      cheap, safe side of that trade rather than loosening a
-                      rule that guards ~3,900 files.
-                    */}
-                    <PaginatedSelect<string>
-                      multiple
-                      ariaLabel="Notification types to send over WhatsApp"
-                      options={NOTIF_TYPE_OPTIONS}
-                      value={notifWhatsappTypes}
-                      onChange={(values) => setNotifWhatsappTypes(values)}
-                      placeholder="All notification types"
-                    />
-                    <Text size="xs" color="muted">Leave empty to send all types.</Text>
-                  </Stack>
-                )}
-              </Stack>
-
-              {/* SMS channel */}
-              <Stack gap="md" rounded="lg" border="default" padding="md">
-                <Toggle label="SMS notifications" checked={notifSmsEnabled} onChange={setNotifSmsEnabled} />
-                {notifSmsEnabled && (
-                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
-                    <Select
-                      label="Minimum priority to send SMS"
-                      options={PRIORITY_OPTIONS}
-                      value={notifSmsMinPriority}
-                      onValueChange={setNotifSmsMinPriority}
-                    />
-                    <Text size="xs" color="muted">
-                      SMS gateway credentials (e.g. Twilio, MSG91) can be configured in the Integrations tab once an SMS provider is connected.
-                    </Text>
-                  </Stack>
-                )}
-              </Stack>
-
-            </SettingsTabForm>
+            {/*
+              Ninth tab migrated to the Universal Template System. See
+              site-settings-notifications-form.ts's header for the full
+              field→payload-group breakdown (this tab writes into FOUR
+              separate groups) and for where the original section-level
+              explanatory paragraphs moved to.
+            */}
+            <Text size="xs" color="muted" className="mb-2">
+              In-app notifications are always on. Enable external channels below to let the platform
+              fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
+            </Text>
+            <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md" className="mb-4">
+              <Row justify="between" gap="sm">
+                <Text size="sm" weight="medium" color="muted">In-app (notification bell)</Text>
+                <Span color="success" surface="success-surface" size="xs" weight="semibold" rounded="full" padding="pill-xs">Always on</Span>
+              </Row>
+              <Text size="xs" color="muted">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
+            </Stack>
+            <SectionForm<SiteSettingsNotificationsFormValues>
+              sections={notificationsSections}
+              values={notificationsForm}
+              onChange={(partial) => setNotificationsForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsNotificationsFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑫ Legal Policies */}
