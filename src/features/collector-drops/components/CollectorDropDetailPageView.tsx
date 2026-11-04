@@ -637,6 +637,48 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
     hasBids: initialHasBids,
   });
 
+  /*
+   * `functionalSlot` (2026-11-05) — this page is more complex than every
+   * other extension so far: `onPlaceBid`/`onBuyNow` reach THREE positions,
+   * not two. `renderBidForm` (desktop, `hidden lg:block` via its own column)
+   * and `renderMobileBidForm` (the `lg:hidden` counterpart — confirmed by
+   * its own doc comment to be "a separate render prop because the two
+   * panels occupy different POSITIONS in the responsive layout, NOT
+   * different content") are both suppressed together on override, per the
+   * owner's explicit decision — an override should look the same regardless
+   * of viewport width. `CollectorDropBottomActions` (the sticky mobile bar,
+   * registered via `useBottomActions()`) is left untouched, same reasoning
+   * as the standard PDP's mobile registration call — it's explicitly
+   * documented as the one thing still reachable when the bid form is off
+   * the visible viewport.
+   *
+   * Only the DESKTOP panel's richer output is hoisted as the slot's live
+   * value — the composable region is already a single, naturally responsive
+   * position (not grid-column-constrained like the main layout), so it
+   * doesn't need the CSS-duplicate trick the two fixed positions use.
+   */
+  const primaryActionsNode = renderCollectorDropBidPanel({
+    productId: String(product.id),
+    currentBid,
+    startingBid,
+    currency,
+    bidCount,
+    isEnded,
+    endDate,
+    buyNowPrice,
+    buyNowAvailable,
+    initialMinBid,
+    initialMinBidIncrement,
+    bidIncrementTiers,
+    minBidIncrementOverride,
+    tags,
+    onPlaceBid,
+    onBuyNow,
+  });
+  const hasPrimaryActionsSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-primary-actions"),
+  );
+
   return (
     <Main>
       <HistoryTracker
@@ -685,17 +727,12 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
           )}
           renderBidForm={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
-              {renderCollectorDropBidPanel({
-                productId: String(product.id),
-                currentBid, startingBid, currency, bidCount, isEnded, endDate,
-                buyNowPrice, buyNowAvailable, initialMinBid, initialMinBidIncrement,
-                bidIncrementTiers, minBidIncrementOverride, tags, onPlaceBid, onBuyNow,
-              })}
+              {!hasPrimaryActionsSlotOverride && primaryActionsNode}
             </SectionVisibilityGate>
           )}
           renderMobileBidForm={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
-              {renderCollectorDropMobileBidPanel({
+              {!hasPrimaryActionsSlotOverride && renderCollectorDropMobileBidPanel({
                 productId: String(product.id),
                 currentBid, startingBid, currency, bidCount, isEnded, endDate,
                 buyNowPrice, bidIncrementTiers, minBidIncrementOverride, tags, onPlaceBid, onBuyNow,
@@ -797,7 +834,11 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
         )}
 
         <Div className="mt-8">
-          <AdminComposableRegion pageId="collector-drops-id" initialCards={pageRegionCards} />
+          <AdminComposableRegion
+            pageId="collector-drops-id"
+            initialCards={pageRegionCards}
+            functionalSlots={{ "pdp-primary-actions": primaryActionsNode }}
+          />
         </Div>
 
         {/* Mobile actions registered via useBottomActions(). It owns its own
