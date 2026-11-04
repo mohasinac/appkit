@@ -44,6 +44,8 @@ import { GroupInlineSelect } from "../../seller/components/GroupInlineSelect";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
 import { BarcodeField } from "../../seller/components/BarcodeField";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -57,6 +59,10 @@ const __O = {
 export interface AdminProductEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   productId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), plus embedded in a drawer, each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
@@ -173,6 +179,8 @@ const EMPTY_PRODUCT: ProductFormValue = {
 
 export function AdminProductEditorView({
   productId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -607,7 +615,10 @@ export function AdminProductEditorView({
         portal="admin"
         {...rest}
         title={isEdit ? "Edit Product" : "Create Product"}
-        sections={[twoPanel]}
+        sections={[
+          <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+          twoPanel,
+        ]}
       />
       <ConfirmDeleteModal
         isOpen={deleteOpen}

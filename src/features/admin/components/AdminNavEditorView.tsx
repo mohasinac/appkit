@@ -32,6 +32,8 @@ import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
 import { navItemFormSchema } from "../schemas/nav-item-form";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 // --- Types -------------------------------------------------------------------
 
@@ -51,6 +53,16 @@ export interface AdminNavEditorViewProps {
   onSaved: () => void;
   item?: NavItemData | null;
   parentOptions?: { label: string; value: string }[];
+  /**
+   * Page-region id for this screen (Phase 12). Optional here — unlike the
+   * other admin editors — because this View is ALSO rendered inline as a
+   * quick-edit drawer by `AdminNavigationView` (the `/admin/navigation` list
+   * page), which has no per-route id of its own. Only the two dedicated
+   * routes (`/admin/navigation/new`, `/admin/navigation/[id]/edit`) pass one.
+   */
+  pageId?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // --- Constants ---------------------------------------------------------------
@@ -78,6 +90,8 @@ export function AdminNavEditorView({
   onSaved,
   item,
   parentOptions = [],
+  pageId,
+  pageRegionCards = [],
 }: AdminNavEditorViewProps) {
   const isEdit = Boolean(item?.id);
 
@@ -172,29 +186,40 @@ export function AdminNavEditorView({
   };
 
   return (
-    <SideDrawer
-      isOpen={open}
-      onClose={onClose}
-      title={isEdit ? "Edit Nav Item" : "New Nav Item"}
-    >
-      <FormShellContext.Provider value={shellCtx}>
-        <Div padding="md">
-          <FormErrorSummary />
-          <SectionForm<NavItemFormValues>
-            sections={sections}
-            values={values}
-            onChange={handleChange}
-            onSubmit={onSubmit}
-            schema={navItemFormSchema}
-            openIds={nav.openIds}
-            onOpenChange={nav.setOpenIds}
-            isLoading={saveMutation.isPending}
-            submitLabel={isEdit ? "Save changes" : "Create item"}
-            onCancel={onClose}
-            cancelLabel="Cancel"
-          />
-        </Div>
-      </FormShellContext.Provider>
-    </SideDrawer>
+    <>
+      {/*
+       * Rendered OUTSIDE the drawer, on the page behind it — only present
+       * when a dedicated route supplied a pageId (see the prop doc above).
+       * The inline quick-edit usage from `AdminNavigationView` never passes
+       * one, so this stays absent there.
+       */}
+      {pageId ? (
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />
+      ) : null}
+      <SideDrawer
+        isOpen={open}
+        onClose={onClose}
+        title={isEdit ? "Edit Nav Item" : "New Nav Item"}
+      >
+        <FormShellContext.Provider value={shellCtx}>
+          <Div padding="md">
+            <FormErrorSummary />
+            <SectionForm<NavItemFormValues>
+              sections={sections}
+              values={values}
+              onChange={handleChange}
+              onSubmit={onSubmit}
+              schema={navItemFormSchema}
+              openIds={nav.openIds}
+              onOpenChange={nav.setOpenIds}
+              isLoading={saveMutation.isPending}
+              submitLabel={isEdit ? "Save changes" : "Create item"}
+              onCancel={onClose}
+              cancelLabel="Cancel"
+            />
+          </Div>
+        </FormShellContext.Provider>
+      </SideDrawer>
+    </>
   );
 }

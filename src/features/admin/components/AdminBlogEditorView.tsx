@@ -31,6 +31,8 @@ import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 import { ATTACHED_COUPON_MAX } from "../../promotions/constants/attached-coupons";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import type { SectionDef } from "../../shell/SectionForm";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -45,6 +47,10 @@ const __O = {
 export interface AdminBlogEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   postId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
@@ -131,6 +137,8 @@ function toDateInputValue(val: Date | string | undefined): string {
 
 export function AdminBlogEditorView({
   postId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -603,6 +611,7 @@ export function AdminBlogEditorView({
       {...rest}
       title={isEdit ? "Edit Post" : "New Blog Post"}
       sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
         <Div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-[1.5rem]">
           <Div>{formContent}</Div>
           <Div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">

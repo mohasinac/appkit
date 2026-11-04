@@ -27,6 +27,8 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { FAQ_CATEGORY_LABELS } from "../../faq/schemas/firestore";
 import type { FAQCategory } from "../../faq/types";
 import { getBrandName } from "../../../core/brand-resolver";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /**
  * Matches the draft this form actually holds, and the payload it actually
@@ -181,6 +183,10 @@ const __O = {
 export interface AdminFaqEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   faqId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
@@ -231,6 +237,8 @@ function toSlug(str: string): string {
 
 export function AdminFaqEditorView({
   faqId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -573,7 +581,10 @@ export function AdminFaqEditorView({
       portal="admin"
       {...rest}
       title={isEdit ? "Edit FAQ" : "New FAQ"}
-      sections={[formSection]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+        formSection,
+      ]}
     />
   );
 }

@@ -17,6 +17,8 @@ import { Repeater } from "../../../ui/components/Repeater";
 import { FieldInput, FormErrorSummary, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import type { SectionDef } from "../../shell/SectionForm";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 /*
  * ── Content & Templates (C2c) ────────────────────────────────────────────────
@@ -274,6 +276,10 @@ const __O = {
 export interface AdminCategoryEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   categoryId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
@@ -439,6 +445,8 @@ function toCategorySlug(str: string): string {
 
 export function AdminCategoryEditorView({
   categoryId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -1154,7 +1162,10 @@ export function AdminCategoryEditorView({
         portal="admin"
         {...rest}
         title={isEdit ? "Edit Category" : "Create Category"}
-        sections={[twoPanel]}
+        sections={[
+          <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+          twoPanel,
+        ]}
       />
       <ConfirmDeleteModal
         isOpen={deleteOpen}

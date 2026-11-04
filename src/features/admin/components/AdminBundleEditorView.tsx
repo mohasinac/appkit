@@ -43,6 +43,8 @@ import {
   BUNDLE_RULE_TYPE_OPTIONS,
 } from "../../categories/schemas/bundle-form";
 import type { BundleQueryRule, CategoryDocument } from "../../categories/schemas";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -68,6 +70,14 @@ export interface AdminBundleEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   /** When set, the form loads an existing bundle; otherwise it runs as "new". */
   bundleId?: string;
+  /**
+   * Page-region id for this screen (Phase 12) — required because this View
+   * is mounted from FOUR distinct routes across two portals (admin new/edit,
+   * store new/edit), each with its own id.
+   */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   /** Called after a successful create with the new bundle id. */
   onSaved?: (id: string) => void;
   /** Called after a successful delete. */
@@ -132,6 +142,8 @@ function bundleToForm(bundle: CategoryDocument | null): Values {
 
 export function AdminBundleEditorView({
   bundleId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   scope = "admin",
@@ -382,7 +394,10 @@ export function AdminBundleEditorView({
           ? BUNDLE_COPY.adminEditorTitleEdit
           : BUNDLE_COPY.adminEditorTitleNew
       }
-      sections={[formSection]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+        formSection,
+      ]}
     />
   );
 }

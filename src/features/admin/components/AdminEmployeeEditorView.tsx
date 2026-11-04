@@ -23,6 +23,7 @@ import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __O = {
   yAuto: "overflow-y-auto",
@@ -38,6 +39,17 @@ export interface AdminEmployeeEditorViewProps {
   displayName?: string;
   currentPermissionGroup?: string;
   currentPermissions?: string[];
+  /**
+   * Page-region id for this screen (Phase 12). Optional because this View
+   * also mounts as an INLINE drawer from `AdminTeamView`'s row click — that
+   * usage is not a distinct route and must not get its own page region (the
+   * list page already renders its own `<AdminComposableRegion pageId="admin-team">`).
+   * Pass it only from the two standalone routes (`/admin/team/new`,
+   * `/admin/team/[id]/edit`), each with its own id.
+   */
+  pageId?: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
 }
 
 // --- Helpers -----------------------------------------------------------------
@@ -197,6 +209,8 @@ export function AdminEmployeeEditorView({
   displayName,
   currentPermissionGroup,
   currentPermissions = [],
+  pageId,
+  pageRegionCards = [],
 }: AdminEmployeeEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -354,7 +368,7 @@ export function AdminEmployeeEditorView({
         title={mode === "invite" ? "Invite Employee" : `Edit — ${displayName ?? "Employee"}`}
       >
         <Div padding="md">
-          <AdminComposableRegion pageId="admin-team-new" initialCards={[]} />
+          {pageId && <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />}
           <FormShellContext.Provider value={shellCtx}>
             <FormErrorSummary />
             <SectionForm<EmployeeValues>

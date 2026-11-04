@@ -22,6 +22,8 @@ import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sectio
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
 import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 import { CategoryChipPicker } from "../../seller/components/CategoryChipPicker";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -72,6 +74,10 @@ interface Values {
 export interface AdminCouponEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   couponId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
@@ -171,6 +177,8 @@ function toDateInputValue(val: Date | string | undefined): string {
 
 export function AdminCouponEditorView({
   couponId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   embedded,
@@ -548,7 +556,10 @@ export function AdminCouponEditorView({
       portal="admin"
       {...rest}
       title={isEdit ? "Edit Coupon" : "Create Coupon"}
-      sections={[formSection]}
+      sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
+        formSection,
+      ]}
     />
   );
 }

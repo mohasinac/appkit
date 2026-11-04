@@ -49,10 +49,16 @@ import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface AdminSublistingCategoryEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   categoryId?: string;
+  /** Page-region id for this screen (Phase 12) — required because this View is mounted from two different routes (new vs edit), each with its own id. */
+  pageId: string;
+  /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
+  pageRegionCards?: DashboardCard[];
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
 }
@@ -66,6 +72,8 @@ interface CategoryPayload {
 
 export function AdminSublistingCategoryEditorView({
   categoryId,
+  pageId,
+  pageRegionCards = [],
   onSaved,
   onDeleted,
   ...rest
@@ -211,6 +219,7 @@ export function AdminSublistingCategoryEditorView({
       {...rest}
       title={isEdit ? "Edit Sub-listing Category" : "New Sub-listing Category"}
       sections={[
+        <AdminComposableRegion key="page-region" pageId={pageId} initialCards={pageRegionCards} />,
         <FormShellContext.Provider key="sc-editor-form" value={shellCtx}>
           <FormErrorSummary />
           <SectionForm<SublistingCategoryFormValues>

@@ -570,6 +570,7 @@ export function AdminProductsView({ children, pageRegionCards = [], ...props }: 
     renderEditor: ({ editId, closePanel }) => (
       <AdminProductEditorView
         productId={editId ?? undefined}
+        pageId={editId ? "admin-products-id-edit" : "admin-products-new"}
         initialData={editId ? (rawByIdRef.current[editId] as any) : undefined}
         onSaved={closePanel}
         onDeleted={closePanel}
