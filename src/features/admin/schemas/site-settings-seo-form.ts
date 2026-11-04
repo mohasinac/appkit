@@ -35,7 +35,7 @@ export const siteSettingsSeoFormSchema = z.object({
   }),
   canonicalUrl: annotate(z.string().trim().optional().or(z.literal("")), {
     section: "seo", order: 4, row: "full", label: "Canonical base URL",
-    help: "e.g. https://letitrip.in — leave blank to use the site's own domain.",
+    help: "Leave blank to use the site's own domain.",
   }),
   seoNoIndex: annotate(z.boolean().optional(), {
     section: "seo", order: 5, row: "full", kind: "toggle",

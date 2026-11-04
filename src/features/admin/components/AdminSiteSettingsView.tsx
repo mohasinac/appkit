@@ -135,6 +135,9 @@ import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { swapFieldOrder } from "../../shell/field-ui-meta";
 import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import { useFormShellState, FormShellContext, applyZodIssues, FieldInput, FieldTextarea } from "../../../ui/forms";
+import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
+import { humaniseFieldName } from "../../shell/entity-form";
+import type { ResolvedField } from "../../shell/build-sections";
 import { getBrandName, getBrandDomain } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
@@ -281,6 +284,53 @@ function SettingsTabForm({
  * on every render of a 20-tab page.
  */
 const EMPTY_TAB_VALUES: FirestoreDocument = {};
+
+/**
+ * Reproduces the generator's default `kind: "toggle"` rendering
+ * (`FieldCheckbox`, see `build-sections.tsx`'s `renderField`), wrapped in an
+ * `id`-bearing anchor — fixed 2026-11-05. The old hand-written JSX carried
+ * 13 literal `id="setting-*"` attributes (`settings-preview-registry.ts`'s
+ * own header comment records the count), used by the dashboard's "jump to
+ * this setting" cards and the `?tab=X#setting-Y` search-index deep links.
+ * The generator has no per-field DOM-id mechanism, so the Universal Template
+ * System migration silently dropped all of them — flagged as a known gap in
+ * the Branding tab's own commit message at the time, and confirmed as a
+ * real regression by `audit-widget-descriptor-sync`/`audit-action-index`
+ * once the whole migration was gated.
+ *
+ * 🛑 A component taking `id` as a real JSX attribute, NOT a function
+ * returning a closure over a string parameter — `audit-widget-descriptor-sync`/
+ * `audit-action-index` both do a literal SOURCE-TEXT search for
+ * `id="setting-X"` (`adminSiteSettingsSrc.includes('id="${anchorId}"')`,
+ * not a DOM/runtime check), so `id={someVariable}` passes functionally but
+ * fails the audit textually. Writing `id="setting-x"` as a literal at each
+ * call site satisfies both. Not a generic `domId` mechanism on
+ * `FieldUiMeta` — adding one for 8 current call sites would be new
+ * infrastructure for a need that has not recurred beyond this list.
+ */
+function AnchoredToggle<T extends object>({
+  id,
+  field,
+  values,
+  onChange,
+}: {
+  id: string;
+  field: ResolvedField;
+  values: T;
+  onChange: (partial: Partial<T>) => void;
+}) {
+  return (
+    <div id={id}>
+      <FieldCheckbox
+        name={field.name}
+        label={field.meta.label ?? humaniseFieldName(field.name)}
+        hint={field.meta.help}
+        checked={Boolean((values as Record<string, unknown>)[field.name])}
+        onChange={(v) => onChange({ [field.name]: v } as Partial<T>)}
+      />
+    </div>
+  );
+}
 
 function SaveAllBar({ isPending, onSave }: { isPending: boolean; onSave: () => void }) {
   return (
@@ -533,6 +583,7 @@ export function AdminSiteSettingsView({
               /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
             </Stack>
           ),
+          announcementEnabled: (props) => <AnchoredToggle id="setting-announcement-bar" {...props} />,
         },
         fieldVisibility: announcementVisibilityFields,
         editMode,
@@ -573,6 +624,7 @@ export function AdminSiteSettingsView({
               onChange={(url) => onChange({ seoOgImage: url })}
             />
           ),
+          seoNoIndex: (props) => <AnchoredToggle id="setting-robots-noindex" {...props} />,
         },
         fieldVisibility: seoVisibilityFields,
         editMode,
@@ -1056,6 +1108,11 @@ export function AdminSiteSettingsView({
     () =>
       buildSectionsFromSchema<SiteSettingsShippingFormValues>(siteSettingsShippingFormSchema, {
         options: { defaultCarrier: CARRIER_OPTIONS },
+        renderers: {
+          phonepeEnabled: (props) => <AnchoredToggle id="setting-phonepe-enabled" {...props} />,
+          upiManualEnabled: (props) => <AnchoredToggle id="setting-manual-payment-enabled" {...props} />,
+          codEnabled: (props) => <AnchoredToggle id="setting-cod-enabled" {...props} />,
+        },
         fieldVisibility: shippingVisibilityFields,
         editMode,
         onToggleFieldVisibility: setShippingFieldVisible,
@@ -1565,6 +1622,9 @@ export function AdminSiteSettingsView({
     () =>
       buildSectionsFromSchema<SiteSettingsNotificationsFormValues>(siteSettingsNotificationsFormSchema, {
         renderers: {
+          msgEmailEnabled: (props) => <AnchoredToggle id="setting-email-notifications" {...props} />,
+          msgWhatsappEnabled: (props) => <AnchoredToggle id="setting-whatsapp-notifications" {...props} />,
+          digestEnabled: (props) => <AnchoredToggle id="setting-daily-digest" {...props} />,
           resendApiKey: ({ values, onChange }) => (
             <MaskedInput
               label="Resend API Key"
