@@ -15,6 +15,12 @@ export type {
 } from "./_internal/server/features/search/search-everything";
 export { SEARCH_SOURCES } from "./_internal/server/features/search/search-sources";
 export { SCOPED_SCAN_BUDGET } from "./_internal/server/features/search/search-everything";
+// 4B part 2 — the cached entity-search index (categories/brands/franchises)
+// behind the admin CommandPalette/InlineNavSearch. Same `_internal/` boundary
+// reasoning as `searchEverything` above — a different consumer of the same
+// directory, not the same feature (see entity-index.ts's own header).
+export { getEntitySearchIndex } from "./_internal/server/features/search/entity-index";
+export type { EntitySearchEntry, EntitySearchType } from "./_internal/server/features/search/entity-index";
 /*
  * `buildTokensIndex` is server-only for the same reason `encryptPiiFields`
  * is: it feeds `BaseRepository.buildTokensIndexFor`, which runs inside the

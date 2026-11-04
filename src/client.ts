@@ -1065,6 +1065,9 @@ export {
   enabledListingTypes,
   enabledCategoryTypes,
   ALL_LISTING_TYPES,
+  // Item 7 FAQ-fragment editor UI (2026-11-04) — the "categoryType" governs
+  // option's own dropdown source, same reason `ALL_LISTING_TYPES` is here.
+  ALL_CATEGORY_TYPES,
   isListingType,
   // Browse-section gates. Client-safe and genuinely needed here: the nav,
   // sidebar, mobile sheet and footer all filter on them, and a link into a

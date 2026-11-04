@@ -1337,6 +1337,29 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
   }
 
+  /**
+   * EVERY category/brand/franchise/sublisting/bundle row — active or not —
+   * the flat corpus for 4B part 2's entity-search index
+   * (`_internal/server/features/search/entity-index.ts`).
+   *
+   * 🛑 Deliberately NO `isActive` clause, unlike `findActiveBrands`/
+   * `findActiveFranchises` above. Those two serve PUBLIC browse pages,
+   * where an inactive row is a dead facet that must not render. This
+   * serves an ADMIN jumping straight to a row's own editor — and 7 of the
+   * 8 seeded franchises are inactive precisely because nobody has stocked
+   * them yet (§ "Franchise" in CLAUDE.md), which is exactly the row an
+   * admin most needs to find and fix. Filtering to active-only here would
+   * make most franchises permanently unreachable from the one search meant
+   * to reach them.
+   *
+   * The caller caches this result (30-min TTL, matching `getFlagSnapshot`'s
+   * own precedent), so this is not a per-request scan.
+   */
+  async findAllForEntitySearch(): Promise<CategoryDocument[]> {
+    const snap = await this.db.collection(this.collection).get();
+    return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+  }
+
   /*
    * 🛑 `incrementViewCount` DELETED 2026-10-10 — zero callers since
    * 2026-08-31, when it was removed from the category-detail render path (a

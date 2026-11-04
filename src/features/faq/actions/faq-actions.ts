@@ -14,6 +14,47 @@ import { resolveFaqAnswer } from "../utils/resolveFaqAnswer";
 
 // --- Schemas --------------------------------------------------------------
 
+/**
+ * Mirrors `ContentFragment` (`_internal/shared/content/fragments.ts`) — for
+ * an answer that MENTIONS several governed things rather than being solely
+ * about one (document-level `contentTags` already covers that case). Each
+ * fragment's own `governs` is optional (omitted = always-shown clause, e.g.
+ * the answer's opening sentence).
+ *
+ * Exported (added Item 7, 2026-11-04) so the `/api/admin/faqs*` routes — a
+ * SEPARATE write path from this file's own `createFaq`/`updateFaq`, with
+ * their own local Zod schemas — can accept the same field with one
+ * definition instead of a third hand-copy. Those routes are what the admin
+ * FAQ editor UI actually calls; `answerFragments` existing only here, with
+ * no reader on the path the UI uses, would mean an editor that appears to
+ * save but silently drops the field on every write.
+ */
+export const answerFragmentsSchema = z
+  .array(
+    z.object({
+      // Mirrors `ContentTag` verbatim (not a `{kind, value}` wrapper) — a
+      // fragment's `governs` IS a `ContentTag`, passed straight into
+      // `isContentVisible([f.governs], settings)` with no reshaping.
+      governs: z
+        .object({
+          governs: z.enum(["listingType", "categoryType", "browsePage"]),
+          value: z.string().min(1).max(50),
+        })
+        .optional(),
+      text: z.string().min(1).max(2000),
+      /*
+       * Item 7 (2026-11-03) — replacement text used when `governs` is
+       * disabled, instead of omitting the fragment. "If an FAQ mentions
+       * pre-orders and I disable them, replace that wording, don't hide
+       * the FAQ." Optional; omitted keeps the pre-existing omit-on-disable
+       * behavior.
+       */
+      whenHidden: z.string().min(1).max(2000).optional(),
+    }),
+  )
+  .max(20)
+  .optional();
+
 const faqBaseSchema = z.object({
   question: z.string().min(10).max(500),
   answer: z.object({
@@ -50,31 +91,7 @@ const faqBaseSchema = z.object({
    * `governs` is optional (omitted = always-shown clause, e.g. the answer's
    * opening sentence).
    */
-  answerFragments: z
-    .array(
-      z.object({
-        // Mirrors `ContentTag` verbatim (not a `{kind, value}` wrapper) — a
-        // fragment's `governs` IS a `ContentTag`, passed straight into
-        // `isContentVisible([f.governs], settings)` with no reshaping.
-        governs: z
-          .object({
-            governs: z.enum(["listingType", "categoryType", "browsePage"]),
-            value: z.string().min(1).max(50),
-          })
-          .optional(),
-        text: z.string().min(1).max(2000),
-        /*
-         * Item 7 (2026-11-03) — replacement text used when `governs` is
-         * disabled, instead of omitting the fragment. "If an FAQ mentions
-         * pre-orders and I disable them, replace that wording, don't hide
-         * the FAQ." Optional; omitted keeps the pre-existing omit-on-disable
-         * behavior.
-         */
-        whenHidden: z.string().min(1).max(2000).optional(),
-      }),
-    )
-    .max(20)
-    .optional(),
+  answerFragments: answerFragmentsSchema,
   relatedFAQs: z.array(z.string()).max(5).optional(),
   useSiteSettings: z.boolean().default(true),
   variables: z.record(z.string(), z.string()).optional(),

@@ -5563,6 +5563,10 @@ export type { VoteFaqInput } from "./features/faq/hooks/useFaqVote";
 export type { VoteFaqResult } from "./features/faq/hooks/useFaqVote";
 
 // ./features/faq/server
+// answerFragmentsSchema - the reusable `answerFragments` Zod shape, shared
+// between this file's own faqCreateSchema/faqUpdateSchema and the
+// `/api/admin/faqs*` routes' separate local schemas (Item 7, 2026-11-04).
+export { answerFragmentsSchema } from "./features/faq/actions/faq-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createFaq - Helper for create faq.
 export { createFaq } from "./features/faq/actions/faq-actions";
@@ -6992,6 +6996,9 @@ export {
   enabledListingTypes,
   enabledCategoryTypes,
   ALL_LISTING_TYPES,
+  // Item 7 FAQ-fragment editor UI (2026-11-04) — the "categoryType" governs
+  // option's own dropdown source, same reason `ALL_LISTING_TYPES` is here.
+  ALL_CATEGORY_TYPES,
   isListingType,
   // Browse-section gates — /categories, /brands, /franchise, /stores.
   // Exported HERE rather than from server.ts for the reason given in that
