@@ -128,14 +128,27 @@ export type PdpSectionId = "gallery" | "info" | "actions" | "tabs" | "related";
  * the id is the ONLY thing standing between an admin picking from a short,
  * pre-vetted list and an admin naming arbitrary code to execute.
  *
- * `"pdp-offer-action"` is the one entry as of 2026-11-05 — the standard
- * PDP's `renderOfferAction` slot (the "Make an Offer" button). Deliberately
- * NOT `renderPrimaryActions` (Buy Now/Add to Cart/Wishlist) as the pilot: a
- * misconfigured or removed offer-action override leaves the PRIMARY purchase
- * path untouched, where a primary-actions override would not. See the
- * `functionalSlot` doc comment below for why this exists at all.
+ * `"pdp-offer-action"` (2026-11-05, the pilot) — the standard PDP's
+ * `renderOfferAction` slot (the "Make an Offer" button), piloted first
+ * because a misconfigured/removed override leaves the PRIMARY purchase path
+ * untouched.
+ *
+ * `"pdp-primary-actions"` (2026-11-05) — the standard PDP's
+ * `renderPrimaryActions` slot (Buy Now / Add to Cart / Wishlist), the
+ * control the owner actually named ("replace the offer/buy buttons at
+ * runtime"). Covers ONLY the desktop-rail position — the same render prop's
+ * second call site (`variant: "mobile"`) is a `useBottomActions()`
+ * REGISTRATION side effect, not a duplicable visible slot, and always fires
+ * regardless of any composed override (suppressing it would break the
+ * mobile buy bar site-wide for a purely additive widget feature).
  */
-export type FunctionalSlotId = "pdp-offer-action";
+export type FunctionalSlotId = "pdp-offer-action" | "pdp-primary-actions";
+
+/** Admin-facing labels for `FunctionalSlotId` — used by the editor's slot picker once a second entry existed. */
+export const FUNCTIONAL_SLOT_LABELS: Record<FunctionalSlotId, string> = {
+  "pdp-offer-action": "Offer action (Make an Offer button)",
+  "pdp-primary-actions": "Primary actions (Buy Now / Add to Cart / Wishlist)",
+};
 
 /** Per-user recently-visited/used cards, namespaced by `"{portal}:hub"` scope — same convention as `hiddenHubCards`. */
 export type RecentlyVisitedMap = Record<string, RecentEntry[]>;

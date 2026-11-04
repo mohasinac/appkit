@@ -533,6 +533,49 @@ export async function ProductDetailPageView({
     card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-offer-action"),
   );
 
+  /*
+   * `functionalSlot` (2026-11-05) — same hoisting pattern as `offerActionNode`
+   * above, for the DESKTOP position only. Unlike offer-action, this slot
+   * always renders SOMETHING (real buttons from `renderPrimaryActions`, or
+   * `ACTION_NOT_WIRED`-disabled placeholders when the caller omitted the
+   * prop) — there is no "not eligible" case, since this is the PRIMARY
+   * purchase path. The SECOND `renderPrimaryActions` call site below
+   * (`variant: "mobile"`) is a `useBottomActions()` REGISTRATION side
+   * effect, not a duplicable visible slot — it always fires regardless of
+   * any composed override; suppressing it would break the mobile buy bar
+   * site-wide for what is meant to be a purely additive widget feature.
+   */
+  const primaryActionsNode = renderPrimaryActions
+    ? renderPrimaryActions({
+        productId: product.id,
+        productSlug: product.slug ?? slug,
+        productTitle: product.title,
+        productImage: product.mainImage,
+        price,
+        currency,
+        storeId: typeof p.storeId === "string" ? (p.storeId as string) : undefined,
+        storeName: typeof p.storeName === "string" ? (p.storeName as string) : undefined,
+        inStock,
+        variant: "desktop",
+      })
+    : (
+        <>
+          <Button variant="primary" size="md" className="w-full" disabled title={ACTION_NOT_WIRED}>
+            {inStock ? "Buy Now" : "Out of Stock"}
+          </Button>
+          <Button variant="secondary" size="md" className="w-full" disabled title={ACTION_NOT_WIRED}>
+            {inStock ? "Add to Cart" : "Out of Stock"}
+          </Button>
+          <Button variant="ghost" size="md" className="w-full" disabled title={ACTION_NOT_WIRED}>
+            <Icon name="wishlist" size="md" />
+            Add to Wishlist
+          </Button>
+        </>
+      );
+  const hasPrimaryActionsSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-primary-actions"),
+  );
+
   const shippingInfo =
     typeof p.shippingInfo === "string" ? (p.shippingInfo as string) : null;
   const returnPolicy =
@@ -1104,51 +1147,7 @@ export async function ProductDetailPageView({
                 needs it most.
               */}
               <Stack gap="sm" {...ctaAnchorProps()}>
-                {renderPrimaryActions ? (
-                  renderPrimaryActions({
-                    productId: product.id,
-                    productSlug: product.slug ?? slug,
-                    productTitle: product.title,
-                    productImage: product.mainImage,
-                    price,
-                    currency,
-                    storeId: typeof p.storeId === "string" ? (p.storeId as string) : undefined,
-                    storeName: typeof p.storeName === "string" ? (p.storeName as string) : undefined,
-                    inStock,
-                    variant: "desktop",
-                  })
-                ) : (
-                  <>
-                    <Button
-                      variant="primary"
-                      size="md"
-                      className="w-full"
-                      disabled
-                      title={ACTION_NOT_WIRED}
-                    >
-                      {inStock ? "Buy Now" : "Out of Stock"}
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      size="md"
-                      className="w-full"
-                      disabled
-                      title={ACTION_NOT_WIRED}
-                    >
-                      {inStock ? "Add to Cart" : "Out of Stock"}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="md"
-                      className="w-full"
-                      disabled
-                      title={ACTION_NOT_WIRED}
-                    >
-                      <Icon name="wishlist" size="md" />
-                      Add to Wishlist
-                    </Button>
-                  </>
-                )}
+                {!hasPrimaryActionsSlotOverride && primaryActionsNode}
                 {!hasOfferSlotOverride && offerActionNode}
               </Stack>
 
@@ -1410,7 +1409,7 @@ export async function ProductDetailPageView({
         <AdminComposableRegion
           pageId="products-slug"
           initialCards={pageRegionCards}
-          functionalSlots={{ "pdp-offer-action": offerActionNode }}
+          functionalSlots={{ "pdp-offer-action": offerActionNode, "pdp-primary-actions": primaryActionsNode }}
         />
 
         {/* Mobile actions registered via useBottomActions() in ProductDetailActions variant="mobile" */}

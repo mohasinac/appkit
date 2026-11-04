@@ -20,6 +20,7 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { Toggle } from "../../../ui/components/Toggle";
 import { useToastSafe } from "../../../ui/components/toast-context";
 import type { CardElement, CardElementSpan, DashboardCard, FunctionalSlotId } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { FUNCTIONAL_SLOT_LABELS } from "../../../_internal/shared/features/dashboard/recent-entry";
 import type { ReactNode } from "react";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ROW_HREF_BY_RESOURCE } from "../../../_internal/shared/features/admin/row-widget-resources";
@@ -149,6 +150,11 @@ const CONTENT_TAG_OPTIONS: SelectOption[] = [
   { value: "", label: "No tag — always visible" },
   ...ALL_LISTING_TYPES.map((t) => ({ value: t, label: humaniseFieldName(t) })),
 ];
+
+/** `<Select>` options for `functionalSlot.slotId`, derived from the closed `FunctionalSlotId` vocabulary — never hand-typed, so a new slot id can't silently go missing here. */
+const FUNCTIONAL_SLOT_OPTIONS: SelectOption[] = (
+  Object.entries(FUNCTIONAL_SLOT_LABELS) as Array<[FunctionalSlotId, string]>
+).map(([value, label]) => ({ value, label }));
 
 const FAQ_CATEGORY_OPTIONS = (
   Object.entries(FAQ_CATEGORY_LABELS) as Array<[FAQCategory, string]>
@@ -453,12 +459,16 @@ function DashboardCardEditPanel({
     onUpdate({ elements: [...card.elements, { kind: "form", formId: "quick-add-faq", label: "Quick add FAQ" }] });
   }
   function addFunctionalSlotElement() {
-    // Same reasoning as `addFormElement` — exactly one `FunctionalSlotId`
-    // exists today (`recent-entry.ts`'s own doc comment), so this is a
-    // direct add rather than a picker. Widen to a `<Select>` the moment a
-    // second slot id exists.
+    // A second `FunctionalSlotId` now exists (2026-11-05) — widened from a
+    // direct add to picking the first option, with the real `<Select>`
+    // (FUNCTIONAL_SLOT_OPTIONS below) shown in the per-element editor so the
+    // admin can change it after adding, same pattern `form`'s own "widen
+    // when a second entry exists" comment anticipated.
     onUpdate({
-      elements: [...card.elements, { kind: "functionalSlot", slotId: "pdp-offer-action", label: "Make an Offer button" }],
+      elements: [
+        ...card.elements,
+        { kind: "functionalSlot", slotId: "pdp-offer-action", label: FUNCTIONAL_SLOT_LABELS["pdp-offer-action"] },
+      ],
     });
   }
 
@@ -578,13 +588,23 @@ function DashboardCardEditPanel({
                       onChange={(value) => updateElement(i, { label: value })}
                     />
                   ) : el.kind === "functionalSlot" ? (
-                    // `slotId` stays fixed — the admin picks a label only.
-                    // What actually renders is entirely developer-wired (see
-                    // `recent-entry.ts`'s `functionalSlot` doc comment); this
-                    // panel deliberately gives no way to point it at
-                    // anything else.
+                    // The admin picks WHICH closed, pre-vetted slot and a
+                    // label — never what it renders. What actually renders
+                    // is entirely developer-wired (see `recent-entry.ts`'s
+                    // `functionalSlot` doc comment); this panel has no way
+                    // to point it at anything outside `FUNCTIONAL_SLOT_OPTIONS`.
                     <Stack gap="xs">
-                      <Text size="xs" color="muted">Functional slot: {el.slotId}</Text>
+                      <Select
+                        aria-label="Functional slot"
+                        options={FUNCTIONAL_SLOT_OPTIONS}
+                        value={el.slotId}
+                        onValueChange={(value) =>
+                          updateElement(i, {
+                            slotId: value as FunctionalSlotId,
+                            label: FUNCTIONAL_SLOT_LABELS[value as FunctionalSlotId],
+                          })
+                        }
+                      />
                       <FieldInput
                         name={`card-element-${card.id}-${i}-label`}
                         label="Label"
