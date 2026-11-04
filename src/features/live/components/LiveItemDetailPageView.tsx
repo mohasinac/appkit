@@ -116,6 +116,21 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
     getFieldVisibility("pdp-sections"),
   ]);
 
+  /*
+   * `functionalSlot` (2026-11-05) — Live has no separate offer path (no
+   * `renderOfferAction`/`allowOffers` anywhere on this component), so
+   * `renderActions` fills the SAME role `renderPrimaryActions` does on the
+   * standard PDP/Digital Code — it IS the sole buy control, just with a
+   * simpler single-argument signature. Mapped onto the EXISTING
+   * `"pdp-primary-actions"` slot id rather than inventing a third, since
+   * the role is identical. Same hoist/suppress pattern as Digital Code:
+   * single call site, plain DOM-id anchor (`live-item-buy-bar`).
+   */
+  const primaryActionsNode = renderActions?.(product);
+  const hasPrimaryActionsSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-primary-actions"),
+  );
+
   return (
     <Main>
       <HistoryTracker
@@ -149,7 +164,11 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
           <ShareButton title={title} />
         </Row>
 
-        <AdminComposableRegion pageId="live-slug" initialCards={pageRegionCards} />
+        <AdminComposableRegion
+          pageId="live-slug"
+          initialCards={pageRegionCards}
+          functionalSlots={{ "pdp-primary-actions": primaryActionsNode }}
+        />
 
         <PreOrderDetailView
           renderGallery={() => (
@@ -297,7 +316,7 @@ export async function LiveItemDetailPageView({ slug, initialProduct, renderActio
           )}
           renderBuyBar={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
-              <Div id="live-item-buy-bar">{renderActions?.(product)}</Div>
+              <Div id="live-item-buy-bar">{!hasPrimaryActionsSlotOverride && primaryActionsNode}</Div>
             </SectionVisibilityGate>
           )}
           renderRelated={() => (
