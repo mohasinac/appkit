@@ -49,8 +49,16 @@ import type { AboutHowItem, AboutValueItem, AboutMilestone, AboutTeamMember } fr
  */
 import { COD_MAX_ORDER_VALUE_FALLBACK } from "../schemas/firestore";
 import { siteSettingsFormSchema } from "../schemas/site-settings-form";
+import {
+  siteSettingsBrandingFormSchema,
+  type SiteSettingsBrandingFormValues,
+} from "../schemas/site-settings-branding-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
+import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
+import { swapFieldOrder } from "../../shell/field-ui-meta";
+import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import { useFormShellState, FormShellContext, applyZodIssues } from "../../../ui/forms";
 import { getBrandName, getBrandDomain, getBrandSupportEmail, getBrandNoreplyEmail } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
@@ -224,18 +232,61 @@ export function AdminSiteSettingsView({
 
   const s = (data ?? {}) as any;
 
-  // ① Branding
-  const [siteName, setSiteName] = React.useState("");
-  const [tagline, setTagline] = React.useState("");
-  const [logoUrl, setLogoUrl] = React.useState("");
-  const [faviconUrl, setFaviconUrl] = React.useState("");
-  const [maintenanceMode, setMaintenanceMode] = React.useState(false);
-  const [maintenanceMessage, setMaintenanceMessage] = React.useState("");
-  // D9 — opt-in; absent/unseeded reads as OFF.
-  const [chatEnabled, setChatEnabled] = React.useState(false);
-  // Customer assistant — kill switch on an already-shipped path; absent/
-  // unseeded reads as ON, matching assertAssistantEnabled's server-side polarity.
-  const [assistantEnabled, setAssistantEnabled] = React.useState(true);
+  // ① Branding — first tab migrated to the Universal Template System
+  // (schema + buildSectionsFromSchema), 2026-11-04. One combined object
+  // instead of eight useState calls; `chatEnabled` defaults false (D9,
+  // opt-in) and `assistantEnabled` defaults true (kill switch on an
+  // already-shipped path, matching assertAssistantEnabled's server-side
+  // polarity) — same defaults the eight separate calls used.
+  const [brandingForm, setBrandingForm] = React.useState<SiteSettingsBrandingFormValues>({
+    siteName: "", tagline: "", logoUrl: "", faviconUrl: "",
+    maintenanceMode: false, maintenanceMessage: "",
+    chatEnabled: false, assistantEnabled: true,
+  });
+  const { editMode } = useEditMode();
+  const {
+    fields: brandingVisibilityFields,
+    setVisible: setBrandingFieldVisible,
+    fieldOrder: brandingFieldOrder,
+    setFieldOrder: setBrandingFieldOrder,
+  } = useFieldVisibility("admin-site-settings-branding");
+  const brandingSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsBrandingFormValues>(siteSettingsBrandingFormSchema, {
+        renderers: {
+          logoUrl: ({ values, onChange }) => (
+            <ImageUpload
+              label="Logo"
+              currentImage={(values.logoUrl as string) ?? ""}
+              onUpload={(file) => upload(file, "store")}
+              onChange={(url) => onChange({ logoUrl: url })}
+            />
+          ),
+          faviconUrl: ({ values, onChange }) => (
+            <ImageUpload
+              label="Favicon"
+              currentImage={(values.faviconUrl as string) ?? ""}
+              onUpload={(file) => upload(file, "store")}
+              onChange={(url) => onChange({ faviconUrl: url })}
+            />
+          ),
+        },
+        fieldVisibility: brandingVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setBrandingFieldVisible,
+        fieldOrder: brandingFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setBrandingFieldOrder(
+            swapFieldOrder(
+              brandingFieldOrder,
+              resolveFields(siteSettingsBrandingFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [brandingVisibilityFields, editMode, setBrandingFieldVisible, brandingFieldOrder, setBrandingFieldOrder, upload],
+  );
 
   // ② Appearance — background image/gradient/color/video (light + dark).
   // The old primaryColor/secondaryColor/accentColor/fontFamily/defaultTheme
@@ -574,14 +625,16 @@ export function AdminSiteSettingsView({
   // Populate from query data
   React.useEffect(() => {
     if (!s || !Object.keys(s).length) return;
-    setSiteName(s.siteName ?? "");
-    setTagline(s.tagline ?? "");
-    setLogoUrl(s.logo ?? "");
-    setFaviconUrl(s.favicon ?? "");
-    setMaintenanceMode(s.maintenance?.enabled ?? false);
-    setMaintenanceMessage(s.maintenance?.message ?? "");
-    setChatEnabled(s.chat?.enabled ?? false);
-    setAssistantEnabled(s.assistant?.enabled ?? true);
+    setBrandingForm({
+      siteName: s.siteName ?? "",
+      tagline: s.tagline ?? "",
+      logoUrl: s.logo ?? "",
+      faviconUrl: s.favicon ?? "",
+      maintenanceMode: s.maintenance?.enabled ?? false,
+      maintenanceMessage: s.maintenance?.message ?? "",
+      chatEnabled: s.chat?.enabled ?? false,
+      assistantEnabled: s.assistant?.enabled ?? true,
+    });
 
     setLightBgType(s.background?.light?.type ?? "color");
     setLightBgValue(s.background?.light?.value ?? "");
@@ -883,10 +936,11 @@ export function AdminSiteSettingsView({
         ctaSell: aboutCtaSell,
         ctaShop: aboutCtaShop,
       },
-      siteName, tagline, logo: logoUrl, favicon: faviconUrl,
-      maintenance: { enabled: maintenanceMode, message: maintenanceMessage },
-      chat: { enabled: chatEnabled },
-      assistant: { enabled: assistantEnabled },
+      siteName: brandingForm.siteName, tagline: brandingForm.tagline,
+      logo: brandingForm.logoUrl, favicon: brandingForm.faviconUrl,
+      maintenance: { enabled: brandingForm.maintenanceMode, message: brandingForm.maintenanceMessage },
+      chat: { enabled: brandingForm.chatEnabled },
+      assistant: { enabled: brandingForm.assistantEnabled },
       background: {
         light: {
           type: lightBgType,
@@ -1271,20 +1325,29 @@ export function AdminSiteSettingsView({
 
           {/* ① Branding */}
           <TabsContent value="branding">
-            <SettingsTabForm id="branding" label="Branding">
-              <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder={getBrandName()} />
-              <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
-              <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
-              <ImageUpload label="Favicon" currentImage={faviconUrl} onUpload={(file) => upload(file, "store")} onChange={setFaviconUrl} />
-              <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Div id="setting-maintenance-mode"><Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} /></Div>
-                <Input label="Maintenance message" value={maintenanceMessage} onChange={(e) => setMaintenanceMessage(e.target.value)} placeholder="We're back soon." disabled={!maintenanceMode} />
-              </Stack>
-              <Stack gap="sm" rounded="lg" border="default" padding="md">
-                <Div id="setting-chat-enabled"><Toggle label="Buyer-seller messaging enabled" checked={chatEnabled} onChange={setChatEnabled} /></Div>
-                <Div id="setting-assistant-enabled"><Toggle label="Customer assistant enabled (floating chat widget + full-chat page)" checked={assistantEnabled} onChange={setAssistantEnabled} /></Div>
-              </Stack>
-            </SettingsTabForm>
+            {/*
+              First tab migrated to the Universal Template System (Phase 3B,
+              admin site-settings form rebuild, 2026-11-04) — schema +
+              buildSectionsFromSchema instead of hand-written JSX, with
+              field-visibility (hide/reorder) wired the same as the
+              shipping-config pilot. `maintenanceMessage`'s old
+              `disabled={!maintenanceMode}` became the schema's `when`
+              predicate instead (hidden, not just disabled, when maintenance
+              mode is off). `id="setting-maintenance-mode"` /
+              `id="setting-chat-enabled"` / `id="setting-assistant-enabled"`
+              anchors (used by `?tab=branding#setting-...` deep links) are
+              NOT preserved field-by-field — the generator does not expose a
+              per-field DOM id — tracked as a follow-up for whichever deep
+              links actually resolve to these three today.
+            */}
+            <SectionForm<SiteSettingsBrandingFormValues>
+              sections={brandingSections}
+              values={brandingForm}
+              onChange={(partial) => setBrandingForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsBrandingFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ② Appearance — site-wide background (homepage/nav/dashboard shells) */}

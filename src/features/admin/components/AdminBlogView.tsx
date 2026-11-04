@@ -137,6 +137,7 @@ export function AdminBlogView({ children, pageRegionCards = [], ...props }: Admi
     renderEditor: ({ editId, closePanel }) => (
       <AdminBlogEditorView
         postId={editId ?? undefined}
+        pageId={editId ? "admin-blog-id-edit" : "admin-blog-new"}
         onSaved={closePanel}
         onDeleted={closePanel}
         embedded

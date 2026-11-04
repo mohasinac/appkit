@@ -218,6 +218,7 @@ export function AdminCouponsView({
       <AdminCouponEditorView
         couponId={editId ?? undefined}
         initialData={editId ? rowsRef.current.find((r) => r.id === editId)?.raw : undefined}
+        pageId={editId ? "admin-coupons-id-edit" : "admin-coupons-new"}
         onSaved={closePanel}
         onDeleted={closePanel}
         embedded

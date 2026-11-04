@@ -212,6 +212,7 @@ const ADMIN_CATEGORIES_CONFIG: ListingViewConfig<AdminCategoriesResponse, Catego
   renderEditor: ({ editId, closePanel }) => (
     <AdminCategoryEditorView
       categoryId={editId ?? undefined}
+      pageId={editId ? "admin-categories-id-edit" : "admin-categories-new"}
       onSaved={closePanel}
       onDeleted={closePanel}
       embedded

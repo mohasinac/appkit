@@ -168,6 +168,7 @@ export function AdminFaqsView({
       renderEditor: ({ editId, closePanel }) => (
         <AdminFaqEditorView
           faqId={editId ?? undefined}
+          pageId={editId ? "admin-faqs-id-edit" : "admin-faqs-new"}
           onSaved={closePanel}
           onDeleted={closePanel}
           embedded
