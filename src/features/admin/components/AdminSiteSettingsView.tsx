@@ -64,6 +64,10 @@ import {
   siteSettingsContactFormSchema,
   type SiteSettingsContactFormValues,
 } from "../schemas/site-settings-contact-form";
+import {
+  siteSettingsWatermarkFormSchema,
+  type SiteSettingsWatermarkFormValues,
+} from "../schemas/site-settings-watermark-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -450,28 +454,116 @@ export function AdminSiteSettingsView({
     [contactVisibilityFields, editMode, setContactFieldVisible, contactFieldOrder, setContactFieldOrder],
   );
 
-  // ⑥ Watermark
-  const [watermarkType, setWatermarkType] = React.useState<"text" | "image">("text");
-  const [watermarkText, setWatermarkText] = React.useState(getBrandDomain());
-  const [watermarkImageUrl, setWatermarkImageUrl] = React.useState("");
-  const [watermarkSize, setWatermarkSize] = React.useState(10);
-  const [watermarkOpacity, setWatermarkOpacity] = React.useState(10);
-  // 4 corners + center are picked from the Select; "custom" is only ever set
-  // by the offset toggle below, never a 6th Select option (keeps the picker
-  // at 5 options — see PaginatedSelect rule for >5).
-  const [watermarkPosition, setWatermarkPosition] = React.useState<
-    "top-left" | "top-right" | "bottom-left" | "bottom-right" | "center"
-  >("center");
-  const [watermarkUseCustomOffset, setWatermarkUseCustomOffset] = React.useState(false);
-  const [watermarkOffsetX, setWatermarkOffsetX] = React.useState(0);
-  const [watermarkOffsetY, setWatermarkOffsetY] = React.useState(0);
+  // ⑥ Watermark — fifth tab migrated to the Universal Template System,
+  // 2026-11-04. One combined object instead of nine useState calls.
+  //
+  // "custom" is only ever set by the offset toggle, never a 6th Select
+  // option (keeps the picker at 5 options — see PaginatedSelect rule for >5)
+  // — `watermarkPosition` itself stays the 5-value enum; `buildFullPayload()`
+  // still substitutes "custom" for the SAVED `position` key when the offset
+  // toggle is on, exactly as the old single-field version did.
+  const [watermarkForm, setWatermarkForm] = React.useState<SiteSettingsWatermarkFormValues>({
+    watermarkType: "text", watermarkText: getBrandDomain(), watermarkImageUrl: "",
+    watermarkSize: 10, watermarkOpacity: 10, watermarkPosition: "center",
+    watermarkUseCustomOffset: false, watermarkOffsetX: 0, watermarkOffsetY: 0,
+  });
+  const {
+    fields: watermarkVisibilityFields,
+    setVisible: setWatermarkFieldVisible,
+    fieldOrder: watermarkFieldOrder,
+    setFieldOrder: setWatermarkFieldOrder,
+  } = useFieldVisibility("admin-site-settings-watermark");
+  const watermarkSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsWatermarkFormValues>(siteSettingsWatermarkFormSchema, {
+        renderers: {
+          watermarkImageUrl: ({ values, onChange }) => (
+            <ImageUpload
+              label="Watermark image"
+              currentImage={(values.watermarkImageUrl as string) ?? ""}
+              onUpload={(file) => upload(file, "store")}
+              onChange={(url) => onChange({ watermarkImageUrl: url })}
+            />
+          ),
+          watermarkSize: ({ values, onChange }) => (
+            <Slider
+              label={`Size — ${values.watermarkSize}% of image width`}
+              value={values.watermarkSize as number}
+              onChange={(v) => onChange({ watermarkSize: v })}
+              min={5}
+              max={100}
+              step={5}
+            />
+          ),
+          watermarkOpacity: ({ values, onChange }) => (
+            <Slider
+              label={`Opacity — ${values.watermarkOpacity}%`}
+              value={values.watermarkOpacity as number}
+              onChange={(v) => onChange({ watermarkOpacity: v })}
+              min={5}
+              max={100}
+              step={5}
+            />
+          ),
+          watermarkPosition: ({ values, onChange }) => (
+            <Select
+              label="Position"
+              options={[
+                { label: "Center", value: "center" },
+                { label: "Top left", value: "top-left" },
+                { label: "Top right", value: "top-right" },
+                { label: "Bottom left", value: "bottom-left" },
+                { label: "Bottom right", value: "bottom-right" },
+              ]}
+              value={values.watermarkPosition as string}
+              onValueChange={(v) => onChange({ watermarkPosition: v as SiteSettingsWatermarkFormValues["watermarkPosition"] })}
+              disabled={Boolean(values.watermarkUseCustomOffset)}
+            />
+          ),
+          watermarkOffsetX: ({ values, onChange }) => (
+            <Input
+              label="X offset (%) — + right / − left of center"
+              value={String(values.watermarkOffsetX)}
+              onChange={(e) => onChange({ watermarkOffsetX: Math.max(-45, Math.min(45, parseInt(e.target.value) || 0)) })}
+              type="number"
+              min={-45}
+              max={45}
+            />
+          ),
+          watermarkOffsetY: ({ values, onChange }) => (
+            <Input
+              label="Y offset (%) — + down / − up from center"
+              value={String(values.watermarkOffsetY)}
+              onChange={(e) => onChange({ watermarkOffsetY: Math.max(-45, Math.min(45, parseInt(e.target.value) || 0)) })}
+              type="number"
+              min={-45}
+              max={45}
+            />
+          ),
+        },
+        fieldVisibility: watermarkVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setWatermarkFieldVisible,
+        fieldOrder: watermarkFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setWatermarkFieldOrder(
+            swapFieldOrder(
+              watermarkFieldOrder,
+              resolveFields(siteSettingsWatermarkFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [watermarkVisibilityFields, editMode, setWatermarkFieldVisible, watermarkFieldOrder, setWatermarkFieldOrder, upload],
+  );
   const watermarkPreviewRef = React.useRef<HTMLSpanElement>(null);
   React.useEffect(() => {
     const el = watermarkPreviewRef.current;
     if (!el) return;
-    el.style.fontSize = `${Math.max(10, watermarkSize / 5)}px`;
-    el.style.opacity = String(watermarkOpacity / 100);
-  }, [watermarkSize, watermarkOpacity]);
+    el.style.fontSize = `${Math.max(10, watermarkForm.watermarkSize / 5)}px`;
+    el.style.opacity = String(watermarkForm.watermarkOpacity / 100);
+  }, [watermarkForm.watermarkSize, watermarkForm.watermarkOpacity]);
 
   // ⑦ Fees — all read/written under commissions key
   const [laborHourlyRate, setLaborHourlyRate] = React.useState(200);
@@ -795,16 +887,21 @@ export function AdminSiteSettingsView({
       pinterest: s.socialLinks?.pinterest ?? "",
     });
 
-    setWatermarkType(s.watermark?.type ?? "text");
-    setWatermarkText(s.watermark?.text ?? getBrandDomain());
-    setWatermarkImageUrl(s.watermark?.imageUrl ?? "");
-    setWatermarkSize(s.watermark?.size ?? 10);
-    setWatermarkOpacity(s.watermark?.opacity ?? 10);
-    const loadedPosition = s.watermark?.position ?? "center";
-    setWatermarkUseCustomOffset(loadedPosition === "custom");
-    setWatermarkPosition(loadedPosition === "custom" ? "center" : (loadedPosition as typeof watermarkPosition));
-    setWatermarkOffsetX(s.watermark?.offsetX ?? 0);
-    setWatermarkOffsetY(s.watermark?.offsetY ?? 0);
+    const loadedWatermarkPosition = s.watermark?.position ?? "center";
+    setWatermarkForm({
+      watermarkType: s.watermark?.type ?? "text",
+      watermarkText: s.watermark?.text ?? getBrandDomain(),
+      watermarkImageUrl: s.watermark?.imageUrl ?? "",
+      watermarkSize: s.watermark?.size ?? 10,
+      watermarkOpacity: s.watermark?.opacity ?? 10,
+      watermarkUseCustomOffset: loadedWatermarkPosition === "custom",
+      watermarkPosition:
+        loadedWatermarkPosition === "custom"
+          ? "center"
+          : (loadedWatermarkPosition as SiteSettingsWatermarkFormValues["watermarkPosition"]),
+      watermarkOffsetX: s.watermark?.offsetX ?? 0,
+      watermarkOffsetY: s.watermark?.offsetY ?? 0,
+    });
 
     setPlatformFeePercent(s.commissions?.platformFeePercent ?? 5);
     setGstPercent(s.commissions?.gstPercent ?? 18);
@@ -1098,14 +1195,14 @@ export function AdminSiteSettingsView({
         pinterest: contactForm.pinterest,
       },
       watermark: {
-        type: watermarkType,
-        text: watermarkText,
-        imageUrl: watermarkImageUrl,
-        size: watermarkSize,
-        opacity: watermarkOpacity,
-        position: watermarkUseCustomOffset ? "custom" : watermarkPosition,
-        offsetX: watermarkOffsetX,
-        offsetY: watermarkOffsetY,
+        type: watermarkForm.watermarkType,
+        text: watermarkForm.watermarkText,
+        imageUrl: watermarkForm.watermarkImageUrl,
+        size: watermarkForm.watermarkSize,
+        opacity: watermarkForm.watermarkOpacity,
+        position: watermarkForm.watermarkUseCustomOffset ? "custom" : watermarkForm.watermarkPosition,
+        offsetX: watermarkForm.watermarkOffsetX,
+        offsetY: watermarkForm.watermarkOffsetY,
       },
       commissions: { platformFeePercent, gstPercent, minimumTransactionFee, platformFeeMax, gatewayFeePercent, payoutHoldDays, whatsappNotifyFee, whatsappNotifyFeeEnabled, minPayoutAmount, collectorDropListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee, giftWrapFeeEnabled, giftWrapFee, shipmentProtectionFeeEnabled, shipmentProtectionFeePercent, shipmentProtectionFeeMin, saleProtectionFeeEnabled, saleProtectionFeePercent, saleProtectionFeeMin, codHandlingFeePercent, codHandlingFeeCap, codDepositPercent, sellerShippingFixed, platformShippingPercent, platformShippingFixedMin },
       laborRate: { hourlyRate: laborHourlyRate, maxHoursPerDay: laborMaxHoursPerDay },
@@ -1635,75 +1732,39 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑥ Watermark */}
+          {/* ⑥ Watermark — fifth tab migrated to the Universal Template System. */}
           <TabsContent value="watermark">
-            <SettingsTabForm id="watermark" label="Watermark">
-              <Select
-                label="Watermark type"
-                options={[{ label: "Text", value: "text" }, { label: "Image", value: "image" }]}
-                value={watermarkType}
-                onValueChange={(v) => setWatermarkType(v as "text" | "image")}
-              />
-              {watermarkType === "text" ? (
-                <Input label="Watermark text" value={watermarkText} onChange={(e) => setWatermarkText(e.target.value)} placeholder={getBrandDomain()} />
-              ) : (
-                <ImageUpload label="Watermark image" currentImage={watermarkImageUrl} onUpload={(file) => upload(file, "store")} onChange={setWatermarkImageUrl} />
-              )}
-              <Slider label={`Size — ${watermarkSize}% of image width`} value={watermarkSize} onChange={setWatermarkSize} min={5} max={100} step={5} />
-              <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
-              <Select
-                label="Position"
-                options={[
-                  { label: "Center", value: "center" },
-                  { label: "Top left", value: "top-left" },
-                  { label: "Top right", value: "top-right" },
-                  { label: "Bottom left", value: "bottom-left" },
-                  { label: "Bottom right", value: "bottom-right" },
-                ]}
-                value={watermarkPosition}
-                onValueChange={(v) => setWatermarkPosition(v as typeof watermarkPosition)}
-                disabled={watermarkUseCustomOffset}
-              />
-              <Toggle
-                checked={watermarkUseCustomOffset}
-                onChange={setWatermarkUseCustomOffset}
-                label="Use a custom X/Y offset instead"
-              />
-              {watermarkUseCustomOffset && (
-                <Grid cols={2} gap="md">
-                  <Input
-                    label="X offset (%) — + right / − left of center"
-                    value={String(watermarkOffsetX)}
-                    onChange={(e) => setWatermarkOffsetX(Math.max(-45, Math.min(45, parseInt(e.target.value) || 0)))}
-                    type="number"
-                    min={-45}
-                    max={45}
-                  />
-                  <Input
-                    label="Y offset (%) — + down / − up from center"
-                    value={String(watermarkOffsetY)}
-                    onChange={(e) => setWatermarkOffsetY(Math.max(-45, Math.min(45, parseInt(e.target.value) || 0)))}
-                    type="number"
-                    min={-45}
-                    max={45}
-                  />
-                </Grid>
-              )}
-              <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
-                <Text size="xs" color="muted">Preview (text watermark only)</Text>
-                <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
-                  <Span
-                    ref={watermarkPreviewRef}
-                    weight="medium"
-                    color="faint"
-                    padding="1"
-                    className="select-none"
-                  >
-                    {watermarkText}
-                  </Span>
-                </Row>
-              </Stack>
-            </SettingsTabForm>
+            {/*
+              `watermarkSize`/`watermarkOpacity`/`watermarkPosition`/
+              `watermarkOffsetX`/`watermarkOffsetY` all use custom renderers
+              (Slider/Select/Input) to preserve the original controls'
+              fidelity — the generator's default `kind: "number"`/`"select"`
+              fallbacks would lose the Slider track and the position-select's
+              disabled-while-custom-offset wiring. The live text preview below
+              stays hand-written JSX alongside the form, same as before.
+            */}
+            <SectionForm<SiteSettingsWatermarkFormValues>
+              sections={watermarkSections}
+              values={watermarkForm}
+              onChange={(partial) => setWatermarkForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsWatermarkFormSchema}
+              hideActions
+            />
+            <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
+              <Text size="xs" color="muted">Preview (text watermark only)</Text>
+              <Row surface="default" justify="end" align="end" className={`relative h-32 ${__O.hidden}`} rounded="default">
+                <Span
+                  ref={watermarkPreviewRef}
+                  weight="medium"
+                  color="faint"
+                  padding="1"
+                  className="select-none"
+                >
+                  {watermarkForm.watermarkText}
+                </Span>
+              </Row>
+            </Stack>
           </TabsContent>
 
           {/* ⑦ Fees & Commissions */}
