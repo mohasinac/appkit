@@ -32,6 +32,7 @@ import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -41,6 +42,7 @@ import { AddressLocationFields } from "../../addresses/components/AddressLocatio
 import { usePostalLookup } from "../../addresses/hooks/usePostalLookup";
 import { COUNTRIES, DEFAULT_COUNTRY } from "../../../constants/geo/countries";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import { useEditMode } from "../../../_internal/client/edit-mode/EditModeProvider";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const COUNTRY_OPTIONS = Object.values(COUNTRIES).map((c) => ({
@@ -52,6 +54,9 @@ const OWNER_TYPE_OPTIONS = [
   { value: "user", label: "User" },
   { value: "store", label: "Store" },
 ];
+
+/** Admin field-visibility surface id — 3B hard gate, PII-forms migration, 2026-11-05. */
+const FIELD_VISIBILITY_SURFACE_ID = "admin-address-editor";
 
 export interface AdminAddressEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -172,10 +177,18 @@ export function AdminAddressEditorView({
 
   const isSubmitting = saveMutation.isPending || isLoading;
 
+  const { editMode } = useEditMode();
+  const { fields: visibilityFields, setVisible: setFieldVisible } = useFieldVisibility(
+    FIELD_VISIBILITY_SURFACE_ID,
+  );
+
   const sections = React.useMemo(
     () =>
       buildSectionsFromSchema<AddressValues>(adminAddressCreateSchema, {
         options: { ownerType: OWNER_TYPE_OPTIONS, country: COUNTRY_OPTIONS },
+        fieldVisibility: visibilityFields,
+        editMode,
+        onToggleFieldVisibility: setFieldVisible,
         renderers: {
           /*
            * The id's LABEL depends on the owner type, which a generated field
@@ -216,7 +229,7 @@ export function AdminAddressEditorView({
           country: () => null,
         },
       }),
-    [isLooking, lookup],
+    [isLooking, lookup, visibilityFields, editMode, setFieldVisible],
   );
 
   const nav = useSectionFormNav(sections, form, { scope: "admin:address-editor" });

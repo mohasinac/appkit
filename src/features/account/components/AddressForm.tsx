@@ -31,11 +31,23 @@ import { FormErrorSummary, applyZodIssues } from "../../../ui/forms";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
 import { buildSectionsFromSchema, visibleValues } from "../../shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
+import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { addressFormSchema } from "../../addresses/schemas/address-form";
 import { usePostalLookup } from "../../addresses/hooks/usePostalLookup";
 import { AddressLocationFields } from "../../addresses/components/AddressLocationFields";
 import { COUNTRIES, DEFAULT_COUNTRY } from "../../../constants/geo/countries";
+import { useEditMode } from "../../../edit-mode";
 import type { AddressFormData } from "../hooks/useAddresses";
+
+/**
+ * Admin field-visibility surface id (3B hard gate — PII-forms migration,
+ * 2026-11-05). One shared id, deliberately, matching this component's own
+ * "purely presentational, reused as-is" contract (see `StoreAddressClients`'s
+ * header comment) — buyer address book and seller pickup address are both
+ * this same component with no per-caller config today, so a per-caller
+ * surface id would contradict that existing design rather than extend it.
+ */
+const FIELD_VISIBILITY_SURFACE_ID = "address-form";
 
 const COUNTRY_OPTIONS = Object.values(COUNTRIES).map((c) => ({
   value: c.code,
@@ -115,16 +127,32 @@ export function AddressForm({
     enabled: !isLoading,
   });
 
+  const { editMode } = useEditMode();
+  const { fields: visibilityFields, setVisible: setFieldVisible } = useFieldVisibility(
+    FIELD_VISIBILITY_SURFACE_ID,
+  );
+
   const sections = React.useMemo(
     () =>
       buildSectionsFromSchema<AddressValues>(addressFormSchema, {
         options: { country: COUNTRY_OPTIONS },
+        fieldVisibility: visibilityFields,
+        editMode,
+        onToggleFieldVisibility: setFieldVisible,
         renderers: {
           /*
            * State, postal code and country move together: the country decides
            * whether state is a picker or free text AND what a valid postal
            * code looks like, so one component owns all three rather than three
            * renderers each re-deriving the same country.
+           *
+           * 🛑 Hiding `state` via the admin field-visibility toggle hides this
+           * whole combined control — postal code and country included — since
+           * they render `null` on their own and have nothing to show
+           * independently. Toggling `postalCode`/`country` individually is
+           * therefore a no-op; `state` is the one toggle that does anything.
+           * Same property `StoreCreateForm`'s own proven wiring has for any
+           * multi-field custom renderer — not a new limitation.
            */
           state: ({ values, onChange, errors }) => (
             <AddressLocationFields
@@ -142,7 +170,7 @@ export function AddressForm({
           country: () => null,
         },
       }),
-    [isLooking, lookup],
+    [isLooking, lookup, visibilityFields, editMode, setFieldVisible],
   );
 
   const nav = useSectionFormNav(sections, form, { scope: "user:address" });
