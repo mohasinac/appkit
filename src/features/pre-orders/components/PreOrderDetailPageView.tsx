@@ -508,6 +508,37 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
   const brandSlug = typeof p.brandSlug === "string" ? (p.brandSlug as string) : null;
   const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
+
+  /*
+   * `functionalSlot` (2026-11-05) — `onReserveNow` is a page-level PROP, but
+   * what actually RENDERS in the buy-bar position is `<PreOrderBuyBarPanel
+   * onReserveNow={onReserveNow} .../>`, a composed component that already
+   * returns a `ReactNode` (progress bar + reserve button, or a price/deposit
+   * fallback when `onReserveNow` is absent — same "always renders
+   * something" shape as the standard PDP's primary actions). Hoisting the
+   * whole rendered element needs no new `functionalSlots` value shape or
+   * adapter — confirmed by reading the actual call site, not assumed ahead
+   * of time. Mapped onto `"pdp-primary-actions"`: reserving IS the purchase
+   * path here, same role as elsewhere.
+   */
+  const primaryActionsNode = (
+    <PreOrderBuyBarPanel
+      reserveTarget={reserveTarget}
+      reservedCount={reservedCount}
+      progressPct={progressPct}
+      productId={String(product.id)}
+      price={price}
+      currency={currency}
+      depositAmount={depositAmount}
+      depositPercent={depositPercent}
+      isCancellable={isCancellable}
+      tags={tags}
+      onReserveNow={onReserveNow}
+    />
+  );
+  const hasPrimaryActionsSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-primary-actions"),
+  );
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
     ? (p.specifications as { name: string; value: string; unit?: string }[])
     : [];
@@ -562,7 +593,11 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
           <ShareButton title={title} />
         </Row>
 
-        <AdminComposableRegion pageId="pre-orders-id" initialCards={pageRegionCards} />
+        <AdminComposableRegion
+          pageId="pre-orders-id"
+          initialCards={pageRegionCards}
+          functionalSlots={{ "pdp-primary-actions": primaryActionsNode }}
+        />
 
         <PreOrderDetailView
           renderGallery={() => (
@@ -641,19 +676,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
           )}
           renderBuyBar={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
-            <PreOrderBuyBarPanel
-              reserveTarget={reserveTarget}
-              reservedCount={reservedCount}
-              progressPct={progressPct}
-              productId={String(product.id)}
-              price={price}
-              currency={currency}
-              depositAmount={depositAmount}
-              depositPercent={depositPercent}
-              isCancellable={isCancellable}
-              tags={tags}
-              onReserveNow={onReserveNow}
-            />
+              {!hasPrimaryActionsSlotOverride && primaryActionsNode}
             </SectionVisibilityGate>
           )}
           renderRelated={() => (
