@@ -121,6 +121,29 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
     getFieldVisibility("pdp-sections"),
   ]);
 
+  /*
+   * `functionalSlot` (2026-11-05) — same hoisting pattern as the standard
+   * PDP's `primaryActionsNode`. Simpler here: `renderPrimaryActions` is
+   * called exactly once (no separate mobile registration call), and the
+   * anchor `ListingBottomActions` depends on is a plain DOM `id`
+   * (`digital-code-buy-bar`), not `ctaAnchorProps()` — kept always mounted,
+   * only its children swap.
+   */
+  const primaryActionsNode = renderPrimaryActions?.({
+    productId: String(product.id),
+    productSlug: String(p.slug ?? product.id),
+    productTitle: title,
+    productImage: images[0],
+    price,
+    currency,
+    storeId: typeof p.storeId === "string" ? p.storeId : undefined,
+    storeName: storeName ?? undefined,
+    inStock: codesLeft > 0,
+  });
+  const hasPrimaryActionsSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-primary-actions"),
+  );
+
   return (
     <Main>
       <HistoryTracker
@@ -270,17 +293,7 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
           renderBuyBar={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
             <Div id="digital-code-buy-bar">
-              {renderPrimaryActions?.({
-                productId: String(product.id),
-                productSlug: String(p.slug ?? product.id),
-                productTitle: title,
-                productImage: images[0],
-                price,
-                currency,
-                storeId: typeof p.storeId === "string" ? p.storeId : undefined,
-                storeName: storeName ?? undefined,
-                inStock: codesLeft > 0,
-              })}
+              {!hasPrimaryActionsSlotOverride && primaryActionsNode}
             </Div>
             </SectionVisibilityGate>
           )}
@@ -316,7 +329,11 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
         />
 
         <Div className="mt-8">
-          <AdminComposableRegion pageId="digital-codes-slug" initialCards={pageRegionCards} />
+          <AdminComposableRegion
+            pageId="digital-codes-slug"
+            initialCards={pageRegionCards}
+            functionalSlots={{ "pdp-primary-actions": primaryActionsNode }}
+          />
         </Div>
 
         {/* Sticky CTA — registers into the layout-level BottomActions bar. */}
