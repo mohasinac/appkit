@@ -64,7 +64,19 @@
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
 
-const priority = z.enum(["low", "normal", "high", "critical"]);
+/*
+ * 🛑 A FACTORY, not a shared const — `annotate()` registers metadata keyed
+ * by SCHEMA OBJECT IDENTITY (a WeakMap), and returns the same instance it
+ * was given. This field is reused by three fields below
+ * (`notifEmailMinPriority`/`notifWhatsappMinPriority`/
+ * `notifSmsMinPriority`); annotating one shared instance three times would
+ * make each call silently overwrite the previous one's registry entry, so
+ * all three fields would resolve to whichever metadata (label, section,
+ * `when`) was registered LAST — found live, 2026-11-04, while fixing the
+ * identical bug on the Appearance tab's `backgroundModeSchema`. Call the
+ * factory once per field to get three distinct instances.
+ */
+const priority = () => z.enum(["low", "normal", "high", "critical"]);
 
 export const siteSettingsNotificationsFormSchema = z.object({
   msgEmailEnabled: annotate(z.boolean(), {
@@ -88,7 +100,7 @@ export const siteSettingsNotificationsFormSchema = z.object({
     section: "email", sectionLabel: "Email channel",
     order: 1, row: "full", kind: "toggle", label: "Email notifications",
   }),
-  notifEmailMinPriority: annotate(priority, {
+  notifEmailMinPriority: annotate(priority(), {
     section: "email", order: 2, row: "full", label: "Minimum priority to send email",
     when: (values) => Boolean(values.notifEmailEnabled),
   }),
@@ -128,7 +140,7 @@ export const siteSettingsNotificationsFormSchema = z.object({
     order: 1, row: "full", kind: "toggle", label: "WhatsApp notifications",
     help: "WhatsApp credentials are configured in the WhatsApp tab (⑬). OTP messages use the same phone number.",
   }),
-  notifWhatsappMinPriority: annotate(priority, {
+  notifWhatsappMinPriority: annotate(priority(), {
     section: "whatsappChannel", order: 2, row: "full", label: "Minimum priority to send WhatsApp",
     when: (values) => Boolean(values.notifWhatsappEnabled),
   }),
@@ -148,7 +160,7 @@ export const siteSettingsNotificationsFormSchema = z.object({
     order: 1, row: "full", kind: "toggle", label: "SMS notifications",
     help: "SMS gateway credentials (e.g. Twilio, MSG91) can be configured in the Integrations tab once an SMS provider is connected.",
   }),
-  notifSmsMinPriority: annotate(priority, {
+  notifSmsMinPriority: annotate(priority(), {
     section: "sms", order: 2, row: "full", label: "Minimum priority to send SMS",
     when: (values) => Boolean(values.notifSmsEnabled),
   }),
