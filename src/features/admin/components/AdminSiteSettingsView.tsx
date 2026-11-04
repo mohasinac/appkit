@@ -19,7 +19,6 @@ import { MediaUploadField } from "../../media/upload/MediaUploadField";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ROUTES } from "../../../next/routing/route-map";
 import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
 import {
   ALL_LISTING_TYPES,
@@ -53,6 +52,10 @@ import {
   siteSettingsBrandingFormSchema,
   type SiteSettingsBrandingFormValues,
 } from "../schemas/site-settings-branding-form";
+import {
+  siteSettingsAnnouncementFormSchema,
+  type SiteSettingsAnnouncementFormValues,
+} from "../schemas/site-settings-announcement-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -310,11 +313,51 @@ export function AdminSiteSettingsView({
     defaultDarkThemeId: DEFAULT_DARK_THEME.id,
   });
 
-  // ③ Announcement
-  const [announcementEnabled, setAnnouncementEnabled] = React.useState(false);
-  const [announcementText, setAnnouncementText] = React.useState("");
-  const [announcementLink, setAnnouncementLink] = React.useState("");
-  const [announcementBg, setAnnouncementBg] = React.useState("");
+  // ③ Announcement — second tab migrated to the Universal Template System,
+  // 2026-11-04. One combined object instead of four useState calls.
+  const [announcementForm, setAnnouncementForm] = React.useState<SiteSettingsAnnouncementFormValues>({
+    announcementEnabled: false, announcementText: "", announcementLink: "", announcementBg: "",
+  });
+  const {
+    fields: announcementVisibilityFields,
+    setVisible: setAnnouncementFieldVisible,
+    fieldOrder: announcementFieldOrder,
+    setFieldOrder: setAnnouncementFieldOrder,
+  } = useFieldVisibility("admin-site-settings-announcement");
+  const announcementSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsAnnouncementFormValues>(siteSettingsAnnouncementFormSchema, {
+        renderers: {
+          announcementBg: ({ values, onChange }) => (
+            <Stack gap="none">
+              <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
+              <Input
+                type="color"
+                aria-label="Background color"
+                value={(values.announcementBg as string) || "#1d4ed8"}
+                onChange={(e) => onChange({ announcementBg: e.target.value })}
+                className="h-10 w-32 cursor-pointer"
+                bare
+              /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
+            </Stack>
+          ),
+        },
+        fieldVisibility: announcementVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setAnnouncementFieldVisible,
+        fieldOrder: announcementFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setAnnouncementFieldOrder(
+            swapFieldOrder(
+              announcementFieldOrder,
+              resolveFields(siteSettingsAnnouncementFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [announcementVisibilityFields, editMode, setAnnouncementFieldVisible, announcementFieldOrder, setAnnouncementFieldOrder],
+  );
 
   // ④ SEO
   const [seoTitle, setSeoTitle] = React.useState("");
@@ -662,10 +705,12 @@ export function AdminSiteSettingsView({
         themeBlock?.defaultDarkThemeId ?? DEFAULT_DARK_THEME.id,
     });
 
-    setAnnouncementEnabled(s.announcementBar?.enabled ?? false);
-    setAnnouncementText(s.announcementBar?.message ?? "");
-    setAnnouncementLink(s.announcementBar?.link ?? "");
-    setAnnouncementBg(s.announcementBar?.backgroundColor ?? "");
+    setAnnouncementForm({
+      announcementEnabled: s.announcementBar?.enabled ?? false,
+      announcementText: s.announcementBar?.message ?? "",
+      announcementLink: s.announcementBar?.link ?? "",
+      announcementBg: s.announcementBar?.backgroundColor ?? "",
+    });
 
     setSeoTitle(s.seo?.defaultTitle ?? "");
     setSeoDescription(s.seo?.defaultDescription ?? "");
@@ -959,7 +1004,12 @@ export function AdminSiteSettingsView({
         defaultDarkThemeId: themeRegistry.defaultDarkThemeId,
       },
       // message, not text — text was never read by AnnouncementBar or the homepage.
-      announcementBar: { enabled: announcementEnabled, message: announcementText, link: announcementLink, backgroundColor: announcementBg },
+      announcementBar: {
+        enabled: announcementForm.announcementEnabled,
+        message: announcementForm.announcementText,
+        link: announcementForm.announcementLink,
+        backgroundColor: announcementForm.announcementBg,
+      },
       seo: { defaultTitle: seoTitle, defaultDescription: seoDescription, defaultOgImage: seoOgImage, noIndex: seoNoIndex, canonicalBaseUrl: canonicalUrl },
       contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp, upiVpa },
       socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
@@ -1458,23 +1508,21 @@ export function AdminSiteSettingsView({
 
           {/* ③ Announcement */}
           <TabsContent value="announcement">
-            <SettingsTabForm id="announcement" label="Announcement">
-              <Div id="setting-announcement-bar"><Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} /></Div>
-              <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
-              <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder={String(ROUTES.PUBLIC.PRODUCTS)} disabled={!announcementEnabled} />
-              <Stack gap="none">
-                {/*
-                  The `<Text>` above is a VISUAL label only — it is not a
-                  `<label>` and carries no `htmlFor`, so the picker had no
-                  accessible name. `bare` renders no label element by design
-                  (the swatch must fill its box), so the association is made
-                  with `aria-label` instead. The four sibling pickers on this
-                  page pass `label` and now get this for free from `Input`.
-                */}
-                <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
-                <Input type="color" aria-label="Background color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 cursor-pointer" bare disabled={!announcementEnabled} /> {/* audit-hex-tokens-ok: native color picker requires literal hex string fallback */}
-              </Stack>
-            </SettingsTabForm>
+            {/*
+              Second tab migrated to the Universal Template System, same
+              pattern as Branding. `announcementBg` keeps its custom
+              `<Input type="color">` renderer — see `renderers` in
+              `announcementSections` above — because no `color` FieldKind
+              exists and adding one for a single field is not warranted.
+            */}
+            <SectionForm<SiteSettingsAnnouncementFormValues>
+              sections={announcementSections}
+              values={announcementForm}
+              onChange={(partial) => setAnnouncementForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsAnnouncementFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ④ SEO */}
