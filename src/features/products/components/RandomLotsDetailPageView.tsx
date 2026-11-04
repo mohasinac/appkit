@@ -3,6 +3,8 @@ import { OwnerQuickActions } from "../../../features/admin/components/OwnerQuick
 import { orderRepository, productRepository } from "../../../repositories";
 import { getFieldVisibility } from "../../../_internal/server/features/forms/field-visibility";
 import { SectionVisibilityGate } from "../../shell/SectionVisibilityGate";
+import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -52,6 +54,15 @@ export interface RandomLotsDetailPageViewProps {
    * personalised "You have X/Y entries used" badge.
    */
   currentUserId?: string;
+  /**
+   * Admin-composed widget cards for this page's `AdminComposableRegion`
+   * (`pageId="random-lots-slug"`) — same mechanism as every other
+   * listing-type detail page. Until 2026-11-04 this was the one PDP-shaped
+   * page without it: the host page.tsx already fetched
+   * `getPageRegion("random-lots-slug")` for the lottery-mode branch but
+   * never passed it to this (classic-mode) branch at all.
+   */
+  pageRegionCards?: DashboardCard[];
 }
 
 function statusLabel(s: "pending" | "open" | "closed" | undefined): string {
@@ -97,6 +108,7 @@ export async function RandomLotsDetailPageView({
   id,
   initialRandomLot,
   currentUserId,
+  pageRegionCards = [],
 }: RandomLotsDetailPageViewProps) {
   const product =
     initialRandomLot !== undefined
@@ -427,6 +439,7 @@ export async function RandomLotsDetailPageView({
                   storeLabel={storeName ?? undefined}
                 />
               </SectionVisibilityGate>
+              <AdminComposableRegion pageId="random-lots-slug" initialCards={pageRegionCards} />
             </Stack>
           )}
         />
