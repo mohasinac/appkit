@@ -114,6 +114,10 @@ import {
   siteSettingsCollectorDropFormSchema,
   type SiteSettingsCollectorDropFormValues,
 } from "../schemas/site-settings-collector-drop-form";
+import {
+  siteSettingsListingsFormSchema,
+  type SiteSettingsListingsFormValues,
+} from "../schemas/site-settings-listings-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -967,10 +971,98 @@ export function AdminSiteSettingsView({
     [shippingVisibilityFields, editMode, setShippingFieldVisible, shippingFieldOrder, setShippingFieldOrder],
   );
 
-  // Per-listing-type / per-category-type visibility flags.
-  const [listingTypeFlags, setListingTypeFlags] = React.useState<Record<string, boolean>>({});
-  const [categoryTypeFlags, setCategoryTypeFlags] = React.useState<Record<string, boolean>>({});
-  const [browsePageFlags, setBrowsePageFlags] = React.useState<Record<string, boolean>>({});
+  // ⑱ Listings — seventeenth tab migrated to the Universal Template
+  // System, 2026-11-04. Three Record<string, boolean> useState calls
+  // collapsed into one combined object. All three are DYNAMIC
+  // registry-driven toggle grids (keys come from LISTING_TYPE_KEYS/
+  // CATEGORY_TYPE_KEYS/BROWSE_PAGE_KEYS, declared further down this
+  // component body) rather than fixed scalar fields — see
+  // site-settings-listings-form.ts's header for why that's a Record field
+  // with a custom renderer rather than per-key schema fields.
+  const [listingsForm, setListingsForm] = React.useState<SiteSettingsListingsFormValues>({
+    listingTypeFlags: {}, categoryTypeFlags: {}, browsePageFlags: {},
+  });
+  const {
+    fields: listingsVisibilityFields,
+    setVisible: setListingsFieldVisible,
+    fieldOrder: listingsFieldOrder,
+    setFieldOrder: setListingsFieldOrder,
+  } = useFieldVisibility("admin-site-settings-listings");
+  const listingsSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsListingsFormValues>(siteSettingsListingsFormSchema, {
+        renderers: {
+          listingTypeFlags: ({ values, onChange }) => {
+            const flags = (values.listingTypeFlags as Record<string, boolean>) ?? {};
+            return (
+              <Grid cols={2} gap="sm">
+                {LISTING_TYPE_KEYS.map((key) => (
+                  <Toggle
+                    key={key}
+                    // The plugin's own display label, not the raw key — the
+                    // literal version rendered "pre-order" and
+                    // "digital-code" at an admin.
+                    label={pluginFor(key).typeLabel}
+                    checked={flags[key] ?? true}
+                    onChange={(v) => onChange({ listingTypeFlags: { ...flags, [key]: v } })}
+                  />
+                ))}
+              </Grid>
+            );
+          },
+          categoryTypeFlags: ({ values, onChange }) => {
+            const flags = (values.categoryTypeFlags as Record<string, boolean>) ?? {};
+            return (
+              <Grid cols={2} gap="sm">
+                {CATEGORY_TYPE_KEYS.map((key) => (
+                  <Toggle
+                    key={key}
+                    label={key}
+                    checked={flags[key] ?? true}
+                    onChange={(v) => onChange({ categoryTypeFlags: { ...flags, [key]: v } })}
+                  />
+                ))}
+              </Grid>
+            );
+          },
+          browsePageFlags: ({ values, onChange }) => {
+            const flags = (values.browsePageFlags as Record<string, boolean>) ?? {};
+            return (
+              <Grid cols={2} gap="sm">
+                {/* The hint sits BESIDE the toggle rather than inside its
+                    `label`: Toggle has no `description` prop, and widening a
+                    primitive used on ~70 surfaces to carry a hint for four
+                    rows is the wrong trade. */}
+                {BROWSE_PAGE_KEYS.map((key) => (
+                  <Stack key={key} gap="xs">
+                    <Toggle
+                      label={BROWSE_PAGE_META[key]?.label ?? key}
+                      checked={flags[key] ?? true}
+                      onChange={(v) => onChange({ browsePageFlags: { ...flags, [key]: v } })}
+                    />
+                    <Text size="xs" color="muted">{BROWSE_PAGE_META[key]?.hint}</Text>
+                  </Stack>
+                ))}
+              </Grid>
+            );
+          },
+        },
+        fieldVisibility: listingsVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setListingsFieldVisible,
+        fieldOrder: listingsFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setListingsFieldOrder(
+            swapFieldOrder(
+              listingsFieldOrder,
+              resolveFields(siteSettingsListingsFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [listingsVisibilityFields, editMode, setListingsFieldVisible, listingsFieldOrder, setListingsFieldOrder],
+  );
 
   // ⑩ Collector Drop — sixteenth tab migrated to the Universal Template
   // System, 2026-11-04. Three useState calls collapsed into one combined
@@ -1528,9 +1620,11 @@ export function AdminSiteSettingsView({
       platformShippingFixedMin: s.commissions?.platformShippingFixedMin ?? 0,
     });
 
-    setListingTypeFlags((s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {});
-    setCategoryTypeFlags((s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {});
-    setBrowsePageFlags((s.listings?.browsePages as Record<string, boolean> | undefined) ?? {});
+    setListingsForm({
+      listingTypeFlags: (s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {},
+      categoryTypeFlags: (s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {},
+      browsePageFlags: (s.listings?.browsePages as Record<string, boolean> | undefined) ?? {},
+    });
 
     setCollectorDropForm({
       bidIncrementTiers: s.collectorDropConfig?.bidIncrementTiers ?? DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
@@ -1878,9 +1972,9 @@ export function AdminSiteSettingsView({
       // used to carry existed to preserve `adminCheckoutBypass`, which is now a
       // permission rather than a stored flag.
       listings: {
-        listingTypes: listingTypeFlags,
-        categoryTypes: categoryTypeFlags,
-        browsePages: browsePageFlags,
+        listingTypes: listingsForm.listingTypeFlags,
+        categoryTypes: listingsForm.categoryTypeFlags,
+        browsePages: listingsForm.browsePageFlags,
       },
       notificationChannels: {
         inApp: { enabled: true, readOnly: true },
@@ -2392,89 +2486,16 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑱ Listings — what the marketplace offers */}
+          {/* ⑱ Listings — seventeenth tab migrated to the Universal Template System. */}
           <TabsContent value="listings">
-            <SettingsTabForm id="listings" label="Listings">
-              <Text size="xs" color="muted">
-                Which listing and category types the marketplace offers. A disabled type is hidden
-                from every browse surface and rejected on create and add-to-cart — existing data is
-                untouched, it just becomes unreachable until re-enabled.
-              </Text>
-
-              {/* This tab was "Feature Flags" until 2026-08-29 and carried 12 more
-                  toggles. Eleven of them had no reader anywhere in the codebase, so
-                  an admin could switch "Wishlists" or "Reviews" off and watch
-                  nothing happen; the twelfth (`offers`) is now governed by the two
-                  gates a person actually sets — the listing type's capability and
-                  the seller's own per-listing opt-in. What is left here are the two
-                  controls that were never flags: standing decisions about the
-                  catalogue. */}
-
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">Listing types</Text>
-                <Text size="xs" color="muted">Disabled types are hidden from listings and reject create/add-to-cart.</Text>
-                <Grid cols={2} gap="sm">
-                  {LISTING_TYPE_KEYS.map((key) => (
-                    <Toggle
-                      key={key}
-                      // The plugin's own display label, not the raw key — the
-                      // literal version rendered "pre-order" and
-                      // "digital-code" at an admin.
-                      label={pluginFor(key).typeLabel}
-                      checked={listingTypeFlags[key] ?? true}
-                      onChange={(v) => setListingTypeFlags((prev) => ({ ...prev, [key]: v }))}
-                    />
-                  ))}
-                </Grid>
-              </Stack>
-
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">Category types</Text>
-                <Grid cols={2} gap="sm">
-                  {CATEGORY_TYPE_KEYS.map((key) => (
-                    <Toggle
-                      key={key}
-                      label={key}
-                      checked={categoryTypeFlags[key] ?? true}
-                      onChange={(v) => setCategoryTypeFlags((prev) => ({ ...prev, [key]: v }))}
-                    />
-                  ))}
-                </Grid>
-              </Stack>
-
-              {/*
-                A THIRD axis, and the copy says so, because the three read as
-                near-synonyms to anyone who has not been told otherwise:
-                listing types are what we SELL, category types are what a
-                taxonomy ROW may be, and these are whether a public ENTRY POINT
-                is open. Switching "Brands" off here does not untag one product
-                — brand rows keep driving every brand query. It closes the door.
-              */}
-              <Stack gap="xs">
-                <Text size="sm" weight="semibold">Browse sections</Text>
-                <Text size="xs" color="muted">
-                  A closed section returns Not Found and disappears from the navbar, the sidebar,
-                  the mobile menu, the footer and the sitemap. Products, categories and stores are
-                  untouched — only the public way in is withdrawn, and re-opening restores it.
-                </Text>
-                <Grid cols={2} gap="sm">
-                  {/* The hint sits BESIDE the toggle rather than inside its
-                      `label`: Toggle has no `description` prop, and widening a
-                      primitive used on ~70 surfaces to carry a hint for four
-                      rows is the wrong trade. */}
-                  {BROWSE_PAGE_KEYS.map((key) => (
-                    <Stack key={key} gap="xs">
-                      <Toggle
-                        label={BROWSE_PAGE_META[key]?.label ?? key}
-                        checked={browsePageFlags[key] ?? true}
-                        onChange={(v) => setBrowsePageFlags((prev) => ({ ...prev, [key]: v }))}
-                      />
-                      <Text size="xs" color="muted">{BROWSE_PAGE_META[key]?.hint}</Text>
-                    </Stack>
-                  ))}
-                </Grid>
-              </Stack>
-            </SettingsTabForm>
+            <SectionForm<SiteSettingsListingsFormValues>
+              sections={listingsSections}
+              values={listingsForm}
+              onChange={(partial) => setListingsForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsListingsFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑧ Integrations & Keys — fifteenth tab migrated to the Universal Template System. */}
