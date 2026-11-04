@@ -60,6 +60,10 @@ import {
   siteSettingsSeoFormSchema,
   type SiteSettingsSeoFormValues,
 } from "../schemas/site-settings-seo-form";
+import {
+  siteSettingsContactFormSchema,
+  type SiteSettingsContactFormValues,
+} from "../schemas/site-settings-contact-form";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm } from "../../shell/SectionForm";
 import { buildSectionsFromSchema, resolveFields } from "../../shell/build-sections";
@@ -403,29 +407,48 @@ export function AdminSiteSettingsView({
     [seoVisibilityFields, editMode, setSeoFieldVisible, seoFieldOrder, setSeoFieldOrder, upload],
   );
 
-  // ⑤ Contact & Social
-  const [supportEmail, setSupportEmail] = React.useState("");
-  const [supportPhone, setSupportPhone] = React.useState("");
-  const [supportAddress, setSupportAddress] = React.useState("");
-  const [supportHours, setSupportHours] = React.useState("");
-  const [instagram, setInstagram] = React.useState("");
-  const [twitter, setTwitter] = React.useState("");
-  const [facebook, setFacebook] = React.useState("");
-  const [youtube, setYoutube] = React.useState("");
-  const [whatsapp, setWhatsapp] = React.useState("");
-  /*
-   * 🛑 Load-bearing, and its absence was a live bug until 2026-10-19.
-   *
-   * `buildFullPayload()` writes the WHOLE `contact` group, so a key this
-   * component does not carry in state is erased on the next save of ANY tab.
-   * `contact.upiVpa` is the site-wide fallback `resolveDisplayedUpiId` uses
-   * when a seller has no UPI configured or the store is admin-owned — i.e.
-   * the VPA a manual-payment buyer is told to pay into. Saving the Watermark
-   * tab silently blanked it.
-   */
-  const [upiVpa, setUpiVpa] = React.useState("");
-  const [linkedin, setLinkedin] = React.useState("");
-  const [pinterest, setPinterest] = React.useState("");
+  // ⑤ Contact & Social — fourth tab migrated to the Universal Template
+  // System, 2026-11-04. One combined object instead of twelve useState
+  // calls.
+  //
+  // 🛑 `upiVpa` specifically is load-bearing, and its absence from this
+  // object was a live bug until 2026-10-19 under the old per-field state.
+  // `buildFullPayload()` writes the WHOLE `contact` group, so a key this
+  // component does not carry is erased on the next save of ANY tab.
+  // `contact.upiVpa` is the site-wide fallback `resolveDisplayedUpiId` uses
+  // when a seller has no UPI configured or the store is admin-owned — i.e.
+  // the VPA a manual-payment buyer is told to pay into. Carried through
+  // unconditionally below, same as every other field in this object.
+  const [contactForm, setContactForm] = React.useState<SiteSettingsContactFormValues>({
+    supportEmail: "", supportPhone: "", supportAddress: "", supportHours: "",
+    instagram: "", twitter: "", facebook: "", youtube: "", whatsapp: "",
+    upiVpa: "", linkedin: "", pinterest: "",
+  });
+  const {
+    fields: contactVisibilityFields,
+    setVisible: setContactFieldVisible,
+    fieldOrder: contactFieldOrder,
+    setFieldOrder: setContactFieldOrder,
+  } = useFieldVisibility("admin-site-settings-contact");
+  const contactSections = React.useMemo(
+    () =>
+      buildSectionsFromSchema<SiteSettingsContactFormValues>(siteSettingsContactFormSchema, {
+        fieldVisibility: contactVisibilityFields,
+        editMode,
+        onToggleFieldVisibility: setContactFieldVisible,
+        fieldOrder: contactFieldOrder,
+        onMoveField: (fieldName, neighborName) =>
+          setContactFieldOrder(
+            swapFieldOrder(
+              contactFieldOrder,
+              resolveFields(siteSettingsContactFormSchema).map((f) => f.name),
+              fieldName,
+              neighborName,
+            ),
+          ),
+      }),
+    [contactVisibilityFields, editMode, setContactFieldVisible, contactFieldOrder, setContactFieldOrder],
+  );
 
   // ⑥ Watermark
   const [watermarkType, setWatermarkType] = React.useState<"text" | "image">("text");
@@ -757,18 +780,20 @@ export function AdminSiteSettingsView({
       canonicalUrl: s.seo?.canonicalBaseUrl ?? "",
     });
 
-    setSupportEmail(s.contact?.email ?? "");
-    setSupportPhone(s.contact?.phone ?? "");
-    setSupportAddress(s.contact?.address ?? "");
-    setSupportHours(s.contact?.supportHours ?? "");
-    setInstagram(s.socialLinks?.instagram ?? "");
-    setTwitter(s.socialLinks?.twitter ?? "");
-    setFacebook(s.socialLinks?.facebook ?? "");
-    setYoutube(s.socialLinks?.youtube ?? "");
-    setWhatsapp(s.contact?.whatsappNumber ?? "");
-    setUpiVpa(s.contact?.upiVpa ?? "");
-    setLinkedin(s.socialLinks?.linkedin ?? "");
-    setPinterest(s.socialLinks?.pinterest ?? "");
+    setContactForm({
+      supportEmail: s.contact?.email ?? "",
+      supportPhone: s.contact?.phone ?? "",
+      supportAddress: s.contact?.address ?? "",
+      supportHours: s.contact?.supportHours ?? "",
+      instagram: s.socialLinks?.instagram ?? "",
+      twitter: s.socialLinks?.twitter ?? "",
+      facebook: s.socialLinks?.facebook ?? "",
+      youtube: s.socialLinks?.youtube ?? "",
+      whatsapp: s.contact?.whatsappNumber ?? "",
+      upiVpa: s.contact?.upiVpa ?? "",
+      linkedin: s.socialLinks?.linkedin ?? "",
+      pinterest: s.socialLinks?.pinterest ?? "",
+    });
 
     setWatermarkType(s.watermark?.type ?? "text");
     setWatermarkText(s.watermark?.text ?? getBrandDomain());
@@ -1056,8 +1081,22 @@ export function AdminSiteSettingsView({
         noIndex: seoForm.seoNoIndex,
         canonicalBaseUrl: seoForm.canonicalUrl,
       },
-      contact: { email: supportEmail, phone: supportPhone, address: supportAddress, supportHours, whatsappNumber: whatsapp, upiVpa },
-      socialLinks: { instagram, twitter, facebook, youtube, linkedin, pinterest },
+      contact: {
+        email: contactForm.supportEmail,
+        phone: contactForm.supportPhone,
+        address: contactForm.supportAddress,
+        supportHours: contactForm.supportHours,
+        whatsappNumber: contactForm.whatsapp,
+        upiVpa: contactForm.upiVpa,
+      },
+      socialLinks: {
+        instagram: contactForm.instagram,
+        twitter: contactForm.twitter,
+        facebook: contactForm.facebook,
+        youtube: contactForm.youtube,
+        linkedin: contactForm.linkedin,
+        pinterest: contactForm.pinterest,
+      },
       watermark: {
         type: watermarkType,
         text: watermarkText,
@@ -1585,31 +1624,15 @@ export function AdminSiteSettingsView({
 
           {/* ⑤ Contact & Social */}
           <TabsContent value="contact">
-            <SettingsTabForm id="contact" label="Contact">
-              <Grid cols={2} gap="md">
-                <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder={getBrandSupportEmail()} />
-                <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
-              </Grid>
-              <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
-              <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
-              <Text className="pt-[0.5rem]" color="muted" size="sm" weight="medium">Social links</Text>
-              <Grid cols={2} gap="md">
-                <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/yourbrand" />
-                <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/yourbrand" />
-                <Input label="Facebook URL" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="https://facebook.com/yourbrand" />
-                <Input label="YouTube URL" value={youtube} onChange={(e) => setYoutube(e.target.value)} placeholder="https://youtube.com/@yourbrand" />
-                <Input label="WhatsApp number" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+91XXXXXXXXXX" />
-                {/*
-                  Editable here for the first time. It was already stored and
-                  already read by the manual-payment flow, but had no input —
-                  so the only way to set it was the seed, and the next save of
-                  any tab wiped it. See the state declaration for why.
-                */}
-                <Input label="Business UPI VPA" value={upiVpa} onChange={(e) => setUpiVpa(e.target.value)} placeholder="name@bank" />
-                <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/yourbrand" />
-                <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/yourbrand" />
-              </Grid>
-            </SettingsTabForm>
+            {/* Fourth tab migrated to the Universal Template System. */}
+            <SectionForm<SiteSettingsContactFormValues>
+              sections={contactSections}
+              values={contactForm}
+              onChange={(partial) => setContactForm((prev) => ({ ...prev, ...partial }))}
+              onSubmit={() => undefined}
+              schema={siteSettingsContactFormSchema}
+              hideActions
+            />
           </TabsContent>
 
           {/* ⑥ Watermark */}
