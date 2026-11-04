@@ -5531,11 +5531,18 @@ export const mediaAssetsSeedData: Partial<MediaAssetDocument>[] = [
     contextType: "category-image",
   },
   {
+    // 🛑 Points at an EXISTING editorial asset (never had its own upload —
+    // the original storagePath 404d live, size:5952 was a placeholder that
+    // was never actually uploaded). Fixed 2026-11-05 by reusing a
+    // visually-verified, high-res single-top "BEYBLADE X" hero shot already
+    // in the bucket rather than fetching a new image for a franchise-level
+    // slot — same principle REUSED_MEDIA documents, applied to repair an
+    // existing row's own broken path rather than a new content reference.
     id: "franchise-beyblade-image",
-    storagePath: "media/categories/franchise-beyblade-image.webp",
+    storagePath: "media/editorial/blog-cover-beyblade-x-guide.webp",
     uploadedBy: "user-admin-letitrip",
     contentType: "image/webp",
-    size: 5952,
+    size: 99380,
     isPublic: true,
     status: "finalized",
     contextType: "category-image",
