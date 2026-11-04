@@ -170,6 +170,36 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
         })
       : null;
 
+  /*
+   * `functionalSlot` (2026-11-05) — same mechanism and same hoisting pattern
+   * as `ProductDetailPageView.tsx`'s `offerActionNode`/`hasOfferSlotOverride`.
+   * Bundles the offer control WITH its companion helper text ("Send a
+   * request..." / "Offer what you think..."), since on a classified the two
+   * are one unit, not an independently-positionable pair.
+   */
+  const offerActionNode =
+    offersAvailable && offerBounds ? (
+      <>
+        {renderOfferAction!({
+          productId: String(product.id),
+          price: price!,
+          currency,
+          minOfferPercent:
+            typeof p.minOfferPercent === "number" ? (p.minOfferPercent as number) : DEFAULT_MIN_OFFER_PERCENT,
+          listingStoreId: typeof p.storeId === "string" ? (p.storeId as string) : undefined,
+          bounds: offerBounds,
+        })}
+        <Text size="xs" color="muted">
+          {offerBounds.isBuyRequest
+            ? "Send a request to buy and the seller will confirm. Payment and collection are arranged after they accept."
+            : "Offer what you think it's worth — the seller can accept, decline or counter."}
+        </Text>
+      </>
+    ) : undefined;
+  const hasOfferSlotOverride = pageRegionCards.some((card) =>
+    card.elements.some((el) => el.kind === "functionalSlot" && el.slotId === "pdp-offer-action"),
+  );
+
   return (
     <Main>
       <HistoryTracker
@@ -315,38 +345,19 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
           renderBuyBar={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
             <Stack id="classified-contact-bar" className="p-[var(--appkit-space-5)]" border="subtle" gap="md" rounded="xl" surface="muted">
-              {offersAvailable && offerBounds ? (
-                <>
-                  {renderOfferAction!({
-                    productId: String(product.id),
-                    price: price!,
-                    currency,
-                    minOfferPercent:
-                      typeof p.minOfferPercent === "number"
-                        ? (p.minOfferPercent as number)
-                        : DEFAULT_MIN_OFFER_PERCENT,
-                    listingStoreId:
-                      typeof p.storeId === "string" ? (p.storeId as string) : undefined,
-                    bounds: offerBounds,
-                  })}
-                  <Text size="xs" color="muted">
-                    {offerBounds.isBuyRequest
-                      ? "Send a request to buy and the seller will confirm. Payment and collection are arranged after they accept."
-                      : "Offer what you think it's worth — the seller can accept, decline or counter."}
+              {!hasOfferSlotOverride &&
+                (offerActionNode ?? (
+                  /*
+                   * Reachable only when the listing has no price at all: a
+                   * classified always accepts offers otherwise (see the gate
+                   * above). Saying so beats an empty bordered box, which is what
+                   * this bar rendered while the contact panel was being removed.
+                   */
+                  <Text size="sm" color="muted">
+                    This listing doesn&apos;t have a price yet, so it isn&apos;t
+                    accepting offers. Check back shortly.
                   </Text>
-                </>
-              ) : (
-                /*
-                 * Reachable only when the listing has no price at all: a
-                 * classified always accepts offers otherwise (see the gate
-                 * above). Saying so beats an empty bordered box, which is what
-                 * this bar rendered while the contact panel was being removed.
-                 */
-                <Text size="sm" color="muted">
-                  This listing doesn&apos;t have a price yet, so it isn&apos;t
-                  accepting offers. Check back shortly.
-                </Text>
-              )}
+                ))}
             </Stack>
             </SectionVisibilityGate>
           )}
@@ -366,7 +377,11 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                   storeLabel={storeName ?? undefined}
                 />
               </SectionVisibilityGate>
-              <AdminComposableRegion pageId="classified-slug" initialCards={pageRegionCards} />
+              <AdminComposableRegion
+                pageId="classified-slug"
+                initialCards={pageRegionCards}
+                functionalSlots={{ "pdp-offer-action": offerActionNode }}
+              />
             </Stack>
           )}
         />
