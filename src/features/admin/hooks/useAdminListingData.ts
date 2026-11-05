@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient, ApiClientError } from "../../../http";
 import type { JsonValue } from "../../../schemas/types";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { toUserMessage } from "../../../errors/error-display-map";
 // The defining module, not a barrel (Root Cause #18). `hasEncPrefix` is a pure
 // string test with no crypto in its import chain, so it is client-safe.
 import { hasEncPrefix } from "../../../security/pii-mask";
@@ -91,9 +92,21 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
     rows,
     total,
     isLoading: query.isLoading,
+    /*
+     * 🛑 NEVER the server's own `query.error.message` — confirmed live on
+     * `/admin/newsletter`, 2026-11-05: a raw Firestore error ("9
+     * FAILED_PRECONDITION: The query requires an index...") was rendered
+     * verbatim in a red banner, the exact anti-pattern Root Cause #86
+     * exists to stop (a Node `MODULE_NOT_FOUND` require-stack once reached
+     * a buyer-facing modal the same way). Every `DataListingView`-based
+     * admin list shares this one hook, so this was a sitewide gap, not a
+     * newsletter-specific one. `ApiClientError.code` is the stable,
+     * mappable signal; `toUserMessage` degrades to a safe generic message
+     * for any code it doesn't recognise, never the server's own text.
+     */
     errorMessage:
       query.error instanceof ApiClientError
-        ? query.error.message
+        ? toUserMessage(query.error.code)
         : query.error
           ? "Unable to load records"
           : undefined,
