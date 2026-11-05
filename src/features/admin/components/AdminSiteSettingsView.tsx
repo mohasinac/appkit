@@ -24,7 +24,7 @@ import {
   ALL_LISTING_TYPES,
   ALL_BROWSE_PAGES,
 } from "../../../_internal/shared/listing-types/feature-flags";
-import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { pluginFor, type ActionKind } from "../../../_internal/shared/listing-types/_registry";
 import {
   SITE_SETTINGS_TABS,
   isSiteSettingsTabId,
@@ -284,6 +284,17 @@ function SettingsTabForm({
  * on every render of a 20-tab page.
  */
 const EMPTY_TAB_VALUES: FirestoreDocument = {};
+
+/** 1A-v (overhaul brief) — `ActionKind` display text, for the listing-type
+ * toggle grid's own label only; not reused anywhere a translated or
+ * buyer-facing string is needed. */
+const ACTION_KIND_LABELS: Record<ActionKind, string> = {
+  "buy-now": "Buy Now",
+  bid: "Bid",
+  reserve: "Reserve",
+  "enter-draw": "Enter Draw",
+  "make-offer": "Make Offer",
+};
 
 /**
  * Reproduces the generator's default `kind: "toggle"` rendering
@@ -1160,8 +1171,11 @@ export function AdminSiteSettingsView({
                     key={key}
                     // The plugin's own display label, not the raw key — the
                     // literal version rendered "pre-order" and
-                    // "digital-code" at an admin.
-                    label={pluginFor(key).typeLabel}
+                    // "digital-code" at an admin. 1A-v — the primary action
+                    // kind appended so an admin can tell at a glance what
+                    // disabling this type actually turns off (bid/reserve/
+                    // offer, not just "buy").
+                    label={`${pluginFor(key).typeLabel} — ${ACTION_KIND_LABELS[pluginFor(key).primaryActionKind]}`}
                     checked={flags[key] ?? true}
                     onChange={(v) => onChange({ listingTypeFlags: { ...flags, [key]: v } })}
                   />

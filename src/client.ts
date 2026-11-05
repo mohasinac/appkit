@@ -137,6 +137,10 @@ export type {
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ConfirmDeleteModal - Component for confirm delete modal.
 export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
+// 2A (overhaul brief) — the one real IDesignPack implementation; see
+// ./ui/design-pack.ts's header for why a second one isn't a gap to fill.
+export type { IDesignPack } from "./ui/design-pack";
+export { cssVarDesignPack } from "./ui/design-pack";
 // S-STORE — pure-UI primitives + Seller view consumed by new dashboard pages
 export { EmptyState } from "./ui/components/EmptyState";
 /* FilterChipGroup — a client UI primitive that existed, was used by
