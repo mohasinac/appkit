@@ -20,10 +20,11 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 import { Badge } from "../../../ui/components/Badge";
 import { Button } from "../../../ui/components/Button";
+import { Card } from "../../../ui/components/Card";
 import { Div } from "../../../ui/components/Div";
 import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
 import { SideDrawer } from "../../../ui/components/SideDrawer";
-import { Span, Text } from "../../../ui/components/Typography";
+import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Stack } from "../../../ui/components/Layout";
 import { useToast } from "../../../ui/components/toast-context";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -65,14 +66,6 @@ import type { DashboardCard } from "../../../_internal/shared/features/dashboard
 const __O = {
   yAuto: "overflow-y-auto",
 } as const;
-
-/*
- * The hairline that separates each panel section inside the order drawer.
- * Named because the drawer gained its fourth section with D55's balance
- * collector, and four copies of one border declaration is four places a
- * future token rename has to find.
- */
-const SECTION_DIVIDER = "border-t border-[var(--appkit-color-border)]";
 
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
@@ -674,7 +667,24 @@ export function SellerOrderDetailPanel({
 
       {order && !loading && (
         <Stack gap="none">
-          <Stack className={`flex-1 ${__O.yAuto}`} gap="5" padding="md">
+          {/*
+            🛑 Restructured 2026-11-05 (owner's direct correction — the exact
+            page screenshotted as "what kind of bullshit ui is this"). Was 12
+            independent concerns stacked flat with no grouping and two
+            different spacing scales mixed on sibling elements (`gap="5"`
+            here, `gap="sm"` inside individual rows, with no rule for which
+            kind of boundary got which). Now four Cards, one per real
+            concern a seller has — Items & total, Shipping & delivery,
+            Payment, Fulfilment actions — plus the status/provenance header,
+            which frames the order rather than being "a card" itself.
+
+            Spacing rhythm, named rather than left implicit: the OUTER gap
+            between cards/header ("lg") marks a concern boundary; the gap
+            WITHIN a card ("sm"/"md") marks sub-grouping inside the same
+            concern. No more border-top dividers doing the same job the
+            Card's own border already does.
+          */}
+          <Stack className={`flex-1 ${__O.yAuto}`} gap="lg" padding="md">
             <Row align="center" justify="between">
               <Badge variant={STATUS_BADGE_VARIANT[order.status ?? ""] ?? "default"}>
                 {order.status ?? "Unknown"}
@@ -695,277 +705,290 @@ export function SellerOrderDetailPanel({
               currency={order.currency}
             />
 
-            {(order.items ?? []).length > 0 && (
-              <Div>
-                <Text size="sm" className="text-[var(--appkit-color-text)] mb-2" weight="semibold">Items</Text>
-                <Div className="divide-y divide-[var(--appkit-color-border)] divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
-                  {/*
-                    Collapsed by `groupOrderItemsByLine` — the SAME helper the
-                    buyer's receipt uses. It had exactly one caller
-                    (user/orders/[id]/page.tsx) while the seller and admin saw
-                    the raw per-member fan-out, so one grouped purchase read as
-                    N unrelated lines to the only people who have to pick and
-                    pack it.
-                  */}
-                  {groupOrderItemsByLine(order.items ?? []).map((group, gi) =>
-                    group.kind === "single" ? (
-                      sellerOrderItemRow(group.item, `s-${group.index}`)
-                    ) : (
-                      <Div key={`g-${gi}`}>
-                        <Row
-                          paddingY="y-xs"
-                          padding="x-sm"
-                          align="center"
-                          gap="sm"
-                          surface="muted"
-                        >
-                          <Text size="xs" weight="semibold">
-                            {group.groupTitle ?? "Grouped purchase"}
-                          </Text>
-                          <Text size="xs" className="text-[var(--appkit-color-text-muted)]">
-                            {`${group.memberCount} ${group.memberCount === 1 ? "item" : "items"} · one line`}
-                          </Text>
-                        </Row>
-                        <Div paddingX="l-md">
-                          {group.items.map(({ item, index }) =>
-                            sellerOrderItemRow(item, `m-${index}`),
-                          )}
-                        </Div>
-                      </Div>
-                    ),
-                  )}
-                </Div>
-              </Div>
-            )}
+            <Card variant="outlined" padding="md">
+              <Stack gap="sm">
+                <Heading level={3} size="sm">Items &amp; total</Heading>
 
-            {/* Every add-on the buyer paid for, plus any coupon — was a
-                gift-wrap-only block, so a seller had no way to see that a buyer
-                had bought WhatsApp updates or shipment protection. */}
-            <OrderAddonBadges order={order} variant="detail" />
-
-            {order.giftWrapAddon && (
-              <Div className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)]" surface="subtle" padding="inline" rounded="lg">
-                <Text size="sm" weight="semibold">🎁 Gift wrap requested</Text>
-                {order.giftWrapMessage && (
-                  <Text size="sm" className="mt-1 text-[var(--appkit-color-text-muted)]">
-                    &ldquo;{order.giftWrapMessage}&rdquo;
-                  </Text>
-                )}
-              </Div>
-            )}
-
-            <Row surface="muted" padding="inline" align="center" justify="between" rounded="lg">
-              <Text size="sm" weight="semibold">Total</Text>
-              {/*
-                🛑 Fall back to `totalPrice`. Measured against the live endpoint,
-                `totalAmount` is UNDEFINED on every order the single-order store endpoint
-                serves — both a seeded one and one placed through real checkout —
-                while `totalPrice` carries the real figure (997.8 = 899 item + 77
-                shipping + 10 platform + 10 WhatsApp). So `order.totalAmount ?? 0`
-                rendered a confident **₹0.00** as the order total on every single
-                order in the seller's drawer.
-
-                Reading both names is the fix that is certain here. Why the stored
-                documents use `totalPrice` when `OrderDocument` declares
-                `totalAmount` is a schema-vs-data divergence spanning the order
-                write paths — recorded in docs/TEST-RUN-3-OUTOFSCOPE.md rather
-                than guessed at from one drawer.
-              */}
-              <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toCurrency(order.totalAmount ?? order.totalPrice ?? 0)}</Text>
-            </Row>
-
-            {addrLine && (
-              <Div>
-                <Text size="sm" className="mb-1" weight="semibold">Shipping address</Text>
-                <Text size="sm" className="text-[var(--appkit-color-text-muted)]">
-                  {[String(addr.fullName ?? ""), addrLine].filter(Boolean).join(" · ")}
-                </Text>
-              </Div>
-            )}
-
-            {order.paymentMethod && (
-              <Div>
-                <Row align="center" justify="between" className="mb-1" gap="3">
-                  <Text size="sm" weight="semibold">Payment</Text>
-                  {isManualPaymentMethod(order.paymentMethod) && (
-                    <Badge variant={sellerPaymentBadge(order).variant}>{sellerPaymentBadge(order).label}</Badge>
-                  )}
-                </Row>
-                <Text size="sm" className="text-[var(--appkit-color-text-muted)]" transform="capitalize">{order.paymentMethod}</Text>
-                {/* Read-only for sellers: verifying / rejecting a manual payment
-                    is admin+moderator only (`adminVerifyPaymentAction`). The
-                    buyer's payment screenshot itself is deliberately not shown
-                    here — it's a bank/UPI capture, and the seller only needs
-                    to know whether the money landed. */}
-                {isManualPaymentMethod(order.paymentMethod) && order.paymentTransactionId && (
-                  <Text size="xs" color="muted" className="mt-1">UTR: {order.paymentTransactionId}</Text>
-                )}
-              </Div>
-            )}
-
-            {order.emiEnabled && (
-              <Div className={SECTION_DIVIDER} padding="t-md">
-                <Row align="center" justify="between" className="mb-2">
-                  <Text size="sm" weight="semibold">
-                    EMI plan {order.emiTenureMonths ? `· ${order.emiTenureMonths} months` : ""}
-                  </Text>
-                  <Badge variant={order.emiComplete ? "success" : "warning"}>
-                    {order.emiComplete ? "Fully paid" : "In progress"}
-                  </Badge>
-                </Row>
-                <Row align="center" justify="between" className="mb-2">
-                  <Text size="xs" color="muted">Token collected</Text>
-                  <Text size="xs" weight="medium">{toCurrency(order.emiTokenAmount ?? 0)}</Text>
-                </Row>
-                <Row align="center" justify="between" className="mb-3">
-                  <Text size="xs" color="muted">Remaining balance</Text>
-                  <Text size="xs" weight="medium">{toCurrency(order.emiRemainingBalance ?? 0)}</Text>
-                </Row>
-                <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
-                  {(order.emiInstallments ?? []).map((inst) => (
-                    <Row key={inst.index} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
-                      <Div className="min-w-0">
-                        <Text size="sm" weight="medium">
-                          Installment {inst.index} · {toCurrency(inst.amount)}
-                        </Text>
-                        <Text size="xs" color="muted">
-                          {inst.status === "paid" && inst.paidAt
-                            ? `Paid ${toRelativeDate(inst.paidAt)}`
-                            : inst.dueDate
-                              ? `Due ${toRelativeDate(inst.dueDate)}`
-                              : ""}
-                        </Text>
-                      </Div>
-                      <Row align="center" gap="sm" className="shrink-0">
-                        <Badge variant={EMI_INSTALLMENT_BADGE_VARIANT[inst.status] ?? "default"}>{inst.status}</Badge>
-                        {inst.status !== "paid" && (
-                          <Button
-                            action={ACTIONS.STORE["mark-installment-paid"]}
-                            size="sm"
-                            variant="outline"
-                            isLoading={markingPaidIndex === inst.index}
-                            disabled={markingPaidIndex !== null}
-                            onClick={() => handleMarkInstallmentPaid(inst.index)}
+                {(order.items ?? []).length > 0 && (
+                  <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
+                    {/*
+                      Collapsed by `groupOrderItemsByLine` — the SAME helper the
+                      buyer's receipt uses. It had exactly one caller
+                      (user/orders/[id]/page.tsx) while the seller and admin saw
+                      the raw per-member fan-out, so one grouped purchase read as
+                      N unrelated lines to the only people who have to pick and
+                      pack it.
+                    */}
+                    {groupOrderItemsByLine(order.items ?? []).map((group, gi) =>
+                      group.kind === "single" ? (
+                        sellerOrderItemRow(group.item, `s-${group.index}`)
+                      ) : (
+                        <Div key={`g-${gi}`}>
+                          <Row
+                            paddingY="y-xs"
+                            padding="x-sm"
+                            align="center"
+                            gap="sm"
+                            surface="muted"
                           >
-                            Mark paid
-                          </Button>
-                        )}
-                      </Row>
-                    </Row>
-                  ))}
-                </Div>
-                {emiError && (
-                  <Div textSize="xs" className="mt-2 border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
-                    {emiError}
+                            <Text size="xs" weight="semibold">
+                              {group.groupTitle ?? "Grouped purchase"}
+                            </Text>
+                            <Text size="xs" className="text-[var(--appkit-color-text-muted)]">
+                              {`${group.memberCount} ${group.memberCount === 1 ? "item" : "items"} · one line`}
+                            </Text>
+                          </Row>
+                          <Div paddingX="l-md">
+                            {group.items.map(({ item, index }) =>
+                              sellerOrderItemRow(item, `m-${index}`),
+                            )}
+                          </Div>
+                        </Div>
+                      ),
+                    )}
                   </Div>
                 )}
-              </Div>
+
+                {/* Every add-on the buyer paid for, plus any coupon — was a
+                    gift-wrap-only block, so a seller had no way to see that a buyer
+                    had bought WhatsApp updates or shipment protection. */}
+                <OrderAddonBadges order={order} variant="detail" />
+
+                {order.giftWrapAddon && (
+                  <Div className="border border-[var(--appkit-color-primary-200)] dark:border-[var(--appkit-color-primary-800)]" surface="subtle" padding="inline" rounded="lg">
+                    <Text size="sm" weight="semibold">🎁 Gift wrap requested</Text>
+                    {order.giftWrapMessage && (
+                      <Text size="sm" className="mt-1 text-[var(--appkit-color-text-muted)]">
+                        &ldquo;{order.giftWrapMessage}&rdquo;
+                      </Text>
+                    )}
+                  </Div>
+                )}
+
+                <Row surface="muted" padding="inline" align="center" justify="between" rounded="lg">
+                  <Text size="sm" weight="semibold">Total</Text>
+                  {/*
+                    🛑 Fall back to `totalPrice`. Measured against the live endpoint,
+                    `totalAmount` is UNDEFINED on every order the single-order store endpoint
+                    serves — both a seeded one and one placed through real checkout —
+                    while `totalPrice` carries the real figure (997.8 = 899 item + 77
+                    shipping + 10 platform + 10 WhatsApp). So `order.totalAmount ?? 0`
+                    rendered a confident **₹0.00** as the order total on every single
+                    order in the seller's drawer.
+
+                    Reading both names is the fix that is certain here. Why the stored
+                    documents use `totalPrice` when `OrderDocument` declares
+                    `totalAmount` is a schema-vs-data divergence spanning the order
+                    write paths — recorded in docs/TEST-RUN-3-OUTOFSCOPE.md rather
+                    than guessed at from one drawer.
+                  */}
+                  <Text size="sm" className="text-[var(--appkit-color-primary)]" weight="bold">{toCurrency(order.totalAmount ?? order.totalPrice ?? 0)}</Text>
+                </Row>
+              </Stack>
+            </Card>
+
+            {addrLine && (
+              <Card variant="outlined" padding="md">
+                <Stack gap="sm">
+                  <Heading level={3} size="sm">Shipping &amp; delivery</Heading>
+                  <Text size="sm" className="text-[var(--appkit-color-text-muted)]">
+                    {[String(addr.fullName ?? ""), addrLine].filter(Boolean).join(" · ")}
+                  </Text>
+                </Stack>
+              </Card>
             )}
 
-            {/*
-              D55 — the pre-order balance.
+            {(order.paymentMethod ||
+              order.emiEnabled ||
+              (order.sourceContext?.path === "pre-order" && order.sourceContext.balanceDue > 0)) && (
+              <Card variant="outlined" padding="md">
+                <Stack gap="md">
+                  <Heading level={3} size="sm">Payment</Heading>
 
-              Rendered only when the order HAS one: `sourceContext.path` is
-              `pre-order` with a non-zero `balanceDue`. On every other order
-              there is nothing to open and the block is absent rather than
-              disabled — a greyed control the seller can never use is noise
-              on 95% of orders.
+                  {order.paymentMethod && (
+                    <Div>
+                      <Row align="center" justify="between" className="mb-1" gap="3">
+                        <Text size="sm" weight="semibold">Method</Text>
+                        {isManualPaymentMethod(order.paymentMethod) && (
+                          <Badge variant={sellerPaymentBadge(order).variant}>{sellerPaymentBadge(order).label}</Badge>
+                        )}
+                      </Row>
+                      <Text size="sm" className="text-[var(--appkit-color-text-muted)]" transform="capitalize">{order.paymentMethod}</Text>
+                      {/* Read-only for sellers: verifying / rejecting a manual payment
+                          is admin+moderator only (`adminVerifyPaymentAction`). The
+                          buyer's payment screenshot itself is deliberately not shown
+                          here — it's a bank/UPI capture, and the seller only needs
+                          to know whether the money landed. */}
+                      {isManualPaymentMethod(order.paymentMethod) && order.paymentTransactionId && (
+                        <Text size="xs" color="muted" className="mt-1">UTR: {order.paymentTransactionId}</Text>
+                      )}
+                    </Div>
+                  )}
 
-              Sits above dispatch because that is the sequence: the balance
-              has to be collected before the parcel goes out, which is the
-              whole reason a pre-order splits its payment in two.
-            */}
-            {order.sourceContext?.path === "pre-order" &&
-              order.sourceContext.balanceDue > 0 && (
-                <Stack className={SECTION_DIVIDER} padding="t-md" gap="3">
-                  <SellerBalanceBlock
-                    orderId={orderId}
-                    apiBase={apiBase}
-                    balance={order.balance}
-                    balanceDue={order.sourceContext.balanceDue}
-                    currency={order.currency}
-                    onOpened={() => {
-                      showToast("Balance opened — the buyer has been notified", "success");
-                      void fetch(`${apiBase}/${orderId}`)
-                        .then((r) => r.json())
-                        .then((json) => setOrder((json?.data ?? json) as OrderDetail))
-                        .catch((err: unknown) => void normalizeError(err));
-                    }}
-                  />
+                  {order.emiEnabled && (
+                    <Div>
+                      <Row align="center" justify="between" className="mb-2">
+                        <Text size="sm" weight="semibold">
+                          EMI plan {order.emiTenureMonths ? `· ${order.emiTenureMonths} months` : ""}
+                        </Text>
+                        <Badge variant={order.emiComplete ? "success" : "warning"}>
+                          {order.emiComplete ? "Fully paid" : "In progress"}
+                        </Badge>
+                      </Row>
+                      <Row align="center" justify="between" className="mb-2">
+                        <Text size="xs" color="muted">Token collected</Text>
+                        <Text size="xs" weight="medium">{toCurrency(order.emiTokenAmount ?? 0)}</Text>
+                      </Row>
+                      <Row align="center" justify="between" className="mb-3">
+                        <Text size="xs" color="muted">Remaining balance</Text>
+                        <Text size="xs" weight="medium">{toCurrency(order.emiRemainingBalance ?? 0)}</Text>
+                      </Row>
+                      <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
+                        {(order.emiInstallments ?? []).map((inst) => (
+                          <Row key={inst.index} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
+                            <Div className="min-w-0">
+                              <Text size="sm" weight="medium">
+                                Installment {inst.index} · {toCurrency(inst.amount)}
+                              </Text>
+                              <Text size="xs" color="muted">
+                                {inst.status === "paid" && inst.paidAt
+                                  ? `Paid ${toRelativeDate(inst.paidAt)}`
+                                  : inst.dueDate
+                                    ? `Due ${toRelativeDate(inst.dueDate)}`
+                                    : ""}
+                              </Text>
+                            </Div>
+                            <Row align="center" gap="sm" className="shrink-0">
+                              <Badge variant={EMI_INSTALLMENT_BADGE_VARIANT[inst.status] ?? "default"}>{inst.status}</Badge>
+                              {inst.status !== "paid" && (
+                                <Button
+                                  action={ACTIONS.STORE["mark-installment-paid"]}
+                                  size="sm"
+                                  variant="outline"
+                                  isLoading={markingPaidIndex === inst.index}
+                                  disabled={markingPaidIndex !== null}
+                                  onClick={() => handleMarkInstallmentPaid(inst.index)}
+                                >
+                                  Mark paid
+                                </Button>
+                              )}
+                            </Row>
+                          </Row>
+                        ))}
+                      </Div>
+                      {emiError && (
+                        <Div textSize="xs" className="mt-2 border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
+                          {emiError}
+                        </Div>
+                      )}
+                    </Div>
+                  )}
+
+                  {/*
+                    D55 — the pre-order balance.
+
+                    Rendered only when the order HAS one: `sourceContext.path` is
+                    `pre-order` with a non-zero `balanceDue`. On every other order
+                    there is nothing to open and the block is absent rather than
+                    disabled — a greyed control the seller can never use is noise
+                    on 95% of orders.
+                  */}
+                  {order.sourceContext?.path === "pre-order" &&
+                    order.sourceContext.balanceDue > 0 && (
+                      <SellerBalanceBlock
+                        orderId={orderId}
+                        apiBase={apiBase}
+                        balance={order.balance}
+                        balanceDue={order.sourceContext.balanceDue}
+                        currency={order.currency}
+                        onOpened={() => {
+                          showToast("Balance opened — the buyer has been notified", "success");
+                          void fetch(`${apiBase}/${orderId}`)
+                            .then((r) => r.json())
+                            .then((json) => setOrder((json?.data ?? json) as OrderDetail))
+                            .catch((err: unknown) => void normalizeError(err));
+                        }}
+                      />
+                    )}
                 </Stack>
-              )}
+              </Card>
+            )}
 
-            {/*
-              🛑 Dispatch is its OWN form, above the status form, not a section
-              inside it — and that separation is the point rather than layout
-              taste. The status form diffs its draft against the loaded order
-              and PATCHes whatever moved; dispatch posts a discriminated union
-              to a different route and, on the platform branch, enqueues a job
-              that spends money. Folding them together would give one Save two
-              meanings, which is bug 0d one level up from where it was found.
+            <Card variant="outlined" padding="md">
+              <Stack gap="md">
+                <Heading level={3} size="sm">Fulfilment actions</Heading>
 
-              It carries its own single submit and no `bottomBar`: this panel
-              renders inside a `SideDrawer` on the orders list, where
-              `useFormBottomActions` suppresses the bar anyway.
-            */}
-            <Stack className={SECTION_DIVIDER} padding="t-md" gap="3">
-              <DispatchForm
-                orderId={orderId}
-                trackingNumber={order.trackingNumber}
-                platformBooked={order.platformBookedShipment}
-                onDispatched={() => {
-                  showToast("Dispatch recorded", "success");
-                  /*
-                   * Re-read rather than patching local state: the platform
-                   * branch's tracking id is produced by the CARRIER, so there
-                   * is no value here to optimistically write. On that branch
-                   * the job is still running, so this first re-read correctly
-                   * shows no tracking number yet.
-                   */
-                  void fetch(`${apiBase}/${orderId}`)
-                    .then((r) => r.json())
-                    .then((json) => setOrder((json?.data ?? json) as OrderDetail))
-                    .catch((err: unknown) => void normalizeError(err));
-                }}
-              />
-            </Stack>
+                {/*
+                  🛑 Dispatch is its OWN form, above the status form, not a section
+                  inside it — and that separation is the point rather than layout
+                  taste. The status form diffs its draft against the loaded order
+                  and PATCHes whatever moved; dispatch posts a discriminated union
+                  to a different route and, on the platform branch, enqueues a job
+                  that spends money. Folding them together would give one Save two
+                  meanings, which is bug 0d one level up from where it was found.
 
-            <Stack className={SECTION_DIVIDER} padding="t-md" gap="3">
-              <FormShellContext.Provider value={form.shellCtx}>
-                <FormErrorSummary />
-                <SectionForm<SellerOrderUpdateValues>
-                  sections={sections}
-                  values={draft}
-                  onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
-                  onSubmit={() => {
-                    // SectionForm scrolls to the first erroring section and then
-                    // submits regardless, so the guard lives here.
-                    form.clearErrors();
-                    const parsed = sellerOrderUpdateSchema.safeParse(
-                      visibleValues(sellerOrderUpdateSchema, draft),
-                    );
-                    if (!parsed.success) {
-                      applyZodIssues(parsed.error.issues, form.setFieldError);
-                      return;
-                    }
-                    void handleSave();
+                  It carries its own single submit and no `bottomBar`: this panel
+                  renders inside a `SideDrawer` on the orders list, where
+                  `useFormBottomActions` suppresses the bar anyway.
+                */}
+                <DispatchForm
+                  orderId={orderId}
+                  trackingNumber={order.trackingNumber}
+                  platformBooked={order.platformBookedShipment}
+                  onDispatched={() => {
+                    showToast("Dispatch recorded", "success");
+                    /*
+                     * Re-read rather than patching local state: the platform
+                     * branch's tracking id is produced by the CARRIER, so there
+                     * is no value here to optimistically write. On that branch
+                     * the job is still running, so this first re-read correctly
+                     * shows no tracking number yet.
+                     */
+                    void fetch(`${apiBase}/${orderId}`)
+                      .then((r) => r.json())
+                      .then((json) => setOrder((json?.data ?? json) as OrderDetail))
+                      .catch((err: unknown) => void normalizeError(err));
                   }}
-                  onValidationChange={() => form.validate(draft)}
-                  schema={sellerOrderUpdateSchema}
-                  openIds={nav.openIds}
-                  onOpenChange={nav.setOpenIds}
-                  submitLabel="Save"
-                  cancelLabel="Close"
-                  onCancel={onClose}
-                  isLoading={saving}
                 />
-              </FormShellContext.Provider>
-              {saveError && (
-                <Div textSize="xs" className="border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
-                  {saveError}
-                </Div>
-              )}
-            </Stack>
+
+                <Stack gap="3">
+                  <FormShellContext.Provider value={form.shellCtx}>
+                    <FormErrorSummary />
+                    <SectionForm<SellerOrderUpdateValues>
+                      sections={sections}
+                      values={draft}
+                      onChange={(partial) => setDraft((d) => ({ ...d, ...partial }))}
+                      onSubmit={() => {
+                        // SectionForm scrolls to the first erroring section and then
+                        // submits regardless, so the guard lives here.
+                        form.clearErrors();
+                        const parsed = sellerOrderUpdateSchema.safeParse(
+                          visibleValues(sellerOrderUpdateSchema, draft),
+                        );
+                        if (!parsed.success) {
+                          applyZodIssues(parsed.error.issues, form.setFieldError);
+                          return;
+                        }
+                        void handleSave();
+                      }}
+                      onValidationChange={() => form.validate(draft)}
+                      schema={sellerOrderUpdateSchema}
+                      openIds={nav.openIds}
+                      onOpenChange={nav.setOpenIds}
+                      submitLabel="Save"
+                      cancelLabel="Close"
+                      onCancel={onClose}
+                      isLoading={saving}
+                    />
+                  </FormShellContext.Provider>
+                  {saveError && (
+                    <Div textSize="xs" className="border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
+                      {saveError}
+                    </Div>
+                  )}
+                </Stack>
+              </Stack>
+            </Card>
           </Stack>
           {/*
             🛑 THE SECOND Close/Save PAIR WAS HERE AND IS DELETED.
