@@ -2,18 +2,6 @@ import React from "react";
 import { Div } from "../../../../ui/components/Div";
 import { Heading, Text } from "../../../../ui/components/Typography";
 import { Row } from "../../../../ui/components/Layout";
-import { DynamicBgDiv } from "../../../../ui/components/DynamicBgDiv";
-const BRAND_FROM = "var(--appkit-color-primary-700)";
-const BRAND_MID  = "var(--appkit-color-cobalt)";
-const BRAND_TO   = "var(--appkit-color-secondary-400)";
-
-const GRADIENTS: Record<string, string> = {
-  brand:  `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 55%, ${BRAND_TO} 100%)`,
-  blue:   `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 100%)`,
-  green:  `linear-gradient(135deg, ${BRAND_MID} 0%, ${BRAND_TO} 100%)`,
-  amber:  "var(--appkit-gradient-warning-stat)",
-  rose:   "var(--appkit-gradient-danger-stat)",
-};
 
 export interface AdminStatCardProps {
   label: string;
@@ -21,8 +9,6 @@ export interface AdminStatCardProps {
   sub?: string;
   /** Emoji or ReactNode icon */
   icon?: React.ReactNode | string;
-  /** Named preset or raw CSS gradient string */
-  gradient?: keyof typeof GRADIENTS | string;
   className?: string;
   /**
    * Change against the previous comparable period, as a SIGNED percentage.
@@ -129,15 +115,12 @@ export function AdminStatCard({
   value,
   sub,
   icon,
-  gradient = "brand",
   className = "",
   trendPercent,
   trendLabel,
   higherIsBetter = true,
   series,
 }: AdminStatCardProps) {
-  const resolvedGradient = GRADIENTS[gradient as keyof typeof GRADIENTS] ?? gradient;
-
   /*
    * 🛑 `!= null`, NOT a truthiness check. `trendPercent === 0` is a real
    * measurement — "this figure did not move" — and `if (trendPercent)` would
@@ -174,15 +157,8 @@ export function AdminStatCard({
 
   return (
     <Div
-      className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden ${className}`} rounded="xl" shadow="sm-hover-md"
+      className={`border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${className}`} rounded="xl" shadow="sm-hover-md"
     >
-      {/* 3-px gradient top accent */}
-      <DynamicBgDiv
-        background={resolvedGradient}
-        className="absolute top-0 left-0 right-0 h-[3px]"
-        aria-hidden="true"
-      />
-
       <Row paddingX="x-5" paddingY="b-md-lg" padding="t-lg" align="start" justify="between" gap="3">
         <Div className="min-w-0 flex-1">
           <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)]" weight="semibold" transform="uppercase">
@@ -199,13 +175,20 @@ export function AdminStatCard({
           )}
         </Div>
 
+        {/*
+          🛑 ONE restrained, theme-safe treatment — no per-card hue. The
+          previous version gave every card a different `gradient` preset
+          (brand/blue/green/amber/rose) as both a 3px top accent and this
+          chip's own background; a row of 4-6 of these read as a rainbow
+          strip, not a dashboard (owner's direct correction, 2026-11-05).
+          `surface="subtle"` + the themed `--appkit-color-primary` icon tint
+          both already invert correctly per `[data-theme]` — no literal
+          per-shade color choice to go wrong in one theme and not the other.
+        */}
         {icon && (
-          <DynamicBgDiv
-            background={resolvedGradient}
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-[length:var(--appkit-text-xl)]"
-          >
+          <Div surface="subtle" className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg text-[length:var(--appkit-text-xl)] text-[var(--appkit-color-primary)]">
             {icon}
-          </DynamicBgDiv>
+          </Div>
         )}
       </Row>
 

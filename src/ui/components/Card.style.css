@@ -44,51 +44,6 @@
   backdrop-filter: blur(8px);
 }
 
-/* Gradient variants */
-.appkit-card--gradient-indigo {
-  background: linear-gradient(to bottom right, #6366f1, #4f46e5);
-  color: white;
-}
-.appkit-card--gradient-teal {
-  background: linear-gradient(to bottom right, #14b8a6, #0891b2);
-  color: white;
-}
-.appkit-card--gradient-amber {
-  background: linear-gradient(to bottom right, #f59e0b, #ea580c);
-  color: white;
-}
-.appkit-card--gradient-rose {
-  background: linear-gradient(to bottom right, #f43f5e, #ec4899);
-  color: white;
-}
-
-/* Stat variants */
-.appkit-card--stat-indigo {
-  background: #eef2ff;
-  color: #312e81;
-  border: 1px solid #c7d2fe;
-}
-.appkit-card--stat-teal {
-  background: var(--appkit-color-teal-50);
-  color: var(--appkit-color-teal-900);
-  border: 1px solid var(--appkit-color-teal-200);
-}
-.appkit-card--stat-amber {
-  background: var(--appkit-color-amber-50);
-  color: var(--appkit-color-amber-900);
-  border: 1px solid var(--appkit-color-amber-200);
-}
-.appkit-card--stat-rose {
-  background: var(--appkit-color-rose-50);
-  color: var(--appkit-color-rose-900);
-  border: 1px solid var(--appkit-color-rose-200);
-}
-.appkit-card--stat-emerald {
-  background: var(--appkit-color-emerald-50);
-  color: var(--appkit-color-emerald-900);
-  border: 1px solid var(--appkit-color-emerald-200);
-}
-
 /* Padding */
 .appkit-card--pad-sm {
   padding: 0.75rem;
@@ -156,31 +111,6 @@
 .dark .appkit-card--glass {
   border-color: rgba(51, 65, 85, 0.4);
   background: rgba(15, 23, 42, 0.75);
-}
-.dark .appkit-card--stat-indigo {
-  background: rgba(49, 46, 129, 0.4);
-  color: #c7d2fe;
-  border-color: rgba(99, 102, 241, 0.6);
-}
-.dark .appkit-card--stat-teal {
-  background: rgba(19, 78, 74, 0.4);
-  color: var(--appkit-color-teal-200);
-  border-color: rgba(20, 184, 166, 0.6);
-}
-.dark .appkit-card--stat-amber {
-  background: rgba(120, 53, 15, 0.4);
-  color: var(--appkit-color-amber-200);
-  border-color: rgba(245, 158, 11, 0.6);
-}
-.dark .appkit-card--stat-rose {
-  background: rgba(136, 19, 55, 0.4);
-  color: var(--appkit-color-rose-200);
-  border-color: rgba(244, 63, 94, 0.6);
-}
-.dark .appkit-card--stat-emerald {
-  background: rgba(6, 78, 59, 0.4);
-  color: var(--appkit-color-emerald-200);
-  border-color: rgba(16, 185, 129, 0.6);
 }
 .dark .appkit-card__header {
   border-bottom-color: var(--appkit-color-border);

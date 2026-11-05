@@ -7,6 +7,7 @@ import { Heading, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
+import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
@@ -117,23 +118,28 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false, pageR
 
   return (
     <Stack gap="xl" padding="b-2xl">
-      {/* Welcome banner */}
+      {/*
+        🛑 Was a full-bleed 3-stop gradient banner with inverse (white)
+        text — owner's direct correction, 2026-11-05: a saturated hero
+        treatment on an internal admin reference page reads as decoration,
+        not the restrained, dense-marketplace quality bar named directly
+        (eBay/Buyee/Zenmarket/Doorzo). Plain bordered card, same as every
+        other admin page, matching `GC.sectionWrap`'s own treatment.
+      */}
       <Section overflow="hidden" className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]" rounded="2xl" shadow="sm">
-        <Div paddingX="x-md-xl" paddingY="y-xl"
-          className="[background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_60%,var(--appkit-color-secondary-400)_100%)]"
-        >
+        <Div paddingX="x-md-xl" paddingY="y-xl">
           <Row className="mb-3" align="center" gap="3">
-            <Row className="flex-shrink-0 w-10 h-10" surface="default" align="center" justify="center" rounded="xl">
-              <BookOpen className="w-5 h-5 text-white" />
+            <Row className={`flex-shrink-0 w-10 h-10 ${GC.iconBg}`} align="center" justify="center" rounded="xl">
+              <BookOpen className={GC.iconPrimary} />
             </Row>
-            <Text color="inverse-muted" className="tracking-widest" size="sm" weight="semibold" transform="uppercase">
+            <Text color="muted" className="tracking-widest" size="sm" weight="semibold" transform="uppercase">
               Admin &amp; Employee Guide
             </Text>
           </Row>
-          <Heading color="inverse" level={1} className="mb-2" mdSize="3xl" size="2xl" weight="bold">
+          <Heading level={1} className="text-[var(--appkit-color-text)] mb-2" mdSize="3xl" size="2xl" weight="bold">
             {getBrandName()} Internal Guide
           </Heading>
-          <Text color="inverse-muted" size="base">
+          <Text color="muted" size="base">
             Everything you need to operate and manage {getBrandName()} — India&apos;s largest collectibles marketplace.
           </Text>
         </Div>
@@ -176,9 +182,9 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false, pageR
               >
                 <Row align="center" gap="3">
                   <Row
-                    className="flex-shrink-0 w-9 h-9 [background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_100%)]" align="center" justify="center" rounded="lg"
+                    className={`flex-shrink-0 w-9 h-9 ${GC.iconBg}`} align="center" justify="center" rounded="lg"
                   >
-                    <Icon className="w-4 h-4 text-white" />
+                    <Icon className={GC.iconPrimarySm} />
                   </Row>
                   <Text className="text-[var(--appkit-color-text)] group-hover:text-[var(--appkit-color-primary)] transition-colors" weight="semibold">
                     {title}

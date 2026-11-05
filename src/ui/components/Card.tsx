@@ -16,15 +16,6 @@ type CardVariant =
   | "bordered"
   | "interactive"
   | "glass"
-  | "gradient-indigo"
-  | "gradient-teal"
-  | "gradient-amber"
-  | "gradient-rose"
-  | "stat-indigo"
-  | "stat-teal"
-  | "stat-amber"
-  | "stat-rose"
-  | "stat-emerald"
   | "chat-bubble"
   | "chat-bubble-mine"
   | "chat-bubble-theirs";
@@ -41,15 +32,6 @@ const UI_CARD = {
     elevated: "appkit-card--elevated",
     interactive: "appkit-card--interactive",
     glass: "appkit-card--glass",
-    "gradient-indigo": "appkit-card--gradient-indigo",
-    "gradient-teal": "appkit-card--gradient-teal",
-    "gradient-amber": "appkit-card--gradient-amber",
-    "gradient-rose": "appkit-card--gradient-rose",
-    "stat-indigo": "appkit-card--stat-indigo",
-    "stat-teal": "appkit-card--stat-teal",
-    "stat-amber": "appkit-card--stat-amber",
-    "stat-rose": "appkit-card--stat-rose",
-    "stat-emerald": "appkit-card--stat-emerald",
     "chat-bubble": "appkit-card--chat-bubble",
     "chat-bubble-mine": "appkit-card--chat-bubble-mine",
     "chat-bubble-theirs": "appkit-card--chat-bubble-theirs",

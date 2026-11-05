@@ -5,6 +5,7 @@ import { Code, Li, Section, Ul } from "../../../ui/components/Semantic";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
+import { GC } from "../../_guide-cls";
 import { getBrandName } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
@@ -30,8 +31,8 @@ export function AdminTeamGuideView({ pageRegionCards = [] }: AdminTeamGuideViewP
     <Stack className="max-w-3xl mx-auto" padding="b-2xl" gap="xl">
       <Section>
         <Row className="mb-2" align="center" gap="3">
-          <Row className="flex-shrink-0 w-10 h-10 [background:linear-gradient(135deg,var(--appkit-color-primary-700)_0%,var(--appkit-color-cobalt)_100%)]" align="center" justify="center" rounded="xl">
-            <Users className="w-5 h-5 text-white" />
+          <Row className={`flex-shrink-0 w-10 h-10 ${GC.iconBg}`} align="center" justify="center" rounded="xl">
+            <Users className={GC.iconPrimary} />
           </Row>
           <Text className="text-[var(--appkit-color-text-muted)] tracking-widest" size="sm" weight="semibold" transform="uppercase">Admin Guide</Text>
         </Row>

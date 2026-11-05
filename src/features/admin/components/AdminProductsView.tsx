@@ -7,6 +7,8 @@ import React, { useState, useCallback } from "react";
 import { ListingLayout } from "../../../ui/components/ListingLayout";
 import { Span, Text } from "../../../ui/components/Typography";
 import { Toggle } from "../../../ui/components/Toggle";
+import { Badge, type BadgeVariant } from "../../../ui/components/Badge";
+import { humaniseFieldName } from "../../shell/entity-form";
 import { useToast } from "../../../ui/components/toast-context";
 import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
@@ -47,6 +49,22 @@ interface AdminProductsResponse {
   items?: JsonArray;
   total?: number;
 }
+
+/**
+ * Status → `Badge` variant, matching the restrained, already-correct
+ * color-coded system orders already use (`SellerOrdersView.tsx`).
+ *
+ * 🛑 Was one fixed `bg-primary-50 text-primary-800` class for EVERY
+ * status (no color-coding at all), whose `dark:` pair used a different
+ * color family than light mode — an internal inconsistency, not a style
+ * choice (owner's direct correction, 2026-11-05; `known-bugs.md:84`).
+ */
+const PRODUCT_STATUS_VARIANT: Record<string, BadgeVariant> = {
+  draft: "default",
+  published: "success",
+  in_review: "pending",
+  archived: "inactive",
+};
 
 /*
  * Phase 4C (overhaul brief) — `price`/`stockQuantity` promoted from inside
@@ -121,9 +139,9 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       className: "w-36",
       render: (row) => (
-        <Span size="xs" weight="medium" className="inline-flex bg-primary-50 text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300" rounded="full" padding="pill-sm-tall">
-          {row.status}
-        </Span>
+        <Badge variant={row.status ? (PRODUCT_STATUS_VARIANT[row.status] ?? "default") : "default"}>
+          {row.status ? humaniseFieldName(row.status) : "—"}
+        </Badge>
       ),
     },
     {

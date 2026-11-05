@@ -1,77 +1,35 @@
 "use client";
 
 import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
-import { Text } from "../../../ui/components/Typography";
-import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { AdminStatCard } from "./analytics/AdminStatCard";
 
-const __P = {
-  p5: "p-[var(--appkit-space-5)]",
-} as const;
-
-const __O = {
-  hidden: "overflow-hidden",
-} as const;
-
-// Brand gradient stop colors (mirrors SiteLogo wordmark gradient)
-const BRAND_FROM = "var(--appkit-color-primary-700)";
-const BRAND_MID  = "var(--appkit-color-cobalt)";
-const BRAND_TO   = "var(--appkit-color-secondary-400)";
-
-interface StatCardProps {
-  label: string;
-  value: string | number;
-  sub?: string;
-  icon: LucideIcon;
-  gradient: string;       // CSS gradient string for the top strip + icon bg
-}
-
-function StatCard({ label, value, sub, icon: Icon, gradient }: StatCardProps) {
-  return (
-    <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden}`} rounded="xl" shadow="sm-hover-md">
-      {/* 3-px gradient top accent */}
-      <DynamicBgDiv
-        background={gradient}
-        className="absolute top-0 left-0 right-0 h-[3px]"
-        aria-hidden="true"
-      />
-
-      <Row paddingX="x-5" paddingY="b-md-lg" padding="t-lg" align="start" justify="between" gap="3">
-        {/* Text block */}
-        <Div className={`min-w-0 flex-1 ${__O.hidden}`}>
-          <Text className="text-[11px] tracking-widest text-[var(--appkit-color-text-muted)] truncate" weight="semibold" transform="uppercase">
-            {label}
-          </Text>
-          <Text className="mt-2 text-[var(--appkit-color-text)] tabular-nums leading-tight break-words" size="xl" weight="bold">
-            {value}
-          </Text>
-          {sub && (
-            <Text className="mt-1.5 text-[var(--appkit-color-text-muted)]" size="xs">{sub}</Text>
-          )}
-        </Div>
-
-        {/* Icon pill */}
-        <DynamicBgDiv
-          background={gradient}
-          className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg opacity-[0.92]"
-        >
-          <Icon className="w-5 h-5 text-white drop-shadow-sm" />
-        </DynamicBgDiv>
-      </Row>
-    </Div>
-  );
-}
+/**
+ * `DashboardStatsGrid` — `AdminDashboardView`'s internal default for
+ * `renderStats` (used only when a caller omits the render prop; the one
+ * real caller, `/admin`'s `AdminDashboardPageClient`, always overrides it
+ * with `renderStats={() => null}` — the dashboard root's stats were
+ * suppressed as part of this session's decluttering). Kept correct rather
+ * than deleted, since a future caller that forgets to pass `renderStats`
+ * would hit this path.
+ *
+ * 🛑 Previously defined its OWN local `StatCard` — a near-duplicate of
+ * `AdminStatCard` with the same per-tile `gradient` rainbow treatment
+ * `AdminStatCard` itself just had removed (owner's direct correction,
+ * 2026-11-05: differently-colored stat tiles in one row read as a rainbow
+ * strip, not a dashboard). Composes the real `AdminStatCard` now instead,
+ * matching the W1-32 consolidation `SellerAnalyticsStats` already did —
+ * one stat-card implementation, not two drifting copies.
+ */
 
 function SkeletonCard() {
   return (
-    <Div className={`relative border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] ${__O.hidden} ${__P.p5} animate-pulse`} rounded="xl">
-      <Div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
-      <Row align="start" justify="between" gap="3" padding="t-2xs">
+    <Div className="border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] animate-pulse" padding="xl" rounded="xl">
+      <Row align="start" justify="between" gap="3">
         <Stack className="flex-1" gap="sm">
           <Div className="h-2.5 w-20 bg-[var(--appkit-color-border)]" rounded="default" />
           <Div className="h-7 w-24 bg-[var(--appkit-color-border)]" rounded="default" />
@@ -103,54 +61,41 @@ export function DashboardStatsGrid({
 
   const currency = stats.currency ?? getDefaultCurrency();
 
-  // Brand gradient (left→right, matches logo wordmark)
-  const brandGrad   = `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 55%, ${BRAND_TO} 100%)`;
-  const blueGrad    = `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 100%)`;
-  const greenGrad   = `linear-gradient(135deg, ${BRAND_MID} 0%, ${BRAND_TO} 100%)`;
-  const amberGrad   = "var(--appkit-gradient-warning-stat)";
-  const roseGrad    = "var(--appkit-gradient-danger-stat)";
-
   return (
     <Grid cols="statTiles">
-      <StatCard
+      <AdminStatCard
         label={labels.totalOrders ?? "Total Orders"}
-        value={stats.totalOrders ?? 0}
-        icon={ShoppingBag}
-        gradient={brandGrad}
+        value={String(stats.totalOrders ?? 0)}
+        icon={<ShoppingBag className="w-5 h-5" />}
       />
-      <StatCard
+      <AdminStatCard
         label={labels.totalRevenue ?? "Total Revenue"}
         value={formatCurrency(stats.totalRevenue ?? 0, currency)}
-        icon={TrendingUp}
-        gradient={greenGrad}
+        icon={<TrendingUp className="w-5 h-5" />}
       />
-      <StatCard
+      <AdminStatCard
         label={labels.totalUsers ?? "Total Users"}
-        value={stats.totalUsers ?? 0}
-        icon={Users}
-        gradient={blueGrad}
+        value={String(stats.totalUsers ?? 0)}
+        icon={<Users className="w-5 h-5" />}
       />
-      <StatCard
+      <AdminStatCard
         label={labels.totalProducts ?? "Total Products"}
-        value={stats.totalProducts ?? 0}
-        icon={Package}
-        gradient={brandGrad}
+        value={String(stats.totalProducts ?? 0)}
+        icon={<Package className="w-5 h-5" />}
       />
       {stats.pendingOrders !== undefined && (
-        <StatCard
+        <AdminStatCard
           label={labels.pendingOrders ?? "Pending Orders"}
-          value={stats.pendingOrders}
-          icon={Clock}
-          gradient={amberGrad}
-          />
+          value={String(stats.pendingOrders)}
+          icon={<Clock className="w-5 h-5" />}
+        />
       )}
       {stats.pendingReviews !== undefined && (
-        <StatCard
+        <AdminStatCard
           label={labels.pendingReviews ?? "Pending Reviews"}
-          value={stats.pendingReviews}
-          icon={Star}
-          gradient={roseGrad}
-          />
+          value={String(stats.pendingReviews)}
+          icon={<Star className="w-5 h-5" />}
+        />
       )}
     </Grid>
   );
