@@ -44,8 +44,6 @@ export interface ResolvedKeys {
   cashfreeSecretKey: string;
   /** "sandbox" | "production" — selects Cashfree's base URL. Defaults to sandbox. */
   cashfreeEnvironment: string;
-  /** Webhook signing secret. Without it `verifyWebhook()` fails closed, which only disables the webhook fallback. */
-  cashfreeWebhookSecret: string;
   // Resend email
   resendApiKey: string;
   // WhatsApp Business Cloud (Twilio legacy key)
@@ -70,7 +68,6 @@ const EMPTY_KEYS: ResolvedKeys = {
   cashfreeAppId: "",
   cashfreeSecretKey: "",
   cashfreeEnvironment: "",
-  cashfreeWebhookSecret: "",
   resendApiKey: "",
   whatsappApiKey: "",
   whatsappPhoneNumberId: "",
@@ -144,8 +141,6 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
       usable(db.cashfreeSecretKey) || process.env.CASHFREE_SECRET_KEY || "",
     cashfreeEnvironment:
       usable(db.cashfreeEnvironment) || process.env.CASHFREE_ENVIRONMENT || "sandbox",
-    cashfreeWebhookSecret:
-      usable(db.cashfreeWebhookSecret) || process.env.CASHFREE_WEBHOOK_SECRET || "",
     resendApiKey: db.resendApiKey || process.env.RESEND_API_KEY || "",
     whatsappApiKey: db.whatsappApiKey || process.env.WHATSAPP_API_KEY || "",
     whatsappPhoneNumberId:

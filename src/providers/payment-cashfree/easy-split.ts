@@ -5,9 +5,11 @@
  * second is the one that matters:
  *
  *   1. that file reached the 1,000-line `max-lines` ceiling;
- *   2. **everything in here is SPECIFIED, NOT CONFIRMED** — see the block
- *      below — and isolating it means correcting any assumption is an edit to
- *      one named thing in one file, with no call-site changes.
+ *   2. **every fact in here was originally SPECIFIED, NOT CONFIRMED, and now
+ *      is** — see the block below for what was checked 2026-11-05 and what
+ *      changed — isolating it here meant correcting the two wrong
+ *      assumptions it turned up was an edit to one named thing in one file,
+ *      with no call-site changes.
  *
  * `audit-payment-provider-import` allowlists `payment-cashfree/**`, so a
  * sibling module here is as legitimate as `index.ts` itself.
@@ -41,65 +43,57 @@ export interface CashfreeVendorEntity {
 
 
 /*
- * 🛑🛑 EVERYTHING IN THIS SECTION IS SPECIFIED, NOT CONFIRMED.
- *
- * Easy Split is a separately-onboarded Cashfree product and none of the three
- * facts below has been exercised against the live API or re-read from Cashfree's
- * current documentation. Each one can be wrong INDEPENDENTLY of the others, and
- * each has a different failure mode:
+ * 🛑🛑 CONFIRMED 2026-11-05 against Cashfree's own API reference + FAQ docs
+ * (direct fetches, not a search snippet) — this section used to read "every
+ * fact below is SPECIFIED, NOT CONFIRMED". All three are resolved now:
  *
  *   1. THE VENDOR ENDPOINT AND ITS BODY (`cashfreeVendorPayload` /
- *      `EASY_SPLIT_VENDORS_PATH`). Wrong path or wrong field names → a 4xx at
- *      registration. LOUD and harmless: the job records `rejected` with
- *      Cashfree's own message and no money has moved.
+ *      `EASY_SPLIT_VENDORS_PATH`). Path confirmed exactly
+ *      (`/easy-split/vendors`). The body was NOT exactly right — the raw
+ *      example request body in Cashfree's own Create Vendor reference uses
+ *      `ifsc` and `account_holder` on both the `bank` and `upi` destination
+ *      objects; this file's original guess used `account_ifsc` and omitted
+ *      `account_holder` entirely on both. Fixed in `cashfreeVendorPayload`
+ *      below — see its own comment.
  *
  *   2. THE SPLIT FIELD ON THE ORDER (`ORDER_SPLITS_FIELD`, `toOrderSplits`).
- *      This is the DANGEROUS one. A wrong field name is not necessarily an
- *      error — Cashfree may ignore an unknown key — and the order would then be
- *      created and CAPTURED with no split at all. That is a completely
- *      successful-looking checkout which has just collected other sellers'
- *      money into the platform's own account: the exact RBI commingling this
- *      whole mechanism exists to prevent. **Before the first real rupee goes
- *      through this path, create one sandbox order with a split and read the
- *      split back off the order entity.** An order that reports no split is the
- *      proof this is wrong; an order that errors is the benign outcome.
+ *      This was the DANGEROUS one — a wrong field name here is not
+ *      necessarily an error; Cashfree could silently ignore an unknown key
+ *      and capture the order with no split, collecting another seller's
+ *      money into the platform's own account while looking like a success.
+ *      CONFIRMED CORRECT as originally written: `order_splits`, each entry
+ *      `{vendor_id, amount}` — verbatim from the Create Order OpenAPI schema.
  *
- *   3. HOW MANY VENDORS ONE ORDER MAY CARRY
- *      (`MAX_SPLIT_VENDORS_PER_ORDER`). See its own 🛑 — this is the open
- *      question the whole multi-vendor cart shape depends on.
+ *   3. HOW MANY VENDORS ONE ORDER MAY CARRY (`MAX_SPLIT_VENDORS_PER_ORDER`).
+ *      Confirmed via Cashfree's own Easy Split FAQ: "You can split a single
+ *      transaction among a maximum of 5 vendors." Set below.
  *
- * All three are isolated here so that correcting any of them is an edit to one
- * named thing with no call-site changes, and every one of them fails CLOSED:
- * a refusal, never a silent collection.
+ * Still not exercised against a REAL delivery/order — these confirm the
+ * CONSTRUCTION against the vendor's own current published spec, which is
+ * necessary but, per CLAUDE.md Rule #11, not a substitute for watching one
+ * real sandbox vendor + split order succeed before trusting this with real
+ * money.
  */
 
-/** 🛑 ASSUMED path, relative to the `/pg` base. See the block above, point 1. */
+/** Confirmed against Cashfree's own Create Vendor API reference, 2026-11-05. */
 export const EASY_SPLIT_VENDORS_PATH = "/easy-split/vendors";
 
-/** 🛑 ASSUMED body key on `POST /pg/orders`. See the block above, point 2. */
+/** Confirmed against Cashfree's own Create Order OpenAPI schema, 2026-11-05 — each entry `{vendor_id, amount}`. */
 export const ORDER_SPLITS_FIELD = "order_splits";
 
 /**
- * 🛑 **THE OPEN QUESTION, AND IT IS NOT ANSWERABLE FROM THIS TREE.**
+ * Confirmed against Cashfree's own Easy Split FAQ, 2026-11-05: "You can
+ * split a single transaction among a maximum of 5 vendors."
  *
  * A multi-vendor cart in this codebase produces ONE payment across SEVERAL
  * orders (`createPhonePeGroupOrder` is called once per seller group off a
- * single capture). Easy Split must therefore carry one split instruction per
- * vendor on ONE order. Whether Cashfree permits that, and up to how many
- * vendors, is a fact about their product that has not been confirmed.
- *
- * This value is set to `0`, which this adapter reads as **UNBOUNDED** — i.e.
- * implement for N, exactly as instructed, rather than inventing a cap and
- * silently refusing carts that would have worked. The alternative shape, if the
- * real limit turns out to be low, is BUYER-VISIBLE: a multi-vendor cart would
- * have to be split into several separate payments, which changes the checkout
- * flow rather than a constant here.
- *
- * 🛑 If a real cap is confirmed, set it here and the adapter REFUSES above it.
- * It must never truncate: dropping the last vendor's split would collect their
- * share into the platform's account and look like a success.
+ * single capture), so this is the real ceiling the adapter refuses above —
+ * see `createOrderWithSplit`'s own check. Never truncates: dropping the
+ * last vendor's split would collect their share into the platform's account
+ * and look like a success: a cart needing a 6th seller settled gets a loud,
+ * buyer-visible refusal instead.
  */
-export const MAX_SPLIT_VENDORS_PER_ORDER: number = 0;
+export const MAX_SPLIT_VENDORS_PER_ORDER: number = 5;
 
 /**
  * Cashfree's vendor status → the contract's outcome.
@@ -166,21 +160,31 @@ interface CashfreeVendorPayload {
   /** Asks Cashfree to run its own account verification — see below. */
   verify_account: true;
   dashboard_access: false;
-  bank?: { account_number: string; account_ifsc: string };
-  upi?: { vpa: string };
+  bank?: { account_number: string; account_holder: string; ifsc: string };
+  upi?: { vpa: string; account_holder: string };
   kyc_details?: { pan?: string; gst?: string };
 }
 
 export function cashfreeVendorPayload(input: SettlementVendorInput): CashfreeVendorPayload {
+  /*
+   * 🛑 CONFIRMED 2026-11-05 against Cashfree's own raw example request body
+   * (API reference, Create Vendor) — `account_holder` and `ifsc` (NOT
+   * `account_ifsc`), on BOTH destination objects. The original guess here
+   * used `account_ifsc` and omitted `account_holder` on both bank and UPI —
+   * exactly the "wrong key, Cashfree ignores it, vendor registers with an
+   * incomplete/wrong destination" risk the file's own header warns about.
+   * Fixed to the confirmed shape.
+   */
   const destination = input.bank
     ? {
         bank: {
           account_number: input.bank.accountNumber,
-          account_ifsc: input.bank.ifsc.toUpperCase(),
+          account_holder: input.bank.accountHolderName,
+          ifsc: input.bank.ifsc.toUpperCase(),
         },
       }
     : input.upi
-      ? { upi: { vpa: input.upi.vpa } }
+      ? { upi: { vpa: input.upi.vpa, account_holder: input.upi.accountHolderName } }
       : {};
 
   return {

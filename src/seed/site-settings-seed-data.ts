@@ -645,7 +645,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     cashfreeAppId: "",
     cashfreeSecretKey: "",
     cashfreeEnvironment: "sandbox",
-    cashfreeWebhookSecret: "",
     resendApiKey: "",
     whatsappApiKey: "wa_PLACEHOLDER",
     // Real Meta secrets — deliberately left empty. With these unset the order

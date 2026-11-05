@@ -298,8 +298,6 @@ export interface SiteSettingsCredentials {
   cashfreeSecretKey?: string;
   /** "sandbox" | "production" — selects Cashfree's base URL. */
   cashfreeEnvironment?: string;
-  /** Webhook signing secret from Cashfree's dashboard. Without it `verifyWebhook()` fails closed. */
-  cashfreeWebhookSecret?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
   metaAppId?: string;
@@ -353,7 +351,6 @@ export interface SiteSettingsCredentialsMasked {
   cashfreeAppId?: string;
   cashfreeSecretKey?: string;
   cashfreeEnvironment?: string;
-  cashfreeWebhookSecret?: string;
   resendApiKey?: string;
   whatsappApiKey?: string;
   metaAppId?: string;

@@ -12,15 +12,19 @@
  *
  * WHAT: Flat field names matching the component's own state, writing into
  *       THREE save-payload groups in `buildFullPayload()`:
- *         - `credentials.*` (22 fields, via `maskedOrReal()`) — every
+ *         - `credentials.*` (21 fields, via `maskedOrReal()`) — every
  *           Razorpay/PhonePe/Cashfree/Google-Maps/Google-Place/Meta/
  *           TikTok/DeviantArt field, INCLUDING the ones that render as
  *           plain (non-dot-obscured) inputs here (`googlePlaceId`,
  *           `metaPageId`, `phonepeClientVersion`,
- *           `phonepeEnvironment`/`cashfreeEnvironment`). Only 17 of the 22
+ *           `phonepeEnvironment`/`cashfreeEnvironment`). Only 16 of the 21
  *           get the `<MaskedInput>` UI treatment — the rest are
  *           operationally non-secret but still masked at the save layer,
  *           same asymmetry already documented on the WhatsApp tab's schema.
+ *           (Was 22/17 — `cashfreeWebhookSecret` removed 2026-11-05:
+ *           Cashfree has no separate webhook-signing secret, confirmed
+ *           against both their docs and the dashboard directly; webhooks
+ *           are signed with `cashfreeSecretKey`, same as API calls.)
  *         - `emailSettings.{host,port,user,fromAddress}` — SHARED with the
  *           Notifications tab, which already writes `fromEmail`/`fromName`/
  *           `dailyDigest` into the SAME object. This migration closes that
@@ -102,7 +106,6 @@ export const siteSettingsIntegrationsFormSchema = z.object({
   cashfreeEnvironment: annotate(str(), {
     section: "cashfree", order: 3, kind: "select", label: "Cashfree Environment",
   }),
-  cashfreeWebhookSecret: annotate(str(), { section: "cashfree", order: 4, label: "Cashfree Webhook Secret" }),
 
   // --- SMTP / Email (emailSettings.*, shared with the Notifications tab) ---
   smtpHost: annotate(str(), {
@@ -177,7 +180,6 @@ export const MASKED_CREDENTIAL_FIELDS: {
   { name: "phonepeWebhookPassword", label: "PhonePe Webhook Password", placeholder: "••••••••" },
   { name: "cashfreeAppId", label: "Cashfree App ID", placeholder: "••••••••" },
   { name: "cashfreeSecretKey", label: "Cashfree Secret Key", placeholder: "••••••••" },
-  { name: "cashfreeWebhookSecret", label: "Cashfree Webhook Secret", placeholder: "••••••••" },
   { name: "googleMapsApiKey", label: "Google Maps API key", placeholder: "••••••••" },
   { name: "metaPageAccessToken", label: "Page Access Token", placeholder: "EAAxxxxxxx…" },
   { name: "tiktokClientKey", label: "Client Key", placeholder: "aw…" },

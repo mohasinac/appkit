@@ -49,7 +49,6 @@
  *     appId: process.env.CASHFREE_APP_ID!,
  *     secretKey: process.env.CASHFREE_SECRET_KEY!,
  *     environment: (process.env.CASHFREE_ENVIRONMENT as "sandbox" | "production") ?? "sandbox",
- *     webhookSecret: process.env.CASHFREE_WEBHOOK_SECRET,
  *   }),
  * });
  * ```
@@ -119,16 +118,15 @@ export interface CashfreeConfig {
    * `payment_session_id`, which is per-order and short-lived.
    */
   appId: string;
-  /** Secret key — sent as `x-client-secret`. Server-only. */
+  /**
+   * Secret key — sent as `x-client-secret`, and ALSO the webhook-signing key
+   * (see `verifyCashfreeWebhookSignature`'s own doc comment — Cashfree has no
+   * separate dedicated webhook secret; confirmed against both the live docs
+   * and the dashboard directly, 2026-11-05). Server-only.
+   */
   secretKey: string;
   /** Selects the base URL: sandbox vs production. */
   environment: "sandbox" | "production";
-  /**
-   * Webhook signing secret from Cashfree's dashboard. Without it
-   * `verifyWebhook()` fails closed and returns `false`, same shape as
-   * Razorpay's and PhonePe's missing-credential behaviour.
-   */
-  webhookSecret?: string;
   /** Overrides `x-api-version`. Leave unset unless pinning deliberately. */
   apiVersion?: string;
 }
@@ -285,21 +283,27 @@ function signaturesMatch(expected: string, received: string): boolean {
 /**
  * The ONE place a Cashfree webhook signature is computed.
  *
- * 🛑 **ASSUMED, NOT CONFIRMED.** The construction implemented here is
- * `base64(HMAC-SHA256(timestamp + rawBody, webhookSecret))`, compared against
- * the `x-webhook-signature` header with `x-webhook-timestamp` as the timestamp.
- * That is the shape this adapter was specified against; it has **not** been
- * verified against Cashfree's live documentation or a real delivery. Three
- * things in it could each be wrong independently:
+ * **CONFIRMED 2026-11-05** against Cashfree's own published docs (and the
+ * dashboard directly, for the one part docs alone couldn't settle): the
+ * construction is `base64(HMAC-SHA256(timestamp + rawBody, secretKey))`,
+ * compared against the `x-webhook-signature` header with `x-webhook-timestamp`
+ * as the timestamp. All three previously-open questions are resolved:
  *
- *   · the CONCATENATION ORDER (`timestamp + body` vs `body + timestamp`),
- *   · the SIGNING KEY (the webhook secret vs the API `secretKey`),
- *   · the ENCODING (base64 vs hex).
+ *   · CONCATENATION ORDER: `timestamp + body` — confirmed (docs' own
+ *     pseudocode: `signedPayload := $timestamp.$payload`).
+ *   · SIGNING KEY: the SAME API `secretKey` used for order creation — NOT a
+ *     separate webhook secret. Cashfree has no dedicated webhook-signing
+ *     credential; confirmed both in their docs and directly in the dashboard
+ *     (checked 2026-11-05 — no such field exists there). The original
+ *     `webhookSecret` config field this function used to read was a wrong
+ *     assumption, now removed.
+ *   · ENCODING: base64 — confirmed (`Base64Encode(HMACSHA256(...))`).
  *
- * Confirm all three against the live docs before trusting a verified webhook,
- * and prove it both ways: a genuine delivery must verify AND a tampered body
- * must be rejected. A check that has only ever been seen to pass is not
- * evidence (CLAUDE.md Rule #11).
+ * Still worth proving BOTH ways once a real delivery is available: a genuine
+ * webhook must verify AND a tampered body must be rejected. A check that has
+ * only ever been seen to pass is not evidence (CLAUDE.md Rule #11) — this
+ * confirms the CONSTRUCTION against the vendor's own spec, which is
+ * necessary but not a substitute for watching one real delivery succeed.
  *
  * It is isolated in this one named function precisely so that correcting the
  * assumption is a one-function edit with no call-site changes.
@@ -356,7 +360,6 @@ export class CashfreeProvider extends IPaymentProvider {
   private readonly appId: string;
   private readonly secretKey: string;
   private readonly apiVersion: string;
-  private readonly webhookSecret?: string;
 
   constructor(config: CashfreeConfig) {
     super();
@@ -370,7 +373,6 @@ export class CashfreeProvider extends IPaymentProvider {
     this.appId = config.appId;
     this.secretKey = config.secretKey;
     this.apiVersion = config.apiVersion?.trim() || DEFAULT_API_VERSION;
-    this.webhookSecret = config.webhookSecret;
   }
 
   /**
@@ -708,15 +710,14 @@ export class CashfreeProvider extends IPaymentProvider {
    * `JSON.stringify(JSON.parse(body))` is not guaranteed to reproduce the bytes
    * that were signed.
    *
-   * Fails closed when no webhook secret is configured, when the packed value is
-   * malformed, or on any mismatch. Reports validity only — the caller parses the
-   * body itself after this returns `true`, same as the existing webhook route.
+   * Fails closed when the packed value is malformed or on any mismatch.
+   * Reports validity only — the caller parses the body itself after this
+   * returns `true`, same as the existing webhook route.
    *
-   * See `verifyCashfreeWebhookSignature` for the 🛑 on the unconfirmed signing
-   * construction.
+   * Signed with `this.secretKey` — see `verifyCashfreeWebhookSignature`'s own
+   * doc comment for why that's the correct key, not a separate webhook secret.
    */
   verifyWebhook(payload: string, signature: string): boolean {
-    if (!this.webhookSecret) return false;
     const separatorAt = signature.indexOf(PACK_SEPARATOR);
     if (separatorAt <= 0) return false;
     const timestamp = signature.slice(0, separatorAt);
@@ -725,7 +726,7 @@ export class CashfreeProvider extends IPaymentProvider {
       payload,
       received,
       timestamp,
-      this.webhookSecret,
+      this.secretKey,
     );
   }
 

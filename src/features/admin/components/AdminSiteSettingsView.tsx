@@ -1031,7 +1031,7 @@ export function AdminSiteSettingsView({
   // three analytics fields).
   const [integrationsForm, setIntegrationsForm] = React.useState<SiteSettingsIntegrationsFormValues>({
     razorpayKeyId: "", razorpayKeySecret: "", razorpayWebhookSecret: "",
-    cashfreeAppId: "", cashfreeSecretKey: "", cashfreeEnvironment: "sandbox", cashfreeWebhookSecret: "",
+    cashfreeAppId: "", cashfreeSecretKey: "", cashfreeEnvironment: "sandbox",
     phonepeClientId: "", phonepeClientSecret: "", phonepeClientVersion: "1",
     phonepeEnvironment: "sandbox", phonepeWebhookUsername: "", phonepeWebhookPassword: "",
     smtpHost: "", smtpPort: "587", smtpUser: "", smtpFrom: "",
@@ -1861,7 +1861,6 @@ export function AdminSiteSettingsView({
       cashfreeAppId: s.credentialsMasked?.cashfreeAppId ?? "",
       cashfreeSecretKey: s.credentialsMasked?.cashfreeSecretKey ?? "",
       cashfreeEnvironment: s.credentialsMasked?.cashfreeEnvironment ?? "sandbox",
-      cashfreeWebhookSecret: s.credentialsMasked?.cashfreeWebhookSecret ?? "",
       phonepeClientId: s.credentialsMasked?.phonepeClientId ?? "",
       phonepeClientSecret: s.credentialsMasked?.phonepeClientSecret ?? "",
       phonepeClientVersion: s.credentialsMasked?.phonepeClientVersion ?? "1",
@@ -2005,7 +2004,6 @@ export function AdminSiteSettingsView({
       cashfreeAppId: s.credentialsMasked?.cashfreeAppId ?? "",
       cashfreeSecretKey: s.credentialsMasked?.cashfreeSecretKey ?? "",
       cashfreeEnvironment: s.credentialsMasked?.cashfreeEnvironment ?? "",
-      cashfreeWebhookSecret: s.credentialsMasked?.cashfreeWebhookSecret ?? "",
       phonepeClientId: s.credentialsMasked?.phonepeClientId ?? "",
       phonepeClientSecret: s.credentialsMasked?.phonepeClientSecret ?? "",
       phonepeClientVersion: s.credentialsMasked?.phonepeClientVersion ?? "",
@@ -2165,7 +2163,6 @@ export function AdminSiteSettingsView({
         cashfreeAppId: maskedOrReal("cashfreeAppId", integrationsForm.cashfreeAppId ?? ""),
         cashfreeSecretKey: maskedOrReal("cashfreeSecretKey", integrationsForm.cashfreeSecretKey ?? ""),
         cashfreeEnvironment: maskedOrReal("cashfreeEnvironment", integrationsForm.cashfreeEnvironment ?? ""),
-        cashfreeWebhookSecret: maskedOrReal("cashfreeWebhookSecret", integrationsForm.cashfreeWebhookSecret ?? ""),
         phonepeClientId: maskedOrReal("phonepeClientId", integrationsForm.phonepeClientId ?? ""),
         phonepeClientSecret: maskedOrReal("phonepeClientSecret", integrationsForm.phonepeClientSecret ?? ""),
         phonepeClientVersion: maskedOrReal("phonepeClientVersion", integrationsForm.phonepeClientVersion ?? ""),
