@@ -100,7 +100,7 @@ export async function GuidesHubView({ pageRegionCards = [] }: GuidesHubViewProps
          * restoring this is uncommenting two lines.
          *
          * { href: String(ROUTES.PUBLIC.SELLER_GUIDE_BUNDLES), label: t("bundleGuide"), text: t("bundleGuideText") },
-         * { href: String(ROUTES.PUBLIC.SELLER_GUIDE_RANDOM_LOTS), label: t("prizeDrawGuide"), text: t("prizeDrawGuideText") },
+         * { href: String(ROUTES.PUBLIC.SELLER_GUIDE_CLEARANCE), label: t("prizeDrawGuide"), text: t("prizeDrawGuideText") },
          */
       ],
     },

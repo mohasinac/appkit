@@ -23,43 +23,43 @@ export type {
   NonRefundableConsentModalProps,
   NonRefundableListingType,
 } from "./NonRefundableConsentModal";
-export { RandomLotsItemsEditor } from "./RandomLotsItemsEditor";
-export type { RandomLotsItemsEditorProps } from "./RandomLotsItemsEditor";
-export { RandomLotsCollage } from "./RandomLotsCollage";
-export type { RandomLotsCollageProps } from "./RandomLotsCollage";
+export { ClearanceItemsEditor } from "./ClearanceItemsEditor";
+export type { ClearanceItemsEditorProps } from "./ClearanceItemsEditor";
+export { ClearanceCollage } from "./ClearanceCollage";
+export type { ClearanceCollageProps } from "./ClearanceCollage";
 export { PrizeRevealModal } from "./PrizeRevealModal";
 export type {
   PrizeRevealModalProps,
   PrizeRevealResult,
 } from "./PrizeRevealModal";
-export { RandomLotsWinnerMappingView } from "./RandomLotsWinnerMappingView";
+export { ClearanceWinnerMappingView } from "./ClearanceWinnerMappingView";
 export type {
-  RandomLotsWinnerMappingViewProps,
-  RandomLotsWinnerMappingRow,
-} from "./RandomLotsWinnerMappingView";
-export { MarketplaceRandomLotCard } from "./MarketplaceRandomLotCard";
+  ClearanceWinnerMappingViewProps,
+  ClearanceWinnerMappingRow,
+} from "./ClearanceWinnerMappingView";
+export { MarketplaceClearanceCard } from "./MarketplaceClearanceCard";
 export type {
-  MarketplaceRandomLotCardProps,
-  MarketplaceRandomLotCardData,
-  MarketplaceRandomLotCardLabels,
-} from "./MarketplaceRandomLotCard";
+  MarketplaceClearanceCardProps,
+  MarketplaceClearanceCardData,
+  MarketplaceClearanceCardLabels,
+} from "./MarketplaceClearanceCard";
 export { MarketplaceBundleCard } from "./MarketplaceBundleCard";
 export type {
   MarketplaceBundleCardProps,
   MarketplaceBundleCardData,
   MarketplaceBundleCardLabels,
 } from "./MarketplaceBundleCard";
-export { RandomLotsIndexListing } from "./RandomLotsIndexListing";
-export type { RandomLotsIndexListingProps } from "./RandomLotsIndexListing";
+export { ClearanceIndexListing } from "./ClearanceIndexListing";
+export type { ClearanceIndexListingProps } from "./ClearanceIndexListing";
 export { AvailabilityTabs } from "./AvailabilityTabs";
 export type { AvailabilityTabsProps } from "./AvailabilityTabs";
-// RandomLotsListingView + RandomLotsDetailPageView are server components that
+// ClearanceListingView + ClearanceDetailPageView are server components that
 // import productRepository (→ firebase-admin). Re-exporting them from this
 // client-mixed barrel pulls firebase-admin into client bundles via webpack/
 // Turbopack tree-shaking gaps (see CLAUDE.md "appkit Export Rules"). Consume
 // them directly from their file paths via the appkit main index instead.
-export { RandomLotsEntryActions } from "./RandomLotsEntryActions";
-export type { RandomLotsEntryActionsProps } from "./RandomLotsEntryActions";
+export { ClearanceEntryActions } from "./ClearanceEntryActions";
+export type { ClearanceEntryActionsProps } from "./ClearanceEntryActions";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
@@ -111,8 +111,8 @@ export { SublistingCarouselSection } from "./SublistingCarouselSection";
 export { ShowGroupSection } from "./ShowGroupSection";
 export { GroupSettingsPanel } from "./GroupSettingsPanel";
 export type { GroupSettingsPanelProps } from "./GroupSettingsPanel";
-export { RandomLotsSection } from "./RandomLotsSection";
-export type { RandomLotsSectionProps } from "./RandomLotsSection";
+export { ClearanceSection } from "./ClearanceSection";
+export type { ClearanceSectionProps } from "./ClearanceSection";
 export { CompareOverlay } from "./CompareOverlay";
 export type {
   CompareOverlayProps,

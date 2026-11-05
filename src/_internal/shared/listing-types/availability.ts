@@ -23,7 +23,7 @@
  * @tag layer:shared
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:_registry,list-public,data,RandomLotsSection
+ * @tag consumers:_registry,list-public,data,ClearanceSection
  * @tag sideEffects:none
  */
 

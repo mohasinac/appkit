@@ -4,8 +4,8 @@ import { ROUTES } from "../../../../next/routing/route-map";
 import { TABLE_KEYS } from "../../../../constants/table-keys";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import {
-  RANDOM_LOTS_SORT_OPTIONS,
-  RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
+  CLEARANCE_SORT_OPTIONS,
+  CLEARANCE_PUBLIC_SORT_OPTIONS,
 } from "../../../../features/products/constants/sieve";
 
 export const LISTING_TYPE = "clearance" as const;
@@ -14,7 +14,7 @@ export const config = {
   listingType: LISTING_TYPE,
   slugPrefix: "clearance-",
   cartLine: "single-product" as const,
-  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(idOrSlug)),
+  detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.CLEARANCE_DETAIL(idOrSlug)),
   badge: { label: "Clearance", className: "bg-primary text-white" },
   priceLabel: "Price (₹)",
   typeLabel: "Clearance",
@@ -23,13 +23,13 @@ export const config = {
   tabSlug: "clearance",
   pluralLabel: "Clearance",
   chipLabel: "Clearance",
-  browseRoute: String(ROUTES.PUBLIC.RANDOM_LOTS),
+  browseRoute: String(ROUTES.PUBLIC.CLEARANCE),
   // /clearance is in MAIN_NAV_ITEMS. Entry-based pricing reads wrong beside
   // ordinary unit prices in the general grid.
   inGeneralCatalogue: false,
   // sells ENTRIES at a fixed price; a group line would blur what was entered
   canJoinProductGroup: false,
-  iconKey: "randomLots" as const,
+  iconKey: "clearance" as const,
   primaryActionKind: "enter-draw" as const,
   hideDefault: "closed" as const,
   // `prizeRevealStatus`, NOT remaining entries: a draw can close with slots
@@ -47,7 +47,7 @@ export const config = {
     },
     { field: PRODUCT_FIELDS.AVAILABLE_QUANTITY, op: "eq" as const, value: 0 },
   ],
-  sortOptions: RANDOM_LOTS_SORT_OPTIONS,
-  publicSortOptions: RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
+  sortOptions: CLEARANCE_SORT_OPTIONS,
+  publicSortOptions: CLEARANCE_PUBLIC_SORT_OPTIONS,
   extraFacetKeys: [TABLE_KEYS.PRIZE_REVEAL_STATUS] as readonly string[],
 };

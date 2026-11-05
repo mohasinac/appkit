@@ -2074,7 +2074,7 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPreordersSeedData - Seed data for pre-order product listings.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsRandomLotsSeedData - Seed data for clearance product listings (SB5-E).
+// productsClearanceSeedData - Seed data for clearance product listings (SB5-E).
 // productsClassifiedsSeedData - Seed data for classified product listings (SB-UNI-I).
 // productsDigitalCodesSeedData - Seed data for digital-code product listings (SB-UNI-J).
 // productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
@@ -3299,8 +3299,8 @@ export type { AdminGatewayEventsViewProps } from "./features/admin/components/Ad
 export { ViewAuditLogEntryModal } from "./features/admin/components/ViewAuditLogEntryModal";
 export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/components/ViewAuditLogEntryModal";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminRandomLotsView - Component for admin clearance listing view (SB4-E).
-export { AdminRandomLotsView } from "./features/admin/components/AdminRandomLotsView";
+// AdminClearanceView - Component for admin clearance listing view (SB4-E).
+export { AdminClearanceView } from "./features/admin/components/AdminClearanceView";
 // W1-29 2026-05-23 — admin listing views for orphaned listing types.
 export { AdminClassifiedView } from "./features/admin/components/AdminClassifiedView";
 export { AdminDigitalCodesView } from "./features/admin/components/AdminDigitalCodesView";
@@ -3309,7 +3309,7 @@ export { AdminLiveView } from "./features/admin/components/AdminLiveView";
 export { AdminArtView } from "./features/admin/components/AdminArtView";
 export { AdminStickersView } from "./features/admin/components/AdminStickersView";
 export { AdminSparesView } from "./features/admin/components/AdminSparesView";
-export type { AdminRandomLotsViewProps } from "./features/admin/components/AdminRandomLotsView";
+export type { AdminClearanceViewProps } from "./features/admin/components/AdminClearanceView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminProductsView - Component for admin products view.
 export { AdminProductsView } from "./features/admin/components/AdminProductsView";
@@ -5142,7 +5142,7 @@ export { LotteryDetailView } from "./_internal/client/features/lottery/LotteryDe
 export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryEntriesView";
 export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
 export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
-export { RandomLotsLotteryDetailView } from "./_internal/client/features/lottery/RandomLotsLotteryDetailView";
+export { ClearanceLotteryDetailView } from "./_internal/client/features/lottery/ClearanceLotteryDetailView";
 // Lottery feature — types
 export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
 export { LotteryError, computeWeight, pickWeightedSlot, assignSlotWeights } from "./features/lottery/types";
@@ -6880,30 +6880,30 @@ export { PlaceBidForm } from "./features/products/components/PlaceBidForm";
 // PreOrderDetailView - Component for pre order detail view.
 export { PreOrderDetailView } from "./features/products/components/PreOrderDetailView";
 // [SERVER-RSC]-Public listing for clearance products (SB4-F).
-export type { RandomLotsListingViewProps } from "./features/products/components/RandomLotsListingView";
+export type { ClearanceListingViewProps } from "./features/products/components/ClearanceListingView";
 // [CLIENT]-Client toolbar+grid for clearance (SB4-F).
-export { RandomLotsIndexListing } from "./features/products/components/RandomLotsIndexListing";
-export type { RandomLotsIndexListingProps } from "./features/products/components/RandomLotsIndexListing";
+export { ClearanceIndexListing } from "./features/products/components/ClearanceIndexListing";
+export type { ClearanceIndexListingProps } from "./features/products/components/ClearanceIndexListing";
 // [CLIENT]-Marketplace card for clearance (SB4-F).
-export { MarketplaceRandomLotCard } from "./features/products/components/MarketplaceRandomLotCard";
+export { MarketplaceClearanceCard } from "./features/products/components/MarketplaceClearanceCard";
 export type {
- MarketplaceRandomLotCardProps,
- MarketplaceRandomLotCardData,
- MarketplaceRandomLotCardLabels,
+ MarketplaceClearanceCardProps,
+ MarketplaceClearanceCardData,
+ MarketplaceClearanceCardLabels,
 } from "./features/products/index";
 // [SERVER-RSC]-Public detail page for a clearance product (SB4-G).
-export type { RandomLotsDetailPageViewProps } from "./features/products/components/RandomLotsDetailPageView";
+export type { ClearanceDetailPageViewProps } from "./features/products/components/ClearanceDetailPageView";
 // [CLIENT]-Buy panel client for clearance detail (consent + add-to-cart) (SB4-G).
-export { RandomLotsEntryActions } from "./features/products/components/RandomLotsEntryActions";
-export type { RandomLotsEntryActionsProps } from "./features/products/components/RandomLotsEntryActions";
+export { ClearanceEntryActions } from "./features/products/components/ClearanceEntryActions";
+export type { ClearanceEntryActionsProps } from "./features/products/components/ClearanceEntryActions";
 // [CLIENT]-Theatrical reveal-mode clearance modal (SB4-I) — fully-automatic reveal, animates to the winning slot.
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
 export type { PrizeRevealModalProps, PrizeRevealResult } from "./features/products/components/PrizeRevealModal";
-export { RandomLotsWinnerMappingView } from "./features/products/components/RandomLotsWinnerMappingView";
+export { ClearanceWinnerMappingView } from "./features/products/components/ClearanceWinnerMappingView";
 export type {
-  RandomLotsWinnerMappingViewProps,
-  RandomLotsWinnerMappingRow,
-} from "./features/products/components/RandomLotsWinnerMappingView";
+  ClearanceWinnerMappingViewProps,
+  ClearanceWinnerMappingRow,
+} from "./features/products/components/ClearanceWinnerMappingView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ProductCard - Component for product card.
 export { ProductCard } from "./features/products/components/ProductGrid";
@@ -6979,7 +6979,7 @@ export {
  isCollectorDropListing,
  isPreOrderListing,
  isStandardListing,
- isRandomLotListing,
+ isClearanceListing,
  isClassifiedListing,
  isDigitalCodeListing,
  isLiveListing,
@@ -8430,7 +8430,7 @@ export { StoreReviewsListing } from "./features/stores/components/StoreReviewsLi
 export type { StoreReviewsListingProps } from "./features/stores/components/StoreReviewsListing";
 export { StoreReviewsPageView } from "./features/stores/components/StoreReviewsPageView";
 // [SERVER-RSC]-Public store â†’ Clearance tab (SB7-D).
-export type { StoreRandomLotsPageViewProps } from "./features/stores/components/StoreRandomLotsPageView";
+export type { StoreClearancePageViewProps } from "./features/stores/components/StoreClearancePageView";
 // [SERVER-RSC]-Public store â†’ Bundles tab (SB7-D / S7-PrizeDraws-3).
 export type { StoreBundlesPageViewProps } from "./features/stores/components/StoreBundlesPageView";
 // [CLIENT-SSR]-Admin guide hub — static view, permission-aware card grid.
@@ -9204,8 +9204,8 @@ export {
  PREORDER_SORT_OPTIONS,
  PREORDER_PUBLIC_SORT_OPTIONS,
  BUNDLE_SORT_OPTIONS,
- RANDOM_LOTS_SORT_OPTIONS,
- RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
+ CLEARANCE_SORT_OPTIONS,
+ CLEARANCE_PUBLIC_SORT_OPTIONS,
 } from "./features/products/constants/sieve";
 // The per-type sort lookup is DERIVED from the listing-type plugin registry
 // (it used to be a hand-written map here that was missing five of the nine
@@ -9643,7 +9643,7 @@ export {
  CHECKOUT_RULES,
  CATEGORY_CHECKOUT_RULES,
  CHECKOUT_MAX_ORDERS_PER_TX,
- RANDOM_LOTS_MAX_REVEALS_PER_ORDER,
+ CLEARANCE_MAX_REVEALS_PER_ORDER,
  BUNDLE_MAX_QTY_PER_TX,
  STANDARD_MAX_QTY_PER_LINE,
 } from "./_internal/shared/checkout/rules";

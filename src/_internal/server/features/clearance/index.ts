@@ -1,8 +1,8 @@
-export { getRandomLotForDetail } from "./data";
-export { enterRandomLotsAction } from "./actions";
-export { assertRandomLotsOpen } from "./service";
+export { getClearanceForDetail } from "./data";
+export { enterClearanceAction } from "./actions";
+export { assertClearanceOpen } from "./service";
 export {
-  renderRandomLotsOg,
-  renderRandomLotsOgImage,
-  type RandomLotsOgData,
+  renderClearanceOg,
+  renderClearanceOgImage,
+  type ClearanceOgData,
 } from "./og";

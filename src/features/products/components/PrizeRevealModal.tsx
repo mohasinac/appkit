@@ -4,7 +4,7 @@
  * PrizeRevealModal (SB4-I, redesigned for fully-automatic reveal)
  *
  * Displays a prize-draw order's reveal state. Reveal is no longer a buyer
- * action — the winner is assigned automatically by assignRandomLotsWinner(),
+ * action — the winner is assigned automatically by assignClearanceWinner(),
  * either the moment payment is confirmed ("instant" mode) or by a scheduled
  * Firebase Function at draw expiry/sellout ("scheduled" mode). This modal is
  * a pure display: "pending" (no result yet) or "won" (order.prizeWon is set).
@@ -20,7 +20,7 @@ import { Stack } from "../../../ui/components/Layout";
 import { MediaImage } from "../../../ui/components/MediaImage";
 import { AnimatePresence, ScaleIn, FadeIn } from "../../../ui/components/Motion";
 import { Disclaimer } from "../../../ui/components/Disclaimer";
-import { RandomLotsCollage } from "./RandomLotsCollage";
+import { ClearanceCollage } from "./ClearanceCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
 import { getBrandName } from "../../../core/brand-resolver";
 
@@ -74,7 +74,7 @@ export function PrizeRevealModal({
    * returning to an already-revealed order should still get the payoff, not
    * just a static card) and flips true after one short build-up beat.
    * Deliberately NOT a slot-machine/spin simulation — that would imply the
-   * outcome is still being decided, when `assignRandomLotsWinner()` already
+   * outcome is still being decided, when `assignClearanceWinner()` already
    * decided it server-side; this is a reveal of a fact, not a randomizer.
    */
   const [revealed, setRevealed] = useState(false);
@@ -93,7 +93,7 @@ export function PrizeRevealModal({
   return (
     <Modal isOpen={open} onClose={onClose} title="Prize Reveal" size="lg">
       <Stack gap="md">
-        <RandomLotsCollage items={items} hideWonState />
+        <ClearanceCollage items={items} hideWonState />
 
         <AnimatePresence mode="wait">
           {!winner ? (

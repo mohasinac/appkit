@@ -32,7 +32,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-const RANDOM_LOTS_TYPES: readonly ListingType[] = ["clearance"];
+const CLEARANCE_TYPES: readonly ListingType[] = ["clearance"];
 
 const STATUS_VARIANT: Record<
   string,
@@ -47,7 +47,7 @@ const STATUS_VARIANT: Record<
   cancelled: "danger",
 };
 
-interface RandomLotsAdminRow extends AdminListingScaffoldRow {
+interface ClearanceAdminRow extends AdminListingScaffoldRow {
   entryFee: string;
   drawDate: string;
   storeName: string;
@@ -58,7 +58,7 @@ interface AdminProductsResponse {
   total?: number;
 }
 
-const RANDOM_LOTS_COLUMNS: AdminTableColumn<RandomLotsAdminRow>[] = [
+const CLEARANCE_COLUMNS: AdminTableColumn<ClearanceAdminRow>[] = [
   {
     key: "primary",
     header: "Clearance",
@@ -105,24 +105,24 @@ const RANDOM_LOTS_COLUMNS: AdminTableColumn<RandomLotsAdminRow>[] = [
   },
 ];
 
-export type AdminRandomLotsViewProps = ListingLayoutProps & {
+export type AdminClearanceViewProps = ListingLayoutProps & {
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
 };
 
-export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }: AdminRandomLotsViewProps) {
+export function AdminClearanceView({ children, pageRegionCards = [], ...props }: AdminClearanceViewProps) {
   /*
    * 🛑 Before the early return, not after.
    *
    * This hook used to sit BELOW the `React.Children.count` branch, so the
    * component called a different number of hooks depending on whether it was
    * given children — a rules-of-hooks violation that React only reports once
-   * the branch actually flips at runtime. The page renders `<AdminRandomLotsView />`
+   * the branch actually flips at runtime. The page renders `<AdminClearanceView />`
    * with no children, so the violating path was the one always taken and the
    * bug stayed latent. `SellerPreOrdersView` had the identical shape and was
    * deleted in the same commit for being unreachable.
    */
-  const scope = useAvailabilityScope(RANDOM_LOTS_TYPES);
+  const scope = useAvailabilityScope(CLEARANCE_TYPES);
 
   if (React.Children.count(children) > 0) {
     return (
@@ -133,7 +133,7 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
   }
 
 
-  const config: ListingViewConfig<AdminProductsResponse, RandomLotsAdminRow> = {
+  const config: ListingViewConfig<AdminProductsResponse, ClearanceAdminRow> = {
     portal: "admin",
     title: "Clearance",
     search: {
@@ -158,7 +158,7 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
       { value: "title", label: "Title A–Z" },
       { value: "prizeRevealWindowEnd", label: "Draw Date Soon" },
     ],
-    columns: RANDOM_LOTS_COLUMNS,
+    columns: CLEARANCE_COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const priceRaw = typeof item.price === "number" ? item.price : 0;
@@ -186,11 +186,11 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
     },
     buildExtraParams: () => scope.extraParams,
     renderAboveContent: scope.renderAboveContent,
-    rowHrefTemplate: String(ROUTES.ADMIN.RANDOM_LOTS_EDIT("{id}")),
+    rowHrefTemplate: String(ROUTES.ADMIN.CLEARANCE_EDIT("{id}")),
     /*
      * Clearance IS a product (`listingType: "clearance"`), so it is created
      * in the product editor like every other type — there is deliberately no
-     * `RANDOM_LOTS_NEW` admin route, and inventing one would be a second create
+     * `CLEARANCE_NEW` admin route, and inventing one would be a second create
      * path for the same document. `?listingType=` preselects the type so the
      * row an admin creates from here actually appears here.
      */
@@ -200,7 +200,7 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
     },
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
-      ADMIN_BULK_ACTIONS.randomLots.map((id) => ({
+      ADMIN_BULK_ACTIONS.clearance.map((id) => ({
         id,
         label: ROW_ACTION_META[id].label,
         destructive: ROW_ACTION_META[id].destructive,
@@ -209,12 +209,12 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
     renderRowActions: (row) => (
       <Row gap="xs">
         <Button variant="ghost" size="sm" asChild>
-          <TextLink href={String(ROUTES.ADMIN.RANDOM_LOTS_EDIT(row.id))} aria-label="Edit">
+          <TextLink href={String(ROUTES.ADMIN.CLEARANCE_EDIT(row.id))} aria-label="Edit">
             <Pencil className="w-4 h-4" />
           </TextLink>
         </Button>
         <Button variant="ghost" size="sm" asChild>
-          <TextLink href={String(ROUTES.ADMIN.RANDOM_LOTS_ENTRIES(row.id))} aria-label="View entries">
+          <TextLink href={String(ROUTES.ADMIN.CLEARANCE_ENTRIES(row.id))} aria-label="View entries">
             <ListChecks className="w-4 h-4" />
           </TextLink>
         </Button>

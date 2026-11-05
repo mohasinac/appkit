@@ -2,17 +2,17 @@
 
 import { ListingBottomActions } from "./ListingBottomActions";
 
-export interface RandomLotsBottomActionsProps {
+export interface ClearanceBottomActionsProps {
   pricePerEntry: number;
   currency: string;
   closed: boolean;
 }
 
-export function RandomLotsBottomActions({
+export function ClearanceBottomActions({
   pricePerEntry,
   currency,
   closed,
-}: RandomLotsBottomActionsProps) {
+}: ClearanceBottomActionsProps) {
   return (
     <ListingBottomActions
       listingType="clearance"

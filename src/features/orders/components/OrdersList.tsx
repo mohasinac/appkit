@@ -45,13 +45,13 @@ export function OrderCard({ order, onClick, labels = {}, renderActions }: OrderC
   // SB8-F — count unrevealed clearance entries to surface a "reveals pending" badge.
   // "prize-draw" kept as a back-compat match for order items written before
   // the clearance rename.
-  const unrevealedRandomLots = order.items.filter(
+  const unrevealedClearance = order.items.filter(
     (it) =>
       (it.listingType === "clearance" || (it.listingType as string) === "prize-draw") &&
       it.prizeRevealStatus !== undefined &&
       it.prizeRevealStatus !== "revealed",
   );
-  const revealsRemaining = unrevealedRandomLots.length;
+  const revealsRemaining = unrevealedClearance.length;
 
   return (
     <Div padding="5" 

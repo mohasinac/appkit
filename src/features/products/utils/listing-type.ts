@@ -89,7 +89,7 @@ export const isStandardListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "standard";
 
-export const isRandomLotListing = (
+export const isClearanceListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "clearance";
 

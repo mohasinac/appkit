@@ -2,7 +2,7 @@ import type { ProductDocument } from "../../../../features/products/schemas/fire
 import { ValidationError, CapacityError, ExpiredError } from "../../../shared/errors/index";
 
 /** Assert the clearance draw is accepting entries (published, reveal not started, slots not exhausted). */
-export function assertRandomLotsOpen(product: ProductDocument): void {
+export function assertClearanceOpen(product: ProductDocument): void {
   if (product.listingType !== "clearance") {
     throw new ValidationError("Not a clearance listing.");
   }

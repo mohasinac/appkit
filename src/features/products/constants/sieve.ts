@@ -198,7 +198,7 @@ export const BUNDLE_SORT_OPTIONS = [
 // Prize Draws
 // ---------------------------------------------------------------------------
 
-export const RANDOM_LOTS_SORT_OPTIONS = [
+export const CLEARANCE_SORT_OPTIONS = [
   ...BASE_TIME_SORTS,
   { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START, "ASC"), label: "Reveal: Soonest" },
   { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START), label: "Reveal: Furthest" },
@@ -207,7 +207,7 @@ export const RANDOM_LOTS_SORT_OPTIONS = [
 ] as const satisfies readonly SortOption[];
 
 /** Public prize-draw browse subset — every option is buyer-meaningful. */
-export const RANDOM_LOTS_PUBLIC_SORT_OPTIONS = RANDOM_LOTS_SORT_OPTIONS;
+export const CLEARANCE_PUBLIC_SORT_OPTIONS = CLEARANCE_SORT_OPTIONS;
 
 // ---------------------------------------------------------------------------
 // Lookup by listing type

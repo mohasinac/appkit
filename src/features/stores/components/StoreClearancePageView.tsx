@@ -3,7 +3,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
-import { RandomLotsIndexListing } from "../../products/components/RandomLotsIndexListing";
+import { ClearanceIndexListing } from "../../products/components/ClearanceIndexListing";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
@@ -13,14 +13,14 @@ const LISTING_TYPES = ["clearance"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
-export interface StoreRandomLotsPageViewProps {
+export interface StoreClearancePageViewProps {
   storeSlug: string;
   searchParams?: SearchParams;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
 }
 
-export async function StoreRandomLotsPageView({ storeSlug, searchParams, pageRegionCards = [] }: StoreRandomLotsPageViewProps) {
+export async function StoreClearancePageView({ storeSlug, searchParams, pageRegionCards = [] }: StoreClearancePageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, unknown> | null)?.id;
   if (typeof storeId !== "string" || !storeId) return null;
@@ -37,7 +37,7 @@ export async function StoreRandomLotsPageView({ storeSlug, searchParams, pageReg
   return (
     <>
       <AdminComposableRegion pageId="stores-storeslug-clearance" initialCards={pageRegionCards} />
-      <RandomLotsIndexListing storeId={storeId} initialData={result ?? undefined} />
+      <ClearanceIndexListing storeId={storeId} initialData={result ?? undefined} />
     </>
   );
 }

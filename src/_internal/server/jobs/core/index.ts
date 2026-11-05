@@ -38,10 +38,10 @@ export {
   type JobRunResult,
 } from "./jobRunners";
 export { runCollectorDropSettlement } from "./collectorDropSettlement";
-export { assignRandomLotsWinner, type AssignRandomLotsWinnerResult } from "./randomLotsAssignWinner";
-export { handleRandomLotsPaymentConfirmed } from "./onRandomLotsPaymentConfirmed";
-export { handleRandomLotsSoldOut } from "./randomLotsSoldOutReveal";
-export { runRandomLotsExpiryReveal } from "./randomLotsExpiryReveal";
+export { assignClearanceWinner, type AssignClearanceWinnerResult } from "./clearanceAssignWinner";
+export { handleClearancePaymentConfirmed } from "./onClearancePaymentConfirmed";
+export { handleClearanceSoldOut } from "./clearanceSoldOutReveal";
+export { runClearanceExpiryReveal } from "./clearanceExpiryReveal";
 
 // Callables
 export { runPromotions, type PromotionsCallableResult } from "./promotions";

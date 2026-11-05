@@ -25,7 +25,7 @@ import {
   paymentReviewAutoApproveHandler,
   pendingOrderTimeoutHandler,
   positionsReconcileHandler,
-  randomLotsExpiryRevealHandler,
+  clearanceExpiryRevealHandler,
   productStatsSyncHandler,
   revenueRollupHandler,
   sellerStandingRollupHandler,
@@ -578,7 +578,7 @@ export const testDataCleanup = defineFunction({
 // Do not reinstate it without also deciding who owns fixture state; two owners is the
 // bug it caused. See tester/scripts/lifecycle.mjs.
 
-export const randomLotsExpiryReveal = defineFunction({
+export const clearanceExpiryReveal = defineFunction({
   /*
    * 🛑 `name` intentionally retains the old "prizeDraw" spelling. `bindAllFromRegistry`
    * keys `module.exports` off `def.name`, so this string IS the deployed Cloud Function
@@ -589,7 +589,7 @@ export const randomLotsExpiryReveal = defineFunction({
   name: "prizeDrawExpiryReveal",
   description: "Assign winners for outstanding paid orders on scheduled-mode clearance past their expiry, then close them (every 5 minutes).",
   trigger: { kind: "schedule", cron: EVERY_5_MIN },
-  handler: randomLotsExpiryRevealHandler,
+  handler: clearanceExpiryRevealHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
 });
 
@@ -659,7 +659,7 @@ export const SCHEDULED_FUNCTIONS = [
   mediaTmpCleanup,
   draftPrune,
   testDataCleanup,
-  randomLotsExpiryReveal,
+  clearanceExpiryReveal,
   bundleStockSync,
   emiInstallmentReminder,
   catalogueImageStalenessReminder,

@@ -23,11 +23,11 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { PreOrderDetailView } from "./PreOrderDetailView";
-import { RandomLotsBottomActions } from "./RandomLotsBottomActions";
+import { ClearanceBottomActions } from "./ClearanceBottomActions";
 import { ProductTabsShell } from "./ProductTabsShell";
 import { ShareButton } from "./ShareButton";
-import { RandomLotsCollage } from "./RandomLotsCollage";
-import { RandomLotsEntryActions } from "./RandomLotsEntryActions";
+import { ClearanceCollage } from "./ClearanceCollage";
+import { ClearanceEntryActions } from "./ClearanceEntryActions";
 import type {
   PrizeDrawItem,
   ProductDocument,
@@ -40,14 +40,14 @@ import { GroupedListingsCarousel } from "../../grouped/components/GroupedListing
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 
-export interface RandomLotsDetailPageViewProps {
+export interface ClearanceDetailPageViewProps {
   id: string;
   /**
    * Pre-fetched product document from the page's server data layer.
    * When provided, the internal repository call is skipped — deduplicating
    * the fetch with generateMetadata() via React.cache().
    */
-  initialRandomLot?: ProductDocument | null;
+  initialClearance?: ProductDocument | null;
   /**
    * Authenticated buyer's uid. When set, the view server-fetches the
    * buyer's existing-entry count for this draw and renders the SB6-D
@@ -98,21 +98,21 @@ function stripIsWon(items: PrizeDrawItem[] | undefined): PrizeDrawItem[] {
  * Public prize-draw detail page (SB4-G).
  *
  * Server-fetches the prize-draw product, strips `isWon` from each item before
- * passing it to `RandomLotsCollage` so public buyers stay unspoiled, and
- * delegates the buy-bar to the client `RandomLotsEntryActions` which surfaces
+ * passing it to `ClearanceCollage` so public buyers stay unspoiled, and
+ * delegates the buy-bar to the client `ClearanceEntryActions` which surfaces
  * the `NonRefundableConsentModal` before any add-to-cart happens.
  *
  * Reuses the `PreOrderDetailView` (grid-2) shell for layout parity.
  */
-export async function RandomLotsDetailPageView({
+export async function ClearanceDetailPageView({
   id,
-  initialRandomLot,
+  initialClearance,
   currentUserId,
   pageRegionCards = [],
-}: RandomLotsDetailPageViewProps) {
+}: ClearanceDetailPageViewProps) {
   const product =
-    initialRandomLot !== undefined
-      ? initialRandomLot ?? undefined
+    initialClearance !== undefined
+      ? initialClearance ?? undefined
       // The prize draw IS this page's subject — a read failure must surface
       // rather than become the same `undefined` a removed listing produces,
       // which the "Not Found" branch below already handles.
@@ -132,7 +132,7 @@ export async function RandomLotsDetailPageView({
                 The clearance you are looking for may have been removed.
               </Text>
               <Link
-                href={String(ROUTES.PUBLIC.RANDOM_LOTS)}
+                href={String(ROUTES.PUBLIC.CLEARANCE)}
                 className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
                 Browse Clearance
@@ -211,19 +211,19 @@ export async function RandomLotsDetailPageView({
   ]);
 
   /*
-   * `functionalSlot` (2026-11-05) — `RandomLotsEntryActions` is rendered
+   * `functionalSlot` (2026-11-05) — `ClearanceEntryActions` is rendered
    * directly by this page (no external render-prop parameterizing it,
    * unlike every other listing type) — same shape as Pre-order's
    * `PreOrderBuyBarPanel`/Collector Drop's `renderCollectorDropBidPanel`:
    * an internally-composed element, not a bare callback. No new page-level
    * prop was needed — contrary to this item's own earlier "needs new
    * infrastructure" framing, which (like Pre-order's) turned out to be
-   * overstated once the actual JSX was read. `RandomLotsBottomActions`
+   * overstated once the actual JSX was read. `ClearanceBottomActions`
    * (the sticky mobile bar, registered separately via `useBottomActions()`)
    * is left untouched, same reasoning as every other extension.
    */
   const primaryActionsNode = (
-    <RandomLotsEntryActions
+    <ClearanceEntryActions
       productId={String(product.id)}
       productSlug={slug}
       title={title}
@@ -263,7 +263,7 @@ export async function RandomLotsDetailPageView({
             </Link>
             <Span aria-hidden>/</Span>
             <Link
-              href={String(ROUTES.PUBLIC.RANDOM_LOTS)}
+              href={String(ROUTES.PUBLIC.CLEARANCE)}
               className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Clearance
@@ -279,7 +279,7 @@ export async function RandomLotsDetailPageView({
         <PreOrderDetailView
           renderGallery={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
-              <RandomLotsCollage items={items} hideWonState />
+              <ClearanceCollage items={items} hideWonState />
             </SectionVisibilityGate>
           )}
           renderInfo={() => (
@@ -468,7 +468,7 @@ export async function RandomLotsDetailPageView({
         />
 
         {/* Mobile actions registered via useBottomActions() */}
-        <RandomLotsBottomActions
+        <ClearanceBottomActions
           pricePerEntry={pricePerEntry}
           currency={currency}
           closed={revealStatus === "closed" || remaining === 0}

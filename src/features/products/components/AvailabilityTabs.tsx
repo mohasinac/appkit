@@ -20,7 +20,7 @@
  * @tag layer:ui
  * @tag pattern:none
  * @tag access:client
- * @tag consumers:ProductsIndexListing,CollectorDropsIndexListing,PreOrdersIndexListing,RandomLotsIndexListing,Store*Listing,CategoryProductsListing,Seller*View,Admin*View
+ * @tag consumers:ProductsIndexListing,CollectorDropsIndexListing,PreOrdersIndexListing,ClearanceIndexListing,Store*Listing,CategoryProductsListing,Seller*View,Admin*View
  * @tag sideEffects:url-mutation
  */
 

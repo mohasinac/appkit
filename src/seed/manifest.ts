@@ -27,7 +27,7 @@ import { storesSeedData } from "./stores-seed-data";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 import { productsCollectorDropsSeedData } from "./products-collector-drops-seed-data";
 import { productsPreordersSeedData } from "./products-preorders-seed-data";
-import { productsRandomLotsSeedData } from "./products-clearance-seed-data";
+import { productsClearanceSeedData } from "./products-clearance-seed-data";
 import { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
 import { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
 import { productsLiveItemsSeedData } from "./products-live-items-seed-data";
@@ -134,7 +134,7 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsStandardSeedData),
       ...asArr(productsCollectorDropsSeedData),
       ...asArr(productsPreordersSeedData),
-      ...asArr(productsRandomLotsSeedData),
+      ...asArr(productsClearanceSeedData),
       ...asArr(productsClassifiedsSeedData),
       ...asArr(productsDigitalCodesSeedData),
       ...asArr(productsLiveItemsSeedData),

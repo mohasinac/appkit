@@ -44,7 +44,7 @@ export type ActionResource =
   | "PRODUCT"
   | "COLLECTOR_DROP"
   | "PRE_ORDER"
-  | "RANDOM_LOTS"
+  | "CLEARANCE"
   // "CLASSIFIED" and "LIVE" were removed 2026-08-31 — both buckets held a
   // single consumerless action naming the deleted conversations feature.
   | "DIGITAL_CODE"
@@ -484,7 +484,7 @@ export const ACTIONS: ActionTree = {
       },
     },
   },
-  RANDOM_LOTS: {
+  CLEARANCE: {
     "buy-now": {
       iconKey: "cart",
       id: "clearance.buy-now",
@@ -585,7 +585,7 @@ export const ACTIONS: ActionTree = {
      * Phase 10 ("widget descriptors") — non-destructive, no confirmation.
      * Records an `adminRow` RecentEntry via `recordVisit`; never a write to
      * the bundle document itself. BUNDLE is one of only 5 `AdminRowResource`
-     * values (the others: RANDOM_LOTS, BEY, PART, SUBLISTING) — the ones
+     * values (the others: CLEARANCE, BEY, PART, SUBLISTING) — the ones
      * whose admin view resolves a row to a real URL via `rowHrefTemplate`,
      * per `recent-entry.ts`'s own doc comment on why most resources are NOT
      * eligible (`renderEditor`/`onRowClick` drawers have no URL to pin).

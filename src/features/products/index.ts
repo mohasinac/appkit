@@ -15,7 +15,7 @@ export {
   isCollectorDropListing,
   isPreOrderListing,
   isStandardListing,
-  isRandomLotListing,
+  isClearanceListing,
   // SB-UNI-F 2026-05-13 — Phase 2 predicates.
   isClassifiedListing,
   isDigitalCodeListing,

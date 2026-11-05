@@ -96,7 +96,7 @@ const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.
 const SIEVE_CLAUSE_LT_COLLECTOR_DROP = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.COLLECTOR_DROP}`;
 const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
-const SIEVE_CLAUSE_LT_RANDOM_LOTS = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.RANDOM_LOTS}`;
+const SIEVE_CLAUSE_LT_CLEARANCE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.CLEARANCE}`;
 const SIEVE_CLAUSE_LT_CLASSIFIED = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.CLASSIFIED}`;
 const SIEVE_CLAUSE_LT_DIGITAL_CODE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.DIGITAL_CODE}`;
 const SIEVE_CLAUSE_LT_LIVE = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.LIVE}`;
@@ -129,7 +129,7 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   standard: LISTING_TYPE_VALUES.STANDARD,
   "collector-drop": LISTING_TYPE_VALUES.COLLECTOR_DROP,
   "pre-order": LISTING_TYPE_VALUES.PRE_ORDER,
-  "clearance": LISTING_TYPE_VALUES.RANDOM_LOTS,
+  "clearance": LISTING_TYPE_VALUES.CLEARANCE,
   classified: LISTING_TYPE_VALUES.CLASSIFIED,
   "digital-code": LISTING_TYPE_VALUES.DIGITAL_CODE,
   live: LISTING_TYPE_VALUES.LIVE,
@@ -153,17 +153,17 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   // Legacy → canonical.
   product: LISTING_TYPE_VALUES.STANDARD,
   preorder: LISTING_TYPE_VALUES.PRE_ORDER,
-  prizedraw: LISTING_TYPE_VALUES.RANDOM_LOTS,
+  prizedraw: LISTING_TYPE_VALUES.CLEARANCE,
   // "prize-draw" is the pre-rename canonical spelling — kept as an alias so
   // any missed literal (or a stored legacy value) still resolves rather than
   // silently dropping the listingType clause (Root Cause #58).
-  "prize-draw": LISTING_TYPE_VALUES.RANDOM_LOTS,
+  "prize-draw": LISTING_TYPE_VALUES.CLEARANCE,
   // "auction" is the pre-rename canonical spelling of `collector-drop` — kept
   // as an alias for the same reason as "prize-draw" above.
   auction: LISTING_TYPE_VALUES.COLLECTOR_DROP,
   // "random-lots" is the pre-rename canonical spelling of `clearance` — kept
   // as an alias for the same reason as "prize-draw"/"auction" above.
-  "random-lots": LISTING_TYPE_VALUES.RANDOM_LOTS,
+  "random-lots": LISTING_TYPE_VALUES.CLEARANCE,
 };
 
 const LISTING_KIND_ACCEPTED = new Set<string>(
@@ -1745,7 +1745,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     prizeRevealWindowEnd: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     prizeRevealStatus: { canFilter: true, canSort: false },
     prizeDrawMode: { canFilter: true, canSort: false },
-    // Prize-draw entry price. RandomLotsListingView emits min/max filters on
+    // Prize-draw entry price. ClearanceListingView emits min/max filters on
     // this field; without an entry here sievejs dropped both clauses silently.
     pricePerEntry: { canFilter: true, canSort: true },
     prizeCurrentEntries: { canFilter: true, canSort: true },
@@ -1880,7 +1880,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      *   scope==publicCollectorDrops →  status==published,listingType==collector-drop
      *                              ("publicCollectorDrops" kept as an alias)
      *   scope==publicPreorders  →  status==published,listingType==pre-order
-     *   scope==publicRandomLots →  status==published,listingType==clearance
+     *   scope==publicClearance →  status==published,listingType==clearance
      *                              ("publicPrizeDraws" kept as an alias)
      *   scope==published        →  status==published
      */
@@ -1894,9 +1894,9 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_COLLECTOR_DROP].join(",");
         case "publicPreorders":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
-        case "publicRandomLots":
+        case "publicClearance":
         case "publicPrizeDraws":
-          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_RANDOM_LOTS].join(",");
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_CLEARANCE].join(",");
         case "publicClassifieds":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_CLASSIFIED].join(",");
         case "publicDigitalCodes":

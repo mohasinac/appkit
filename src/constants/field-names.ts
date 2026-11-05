@@ -224,7 +224,7 @@ export const PRODUCT_FIELDS = {
     STANDARD: "standard",
     COLLECTOR_DROP: "collector-drop",
     PRE_ORDER: "pre-order",
-    RANDOM_LOTS: "clearance",
+    CLEARANCE: "clearance",
     CLASSIFIED: "classified",
     DIGITAL_CODE: "digital-code",
     LIVE: "live",

@@ -8,7 +8,7 @@ import type {
   OrderItemInput,
 } from "./types";
 import { DEFAULT_LISTING_RULE } from "./_defaults";
-import { RANDOM_LOTS_MAX_REVEALS_PER_ORDER } from "./_limits";
+import { CLEARANCE_MAX_REVEALS_PER_ORDER } from "./_limits";
 import type { CheckoutPaymentMethod } from "../../features/checkout/config";
 
 /**
@@ -54,7 +54,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  * does not touch: winner assignment triggers on CONFIRMED payment, and a
  * pay-later method does not guarantee that happens before the draw.
  */
-const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "emi"];
+const CLEARANCE_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "emi"];
 
 /**
  * The refusal, kept VERBATIM when this check moved out of `preflightChecks`
@@ -66,34 +66,34 @@ const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "em
  * reason is the thing a buyer needs in order to pick a different method rather
  * than abandon the entry.
  */
-const RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE =
+const CLEARANCE_BLOCKED_PAYMENT_MESSAGE =
   "A clearance is paid for up front — winner assignment waits on confirmed payment, so pay-later methods are not available for clearance.";
 
-export const randomLotsRule: ListingCheckoutRule = {
+export const clearanceRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
   orderType: "clearance",
   nonRefundable: true,
   canMergeWithSameProduct: false,
-  maxLinesPerOrder: RANDOM_LOTS_MAX_REVEALS_PER_ORDER,
+  maxLinesPerOrder: CLEARANCE_MAX_REVEALS_PER_ORDER,
   refundPolicy: { full: false, partial: false, partialGranularity: "none" },
-  blockedPaymentMethods: RANDOM_LOTS_BLOCKED_PAYMENT_METHODS,
+  blockedPaymentMethods: CLEARANCE_BLOCKED_PAYMENT_METHODS,
   requiresGatewayPermission: true,
-  blockedPaymentMessage: RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE,
+  blockedPaymentMessage: CLEARANCE_BLOCKED_PAYMENT_MESSAGE,
 
   splitKey: (item: CartItemDocument) => `clearance:${item.itemId}`,
 
   /**
    * Slice a high-quantity clearance entry into chunks of
-   * RANDOM_LOTS_MAX_REVEALS_PER_ORDER so each resulting order has at most
+   * CLEARANCE_MAX_REVEALS_PER_ORDER so each resulting order has at most
    * that many reveal slots.  Buying 7 entries → [3, 3, 1].
    */
   splitMultipleOrders: (item: CartItemDocument): CartItemDocument[] => {
-    if (item.quantity <= RANDOM_LOTS_MAX_REVEALS_PER_ORDER) return [item];
+    if (item.quantity <= CLEARANCE_MAX_REVEALS_PER_ORDER) return [item];
     const chunks: CartItemDocument[] = [];
     let remaining = item.quantity;
     let batchIndex = 0;
     while (remaining > 0) {
-      const batchQty = Math.min(remaining, RANDOM_LOTS_MAX_REVEALS_PER_ORDER);
+      const batchQty = Math.min(remaining, CLEARANCE_MAX_REVEALS_PER_ORDER);
       chunks.push({
         ...item,
         quantity: batchQty,

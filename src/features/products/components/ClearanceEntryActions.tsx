@@ -19,7 +19,7 @@ import { ACTION_ID } from "../constants/action-defs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { toUserMessage } from "../../../errors/error-display-map";
 
-export interface RandomLotsEntryActionsProps {
+export interface ClearanceEntryActionsProps {
   productId: string;
   productSlug?: string;
   title: string;
@@ -45,13 +45,13 @@ export interface RandomLotsEntryActionsProps {
  * checkout of whatever was already in their basket, with no entry in it.
  * Buying an entry was impossible.
  *
- * 🛑 MULTI-ENTRY NEEDED NO SERVER WORK. `randomLotsRule.splitMultipleOrders`
- * already chunks a quantity into batches of RANDOM_LOTS_MAX_REVEALS_PER_ORDER
+ * 🛑 MULTI-ENTRY NEEDED NO SERVER WORK. `clearanceRule.splitMultipleOrders`
+ * already chunks a quantity into batches of CLEARANCE_MAX_REVEALS_PER_ORDER
  * (7 entries → [3,3,1]), `enforceMaxPerUserForCart` already caps per buyer, and
  * the rule's preflight already checks `prizeMaxEntries`. The whole server half
  * was written and unreachable because the client never sent a quantity.
  */
-export function RandomLotsEntryActions({
+export function ClearanceEntryActions({
   productId,
   title,
   pricePerEntry,
@@ -59,7 +59,7 @@ export function RandomLotsEntryActions({
   remainingEntries,
   revealStatus,
   prizeGithubFileUrl,
-}: RandomLotsEntryActionsProps) {
+}: ClearanceEntryActionsProps) {
   const router = useRouter();
   const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
     useAuthGate();
@@ -83,7 +83,7 @@ export function RandomLotsEntryActions({
 
   const handleEnter = useCallback(() => {
     if (closed) return;
-    requireAuth(ACTION_ID.ENTER_RANDOM_LOTS, () => setConsentOpen(true));
+    requireAuth(ACTION_ID.ENTER_CLEARANCE, () => setConsentOpen(true));
   }, [closed, requireAuth]);
 
   const handleConfirm = useCallback(async () => {
@@ -153,7 +153,7 @@ export function RandomLotsEntryActions({
       ) : null}
 
       <Button
-        action={closed ? undefined : ACTIONS.RANDOM_LOTS["buy-now"]}
+        action={closed ? undefined : ACTIONS.CLEARANCE["buy-now"]}
         variant="primary"
         size="md"
         className="w-full"

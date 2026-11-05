@@ -9,7 +9,7 @@
  *       (2 prizes, small pool for easy manual sellout testing).
  *
  * EXPORTS:
- *   productsRandomLotsSeedData — Array of 7 Partial<ProductDocument> with listingType:"clearance"
+ *   productsClearanceSeedData — Array of 7 Partial<ProductDocument> with listingType:"clearance"
  *
  * @tag domain:products,clearance
  * @tag layer:seed
@@ -27,7 +27,7 @@ import { seedPhoto, seedGallery } from "./_helpers/media";
 import { withFinalSale } from "./_helpers/final-sale-fixtures";
 import { withDerivedCategoryNames } from "./_helpers/category-names";
 
-const _rawproductsRandomLotsSeedData: Partial<ProductDocument>[] = [
+const _rawproductsClearanceSeedData: Partial<ProductDocument>[] = [
   {
     id: "clearance-beyblade-mystery-box",
     isLot: true,
@@ -441,5 +441,5 @@ const _rawproductsRandomLotsSeedData: Partial<ProductDocument>[] = [
  * the bottom of the array cannot ship without it — which is exactly how the
  * sold/depleted fixture in this file ended up unsearchable.
  */
-export const productsRandomLotsSeedData: Partial<ProductDocument>[] =
-  _rawproductsRandomLotsSeedData.map(withProductSearchTxt).map(withFinalSale).map(withDerivedCategoryNames);
+export const productsClearanceSeedData: Partial<ProductDocument>[] =
+  _rawproductsClearanceSeedData.map(withProductSearchTxt).map(withFinalSale).map(withDerivedCategoryNames);

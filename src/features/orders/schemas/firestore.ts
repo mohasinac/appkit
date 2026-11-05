@@ -115,7 +115,7 @@ export interface OrderSourcePreOrder {
   expectedDeliveryDate?: Date;
 }
 
-export interface OrderSourceRandomLots {
+export interface OrderSourceClearance {
   path: "clearance";
   prizeDrawProductId: string;
   pricePerEntry: number;
@@ -129,7 +129,7 @@ export type OrderSourceContext =
   | OrderSourceCollectorDropBuyNow
   | OrderSourceOfferAccepted
   | OrderSourcePreOrder
-  | OrderSourceRandomLots;
+  | OrderSourceClearance;
 
 /** Manual shipping is the only supported method — sellers enter carrier + tracking directly, no carrier API integration. */
 export type ShippingMethod = "custom";

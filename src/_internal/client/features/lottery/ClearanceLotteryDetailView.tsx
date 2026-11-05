@@ -11,7 +11,7 @@ import { MediaImage } from "../../../../ui/components/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { LotterySlotGrid } from "./LotterySlotGrid";
 import { LotteryPullForm } from "./LotteryPullForm";
-import { RandomLotsCollage } from "../../../../features/products/components/RandomLotsCollage";
+import { ClearanceCollage } from "../../../../features/products/components/ClearanceCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
 import type { ClientLotteryConfig } from "../../../../features/lottery/types";
 import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
@@ -27,7 +27,7 @@ interface ClientProduct {
   lotteryConfig?: ClientLotteryConfig;
 }
 
-interface RandomLotsLotteryDetailViewProps {
+interface ClearanceLotteryDetailViewProps {
   product: ClientProduct;
   user?: { uid: string; displayName?: string | null } | null;
   currentEntry?: { userLotteryNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
@@ -39,12 +39,12 @@ interface RandomLotsLotteryDetailViewProps {
  * Prize-draw product detail view for lottery mode.
  * Same flow as LotteryDetailView but sourced from a product.
  */
-export function RandomLotsLotteryDetailView({
+export function ClearanceLotteryDetailView({
   product,
   user,
   currentEntry,
   pageRegionCards = [],
-}: RandomLotsLotteryDetailViewProps) {
+}: ClearanceLotteryDetailViewProps) {
   const [pulledEntry, setPulledEntry] = useState<{
     userLotteryNumber: number;
     assignedPrizeSlotNumber: number;
@@ -102,7 +102,7 @@ export function RandomLotsLotteryDetailView({
           {prizeItems.length > 0 ? (
             <Stack gap="sm">
               <Heading level={2} size="xl" weight="semibold">Prizes</Heading>
-              <RandomLotsCollage items={prizeItems} wonLabel="Claimed" />
+              <ClearanceCollage items={prizeItems} wonLabel="Claimed" />
             </Stack>
           ) : null}
 

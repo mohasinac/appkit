@@ -7,14 +7,14 @@ import { Container, Grid, Stack } from "../../../ui/components/Layout";
 import { Heading, Text } from "../../../ui/components/Typography";
 import { Section } from "../../../ui/components/Semantic";
 import { ROUTES } from "../../../next/routing/route-map";
-import type { RandomLotsSectionConfig } from "../../homepage/schemas/firestore";
+import type { ClearanceSectionConfig } from "../../homepage/schemas/firestore";
 import { listPublicProducts } from "../../../_internal/server/features/products/list-public";
 import { AVAILABILITY_VALUES, PRODUCT_FIELDS } from "../../../constants/field-names";
 import type { ProductDocument } from "../schemas";
 import { InteractiveProductCard } from "./InteractiveProductCard";
 
-export interface RandomLotsSectionProps {
-  config: RandomLotsSectionConfig;
+export interface ClearanceSectionProps {
+  config: ClearanceSectionConfig;
 }
 
 /**
@@ -27,9 +27,9 @@ export interface RandomLotsSectionProps {
  * which is why a closed, already-revealed draw sat on the homepage advertising
  * entries nobody could buy.
  */
-export async function RandomLotsSection({
+export async function ClearanceSection({
   config,
-}: RandomLotsSectionProps) {
+}: ClearanceSectionProps) {
   const title = config.title ?? "Clearance";
   const subtitle =
     config.subtitle ?? "Enter for a chance to win rare collectibles";
@@ -38,7 +38,7 @@ export async function RandomLotsSection({
   const showAll = revealStatus === "all";
 
   const result = await listPublicProducts({
-    listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.RANDOM_LOTS],
+    listingTypes: [PRODUCT_FIELDS.LISTING_TYPE_VALUES.CLEARANCE],
     storeId: config.storeId,
     // "all" means the admin deliberately wants closed draws too — an archive
     // strip — so neither the status filter nor the availability scope applies.

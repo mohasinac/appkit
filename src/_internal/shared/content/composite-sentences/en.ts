@@ -38,7 +38,7 @@ export type CompositeSentenceId =
   | "faqs.metaDescription"
   | "guides.metaDescription"
   | "helpCollectorDrops.metaDescription"
-  | "sellerGuideRandomLots.metaDescription"
+  | "sellerGuideClearance.metaDescription"
   | "storeGuideListings.metaDescription"
   | "support.metaDescription";
 
@@ -185,8 +185,8 @@ export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
   },
   // /seller-guide/clearance — clearance is the page's own topic, fixed
   // in `lead`; only the secondary digital-code mention is gated.
-  "sellerGuideRandomLots.metaDescription": {
-    id: "sellerGuideRandomLots.metaDescription",
+  "sellerGuideClearance.metaDescription": {
+    id: "sellerGuideClearance.metaDescription",
     lead: "Run clearance on LetItRip",
     clauses: [
       { governs: { governs: "listingType", value: "digital-code" }, text: "digital code giveaways" },

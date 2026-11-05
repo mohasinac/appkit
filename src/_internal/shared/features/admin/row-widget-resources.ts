@@ -16,7 +16,7 @@ import type { AdminRowResource } from "../dashboard/recent-entry";
 
 export const ADMIN_ROW_HREF_BY_RESOURCE: Record<AdminRowResource, (rowId: string) => string> = {
   BUNDLE: (rowId) => String(ROUTES.ADMIN.BUNDLES_EDIT(rowId)),
-  RANDOM_LOTS: (rowId) => String(ROUTES.ADMIN.RANDOM_LOTS_EDIT(rowId)),
+  CLEARANCE: (rowId) => String(ROUTES.ADMIN.CLEARANCE_EDIT(rowId)),
   BEY: (rowId) => String(ROUTES.ADMIN.BEYS_EDIT(rowId)),
   PART: (rowId) => String(ROUTES.ADMIN.PARTS_EDIT(rowId)),
   SUBLISTING: (rowId) => String(ROUTES.ADMIN.SUBLISTING_CATEGORIES_EDIT(rowId)),
@@ -25,7 +25,7 @@ export const ADMIN_ROW_HREF_BY_RESOURCE: Record<AdminRowResource, (rowId: string
 /** Display labels for the "Pin to dashboard" action's resource picker / card subtitle. */
 export const ADMIN_ROW_RESOURCE_LABEL: Record<AdminRowResource, string> = {
   BUNDLE: "Bundle",
-  RANDOM_LOTS: "Clearance listing",
+  CLEARANCE: "Clearance listing",
   BEY: "Bey",
   PART: "Part",
   SUBLISTING: "Sublisting category",

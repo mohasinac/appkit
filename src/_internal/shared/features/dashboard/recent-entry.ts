@@ -107,7 +107,7 @@ export type RecentEntry =
  */
 export type AdminRowResource =
   | "BUNDLE"
-  | "RANDOM_LOTS"
+  | "CLEARANCE"
   | "BEY"
   | "PART"
   | "SUBLISTING";

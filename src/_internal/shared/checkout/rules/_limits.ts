@@ -25,11 +25,11 @@ export const CHECKOUT_MAX_ORDERS_PER_TX = 20;
  * produces three orders: [3, 3, 1].  Each order has its own independent
  * reveal flow.
  */
-export const RANDOM_LOTS_MAX_REVEALS_PER_ORDER = 3;
+export const CLEARANCE_MAX_REVEALS_PER_ORDER = 3;
 
 /** Seller-facing prize-draw duration cap, in days — enforced by the Zod schema and the seller form. */
-export const RANDOM_LOTS_DURATION_DAYS_MIN = 1;
-export const RANDOM_LOTS_DURATION_DAYS_MAX = 15;
+export const CLEARANCE_DURATION_DAYS_MIN = 1;
+export const CLEARANCE_DURATION_DAYS_MAX = 15;
 
 /**
  * How far ahead a pre-order may promise delivery, in days.

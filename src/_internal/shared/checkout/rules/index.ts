@@ -30,9 +30,9 @@ export {
 export {
   CART_MAX_ITEMS,
   CHECKOUT_MAX_ORDERS_PER_TX,
-  RANDOM_LOTS_MAX_REVEALS_PER_ORDER,
-  RANDOM_LOTS_DURATION_DAYS_MIN,
-  RANDOM_LOTS_DURATION_DAYS_MAX,
+  CLEARANCE_MAX_REVEALS_PER_ORDER,
+  CLEARANCE_DURATION_DAYS_MIN,
+  CLEARANCE_DURATION_DAYS_MAX,
   BUNDLE_MAX_QTY_PER_TX,
   STANDARD_MAX_QTY_PER_LINE,
 } from "./_limits";
@@ -40,7 +40,7 @@ export {
 export { standardRule } from "./standard.rule";
 export { collectorDropRule } from "./collector-drop.rule";
 export { preOrderRule } from "./preorder.rule";
-export { randomLotsRule } from "./clearance.rule";
+export { clearanceRule } from "./clearance.rule";
 export { offerRule } from "./offer.rule";
 export { bundleRule } from "./bundle.rule";
 export { classifiedRule } from "./classified.rule";

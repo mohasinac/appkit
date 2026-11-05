@@ -53,7 +53,7 @@ import {
   resolveGovernedLink,
   type ContentFlagSnapshot,
 } from "../../../_internal/shared/content/fragments";
-import { RandomLotsSection } from "../../products/components/RandomLotsSection";
+import { ClearanceSection } from "../../products/components/ClearanceSection";
 import { EventGiveawaysSection } from "../../events/components/EventGiveawaysSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
 import { HowItWorksSection, type HowItWorksStep } from "../components/HowItWorksSection";
@@ -87,7 +87,7 @@ import type {
   CustomCardsSectionConfig,
   GoogleReviewsSectionConfig,
   FeaturedBundlesSectionConfig,
-  RandomLotsSectionConfig,
+  ClearanceSectionConfig,
   EventRafflesSectionConfig,
   CollectionCardsSectionConfig,
   HowItWorksSectionConfig,
@@ -817,8 +817,8 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
   "clearance": {
     surfaces: ["homepage", "category", "brand"],
     render: ({ config }) => {
-      const cfg = config as RandomLotsSectionConfig;
-      return <RandomLotsSection config={cfg ?? {}} />;
+      const cfg = config as ClearanceSectionConfig;
+      return <ClearanceSection config={cfg ?? {}} />;
     },
   },
 

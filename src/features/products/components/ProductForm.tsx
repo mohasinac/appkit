@@ -49,15 +49,15 @@ import type { ProductItem, ProductStatus } from "../types";
 import {
   isCollectorDropListing,
   isPreOrderListing,
-  isRandomLotListing,
+  isClearanceListing,
   normalizeListingType,
 } from "../utils/listing-type";
-import { RandomLotsItemsEditor } from "./RandomLotsItemsEditor";
+import { ClearanceItemsEditor } from "./ClearanceItemsEditor";
 import type { PrizeDrawItem } from "../schemas/firestore";
 import type { ListingType } from "../types";
 import {
-  RANDOM_LOTS_DURATION_DAYS_MIN,
-  RANDOM_LOTS_DURATION_DAYS_MAX,
+  CLEARANCE_DURATION_DAYS_MIN,
+  CLEARANCE_DURATION_DAYS_MAX,
 } from "../../../_internal/shared/checkout/rules/_limits";
 
 const PRIZE_REVEAL_MODE_OPTIONS: { value: "instant" | "scheduled"; label: string }[] = [
@@ -993,7 +993,7 @@ export function ProductForm({
 
           <Checkbox
             label="This is a clearance listing"
-            checked={isRandomLotListing(product)}
+            checked={isClearanceListing(product)}
             onChange={(e) =>
               update({ listingType: e.target.checked ? "clearance" : "standard" })
             }
@@ -1007,7 +1007,7 @@ export function ProductForm({
         </>
       )}
 
-      {isRandomLotListing(product) && (
+      {isClearanceListing(product) && (
         (() => {
           const prizeItems = (product.prizeDrawItems ?? []) as PrizeDrawItem[];
           const anyWon = prizeItems.some((it) => it.isWon);
@@ -1069,7 +1069,7 @@ export function ProductForm({
               }
               disabled={fieldDisabled}
               placeholder="7"
-              helpText={`Draw runs this many days from publish, or until sold out — whichever comes first. ${RANDOM_LOTS_DURATION_DAYS_MIN}–${RANDOM_LOTS_DURATION_DAYS_MAX} days.`}
+              helpText={`Draw runs this many days from publish, or until sold out — whichever comes first. ${CLEARANCE_DURATION_DAYS_MIN}–${CLEARANCE_DURATION_DAYS_MAX} days.`}
             />
             <FormField
               name="prizeRevealMode"
@@ -1111,12 +1111,12 @@ export function ProductForm({
             />
           ) : null}
 
-          <RandomLotsItemsEditor
+          <ClearanceItemsEditor
             items={(product.prizeDrawItems ?? []) as PrizeDrawItem[]}
             onChange={(items) => update({ prizeDrawItems: items })}
             onUploadImage={(file) =>
               // Caller is expected to wire a real uploader by overriding
-              // renderRandomLotsImageUpload — fall back to data URL preview
+              // renderClearanceImageUpload — fall back to data URL preview
               // so the editor still functions in unwired admin contexts.
               readFileAsDataUrl(file)
             }

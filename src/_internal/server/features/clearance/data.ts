@@ -1,3 +1,3 @@
 import { makeGetListingForDetail } from "../shared/listing-data-factory";
 
-export const getRandomLotForDetail = makeGetListingForDetail("clearance");
+export const getClearanceForDetail = makeGetListingForDetail("clearance");

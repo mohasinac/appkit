@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * RandomLotsItemsEditor (SB4-A)
+ * ClearanceItemsEditor (SB4-A)
  *
  * Editor for the `prizeDrawItems` array on a prize-draw ProductDocument.
  * Owns: add / remove / reorder, per-item title/description/condition/
@@ -32,7 +32,7 @@ const CONDITION_OPTIONS = [
   { value: "refurbished", label: "Refurbished" },
 ];
 
-export interface RandomLotsItemsEditorProps {
+export interface ClearanceItemsEditorProps {
   items: PrizeDrawItem[];
   onChange: (items: PrizeDrawItem[]) => void;
   /** Upload an image File → returns the resolved storage URL (or media slug). */
@@ -43,13 +43,13 @@ export interface RandomLotsItemsEditorProps {
   warning?: string;
 }
 
-export function RandomLotsItemsEditor({
+export function ClearanceItemsEditor({
   items,
   onChange,
   onUploadImage,
   onUploadVideo,
   warning,
-}: RandomLotsItemsEditorProps) {
+}: ClearanceItemsEditorProps) {
   // Once any prize has been revealed (isWon=true), the array is frozen for
   // the seller — add/remove/reorder are all blocked. Per-item edits already
   // respect the per-item `locked` flag below.
@@ -323,4 +323,4 @@ export function RandomLotsItemsEditor({
   );
 }
 
-export default RandomLotsItemsEditor;
+export default ClearanceItemsEditor;

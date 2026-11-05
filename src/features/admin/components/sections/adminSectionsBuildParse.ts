@@ -49,10 +49,10 @@ import {
   WelcomeBuilderState,
   WhatsAppBuilderState,
   FeaturedBundlesBuilderState,
-  RandomLotsBuilderState,
+  ClearanceBuilderState,
   EventRafflesBuilderState,
   DEFAULT_FEATURED_BUNDLES_BUILDER,
-  DEFAULT_RANDOM_LOTS_BUILDER,
+  DEFAULT_CLEARANCE_BUILDER,
   DEFAULT_EVENT_RAFFLES_BUILDER,
   CollectionCardsBuilderState,
   CollectionCardsEntryBuilderState,
@@ -844,7 +844,7 @@ export function parseFeaturedBundlesBuilder(config: JsonObjectWithUndefined): Fe
   };
 }
 
-export function buildRandomLotsConfig(builder: RandomLotsBuilderState): JsonObjectWithUndefined {
+export function buildClearanceConfig(builder: ClearanceBuilderState): JsonObjectWithUndefined {
   return {
     title: builder.title || undefined,
     subtitle: builder.subtitle || undefined,
@@ -856,15 +856,15 @@ export function buildRandomLotsConfig(builder: RandomLotsBuilderState): JsonObje
   };
 }
 
-export function parseRandomLotsBuilder(config: JsonObjectWithUndefined): RandomLotsBuilderState {
+export function parseClearanceBuilder(config: JsonObjectWithUndefined): ClearanceBuilderState {
   return {
-    title: toStringValue(config.title, DEFAULT_RANDOM_LOTS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle, DEFAULT_RANDOM_LOTS_BUILDER.subtitle),
-    maxItems: toNumberValue(config.maxItems, DEFAULT_RANDOM_LOTS_BUILDER.maxItems),
+    title: toStringValue(config.title, DEFAULT_CLEARANCE_BUILDER.title),
+    subtitle: toStringValue(config.subtitle, DEFAULT_CLEARANCE_BUILDER.subtitle),
+    maxItems: toNumberValue(config.maxItems, DEFAULT_CLEARANCE_BUILDER.maxItems),
     storeId: toStringValue(config.storeId),
-    revealStatus: toStringValue(config.revealStatus, DEFAULT_RANDOM_LOTS_BUILDER.revealStatus) as RandomLotsBuilderState["revealStatus"],
-    showCountdown: toBooleanValue(config.showCountdown, DEFAULT_RANDOM_LOTS_BUILDER.showCountdown),
-    showEntriesRemaining: toBooleanValue(config.showEntriesRemaining, DEFAULT_RANDOM_LOTS_BUILDER.showEntriesRemaining),
+    revealStatus: toStringValue(config.revealStatus, DEFAULT_CLEARANCE_BUILDER.revealStatus) as ClearanceBuilderState["revealStatus"],
+    showCountdown: toBooleanValue(config.showCountdown, DEFAULT_CLEARANCE_BUILDER.showCountdown),
+    showEntriesRemaining: toBooleanValue(config.showEntriesRemaining, DEFAULT_CLEARANCE_BUILDER.showEntriesRemaining),
   };
 }
 

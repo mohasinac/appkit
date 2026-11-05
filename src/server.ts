@@ -2071,10 +2071,10 @@ export { updateActionConfigDomain, updateNavConfigDomain, updateNavOrderDomain, 
 export { getClassifiedForDetail } from "./_internal/server/features/classified/data";
 // OG-coverage-followup 2026-05-23 — clearance OG renderer.
 export {
-  getRandomLotForDetail,
-  renderRandomLotsOg,
-  renderRandomLotsOgImage,
-  type RandomLotsOgData,
+  getClearanceForDetail,
+  renderClearanceOg,
+  renderClearanceOgImage,
+  type ClearanceOgData,
 } from "./_internal/server/features/clearance/index";
 // OG-coverage-followup 2026-05-23 — item-requests OG renderer.
 export {

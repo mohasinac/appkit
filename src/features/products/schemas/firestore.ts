@@ -857,7 +857,7 @@ export interface ProductDocument extends BaseDocument {
    */
   prizeRevealStatus?: "pending" | "open" | "closed";
   /**
-   * Seller-facing duration input, 1–15 days (RANDOM_LOTS_DURATION_DAYS_MIN/MAX
+   * Seller-facing duration input, 1–15 days (CLEARANCE_DURATION_DAYS_MIN/MAX
    * in checkout/rules/_limits.ts). Drives `prizeRevealWindowEnd` at creation.
    */
   prizeDrawDurationDays?: number;
@@ -1452,7 +1452,7 @@ export const productQueryHelpers = {
   available: () => ["availableQuantity", ">", 0] as const,
   collectorDrops: () => ["listingType", "==", "collector-drop"] as const,
   preOrders: () => ["listingType", "==", "pre-order"] as const,
-  randomLots: () => ["listingType", "==", "clearance"] as const,
+  clearance: () => ["listingType", "==", "clearance"] as const,
   standardListings: () => ["listingType", "==", "standard"] as const,
   // SB-UNI-F 2026-05-13 — Phase 2 query helpers.
   classifieds: () => ["listingType", "==", "classified"] as const,

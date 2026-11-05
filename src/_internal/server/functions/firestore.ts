@@ -27,8 +27,8 @@ import {
   onShipmentDeletedHandler,
   onCatalogueSubmittedForApprovalHandler,
   onJobCreatedHandler,
-  onRandomLotsPaymentConfirmedHandler,
-  randomLotsSoldOutRevealHandler,
+  onClearancePaymentConfirmedHandler,
+  clearanceSoldOutRevealHandler,
 } from "../jobs/handlers";
 import { defineFunction } from "./define";
 
@@ -66,7 +66,7 @@ export const onProductStockChange = defineFunction({
   options: { region: REGION },
 });
 
-export const onRandomLotsPaymentConfirmed = defineFunction({
+export const onClearancePaymentConfirmed = defineFunction({
   /*
    * 🛑 `name` intentionally retains the old "PrizeDraw" spelling. `bindAllFromRegistry`
    * keys `module.exports` off `def.name`, so this string IS the deployed Cloud Function
@@ -77,17 +77,17 @@ export const onRandomLotsPaymentConfirmed = defineFunction({
   name: "onPrizeDrawPaymentConfirmed",
   description: "Instant-mode clearance winner assignment the moment an order's payment is confirmed.",
   trigger: { kind: "documentUpdated", pathPattern: "orders/{orderId}" },
-  handler: onRandomLotsPaymentConfirmedHandler,
+  handler: onClearancePaymentConfirmedHandler,
   options: { region: REGION },
 });
 
-export const randomLotsSoldOutReveal = defineFunction({
+export const clearanceSoldOutReveal = defineFunction({
   // 🛑 `name` intentionally retains the old "prizeDraw" spelling — it is the DEPLOYED
-  // Cloud Function name (see `onRandomLotsPaymentConfirmed` above for the full reason).
+  // Cloud Function name (see `onClearancePaymentConfirmed` above for the full reason).
   name: "prizeDrawSoldOutReveal",
   description: "Assign winners for all outstanding clearance orders the moment a scheduled-mode draw sells out.",
   trigger: { kind: "documentWritten", pathPattern: "products/{productId}" },
-  handler: randomLotsSoldOutRevealHandler,
+  handler: clearanceSoldOutRevealHandler,
   options: { region: REGION },
 });
 
@@ -239,8 +239,8 @@ export const FIRESTORE_TRIGGER_FUNCTIONS = [
   onOrderStatusChange,
   onProductWrite,
   onProductStockChange,
-  onRandomLotsPaymentConfirmed,
-  randomLotsSoldOutReveal,
+  onClearancePaymentConfirmed,
+  clearanceSoldOutReveal,
   onReviewWrite,
   onCategoryWrite,
   onSiteSettingsWrite,

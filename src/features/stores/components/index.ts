@@ -29,8 +29,8 @@ export type { StorePreOrdersListingProps } from "./StorePreOrdersListing";
 // StorePreOrdersPageView is an RSC — exported directly from src/index.ts, NOT here
 // (this barrel is pulled into client.ts via stores/index.ts → client.ts)
 export type { StorePreOrdersPageViewProps } from "./StorePreOrdersPageView";
-// StoreRandomLotsPageView is an RSC — exported directly from src/index.ts, NOT here
-export type { StoreRandomLotsPageViewProps } from "./StoreRandomLotsPageView";
+// StoreClearancePageView is an RSC — exported directly from src/index.ts, NOT here
+export type { StoreClearancePageViewProps } from "./StoreClearancePageView";
 // StoreBundlesPageView is an RSC — exported directly from src/index.ts, NOT here
 export type { StoreBundlesPageViewProps } from "./StoreBundlesPageView";
 export { StoreClassifiedsListing } from "./StoreClassifiedsListing";

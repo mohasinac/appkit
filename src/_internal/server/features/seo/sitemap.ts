@@ -181,7 +181,7 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
     page(String(ROUTES.PUBLIC.SHIPPING_POLICY), "yearly", 0.3),
     page(String(ROUTES.PUBLIC.PRE_ORDERS), "daily", 0.7),
     page(String(ROUTES.PUBLIC.BUNDLES), "weekly", 0.6),
-    page(String(ROUTES.PUBLIC.RANDOM_LOTS), "daily", 0.7),
+    page(String(ROUTES.PUBLIC.CLEARANCE), "daily", 0.7),
     /*
      * 🛑 `/classified`, `/digital-codes` and `/live` are NOT listed, and must
      * not be re-added. All three index pages were reduced to redirect stubs
@@ -286,8 +286,8 @@ async function fetchListingTypeUrls(
 const fetchPreOrderUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "pre-order", (slug) => ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug), "pre-order");
 
-const fetchRandomLotsUrls = (baseUrl: string) =>
-  fetchListingTypeUrls(baseUrl, "clearance", (slug) => ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(slug), "clearance");
+const fetchClearanceUrls = (baseUrl: string) =>
+  fetchListingTypeUrls(baseUrl, "clearance", (slug) => ROUTES.PUBLIC.CLEARANCE_DETAIL(slug), "clearance");
 
 const fetchClassifiedUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "classified", (slug) => ROUTES.PUBLIC.CLASSIFIED_DETAIL(slug), "classified");
@@ -731,7 +731,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     blogUrls,
     collectorDropUrls,
     preOrderUrls,
-    randomLotsUrls,
+    clearanceUrls,
     classifiedUrls,
     digitalCodeUrls,
     liveUrls,
@@ -750,7 +750,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchBlogPostUrls(baseUrl),
     fetchCollectorDropUrls(baseUrl),
     fetchPreOrderUrls(baseUrl),
-    fetchRandomLotsUrls(baseUrl),
+    fetchClearanceUrls(baseUrl),
     fetchClassifiedUrls(baseUrl),
     fetchDigitalCodeUrls(baseUrl),
     fetchLiveUrls(baseUrl),
@@ -780,7 +780,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     product: productUrls.length,
     collectorDrop: collectorDropUrls.length,
     preOrder: preOrderUrls.length,
-    randomLots: randomLotsUrls.length,
+    clearance: clearanceUrls.length,
     classified: classifiedUrls.length,
     digitalCode: digitalCodeUrls.length,
     live: liveUrls.length,
@@ -915,7 +915,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...productUrls,
     ...collectorDropUrls,
     ...preOrderUrls,
-    ...randomLotsUrls,
+    ...clearanceUrls,
     ...classifiedUrls,
     ...digitalCodeUrls,
     ...liveUrls,

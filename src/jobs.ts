@@ -51,9 +51,9 @@ export {
   listingProcessorHandler,
   supportedListingCollections,
   // SB1-L (S7-PrizeDraws) — clearance reveal redesigned to a fully-automatic model.
-  onRandomLotsPaymentConfirmedHandler,
-  randomLotsSoldOutRevealHandler,
-  randomLotsExpiryRevealHandler,
+  onClearancePaymentConfirmedHandler,
+  clearanceSoldOutRevealHandler,
+  clearanceExpiryRevealHandler,
   bundleStockSyncHandler,
   // SB-UNI-V — Firestore onWrite trigger for product stock changes.
   onProductStockChangeHandler,

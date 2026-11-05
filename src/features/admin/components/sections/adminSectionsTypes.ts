@@ -425,7 +425,7 @@ export interface FeaturedBundlesBuilderState {
   showSavingsBadge: boolean;
 }
 
-export interface RandomLotsBuilderState {
+export interface ClearanceBuilderState {
   title: string;
   subtitle: string;
   maxItems: number;
@@ -755,7 +755,7 @@ export const DEFAULT_FEATURED_BUNDLES_BUILDER: FeaturedBundlesBuilderState = {
   showSavingsBadge: true,
 };
 
-export const DEFAULT_RANDOM_LOTS_BUILDER: RandomLotsBuilderState = {
+export const DEFAULT_CLEARANCE_BUILDER: ClearanceBuilderState = {
   title: "Clearance",
   subtitle: "Every lot ships a real item — which one is the surprise",
   maxItems: 6,

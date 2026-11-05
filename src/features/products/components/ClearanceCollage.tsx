@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * RandomLotsCollage (SB4-B)
+ * ClearanceCollage (SB4-B)
  *
  * Read-only display of a prize-draw's full prize pool. Each cell shows the
  * primary image, item-number badge, and title. Items with sieveFilter("isWon", SIEVE_OP.EQ, "= true")
@@ -53,7 +53,7 @@ export interface CollagePrizeItem {
   isWon?: boolean;
 }
 
-export interface RandomLotsCollageProps<T extends CollagePrizeItem = PrizeDrawItem> {
+export interface ClearanceCollageProps<T extends CollagePrizeItem = PrizeDrawItem> {
   items: T[];
   highlightItemNumber?: number;
   /** Custom click handler — overrides the built-in lightbox. */
@@ -104,13 +104,13 @@ function toGalleryImages(
   }));
 }
 
-export function RandomLotsCollage<T extends CollagePrizeItem = PrizeDrawItem>({
+export function ClearanceCollage<T extends CollagePrizeItem = PrizeDrawItem>({
   items,
   highlightItemNumber,
   onItemClick,
   wonLabel = "Won",
   hideWonState = false,
-}: RandomLotsCollageProps<T>) {
+}: ClearanceCollageProps<T>) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   // Above the empty-state early return — a hook after a conditional return is a
   // render-order violation, not a style preference.
@@ -223,4 +223,4 @@ export function RandomLotsCollage<T extends CollagePrizeItem = PrizeDrawItem>({
   );
 }
 
-export default RandomLotsCollage;
+export default ClearanceCollage;
