@@ -1228,11 +1228,143 @@ async function settlePointsTender(input: {
 }
 
 /**
+ * §Payment cross-gateway duplication pass (overhaul brief, 2026-11-05) —
+ * the ~45-line post-write side-effect tail `createOrderForGroup` and
+ * `createPhonePeGroupOrder` both ran in the exact same order, independently
+ * copy-pasted: settlePointsTender → finalizeLockedLines → digital-code
+ * claim → coupon-usage accumulation → email queueing →
+ * emitOrderPlacedNotifications. Pure sequencing, no business-logic
+ * branching between the two copies — the plan's own read-first pass found
+ * this the one real, clean consolidation candidate (the order-literal
+ * assembly itself is NOT: real per-gateway field differences there trip
+ * the Duplication Decision Framework's keep-separate rule).
+ *
+ * `paymentMethod`/`paid` are the only two values that differ between the
+ * two original call sites (dynamic on the manual/COD path, a fixed
+ * `PaymentMethodValues.ONLINE`/`true` on the online-gateway path) — both
+ * are caller-supplied params here rather than re-derived, so this function
+ * makes no payment-method assumption of its own.
+ *
+ * `emailsToSend` is the SAME shared, whole-checkout accumulator array both
+ * original call sites pushed into directly (mutated by reference, same
+ * pattern `couponUsageAccumulator` already uses) — not a return value,
+ * since the caller flushes it once per whole checkout, not per group.
+ */
+async function finalizeOrderPlacement(input: {
+  orderId: string;
+  uid: string;
+  group: Array<{ item: CartItemDocument; product: ProductDocument | null }>;
+  pointsApplied: number;
+  pointsBudget: { remaining: number };
+  firstItem: CartItemDocument;
+  userEmail: string | undefined;
+  userName: string;
+  groupCouponCodes: Set<string>;
+  couponUsageAccumulator: Map<string, CouponAccumEntry>;
+  emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][];
+  orderItems: unknown[];
+  totalQuantity: number;
+  orderTotal: number;
+  shippingAddress: unknown;
+  paymentMethod: string;
+  storeOwnerId: string | undefined;
+  paid: boolean;
+  storeId: string | undefined;
+}): Promise<void> {
+  const {
+    orderId,
+    uid,
+    group,
+    pointsApplied,
+    pointsBudget,
+    firstItem,
+    userEmail,
+    userName,
+    groupCouponCodes,
+    couponUsageAccumulator,
+    emailsToSend,
+    orderItems,
+    totalQuantity,
+    orderTotal,
+    shippingAddress,
+    paymentMethod,
+    storeOwnerId,
+    paid,
+    storeId,
+  } = input;
+
+  // The second half of the points tender — see `settlePointsTender`. Runs
+  // before the caller asks the gateway for anything.
+  await settlePointsTender({ orderId, userId: uid, pointsApplied, pointsBudget });
+
+  // Close the loop on any locked line this order settled: flip the offer to
+  // "paid" (its terminal status had NO server-side writer before 2026-08-21,
+  // so an accepted offer could be re-added and re-ordered) and back-link the
+  // winning bid to the order it became.
+  await finalizeLockedLines(
+    group.map(({ item }) => item),
+    orderId,
+  );
+
+  // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
+  // order is already persisted so a claim failure is logged, not thrown).
+  if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
+    claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, orderId, uid, {
+      userEmail: userEmail || undefined,
+      userName,
+      productTitle: firstItem.productTitle,
+    }).catch((e) => serverLogger.error("claimDigitalCode", { error: normalizeError(e).message }));
+  }
+
+  for (const code of groupCouponCodes) {
+    const entry = couponUsageAccumulator.get(code);
+    if (entry) entry.orderIds.push(orderId);
+  }
+
+  if (userEmail) {
+    emailsToSend.push({
+      to: userEmail,
+      userName,
+      orderId,
+      productTitle: orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+      quantity: totalQuantity,
+      totalPrice: orderTotal,
+      currency: firstItem.currency ?? getDefaultCurrency(),
+      shippingAddress,
+      paymentMethod,
+      items: orderItems,
+    } as Parameters<typeof sendOrderConfirmationEmail>[0]);
+  }
+
+  emitOrderPlacedNotifications({
+    orderId,
+    buyerUid: uid,
+    buyerName: userName,
+    storeOwnerId,
+    productLabel: orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+    paid,
+    storeId,
+  });
+}
+
+/**
  * Places one order for one seller-group of the checkout cart — fee math
  * (COD deposit/handling, EMI schedule), coupon apportionment, order-doc
  * creation, digital-code claim, and notification fan-out. Pushes into
- * `ctx.orderIds` / `ctx.emailsToSend` and returns the group's pre-fee total
- * so the caller can accumulate the checkout-wide `total`.
+ * `ctx.orderIds` / `ctx.emailsToSend` and returns the group's full,
+ * fee-inclusive charged total (`orderTotal`) so the caller can accumulate
+ * the checkout-wide `total` — 🛑 CORRECTED 2026-11-05: this used to return
+ * `groupTotal` (the pre-fee goods subtotal only), while the sibling
+ * `createPhonePeGroupOrder` returned `orderTotal` (the full amount) under
+ * the identically-typed, identically-named `CheckoutOrderResult.total`.
+ * Confirmed latent, not live-user-visible (the checkout success page reads
+ * the freshly-fetched Firestore order's own `totalPrice`, which was always
+ * `orderTotal`-correct on both paths) — but the in-memory return value is
+ * summed across every seller-group in `orderGroups.reduce`-style checkout
+ * orchestration, where only the full fee-inclusive figure is the correct
+ * term (shipping/GST/fees are computed per-group already, never shared
+ * across groups, so summing `orderTotal` per group cannot double-count
+ * anything here).
  */
 async function createOrderForGroup(
   group: Array<{ item: CartItemDocument; product: ProductDocument }>,
@@ -1971,61 +2103,29 @@ async function createOrderForGroup(
 
   orderIds.push(order.id);
 
-  // The second half of the points tender — see `settlePointsTender`. Runs
-  // before the caller asks the gateway for anything.
-  await settlePointsTender({ orderId: order.id, userId: uid, pointsApplied, pointsBudget });
-
-  // Close the loop on any locked line this order settled: flip the offer to
-  // "paid" (its terminal status had NO server-side writer before 2026-08-21,
-  // so an accepted offer could be re-added and re-ordered) and back-link the
-  // winning bid to the order it became.
-  await finalizeLockedLines(
-    group.map(({ item }) => item),
-    order.id,
-  );
-
-  // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
-  // order is already persisted so a claim failure is logged, not thrown).
-  if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
-    claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
-      userEmail: userEmail || undefined,
-      userName,
-      productTitle: firstItem.productTitle,
-    }).catch((e) => serverLogger.error("claimDigitalCode", { error: normalizeError(e).message }));
-  }
-
-  for (const code of groupCouponCodes) {
-    const entry = couponUsageAccumulator.get(code);
-    if (entry) entry.orderIds.push(order.id);
-  }
-
-  if (userEmail) {
-    emailsToSend.push({
-      to: userEmail,
-      userName,
-      orderId: order.id,
-      productTitle: orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-      quantity: totalQuantity,
-      totalPrice: orderTotal,
-      currency: firstItem.currency ?? getDefaultCurrency(),
-      shippingAddress,
-      paymentMethod,
-      items: orderItems,
-    });
-  }
-
-  emitOrderPlacedNotifications({
+  await finalizeOrderPlacement({
     orderId: order.id,
-    buyerUid: uid,
-    buyerName: userName,
+    uid,
+    group,
+    pointsApplied,
+    pointsBudget,
+    firstItem,
+    userEmail,
+    userName,
+    groupCouponCodes,
+    couponUsageAccumulator,
+    emailsToSend,
+    orderItems,
+    totalQuantity,
+    orderTotal,
+    shippingAddress,
+    paymentMethod,
     storeOwnerId,
-    productLabel:
-      orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: adminBypass,
     storeId: order.storeId,
   });
 
-  return groupTotal;
+  return orderTotal;
 }
 
 /**
@@ -4206,57 +4306,24 @@ async function createPhonePeGroupOrder(
 
   orderIds.push(order.id);
 
-  // The second half of the points tender — one implementation, shared with the
-  // COD/manual path. See `settlePointsTender`.
-  await settlePointsTender({ orderId: order.id, userId: uid, pointsApplied, pointsBudget });
-
-  // Close the loop on any locked line this order settled: flip the offer to
-  // "paid" (its terminal status had NO server-side writer before 2026-08-21,
-  // so an accepted offer could be re-added and re-ordered) and back-link the
-  // winning bid to the order it became.
-  await finalizeLockedLines(
-    group.map(({ item }) => item),
-    order.id,
-  );
-
-  // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
-  // order is already persisted so a claim failure is logged, not thrown).
-  if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
-    claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
-      userEmail: userEmail || undefined,
-      userName,
-      productTitle: firstItem.productTitle,
-    }).catch((e) => serverLogger.error("claimDigitalCode", { error: normalizeError(e).message }));
-  }
-
-  for (const code of groupCouponCodes) {
-    const entry = couponUsageAccumulator.get(code);
-    if (entry) entry.orderIds.push(order.id);
-  }
-
-  if (userEmail) {
-    emailsToSend.push({
-      to: userEmail,
-      userName,
-      orderId: order.id,
-      productTitle:
-        orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-      quantity: totalQuantity,
-      totalPrice: orderTotal,
-      currency: firstItem.currency ?? getDefaultCurrency(),
-      shippingAddress,
-      paymentMethod: PaymentMethodValues.ONLINE,
-      items: orderItems,
-    });
-  }
-
-  emitOrderPlacedNotifications({
+  await finalizeOrderPlacement({
     orderId: order.id,
-    buyerUid: uid,
-    buyerName: userName,
+    uid,
+    group,
+    pointsApplied,
+    pointsBudget,
+    firstItem,
+    userEmail,
+    userName,
+    groupCouponCodes,
+    couponUsageAccumulator,
+    emailsToSend,
+    orderItems,
+    totalQuantity,
+    orderTotal,
+    shippingAddress,
+    paymentMethod: PaymentMethodValues.ONLINE,
     storeOwnerId,
-    productLabel:
-      orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
     paid: true,
     storeId: order.storeId,
   });
