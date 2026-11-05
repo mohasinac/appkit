@@ -361,6 +361,12 @@ const TYPE_FACET_FIELD: Record<string, string> = {
   [TABLE_KEYS.LIVE_SEX]: "liveItem.sex",
   [TABLE_KEYS.JURISDICTION]: "liveItem.jurisdictionAllowed",
   [TABLE_KEYS.LIVE_TRANSPORT_METHOD]: "liveItem.transport.method",
+  // 3B item 1b, toolbars subsystem (2026-11-05) — the first real consumer
+  // of ListingToolbar's admin-added-toggle mechanism. Not type-specific
+  // (unlike every entry above); the composite index below mirrors
+  // `isPartOfBundle`'s own existing (listingType, X) shape, the closest
+  // precedent for a general, non-type-scoped boolean product facet.
+  [TABLE_KEYS.IS_ON_SALE]: "isOnSale",
 };
 
 /** Every field path a per-type facet can filter on. Read by the wiring audit. */

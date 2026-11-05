@@ -58,6 +58,7 @@ export const TABLE_KEYS = {
   IS_PART_OF_BUNDLE: "isPartOfBundle",
   SUBLISTING_CATEGORY: "sublistingCategory",
   FEATURES: "features",
+  IS_ON_SALE: "isOnSale",
   // Classified-specific
   CITY: "city",
   ACCEPTS_SHIPPING: "acceptsShipping",

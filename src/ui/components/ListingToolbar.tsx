@@ -14,6 +14,9 @@ import {
 import { SortDropdown } from "./SortDropdown";
 import { Div } from "./Div";
 import { Span } from "./Typography";
+import { IconButton } from "./IconButton";
+import { Icon } from "./Icon";
+import { FieldSelect } from "../forms/FieldSelect";
 import { StickyToolbar } from "./StickyToolbar";
 import { sortByFieldOrder, filterByFieldVisibility } from "../../features/shell/field-ui-meta";
 
@@ -29,23 +32,32 @@ export interface ListingToolbarToggle {
   label: string;
   active: boolean;
   onChange: (next: boolean) => void;
+  /**
+   * Present only on an admin-ADDED toggle (built via `buildCustomToggles`
+   * below) — the `CustomFieldDef.key` the edit-mode remove control needs.
+   * A hand-coded, built-in toggle never sets this, and only a toggle that
+   * sets it gets a remove (×) affordance when `editMode` is on.
+   */
+  customKey?: string;
+}
+
+/** A boolean field the owning view has already confirmed is real and
+ * filterable — the closed vocabulary an admin picks from, same trust
+ * boundary `AdminFilterFacets.AvailableFacet` already uses. */
+export interface AvailableToggleField {
+  key: string;
+  label: string;
 }
 
 /**
- * 3B item 1b, toolbars subsystem (2026-11-03). `toggles` is a plain data
- * array each caller hand-constructs (confirmed — `ProductsIndexListing.tsx`
- * builds a one-item array for "Free shipping"), unlike `renderFilterPanel`'s
- * hand-written JSX, so admin hide/reorder needs no new derivation layer:
- * `label` is already the toggle's stable identity (`key={t.label}` in this
- * file's own render loop), so the SAME `field-visibility.ts` mechanism
- * `fieldOrder`/`customFields` already use for forms applies here unchanged
- * — just filter-then-sort the array a caller was going to pass anyway.
- *
- * Deliberately does NOT support admin-DEFINED new toggles (no
- * `customFields`-equivalent here): a toggle needs a real `onChange`
- * handler tied to real behavior that only the owning view can supply — an
- * admin cannot author one generically the way they can type a text field's
- * label. Hide/reorder of the EXISTING, hand-coded set is the whole scope.
+ * 3B item 1b, toolbars subsystem (2026-11-03, extended 2026-11-05).
+ * `toggles` is a plain data array each caller hand-constructs, unlike
+ * `renderFilterPanel`'s hand-written JSX, so admin hide/reorder needs no
+ * new derivation layer: `label` is already the toggle's stable identity
+ * (`key={t.label}` in this file's own render loop), so the SAME
+ * `field-visibility.ts` mechanism `fieldOrder`/`customFields` already use
+ * for forms applies here unchanged — just filter-then-sort the array a
+ * caller was going to pass anyway.
  *
  * `fields`/`fieldOrder` come straight from `useFieldVisibility(surfaceId)` —
  * callers pass the same two values they already compute for any other
@@ -58,6 +70,27 @@ export function applyToggleVisibility(
 ): ListingToolbarToggle[] {
   const getKey = (t: ListingToolbarToggle) => t.label;
   return sortByFieldOrder(filterByFieldVisibility(toggles, fields, getKey), fieldOrder, getKey);
+}
+
+/**
+ * 2026-11-05 — admin-DEFINED new toggles, built generically after all.
+ * The premise that blocked this ("a toggle needs a real `onChange` only
+ * the owning view can supply") turns out to be avoidable the same way
+ * `AdminFilterFacets`'s boolean facets already are: flipping a URL-table
+ * boolean value on a pre-declared, already-SIEVE_FIELDS-filterable key
+ * needs no bespoke per-field logic at all. `table` is the minimal shape
+ * every caller's `useUrlTable()`/`usePendingTable()` result already is.
+ */
+export function buildCustomToggles(
+  customFields: { key: string; label: string }[],
+  table: { get: (key: string) => string; set: (key: string, value: string) => void },
+): ListingToolbarToggle[] {
+  return customFields.map((f) => ({
+    label: f.label,
+    active: table.get(f.key) === "true",
+    onChange: (next: boolean) => table.set(f.key, next ? "true" : ""),
+    customKey: f.key,
+  }));
 }
 
 export interface ListingToolbarLabels {
@@ -129,6 +162,17 @@ export interface ListingToolbarProps {
   /** Pill-style filter toggles rendered between view controls and extra */
   toggles?: ListingToolbarToggle[];
 
+  /**
+   * Admin-defined NEW toggles (2026-11-05). All three required together to
+   * show the "add toggle" control; omitted (the default) renders exactly
+   * as before this existed. `editMode` also gates a remove (×) affordance
+   * on any toggle carrying `customKey`.
+   */
+  editMode?: boolean;
+  availableToggleFields?: AvailableToggleField[];
+  onAddToggle?: (field: AvailableToggleField) => void;
+  onRemoveToggle?: (key: string) => void;
+
   /** Any extra action buttons placed after the view toggle */
   extra?: React.ReactNode;
 
@@ -186,6 +230,10 @@ export function ListingToolbar({
   onBulkSelectAll,
   onBulkClear,
   toggles,
+  editMode = false,
+  availableToggleFields,
+  onAddToggle,
+  onRemoveToggle,
   extra,
   labels,
   className = "",
@@ -196,6 +244,10 @@ export function ListingToolbar({
   const l = { ...DEFAULT_LABELS, ...labels };
   const pathname = usePathname();
   const resolvedToolbarId = toolbarId ?? `listing-toolbar${pathname ? `:${pathname}` : ""}`;
+  const [addingToggleKey, setAddingToggleKey] = React.useState<string>("");
+  const canAddToggle = editMode && Boolean(onAddToggle) && Boolean(availableToggleFields?.length);
+  const existingCustomKeys = new Set((toggles ?? []).map((t) => t.customKey).filter(Boolean));
+  const remainingToggleFields = (availableToggleFields ?? []).filter((f) => !existingCustomKeys.has(f.key));
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onSearchKeyDown) {
@@ -344,21 +396,56 @@ export function ListingToolbar({
           {toggles && toggles.length > 0 && (
             <div className="flex items-center gap-1">
               {toggles.map((t) => (
-                <button
-                  key={t.label}
-                  type="button"
-                  role="switch"
-                  aria-checked={t.active}
-                  onClick={() => t.onChange(!t.active)}
-                  className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
+                <div key={t.label} className="relative inline-flex items-center">
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={t.active}
+                    onClick={() => t.onChange(!t.active)}
+                    className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
  t.active
  ? "border-transparent bg-[var(--appkit-color-primary)] text-white"
  : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-surface-hover"
  }`}
-                >
-                  {t.label}
-                </button>
+                  >
+                    {t.label}
+                  </button>
+                  {editMode && t.customKey && onRemoveToggle ? (
+                    <IconButton
+                      aria-label={`Remove toggle "${t.label}"`}
+                      icon={<Icon name="close" size="sm" />}
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => onRemoveToggle(t.customKey!)}
+                    />
+                  ) : null}
+                </div>
               ))}
+            </div>
+          )}
+
+          {canAddToggle && remainingToggleFields.length > 0 && (
+            <div className="flex items-center gap-1">
+              <FieldSelect
+                name="newToolbarToggle"
+                label="Add toggle"
+                value={addingToggleKey}
+                options={remainingToggleFields.map((f) => ({ value: f.key, label: f.label }))}
+                onChange={setAddingToggleKey}
+              />
+              <IconButton
+                aria-label="Add toggle"
+                icon={<Icon name="create" size="sm" />}
+                size="sm"
+                variant="outline"
+                disabled={!addingToggleKey}
+                onClick={() => {
+                  const field = remainingToggleFields.find((f) => f.key === addingToggleKey);
+                  if (!field) return;
+                  onAddToggle?.(field);
+                  setAddingToggleKey(remainingToggleFields.find((f) => f.key !== field.key)?.key ?? "");
+                }}
+              />
             </div>
           )}
 

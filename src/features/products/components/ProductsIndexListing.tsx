@@ -8,7 +8,12 @@ import { BulkActionBar } from "../../../ui/components/BulkActionBar";
 import { Div } from "../../../ui/components/Div";
 import { FilterDrawer } from "../../../ui/components/FilterDrawer";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
-import { ListingToolbar, applyToggleVisibility } from "../../../ui/components/ListingToolbar";
+import {
+  ListingToolbar,
+  applyToggleVisibility,
+  buildCustomToggles,
+  type AvailableToggleField,
+} from "../../../ui/components/ListingToolbar";
 import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { useEditMode } from "../../../edit-mode";
 import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
@@ -63,7 +68,16 @@ const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 // drawer, counts toward the filter badge, and is cleared by Reset. It used to
 // be driven by a separate always-visible chip row that wrote the URL directly,
 // which was the one facet bypassing the Apply model everything else uses.
-const FILTER_KEYS = [TABLE_KEYS.LISTING_TYPE, TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS, TABLE_KEYS.FEATURES, TABLE_KEYS.IS_PART_OF_BUNDLE];
+const BASE_FILTER_KEYS = [TABLE_KEYS.LISTING_TYPE, TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS, TABLE_KEYS.FEATURES, TABLE_KEYS.IS_PART_OF_BUNDLE];
+
+// 3B item 1b, toolbars subsystem (2026-11-05) — the closed vocabulary an
+// admin picks from to add a NEW toolbar toggle. Every key here already has
+// a real, SIEVE_FIELDS-filterable, index-backed facet
+// (`TYPE_FACET_FIELD`/`audit-type-facet-wiring`) — never a freely-typed
+// field name, same trust boundary `AdminFilterFacets.availableFacets` uses.
+const AVAILABLE_TOGGLE_FIELDS: AvailableToggleField[] = [
+  { key: TABLE_KEYS.IS_ON_SALE, label: "On sale" },
+];
 
 /**
  * The dedicated per-type browse page for a selection, when there is exactly
@@ -140,8 +154,12 @@ export function ProductsIndexListing({
    * to before this existed.
    */
   const { editMode } = useEditMode();
-  const { fields: toolbarVisibilityFields, fieldOrder: toolbarFieldOrder } =
-    useFieldVisibility("products-index-toolbar");
+  const {
+    fields: toolbarVisibilityFields,
+    fieldOrder: toolbarFieldOrder,
+    customFields: toolbarCustomFields,
+    setCustomFields: setToolbarCustomFields,
+  } = useFieldVisibility("products-index-toolbar");
 
   /*
    * ── What this page actually spans ────────────────────────────────────────
@@ -212,8 +230,18 @@ export function ProductsIndexListing({
     (table.get(TABLE_KEYS.AVAILABILITY) as AvailabilityFilter) ||
     AVAILABILITY_VALUES.AVAILABLE;
 
+  // Admin-added toggle keys (toolbarCustomFields) MUST be merged in here —
+  // same Root Cause #33/#62 shape AdminFilterFacets's own header warns
+  // about, one layer up: a key absent from this array never counts toward
+  // the filter badge or gets cleared by Reset, even though the toggle
+  // itself keeps working (typeFacets reads the URL directly, not gated by
+  // this list).
+  const filterKeys = useMemo(
+    () => [...BASE_FILTER_KEYS, ...toolbarCustomFields.map((f) => f.key)],
+    [toolbarCustomFields],
+  );
   const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
-    usePendingTable(table, FILTER_KEYS);
+    usePendingTable(table, filterKeys);
 
   // The drawer's own, uncommitted type selection. The "Full <type> filters →"
   // link tracks THIS rather than the applied URL value, so it appears the
@@ -285,6 +313,15 @@ export function ProductsIndexListing({
     sort: effectiveSort,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
+    // Admin-added toggles (toolbarCustomFields) — each one's key is already
+    // in TYPE_FACET_FIELD (AVAILABLE_TOGGLE_FIELDS' own closed vocabulary),
+    // so this is the generic read half of buildCustomToggles' generic write
+    // half: no per-field branch needed here either.
+    typeFacets: Object.fromEntries(
+      toolbarCustomFields
+        .map((f) => [f.key, table.get(f.key)] as const)
+        .filter(([, v]) => v === "true"),
+    ),
     // Pipe-joined OR-group — sievejs parses it as a same-field OR and the
     // Firebase adapter upgrades it to a `.where(…, "in", …)` query.
     listingType: effectiveTypes.join("|"),
@@ -460,6 +497,9 @@ export function ProductsIndexListing({
             // → close for every toggle. The full facet set (category/price/brand/…)
             // remains in <FilterDrawer> below.
             { label: "Free shipping", active: table.get(TABLE_KEYS.FREE_SHIPPING) === "true", onChange: (next: boolean) => table.set(TABLE_KEYS.FREE_SHIPPING, next ? "true" : "") },
+            // Admin-defined NEW toggles (2026-11-05) — built generically from
+            // whatever the admin has added via the "Add toggle" control below.
+            ...buildCustomToggles(toolbarCustomFields, table),
           ],
           // Edit mode shows every toggle regardless of stored visibility —
           // same reasoning build-sections.tsx's own editMode branch uses: an
@@ -467,6 +507,10 @@ export function ProductsIndexListing({
           editMode ? {} : toolbarVisibilityFields,
           toolbarFieldOrder,
         )}
+        editMode={editMode}
+        availableToggleFields={AVAILABLE_TOGGLE_FIELDS}
+        onAddToggle={(field) => setToolbarCustomFields([...toolbarCustomFields, { ...field, type: "boolean" }])}
+        onRemoveToggle={(key) => setToolbarCustomFields(toolbarCustomFields.filter((f) => f.key !== key))}
       />
 
       {/* ── Availability scope — Available / Sold & Ended / All ─────────── */}
