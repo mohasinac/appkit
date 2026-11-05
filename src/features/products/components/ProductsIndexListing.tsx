@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
 import { BulkActionBar } from "../../../ui/components/BulkActionBar";
+import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { FilterDrawer } from "../../../ui/components/FilterDrawer";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
@@ -583,38 +584,82 @@ export function ProductsIndexListing({
         </StickyToolbar>
       )}
 
-      {/* ── Product grid ───────────────────────────────────────────────── */}
-      <Div padding="y-lg">
-        {isLoading ? (
-          <Grid cols="cards" gap="md">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
-                <Div className="aspect-square" surface="subtle" />
-                <Stack className={`${__P.p3}`} gap="sm">
-                  <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
-                  <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
-                  <Div className="h-4 w-1/3" surface="subtle" rounded="default" />
-                </Stack>
-              </Div>
-            ))}
-          </Grid>
-        ) : (
-          <ProductGrid
-            products={products as any[]}
-            getProductHref={(p) =>
-              pluginFor((p as any).listingType ?? "standard").detailRoute((p as any).slug || p.id)
-            }
-            view={view === "grid" ? "card" : "list"}
-            onWishlistToggle={handleWishlistToggle}
-            wishlistedIds={wishlistedIds}
-            onAddToCart={handleAddToCart}
-            onBuyNow={handleBuyNow}
-            selectionMode={selection.isSelecting}
-            selectedIds={selection.selectedIdSet}
-            onToggleSelect={selection.toggle}
-          />
-        )}
+      {/*
+       * ── Persistent filter sidebar (desktop) + product grid ───────────
+       * Same `lg:grid-cols-12` 2-column technique FAQPageContent.tsx already
+       * uses for its category sidebar — exactly ONE grid-template-columns
+       * class on this container, never a competing `grid-cols-1` alongside
+       * it (that collided once in production; see FAQPageContent's own
+       * comment on the bug). `ProductFilters` is the SAME component/instance
+       * the mobile `<FilterDrawer>` below already renders — bound to the
+       * same `pendingTable`, same Apply/Reset handlers — no new filter
+       * logic, just a second, persistent container for it on `lg:` and up.
+       */}
+      <Div layout="grid" gap="8" className="lg:grid-cols-12">
+        <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
+          <Div rounded="xl" border="default" padding="lg">
+            <ProductFilters
+              table={pendingTable as any}
+              currencyPrefix="₹"
+              listingTypeOptions={listingTypeOptions}
+              listingTypeFooter={
+                dedicatedPage ? (
+                  <Div padding="x-md" paddingY="b-sm">
+                    <TextLink href={dedicatedPage.href} size="sm" weight="medium">
+                      {dedicatedPage.label}
+                    </TextLink>
+                  </Div>
+                ) : null
+              }
+              categoryOptions={categoryOptions}
+              brandOptions={brandOptions}
+              featureOptions={featureOptions}
+            />
+            <Row gap="sm" className="mt-4" justify="end">
+              <Button type="button" variant="ghost" onClick={onFilterClear}>
+                Reset all
+              </Button>
+              <Button type="button" variant="primary" onClick={applyFilters}>
+                {filterActiveCount > 0 ? `Apply (${filterActiveCount})` : "Apply"}
+              </Button>
+            </Row>
+          </Div>
+        </Div>
 
+        <Div className="lg:col-span-8 xl:col-span-9">
+          {/* ── Product grid ─────────────────────────────────────────────── */}
+          <Div padding="y-lg">
+            {isLoading ? (
+              <Grid cols="cards" gap="md">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
+                    <Div className="aspect-square" surface="subtle" />
+                    <Stack className={`${__P.p3}`} gap="sm">
+                      <Div className="h-3 w-3/4" surface="subtle" rounded="default" />
+                      <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
+                      <Div className="h-4 w-1/3" surface="subtle" rounded="default" />
+                    </Stack>
+                  </Div>
+                ))}
+              </Grid>
+            ) : (
+              <ProductGrid
+                products={products as any[]}
+                getProductHref={(p) =>
+                  pluginFor((p as any).listingType ?? "standard").detailRoute((p as any).slug || p.id)
+                }
+                view={view === "grid" ? "card" : "list"}
+                onWishlistToggle={handleWishlistToggle}
+                wishlistedIds={wishlistedIds}
+                onAddToCart={handleAddToCart}
+                onBuyNow={handleBuyNow}
+                selectionMode={selection.isSelecting}
+                selectedIds={selection.selectedIdSet}
+                onToggleSelect={selection.toggle}
+              />
+            )}
+          </Div>
+        </Div>
       </Div>
 
       <CompareOverlay

@@ -5,6 +5,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
+import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { FilterDrawer } from "../../../ui/components/FilterDrawer";
@@ -251,13 +252,38 @@ export function CategoryProductsListing({
         </StickyToolbar>
       )}
 
-      <Div padding="y-lg">
-        {renderCategoryProductGrid({
-          isLoading, products: products as any[], view,
-           
-          getProductHref: (p: any) => String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id)),
-          onWishlistToggle: handleWishlistToggle, wishlistedIds, onAddToCart: handleAddToCart,
-        })}
+      {/*
+       * ── Persistent filter sidebar (desktop) + product grid ───────────
+       * Same technique as ProductsIndexListing.tsx (and FAQPageContent.tsx's
+       * original precedent) — exactly ONE grid-template-columns class here.
+       * `ProductFilters` below is the SAME `pendingTable`-bound instance the
+       * mobile `<FilterDrawer>` already renders; no new filter logic.
+       */}
+      <Div layout="grid" gap="8" className="lg:grid-cols-12">
+        <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
+          <Div rounded="xl" border="default" padding="lg">
+            <ProductFilters table={pendingTable as any} currencyPrefix="₹" />
+            <Row gap="sm" className="mt-4" justify="end">
+              <Button type="button" variant="ghost" onClick={onFilterClear}>
+                Reset all
+              </Button>
+              <Button type="button" variant="primary" onClick={applyFilters}>
+                {filterActiveCount > 0 ? `Apply (${filterActiveCount})` : "Apply"}
+              </Button>
+            </Row>
+          </Div>
+        </Div>
+
+        <Div className="lg:col-span-8 xl:col-span-9">
+          <Div padding="y-lg">
+            {renderCategoryProductGrid({
+              isLoading, products: products as any[], view,
+
+              getProductHref: (p: any) => String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id)),
+              onWishlistToggle: handleWishlistToggle, wishlistedIds, onAddToCart: handleAddToCart,
+            })}
+          </Div>
+        </Div>
       </Div>
 
       <FilterDrawer
