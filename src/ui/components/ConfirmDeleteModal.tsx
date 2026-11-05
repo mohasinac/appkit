@@ -1,8 +1,8 @@
 "use client"
-import { useEffect } from "react";
 import { Card } from "./Card";
 import { Heading, Text } from "./Typography";
 import { Button } from "./Button";
+import { DialogShell } from "./dialog-shell";
 
 export interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -81,30 +81,16 @@ export function ConfirmDeleteModal({
 }: ConfirmDeleteModalProps) {
   const styles = VARIANT_STYLES[variant];
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) onClose();
-    };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "unset";
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
   return (
-    <div
-      data-testid="confirm-delete-modal"
-      className={UI_CONFIRM_MODAL.backdrop}
-      onClick={onClose}
+    <DialogShell
+      open={isOpen}
+      onClose={onClose}
+      dialogLabel={title}
+      wrapperClassName="appkit-confirm-modal"
+      overlayClassName="appkit-confirm-modal__backdrop"
+      contentClassName="appkit-confirm-modal__content-reset"
     >
-      <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+      <div data-testid="confirm-delete-modal">
         <Card className={UI_CONFIRM_MODAL.body}>
           {/* Icon */}
           <div className={UI_CONFIRM_MODAL.iconWrap} data-section="confirmdeletemodal-div-469">
@@ -157,6 +143,6 @@ export function ConfirmDeleteModal({
           </div>
         </Card>
       </div>
-    </div>
+    </DialogShell>
   );
 }

@@ -11,15 +11,14 @@
 }
 
 .appkit-row-action-menu__dropdown {
-  position: absolute;
   z-index: var(--appkit-z-confirm);
-  margin-top: 0.25rem;
   min-width: 160px;
   border-radius: 0.75rem;
   border: 1px solid var(--appkit-color-border);
   background: var(--appkit-color-surface);
   padding-block: 0.375rem;
   box-shadow: var(--appkit-shadow-xl);
+  outline: none;
 }
 
 :is(.dark) .appkit-row-action-menu__dropdown {
@@ -27,12 +26,19 @@
   background: var(--appkit-color-surface);
 }
 
-.appkit-row-action-menu__dropdown--left {
-  left: 0;
+.appkit-row-action-menu__dropdown[data-state="open"] {
+  animation: appkit-row-action-menu-in 0.12s ease forwards;
 }
 
-.appkit-row-action-menu__dropdown--right {
-  right: 0;
+@media (prefers-reduced-motion: reduce) {
+  .appkit-row-action-menu__dropdown {
+    animation: none;
+  }
+}
+
+@keyframes appkit-row-action-menu-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .appkit-row-action-menu__separator {
@@ -54,9 +60,12 @@
   text-align: left;
   font-size: 0.875rem;
   color: var(--appkit-color-zinc-700);
+  cursor: pointer;
+  outline: none;
 }
 
-.appkit-row-action-menu__item:hover {
+.appkit-row-action-menu__item:hover,
+.appkit-row-action-menu__item[data-highlighted] {
   background: var(--appkit-color-surface-hover);
 }
 
@@ -64,15 +73,22 @@
   color: var(--appkit-color-zinc-100);
 }
 
-:is(.dark) .appkit-row-action-menu__item:hover {
+:is(.dark) .appkit-row-action-menu__item:hover,
+:is(.dark) .appkit-row-action-menu__item[data-highlighted] {
   background: var(--appkit-color-slate-800);
+}
+
+.appkit-row-action-menu__item[data-disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .appkit-row-action-menu__item--destructive {
   color: var(--appkit-color-error);
 }
 
-.appkit-row-action-menu__item--destructive:hover {
+.appkit-row-action-menu__item--destructive:hover,
+.appkit-row-action-menu__item--destructive[data-highlighted] {
   background: var(--appkit-color-error-surface);
 }
 
@@ -80,7 +96,8 @@
   color: var(--appkit-color-rose-400);
 }
 
-:is(.dark) .appkit-row-action-menu__item--destructive:hover {
+:is(.dark) .appkit-row-action-menu__item--destructive:hover,
+:is(.dark) .appkit-row-action-menu__item--destructive[data-highlighted] {
   background: rgba(127, 29, 29, 0.4);
 }
 

@@ -33,6 +33,97 @@
   z-index: 1;
 }
 
+/* Button's own confirmation dialog — the un-trapped, Escape-less inline
+   style portal this replaced. Tokens, not hardcoded rgba()/boxShadow. */
+.appkit-action-confirm {
+  position: fixed;
+  inset: 0;
+  z-index: var(--appkit-z-confirm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.appkit-action-confirm__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.appkit-action-confirm__backdrop[data-state="open"] {
+  animation: appkit-action-confirm-backdrop-in 0.15s ease forwards;
+}
+
+.appkit-action-confirm__backdrop[data-state="closed"] {
+  animation: appkit-action-confirm-backdrop-out 0.15s ease forwards;
+}
+
+.appkit-action-confirm__panel {
+  background: var(--appkit-color-surface);
+  border-radius: var(--appkit-radius-lg, 12px);
+  padding: 1.5rem;
+  max-width: 380px;
+  width: calc(100% - 2rem);
+  box-shadow: var(--appkit-shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.2));
+  outline: none;
+}
+
+.appkit-action-confirm__panel[data-state="open"] {
+  animation: appkit-action-confirm-fade-up 0.15s ease forwards;
+}
+
+.appkit-action-confirm__panel[data-state="closed"] {
+  animation: appkit-action-confirm-fade-down 0.15s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-action-confirm__backdrop,
+  .appkit-action-confirm__panel {
+    animation: none;
+  }
+}
+
+.appkit-action-confirm__title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: var(--appkit-color-text);
+}
+
+.appkit-action-confirm__body {
+  font-size: 0.875rem;
+  color: var(--appkit-color-text-muted);
+  margin-bottom: 1.25rem;
+}
+
+.appkit-action-confirm__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+@keyframes appkit-action-confirm-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes appkit-action-confirm-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes appkit-action-confirm-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes appkit-action-confirm-fade-down {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(8px); }
+}
+
 @keyframes appkit-button-ripple {
   to {
     transform: scale(2.4);

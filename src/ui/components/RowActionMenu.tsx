@@ -1,14 +1,9 @@
 "use client"
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import React from "react";
+import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./Button";
 import { Span } from "./Typography";
-// Defining modules, not the sibling barrel — Root Cause #18. `ui/index.ts` and
-// `react/index.ts` re-exported into each other, which is the whole of
-// `audit-import-cycles` component 1: an 18-module knot held together entirely
-// by barrel hops, none of which needed the barrel.
-import { useKeyPress } from "../../react/hooks/useKeyPress";
 
 export interface RowAction {
   label: string;
@@ -24,110 +19,57 @@ export interface RowActionMenuProps {
   align?: "left" | "right";
 }
 
-interface DropdownPos { top: number; left?: number; right?: number; }
+const ALIGN_MAP: Record<NonNullable<RowActionMenuProps["align"]>, "start" | "end"> = {
+  left: "start",
+  right: "end",
+};
 
 export function RowActionMenu({
   actions,
   align = "right",
 }: RowActionMenuProps) {
-  const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState<DropdownPos | null>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
-
-  useKeyPress("Escape", () => setOpen(false), { enabled: open });
-
-  // Close on outside click — exclude both trigger wrapper and portal dropdown
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      const t = e.target as Node;
-      if (!wrapperRef.current?.contains(t) && !dropdownRef.current?.contains(t)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  const handleToggle = useCallback(() => {
-    if (!open && wrapperRef.current) {
-      const rect = wrapperRef.current.getBoundingClientRect();
-      const top = rect.bottom + 4;
-      setPos(
-        align === "right"
-          ? { top, right: window.innerWidth - rect.right }
-          : { top, left: rect.left },
-      );
-    }
-    setOpen((v) => !v);
-  }, [open, align]);
-
-  const dropdown =
-    open && pos && mounted
-      ? createPortal(
-          <div
-            ref={dropdownRef}
-            role="menu"
-            className="appkit-row-action-menu__dropdown"
-            style={{
-              position: "fixed",
-              zIndex: "var(--appkit-z-confirm)",
-              top: pos.top,
-              ...(pos.right !== undefined ? { right: pos.right } : { left: pos.left }),
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {actions.map((action, idx) => (
-              <div key={`${action.label}-${idx}`}>
-                {action.separator && idx > 0 ? (
-                  <div className="appkit-row-action-menu__separator" />
-                ) : null}
-                <Button
-                  type="button"
-                  role="menuitem"
-                  variant="ghost"
-                  disabled={action.disabled}
-                  onClick={() => {
-                    if (action.disabled) return;
-                    action.onClick();
-                    setOpen(false);
-                  }}
-                  className={`appkit-row-action-menu__item ${action.destructive ? "appkit-row-action-menu__item--destructive" : ""} ${action.disabled ? "opacity-40 cursor-not-allowed" : ""}`}
-                >
-                  {action.icon ? (
-                    <Span className="appkit-row-action-menu__icon">{action.icon}</Span>
-                  ) : null}
-                  {action.label}
-                </Button>
-              </div>
-            ))}
-          </div>,
-          document.body,
-        )
-      : null;
-
   return (
-    <div
-      ref={wrapperRef}
-      className="appkit-row-action-menu"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <Button
-        type="button"
-        variant="ghost"
-        aria-label="Row actions"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        onClick={handleToggle}
-        className="appkit-row-action-menu__trigger"
-      >
-        <MoreHorizontal className="h-4 w-4" strokeWidth={1.5} />
-      </Button>
-      {dropdown}
-    </div>
+    <RadixDropdownMenu.Root>
+      <RadixDropdownMenu.Trigger asChild>
+        <Button
+          type="button"
+          variant="ghost"
+          aria-label="Row actions"
+          className="appkit-row-action-menu appkit-row-action-menu__trigger"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <MoreHorizontal className="h-4 w-4" strokeWidth={1.5} />
+        </Button>
+      </RadixDropdownMenu.Trigger>
+      <RadixDropdownMenu.Portal>
+        <RadixDropdownMenu.Content
+          className="appkit-row-action-menu__dropdown"
+          align={ALIGN_MAP[align]}
+          sideOffset={4}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {actions.map((action, idx) => (
+            <React.Fragment key={`${action.label}-${idx}`}>
+              {action.separator && idx > 0 ? (
+                <RadixDropdownMenu.Separator className="appkit-row-action-menu__separator" />
+              ) : null}
+              <RadixDropdownMenu.Item
+                disabled={action.disabled}
+                onSelect={() => {
+                  if (action.disabled) return;
+                  action.onClick();
+                }}
+                className={`appkit-row-action-menu__item ${action.destructive ? "appkit-row-action-menu__item--destructive" : ""}`}
+              >
+                {action.icon ? (
+                  <Span className="appkit-row-action-menu__icon">{action.icon}</Span>
+                ) : null}
+                {action.label}
+              </RadixDropdownMenu.Item>
+            </React.Fragment>
+          ))}
+        </RadixDropdownMenu.Content>
+      </RadixDropdownMenu.Portal>
+    </RadixDropdownMenu.Root>
   );
 }

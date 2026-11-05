@@ -1,13 +1,10 @@
 "use client"
 import React from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
 import { ActionRow } from "./ActionRow";
-import { SPRING_GENTLE } from "../../tokens/motion";
 import { useHandMode } from "../../_internal/client/hand-mode";
-import { OverlayContext } from "./overlay-context";
+import { DialogShell } from "./dialog-shell";
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -42,9 +39,6 @@ export function Modal({
 }: ModalProps) {
   const visible = open ?? isOpen ?? false;
   const { hand } = useHandMode();
-  const titleId = React.useId();
-  const panelRef = React.useRef<HTMLDivElement>(null);
-  const previousFocusRef = React.useRef<HTMLElement | null>(null);
   /*
    * 🛑 `useState(false)` + `useEffect`, NOT `typeof document === "undefined"`
    * at render time — same fix, same root cause, as `Drawer.tsx` (found
@@ -52,7 +46,9 @@ export function Modal({
    * that file's comment for the full explanation: branching on `document`
    * directly makes the server render `null` and the client's FIRST render
    * (before hydration settles) render the full portal, which is exactly
-   * what hydration compares and rejects.
+   * what hydration compares and rejects. Kept even though
+   * `@radix-ui/react-portal` carries its own mount guard — redundant is
+   * fine, dropping it unverified is how the bug comes back.
    */
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
@@ -68,129 +64,53 @@ export function Modal({
     };
   }, [visible]);
 
-  React.useEffect(() => {
-    if (visible) {
-      previousFocusRef.current = document.activeElement as HTMLElement;
-      requestAnimationFrame(() => panelRef.current?.focus());
-      return;
-    }
-    previousFocusRef.current?.focus();
-  }, [visible]);
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Escape") {
-      onClose();
-      return;
-    }
-
-    if (event.key !== "Tab") {
-      return;
-    }
-
-    const panel = panelRef.current;
-    if (!panel) {
-      return;
-    }
-
-    const focusable = Array.from(
-      panel.querySelectorAll<HTMLElement>(
-        'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])',
-      ),
-    );
-
-    if (!focusable.length) {
-      return;
-    }
-
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && document.activeElement === last) {
-      event.preventDefault();
-      first.focus();
-    }
-  };
-
-  const reduced = useReducedMotion();
-
   if (!mounted) {
     return null;
   }
 
-  return createPortal(
-    <OverlayContext.Provider value={true}>
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          className="appkit-modal"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={title ? titleId : undefined}
-          onKeyDown={handleKeyDown}
-          initial={reduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-          data-section="modal-div-561"
+  return (
+    <DialogShell
+      open={visible}
+      onClose={onClose}
+      dialogLabel={typeof title === "string" ? title : "Dialog"}
+      wrapperClassName="appkit-modal"
+      overlayClassName="appkit-modal__backdrop"
+      contentClassName={["appkit-modal__panel", SIZE_CLASSES[size], className]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {(title || showCloseButton) && (
+        <div
+          className={hand === "left" ? "appkit-modal__header flex-row-reverse" : "appkit-modal__header"}
+          data-section="modal-div-563"
         >
-          <div
-            className="appkit-modal__backdrop"
-            aria-hidden="true"
-            onClick={onClose}
-          />
-
-          <motion.div
-            ref={panelRef}
-            tabIndex={-1}
-            className={["appkit-modal__panel", SIZE_CLASSES[size], className]
-              .filter(Boolean)
-              .join(" ")}
-            initial={reduced ? false : { opacity: 0, scale: 0.95, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 8 }}
-            transition={SPRING_GENTLE}
-            data-section="modal-div-562"
-          >
-            {(title || showCloseButton) && (
-              <div
-                className={hand === "left" ? "appkit-modal__header flex-row-reverse" : "appkit-modal__header"}
-                data-section="modal-div-563"
-              >
-                {title ? (
-                  <Heading level={2} id={titleId} className="appkit-modal__title">
-                    {title}
-                  </Heading>
-                ) : (
-                  <span />
-                )}
-                {showCloseButton ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    type="button"
-                    onClick={onClose}
-                    className="appkit-modal__close"
-                    aria-label="Close"
-                  >
-                    <span className="appkit-modal__close-icon" aria-hidden="true">
-                      ×
-                    </span>
-                  </Button>
-                ) : null}
-              </div>
-            )}
-
-            <div className="appkit-modal__body" data-section="modal-div-564">{children}</div>
-            {actions ? <ModalFooter>{actions}</ModalFooter> : null}
-          </motion.div>
-        </motion.div>
+          {title ? (
+            <Heading level={2} className="appkit-modal__title">
+              {title}
+            </Heading>
+          ) : (
+            <span />
+          )}
+          {showCloseButton ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              onClick={onClose}
+              className="appkit-modal__close"
+              aria-label="Close"
+            >
+              <span className="appkit-modal__close-icon" aria-hidden="true">
+                ×
+              </span>
+            </Button>
+          ) : null}
+        </div>
       )}
-    </AnimatePresence>
-    </OverlayContext.Provider>,
-    document.body,
+
+      <div className="appkit-modal__body" data-section="modal-div-564">{children}</div>
+      {actions ? <ModalFooter>{actions}</ModalFooter> : null}
+    </DialogShell>
   );
 }
 

@@ -15,6 +15,14 @@
   backdrop-filter: blur(4px);
 }
 
+.appkit-modal__backdrop[data-state="open"] {
+  animation: appkit-modal-backdrop-in 0.15s ease forwards;
+}
+
+.appkit-modal__backdrop[data-state="closed"] {
+  animation: appkit-modal-backdrop-out 0.15s ease forwards;
+}
+
 .appkit-modal__panel {
   position: relative;
   width: 100%;
@@ -26,7 +34,21 @@
   background: var(--appkit-color-surface);
   box-shadow: 0 20px 45px -20px rgba(0, 0, 0, 0.45);
   border: 1px solid var(--appkit-color-border);
+}
+
+.appkit-modal__panel[data-state="open"] {
   animation: appkit-modal-fade-up 0.15s ease forwards;
+}
+
+.appkit-modal__panel[data-state="closed"] {
+  animation: appkit-modal-fade-down 0.15s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-modal__backdrop,
+  .appkit-modal__panel {
+    animation: none;
+  }
 }
 
 .dark .appkit-modal__panel {
@@ -103,4 +125,25 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes appkit-modal-fade-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes appkit-modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes appkit-modal-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }

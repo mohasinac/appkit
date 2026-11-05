@@ -1,6 +1,6 @@
 /* ConfirmDeleteModal — confirmation dialog for destructive/bulk actions */
 
-.appkit-confirm-modal__backdrop {
+.appkit-confirm-modal {
   position: fixed;
   inset: 0;
   z-index: var(--appkit-z-confirm);
@@ -8,8 +8,60 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
+}
+
+.appkit-confirm-modal__backdrop {
+  position: absolute;
+  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+}
+
+.appkit-confirm-modal__backdrop[data-state="open"] {
+  animation: appkit-confirm-modal-backdrop-in 0.15s ease forwards;
+}
+
+.appkit-confirm-modal__backdrop[data-state="closed"] {
+  animation: appkit-confirm-modal-backdrop-out 0.15s ease forwards;
+}
+
+.appkit-confirm-modal__content-reset {
+  outline: none;
+}
+
+.appkit-confirm-modal__content-reset[data-state="open"] {
+  animation: appkit-confirm-modal-fade-up 0.15s ease forwards;
+}
+
+.appkit-confirm-modal__content-reset[data-state="closed"] {
+  animation: appkit-confirm-modal-fade-down 0.15s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-confirm-modal__backdrop,
+  .appkit-confirm-modal__content-reset {
+    animation: none;
+  }
+}
+
+@keyframes appkit-confirm-modal-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes appkit-confirm-modal-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes appkit-confirm-modal-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes appkit-confirm-modal-fade-down {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(8px); }
 }
 
 .appkit-confirm-modal__body {

@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
+import { DialogShell } from "./dialog-shell";
 import { Loader2 } from "lucide-react";
 import type { ActionDef } from "../../_internal/shared/actions/action-registry";
 import { surfaceError } from "../../client/api/surface-error";
@@ -417,47 +417,26 @@ export function Button({
   // one of those two branches, or the other branch can never open a
   // confirmation dialog at all (this was the actual asChild bug: the early
   // return happened before this JSX was ever reached).
-  const confirmPortal = confirmOpen && confirmDef && typeof document !== "undefined" && createPortal(
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="appkit-action-confirm-title"
-          style={{
-            position: "fixed", inset: 0, zIndex: "var(--appkit-z-confirm, 1000)" as string,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)",
-          }}
-          onClick={(e) => { if (e.target === e.currentTarget) setConfirmOpen(false); }}
+  const confirmPortal = confirmOpen && confirmDef && (
+        <DialogShell
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          dialogLabel={confirmDef.title}
+          wrapperClassName="appkit-action-confirm"
+          overlayClassName="appkit-action-confirm__backdrop"
+          contentClassName="appkit-action-confirm__panel"
         >
-          <div
-            style={{
-              background: "var(--appkit-color-surface)",
-              borderRadius: "var(--appkit-radius-lg, 12px)",
-              padding: "1.5rem",
-              maxWidth: "380px", width: "calc(100% - 2rem)",
-              boxShadow: "var(--appkit-shadow-lg, 0 20px 60px rgba(0,0,0,0.2))",
-            }}
-          >
-            <p
-              id="appkit-action-confirm-title"
-              style={{ fontWeight: 600, marginBottom: "0.5rem", fontSize: "1rem" }}
-            >
-              {confirmDef.title}
-            </p>
-            <p style={{ fontSize: "0.875rem", color: "var(--appkit-color-text-muted)", marginBottom: "1.25rem" }}>
-              {confirmBody}
-            </p>
-            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
-              <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>
-                {confirmDef.cancelLabel ?? "Cancel"}
-              </Button>
-              <Button variant={confirmVariant} size="sm" onClick={handleConfirm}>
-                {confirmDef.confirmLabel}
-              </Button>
-            </div>
+          <p className="appkit-action-confirm__title">{confirmDef.title}</p>
+          <p className="appkit-action-confirm__body">{confirmBody}</p>
+          <div className="appkit-action-confirm__actions">
+            <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>
+              {confirmDef.cancelLabel ?? "Cancel"}
+            </Button>
+            <Button variant={confirmVariant} size="sm" onClick={handleConfirm}>
+              {confirmDef.confirmLabel}
+            </Button>
           </div>
-        </div>,
-        document.body,
+        </DialogShell>
       );
 
   if (asChild && React.isValidElement(resolvedChildren)) {
