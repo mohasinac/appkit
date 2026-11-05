@@ -781,7 +781,7 @@ export type SectionType =
   | "custom-cards"
   | "google-reviews"
   | "featured-bundles"
-  | "random-lots"
+  | "clearance"
   | "event-raffles"
   | "collection-cards"
   | "how-it-works"
@@ -909,7 +909,7 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   "custom-cards": 13,
   "google-reviews": 14,
   "featured-bundles": 20,
-  "random-lots": 21,
+  "clearance": 21,
   "event-raffles": 22,
   "collection-cards": 23,
   "how-it-works": 24,

@@ -13,7 +13,7 @@ export const orderListingTypeSchema = z.enum([
   // collector-drop rename still validates on update.
   "auction",
   "pre-order",
-  "random-lots",
+  "clearance",
   "classified",
   "digital-code",
   "live",

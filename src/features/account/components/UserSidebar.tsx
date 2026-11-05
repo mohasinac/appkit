@@ -1,7 +1,7 @@
 "use client";
 import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
 import { DASHBOARD_ACCENT_CLASSES } from "../../../_internal/shared/features/layout/config";
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,6 +19,7 @@ import { useSidebarSearch } from "../../../_internal/client/features/layout/useS
 import { findActiveNavGroup, findActiveNavItem } from "../../../_internal/client/features/layout/navActive";
 import { getSidebarRailClasses, getSidebarOverlayClasses } from "../../../_internal/client/features/layout/sidebarPositionClasses";
 import { useHandMode } from "../../../_internal/client/hand-mode";
+import { useClickOutside } from "../../../react/hooks/useClickOutside";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -255,6 +256,8 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
   const { hand } = useHandMode();
   const rail = getSidebarRailClasses(hand);
   const [mounted, setMounted] = useState(false);
+  const desktopPanelRef = useRef<HTMLDivElement>(null);
+  const handleToggle = onToggle ?? close;
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -265,15 +268,23 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
     }
   }, [mobileOpen, variant]);
 
+  // Outside-click dismissal only applies to the persistent desktop "sidebar"
+  // variant — the "overlay" variant already closes via its own backdrop's
+  // onClick. `enabled` keeps this inert (no listener attached) everywhere
+  // else, so calling the hook unconditionally here is free, not just safe.
+  useClickOutside(desktopPanelRef, handleToggle, {
+    enabled: variant === "sidebar" && desktopOpen,
+  });
+
   // ── Persistent sidebar variant (desktop left slide-over, mobile bottom-sheet) ──────
   if (variant === "sidebar") {
-    const handleToggle = onToggle ?? close;
     return (
       <>
         {/*
-          ── NO DESKTOP BACKDROP ───────────────────────────────────────────
+          ── NO DESKTOP BACKDROP, BUT DISMISSIBLE ────────────────────────────
 
-          🛑 THERE WAS ONE, AND REMOVING IT IS HALF OF THE DOCKING FIX.
+          🛑 THERE WAS A BACKDROP ONCE, AND REMOVING IT IS HALF OF THE DOCKING
+          FIX — see the dismissal mechanism note below for the other half.
 
           A `hidden lg:block fixed inset-0 backdrop-blur-[2px]` dimmed the
           whole page whenever this panel was open at `lg`. It existed because
@@ -292,6 +303,17 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           reserving without removing leaves a dimmed page beside an open
           sidebar. That coupling is why the audit plan declined to land this
           piecemeal.
+
+          🛑 "No backdrop" is a statement about the VISUAL (no dimming/blur
+          over content the user can still see and use), not about dismissal.
+          `useClickOutside` below closes the panel on an outside click without
+          reintroducing a backdrop element — the reserved content stays fully
+          interactive right up until the click that also happens to close
+          this panel. Every nav link inside also collapses the panel via the
+          SAME `handleToggle` the outside-click and collapse-tab use, so all
+          three dismissal paths (outside click, nav link, collapse tab) stay
+          in sync by construction rather than needing to be kept in sync by
+          hand.
 
           The mobile sheet below KEEPS its backdrop: there the panel really
           does cover the viewport, and dismiss-on-tap-outside is the only
@@ -315,6 +337,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
          * sidebars — all four spellings there are literals Tailwind must see.
          */}
         <Div
+          ref={desktopPanelRef}
           className={`hidden lg:flex fixed ${rail.edgeClass} z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : rail.collapsedTranslateClass}`}
         >
           {/* Nav panel */}
@@ -323,7 +346,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
               <Span size="xs" weight="semibold" transform="uppercase" color="muted">My Account</Span>
             </Div>
             <Div className={`flex-1 ${__O.yAuto}`}>
-              <DrawerContent groups={groups} items={items} activeHref={pathname} />
+              <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={handleToggle} />
             </Div>
             {renderFooter && <Div border="top" padding="inline">{renderFooter()}</Div>}
           </Stack>

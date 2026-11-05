@@ -116,7 +116,7 @@ export interface OrderSourcePreOrder {
 }
 
 export interface OrderSourceRandomLots {
-  path: "random-lots";
+  path: "clearance";
   prizeDrawProductId: string;
   pricePerEntry: number;
   entryCount: number;

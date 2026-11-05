@@ -1235,7 +1235,7 @@ export const LISTING_TYPE_HAS_COMPOSITION: Record<
    */
   spares: false,
   "pre-order": true,
-  "random-lots": true,
+  "clearance": true,
   classified: true,
   live: true,
   // Depicts the model; is not the model.

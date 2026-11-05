@@ -27,7 +27,7 @@ import { storesSeedData } from "./stores-seed-data";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 import { productsCollectorDropsSeedData } from "./products-collector-drops-seed-data";
 import { productsPreordersSeedData } from "./products-preorders-seed-data";
-import { productsRandomLotsSeedData } from "./products-random-lots-seed-data";
+import { productsRandomLotsSeedData } from "./products-clearance-seed-data";
 import { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
 import { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
 import { productsLiveItemsSeedData } from "./products-live-items-seed-data";
@@ -107,7 +107,7 @@ const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
   spares: "spares",
   "collector-drop": "collector-drop",
   "pre-order": "preorder",
-  "random-lots": "random-lots",
+  "clearance": "clearance",
   classified: "classified",
   "digital-code": "digital-code",
   live: "live",

@@ -255,7 +255,7 @@ function SectionEditorPanel({
       case "custom-cards": return buildCustomCardsConfig(customCardsBuilder);
       case "google-reviews": return buildGoogleReviewsConfig(googleReviewsBuilder);
       case "featured-bundles": return buildFeaturedBundlesConfig(featuredBundlesBuilder);
-      case "random-lots": return buildRandomLotsConfig(randomLotsBuilder);
+      case "clearance": return buildRandomLotsConfig(randomLotsBuilder);
       case "event-raffles": return buildEventRafflesConfig(eventRafflesBuilder);
       case "collection-cards": return buildCollectionCardsConfig(collectionCardsBuilder);
       default: return null;
@@ -399,7 +399,7 @@ function SectionEditorPanel({
       case "custom-cards": setCustomCardsBuilder(parseCustomCardsBuilder(selectedConfig)); break;
       case "google-reviews": setGoogleReviewsBuilder(parseGoogleReviewsBuilder(selectedConfig)); break;
       case "featured-bundles": setFeaturedBundlesBuilder(parseFeaturedBundlesBuilder(selectedConfig)); break;
-      case "random-lots": setRandomLotsBuilder(parseRandomLotsBuilder(selectedConfig)); break;
+      case "clearance": setRandomLotsBuilder(parseRandomLotsBuilder(selectedConfig)); break;
       case "event-raffles": setEventRafflesBuilder(parseEventRafflesBuilder(selectedConfig)); break;
       case "collection-cards": setCollectionCardsBuilder(parseCollectionCardsBuilder(selectedConfig)); break;
     }
@@ -454,7 +454,7 @@ function SectionEditorPanel({
       case "custom-cards": setCustomCardsBuilder(pick(DEFAULT_CUSTOM_CARDS_BUILDER)); break;
       case "google-reviews": setGoogleReviewsBuilder(pick(DEFAULT_GOOGLE_REVIEWS_BUILDER)); break;
       case "featured-bundles": setFeaturedBundlesBuilder(pick(DEFAULT_FEATURED_BUNDLES_BUILDER)); break;
-      case "random-lots": setRandomLotsBuilder(pick(DEFAULT_RANDOM_LOTS_BUILDER)); break;
+      case "clearance": setRandomLotsBuilder(pick(DEFAULT_RANDOM_LOTS_BUILDER)); break;
       case "event-raffles": setEventRafflesBuilder(pick(DEFAULT_EVENT_RAFFLES_BUILDER)); break;
       case "collection-cards": setCollectionCardsBuilder(pick(DEFAULT_COLLECTION_CARDS_BUILDER)); break;
     }
@@ -2043,13 +2043,13 @@ function SectionEditorPanel({
     return (
       <Div className={CLS_SECTION_PANEL}>
         <Text size="sm" weight="semibold" color="primary">
-          Random Lots Builder
+          Clearance Builder
         </Text>
         <Input
           label="Section title"
           value={randomLotsBuilder.title}
           onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, title: e.target.value }))}
-          placeholder="Random Lots"
+          placeholder="Clearance"
         />
         <Input
           label="Subtitle"
@@ -2099,7 +2099,7 @@ function SectionEditorPanel({
           onChange={(e) => setRandomLotsBuilder((prev) => ({ ...prev, showEntriesRemaining: e.target.checked }))}
         />
         <Text size="xs" color="muted">
-          Random-lots listing type is added with the random-lots feature; until then this section renders an empty state.
+          Random-lots listing type is added with the clearance feature; until then this section renders an empty state.
         </Text>
       </Div>
     );
@@ -2441,7 +2441,7 @@ function SectionEditorPanel({
       case "custom-cards": return renderCustomCardsBuilder();
       case "google-reviews": return renderGoogleReviewsBuilder();
       case "featured-bundles": return renderFeaturedBundlesBuilder();
-      case "random-lots": return renderRandomLotsBuilder();
+      case "clearance": return renderRandomLotsBuilder();
       case "event-raffles": return renderEventRafflesBuilder();
       case "collection-cards": return renderCollectionCardsBuilder();
       default: return null;

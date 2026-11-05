@@ -68,7 +68,7 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
         quantity: item.quantity,
         currency: doc.currency,
         storeId: doc.storeId,
-        // SB8-F — surface random-lots reveal-state to the API response so
+        // SB8-F — surface clearance reveal-state to the API response so
         // user-orders pages can render the "X reveals pending" badge.
         ...(item.listingType ? { listingType: item.listingType } : {}),
         ...(item.prizeRevealStatus
@@ -176,7 +176,7 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     orderStatus: doc.status,
     paymentStatus: doc.paymentStatus,
     // Which checkout lane produced this order (standard / collector drop / offer /
-    // preorder / random-lots). Drives the lane tabs on /user/orders. Absent on
+    // preorder / clearance). Drives the lane tabs on /user/orders. Absent on
     // orders written before `orderType` existed — every reader must treat a
     // missing value as "standard" rather than filtering it out.
     orderType: doc.orderType,

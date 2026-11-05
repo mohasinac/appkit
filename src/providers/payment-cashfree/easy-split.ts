@@ -6,10 +6,11 @@
  *
  *   1. that file reached the 1,000-line `max-lines` ceiling;
  *   2. **every fact in here was originally SPECIFIED, NOT CONFIRMED, and now
- *      is** — see the block below for what was checked 2026-11-05 and what
- *      changed — isolating it here meant correcting the two wrong
- *      assumptions it turned up was an edit to one named thing in one file,
- *      with no call-site changes.
+ *      is — verified end to end against a real sandbox vendor + split
+ *      order, not just docs** — see the block below for what 2026-11-05's
+ *      live calls found wrong or missing — isolating it here meant
+ *      correcting each one was an edit to one named thing in one file, with
+ *      no call-site changes.
  *
  * `audit-payment-provider-import` allowlists `payment-cashfree/**`, so a
  * sibling module here is as legitimate as `index.ts` itself.
@@ -43,9 +44,13 @@ export interface CashfreeVendorEntity {
 
 
 /*
- * 🛑🛑 CONFIRMED 2026-11-05 against Cashfree's own API reference + FAQ docs
- * (direct fetches, not a search snippet) — this section used to read "every
- * fact below is SPECIFIED, NOT CONFIRMED". All three are resolved now:
+ * 🛑🛑 CONFIRMED 2026-11-05, END TO END — a real sandbox vendor registration
+ * followed by a real sandbox split order against it, both succeeded (200),
+ * with `order_splits` echoed back correctly on the order entity. This
+ * section used to read "every fact below is SPECIFIED, NOT CONFIRMED" —
+ * this is what actually retired that, not just reading docs (CLAUDE.md
+ * Rule #11): five things were wrong or missing, found by the live calls
+ * themselves, not by research:
  *
  *   1. THE VENDOR ENDPOINT AND ITS BODY (`cashfreeVendorPayload` /
  *      `EASY_SPLIT_VENDORS_PATH`). Path confirmed exactly
@@ -62,17 +67,27 @@ export interface CashfreeVendorEntity {
  *      and capture the order with no split, collecting another seller's
  *      money into the platform's own account while looking like a success.
  *      CONFIRMED CORRECT as originally written: `order_splits`, each entry
- *      `{vendor_id, amount}` — verbatim from the Create Order OpenAPI schema.
+ *      `{vendor_id, amount}` — verbatim from the Create Order OpenAPI schema,
+ *      and now also confirmed by a real order actually echoing it back.
  *
  *   3. HOW MANY VENDORS ONE ORDER MAY CARRY (`MAX_SPLIT_VENDORS_PER_ORDER`).
  *      Confirmed via Cashfree's own Easy Split FAQ: "You can split a single
  *      transaction among a maximum of 5 vendors." Set below.
  *
- * Still not exercised against a REAL delivery/order — these confirm the
- * CONSTRUCTION against the vendor's own current published spec, which is
- * necessary but, per CLAUDE.md Rule #11, not a substitute for watching one
- * real sandbox vendor + split order succeed before trusting this with real
- * money.
+ *   4. `status` ON THE VENDOR PAYLOAD. Found live, not from docs — a real
+ *      sandbox Create Vendor call without this field was rejected with
+ *      `status_missing`. Added as a required `"ACTIVE"` literal; see
+ *      `CashfreeVendorPayload`'s own comment.
+ *
+ *   5. `kyc_details.business_type` ON THE VENDOR PAYLOAD. Also found live —
+ *      an omitted `kyc_details` was rejected with `kyc_details_missing`;
+ *      an empty one was then rejected with
+ *      `kyc_details.business_type_missing`; a guessed `"Individual"` was
+ *      then rejected with `INVALID_REQUEST_TYPE` and Cashfree's own
+ *      validator handed back the full accepted enum in its error message.
+ *      `"E-commerce"` — confirmed correct, not guessed — is now sent for
+ *      every vendor; see `CASHFREE_VENDOR_BUSINESS_TYPE`'s own comment for
+ *      the full accepted list.
  */
 
 /** Confirmed against Cashfree's own Create Vendor API reference, 2026-11-05. */
@@ -154,6 +169,18 @@ export function mapCashfreeVendorStatus(status: string | undefined): SettlementV
  */
 interface CashfreeVendorPayload {
   vendor_id: string;
+  /*
+   * 🛑 CONFIRMED 2026-11-05 — a REQUIRED field, found live: a sandbox Create
+   * Vendor call against the raw payload (before this field existed) was
+   * rejected with `{"code":"status_missing","message":"status : is missing
+   * in the request."}`. Cashfree's own raw example body for this endpoint
+   * sets it to `"ACTIVE"`. This is the vendor record's initial state, not a
+   * substitute for `verify_account` — Cashfree's own verification still
+   * runs; an unverified vendor stays unable to receive a split regardless
+   * of this value, per `mapCashfreeVendorStatus`'s own fail-closed read of
+   * the status Cashfree reports back.
+   */
+  status: "ACTIVE";
   name: string;
   email: string;
   phone: string;
@@ -162,8 +189,40 @@ interface CashfreeVendorPayload {
   dashboard_access: false;
   bank?: { account_number: string; account_holder: string; ifsc: string };
   upi?: { vpa: string; account_holder: string };
-  kyc_details?: { pan?: string; gst?: string };
+  /*
+   * 🛑 CONFIRMED 2026-11-05 — REQUIRED, found live in two steps. An omitted
+   * `kyc_details` was rejected with `kyc_details_missing`; an empty
+   * `kyc_details: {}` was then rejected with
+   * `kyc_details.business_type_missing`. `business_type` is a merchant-
+   * category enum, not a legal structure — Cashfree's own validator
+   * rejected a guessed `"Individual"` with the full accepted list in its
+   * error message (`CASHFREE_VENDOR_BUSINESS_TYPE`'s own comment has it
+   * verbatim), which is how `"E-commerce"` was confirmed correct rather
+   * than guessed.
+   */
+  kyc_details: { business_type: string; pan?: string; gst?: string };
 }
+
+/*
+ * 🛑 CONFIRMED 2026-11-05 live against Cashfree's sandbox validator — a
+ * guessed `business_type: "Individual"` was rejected with
+ * `INVALID_REQUEST_TYPE` and this VERBATIM accepted list: Grocery,
+ * Jewellery, Miscellaneous, Web host/Domain seller, E-commerce, Online
+ * Gaming, Society/Trust/Club/Association, Mutual funds/Broking, B2B, Real
+ * Estate, Housing, Rentals, Utilities, Travel and Hospitality, Education,
+ * Food and Beverages, NBFCs/Organizations into Lending, Chit Funds, Non
+ * Profit/NGO, Financial Services, Government, Readymade, SaaS, Professional
+ * Services (Doctors, Lawyers, Architects, CAs, and other Professionals),
+ * Open and Semi Open Wallet, Social Media and Entertainment, Pan shop,
+ * Telecom, Digital Goods, Insurance, Pharmacy, Healthcare, Retail and
+ * Shopping, Gaming, Logistics.
+ *
+ * Every vendor this platform registers IS a marketplace seller on this
+ * platform — there is no per-seller input to collect here, so this is a
+ * platform-wide constant, not a guess per vendor. `"E-commerce"` is the one
+ * entry that actually describes what every vendor here is.
+ */
+const CASHFREE_VENDOR_BUSINESS_TYPE = "E-commerce";
 
 export function cashfreeVendorPayload(input: SettlementVendorInput): CashfreeVendorPayload {
   /*
@@ -189,6 +248,7 @@ export function cashfreeVendorPayload(input: SettlementVendorInput): CashfreeVen
 
   return {
     vendor_id: input.vendorId,
+    status: "ACTIVE",
     name: input.name,
     email: input.email,
     phone: input.phone,
@@ -196,19 +256,17 @@ export function cashfreeVendorPayload(input: SettlementVendorInput): CashfreeVen
     dashboard_access: false,
     ...destination,
     /*
-     * 🛑 `kyc_details` is sent only when there is something to put in it.
-     * Cashfree validates the shape of what it receives, so an empty object is
-     * a likelier 400 than an omitted key — and a seller with no PAN and no
-     * GSTIN is a real state (blocker #5), not an error to force.
+     * 🛑 `kyc_details` is now ALWAYS sent — see the field's own comment on
+     * `CashfreeVendorPayload`. `business_type` is the one sub-field
+     * Cashfree's validator requires; `pan`/`gst` stay conditional since a
+     * seller with neither is a real state (blocker #5), not an error to
+     * force — only `business_type` is non-negotiable.
      */
-    ...(input.pan || input.gstin
-      ? {
-          kyc_details: {
-            ...(input.pan ? { pan: input.pan } : {}),
-            ...(input.gstin ? { gst: input.gstin } : {}),
-          },
-        }
-      : {}),
+    kyc_details: {
+      business_type: CASHFREE_VENDOR_BUSINESS_TYPE,
+      ...(input.pan ? { pan: input.pan } : {}),
+      ...(input.gstin ? { gst: input.gstin } : {}),
+    },
   };
 }
 

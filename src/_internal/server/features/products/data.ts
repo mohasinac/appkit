@@ -222,7 +222,7 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
         rawListingType === "collector-drop" ||
         rawListingType === "auction" ||
         rawListingType === "pre-order" ||
-        rawListingType === "random-lots"
+        rawListingType === "clearance"
           ? rawListingType
           : "standard";
       return {

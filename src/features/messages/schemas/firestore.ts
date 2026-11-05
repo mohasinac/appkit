@@ -78,7 +78,7 @@ export interface MessageProductRef {
    * 🛑 Required for the card to LINK anywhere correct.
    *
    * Nine listing types have five different detail routes
-   * (`/collector-drops/…`, `/pre-orders/…`, `/random-lots/…`, `/classified/…`, …) and
+   * (`/collector-drops/…`, `/pre-orders/…`, `/clearance/…`, `/classified/…`, …) and
    * `pluginFor(type).detailRoute()` is the only thing that knows which. A card
    * that hardcodes `/products/{slug}` sends a collector drop to the standard product
    * page — which is Root Cause #48 exactly: a doc→card mapper dropping

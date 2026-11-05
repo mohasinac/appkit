@@ -1,7 +1,7 @@
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 
 export function isRandomLotProduct(doc: ProductDocument): boolean {
-  return doc.listingType === "random-lots";
+  return doc.listingType === "clearance";
 }
 
 // True when entries are still accepted (reveal window has not started, slots not exhausted).

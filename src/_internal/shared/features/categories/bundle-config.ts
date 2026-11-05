@@ -23,14 +23,14 @@ export const BUNDLES_FEATURED_LIMIT = 12 as const;
  * Listing types that may be added to a bundle.
  *   - standard — regular product
  *   - pre-order — pre-order product
- *   - random-lots — added as N draws/entries (see BundleItemDetail.drawCount)
+ *   - clearance — added as N draws/entries (see BundleItemDetail.drawCount)
  *
  * Collector Drops and bundles themselves are never eligible.
  */
 export const BUNDLE_ELIGIBLE_LISTING_TYPES = [
   "standard",
   "pre-order",
-  "random-lots",
+  "clearance",
 ] as const;
 
 export type BundleEligibleListingType =

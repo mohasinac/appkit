@@ -145,9 +145,9 @@ export async function buildOrderSourceContext(
       };
     }
 
-    if (orderType === "random-lots") {
+    if (orderType === "clearance") {
       return {
-        path: "random-lots",
+        path: "clearance",
         prizeDrawProductId: item.productId,
         pricePerEntry: product.pricePerEntry ?? product.price,
         entryCount: item.quantity,

@@ -30,7 +30,7 @@ export interface RandomLotsSectionProps {
 export async function RandomLotsSection({
   config,
 }: RandomLotsSectionProps) {
-  const title = config.title ?? "Random Lots";
+  const title = config.title ?? "Clearance";
   const subtitle =
     config.subtitle ?? "Enter for a chance to win rare collectibles";
 

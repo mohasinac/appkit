@@ -42,7 +42,7 @@ export async function handleRandomLotsSoldOut(
   // `FEATURE_PRIZE_DRAWS` gate deleted 2026-10-19 — see `assignSpinPrize.ts`.
   const { productId, before, after } = input;
   if (!after) return;
-  if (after.listingType !== "random-lots") return;
+  if (after.listingType !== "clearance") return;
   if (after.prizeDrawMode === "lottery") return; // out of scope — separate mechanic
   if (after.prizeRevealMode !== "scheduled") return;
   if (after.prizeRevealStatus !== PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.OPEN) return;

@@ -2074,7 +2074,7 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPreordersSeedData - Seed data for pre-order product listings.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsRandomLotsSeedData - Seed data for random-lots product listings (SB5-E).
+// productsRandomLotsSeedData - Seed data for clearance product listings (SB5-E).
 // productsClassifiedsSeedData - Seed data for classified product listings (SB-UNI-I).
 // productsDigitalCodesSeedData - Seed data for digital-code product listings (SB-UNI-J).
 // productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
@@ -3299,7 +3299,7 @@ export type { AdminGatewayEventsViewProps } from "./features/admin/components/Ad
 export { ViewAuditLogEntryModal } from "./features/admin/components/ViewAuditLogEntryModal";
 export type { AuditLogEntryDetail, ViewAuditLogEntryModalProps } from "./features/admin/components/ViewAuditLogEntryModal";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminRandomLotsView - Component for admin random-lots listing view (SB4-E).
+// AdminRandomLotsView - Component for admin clearance listing view (SB4-E).
 export { AdminRandomLotsView } from "./features/admin/components/AdminRandomLotsView";
 // W1-29 2026-05-23 — admin listing views for orphaned listing types.
 export { AdminClassifiedView } from "./features/admin/components/AdminClassifiedView";
@@ -6879,24 +6879,24 @@ export { PlaceBidForm } from "./features/products/components/PlaceBidForm";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PreOrderDetailView - Component for pre order detail view.
 export { PreOrderDetailView } from "./features/products/components/PreOrderDetailView";
-// [SERVER-RSC]-Public listing for random-lots products (SB4-F).
+// [SERVER-RSC]-Public listing for clearance products (SB4-F).
 export type { RandomLotsListingViewProps } from "./features/products/components/RandomLotsListingView";
-// [CLIENT]-Client toolbar+grid for random lots (SB4-F).
+// [CLIENT]-Client toolbar+grid for clearance (SB4-F).
 export { RandomLotsIndexListing } from "./features/products/components/RandomLotsIndexListing";
 export type { RandomLotsIndexListingProps } from "./features/products/components/RandomLotsIndexListing";
-// [CLIENT]-Marketplace card for random lots (SB4-F).
+// [CLIENT]-Marketplace card for clearance (SB4-F).
 export { MarketplaceRandomLotCard } from "./features/products/components/MarketplaceRandomLotCard";
 export type {
  MarketplaceRandomLotCardProps,
  MarketplaceRandomLotCardData,
  MarketplaceRandomLotCardLabels,
 } from "./features/products/index";
-// [SERVER-RSC]-Public detail page for a random-lots product (SB4-G).
+// [SERVER-RSC]-Public detail page for a clearance product (SB4-G).
 export type { RandomLotsDetailPageViewProps } from "./features/products/components/RandomLotsDetailPageView";
-// [CLIENT]-Buy panel client for random-lots detail (consent + add-to-cart) (SB4-G).
+// [CLIENT]-Buy panel client for clearance detail (consent + add-to-cart) (SB4-G).
 export { RandomLotsEntryActions } from "./features/products/components/RandomLotsEntryActions";
 export type { RandomLotsEntryActionsProps } from "./features/products/components/RandomLotsEntryActions";
-// [CLIENT]-Theatrical reveal-mode random-lots modal (SB4-I) — fully-automatic reveal, animates to the winning slot.
+// [CLIENT]-Theatrical reveal-mode clearance modal (SB4-I) — fully-automatic reveal, animates to the winning slot.
 export { PrizeRevealModal } from "./features/products/components/PrizeRevealModal";
 export type { PrizeRevealModalProps, PrizeRevealResult } from "./features/products/components/PrizeRevealModal";
 export { RandomLotsWinnerMappingView } from "./features/products/components/RandomLotsWinnerMappingView";
@@ -8429,7 +8429,7 @@ export type { StoreCollectorDropsListingProps } from "./features/stores/componen
 export { StoreReviewsListing } from "./features/stores/components/StoreReviewsListing";
 export type { StoreReviewsListingProps } from "./features/stores/components/StoreReviewsListing";
 export { StoreReviewsPageView } from "./features/stores/components/StoreReviewsPageView";
-// [SERVER-RSC]-Public store â†’ Random Lots tab (SB7-D).
+// [SERVER-RSC]-Public store â†’ Clearance tab (SB7-D).
 export type { StoreRandomLotsPageViewProps } from "./features/stores/components/StoreRandomLotsPageView";
 // [SERVER-RSC]-Public store â†’ Bundles tab (SB7-D / S7-PrizeDraws-3).
 export type { StoreBundlesPageViewProps } from "./features/stores/components/StoreBundlesPageView";

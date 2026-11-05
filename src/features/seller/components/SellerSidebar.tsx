@@ -1,7 +1,7 @@
 "use client";
 import type { SidebarNavItem } from "../../../_internal/shared/features/layout/types";
 import { DASHBOARD_ACCENT_CLASSES } from "../../../_internal/shared/features/layout/config";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Button } from "../../../ui/components/Button";
@@ -18,6 +18,7 @@ import { useSidebarSearch } from "../../../_internal/client/features/layout/useS
 import { findActiveNavGroup, findActiveNavItem } from "../../../_internal/client/features/layout/navActive";
 import { getSidebarRailClasses, getSidebarOverlayClasses } from "../../../_internal/client/features/layout/sidebarPositionClasses";
 import { useHandMode } from "../../../_internal/client/hand-mode";
+import { useClickOutside } from "../../../react/hooks/useClickOutside";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -294,6 +295,8 @@ export function StoreSidebar({
   const { hand } = useHandMode();
   const rail = getSidebarRailClasses(hand);
   const [mounted, setMounted] = useState(false);
+  const desktopPanelRef = useRef<HTMLDivElement>(null);
+  const handleToggle = onToggle ?? close;
 
   useEffect(() => { setMounted(true); }, []);
 
@@ -301,6 +304,12 @@ export function StoreSidebar({
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
+
+  // See the "NO DESKTOP BACKDROP, BUT DISMISSIBLE" note below — inert
+  // (no listener attached) outside the desktop "sidebar" variant.
+  useClickOutside(desktopPanelRef, handleToggle, {
+    enabled: variant === "sidebar" && desktopOpen,
+  });
 
   const panelTitle = storeName ?? "Store Panel";
 
@@ -310,14 +319,25 @@ export function StoreSidebar({
     <FlatContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
   );
 
+  // Desktop "sidebar" variant's own nav content — deliberately NOT the
+  // `navContent` above. That one's `onItemClick={close}` closes via
+  // `onCloseMobile`, which this variant's caller doesn't wire (it's
+  // controlled by `desktopOpen`/`onToggle` instead) — reusing it here left
+  // nav-link clicks not collapsing the desktop panel at all.
+  const sidebarNavContent = groups ? (
+    <GroupsContent groups={groups} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={handleToggle} />
+  ) : (
+    <FlatContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={handleToggle} />
+  );
+
   if (variant === "sidebar") {
-    const handleToggle = onToggle ?? close;
     return (
       <>
         {/*
-          ── NO DESKTOP BACKDROP ───────────────────────────────────────────
+          ── NO DESKTOP BACKDROP, BUT DISMISSIBLE ────────────────────────────
 
-          🛑 THERE WAS ONE, AND REMOVING IT IS HALF OF THE DOCKING FIX.
+          🛑 THERE WAS A BACKDROP ONCE, AND REMOVING IT IS HALF OF THE DOCKING
+          FIX — see the dismissal mechanism note below for the other half.
 
           A `hidden lg:block fixed inset-0 backdrop-blur-[2px]` dimmed the
           whole page whenever this panel was open at `lg`. It existed because
@@ -337,6 +357,14 @@ export function StoreSidebar({
           sidebar. That coupling is why the audit plan declined to land this
           piecemeal.
 
+          🛑 "No backdrop" is a statement about the VISUAL (no dimming/blur
+          over content the user can still see and use), not about dismissal.
+          `useClickOutside` above closes the panel on an outside click
+          without reintroducing a backdrop element. Every nav link inside
+          collapses the panel via the SAME `handleToggle` the outside-click
+          and collapse-tab use (`sidebarNavContent`, not `navContent`) — all
+          three dismissal paths stay in sync by construction.
+
           The mobile sheet below KEEPS its backdrop: there the panel really
           does cover the viewport, and dismiss-on-tap-outside is the only
           affordance a phone has.
@@ -344,6 +372,7 @@ export function StoreSidebar({
 
         {/* Desktop: slide-over panel + always-visible primary toggle tab */}
         <Div
+          ref={desktopPanelRef}
           className={`hidden lg:flex fixed ${rail.edgeClass} z-40 transition-transform duration-300 top-[var(--header-height,3.5rem)] h-[calc(100vh-var(--header-height,3.5rem))] w-[18rem] ${desktopOpen ? "translate-x-0" : rail.collapsedTranslateClass}`}
         >
           {/* Nav panel */}
@@ -362,7 +391,7 @@ export function StoreSidebar({
                 <Text className={CLS_STORE_NAME}>{storeName || panelTitle}</Text>
               </Row>
             </Div>
-            <Div className={`flex-1 ${__O.yAuto}`}>{navContent}</Div>
+            <Div className={`flex-1 ${__O.yAuto}`}>{sidebarNavContent}</Div>
             {renderFooter && <Div border="top" padding="inline">{renderFooter()}</Div>}
           </Stack>
 

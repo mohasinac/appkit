@@ -80,7 +80,7 @@ export function RandomLotsLotteryDetailView({
 
           <Stack gap="sm">
             <Row gap="xs" align="center" wrap>
-              <Badge variant="info">Slot-pick Random Lot</Badge>
+              <Badge variant="info">Slot-pick Clearance</Badge>
               {config && (
                 <Badge variant={isActive ? "success" : "secondary"}>
                   {config.slots.filter((s) => s.isBooked).length}/{config.totalSlots} claimed
@@ -95,7 +95,7 @@ export function RandomLotsLotteryDetailView({
             ) : null}
           </Stack>
 
-          <AdminComposableRegion pageId="random-lots-slug" initialCards={pageRegionCards} />
+          <AdminComposableRegion pageId="clearance-slug" initialCards={pageRegionCards} />
 
           {/* Prize previews — only the slots that actually have a photo. The
               numbered grid below stays the complete slot map. */}

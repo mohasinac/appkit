@@ -29,7 +29,7 @@ const cartItemBaseSchema = z.object({
     "standard",
     "collector-drop",
     "pre-order",
-    "random-lots",
+    "clearance",
     "classified",
     "digital-code",
     "live",

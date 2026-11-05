@@ -205,7 +205,7 @@ export const PRODUCT_FIELDS = {
   },
 
   /**
-   * 🛑 PRODUCT-level draw mode for the `random-lots` listing type — a
+   * 🛑 PRODUCT-level draw mode for the `clearance` listing type — a
    * DIFFERENT axis from the event-level `EventType`, which lost its
    * `"lottery"` member on 2026-10-31 (it is `"random-draw"` now).
    *
@@ -224,7 +224,7 @@ export const PRODUCT_FIELDS = {
     STANDARD: "standard",
     COLLECTOR_DROP: "collector-drop",
     PRE_ORDER: "pre-order",
-    RANDOM_LOTS: "random-lots",
+    RANDOM_LOTS: "clearance",
     CLASSIFIED: "classified",
     DIGITAL_CODE: "digital-code",
     LIVE: "live",

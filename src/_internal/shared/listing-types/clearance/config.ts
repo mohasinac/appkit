@@ -8,23 +8,23 @@ import {
   RANDOM_LOTS_PUBLIC_SORT_OPTIONS,
 } from "../../../../features/products/constants/sieve";
 
-export const LISTING_TYPE = "random-lots" as const;
-export const capability = LISTING_TYPE_CAPABILITIES["random-lots"];
+export const LISTING_TYPE = "clearance" as const;
+export const capability = LISTING_TYPE_CAPABILITIES["clearance"];
 export const config = {
   listingType: LISTING_TYPE,
-  slugPrefix: "randomlots-",
+  slugPrefix: "clearance-",
   cartLine: "single-product" as const,
   detailRoute: (idOrSlug: string) => String(ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(idOrSlug)),
-  badge: { label: "Random Lots", className: "bg-primary text-white" },
+  badge: { label: "Clearance", className: "bg-primary text-white" },
   priceLabel: "Price (₹)",
-  typeLabel: "Random Lots",
+  typeLabel: "Clearance",
   showsStockQuantity: false,
 
-  tabSlug: "random-lots",
-  pluralLabel: "Random Lots",
-  chipLabel: "Random Lots",
+  tabSlug: "clearance",
+  pluralLabel: "Clearance",
+  chipLabel: "Clearance",
   browseRoute: String(ROUTES.PUBLIC.RANDOM_LOTS),
-  // /random-lots is in MAIN_NAV_ITEMS. Entry-based pricing reads wrong beside
+  // /clearance is in MAIN_NAV_ITEMS. Entry-based pricing reads wrong beside
   // ordinary unit prices in the general grid.
   inGeneralCatalogue: false,
   // sells ENTRIES at a fixed price; a group line would blur what was entered

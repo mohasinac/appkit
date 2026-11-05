@@ -173,7 +173,7 @@ export function BrandDetailTabs({
       {activeTab === pluginFor("pre-order").tabSlug && (
         <PreOrdersIndexListing brandName={brandName} />
       )}
-      {activeTab === pluginFor("random-lots").tabSlug && (
+      {activeTab === pluginFor("clearance").tabSlug && (
         <RandomLotsIndexListing brandName={brandName} />
       )}
       {activeTab === "bundles" && (

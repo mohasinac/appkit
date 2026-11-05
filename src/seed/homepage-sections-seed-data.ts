@@ -658,13 +658,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
 
   {
     id: "section-prize-draws",
-    type: "random-lots",
-    // Disabled 2026-10-20 with `listings.listingTypes.random-lots: false` — the
+    type: "clearance",
+    // Disabled 2026-10-20 with `listings.listingTypes.clearance: false` — the
     // same two-lock arrangement as the collector drops rail.
     order: 15,
     enabled: false,
     config: {
-      title: "Random Lots",
+      title: "Clearance",
       subtitle: "Buy an entry for a shot at something rare.",
       maxItems: 6,
       // "open" is deliberate — a closed draw is not enterable, so surfacing it

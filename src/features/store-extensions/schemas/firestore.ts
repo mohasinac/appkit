@@ -266,7 +266,7 @@ export const LISTING_TEMPLATE_TYPES = [
   "standard",
   "collector-drop",
   "pre-order",
-  "random-lots",
+  "clearance",
   "bundle",
   "classified",
   "digital-code",

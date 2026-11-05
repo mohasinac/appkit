@@ -164,7 +164,7 @@ export function PrizeRevealModal({
           rendered it. `inline`: the fairness box above already supplies the
           surrounding chrome.
         */}
-        <Disclaimer id="random-lots" inline />
+        <Disclaimer id="clearance" inline />
       </Stack>
     </Modal>
   );

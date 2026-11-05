@@ -56,10 +56,10 @@ export interface RandomLotsDetailPageViewProps {
   currentUserId?: string;
   /**
    * Admin-composed widget cards for this page's `AdminComposableRegion`
-   * (`pageId="random-lots-slug"`) — same mechanism as every other
+   * (`pageId="clearance-slug"`) — same mechanism as every other
    * listing-type detail page. Until 2026-11-04 this was the one PDP-shaped
    * page without it: the host page.tsx already fetched
-   * `getPageRegion("random-lots-slug")` for the lottery-mode branch but
+   * `getPageRegion("clearance-slug")` for the lottery-mode branch but
    * never passed it to this (classic-mode) branch at all.
    */
   pageRegionCards?: DashboardCard[];
@@ -126,16 +126,16 @@ export async function RandomLotsDetailPageView({
             <Stack align="start" gap="md" className="text-left">
               <Heading
                 level={1} size="2xl" weight="semibold" color="primary">
-                Random Lot Not Found
+                Clearance Not Found
               </Heading>
               <Text color="muted">
-                The random lot you are looking for may have been removed.
+                The clearance you are looking for may have been removed.
               </Text>
               <Link
                 href={String(ROUTES.PUBLIC.RANDOM_LOTS)}
                 className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
-                Browse Random Lots
+                Browse Clearance
               </Link>
             </Stack>
           </Container>
@@ -146,7 +146,7 @@ export async function RandomLotsDetailPageView({
 
   const p = product as unknown as FirestoreDocument;
   const currency = (p.currency as string | undefined) || getDefaultCurrency();
-  const title = String(p.title ?? p.name ?? "Random Lot");
+  const title = String(p.title ?? p.name ?? "Clearance");
   const slug = typeof p.slug === "string" ? p.slug : String(p.id ?? "");
 
   const items = stripIsWon(p.prizeDrawItems as PrizeDrawItem[] | undefined);
@@ -242,7 +242,7 @@ export async function RandomLotsDetailPageView({
     <Main>
       <HistoryTracker
         productId={String(p.id ?? p.slug ?? "")}
-        productType="random-lots"
+        productType="clearance"
         snapshot={{
           title,
           thumb,
@@ -266,7 +266,7 @@ export async function RandomLotsDetailPageView({
               href={String(ROUTES.PUBLIC.RANDOM_LOTS)}
               className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
-              Random Lots
+              Clearance
             </Link>
             <Span aria-hidden>/</Span>
             <Span className="truncate max-w-[200px]" color="muted">
@@ -299,7 +299,7 @@ export async function RandomLotsDetailPageView({
               <Div>
                 <Row gap="xs" wrap className="mb-2">
                   <Span size="xs" weight="semibold" className={CLS_PRIZE_BADGE}>
-                    Random Lot
+                    Clearance
                   </Span>
                   <Span
                     size="xs"
@@ -403,7 +403,7 @@ export async function RandomLotsDetailPageView({
                 * In the sidebar, beside the entry CTA, for rule 1: the
                 * decision is made here, not on a terms page.
               */}
-              <Disclaimer id="random-lots" />
+              <Disclaimer id="clearance" />
             </Stack>
             </SectionVisibilityGate>
           )}
@@ -459,7 +459,7 @@ export async function RandomLotsDetailPageView({
                 />
               </SectionVisibilityGate>
               <AdminComposableRegion
-                pageId="random-lots-slug"
+                pageId="clearance-slug"
                 initialCards={pageRegionCards}
                 functionalSlots={{ "pdp-primary-actions": primaryActionsNode }}
               />

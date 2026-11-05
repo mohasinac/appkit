@@ -814,7 +814,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
     },
   },
 
-  "random-lots": {
+  "clearance": {
     surfaces: ["homepage", "category", "brand"],
     render: ({ config }) => {
       const cfg = config as RandomLotsSectionConfig;

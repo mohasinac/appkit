@@ -197,7 +197,7 @@ export function CategoryDetailTabs({
       {activeTab === pluginFor("pre-order").tabSlug && (
         <PreOrdersIndexListing categorySlug={categorySlug} />
       )}
-      {activeTab === pluginFor("random-lots").tabSlug && (
+      {activeTab === pluginFor("clearance").tabSlug && (
         <RandomLotsIndexListing categorySlug={categorySlug} />
       )}
       {activeTab === "bundles" && (

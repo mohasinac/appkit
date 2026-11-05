@@ -32,7 +32,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
-const RANDOM_LOTS_TYPES: readonly ListingType[] = ["random-lots"];
+const RANDOM_LOTS_TYPES: readonly ListingType[] = ["clearance"];
 
 const STATUS_VARIANT: Record<
   string,
@@ -61,7 +61,7 @@ interface AdminProductsResponse {
 const RANDOM_LOTS_COLUMNS: AdminTableColumn<RandomLotsAdminRow>[] = [
   {
     key: "primary",
-    header: "Random Lot",
+    header: "Clearance",
     render: (row) => (
       <Stack gap="xs">
         <Text className="text-[var(--appkit-color-text)] line-clamp-1" weight="semibold">
@@ -135,22 +135,22 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
 
   const config: ListingViewConfig<AdminProductsResponse, RandomLotsAdminRow> = {
     portal: "admin",
-    title: "Random Lots",
+    title: "Clearance",
     search: {
-      placeholder: "Search random lots by name, brand or tag…",
+      placeholder: "Search clearance by name, brand or tag…",
       /*
        * 🛑 "or store" was a promise the corpus cannot keep.
        * `buildProductSearchTxt` indexes title, description, brand, brandSlug,
        * category names, tags, features, condition and card/grading details —
        * and NO store name or id. Typing a seller's name returned an empty list
-       * that reads as "this seller runs no random lots".
+       * that reads as "this seller runs no clearance".
        */
       fields: ["title", "description", "brand", "categoryNames", "tags", "features"],
     },
-    emptyLabel: "No random lots found",
+    emptyLabel: "No clearance found",
     filterKeys: ["status"],
     defaultSort: sortBy("createdAt", "DESC"),
-    queryKey: ["admin", "random-lots", "listing"],
+    queryKey: ["admin", "clearance", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
     sortOptions: [
       { value: sortBy("createdAt", "DESC"), label: "Newest" },
@@ -163,8 +163,8 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
       toRecordArray(response.items).map((item, index) => {
         const priceRaw = typeof item.price === "number" ? item.price : 0;
         return {
-          id: toStringValue(item.id, `random-lots-${index}`),
-          primary: toStringValue(item.title ?? item.name, "Untitled random lot"),
+          id: toStringValue(item.id, `clearance-${index}`),
+          primary: toStringValue(item.title ?? item.name, "Untitled clearance"),
           secondary: toStringValue(item.sellerName, ""),
           storeName: toStringValue(item.sellerName ?? item.storeId, "Unknown store"),
           status: toStringValue(item.status, "draft"),
@@ -180,7 +180,7 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
       typeof response.total === "number" ? response.total : mappedRows.length,
     buildFilters: (state) => {
       const status = state.status && state.status !== "All" ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null;
-      return [sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "random-lots"), status]
+      return [sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "clearance"), status]
         .filter(Boolean)
         .join(",");
     },
@@ -188,15 +188,15 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
     renderAboveContent: scope.renderAboveContent,
     rowHrefTemplate: String(ROUTES.ADMIN.RANDOM_LOTS_EDIT("{id}")),
     /*
-     * Random lots IS a product (`listingType: "random-lots"`), so it is created
+     * Clearance IS a product (`listingType: "clearance"`), so it is created
      * in the product editor like every other type — there is deliberately no
      * `RANDOM_LOTS_NEW` admin route, and inventing one would be a second create
      * path for the same document. `?listingType=` preselects the type so the
      * row an admin creates from here actually appears here.
      */
     primaryAction: {
-      label: "Add Random Lot",
-      href: `${String(ROUTES.ADMIN.PRODUCTS_NEW)}?${PRODUCT_FIELDS.LISTING_TYPE}=random-lots`,
+      label: "Add Clearance",
+      href: `${String(ROUTES.ADMIN.PRODUCTS_NEW)}?${PRODUCT_FIELDS.LISTING_TYPE}=clearance`,
     },
     // Rule #7: bulk-action array sourced from the ADMIN_BULK_ACTIONS preset.
     buildBulkActions: (selection): BulkActionItem[] =>
@@ -232,7 +232,7 @@ export function AdminRandomLotsView({ children, pageRegionCards = [], ...props }
 
   return (
     <>
-      <AdminComposableRegion pageId="admin-random-lots" initialCards={pageRegionCards} />
+      <AdminComposableRegion pageId="admin-clearance" initialCards={pageRegionCards} />
       <DataListingView config={config} />
     </>
   );

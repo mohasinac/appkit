@@ -46,7 +46,7 @@ import type { SectionType } from "../schemas/firestore";
 const HOMEPAGE_SECTION_LISTING_TYPE: Partial<Record<SectionType, ListingType>> = {
   "collector-drops": "collector-drop",
   "pre-orders": "pre-order",
-  "random-lots": "random-lots",
+  "clearance": "clearance",
 };
 
 /**

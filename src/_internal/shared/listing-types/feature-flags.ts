@@ -247,7 +247,7 @@ const ALL_LISTING_TYPES_MAP: Record<ListingType, true> = {
   spares: true,
   "collector-drop": true,
   "pre-order": true,
-  "random-lots": true,
+  "clearance": true,
   classified: true,
   "digital-code": true,
   live: true,

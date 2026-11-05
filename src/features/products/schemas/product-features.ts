@@ -52,7 +52,7 @@ export type ProductFeatureProductType =
   | "product"
   | "collector-drop"
   | "preorder"
-  | "random-lots"
+  | "clearance"
   | "classified"
   | "digital-code"
   | "live"

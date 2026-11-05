@@ -68,7 +68,7 @@ const PRIZE_REVEAL_MODE_OPTIONS: { value: "instant" | "scheduled"; label: string
 // ListingType uses the canonical SB1-G spellings ("standard", "pre-order");
 // ProductFeatureProductType predates it with legacy spellings for 2 values.
 // Replaces the old 2-case ternary that silently mapped every other type
-// (classified/digital-code/live/random-lots/art/stickers) to "product".
+// (classified/digital-code/live/clearance/art/stickers) to "product".
 const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeatureProductType> = {
   standard: "product",
   /*
@@ -81,7 +81,7 @@ const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeaturePr
   spares: "product",
   "collector-drop": "collector-drop",
   "pre-order": "preorder",
-  "random-lots": "random-lots",
+  "clearance": "clearance",
   classified: "classified",
   "digital-code": "digital-code",
   live: "live",
@@ -984,18 +984,18 @@ export function ProductForm({
         </>
       )}
 
-      {/* ── Random Lots section (SB4-C) ── */}
-      {listingTypeFlags["random-lots"] && (
+      {/* ── Clearance section (SB4-C) ── */}
+      {listingTypeFlags["clearance"] && (
         <>
           <Heading level={4} className="mt-4">
-            Random Lots Settings
+            Clearance Settings
           </Heading>
 
           <Checkbox
-            label="This is a random-lots listing"
+            label="This is a clearance listing"
             checked={isRandomLotListing(product)}
             onChange={(e) =>
-              update({ listingType: e.target.checked ? "random-lots" : "standard" })
+              update({ listingType: e.target.checked ? "clearance" : "standard" })
             }
             disabled={
               isReadonly ||
@@ -1019,7 +1019,7 @@ export function ProductForm({
             <Alert variant="error" title="Listing locked">
               At least one prize has been revealed for this draw — the listing
               and its fields are now frozen. To rerun a similar draw, clone it
-              into a new random-lots listing.
+              into a new clearance listing.
             </Alert>
           ) : null}
           <Alert variant="warning" title="Non-refundable">

@@ -168,7 +168,7 @@ export function AdminAssistantWidget() {
                 <FieldInput
                   name="question"
                   label="Your question"
-                  placeholder="e.g. Where do I turn off random lots?"
+                  placeholder="e.g. Where do I turn off clearance?"
                   value={question}
                   onChange={setQuestion}
                   maxLength={2000}

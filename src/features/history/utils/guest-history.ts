@@ -14,14 +14,14 @@ const DEFAULT_GUEST_HISTORY_KEY = process.env.NEXT_PUBLIC_APP_ID
   : "guest_history";
 
 // "prize-draw" kept as a back-compat read alias for localStorage history
-// written before the random-lots rename — new writes always use "random-lots".
+// written before the clearance rename — new writes always use "clearance".
 // 🛑 `auction` / `prize-draw` are pre-rename spellings kept for localStorage
 // rows written before the rename. Writers only emit the new values.
 export type GuestHistoryType =
   | "product"
   | "collector-drop"
   | "preorder"
-  | "random-lots"
+  | "clearance"
   | "auction"
   | "prize-draw";
 

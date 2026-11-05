@@ -161,7 +161,7 @@ export { productsBeybladeXSeedData } from "./products-beyblade-x-seed-data";
  */
 export { productsCollectorDropsSeedData } from "./products-collector-drops-seed-data";
 export { productsPreordersSeedData } from "./products-preorders-seed-data";
-export { productsRandomLotsSeedData } from "./products-random-lots-seed-data";
+export { productsRandomLotsSeedData } from "./products-clearance-seed-data";
 export { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
 export { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
 export { productsLiveItemsSeedData } from "./products-live-items-seed-data";

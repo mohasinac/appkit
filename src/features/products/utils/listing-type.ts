@@ -71,7 +71,8 @@ export function normalizeListingType(
    * (Root Cause #58).
    */
   if ((raw as string) === "auction") return "collector-drop";
-  if ((raw as string) === "prize-draw") return "random-lots";
+  if ((raw as string) === "prize-draw") return "clearance";
+  if ((raw as string) === "random-lots") return "clearance";
   return raw;
 }
 
@@ -90,7 +91,7 @@ export const isStandardListing = (
 
 export const isRandomLotListing = (
   input?: { listingType?: ListingType },
-): boolean => normalizeListingType(input) === "random-lots";
+): boolean => normalizeListingType(input) === "clearance";
 
 // SB-UNI-F 2026-05-13 — Phase 2 union extension predicates.
 export const isClassifiedListing = (

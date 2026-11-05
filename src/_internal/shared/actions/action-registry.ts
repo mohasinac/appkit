@@ -340,7 +340,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Add to cart",
       description: "Add a standard listing to the buyer's cart.",
       kind: "primary",
-      listingTypeScope: ["standard", "pre-order", "random-lots", "digital-code", "live"],
+      listingTypeScope: ["standard", "pre-order", "clearance", "digital-code", "live"],
     },
     "buy-now": {
       iconKey: "cart",
@@ -487,27 +487,27 @@ export const ACTIONS: ActionTree = {
   RANDOM_LOTS: {
     "buy-now": {
       iconKey: "cart",
-      id: "random-lots.buy-now",
+      id: "clearance.buy-now",
       label: "Buy now",
-      description: "Purchase a random-lots entry directly (buyout — skips cart, goes to checkout).",
+      description: "Purchase a clearance entry directly (buyout — skips cart, goes to checkout).",
       kind: "primary",
-      listingTypeScope: ["random-lots"],
+      listingTypeScope: ["clearance"],
     },
     "enter-draw": {
       iconKey: "confirm",
-      id: "random-lots.enter-draw",
+      id: "clearance.enter-draw",
       label: "Claim a lot",
       description: "Buy a lot — you receive a real item, allocated at random.",
       kind: "secondary",
-      listingTypeScope: ["random-lots"],
+      listingTypeScope: ["clearance"],
     },
     "reveal-code": {
       iconKey: "view",
-      id: "random-lots.reveal-code",
+      id: "clearance.reveal-code",
       label: "Reveal code",
-      description: "Reveal the buyer's random-lots redemption code.",
+      description: "Reveal the buyer's clearance redemption code.",
       kind: "primary",
-      listingTypeScope: ["random-lots"],
+      listingTypeScope: ["clearance"],
     },
   },
   /*
@@ -2889,7 +2889,7 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
       permissions: ["admin"],
     },
-    // ── Feature & random-lots management ────────────────────────────────────
+    // ── Feature & clearance management ────────────────────────────────────
     "delete-feature": {
       iconKey: "delete",
       id: "admin.delete-feature",
@@ -2907,15 +2907,15 @@ export const ACTIONS: ActionTree = {
     },
     "delete-prize-draw": {
       iconKey: "delete",
-      id: "admin.delete-random-lots",
-      label: "Delete Random Lots",
-      ariaLabel: "Delete selected random lots",
-      description: "Permanently delete the selected random-lots listings.",
+      id: "admin.delete-clearance",
+      label: "Delete Clearance",
+      ariaLabel: "Delete selected clearance",
+      description: "Permanently delete the selected clearance listings.",
       kind: "danger",
       permissions: ["admin"],
       confirmation: {
-        title: "Delete these random lots?",
-        body: "The selected random-lots listings will be permanently removed. This action cannot be undone.",
+        title: "Delete these clearance?",
+        body: "The selected clearance listings will be permanently removed. This action cannot be undone.",
         confirmLabel: "Delete",
         confirmKind: "danger",
       },

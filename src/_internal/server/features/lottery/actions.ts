@@ -91,11 +91,11 @@ export async function submitLotteryPullAction(
       lotteryConfig = event.lotteryConfig;
     } else {
       const product = await productRepository.findById(sourceId);
-      if (!product || product.listingType !== "random-lots") {
+      if (!product || product.listingType !== "clearance") {
         throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Random-lots product not found.");
       }
       if (product.status !== "published") {
-        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "This random lots draw is not currently active.");
+        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "This clearance draw is not currently active.");
       }
       if (product.prizeDrawMode !== "lottery" || !product.lotteryConfig) {
         throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Lottery config not found on product.");
@@ -132,7 +132,7 @@ export async function submitLotteryPullAction(
      * lottery_transactions.external_tx_id`, pointing at a collection that does
      * not exist. The gap was marked and left open.
      *
-     * It does not need that collection: a random-lots entry is bought through
+     * It does not need that collection: a clearance entry is bought through
      * the ordinary cart, so a paid ORDER is the payment record we already
      * have. `maxPullsPerTransaction` then does what its name says — it bounds
      * pulls per PAYMENT rather than per guessed string.
@@ -140,7 +140,7 @@ export async function submitLotteryPullAction(
      * 🛑 THE TWO SOURCES HAVE DIFFERENT PAYMENT REALITIES, and pretending
      * otherwise would either leave the hole open or break a working feature.
      *
-     * · A PRODUCT-sourced lottery is a `random-lots` listing bought through the
+     * · A PRODUCT-sourced lottery is a `clearance` listing bought through the
      *   ordinary cart, so a paid ORDER exists and is verifiable. Required.
      *
      * · An EVENT-sourced lottery carries real slot prices (the seed has both
@@ -181,7 +181,7 @@ export async function submitLotteryPullAction(
         );
       }
       /*
-       * The order must contain THIS random lots draw, or one paid order could be
+       * The order must contain THIS clearance draw, or one paid order could be
        * spent across every open lottery on the site.
        *
        * Both shapes are checked: `items[]` is the fan-out form, and the flat
@@ -195,7 +195,7 @@ export async function submitLotteryPullAction(
       if (!orderCoversSource) {
         throw new LotteryError(
           "TX_ALREADY_USED",
-          "That order does not include this random lots draw. Check the order ID.",
+          "That order does not include this clearance draw. Check the order ID.",
         );
       }
     } else {
@@ -439,7 +439,7 @@ export async function updateLotteryEventAction(
 }
 
 /**
- * Store owner or Admin — switch a random-lots product into lottery mode.
+ * Store owner or Admin — switch a clearance product into lottery mode.
  * Store owners provide prizeSlotPrice but weight is NEVER returned to them.
  */
 export async function setProductLotteryModeAction(

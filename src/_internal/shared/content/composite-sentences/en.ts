@@ -96,7 +96,7 @@ export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
     clauses: [
       { governs: { governs: "listingType", value: "collector-drop" }, text: "Collector Drops" },
       { governs: { governs: "listingType", value: "pre-order" }, text: "pre-orders" },
-      { governs: { governs: "listingType", value: "random-lots" }, text: "prize draws" },
+      { governs: { governs: "listingType", value: "clearance" }, text: "prize draws" },
     ],
     conjunction: "and",
     leadSeparator: ": ",
@@ -132,7 +132,7 @@ export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
     clauses: [
       { governs: { governs: "listingType", value: "collector-drop" }, text: "collector drops" },
       { governs: { governs: "listingType", value: "pre-order" }, text: "pre-orders" },
-      { governs: { governs: "listingType", value: "random-lots" }, text: "prize draws" },
+      { governs: { governs: "listingType", value: "clearance" }, text: "prize draws" },
       { governs: { governs: "listingType", value: "spares" }, text: "spare parts" },
       { governs: { governs: "listingType", value: "art" }, text: "art" },
       { governs: { governs: "listingType", value: "stickers" }, text: "sticker sheets" },
@@ -183,11 +183,11 @@ export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
     leadSeparator: ", plus ",
     terminator: ".",
   },
-  // /seller-guide/random-lots — random-lots is the page's own topic, fixed
+  // /seller-guide/clearance — clearance is the page's own topic, fixed
   // in `lead`; only the secondary digital-code mention is gated.
   "sellerGuideRandomLots.metaDescription": {
     id: "sellerGuideRandomLots.metaDescription",
-    lead: "Run random lots on LetItRip",
+    lead: "Run clearance on LetItRip",
     clauses: [
       { governs: { governs: "listingType", value: "digital-code" }, text: "digital code giveaways" },
     ],

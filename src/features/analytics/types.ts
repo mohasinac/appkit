@@ -13,7 +13,7 @@ export const PAGE_VIEW_ENTITY_TYPES = [
   "blog",
   "event",
   "pre-order",
-  "random-lots",
+  "clearance",
   "classified",
   "digital-code",
   "live",

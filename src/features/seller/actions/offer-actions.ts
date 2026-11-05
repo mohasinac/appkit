@@ -144,7 +144,7 @@ export async function makeOffer(
   const listingType = normalizeListingType(product);
 
   // Some listing types cannot be negotiated at all — a collector drop already has
-  // bidding, random-lots sells fixed-price entries. This was never checked, so
+  // bidding, clearance sells fixed-price entries. This was never checked, so
   // an offer could be (and in seed data was) attached to a collector drop, producing
   // a cart line that claims `listingType: "standard"` in the offer lane.
   if (!canMakeOffer(listingType)) {

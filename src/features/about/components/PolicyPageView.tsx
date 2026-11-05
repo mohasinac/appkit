@@ -175,7 +175,7 @@ export async function PolicyPageView({
 
   /*
    * 1A-ii composite-sentence cascade — `cancellationPolicy`'s section 3
-   * heading names collector-drop/pre-order/random-lots inline ("Collector
+   * heading names collector-drop/pre-order/clearance inline ("Collector
    * Drops, pre-orders and prize draws"). Overridden here rather than left as
    * static i18n so disabling one of those types drops it from the heading,
    * same as everywhere else this mechanism applies. Scoped to this one

@@ -519,7 +519,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       art: false,
       stickers: false,
       "collector-drop": false,
-      "random-lots": false,
+      "clearance": false,
       classified: false,
       "digital-code": false,
       live: false,

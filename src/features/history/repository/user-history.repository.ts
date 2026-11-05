@@ -20,7 +20,7 @@ import {
 } from "../../../constants/limits";
 
 // "prize-draw" kept as a back-compat read alias for history rows written
-// before the random-lots rename — new writes always use "random-lots".
+// before the clearance rename — new writes always use "clearance".
 // 🛑 `auction` and `prize-draw` are PRE-RENAME spellings, kept so a row
 // written before the rename still reads. Writers only ever emit the new
 // values; `appkit/scripts/migrate-collector-drop-rename.mjs` drains the old.
@@ -28,7 +28,7 @@ export type HistoryProductType =
   | "product"
   | "collector-drop"
   | "preorder"
-  | "random-lots"
+  | "clearance"
   | "auction"
   | "prize-draw";
 

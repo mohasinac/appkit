@@ -184,7 +184,7 @@ const RESOURCE_ICON_MAP: Record<string, string> = {
   "digital-codes": "🔑",
   classified: "📋",
   "pre-orders": "🕓",
-  "random-lots": "🎁",
+  "clearance": "🎁",
   collectorDrops: "🔨",
   bundles: "🎀",
   bids: "🔨",

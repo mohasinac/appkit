@@ -32,7 +32,7 @@ type DynamicRule = {
     categorySlug?: string;
     brandSlug?: string;
     tags?: string[];
-    listingType?: "standard" | "pre-order" | "random-lots";
+    listingType?: "standard" | "pre-order" | "clearance";
   };
   orderBy?: "price-asc" | "price-desc" | "createdAt-desc";
   limit: number;
@@ -58,7 +58,7 @@ const LISTING_TYPE_OPTIONS: Array<{
   { label: "Any", value: "" },
   { label: "Standard only", value: "standard" },
   { label: "Pre-order only", value: "pre-order" },
-  { label: "Random lots only", value: "random-lots" },
+  { label: "Clearance only", value: "clearance" },
 ];
 
 export interface BundleDynamicRuleEditorProps {

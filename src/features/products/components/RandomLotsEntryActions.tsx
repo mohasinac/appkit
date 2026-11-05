@@ -189,7 +189,7 @@ export function RandomLotsEntryActions({
 
       <NonRefundableConsentModal
         open={consentOpen}
-        listingType="random-lots"
+        listingType="clearance"
         itemTitle={title}
         priceLabel={formatCurrency(pricePerEntry, currency)}
         onCancel={() => setConsentOpen(false)}

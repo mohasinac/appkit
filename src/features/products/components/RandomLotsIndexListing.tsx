@@ -23,7 +23,7 @@ import { AVAILABILITY_VALUES, type AvailabilityFilter } from "../../../constants
 import { AvailabilityTabs } from "./AvailabilityTabs";
 import type { ListingType } from "../types";
 
-const RANDOM_LOTS_LISTING_TYPES: readonly ListingType[] = ["random-lots"];
+const RANDOM_LOTS_LISTING_TYPES: readonly ListingType[] = ["clearance"];
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -110,7 +110,7 @@ export function RandomLotsIndexListing({
     sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
-    listingType: "random-lots" as const,
+    listingType: "clearance" as const,
     availability,
   };
 
@@ -139,7 +139,7 @@ export function RandomLotsIndexListing({
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder="Search random lots..."
+        searchPlaceholder="Search clearance..."
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
@@ -194,7 +194,7 @@ export function RandomLotsIndexListing({
           </Grid>
         ) : filteredDraws.length === 0 ? (
           <Text paddingY="3xl" color="muted" size="sm" align="start">
-            No random lots found.
+            No clearance found.
           </Text>
         ) : (
           <Grid cols="cards" gap="md">

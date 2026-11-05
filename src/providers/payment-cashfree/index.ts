@@ -342,7 +342,7 @@ export class CashfreeProvider extends IPaymentProvider {
    * houses anywhere. Razorpay and PhonePe both name "Bidding/Auction houses"
    * explicitly, which is why neither declares these.
    *
-   * `random-lots` is included on the owner's framing, recorded here because
+   * `clearance` is included on the owner's framing, recorded here because
    * it is the part a reader will want to challenge: every numbered slot is a
    * named prize with an image (`lotterySlotWriteSchema`), so every buyer
    * receives a real item and nobody pays for nothing. That is consideration
@@ -355,7 +355,7 @@ export class CashfreeProvider extends IPaymentProvider {
    * real money moves is the outstanding item; a published list is evidence
    * about the policy, not a decision about this merchant.
    */
-  override readonly acceptsRestrictedListingTypes = ["collector-drop", "random-lots"] as const;
+  override readonly acceptsRestrictedListingTypes = ["collector-drop", "clearance"] as const;
   private readonly baseUrl: string;
   private readonly appId: string;
   private readonly secretKey: string;

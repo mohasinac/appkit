@@ -60,7 +60,7 @@ const LISTING_TEMPLATE_TYPE_LABEL: Record<ListingTemplateType, string> = {
   standard: "Standard",
   "collector-drop": "Collector Drop",
   "pre-order": "Pre-order",
-  "random-lots": "Random lots",
+  "clearance": "Clearance",
   bundle: "Bundle",
   classified: "Classified",
   "digital-code": "Digital code",

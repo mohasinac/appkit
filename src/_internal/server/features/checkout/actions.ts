@@ -2368,7 +2368,7 @@ export async function createCheckoutOrderAction(
   /*
    * 🛑 The third argument is NOT optional in effect, even though its type
    * allows omission. The gate FAILS CLOSED: a listing type carrying
-   * `requiresGatewayPermission` (collector-drop, random-lots) is refused
+   * `requiresGatewayPermission` (collector-drop, clearance) is refused
    * online payment unless the ACTIVE gateway declares it accepts that type.
    * Razorpay and PhonePe declare nothing, because both name "Bidding/Auction
    * houses" in their prohibited-merchant lists; only Cashfree opens them.
@@ -4175,7 +4175,7 @@ async function createPhonePeGroupOrder(
        * provider registers. Every Cashfree-settled order recorded
        * `method: "phonepe"` and no `cashfreeOrderId`, which is wrong audit
        * trail for a real, live gateway (Cashfree is the one this project
-       * uses specifically for collector-drop/random-lots compliance — see
+       * uses specifically for collector-drop/clearance compliance — see
        * CLAUDE.md § payment-cashfree). `gatewayName` is read off the
        * REGISTERED provider three lines above this function's own top, so
        * this is never a value the caller could get wrong.

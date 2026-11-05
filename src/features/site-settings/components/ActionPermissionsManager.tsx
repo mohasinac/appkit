@@ -44,7 +44,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   "reserve-now": "Pre-order CTA",
   "cancel-reservation": "Pre-order CTA",
   "checkout": "Checkout",
-  "enter-random-lots": "Random Lots",
+  "enter-clearance": "Clearance",
   // 🛑 The KEY is the action id and is persisted in
   // `siteSettings.actionPermissions`; only the display VALUE is renamed.
   "enter-raffle": "Giveaway",
@@ -75,8 +75,8 @@ const CATEGORY_COLORS: Record<string, string> = {
   // 🛑 These keys are the VALUES of CATEGORY_LABELS above, not action ids —
   // they must be renamed in lockstep or the group falls through to the grey
   // "Account" colour with no error (Root Cause #33). "Prize Draw" and
-  // "Raffle" were left here when the labels became "Random Lots"/"Giveaway".
-  "Random Lots": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
+  // "Raffle" were left here when the labels became "Clearance"/"Giveaway".
+  "Clearance": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Giveaway": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Moderation": "bg-error-surface text-error dark:bg-error-surface dark:text-error",
   "Social": "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300",

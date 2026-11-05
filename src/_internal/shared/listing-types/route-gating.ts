@@ -150,7 +150,7 @@ export function closedSurfaceContext(
  * ## What it still does NOT match
  *
  * Editorial pages that merely carry a name in the path — `/help/collector-drops`,
- * `/how-collector-drops-work`, `/seller-guide/random-lots`. None starts with
+ * `/how-collector-drops-work`, `/seller-guide/clearance`. None starts with
  * `/collector-drops`, so the `/`-delimited boundary excludes them for free, and that
  * is correct: an explainer about collector drops is honest reading when collector drops are
  * off.

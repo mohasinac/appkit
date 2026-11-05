@@ -24,8 +24,8 @@ export async function handleRandomLotsPaymentConfirmed(
   const { orderId, order } = input;
   if (!order.prizeDrawProductId) return;
   // "prize-draw" kept as a back-compat match for order items written before
-  // the random-lots rename.
-  if (!order.items?.some((it) => it.listingType === "random-lots" || it.listingType === "prize-draw")) return;
+  // the clearance rename.
+  if (!order.items?.some((it) => it.listingType === "clearance" || it.listingType === "prize-draw")) return;
 
   let product: { prizeRevealMode?: string } | undefined;
   try {

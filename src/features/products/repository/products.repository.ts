@@ -122,13 +122,14 @@ type ProductListingKind =
   | "product"
   | "prizedraw"
   | "prize-draw"
-  | "auction";
+  | "auction"
+  | "random-lots";
 
 const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   standard: LISTING_TYPE_VALUES.STANDARD,
   "collector-drop": LISTING_TYPE_VALUES.COLLECTOR_DROP,
   "pre-order": LISTING_TYPE_VALUES.PRE_ORDER,
-  "random-lots": LISTING_TYPE_VALUES.RANDOM_LOTS,
+  "clearance": LISTING_TYPE_VALUES.RANDOM_LOTS,
   classified: LISTING_TYPE_VALUES.CLASSIFIED,
   "digital-code": LISTING_TYPE_VALUES.DIGITAL_CODE,
   live: LISTING_TYPE_VALUES.LIVE,
@@ -160,6 +161,9 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   // "auction" is the pre-rename canonical spelling of `collector-drop` — kept
   // as an alias for the same reason as "prize-draw" above.
   auction: LISTING_TYPE_VALUES.COLLECTOR_DROP,
+  // "random-lots" is the pre-rename canonical spelling of `clearance` — kept
+  // as an alias for the same reason as "prize-draw"/"auction" above.
+  "random-lots": LISTING_TYPE_VALUES.RANDOM_LOTS,
 };
 
 const LISTING_KIND_ACCEPTED = new Set<string>(
@@ -1876,7 +1880,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      *   scope==publicCollectorDrops →  status==published,listingType==collector-drop
      *                              ("publicCollectorDrops" kept as an alias)
      *   scope==publicPreorders  →  status==published,listingType==pre-order
-     *   scope==publicRandomLots →  status==published,listingType==random-lots
+     *   scope==publicRandomLots →  status==published,listingType==clearance
      *                              ("publicPrizeDraws" kept as an alias)
      *   scope==published        →  status==published
      */

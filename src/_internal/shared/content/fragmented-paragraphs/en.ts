@@ -30,7 +30,7 @@ export const PARAGRAPHS_EN: Record<FragmentedParagraphId, ContentFragment[]> = {
       text: "Pre-orders can be cancelled before the item ships unless the listing states otherwise — some pre-orders are explicitly non-cancellable, and that is shown on the listing before you order.",
     },
     {
-      governs: { governs: "listingType", value: "random-lots" },
+      governs: { governs: "listingType", value: "clearance" },
       text: "Prize-draw entries cannot be cancelled once the draw has closed.",
     },
   ],

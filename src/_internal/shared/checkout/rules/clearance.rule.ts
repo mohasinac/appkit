@@ -15,7 +15,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  * 🛑 THE GATEWAY IS PROHIBITED HERE — `online` joined this list 2026-10-28,
  * and `cash` left it.
  *
- * A random-lots draw is a game of chance, which is on the prohibited-merchant lists
+ * A clearance draw is a game of chance, which is on the prohibited-merchant lists
  * Indian payment gateways inherit from the card networks — the same lists that
  * carry lotteries and collector drops. Routing entry payments through a standard
  * e-commerce MID is a terms breach, and the penalty is the merchant account
@@ -43,7 +43,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  * Razorpay and PhonePe — but it was a statement about WHO IS COLLECTING
  * wearing the shape of a statement about the listing.
  *
- * The owner's framing is what reopens it: a random lot is **a booster box**.
+ * The owner's framing is what reopens it: a clearance is **a booster box**.
  * Every numbered slot is a named prize with an image
  * (`lotterySlotWriteSchema`), so every buyer receives a real item and nobody
  * pays for nothing — consideration buying A GOOD, NOT A CHANCE. That is a
@@ -67,11 +67,11 @@ const RANDOM_LOTS_BLOCKED_PAYMENT_METHODS: CheckoutPaymentMethod[] = ["cod", "em
  * than abandon the entry.
  */
 const RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE =
-  "A random lot is paid for up front — winner assignment waits on confirmed payment, so pay-later methods are not available for random lots.";
+  "A clearance is paid for up front — winner assignment waits on confirmed payment, so pay-later methods are not available for clearance.";
 
 export const randomLotsRule: ListingCheckoutRule = {
   ...DEFAULT_LISTING_RULE,
-  orderType: "random-lots",
+  orderType: "clearance",
   nonRefundable: true,
   canMergeWithSameProduct: false,
   maxLinesPerOrder: RANDOM_LOTS_MAX_REVEALS_PER_ORDER,
@@ -80,10 +80,10 @@ export const randomLotsRule: ListingCheckoutRule = {
   requiresGatewayPermission: true,
   blockedPaymentMessage: RANDOM_LOTS_BLOCKED_PAYMENT_MESSAGE,
 
-  splitKey: (item: CartItemDocument) => `random-lots:${item.itemId}`,
+  splitKey: (item: CartItemDocument) => `clearance:${item.itemId}`,
 
   /**
-   * Slice a high-quantity random-lots entry into chunks of
+   * Slice a high-quantity clearance entry into chunks of
    * RANDOM_LOTS_MAX_REVEALS_PER_ORDER so each resulting order has at most
    * that many reveal slots.  Buying 7 entries → [3, 3, 1].
    */
@@ -123,7 +123,7 @@ export const randomLotsRule: ListingCheckoutRule = {
      * the gate reads, so the wording is unchanged.
      */
     for (const { item, product } of pairs) {
-      if (product.listingType !== "random-lots") continue;
+      if (product.listingType !== "clearance") continue;
       const max = product.prizeMaxEntries ?? 0;
       if (max <= 0) continue;
       const current = product.prizeCurrentEntries ?? 0;
@@ -139,14 +139,14 @@ export const randomLotsRule: ListingCheckoutRule = {
   },
 
   stockDecrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
-    if (product.listingType !== "random-lots") return {};
+    if (product.listingType !== "clearance") return {};
     return {
       prizeCurrentEntries: (product.prizeCurrentEntries ?? 0) + quantity,
     };
   },
 
   stockIncrementExtras: (product: ProductDocument, quantity: number): Record<string, JsonValue> => {
-    if (product.listingType !== "random-lots") return {};
+    if (product.listingType !== "clearance") return {};
     return {
       prizeCurrentEntries: Math.max(0, (product.prizeCurrentEntries ?? 0) - quantity),
     };
@@ -157,7 +157,7 @@ export const randomLotsRule: ListingCheckoutRule = {
     product: ProductDocument,
   ): OrderItemInput => ({
     ...line,
-    listingType: "random-lots",
+    listingType: "clearance",
     prizeRevealStatus:
       product.prizeRevealStatus === "open" ? "open" : "pending",
   }),

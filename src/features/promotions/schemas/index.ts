@@ -255,7 +255,7 @@ export const claimedCouponSourceSchema = z.enum([
   "promo",
   "spin",
   "giveaway",
-  "random-lots",
+  "clearance",
 ]);
 
 export const claimedCouponSnapshotSchema = z.object({

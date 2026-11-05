@@ -9,7 +9,7 @@ import { ACTION_META, MOBILE_PRIMARY_ACTIONS } from "../constants/action-defs";
  * The sticky-CTA registrar shared by every listing type whose bottom bar is just
  * "primary CTA that scrolls to the buy/contact panel, plus a price label".
  *
- * Pre-order, random-lots, classified, digital-code and live all fit that shape, which put
+ * Pre-order, clearance, classified, digital-code and live all fit that shape, which put
  * it well past the Rule of Three for a per-type copy. Collector Drop and standard product keep
  * their own registrars — the collector drop ticks a live countdown into `secondaryLabel`, and
  * the product bar carries three buttons whose labels track cart/wishlist state.
@@ -25,7 +25,7 @@ export interface ListingBottomActionsProps {
   currency: string;
   /**
    * Register nothing at all — for ended/closed/sold-out listings, matching how the
-   * collector drop and random-lots registrars bail out.
+   * collector drop and clearance registrars bail out.
    */
   unavailable?: boolean;
   /** Appended after the formatted price, e.g. "per entry". */

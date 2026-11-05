@@ -57,7 +57,7 @@ export const ADMIN_PRODUCT_LISTING_TYPE_TABS = [
   { id: "standard", label: "Products" },
   { id: "collector-drop", label: "Collector Drops" },
   { id: "pre-order", label: "Pre-orders" },
-  { id: "random-lots", label: "Random Lots" },
+  { id: "clearance", label: "Clearance" },
   { id: "classified", label: "Classifieds" },
   { id: "digital-code", label: "Digital Codes" },
   { id: "live", label: "Live Items" },

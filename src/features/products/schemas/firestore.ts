@@ -817,7 +817,7 @@ export interface ProductDocument extends BaseDocument {
    * SB-UNI-F — extended with classified | digital-code | live.
    */
   listingType: ListingType;
-  /** Hard cap on units a single user may purchase (SB1-B; bundle/random-lots). */
+  /** Hard cap on units a single user may purchase (SB1-B; bundle/clearance). */
   maxPerUser?: number;
   /** Reverse pointers — bundle ids that include this product. */
   partOfBundleIds?: string[];
@@ -836,7 +836,7 @@ export interface ProductDocument extends BaseDocument {
   sourceCatalogueItemId?: string;
   sourceCatalogueOwnerId?: string;
 
-  // ── Random-lots fields (SB1-B). Only populated when listingType === "random-lots".
+  // ── Random-lots fields (SB1-B). Only populated when listingType === "clearance".
   prizeDrawItems?: PrizeDrawItem[];
   pricePerEntry?: number;
   prizeMaxEntries?: number;
@@ -864,7 +864,7 @@ export interface ProductDocument extends BaseDocument {
   /** Public proof-of-fairness file (commit-reveal scheme). */
   prizeGithubFileUrl?: string;
   /**
-   * Draw mode for random-lots listings.
+   * Draw mode for clearance listings.
    * "reveal" = classic automatic-reveal flow (default, backward-compat).
    * "lottery" = user self-pull with weighted random slot assignment.
    */
@@ -989,7 +989,7 @@ export interface ProductDocument extends BaseDocument {
 }
 
 /**
- * Single prize within a random-lots listing. A draw can have between 3 and 16
+ * Single prize within a clearance listing. A draw can have between 3 and 16
  * prizes; each is revealed in `itemNumber` order during the reveal window.
  * `isWon` flips to `true` when the draw assigns this prize to a participant.
  */
@@ -1452,7 +1452,7 @@ export const productQueryHelpers = {
   available: () => ["availableQuantity", ">", 0] as const,
   collectorDrops: () => ["listingType", "==", "collector-drop"] as const,
   preOrders: () => ["listingType", "==", "pre-order"] as const,
-  randomLots: () => ["listingType", "==", "random-lots"] as const,
+  randomLots: () => ["listingType", "==", "clearance"] as const,
   standardListings: () => ["listingType", "==", "standard"] as const,
   // SB-UNI-F 2026-05-13 — Phase 2 query helpers.
   classifieds: () => ["listingType", "==", "classified"] as const,

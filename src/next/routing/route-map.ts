@@ -36,10 +36,10 @@ export const DEFAULT_ROUTE_MAP = {
      * detail page — see § "Bundles vs Product Groups vs Grouped Listings".
      */
     GROUP_DETAIL: (slug: string) => `/groups/${slug}`,
-    RANDOM_LOTS: "/random-lots",
-    RANDOM_LOTS_DETAIL: (slug: string) => `/random-lots/${slug}`,
+    RANDOM_LOTS: "/clearance",
+    RANDOM_LOTS_DETAIL: (slug: string) => `/clearance/${slug}`,
     SELLER_GUIDE_BUNDLES: "/seller-guide/bundles",
-    SELLER_GUIDE_RANDOM_LOTS: "/seller-guide/random-lots",
+    SELLER_GUIDE_RANDOM_LOTS: "/seller-guide/clearance",
     SELLERS: "/sellers",
     SELLER_DETAIL: (id: string) => `/sellers/${id}`,
     STORES: "/stores",
@@ -47,7 +47,7 @@ export const DEFAULT_ROUTE_MAP = {
     STORE_PRODUCTS: (storeSlug: string) => `/stores/${storeSlug}/products`,
     STORE_COLLECTOR_DROPS: (storeSlug: string) => `/stores/${storeSlug}/collector-drops`,
     STORE_PRE_ORDERS: (storeSlug: string) => `/stores/${storeSlug}/pre-orders`,
-    STORE_RANDOM_LOTS: (storeSlug: string) => `/stores/${storeSlug}/random-lots`,
+    STORE_RANDOM_LOTS: (storeSlug: string) => `/stores/${storeSlug}/clearance`,
     STORE_BUNDLES: (storeSlug: string) => `/stores/${storeSlug}/bundles`,
     STORE_REVIEWS: (storeSlug: string) => `/stores/${storeSlug}/reviews`,
     STORE_ABOUT: (storeSlug: string) => `/stores/${storeSlug}/about`,
@@ -384,7 +384,7 @@ export const DEFAULT_ROUTE_MAP = {
     /** D56 — the advertiser's own bookings and their moderation state. */
     AD_BOOKINGS: "/user/ad-bookings",
     DIGITAL_CODES: "/user/digital-codes",
-    RANDOM_LOTS: "/user/random-lots",
+    RANDOM_LOTS: "/user/clearance",
     EVENTS: "/user/events",
     CATALOGUE: "/user/catalogue",
     CATALOGUE_NEW: "/user/catalogue/new",
@@ -434,14 +434,14 @@ export const DEFAULT_ROUTE_MAP = {
     SLUG: "/store/slug",
     /** Tickets raised ABOUT this store (W11). Read-only for the seller. */
     SUPPORT: "/store/support",
-    // SB1-J — bundles + random lots
+    // SB1-J — bundles + clearance
     BUNDLES: "/store/bundles",
     BUNDLES_NEW: "/store/bundles/new",
     BUNDLES_EDIT: (id: string) => `/store/bundles/${id}/edit`,
-    RANDOM_LOTS: "/store/random-lots",
-    RANDOM_LOTS_NEW: "/store/random-lots/new",
-    RANDOM_LOTS_EDIT: (id: string) => `/store/random-lots/${id}/edit`,
-    RANDOM_LOTS_ENTRIES: (id: string) => `/store/random-lots/${id}/entries`,
+    RANDOM_LOTS: "/store/clearance",
+    RANDOM_LOTS_NEW: "/store/clearance/new",
+    RANDOM_LOTS_EDIT: (id: string) => `/store/clearance/${id}/edit`,
+    RANDOM_LOTS_ENTRIES: (id: string) => `/store/clearance/${id}/entries`,
     // SB-UNI-R — classified / digital-code / live
     CLASSIFIED: "/store/classified",
     CLASSIFIED_NEW: "/store/classified/new",
@@ -690,14 +690,14 @@ export const DEFAULT_ROUTE_MAP = {
     TAX_CODES: "/admin/tax-codes",
     FEATURES_NEW: "/admin/features/new",
     FEATURES_EDIT: (id: string) => `/admin/features/${id}/edit`,
-    // SB1-J — bundles + random lots (admin moderation)
+    // SB1-J — bundles + clearance (admin moderation)
     // S-SBUNI-4 — BUNDLES_NEW added alongside BUNDLES_EDIT.
     BUNDLES: "/admin/bundles",
     BUNDLES_NEW: "/admin/bundles/new",
     BUNDLES_EDIT: (id: string) => `/admin/bundles/${id}/edit`,
-    RANDOM_LOTS: "/admin/random-lots",
-    RANDOM_LOTS_EDIT: (id: string) => `/admin/random-lots/${id}/edit`,
-    RANDOM_LOTS_ENTRIES: (id: string) => `/admin/random-lots/${id}/entries`,
+    RANDOM_LOTS: "/admin/clearance",
+    RANDOM_LOTS_EDIT: (id: string) => `/admin/clearance/${id}/edit`,
+    RANDOM_LOTS_ENTRIES: (id: string) => `/admin/clearance/${id}/entries`,
     LOTTERIES: "/admin/lotteries",
     /*
      * Slot configuration only. A lottery EVENT (title, dates, status, media)

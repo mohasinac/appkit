@@ -269,7 +269,7 @@ export {
 // `CHECKOUT_PAYMENT_METHODS` above it and the money helpers further down this
 // file: `/api/payment/create-order` is the consumer's gateway capture route,
 // and every rule that route needs has had to be exported here after the route
-// was found missing it. `collector-drop.rule.ts` / `random-lots.rule.ts` have declared
+// was found missing it. `collector-drop.rule.ts` / `clearance.rule.ts` have declared
 // `blockedPaymentMethods: ["online", ...]` since 2026-10-28 — Indian payment
 // aggregators prohibit settling collector drops/lotteries through a standard
 // e-commerce MID, and the penalty is the whole merchant account frozen — but

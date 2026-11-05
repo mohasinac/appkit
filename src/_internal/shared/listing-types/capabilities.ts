@@ -40,7 +40,7 @@ export interface ListingTypeCapability {
    * path to it.
    *
    * False wherever a negotiated price would collide with the type's own pricing
-   * mechanism: a collector drop already has bidding, random-lots sells fixed-price
+   * mechanism: a collector drop already has bidding, clearance sells fixed-price
    * entries, a digital code is a fungible pool item, a pre-order is a deposit
    * against a future price, and a live item is jurisdiction-gated with a
    * verified vendor on the hook for it.
@@ -95,7 +95,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     hasInstantFulfillment: false,
     canMakeOffer: false,  // deposit against a future price, not a price to haggle
   },
-  "random-lots": {
+  "clearance": {
     canAddToCart: true,
     canBid: false,
     supportsShipping: true,

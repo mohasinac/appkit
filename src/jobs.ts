@@ -50,7 +50,7 @@ export {
   storeAnalyticsHandler,
   listingProcessorHandler,
   supportedListingCollections,
-  // SB1-L (S7-PrizeDraws) — random-lots reveal redesigned to a fully-automatic model.
+  // SB1-L (S7-PrizeDraws) — clearance reveal redesigned to a fully-automatic model.
   onRandomLotsPaymentConfirmedHandler,
   randomLotsSoldOutRevealHandler,
   randomLotsExpiryRevealHandler,

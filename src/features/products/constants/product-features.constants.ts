@@ -34,7 +34,7 @@ export const PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS: SelectOption<ProductFeaturePr
     { value: "product", label: "Standard product" },
     { value: "collector-drop", label: "Collector Drop" },
     { value: "preorder", label: "Pre-order" },
-    { value: "random-lots", label: "Random lots" },
+    { value: "clearance", label: "Clearance" },
     { value: "classified", label: "Classified" },
     { value: "digital-code", label: "Digital code" },
     { value: "live", label: "Live item" },

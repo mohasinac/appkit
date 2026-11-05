@@ -6,7 +6,7 @@
  * `standard`, `spares` and `collector drop` are BASIC — every store can use them.
  * The other seven are ADVANCED and need the `advanced_listing_types`
  * capability, because each carries an obligation a new seller has not agreed
- * to yet: a pre-order takes money for stock that does not exist, random lots
+ * to yet: a pre-order takes money for stock that does not exist, clearance
  * is a regulated promotion, a classified happens off-platform with no escrow,
  * a digital code must be delivered from a pool the seller has to keep stocked,
  * and a live listing is an animal.
@@ -54,7 +54,7 @@ export const LISTING_TYPE_TIER: Record<ListingType, ListingTypeTier> = {
   spares: "basic",
   "collector-drop": "basic",
   "pre-order": "advanced",
-  "random-lots": "advanced",
+  "clearance": "advanced",
   classified: "advanced",
   "digital-code": "advanced",
   live: "advanced",

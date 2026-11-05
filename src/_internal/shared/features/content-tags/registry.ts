@@ -61,7 +61,7 @@ export interface ContentFlagSnapshot {
  * tagging must not have everything vanish).
  *
  * Tags are AND'd, not OR'd: a FAQ explaining both collector-drop bidding and
- * random-lots odds should disappear the moment either type closes, not stay
+ * clearance odds should disappear the moment either type closes, not stay
  * up because the other is still open and give half-true instructions.
  */
 export function isContentVisible(

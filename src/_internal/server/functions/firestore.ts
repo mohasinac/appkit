@@ -72,10 +72,10 @@ export const onRandomLotsPaymentConfirmed = defineFunction({
    * keys `module.exports` off `def.name`, so this string IS the deployed Cloud Function
    * name — renaming it would orphan the live function and create a second one beside it.
    * The exported const, the handler symbol and the module path were renamed to
-   * random-lots; only this identifier is frozen.
+   * clearance; only this identifier is frozen.
    */
   name: "onPrizeDrawPaymentConfirmed",
-  description: "Instant-mode random-lots winner assignment the moment an order's payment is confirmed.",
+  description: "Instant-mode clearance winner assignment the moment an order's payment is confirmed.",
   trigger: { kind: "documentUpdated", pathPattern: "orders/{orderId}" },
   handler: onRandomLotsPaymentConfirmedHandler,
   options: { region: REGION },
@@ -85,7 +85,7 @@ export const randomLotsSoldOutReveal = defineFunction({
   // 🛑 `name` intentionally retains the old "prizeDraw" spelling — it is the DEPLOYED
   // Cloud Function name (see `onRandomLotsPaymentConfirmed` above for the full reason).
   name: "prizeDrawSoldOutReveal",
-  description: "Assign winners for all outstanding random-lots orders the moment a scheduled-mode draw sells out.",
+  description: "Assign winners for all outstanding clearance orders the moment a scheduled-mode draw sells out.",
   trigger: { kind: "documentWritten", pathPattern: "products/{productId}" },
   handler: randomLotsSoldOutRevealHandler,
   options: { region: REGION },

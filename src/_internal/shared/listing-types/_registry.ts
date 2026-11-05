@@ -25,7 +25,7 @@
 import * as standard from "./standard/config";
 import * as collectorDrop from "./collector-drop/config";
 import * as preOrder from "./pre-order/config";
-import * as randomLots from "./random-lots/config";
+import * as randomLots from "./clearance/config";
 // SB-UNI-F 2026-05-13 — Phase 2 union extension.
 import * as classified from "./classified/config";
 import * as digitalCode from "./digital-code/config";
@@ -235,7 +235,7 @@ export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   standard: standard.config,
   "collector-drop": collectorDrop.config,
   "pre-order": preOrder.config,
-  "random-lots": randomLots.config,
+  "clearance": randomLots.config,
   classified: classified.config,
   "digital-code": digitalCode.config,
   live: live.config,
@@ -297,7 +297,8 @@ export function pluginFor(type: ListingType): ListingTypePlugin {
  */
 const LEGACY_SLUG_PREFIXES: Readonly<Record<string, ListingType>> = {
   "auction-": "collector-drop",
-  "prizedraw-": "random-lots",
+  "prizedraw-": "clearance",
+  "randomlots-": "clearance",
 };
 
 export function detectListingTypeFromSlug(slug: string): ListingType {

@@ -9,7 +9,7 @@ import type { DashboardCard } from "../../../_internal/shared/features/dashboard
 
 type SearchParams = Record<string, string | string[]>;
 
-const LISTING_TYPES = ["random-lots"] as const;
+const LISTING_TYPES = ["clearance"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
@@ -36,7 +36,7 @@ export async function StoreRandomLotsPageView({ storeSlug, searchParams, pageReg
 
   return (
     <>
-      <AdminComposableRegion pageId="stores-storeslug-random-lots" initialCards={pageRegionCards} />
+      <AdminComposableRegion pageId="stores-storeslug-clearance" initialCards={pageRegionCards} />
       <RandomLotsIndexListing storeId={storeId} initialData={result ?? undefined} />
     </>
   );

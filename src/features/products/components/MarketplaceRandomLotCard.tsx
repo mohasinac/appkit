@@ -56,7 +56,7 @@ export interface MarketplaceRandomLotCardProps {
 }
 
 const DEFAULT_LABELS: Required<MarketplaceRandomLotCardLabels> = {
-  randomLotBadge: "Random Lots",
+  randomLotBadge: "Clearance",
   pendingBadge: "Reveal pending",
   openBadge: "Reveal open",
   closedBadge: "Lot closed",

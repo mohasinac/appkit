@@ -1184,7 +1184,7 @@ export {
 } from "./_internal/server/features/raffle/actions";
 /*
  * [SERVER-ONLY] The ONE reason → {status, code} map for the two event
- * random-lots cores, shared by both API routes and both Firebase handlers.
+ * clearance cores, shared by both API routes and both Firebase handlers.
  * Four hand-written copies disagreed before this (Root Cause #85).
  */
 export {
@@ -2069,13 +2069,13 @@ export { updateActionConfigDomain, updateNavConfigDomain, updateNavOrderDomain, 
 
 // ── Classified listing — data + adapters + metadata + OG ─────────────────────
 export { getClassifiedForDetail } from "./_internal/server/features/classified/data";
-// OG-coverage-followup 2026-05-23 — random-lots OG renderer.
+// OG-coverage-followup 2026-05-23 — clearance OG renderer.
 export {
   getRandomLotForDetail,
   renderRandomLotsOg,
   renderRandomLotsOgImage,
   type RandomLotsOgData,
-} from "./_internal/server/features/random-lots/index";
+} from "./_internal/server/features/clearance/index";
 // OG-coverage-followup 2026-05-23 — item-requests OG renderer.
 export {
   getItemRequestForDetail,

@@ -25,7 +25,7 @@ export const ADMIN_ROW_HREF_BY_RESOURCE: Record<AdminRowResource, (rowId: string
 /** Display labels for the "Pin to dashboard" action's resource picker / card subtitle. */
 export const ADMIN_ROW_RESOURCE_LABEL: Record<AdminRowResource, string> = {
   BUNDLE: "Bundle",
-  RANDOM_LOTS: "Random Lots listing",
+  RANDOM_LOTS: "Clearance listing",
   BEY: "Bey",
   PART: "Part",
   SUBLISTING: "Sublisting category",

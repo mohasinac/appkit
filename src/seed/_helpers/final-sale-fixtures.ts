@@ -27,8 +27,8 @@ export const RETURNABLE_FIXTURE_IDS: ReadonlySet<string> = new Set([
   "collectordrop-beyblade-x-shark-edge",
   // pre-order
   "preorder-beyblade-x-bx-09-glide-ring",
-  // random-lots
-  "randomlots-beyblade-scheduled-demo",
+  // clearance
+  "clearance-beyblade-scheduled-demo",
   // classified
   "classified-beyblade-x-starter-pune",
   // digital-code

@@ -53,7 +53,7 @@ export type ListingType =
   | "standard"
   | "collector-drop"
   | "pre-order"
-  | "random-lots"
+  | "clearance"
   | "classified"
   | "digital-code"
   | "live"

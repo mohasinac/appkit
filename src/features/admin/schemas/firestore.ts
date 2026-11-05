@@ -1613,7 +1613,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
       art: false,
       stickers: false,
       "collector-drop": false,
-      "random-lots": false,
+      "clearance": false,
       classified: false,
       "digital-code": false,
       live: false,

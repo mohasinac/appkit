@@ -37,7 +37,7 @@ interface LotteryEntriesViewProps {
   /**
    * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
    * by three distinct routes (the admin lottery entries page, and the admin
-   * + store random-lots entries pages), so every caller computes its own
+   * + store clearance entries pages), so every caller computes its own
    * route-template-derived id rather than this component guessing one.
    */
   pageId: string;

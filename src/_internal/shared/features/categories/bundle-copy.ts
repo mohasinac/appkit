@@ -116,7 +116,7 @@ export const BUNDLE_COPY = {
     bundleKindBrand: "Brand collection",
     // Prize-draw draw count
     drawCountLabel: "Draw entries included",
-    drawCountHint: "How many draw entries the buyer receives for this random-lots item when purchasing the bundle.",
+    drawCountHint: "How many draw entries the buyer receives for this clearance item when purchasing the bundle.",
     drawCountPlaceholder: "e.g. 5",
     dynamic: {
       title: "Dynamic query rule",

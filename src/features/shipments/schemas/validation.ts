@@ -32,7 +32,7 @@ const listingTypeSchema = z.enum([
   "standard",
   "collector-drop",
   "pre-order",
-  "random-lots",
+  "clearance",
   "classified",
   "digital-code",
   "live",

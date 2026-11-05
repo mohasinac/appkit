@@ -15,7 +15,7 @@ import type { DashboardCard } from "../../../_internal/shared/features/dashboard
 
 type SearchParams = Record<string, string | string[]>;
 
-const LISTING_TYPES = ["random-lots"] as const;
+const LISTING_TYPES = ["clearance"] as const;
 const DEFAULT_PAGE_SIZE = 24;
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
@@ -26,7 +26,7 @@ export interface RandomLotsListingViewProps {
 }
 
 /**
- * Public listing page (SB4-F). Server-fetches published random-lots products,
+ * Public listing page (SB4-F). Server-fetches published clearance products,
  * hydrates the client `RandomLotsIndexListing` which renders the filter
  * toolbar + collage-thumb grid. URL params: `?storeId=…&prizeRevealStatus=…`.
  *
@@ -62,14 +62,14 @@ export async function RandomLotsListingView({
             level={1}
             className="mb-2" color="primary" size="3xl" weight="semibold"
           >
-            Random Lots
+            Clearance
           </Heading>
           <Text className="mb-6 text-[var(--appkit-color-text-muted)]" size="sm">
             Every lot ships a real item — the surprise is which one. Sealed
             Pokémon, Hot Wheels Super Treasure Hunts, Gundam kits and more,
             allocated by crypto.randomInt with proof on GitHub.
           </Text>
-          <AdminComposableRegion pageId="random-lots-index" initialCards={pageRegionCards} />
+          <AdminComposableRegion pageId="clearance-index" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
           <RandomLotsIndexListing initialData={result ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />

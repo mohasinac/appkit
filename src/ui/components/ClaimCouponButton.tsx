@@ -65,7 +65,7 @@ export interface ClaimCouponButtonProps {
   label?: string;
   className?: string;
   size?: "sm" | "md" | "lg";
-  source?: "manual" | "promo" | "spin" | "giveaway" | "random-lots";
+  source?: "manual" | "promo" | "spin" | "giveaway" | "clearance";
 }
 
 export function ClaimCouponButton({

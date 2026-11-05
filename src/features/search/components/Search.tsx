@@ -36,7 +36,7 @@ export type SearchResourceType =
   | "products"
   | "collector-drops"
   | "pre-orders"
-  | "random-lots"
+  | "clearance"
   | "bundles"
   | "classified"
   | "digital-codes"

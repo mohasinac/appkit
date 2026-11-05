@@ -4,7 +4,7 @@ import { defineAssistantTool, type AnyAssistantToolDef } from "../define";
 
 /**
  * `searchNav` — 2E-ii's admin-facing tool (overhaul brief). Answers "where do
- * I turn off random lots" / "how do I add a coupon" with a real page link,
+ * I turn off clearance" / "how do I add a coupon" with a real page link,
  * instead of the model guessing from training-time knowledge of a generic
  * admin panel that does not match this one.
  *
@@ -52,7 +52,7 @@ export function createSearchNavTool(items: readonly SearchableNavItem[]): AnyAss
     name: "searchNav",
     description:
       "Find where a specific admin/seller page, control or setting lives — e.g. " +
-      "'where do I turn off random lots', 'how do I add a coupon', 'where are " +
+      "'where do I turn off clearance', 'how do I add a coupon', 'where are " +
       "payment settings'. Returns the real page link(s). Use this for any " +
       "'where is X' / 'how do I get to Y' question rather than guessing.",
     inputSchema,

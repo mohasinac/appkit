@@ -15,7 +15,7 @@ export function RandomLotsBottomActions({
 }: RandomLotsBottomActionsProps) {
   return (
     <ListingBottomActions
-      listingType="random-lots"
+      listingType="clearance"
       anchorId="prize-draw-buy-bar"
       price={pricePerEntry}
       currency={currency}

@@ -287,7 +287,7 @@ const fetchPreOrderUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "pre-order", (slug) => ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug), "pre-order");
 
 const fetchRandomLotsUrls = (baseUrl: string) =>
-  fetchListingTypeUrls(baseUrl, "random-lots", (slug) => ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(slug), "random-lots");
+  fetchListingTypeUrls(baseUrl, "clearance", (slug) => ROUTES.PUBLIC.RANDOM_LOTS_DETAIL(slug), "clearance");
 
 const fetchClassifiedUrls = (baseUrl: string) =>
   fetchListingTypeUrls(baseUrl, "classified", (slug) => ROUTES.PUBLIC.CLASSIFIED_DETAIL(slug), "classified");
