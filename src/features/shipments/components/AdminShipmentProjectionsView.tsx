@@ -56,6 +56,7 @@ export function AdminShipmentProjectionsView({ pageRegionCards = [] }: AdminShip
           value={sorts}
           onValueChange={setSorts}
           options={SORT_OPTIONS}
+          wrapperClassName="w-auto min-w-[14rem] flex-shrink-0"
         />
       </Div>
 

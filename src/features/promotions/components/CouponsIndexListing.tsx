@@ -282,7 +282,11 @@ export function CouponsIndexListing({
           </Grid>
         ) : displayCoupons.length === 0 ? (
           <Div className="text-left" padding="y-4xl">
-            <Text color="faint">No coupons match your search.</Text>
+            <Text color="faint">
+              {table.get(TABLE_KEYS.QUERY) || activeFilterCount > 0
+                ? "No coupons match your search."
+                : "No active coupons right now — check back soon."}
+            </Text>
           </Div>
         ) : (
           <Grid cols="cardsWide" gap="sm">
