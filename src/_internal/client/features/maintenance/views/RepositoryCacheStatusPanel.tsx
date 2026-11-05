@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Button, Div, Heading, Skeleton, Span, Text } from "@mohasinac/appkit/client";
+import { Button, Div, FieldInput, Heading, Skeleton, Span, Text } from "@mohasinac/appkit/client";
 import { normalizeError } from "../../../../../errors/normalize";
 import { toUserMessage } from "../../../../../errors/error-display-map";
 import { ADMIN_ENDPOINTS } from "../../../../../constants/api-endpoints";
@@ -58,6 +58,11 @@ export function RepositoryCacheStatusPanel(): React.JSX.Element {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
   const [clearingId, setClearingId] = React.useState<string | null>(null);
+  // Item 8 (overhaul brief) — draft TTL-minutes input per named row, keyed
+  // by source id. Seeded from the live ttlMs once status loads; typing
+  // doesn't save until "Save".
+  const [ttlDrafts, setTtlDrafts] = React.useState<Record<string, string>>({});
+  const [savingTtlId, setSavingTtlId] = React.useState<string | null>(null);
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -76,6 +81,15 @@ export function RepositoryCacheStatusPanel(): React.JSX.Element {
         return;
       }
       setStatus(body.data);
+      setTtlDrafts((prev) => {
+        const next = { ...prev };
+        for (const n of body.data.named) {
+          if (next[n.id] === undefined) {
+            next[n.id] = n.ttlMs !== null ? String(Math.round(n.ttlMs / 60_000)) : "";
+          }
+        }
+        return next;
+      });
     } catch (err) {
       const e = normalizeError(err);
       setError(
@@ -122,6 +136,45 @@ export function RepositoryCacheStatusPanel(): React.JSX.Element {
       );
     } finally {
       setClearingId(null);
+    }
+  }
+
+  async function saveTtl(id: string): Promise<void> {
+    const raw = ttlDrafts[id] ?? "";
+    const minutes = Number(raw);
+    if (raw.trim() === "" || !Number.isFinite(minutes) || minutes < 0) {
+      setError("Enter a whole number of minutes, 0 or greater.");
+      return;
+    }
+    setSavingTtlId(id);
+    setError(null);
+    try {
+      const res = await fetch(ADMIN_ENDPOINTS.MAINTENANCE_CACHE, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, minutes }),
+      });
+      const body = (await res.json()) as
+        | { success: true; data: { status: CacheAdminStatus } }
+        | { success: false; code?: string };
+      if (!res.ok || !body.success) {
+        setError(
+          toUserMessage("code" in body ? String(body.code) : undefined, undefined, {
+            fallback: `Could not save that TTL (HTTP ${res.status}).`,
+          }),
+        );
+        return;
+      }
+      setStatus(body.data.status);
+    } catch (err) {
+      const e = normalizeError(err);
+      setError(
+        toUserMessage(e.code, undefined, {
+          fallback: "Could not reach the cache endpoint.",
+        }),
+      );
+    } finally {
+      setSavingTtlId(null);
     }
   }
 
@@ -196,14 +249,34 @@ export function RepositoryCacheStatusPanel(): React.JSX.Element {
                 </Text>
               </Div>
               {canClear ? (
-                <Button
-                  action={ACTIONS.ADMIN["clear-repository-cache"]}
-                  variant="ghost"
-                  size="sm"
-                  isLoading={clearingId === n.id}
-                  disabled={clearingId !== null || !n.cached}
-                  onClick={() => clear("named", n.id)}
-                />
+                <Div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <Div style={{ width: "5.5rem" }}>
+                    <FieldInput
+                      name={`ttl-${n.id}`}
+                      type="number"
+                      label="TTL (min)"
+                      value={ttlDrafts[n.id] ?? ""}
+                      onChange={(next) => setTtlDrafts((prev) => ({ ...prev, [n.id]: next }))}
+                    />
+                  </Div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    isLoading={savingTtlId === n.id}
+                    disabled={savingTtlId !== null}
+                    onClick={() => saveTtl(n.id)}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    action={ACTIONS.ADMIN["clear-repository-cache"]}
+                    variant="ghost"
+                    size="sm"
+                    isLoading={clearingId === n.id}
+                    disabled={clearingId !== null || !n.cached}
+                    onClick={() => clear("named", n.id)}
+                  />
+                </Div>
               ) : null}
             </Div>
           ))}

@@ -66,6 +66,30 @@ export function getCacheAdminStatus(): CacheAdminStatus {
   };
 }
 
+/**
+ * Item 8 (overhaul brief) — admin-configurable cache TTLs, write side. Only
+ * named sources are overridable today (the two visible in this panel with a
+ * real `ttlMs`) — keyed sources (products) report an entry COUNT, not a
+ * TTL, in `KeyedCacheStatus`, so there is nothing here yet to override.
+ *
+ * Merges into whatever overrides already exist rather than replacing the
+ * whole map, since this writes through the same `updateSingleton()` every
+ * other admin setting uses, and a sibling tab's concurrent save must not
+ * silently drop a cache-TTL change this one just made (or vice versa).
+ *
+ * `minutes < 0` is rejected by the caller's own Zod schema, not here — this
+ * function's job is the merge-and-write, not input validation.
+ */
+export async function setNamedCacheTtlOverride(id: string, minutes: number): Promise<void> {
+  if (!namedSources().some((s) => s.id === id)) {
+    throw new Error(`"${id}" is not a known named cache source`);
+  }
+  const current = await siteSettingsRepository.getSingleton();
+  await siteSettingsRepository.updateSingleton({
+    cacheTtlOverrideMinutes: { ...current.cacheTtlOverrideMinutes, [id]: minutes },
+  });
+}
+
 export type CacheClearTarget =
   | { kind: "named"; id: string }
   | { kind: "keyed"; id: string }

@@ -1373,6 +1373,15 @@ export interface SiteSettingsDocument extends BaseDocument {
    */
   integrations?: SiteSettingsIntegrations;
   platformLimits?: SiteSettingsPlatformLimits;
+  /**
+   * Item 8 (overhaul brief) — admin-configurable cache TTLs. Key = the same
+   * source id `cache-admin.ts`'s `namedSources()` already uses
+   * ("site-settings-main" / "site-settings-flags"), value = minutes.
+   * Absent key = that source's hardcoded default applies, unchanged. A
+   * Record keyed by source id (not one named field per source) so a future
+   * fourth cache source needs zero schema change to become overridable.
+   */
+  cacheTtlOverrideMinutes?: Record<string, number>;
   adSettings?: SiteSettingsAdSettings;
   /**
    * Theme color overrides — injected as CSS custom properties by LayoutShellClient.

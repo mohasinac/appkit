@@ -338,7 +338,7 @@ export type {
 } from "./_internal/server/features/maintenance/cloud-logs-data";
 
 // [SERVER-ONLY] Admin cache status + clear for /admin/maintenance/cache — item 8 §18 (overhaul brief).
-export { getCacheAdminStatus, clearAdminCache } from "./_internal/server/features/maintenance/cache-admin";
+export { getCacheAdminStatus, clearAdminCache, setNamedCacheTtlOverride } from "./_internal/server/features/maintenance/cache-admin";
 export type {
   CacheAdminStatus,
   NamedCacheStatus,

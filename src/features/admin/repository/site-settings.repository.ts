@@ -90,6 +90,26 @@ export function toDottedPaths(
 }
 
 /**
+ * Item 8 (overhaul brief) — admin-configurable cache TTLs. `sourceId` is the
+ * same id `cache-admin.ts`'s `namedSources()` uses ("site-settings-main" /
+ * "site-settings-flags"); kept here rather than imported from there, since
+ * `cache-admin.ts` already imports THIS repository and the reverse import
+ * would be circular. An absent/non-finite override falls back to the
+ * caller's hardcoded default, unchanged. `0` is honoured as a deliberate
+ * "don't cache this" admin choice, not treated as falsy-absent.
+ */
+function resolveCacheTtlMs(
+  settings: Pick<SiteSettingsDocument, "cacheTtlOverrideMinutes">,
+  sourceId: string,
+  fallbackMs: number,
+): number {
+  const minutes = settings.cacheTtlOverrideMinutes?.[sourceId];
+  return typeof minutes === "number" && Number.isFinite(minutes) && minutes >= 0
+    ? minutes * 60_000
+    : fallbackMs;
+}
+
+/**
  * Repository for site settings management
  *
  * Note: Site settings is a singleton document with ID "global"
@@ -155,7 +175,10 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
 
     if (isProd) {
       cacheManager.set(this.flagCacheKey(), snapshot, {
-        ttl: SiteSettingsRepository.FLAG_CACHE_TTL_MS,
+        // settings was JUST fetched above (cache miss, or non-prod never
+        // caches this), so the override lives right there — no extra read,
+        // no circularity between this cache and the one it reads from.
+        ttl: resolveCacheTtlMs(settings, "site-settings-flags", SiteSettingsRepository.FLAG_CACHE_TTL_MS),
       });
     }
     return snapshot;
@@ -196,7 +219,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
           );
 
         cacheManager.set(this.cacheKey(), defaultSettings, {
-          ttl: SiteSettingsRepository.CACHE_TTL_MS,
+          ttl: resolveCacheTtlMs(defaultSettings, "site-settings-main", SiteSettingsRepository.CACHE_TTL_MS),
         });
 
         return defaultSettings;
@@ -204,7 +227,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
 
       const mapped = this.mapDoc<SiteSettingsDocument>(doc);
       cacheManager.set(this.cacheKey(), mapped, {
-        ttl: SiteSettingsRepository.CACHE_TTL_MS,
+        ttl: resolveCacheTtlMs(mapped, "site-settings-main", SiteSettingsRepository.CACHE_TTL_MS),
       });
       return mapped;
     } catch (error) {
@@ -314,7 +337,7 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
 
       const latest = await this.getSingleton();
       cacheManager.set(this.cacheKey(), latest, {
-        ttl: SiteSettingsRepository.CACHE_TTL_MS,
+        ttl: resolveCacheTtlMs(latest, "site-settings-main", SiteSettingsRepository.CACHE_TTL_MS),
       });
       return latest;
     } catch (error) {
