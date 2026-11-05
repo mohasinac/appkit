@@ -34,7 +34,13 @@ export type CompositeSentenceId =
   | "helpPage.topicCollectorDropsDesc"
   | "cancellationPolicy.sections.3.heading"
   | "sellPage.listingStepDesc"
-  | "sellPage.everyKindOfListingDesc";
+  | "sellPage.everyKindOfListingDesc"
+  | "faqs.metaDescription"
+  | "guides.metaDescription"
+  | "helpCollectorDrops.metaDescription"
+  | "sellerGuideRandomLots.metaDescription"
+  | "storeGuideListings.metaDescription"
+  | "support.metaDescription";
 
 export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
   "homepage.howItWorksStep2Desc": {
@@ -133,5 +139,81 @@ export const SENTENCES_EN: Record<CompositeSentenceId, CompositeSentence> = {
     ],
     conjunction: "and",
     terminator: " — all supported, each with the right chrome.",
+  },
+  /*
+   * Fact 1 worklist (REPORT.md, 2026-11-04/05) — the 6 remaining real
+   * candidates `scanTsxCompositeSentences()` found: static meta-description
+   * copy naming 2+ governed listing types inline. Each `lead` below is
+   * written to read as a complete, grammatically valid sentence ON ITS OWN
+   * — the zero-survivors collapse case (every named clause disabled) must
+   * not depend on the clauses existing, unlike a lead that ends mid-clause.
+   */
+  "faqs.metaDescription": {
+    id: "faqs.metaDescription",
+    lead: "Answers to common questions about shipping, returns, and payments",
+    clauses: [
+      { governs: { governs: "listingType", value: "collector-drop" }, text: "collector drops" },
+      { governs: { governs: "listingType", value: "pre-order" }, text: "pre-orders" },
+    ],
+    conjunction: "and",
+    leadSeparator: ", plus ",
+    terminator: " on LetItRip.",
+  },
+  "guides.metaDescription": {
+    id: "guides.metaDescription",
+    lead:
+      "Every LetItRip explainer in one place: how offers, EMI and payouts work, what the fees and GST are, and how to tell a genuine release from an aftermarket copy",
+    clauses: [
+      { governs: { governs: "listingType", value: "collector-drop" }, text: "how collector drops work" },
+      { governs: { governs: "listingType", value: "pre-order" }, text: "how pre-orders work" },
+    ],
+    conjunction: "and",
+    leadSeparator: ", plus ",
+    terminator: ".",
+  },
+  // /help/collector-drops — collector-drop itself is the page's own named
+  // topic (fixed in `lead`, same reasoning `help/collector-drops`'s own
+  // route gating would use); only the secondary pre-order mention is gated.
+  "helpCollectorDrops.metaDescription": {
+    id: "helpCollectorDrops.metaDescription",
+    lead: "How collector drops work on LetItRip — bidding, winning, bid retraction policy, and safety tips",
+    clauses: [
+      { governs: { governs: "listingType", value: "pre-order" }, text: "pre-order details" },
+    ],
+    leadSeparator: ", plus ",
+    terminator: ".",
+  },
+  // /seller-guide/random-lots — random-lots is the page's own topic, fixed
+  // in `lead`; only the secondary digital-code mention is gated.
+  "sellerGuideRandomLots.metaDescription": {
+    id: "sellerGuideRandomLots.metaDescription",
+    lead: "Run random lots on LetItRip",
+    clauses: [
+      { governs: { governs: "listingType", value: "digital-code" }, text: "digital code giveaways" },
+    ],
+    leadSeparator: " and ",
+    terminator: ". Learn how to create listings, manage codes, and announce winners.",
+  },
+  "storeGuideListings.metaDescription": {
+    id: "storeGuideListings.metaDescription",
+    lead: "How to create products on LetItRip",
+    clauses: [
+      { governs: { governs: "listingType", value: "collector-drop" }, text: "collector drops" },
+      { governs: { governs: "listingType", value: "pre-order" }, text: "pre-orders" },
+    ],
+    conjunction: "and",
+    leadSeparator: ", plus ",
+    terminator: " — condition grades, media tips, pricing, and common mistakes.",
+  },
+  "support.metaDescription": {
+    id: "support.metaDescription",
+    lead: "Get help with buying, shipping, payments, and selling on LetItRip",
+    clauses: [
+      { governs: { governs: "listingType", value: "collector-drop" }, text: "collector drops" },
+      { governs: { governs: "listingType", value: "pre-order" }, text: "pre-orders" },
+    ],
+    conjunction: "and",
+    leadSeparator: ", plus ",
+    terminator: ". Browse FAQs or contact our support team.",
   },
 };
