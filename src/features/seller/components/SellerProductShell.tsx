@@ -52,6 +52,7 @@ import { getBrandName } from "../../../core/brand-resolver";
 const BUNDLE_PLUGIN_FALLBACK = {
   priceLabel: "Price (₹)",
   typeLabel: "Bundle",
+  pluralLabel: "Bundles",
   showsStockQuantity: false,
 } as const;
 
@@ -2214,6 +2215,7 @@ export function SellerProductShell({
   }, [draft, onPublish, markClean, clearErrors, setFieldError, showToast, addAnother, nextDraftForAnother, markSubmitAttempted]);
 
   const listingTypeLabel = pluginForMode(listingType).typeLabel;
+  const listingTypePluralLabel = pluginForMode(listingType).pluralLabel;
   const typeSpecificSection: TypeSpecificSectionDef | null = TYPE_SPECIFIC_SECTIONS[listingType] ?? null;
 
   const sections: SectionDef<SellerProductDraft>[] = [
@@ -2376,7 +2378,9 @@ export function SellerProductShell({
    */
 
   const breadcrumb =
-    mode === "create" ? `Store / ${listingTypeLabel}s / New` : `Store / ${listingTypeLabel}s / Edit`;
+    mode === "create"
+      ? `Store / ${listingTypePluralLabel} / New`
+      : `Store / ${listingTypePluralLabel} / Edit`;
   const title =
     mode === "create"
       ? `New ${listingTypeLabel}`

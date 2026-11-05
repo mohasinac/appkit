@@ -94,6 +94,7 @@ export function AdminTeamView({ children, onBulkRemove, pageRegionCards = [], ..
   const config: ListingViewConfig<AdminTeamResponse, EmployeeRow> = {
     portal: "admin",
     title: "Team",
+    subtitle: "Manage employee accounts and permissions",
     search: {
       placeholder: "Search by name or email",
       /*
