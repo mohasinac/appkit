@@ -262,7 +262,20 @@ export function useFormShellState<TSchema extends import("zod").ZodTypeAny = imp
 
   const shellCtx = useMemo<FormShellContextValue>(() => ({
     errors,
-    touched: Object.fromEntries(Object.keys(errors).map((k) => [k, true])),
+    /*
+     * 🛑 GATED ON `submitAttempted`, not unconditionally `true`.
+     *
+     * `validate()` above is deliberately called from mount effects (see its
+     * own comment) to keep the summary/submit-button state live without
+     * marking an attempt — but this map used to set every errored field's
+     * `touched` to `true` regardless, so `FormField`'s per-field gate
+     * (`touched != null ? touched && !!error : !!error`) saw a present,
+     * truthy `touched` entry and showed the error on first paint anyway.
+     * The key must still be PRESENT (not absent) before an attempt, or
+     * `FormField` falls through to its unconditional-show fallback — hence
+     * `submitAttempted` as the value rather than omitting the entry.
+     */
+    touched: Object.fromEntries(Object.keys(errors).map((k) => [k, submitAttempted])),
     setFieldError,
     setFieldTouched: () => {},
     clearFieldError: (name) => setFieldError(name, null),
