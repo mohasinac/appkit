@@ -73,3 +73,31 @@ export async function updateNavOrderDomain(
     navConfig: merged,
   } as any);
 }
+
+/**
+ * Admin-created NEW nav entries (overhaul brief, Table D — safe version).
+ * `item` is copied from the caller's closed, pre-registered candidate list
+ * (`ActionDef`s with a real `href`) — this function trusts the caller the
+ * same way `updateNavConfigDomain` trusts `allNavItems`, it does not
+ * re-validate the href against anything, because there is no free-text
+ * path into this function for a malformed value to take.
+ */
+export async function addNavEntryDomain(
+  group: "admin" | "store" | "user",
+  item: { id: string; href: string; label: string; requiredPermission?: string },
+): Promise<void> {
+  const current = await siteSettingsRepository.getSingleton();
+  const existing = current.navCustomEntries ?? [];
+  if (existing.some((e) => e.id === item.id)) return;
+  await siteSettingsRepository.updateSingleton({
+    navCustomEntries: [...existing, { ...item, group }],
+  } as any);
+}
+
+/** The removal half — see `addNavEntryDomain`. */
+export async function removeNavEntryDomain(navId: string): Promise<void> {
+  const current = await siteSettingsRepository.getSingleton();
+  await siteSettingsRepository.updateSingleton({
+    navCustomEntries: (current.navCustomEntries ?? []).filter((e) => e.id !== navId),
+  } as any);
+}

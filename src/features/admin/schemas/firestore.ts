@@ -1413,6 +1413,15 @@ export interface SiteSettingsDocument extends BaseDocument {
    */
   disabledRoutes?: string[];
   /**
+   * Admin-created NEW nav entries (overhaul brief, Table D — safe version).
+   * `href`/`requiredPermission` are never admin-typed free text: each entry
+   * is copied verbatim from a pre-registered `ActionDef` (`ACTIONS.ADMIN`)
+   * at add-time, so every value here already passed through a real,
+   * server-enforced route guard before this admin ever saw it. `group`
+   * picks which existing sidebar (admin/store/user) the entry joins.
+   */
+  navCustomEntries?: { id: string; href: string; label: string; requiredPermission?: string; group: "admin" | "store" | "user" }[];
+  /**
    * Notification channel configuration — controls which delivery channels are
    * active. In-app is always enabled and cannot be disabled; all others are
    * opt-in and require the corresponding credentials to be set.

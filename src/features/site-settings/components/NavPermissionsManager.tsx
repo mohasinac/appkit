@@ -3,10 +3,13 @@ import { normalizeError } from "../../../errors/normalize";
 import React, { useState, useTransition } from "react";
 import { Code, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
 import { Div } from "../../../ui/components/Div";
-import { Stack } from "../../../ui/components/Layout";
+import { Stack, Row } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { Toggle } from "../../../ui/components/Toggle";
 import { Button } from "../../../ui/components/Button";
+import { IconButton } from "../../../ui/components/IconButton";
+import { Icon } from "../../../ui/components/Icon";
+import { FieldSelect } from "../../../ui/forms/FieldSelect";
 import { useToast } from "../../../ui/components/toast-context";
 import { sortByFieldOrder } from "../../shell/field-ui-meta";
 
@@ -36,6 +39,18 @@ export interface NavPermissionsManagerProps {
    * every other 3B-1b subsystem's "unconfigured = today's behaviour" rule.
    */
   onReorder?: (orderedIds: string[]) => Promise<void>;
+  /**
+   * Admin-created NEW nav entries (overhaul brief, Table D — safe version).
+   * `availableToAdd` is the closed vocabulary — pre-registered `ActionDef`s
+   * the caller has already vetted, never a free-typed href/permission. All
+   * three required together to show the "add entry" control per group;
+   * omitted (the default) renders exactly as before this existed.
+   */
+  availableToAdd?: NavItem[];
+  onAdd?: (groupLabel: string, item: NavItem) => Promise<void>;
+  onRemove?: (navId: string) => Promise<void>;
+  /** Which `navId`s were admin-added — only these get a remove (×) control. */
+  customNavIds?: Set<string>;
 }
 
 export function NavPermissionsManager({
@@ -43,7 +58,13 @@ export function NavPermissionsManager({
   navGroups,
   onUpdate,
   onReorder,
+  availableToAdd,
+  onAdd,
+  onRemove,
+  customNavIds,
 }: NavPermissionsManagerProps) {
+  const [addingId, setAddingId] = useState<string>("");
+  const [addingGroup, setAddingGroup] = useState<string>("");
   const { showToast } = useToast();
   const [config, setConfig] = useState(initialConfig);
   const [, startTransition] = useTransition();
@@ -97,6 +118,33 @@ export function NavPermissionsManager({
         void normalizeError(_err);
         setConfig(prev);
         showToast("Failed to reorder navigation. Please try again.", "error");
+      }
+    });
+  };
+
+  const handleAdd = (groupLabel: string) => {
+    const item = availableToAdd?.find((i) => i.id === addingId);
+    if (!item) return;
+    startTransition(async () => {
+      try {
+        await onAdd?.(groupLabel, item);
+        showToast(`"${item.label}" added to ${groupLabel}.`, "success");
+        setAddingId("");
+      } catch (_err) {
+        void normalizeError(_err);
+        showToast("Failed to add nav entry. Please try again.", "error");
+      }
+    });
+  };
+
+  const handleRemove = (navId: string, label: string) => {
+    startTransition(async () => {
+      try {
+        await onRemove?.(navId);
+        showToast(`"${label}" removed.`, "success");
+      } catch (_err) {
+        void normalizeError(_err);
+        showToast("Failed to remove nav entry. Please try again.", "error");
       }
     });
   };
@@ -176,15 +224,26 @@ export function NavPermissionsManager({
                         )}
                       </Td>
                       <Td className="text-right" padding="md">
-                        {hasId ? (
-                          <Toggle
-                            checked={enabled}
-                            onChange={(v) => handleToggle(item.id!, item.label, v)}
-                            aria-label={`Toggle ${item.label}`}
-                          />
-                        ) : (
-                          <Text className="italic" size="xs" color="faint">Legacy — always visible</Text>
-                        )}
+                        <Row gap="xs" align="center" justify="end">
+                          {hasId ? (
+                            <Toggle
+                              checked={enabled}
+                              onChange={(v) => handleToggle(item.id!, item.label, v)}
+                              aria-label={`Toggle ${item.label}`}
+                            />
+                          ) : (
+                            <Text className="italic" size="xs" color="faint">Legacy — always visible</Text>
+                          )}
+                          {hasId && customNavIds?.has(item.id!) && onRemove ? (
+                            <IconButton
+                              aria-label={`Remove "${item.label}"`}
+                              icon={<Icon name="delete" size="sm" />}
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleRemove(item.id!, item.label)}
+                            />
+                          ) : null}
+                        </Row>
                       </Td>
                     </Tr>
                   );
@@ -192,8 +251,53 @@ export function NavPermissionsManager({
               </Tbody>
             </Table>
           </Div>
+          {availableToAdd && availableToAdd.length > 0 && onAdd ? (
+            <AddNavEntryRow
+              groupLabel={group.groupLabel}
+              availableToAdd={availableToAdd.filter(
+                (candidate) => !group.items.some((existing) => existing.id === candidate.id),
+              )}
+              addingId={addingId}
+              onSelect={setAddingId}
+              onAdd={() => handleAdd(group.groupLabel)}
+            />
+          ) : null}
         </Div>
       ))}
     </Stack>
+  );
+}
+
+function AddNavEntryRow({
+  groupLabel,
+  availableToAdd,
+  addingId,
+  onSelect,
+  onAdd,
+}: {
+  groupLabel: string;
+  availableToAdd: NavItem[];
+  addingId: string;
+  onSelect: (id: string) => void;
+  onAdd: () => void;
+}) {
+  if (availableToAdd.length === 0) {
+    return (
+      <Text className="mt-2" size="xs" color="faint">Every available entry is already in {groupLabel}.</Text>
+    );
+  }
+  return (
+    <Row className="mt-2" gap="xs" align="end" wrap>
+      <FieldSelect
+        name={`add-nav-${groupLabel}`}
+        label="Add entry"
+        value={addingId}
+        options={availableToAdd.map((i) => ({ value: i.id ?? i.href, label: i.label }))}
+        onChange={onSelect}
+      />
+      <Button variant="outline" size="sm" type="button" disabled={!addingId} onClick={onAdd}>
+        Add to {groupLabel}
+      </Button>
+    </Row>
   );
 }
