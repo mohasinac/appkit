@@ -254,7 +254,7 @@ const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBank
 
 const {
   // seed data
-  usersSeedData, addressesSeedData, storeAddressesSeedData,
+  usersSeedData, addressesSeedData, storeAddressesSeedData, sellerProfilesSeedData,
   // store-extensions — see the SEED_DATA_MAP note below (Root Cause #90, 7-16).
   payoutMethodsSeedData, shippingConfigsSeedData, analyticsCardsSeedData, analyticsAlertsSeedData,
   storeCategoriesSeedData, listingTemplatesSeedData, moderationQueueSeedData, reportsSeedData,
@@ -326,6 +326,7 @@ const COLLECTION_MAP = {
   users: USER_COLLECTION,
   addresses: "addresses",
   storeAddresses: "storeAddresses",
+  sellerProfiles: "sellerProfiles",         // features/seller/schemas/seller-profile-firestore.ts:57
   couponUsage: "couponUsage",
   categories: CATEGORIES_COLLECTION,
   stores: STORE_COLLECTION,
@@ -724,6 +725,11 @@ const SEED_DATA_MAP = {
   storeGoogleConfig: storeGoogleConfigSeedData,
   addresses: addressesSeedData,
   storeAddresses: storeAddressesSeedData,
+  // Sidecar to `users` (fb72d0605 split storeId/storeSlug/storeStatus off
+  // UserDocument) — needs its own loader branch below, not loadGeneric,
+  // since this collection has no `slug` concept and loadGeneric always
+  // stamps one.
+  sellerProfiles: sellerProfilesSeedData,
   // SB-UNI-C: brands were merged into categories (categoryType:"brand") — no
   // standalone brands collection/seed exists anymore.
   categories: loadableBundlesOnly(categoriesSeedData, REAL_PRODUCTS),
@@ -1542,6 +1548,21 @@ async function cmdLoad() {
                 stripUndefined(stampSeedPurpose("couponUsage", { couponId, ...data }, couponId)),
                 { merge: true },
               );
+            stats.created++;
+          } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
+        }
+      } else if (colName === "sellerProfiles") {
+        // shape: { uid, storeId, storeSlug, storeStatus } — no PII (payoutDetails/
+        // shippingConfig deliberately absent from seed data; the loader writes
+        // raw, bypassing SellerProfileRepository.applyWriteHooks's encryption).
+        for (const d of seed) {
+          try {
+            const { uid, ...data } = d;
+            if (!uid) { stats.errors++; continue; }
+            await db.collection("sellerProfiles").doc(uid).set(
+              stripUndefined(stampSeedPurpose("sellerProfiles", { uid, ...data }, uid)),
+              { merge: true },
+            );
             stats.created++;
           } catch (err) { console.error(`    ✗ ${err.message}`); stats.errors++; }
         }

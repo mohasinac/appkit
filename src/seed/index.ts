@@ -144,6 +144,8 @@ export { sessionsSeedData, SESSION_COLLECTION } from "./sessions-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";
 export { storesSeedData } from "./stores-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
+export type { SellerProfileSeedDocument } from "./seller-profiles-seed-data";
+export { sellerProfilesSeedData } from "./seller-profiles-seed-data";
 export { categoriesSeedData, categoriesP1SeedData } from "./categories-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
 export { productsBeybladeXSeedData } from "./products-beyblade-x-seed-data";
