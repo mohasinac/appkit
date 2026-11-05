@@ -113,7 +113,6 @@ const STATUS_TONE_MAP: Record<string, StatusTone> = {
   success: "success",
   // warning
   pending: "warning",
-  processing: "warning",
   draft: "warning",
   low_stock: "warning",
   waitlisted: "warning",
@@ -140,6 +139,17 @@ const STATUS_TONE_MAP: Record<string, StatusTone> = {
   // info
   scheduled: "info",
   closed: "info",
+  /*
+   * 🛑 `processing` moved out of the `warning` group it shared with
+   * `pending`, 2026-11-05 (owner's direct correction) — two real payout
+   * lifecycle stages (not yet started vs. actively being worked on)
+   * rendered the identical amber badge in every generic status column,
+   * `/admin/payouts` and `/store/payouts` confirmed live. Matches the
+   * already-established "processing = info" convention this same tone
+   * already uses elsewhere (`ui/components/StatusBadge.tsx`'s own
+   * order/payment tone map).
+   */
+  processing: "info",
 };
 
 /** Map a raw status string to a semantic tone for badge coloring. */

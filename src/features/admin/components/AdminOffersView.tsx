@@ -42,7 +42,7 @@ import { RowActionMenu } from "../../../ui/components/RowActionMenu";
 import { useToast } from "../../../ui/components/toast-context";
 import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import { ADMIN_OFFER_STATUS_TABS, offerStatusLabel } from "../constants/filter-tabs";
+import { ADMIN_OFFER_STATUS_TABS, offerStatusLabel, offerStatusVariant } from "../constants/filter-tabs";
 import { OfferPhaseTimeline } from "../../seller/components/OfferPhaseTimeline";
 import { QuickFormDrawer } from "../../shell/QuickFormDrawer";
 import { cancelOfferFormSchema } from "../../seller/schemas/offer-forms";
@@ -238,7 +238,7 @@ export function AdminOffersView({ children, pageRegionCards = [], ...props }: Ad
         isOpen={detailRow !== null}
         onClose={() => setDetailRow(null)}
         title={detailRow?.primary ?? "Offer"}
-        badges={detailRow ? [{ label: detailRow.status }] : undefined}
+        badges={detailRow ? [{ label: detailRow.status, variant: offerStatusVariant(d.status as string | undefined) }] : undefined}
         description={toStringValue(d.buyerNote, "")}
         fields={[
           { label: "Buyer", value: toStringValue(d.buyerName, "Unknown buyer") },

@@ -12,7 +12,7 @@ import { OfferPhaseTimeline } from "./OfferPhaseTimeline";
 import { counterOfferFormSchema } from "../schemas/offer-forms";
 import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
-import { SELLER_OFFER_STATUS_TABS, offerStatusLabel } from "../../admin/constants/filter-tabs";
+import { SELLER_OFFER_STATUS_TABS, offerStatusLabel, offerStatusVariant } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
@@ -157,7 +157,7 @@ export function SellerOffersView({
         isOpen={detailRow !== null}
         onClose={() => setDetailRow(null)}
         title={detailRow?.primary ?? "Offer"}
-        badges={detailRow ? [{ label: detailRow.status }] : undefined}
+        badges={detailRow ? [{ label: detailRow.status, variant: offerStatusVariant(d.status as string | undefined) }] : undefined}
         description={toStringValue(d.buyerNote, "")}
         fields={[
           { label: "Buyer", value: toStringValue(d.buyerName, "Unknown buyer") },

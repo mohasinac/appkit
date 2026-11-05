@@ -1,4 +1,3 @@
-
 /**
  * Admin filter-chip tab sets (SB10-C completion, S8 2026-05-13).
  *
@@ -439,6 +438,31 @@ export function offerStatusLabel(
   if (!status) return "Pending";
   const tabs = audience === "admin" ? ADMIN_OFFER_STATUS_TABS : SELLER_OFFER_STATUS_TABS;
   return (tabs as readonly AdminFilterTab[]).find((t) => t.id === status)?.label ?? status;
+}
+
+/**
+ * The `Badge` color for an offer status — audience-independent, since the
+ * SEMANTIC meaning (good/bad/in-progress) doesn't change between seller and
+ * admin even though the label text does. Mirrors the mapping
+ * `UserOffersPanel.tsx`'s own buyer-facing `statusVariant()` already uses;
+ * the admin/seller detail views (owner's direct correction, 2026-11-05) were
+ * passing no variant at all, so every status except whatever happened to
+ * resolve truthy rendered the same neutral gray badge.
+ */
+export function offerStatusVariant(
+  status: string | null | undefined,
+): "default" | "success" | "warning" | "danger" | "info" {
+  switch (status) {
+    case "pending": return "warning";
+    case "accepted": return "success";
+    case "declined": return "danger";
+    case "countered": return "info";
+    case "paid": return "success";
+    case "expired":
+    case "withdrawn":
+    default:
+      return "default";
+  }
 }
 
 /** Seller > Bids — bid-state filter chip set. Uses the empty-sentinel
