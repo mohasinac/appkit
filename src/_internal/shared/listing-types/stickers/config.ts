@@ -33,6 +33,7 @@ export const config = {
   // THE case this exists for: a sheet plus its individual cut-out stickers
   canJoinProductGroup: true,
   iconKey: "stickers" as const,
+  primaryActionKind: "buy-now" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

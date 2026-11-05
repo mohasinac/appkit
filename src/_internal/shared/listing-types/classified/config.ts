@@ -32,6 +32,7 @@ export const config = {
   // no cart at all (cartLine "blocked") — the purchase path is contact-seller
   canJoinProductGroup: false,
   iconKey: "deals" as const,
+  primaryActionKind: "make-offer" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

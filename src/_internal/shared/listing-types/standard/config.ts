@@ -30,6 +30,7 @@ export const config = {
   // the ordinary case — a complete item whose parts can be sold beside it
   canJoinProductGroup: true,
   iconKey: "order" as const,
+  primaryActionKind: "buy-now" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

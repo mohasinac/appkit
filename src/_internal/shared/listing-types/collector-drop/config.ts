@@ -30,6 +30,7 @@ export const config = {
   // one unique lot, won by one bidder — there is no "pick 3 of these"
   canJoinProductGroup: false,
   iconKey: "bid" as const,
+  primaryActionKind: "bid" as const,
   // A collector drop is never "sold out" — it ends. Hiding by stock would hide
   // every live collector drop, since collector drops don't carry meaningful stock.
   hideDefault: "ended" as const,

@@ -30,6 +30,7 @@ export const config = {
   // sells ENTRIES at a fixed price; a group line would blur what was entered
   canJoinProductGroup: false,
   iconKey: "randomLots" as const,
+  primaryActionKind: "enter-draw" as const,
   hideDefault: "closed" as const,
   // `prizeRevealStatus`, NOT remaining entries: a draw can close with slots
   // unsold (the seller ends it early, or the reveal window lapses), and it can

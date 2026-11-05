@@ -33,6 +33,7 @@ export const config = {
   // a deposit against a future release; members would ship at different times
   canJoinProductGroup: false,
   iconKey: "preOrder" as const,
+  primaryActionKind: "reserve" as const,
   hideDefault: "closed" as const,
   /*
    * A pre-order closes when its allocation fills, NOT when its delivery date

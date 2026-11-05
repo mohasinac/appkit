@@ -32,6 +32,7 @@ export const config = {
   // jurisdiction-gated per buyer and vendor-verified — not mixable into a group line
   canJoinProductGroup: false,
   iconKey: "live" as const,
+  primaryActionKind: "buy-now" as const,
   hideDefault: "sold" as const,
   // Runs out rather than ending — no time dimension, so the shared
   // stock-only rules are the whole story for this type.

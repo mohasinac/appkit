@@ -62,6 +62,19 @@ import {
  */
 export type ListingHideDefault = "sold" | "ended" | "closed";
 
+/**
+ * 1A-v (overhaul brief, Single-scoped action/CTA gating) — which primary
+ * action a listing type's own PDP exposes. Each type's real buy-bar
+ * component (`renderPrimaryActions`/`functionalSlot`'s `pdp-primary-actions`)
+ * already renders the one correct control for its type via a type-safe
+ * callback prop, not a runtime lookup — this registry field does not gate
+ * that rendering (nothing needs it to). It exists so OTHER surfaces that
+ * only need to know "what kind of action is this" (search result labels,
+ * admin triage, a future cross-type summary) read one typed value instead
+ * of re-deriving it from `listingType` by hand.
+ */
+export type ActionKind = "buy-now" | "bid" | "reserve" | "enter-draw" | "make-offer";
+
 export interface ListingTypePlugin {
   listingType: ListingType;
   slugPrefix: string;
@@ -201,6 +214,18 @@ export interface ListingTypePlugin {
    * shared product facets (category/brand/price/condition) are implicit.
    */
   extraFacetKeys: readonly string[];
+  /** See `ActionKind`. Required for the same reason as `inGeneralCatalogue`/
+   * `iconKey`: a tenth listing type must not compile until someone has
+   * answered what its PDP's primary action actually is. */
+  primaryActionKind: ActionKind;
+}
+
+/**
+ * The read half of 1A-v. A plain lookup, not a gate — see `ActionKind`'s
+ * own doc comment for why nothing in the real rendering path needs this.
+ */
+export function actionsForListingType(listingType: ListingType): ActionKind {
+  return LISTING_TYPE_REGISTRY[listingType].primaryActionKind;
 }
 
 // SB-UNI-D — bundle entry removed; bundles are a categoryType, not a listingType.

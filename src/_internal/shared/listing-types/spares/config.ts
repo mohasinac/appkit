@@ -54,6 +54,7 @@ export const config = {
    */
   canJoinProductGroup: true,
   iconKey: "spares" as const,
+  primaryActionKind: "buy-now" as const,
   hideDefault: "sold" as const,
   /*
    * A spare runs out rather than ending — there is no time dimension at all, so

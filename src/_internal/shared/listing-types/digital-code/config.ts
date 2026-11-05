@@ -45,6 +45,7 @@ export const config = {
   // a fungible pool item; "which 3 of these codes" is not a question a buyer has
   canJoinProductGroup: false,
   iconKey: "digitalCode" as const,
+  primaryActionKind: "buy-now" as const,
   // "Sold out" for a code pool means codesAvailable hit 0. That was ASSUMED to
   // be mirrored by stockQuantity, and it isn't — seed and production rows exist
   // with a drained pool and non-zero stock. The pool count is authoritative.
