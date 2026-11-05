@@ -9,15 +9,14 @@ import type { FormFieldValue } from "../../schemas/types";
  *
  * 🛑 No renderer handles it yet, anywhere. `QuickFormDrawer.tsx`'s own
  * field-render loop does NOT handle this value (no upload plumbing, no
- * existing call site needs one). There is deliberately no
- * `InlineFormWidget`/registry built on top of it either — see
- * `DashboardCardRenderer.tsx`'s own `CardElement.kind === "form"` branch
- * for why that was investigated and explicitly NOT built in the same pass:
- * every real short form in this codebase is tied to a specific record/
- * store the bare `{formId, label}` shape can't carry, so a registry would
- * need a fake first entry with no real consumer. If a real inline-form
- * renderer is ever built, it should reuse `FormField`'s own `type="image"`
- * + `onUpload` contract, the same one `QuickProductForm.tsx` already uses.
+ * existing call site needs one). `DashboardCardRenderer.tsx`'s own
+ * `CardElement.kind === "form"` branch now has a real, plural
+ * `FORM_WIDGET_REGISTRY` (`quick-add-faq`, `quick-open-support-ticket`,
+ * 2026-11-05) — neither entry needs an image field, so this value is still
+ * unused there, not because a registry couldn't support it. If a real
+ * inline-form field ever needs an upload, it should reuse `FormField`'s own
+ * `type="image"` + `onUpload` contract, the same one `QuickProductForm.tsx`
+ * already uses.
  */
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url" | "image";
 

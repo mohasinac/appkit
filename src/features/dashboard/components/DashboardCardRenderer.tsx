@@ -24,10 +24,12 @@ import { FUNCTIONAL_SLOT_LABELS } from "../../../_internal/shared/features/dashb
 import type { ReactNode } from "react";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ROW_HREF_BY_RESOURCE } from "../../../_internal/shared/features/admin/row-widget-resources";
-import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS, SUPPORT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 import { FAQ_CATEGORY_LABELS } from "../../faq/schemas/firestore";
 import type { FAQCategory } from "../../faq/types";
+import { TicketCategoryValues } from "../../support/schemas/firestore";
+import { supportTicketCreateSchema } from "../../support/schemas/ticket-create-form";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { ROW_COLUMNS, packBySpan } from "../../../utils/pack-by-span";
@@ -160,6 +162,19 @@ const FAQ_CATEGORY_OPTIONS = (
   Object.entries(FAQ_CATEGORY_LABELS) as Array<[FAQCategory, string]>
 ).map(([value, label]) => ({ value, label }));
 
+/**
+ * No pre-built label map exists for `TicketCategoryValues` (unlike FAQ's own
+ * `FAQ_CATEGORY_LABELS`) — `/user/support/new` derives its labels from the
+ * schema's `annotate()` metadata via `buildSectionsFromSchema`, which this
+ * flat `QuickFieldDef[]` shape doesn't go through. `humaniseFieldName` turns
+ * each snake_case value into the same reading a human would pick by hand
+ * (`"order_issue"` → "Order issue").
+ */
+const TICKET_CATEGORY_OPTIONS = Object.values(TicketCategoryValues).map((value) => ({
+  value,
+  label: humaniseFieldName(value),
+}));
+
 const quickFaqSchema = z.object({
   question: z.string().min(5, "Question must be at least 5 characters"),
   answer: z.string().min(20, "Answer must be at least 20 characters"),
@@ -167,13 +182,16 @@ const quickFaqSchema = z.object({
 });
 
 /**
- * `form` CardElement kind registry (2026-11-04) — resolves `formId` to a
- * real, runnable quick-create form. ONE entry, deliberately: the plan's own
- * investigation found every candidate form tied to a specific record except
- * FAQ creation, so adding a second, speculative entry here would repeat the
- * exact "registry almost nothing uses" pattern this codebase already
- * retired once (`route-schema-registry`). Add the next entry when a second
- * real, context-free quick-create need exists — not before.
+ * `form` CardElement kind registry — resolves `formId` to a real, runnable
+ * quick-create form. Two entries: `quick-add-faq` is an ADMIN write (posts
+ * to `ADMIN_ENDPOINTS.FAQS`, meant for an admin dashboard/page-region card);
+ * `quick-open-support-ticket` is a USER write (posts to
+ * `SUPPORT_ENDPOINTS.TICKETS`, scoped to the signed-in caller by the route
+ * itself — meant for a buyer/seller dashboard card, e.g. "Need help?").
+ * Neither needs `context` — both reuse the SAME shared schema their full-page
+ * counterpart already validates with
+ * (`supportTicketCreateSchema`'s `superRefine` for the order-issue case),
+ * so the quick-form and the full form can never disagree on what's valid.
  */
 interface FormWidgetDef {
   title: string;
@@ -197,7 +215,32 @@ const FORM_WIDGET_REGISTRY: Record<string, FormWidgetDef> = {
       await apiClient.post(ADMIN_ENDPOINTS.FAQS, values);
     },
   },
+  "quick-open-support-ticket": {
+    title: "Quick open support ticket",
+    fields: [
+      { name: "category", label: "Category", type: "select", required: true, options: TICKET_CATEGORY_OPTIONS },
+      { name: "subject", label: "Subject", type: "text", required: true },
+      { name: "description", label: "Description", type: "textarea", required: true },
+      {
+        name: "orderId",
+        label: "Order ID",
+        type: "text",
+        helperText: "Required when the category is an order issue.",
+      },
+    ],
+    schema: supportTicketCreateSchema as z.ZodType<FormValues>,
+    // `context` unused — the route scopes the ticket to the signed-in
+    // caller (`auth: true`), not to any record this card could be on.
+    submit: async (values) => {
+      await apiClient.post(SUPPORT_ENDPOINTS.TICKETS, values);
+    },
+  },
 };
+
+/** `<Select>` options for `form.formId`, derived from the registry itself — never hand-typed, so a renamed/removed entry can't silently go missing here. */
+const FORM_WIDGET_OPTIONS: SelectOption[] = Object.entries(FORM_WIDGET_REGISTRY).map(
+  ([value, def]) => ({ value, label: def.title }),
+);
 
 /**
  * The `form` CardElement's render target — a button that opens a
@@ -453,10 +496,18 @@ function DashboardCardEditPanel({
     onUpdate({ elements: [...card.elements, { kind: "image", mediaUrl: "", alt: "" }] });
   }
   function addFormElement() {
-    // Single registry entry today (`FORM_WIDGET_REGISTRY`'s own doc
-    // comment explains why) — a direct add, not a picker. Widen to a
-    // `<Select>` of `formId`s the moment a second entry exists.
-    onUpdate({ elements: [...card.elements, { kind: "form", formId: "quick-add-faq", label: "Quick add FAQ" }] });
+    // A second registry entry now exists (2026-11-05) — widened from a
+    // direct add to picking the first option, with the real `<Select>`
+    // (FORM_WIDGET_OPTIONS below) shown in the per-element editor so the
+    // admin can change it after adding, same pattern `functionalSlot`
+    // already uses.
+    const firstId = Object.keys(FORM_WIDGET_REGISTRY)[0];
+    onUpdate({
+      elements: [
+        ...card.elements,
+        { kind: "form", formId: firstId, label: FORM_WIDGET_REGISTRY[firstId].title },
+      ],
+    });
   }
   function addFunctionalSlotElement() {
     // A second `FunctionalSlotId` now exists (2026-11-05) — widened from a
@@ -577,16 +628,28 @@ function DashboardCardEditPanel({
                       />
                     </Stack>
                   ) : el.kind === "form" ? (
-                    // `formId` stays fixed to the registry entry this was
-                    // added as — only the button's own label is editable.
-                    // Widen when a second registry entry makes `formId`
-                    // itself a real choice.
-                    <FieldInput
-                      name={`card-element-${card.id}-${i}-label`}
-                      label="Button label"
-                      value={el.label}
-                      onChange={(value) => updateElement(i, { label: value })}
-                    />
+                    // The admin picks WHICH closed, pre-registered
+                    // quick-create target and a label — never a submit
+                    // target outside `FORM_WIDGET_REGISTRY`.
+                    <Stack gap="xs">
+                      <Select
+                        aria-label="Quick form"
+                        options={FORM_WIDGET_OPTIONS}
+                        value={el.formId}
+                        onValueChange={(value) =>
+                          updateElement(i, {
+                            formId: value,
+                            label: FORM_WIDGET_REGISTRY[value]?.title ?? el.label,
+                          })
+                        }
+                      />
+                      <FieldInput
+                        name={`card-element-${card.id}-${i}-label`}
+                        label="Button label"
+                        value={el.label}
+                        onChange={(value) => updateElement(i, { label: value })}
+                      />
+                    </Stack>
                   ) : el.kind === "functionalSlot" ? (
                     // The admin picks WHICH closed, pre-vetted slot and a
                     // label — never what it renders. What actually renders
