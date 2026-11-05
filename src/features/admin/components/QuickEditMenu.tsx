@@ -76,7 +76,7 @@ export function QuickEditMenu({ actions, align = "right" }: QuickEditMenuProps) 
         {menuOpen && (
           <Div
             role="menu"
-            className={`appkit-row-action-menu__dropdown ${align === "right" ? "appkit-row-action-menu__dropdown--right" : "appkit-row-action-menu__dropdown--left"}`}
+            className={`appkit-quick-edit-menu__dropdown ${align === "right" ? "appkit-quick-edit-menu__dropdown--right" : "appkit-quick-edit-menu__dropdown--left"}`}
           >
             {actions.map((action, idx) => (
               <Div key={`${action.label}-${idx}`}>

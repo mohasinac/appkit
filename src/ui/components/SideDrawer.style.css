@@ -43,22 +43,17 @@
   position: relative;
 }
 
-/* 3-px brand-gradient rule at the very top of the drawer */
-.appkit-side-drawer__header::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(
-    to right,
-    var(--appkit-color-primary-700) 0%,
-    var(--appkit-color-primary)      55%,
-    var(--appkit-color-secondary-400) 100%
-  );
-  pointer-events: none;
-}
+/*
+ * 🛑 REMOVED 2026-11-05 — the 3px multi-hue gradient top-accent bar every
+ * drawer header carried via this `::before`. Same defect class already
+ * found and fixed on `AdminStatCard`/`DashboardStats`/GuideHub banners
+ * (owner's direct correction: a row of per-surface rainbow accents reads
+ * as decoration, not a design system). Those fixes landed on a ONE
+ * restrained, theme-safe treatment with NO top accent bar at all
+ * (`AdminStatCard.tsx`'s own comment: "no 3px top accent") — this
+ * component just hadn't been swept yet. Confirmed live on the Team/Users/
+ * Stores "view"-variant drawers before removal.
+ */
 
 .appkit-side-drawer__header--view {
   background: var(--appkit-color-surface);
