@@ -229,6 +229,16 @@ const RE_SORT_OPTIONS = /sortOptions\s*:\s*\[([\s\S]*?)\n\s*\]/;
 const RE_SORT_VAL     = /value\s*:\s*["'`]([^"'`]+)["'`]/g;
 const RE_ENDPOINT     = /endpoint\s*:\s*([A-Z_]+_ENDPOINTS\.[A-Z_]+)/;
 const RE_BUILD_FILTERS = /buildFilters\s*:\s*\([^)]*\)\s*=>\s*([\s\S]*?)(?=\n\s{0,4}[a-zA-Z_]+\s*:|\n\s{0,2}\}\s*satisfies|\n\s{0,2}\}\s*;?)/;
+/**
+ * `buildFilters: SOME_IDENT.buildFilters` — the `buildFilterPanel()`
+ * generator's own output (3B/5B), not an inline arrow function. `RE_BUILD_FILTERS`
+ * above matches nothing here, which is exactly Root Cause #84 again one level
+ * removed: adopting the generator would make this audit go quiet on every view
+ * that migrates to it, the same way adopting the typed `sieveFilter` builder
+ * once did. Resolved below by reading the generator's OWN field declarations
+ * instead of an arrow-function body.
+ */
+const RE_FILTER_PANEL_REF = /buildFilters\s*:\s*([A-Za-z_$][\w$]*)\.buildFilters\b/;
 // Sieve clause: <field> <op> <value> — field can contain dots
 const RE_SIEVE_CLAUSE = /([\w.]+)\s*(==|!=|>=|<=|>|<|_=)\s*/g;
 const RE_STRING_LITERAL = /["'`]([^"'`]*?)["'`]/g;
@@ -258,6 +268,55 @@ function sliceBalanced(src, startIdx) {
   return src.slice(startIdx);
 }
 
+/** Same balancing as `sliceBalanced`, for a caller-chosen bracket pair (`buildFilterPanel`'s own `[...]` array argument isn't braces). */
+function sliceBalancedChars(src, startIdx, openCh, closeCh) {
+  let depth = 0;
+  for (let i = startIdx; i < src.length; i++) {
+    const ch = src[i];
+    if (ch === openCh) depth++;
+    else if (ch === closeCh) {
+      depth--;
+      if (depth === 0) return src.slice(startIdx, i + 1);
+    }
+  }
+  return src.slice(startIdx);
+}
+
+/**
+ * Reads a `buildFilterPanel([{ key, sieveField?, ... }, ...])` declaration
+ * directly — the field list `RE_BUILD_FILTERS` can't see once `buildFilters`
+ * is a bare `IDENT.buildFilters` reference instead of an inline arrow body.
+ * Returns `null` (not `[]`) when the declaration can't be found/parsed, so
+ * the caller can report it as unresolved rather than silently reading "no
+ * filters" — the exact distinction `unresolvedBuilderTokens` already draws
+ * for the inline-builder case.
+ */
+function resolveFilterPanelFields(content, identifier) {
+  const declRe = new RegExp(`(?:const|let)\\s+${identifier}\\s*=\\s*buildFilterPanel\\s*\\(`);
+  const dm = content.match(declRe);
+  if (!dm) return null;
+  const arrStart = content.indexOf("[", dm.index + dm[0].length - 1);
+  if (arrStart === -1) return null;
+  const arrSlice = sliceBalancedChars(content, arrStart, "[", "]");
+
+  // Each field entry is a `{ ... }` object literal in the array. None of
+  // `FilterPanelFieldDef`'s own values are ever an inline object/array
+  // (`tabs` is always an identifier reference to a `filter-tabs.ts`
+  // constant) — a balanced-brace split per entry is safe here.
+  const fields = [];
+  let i = 0;
+  while (i < arrSlice.length) {
+    const open = arrSlice.indexOf("{", i);
+    if (open === -1) break;
+    const entry = sliceBalancedChars(arrSlice, open, "{", "}");
+    const keyM = entry.match(/\bkey\s*:\s*["'`]([\w.]+)["'`]/);
+    const sieveFieldM = entry.match(/\bsieveField\s*:\s*["'`]([\w.]+)["'`]/);
+    if (keyM) fields.push(sieveFieldM ? sieveFieldM[1] : keyM[1]);
+    i = open + entry.length;
+  }
+  return fields;
+}
+
 function extractDataListingConfig(content) {
   const startMatch = content.match(RE_LISTING_CFG_START);
   if (!startMatch) return null;
@@ -276,6 +335,22 @@ function extractDataListingConfig(content) {
   cfg.endpoint = ep ? ep[1] : null;
   const bf = slice.match(RE_BUILD_FILTERS);
   cfg.buildFiltersBody = bf ? bf[1] : "";
+  if (!cfg.buildFiltersBody) {
+    const ref = slice.match(RE_FILTER_PANEL_REF);
+    if (ref) {
+      const fields = resolveFilterPanelFields(content, ref[1]);
+      if (fields) {
+        // Synthesize text the existing `sieveFilter` builder regex already
+        // knows how to read, so `extractSieveFieldsFromBody` needs no second
+        // code path. Always `SIEVE_OP.EQ`: `buildFilterPanel` only ever emits
+        // a plain equality or a pipe-joined OR-group, and both need the SAME
+        // composite index shape a plain `==` does.
+        cfg.buildFiltersBody = fields.map((f) => `sieveFilter("${f}", SIEVE_OP.EQ, "")`).join(";");
+      } else {
+        cfg.filterPanelUnresolved = ref[1];
+      }
+    }
+  }
   return cfg;
 }
 
@@ -504,6 +579,13 @@ function scanDataListingConfigs() {
         ref: relative(REPO_ROOT, file).replace(/\\/g, "/"),
       });
       continue;
+    }
+    if (cfg.filterPanelUnresolved) {
+      informational.push({
+        rule: "FILTER_PANEL_UNRESOLVED",
+        message: `buildFilters references ${cfg.filterPanelUnresolved}.buildFilters but its buildFilterPanel(...) declaration could not be resolved — index derivation skipped for this view`,
+        ref: relative(REPO_ROOT, file).replace(/\\/g, "/"),
+      });
     }
     const fieldsFromBuild = extractSieveFieldsFromBody(cfg.buildFiltersBody);
     const implicitFields = ep.implicit.flatMap(parseSieveString);

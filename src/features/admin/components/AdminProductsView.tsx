@@ -1,7 +1,7 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
 
-import { SIEVE_OP, Stack, sieveFilter, type JsonArray, Row } from "@mohasinac/appkit/client";
+import { Stack, type JsonArray, Row } from "@mohasinac/appkit/client";
 import { sortBy } from "@mohasinac/appkit/client";
 import React, { useState, useCallback } from "react";
 import { ListingLayout } from "../../../ui/components/ListingLayout";
@@ -24,14 +24,14 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
 import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
-import { FilterChipGroup } from "../../../ui/components/FilterChipGroup";
+import { buildFilterPanel } from "../hooks/build-filter-panel";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
-import { parseSelectedListingTypes, isCollectorDropListing } from "../../products/utils/listing-type";
+import { isCollectorDropListing } from "../../products/utils/listing-type";
 import { useAvailabilityScope } from "../../products/hooks/useAvailabilityScope";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
 import { formatMoney } from "../../../utils/number.formatter";
@@ -49,6 +49,20 @@ interface AdminProductsResponse {
   items?: JsonArray;
   total?: number;
 }
+
+/**
+ * Pilot conversion (3B/5B, overhaul brief) — this view's `filterKeys`/
+ * `buildFilters`/`renderFilterPanel` trio used to be hand-written (see
+ * `build-filter-panel.tsx`'s own doc comment for why `SIEVE_FIELDS` alone
+ * can't drive this); both chips reduce exactly to `buildFilterPanel`'s two
+ * supported shapes — single-select equality (`status`) and multi-select
+ * OR-group (`type`, which filters the differently-named `listingType`
+ * Sieve field) — so nothing here is hand-written anymore.
+ */
+const PRODUCTS_FILTER_PANEL = buildFilterPanel([
+  { key: "status", label: "Status", tabs: ADMIN_PRODUCT_STATUS_TABS },
+  { key: "type", label: "Type", tabs: ADMIN_PRODUCT_LISTING_TYPE_TABS, multiple: true, sieveField: "listingType" },
+]);
 
 /**
  * Status → `Badge` variant, matching the restrained, already-correct
@@ -352,7 +366,7 @@ export function AdminProductsView({ children, pageRegionCards = [], ...props }: 
       ],
     },
     emptyLabel: "No products found",
-    filterKeys: ["status", "type"],
+    filterKeys: PRODUCTS_FILTER_PANEL.filterKeys,
     defaultSort: sortBy("createdAt", "DESC"),
     queryKey: ["admin", "products", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
@@ -453,28 +467,16 @@ export function AdminProductsView({ children, pageRegionCards = [], ...props }: 
       }),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
-    buildFilters: (state) => {
-      const parts: string[] = [];
-      if (state.status && state.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, state.status));
-
-      // `state.type` is a pipe-joined set of canonical ListingType values
-      // (multi-select chips). It used to be a single display LABEL resolved
-      // through a TYPE_FILTER_MAP lookup — an indirection that silently
-      // dropped `art` and `stickers`, which had no map entry.
-      const selectedTypes = parseSelectedListingTypes(state.type);
-      if (selectedTypes.length > 0) {
-        parts.push(sieveFilter("listingType", SIEVE_OP.EQ, selectedTypes.join("|")));
-      }
-
-      // Three drawer chips (Sold / Ended / Closed) used to live here, each
-      // emitting its own clause and each guarded by an `onlyType` check
-      // because `collectorDropEndDate` and `prizeRevealWindowEnd` do not exist on
-      // the other seven types. That guard meant the ended/closed filters
-      // silently did nothing on any mixed selection. The scope param replaces
-      // all three, and resolves the per-type meaning server-side — so it works
-      // across a mixed selection, which is the common case here.
-      return parts.join(",") || undefined;
-    },
+    // Three drawer chips (Sold / Ended / Closed) used to live here too, each
+    // emitting its own clause and each guarded by an `onlyType` check because
+    // `collectorDropEndDate` and `prizeRevealWindowEnd` do not exist on the
+    // other seven types. That guard meant the ended/closed filters silently
+    // did nothing on any mixed selection. The scope param (`buildExtraParams`
+    // below) replaces all three and resolves the per-type meaning
+    // server-side — so it works across a mixed selection, which is the
+    // common case here. `status`/`type` are the two that reduce to a plain
+    // Sieve equality/OR-group, now generated rather than hand-written.
+    buildFilters: PRODUCTS_FILTER_PANEL.buildFilters,
     buildExtraParams: () => scope.extraParams,
     renderAboveContent: scope.renderAboveContent,
     primaryAction: {
@@ -565,26 +567,7 @@ export function AdminProductsView({ children, pageRegionCards = [], ...props }: 
         ]}
       />
     ),
-    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
-      <>
-        <FilterChipGroup
-          label="Status"
-          tabs={ADMIN_PRODUCT_STATUS_TABS}
-          value={pendingFilters.status ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-        />
-        {/* Multi-select: an admin reviewing the queue usually wants two or
-            three types at once (e.g. collector drops + prize draws), which the old
-            single-select chips made impossible. */}
-        <FilterChipGroup
-          multiple
-          label="Type"
-          tabs={ADMIN_PRODUCT_LISTING_TYPE_TABS}
-          value={pendingFilters.type ?? ""}
-          onChange={(ids) => setPendingFilters((p) => ({ ...p, type: ids }))}
-        />
-      </>
-    ),
+    renderFilterPanel: PRODUCTS_FILTER_PANEL.renderFilterPanel,
     renderEditor: ({ editId, closePanel }) => (
       <AdminProductEditorView
         productId={editId ?? undefined}
