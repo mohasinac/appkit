@@ -207,10 +207,19 @@ function toRecords(
       continue;
     }
     const slug = key.slice(typeKey.length + 1);
+    // `image` is absent on every source but `standard` (see `index-record.ts`'s
+    // header) — when present without `facets`, position 4 gets an explicit
+    // `""` placeholder rather than a true array hole, so JSON round-trips it
+    // correctly (a hole serialises to `null`, which `facetsOf` would then
+    // have to special-case).
     const tuple: SearchIndexRecord =
-      rec.facets === undefined
-        ? [typeIdx, rec.title, rec.detail, slug]
-        : [typeIdx, rec.title, rec.detail, slug, rec.facets];
+      rec.image !== undefined
+        ? rec.facets !== undefined
+          ? [typeIdx, rec.title, rec.detail, slug, rec.facets, rec.image]
+          : [typeIdx, rec.title, rec.detail, slug, "", rec.image]
+        : rec.facets === undefined
+          ? [typeIdx, rec.title, rec.detail, slug]
+          : [typeIdx, rec.title, rec.detail, slug, rec.facets];
     kept.push([key, tuple]);
   }
   return { kept, removed, dropped };

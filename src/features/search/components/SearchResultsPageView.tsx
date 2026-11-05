@@ -30,6 +30,7 @@ import { Container, Stack, Row } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Text, Span } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
+import { MediaImage } from "../../../ui/components/MediaImage";
 import type { SearchEverythingResult } from "../../../_internal/server/features/search/search-everything";
 
 export interface SearchResultsPageViewProps {
@@ -169,20 +170,34 @@ export function SearchResultsPageView({
                     <TextLink
                       href={hit.href}
                       variant="inherit"
-                      layout="flex-col"
-                      gap="xs"
+                      layout="flex"
+                      align="center"
+                      gap="sm"
                       paddingX="sm"
                       paddingY="sm"
                       className="w-full hover:bg-surface-hover"
                     >
-                      <Text size="sm" weight="medium">
-                        {hit.title}
-                      </Text>
-                      {hit.detail && (
-                        <Text size="xs" color="muted">
-                          {hit.detail}
-                        </Text>
+                      {/*
+                        Only products carry an image (see `SearchHit`'s own
+                        doc comment) — every other kind renders exactly as
+                        before, text-only. The image stays INSIDE this one
+                        anchor, same "whole card is the link" rule above —
+                        a second nested link is what this comment block
+                        already warns against.
+                      */}
+                      {hit.image && (
+                        <MediaImage src={hit.image} alt={hit.title} size="thumbnail" className="flex-shrink-0" />
                       )}
+                      <Stack gap="xs">
+                        <Text size="sm" weight="medium">
+                          {hit.title}
+                        </Text>
+                        {hit.detail && (
+                          <Text size="xs" color="muted">
+                            {hit.detail}
+                          </Text>
+                        )}
+                      </Stack>
                     </TextLink>
                   </Div>
                 ))}

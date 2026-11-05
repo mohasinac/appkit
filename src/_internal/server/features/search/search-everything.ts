@@ -72,6 +72,8 @@ export interface SearchHit {
   href: string;
   /** A one-line qualifier — the category path, the store name, the FAQ category. */
   detail?: string;
+  /** Thumbnail URL. Only products carry one today — every other kind omits it. */
+  image?: string;
 }
 
 export interface SearchGroup {

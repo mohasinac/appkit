@@ -25,6 +25,18 @@
  *               into the artifact is untranslatable, and this app is
  *               `[locale]`-routed with every other UI string going through the
  *               label system. The client maps `key` -> label at render time
+ *
+ * ## `image` (added schema v2, overhaul brief Phase 11)
+ *
+ * Optional, trailing. Only the `standard` (products) source populates it —
+ * the other 12 sources never set `BuiltRecord.image`, so their tuples never
+ * grow a 6th element at all (zero added bytes, not an empty placeholder).
+ * When a record needs `image` but has no `facets`, position 4 gets an
+ * explicit `""` rather than a true array hole — `JSON.stringify` turns a
+ * sparse hole into `null`, which `facetsOf` would then have to special-case;
+ * `""` already round-trips correctly through its existing `if (!raw)
+ * return []` check.
+ *
  *   price       § Guest price gating is a CLIENT gate; it reaches the rendered
  *               DOM and nothing else. This artifact is unauthenticated and
  *               immutable-cached, so no gate can reach it — an amount here is
@@ -51,7 +63,7 @@
  * falls back to the server path, rather than rendering a half-understood one.
  * That is why this is in the envelope and not implied by the URL.
  */
-export const SEARCH_INDEX_SCHEMA_VERSION = 1;
+export const SEARCH_INDEX_SCHEMA_VERSION = 2;
 
 /**
  * The incremental build's watermark field.
@@ -83,19 +95,23 @@ export const REC_TITLE = 1;
 export const REC_DETAIL = 2;
 export const REC_SLUG = 3;
 export const REC_FACETS = 4;
+export const REC_IMAGE = 5;
 
 /**
- * `[typeIdx, title, detail, slug, facets?]`
+ * `[typeIdx, title, detail, slug, facets?, image?]`
  *
  * `facets` is a compact pipe-joined string (`"lt:collector drop|br:takara-tomy"`) and
  * is absent rather than empty when a record has none — an omitted trailing
- * element costs two bytes, `""` costs four, times 3,730.
+ * element costs two bytes, `""` costs four, times 3,730. `image`, when
+ * present, is the record's `mainImage` URL verbatim — see this file's own
+ * header comment for why it is absent on every source but `standard`.
  */
 export type SearchIndexRecord = readonly [
   number,
   string,
   string,
   string,
+  string?,
   string?,
 ];
 
@@ -134,4 +150,9 @@ export function facetsOf(rec: SearchIndexRecord): ReadonlyArray<readonly [string
     if (i > 0) out.push([part.slice(0, i), part.slice(i + 1)] as const);
   }
   return out;
+}
+
+/** The record's image URL, or `undefined` — absent for every source but `standard` (see this file's header). */
+export function imageOf(rec: SearchIndexRecord): string | undefined {
+  return rec[REC_IMAGE] || undefined;
 }

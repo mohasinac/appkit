@@ -61,6 +61,7 @@ import { partAliasTokens } from "./part-aliases";
 import {
   facetsOf,
   hrefFor,
+  imageOf,
   REC_DETAIL,
   REC_FACETS,
   REC_TITLE,
@@ -101,6 +102,8 @@ export interface ResolvedEntity {
    * handful it actually needs.
    */
   readonly facets: string;
+  /** The record's image URL, or `undefined` — only `standard` (products) records carry one. */
+  readonly image?: string;
 }
 
 export interface ResolveOptions {
@@ -282,6 +285,7 @@ export function searchIndex(
         detail: p.rec[REC_DETAIL],
         href: hrefFor(artifact, p.rec),
         facets: p.rec[REC_FACETS] ?? "",
+        image: imageOf(p.rec),
         // An alias hit is a weaker signal than a direct one and must not
         // outrank it when both are present in a later, wider query.
         score: aliasPass ? score - S_ALIAS : score,

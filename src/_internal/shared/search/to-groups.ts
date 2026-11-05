@@ -99,6 +99,7 @@ export function toSearchGroups(
       title: h.title,
       href: h.href,
       detail: h.detail || undefined,
+      image: h.image,
     }));
     return {
       key: typeKey,

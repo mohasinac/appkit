@@ -55,18 +55,20 @@ export const SEARCH_SOURCES: readonly SearchSource[] = [
      * buy it right now". The listing page it links to applies the scope.
      */
     where: [["status", "published"]],
-    select: ["title", "slug", "listingType", "categoryNames", "brand"],
+    select: ["title", "slug", "listingType", "categoryNames", "brand", "mainImage"],
     toHit: (id: string, d: SearchDocData): SearchHit | null => {
       const title = str(d.title);
       if (!title) return null;
       const names = Array.isArray(d.categoryNames) ? (d.categoryNames as string[]) : [];
       // The chain is stored LEAF-FIRST, so [0] is the most specific label.
       const detail = [str(d.brand), names[0]].filter(Boolean).join(" · ");
+      const image = str(d.mainImage);
       return {
         id,
         title,
         href: `/products/${str(d.slug) ?? id}`,
         ...(detail ? { detail } : {}),
+        ...(image ? { image } : {}),
       };
     },
     moreHref: (q) => withQ(ROUTES.PUBLIC.PRODUCTS, q),

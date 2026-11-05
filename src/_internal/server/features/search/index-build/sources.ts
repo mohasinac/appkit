@@ -65,6 +65,8 @@ export interface BuiltRecord {
   readonly title: string;
   readonly detail: string;
   readonly facets?: string;
+  /** Only the `standard` source sets this — see `index-record.ts`'s header. */
+  readonly image?: string;
 }
 
 export interface IndexSource {
@@ -194,11 +196,12 @@ export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
     },
     collection: "products",
     where: [["status", "published"]],
-    select: ["title", "slug", "brand", "categoryNames", "listingType", "condition", "franchiseSlug"],
+    select: ["title", "slug", "brand", "categoryNames", "listingType", "condition", "franchiseSlug", "mainImage"],
     slugOf: (id, d) => str(d.slug) ?? id,
     toRecord: (id, d) => {
       const title = str(d.title);
       if (!title) return null;
+      const image = str(d.mainImage);
       const names = Array.isArray(d.categoryNames) ? (d.categoryNames as string[]) : [];
       /*
        * 🛑 The enum VALUES go in `detail`, which is SEARCHED — the `facets`
@@ -243,6 +246,7 @@ export const PUBLIC_INDEX_SOURCES: readonly IndexSource[] = [
           ["cn", d.condition],
           ["fr", d.franchiseSlug],
         ]),
+        ...(image ? { image } : {}),
       };
     },
   },
