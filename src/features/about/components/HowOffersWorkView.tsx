@@ -1,5 +1,4 @@
 import { ROUTES } from "../../../constants";
-import { Div } from "../../../ui/components/Div";
 import { FlowDiagram } from "../../../ui/components/FlowDiagram";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Li, Section, Ul } from "../../../ui/components/Semantic";

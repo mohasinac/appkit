@@ -1,21 +1,17 @@
 import { ROUTES } from "../../../constants";
-import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { ProseHero } from "./ProseHero";
 import { Div } from "../../../ui/components/Div";
 import { FlowDiagram } from "../../../ui/components/FlowDiagram";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
-import { TextLink } from "../../../ui/components/TextLink";
 import { PackageSearch, MapPinned, FileText, XCircle } from "lucide-react";
-import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import { PolicyCta, PolicyPageView } from "./PolicyPageView";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
   p5: "p-[var(--appkit-space-5)]",
-  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 
@@ -27,7 +23,6 @@ export interface HowOrdersWorkViewProps {
 export async function HowOrdersWorkView({
   pageRegionCards = [],
 }: HowOrdersWorkViewProps = {}) {
-  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howOrdersWork");
 
@@ -171,25 +166,30 @@ export async function HowOrdersWorkView({
   ];
 
   return (
-    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      {/* One hero for every prose page — see ProseHero for the eleven
-          byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
-      <ProseHero title={t("title")} subtitle={t("subtitle")} />
-      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        <AdminComposableRegion pageId="how-orders-work" initialCards={pageRegionCards} />
-        {renderOrderStatusesSection(t, ORDER_STATUSES)}
-        <Section>
-          <FlowDiagram title={`📦 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
-        </Section>
-        {renderOrderInfoCardsSection(INFO_CARDS)}
-        {renderOrdersCtaSection(t)}
-      </Stack>
-    </Div>
+    <PolicyPageView
+      pageId="how-orders-work"
+      pageRegionCards={pageRegionCards}
+      title={t("title")}
+      subtitle={t("subtitle")}
+      containerSize="md"
+    >
+      {renderOrderStatusesSection(t, ORDER_STATUSES)}
+      <Section>
+        <FlowDiagram title={`📦 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
+      </Section>
+      {renderOrderInfoCardsSection(INFO_CARDS)}
+      <PolicyCta
+        title={t("ctaTitle")}
+        text={t("ctaText")}
+        primary={{ label: t("ctaBrowse"), href: String(ROUTES.PUBLIC.PRODUCTS) }}
+        secondary={{ label: t("ctaCheckout"), href: String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS) }}
+      />
+    </PolicyPageView>
   );
 }
 
 type OrdersT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
- 
+
 type OrderInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
 type OrderStatus = { status: string; icon: string; badge: string; desc: string };
 
@@ -226,19 +226,6 @@ function renderOrderInfoCardsSection(cards: OrderInfoCard[]) {
           </Div>
         ))}
       </Div>
-    </Section>
-  );
-}
-
-function renderOrdersCtaSection(t: OrdersT) {
-  return (
-    <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
-      <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
-      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <Row align="center" justify="center" gap="md" wrap >
-        <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>{t("ctaBrowse")}</TextLink>
-        <TextLink href={String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS)} variant="muted">{t("ctaCheckout")}</TextLink>
-      </Row>
     </Section>
   );
 }

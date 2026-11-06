@@ -1,20 +1,16 @@
 import { ROUTES } from "../../../constants";
-import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { ProseHero } from "./ProseHero";
 import { Div } from "../../../ui/components/Div";
 import { FlowDiagram } from "../../../ui/components/FlowDiagram";
-import { Heading, Text } from "../../../ui/components/Typography";
-import { Row, Stack } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
+import { Row } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
-import { TextLink } from "../../../ui/components/TextLink";
 import { Package, Clock, Banknote, AlertCircle } from "lucide-react";
-import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import { PolicyCta, PolicyPageView, PolicySteps } from "./PolicyPageView";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
-  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 
@@ -26,7 +22,6 @@ export interface HowPreOrdersWorkViewProps {
 export async function HowPreOrdersWorkView({
   pageRegionCards = [],
 }: HowPreOrdersWorkViewProps = {}) {
-  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howPreOrdersWork");
 
@@ -121,46 +116,29 @@ export async function HowPreOrdersWorkView({
   ];
 
   return (
-    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      {/* One hero for every prose page — see ProseHero for the eleven
-          byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
-      <ProseHero title={t("title")} subtitle={t("subtitle")} />
-      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        <AdminComposableRegion pageId="how-pre-orders-work" initialCards={pageRegionCards} />
-        {renderPreOrdersStepsSection(t, STEPS)}
-        <Section>
-          <FlowDiagram title={`📋 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
-        </Section>
-        {renderPreOrdersInfoCardsSection(INFO_CARDS)}
-        {renderPreOrdersCtaSection(t)}
-      </Stack>
-    </Div>
+    <PolicyPageView
+      pageId="how-pre-orders-work"
+      pageRegionCards={pageRegionCards}
+      title={t("title")}
+      subtitle={t("subtitle")}
+      containerSize="md"
+    >
+      <PolicySteps title={t("stepsTitle")} items={STEPS} />
+      <Section>
+        <FlowDiagram title={`📋 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
+      </Section>
+      {renderPreOrdersInfoCardsSection(INFO_CARDS)}
+      <PolicyCta
+        title={t("ctaTitle")}
+        text={t("ctaText")}
+        primary={{ label: t("ctaBrowse"), href: String(ROUTES.PUBLIC.PRE_ORDERS) }}
+        secondary={{ label: t("ctaOrders"), href: String(ROUTES.PUBLIC.HOW_ORDERS_WORK) }}
+      />
+    </PolicyPageView>
   );
 }
 
-type PreOrdersT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
- 
 type PreOrdersInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
-type PreOrdersStep = { number: number; icon: string; title: string; text: string };
-
-function renderPreOrdersStepsSection(t: PreOrdersT, steps: PreOrdersStep[]) {
-  return (
-    <Section>
-      <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
-      <Stack gap="5">
-        {steps.map(({ number, icon, title, text }) => (
-          <Row key={number} className={`${__P.p5}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Row align="center" justify="center" className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15`} rounded="full">{icon}</Row>
-            <Div>
-              <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
-              <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
-            </Div>
-          </Row>
-        ))}
-      </Stack>
-    </Section>
-  );
-}
 
 function renderPreOrdersInfoCardsSection(cards: PreOrdersInfoCard[]) {
   return (
@@ -176,19 +154,6 @@ function renderPreOrdersInfoCardsSection(cards: PreOrdersInfoCard[]) {
           </Div>
         ))}
       </Div>
-    </Section>
-  );
-}
-
-function renderPreOrdersCtaSection(t: PreOrdersT) {
-  return (
-    <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
-      <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
-      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <Row align="center" justify="center" gap="md" wrap >
-        <TextLink href={String(ROUTES.PUBLIC.PRE_ORDERS)}>{t("ctaBrowse")}</TextLink>
-        <TextLink href={String(ROUTES.PUBLIC.HOW_ORDERS_WORK)} variant="muted">{t("ctaOrders")}</TextLink>
-      </Row>
     </Section>
   );
 }
