@@ -12,6 +12,7 @@ import { Anchor } from "../../../ui/components/Anchor";
 import { Container, Stack } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Dl, Dt, Dd, Main, Nav, Section } from "../../../ui/components/Semantic";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 import { DynamicBgDiv } from "../../../ui/components/DynamicBgDiv";
@@ -252,229 +253,248 @@ export async function BrandDetailPageView({ slug, initialBrand, pageRegionCards 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
         />
       )}
-      {/* ── Brand Hero ──────────────────────────────────────────────────── */}
-      <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
-        {hasCover && (
-          <>
-            <Div className="absolute inset-0">
-              <MediaImage src={coverImage} alt="" size="banner" />
-            </Div>
-            <Div surface="overlay-md" className="absolute inset-0" />
-          </>
-        )}
-        {!hasCover && (
-          <DynamicBgDiv color={brandColor} className="absolute inset-0 opacity-10" />
-        )}
-
-        <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
-          {/* Breadcrumb */}
-          <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
-            <Link
-              href={String(ROUTES.HOME)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"}
-            >
-              Home
-            </Link>
-            <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
-            <Link
-              href={String(ROUTES.PUBLIC.BRANDS)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"}
-            >
-              Brands
-            </Link>
-            <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
-            <Span weight="medium" className={hasCover ? "text-white" : "text-[var(--appkit-color-text)]"}>
-              {brand?.name ?? slug}
-            </Span>
-          </Nav>
-
-          {/* Brand logo + name */}
-          <Row className="mb-3" align="center" gap="md">
-            {brand?.display?.icon && (
-              <Span className="leading-none" size="5xl">
-                {brand.display.icon}
-              </Span>
-            )}
-            {/*
-              🛑 A `<Stack>`, not a bare `<>` fragment. A fragment is not an
-              element, so its children became flex items of the `<Row>` above
-              — the heading, this toolbar and the description were all laid
-              out SIDE BY SIDE next to the brand logo, rather than stacked
-              beside it. The Row's job is [logo] [text block]; the text block
-              needs a box of its own to be one.
-            */}
-            <Stack gap="xs" className="min-w-0">
-              {/* See CategoryDetailPageView for why this is rendered directly
-                  rather than threaded through a slot prop. Brands have no
-                  owner either, so this is admin-only, and they carry the same
-                  derived tree fields — hence no clone. */}
-              <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
-                {brand?.name ?? slug}
-              </Heading>
-              {/* Below the title, matching CategoryDetailPageView — above a
-                  heading there is nothing for a control strip to belong to. */}
-              {brand?.id && (
-                <RecordOwnerQuickActions
-                  resource="BRAND"
-                  recordId={brand.id}
-                  placement="detail"
-                  /* See CategoryDetailPageView — ghost ink is invisible on the cover hero. */
-                  onMedia={hasCover}
-                  className="mb-2"
-                  recordLabel={brand.name ?? slug}
-                />
+      {/*
+        Migrated onto the shared DetailViewShell ("hub" — taxonomy hub
+        pages: hero band, tabs, browse grid. Renders like "stacked", no
+        shared wrapper imposed, since every section below already manages
+        its own width via its own Section/Container, so this is a pure
+        structural move with identical rendered output.
+      */}
+      <DetailViewShell
+        layout="hub"
+        mainSlots={[
+          /* ── Brand Hero ──────────────────────────────────────────────────── */
+          () => (
+            <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
+              {hasCover && (
+                <>
+                  <Div className="absolute inset-0">
+                    <MediaImage src={coverImage} alt="" size="banner" />
+                  </Div>
+                  <Div surface="overlay-md" className="absolute inset-0" />
+                </>
               )}
-              {/* The `/80` that used to be interpolated into the className
-                  below was a DEAD ALPHA FRAGMENT — codemod residue from a
-                  stripped `text-white/80`, which Tailwind cannot generate and
-                  silently drops. `color="inverse"` already carries the ink.
-                  Same one the category hero had. */}
-              {brand?.description && typeof brand.description === "string" && !brand.description.startsWith("{") && (
-                <Text color={hasCover ? "inverse" : "muted"} className="max-w-2xl mt-1" size="base">
-                  {brand.description}
-                </Text>
+              {!hasCover && (
+                <DynamicBgDiv color={brandColor} className="absolute inset-0 opacity-10" />
               )}
-            </Stack>
-          </Row>
 
-          {/* Item count chips */}
-          <Row gap="sm" wrap className="mt-3">
-            {(counts.products ?? 0) > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="pill-sm-tall">
-                {counts.products!.toLocaleString()} {counts.products === 1 ? "product" : "products"}
-              </Span>
-            )}
-            {(counts.collectorDrops ?? 0) > 0 && (
-              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {counts.collectorDrops!.toLocaleString()} {counts.collectorDrops === 1 ? "collector drop" : "collector drops"}
-              </Span>
-            )}
-            {(counts["pre-orders"] ?? 0) > 0 && (
-              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "info"} surface={hasCover ? undefined : "info-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {counts["pre-orders"]!.toLocaleString()} {counts["pre-orders"] === 1 ? "pre-order" : "pre-orders"}
-              </Span>
-            )}
-            {totalItems === 0 && (
-              <Span size="sm" className={hasCover ? "text-white/60" : "text-zinc-400"}>
-                No items listed yet
-              </Span>
-            )}
-          </Row>
-        </Div>
-      </Section>
+              <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
+                {/* Breadcrumb */}
+                <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
+                  <Link
+                    href={String(ROUTES.HOME)}
+                    className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"}
+                  >
+                    Home
+                  </Link>
+                  <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
+                  <Link
+                    href={String(ROUTES.PUBLIC.BRANDS)}
+                    className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"}
+                  >
+                    Brands
+                  </Link>
+                  <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
+                  <Span weight="medium" className={hasCover ? "text-white" : "text-[var(--appkit-color-text)]"}>
+                    {brand?.name ?? slug}
+                  </Span>
+                </Nav>
 
-      {/* ── About this brand ────────────────────────────────────────────── */}
-      {(brand?.brandWebsite || brand?.brandCountry || brand?.brandFounded) && (
-        <Section border="subtle" surface="default" className="border-b" padding="y-md">
-          <Container size="xl">
-            <Stack gap="sm">
-              <Heading level={2} size="sm" weight="semibold" color="muted" transform="uppercase">
-                About this brand
-              </Heading>
-              <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden max-w-lg">
-                {brand?.brandWebsite && (
-                  <Row gap="md" oddEven="zebra" surface="default" padding="inline">
-                    <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Website</Dt>
-                    <Dd className="flex-1">
-                      <Anchor href={brand.brandWebsite} tone="brand" underline="hover">
-                        {brand.brandWebsite}
-                      </Anchor>
-                    </Dd>
-                  </Row>
+                {/* Brand logo + name */}
+                <Row className="mb-3" align="center" gap="md">
+                  {brand?.display?.icon && (
+                    <Span className="leading-none" size="5xl">
+                      {brand.display.icon}
+                    </Span>
+                  )}
+                  {/*
+                    🛑 A `<Stack>`, not a bare `<>` fragment. A fragment is not an
+                    element, so its children became flex items of the `<Row>` above
+                    — the heading, this toolbar and the description were all laid
+                    out SIDE BY SIDE next to the brand logo, rather than stacked
+                    beside it. The Row's job is [logo] [text block]; the text block
+                    needs a box of its own to be one.
+                  */}
+                  <Stack gap="xs" className="min-w-0">
+                    {/* See CategoryDetailPageView for why this is rendered directly
+                        rather than threaded through a slot prop. Brands have no
+                        owner either, so this is admin-only, and they carry the same
+                        derived tree fields — hence no clone. */}
+                    <Heading color="inverse" level={1} className={`${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
+                      {brand?.name ?? slug}
+                    </Heading>
+                    {/* Below the title, matching CategoryDetailPageView — above a
+                        heading there is nothing for a control strip to belong to. */}
+                    {brand?.id && (
+                      <RecordOwnerQuickActions
+                        resource="BRAND"
+                        recordId={brand.id}
+                        placement="detail"
+                        /* See CategoryDetailPageView — ghost ink is invisible on the cover hero. */
+                        onMedia={hasCover}
+                        className="mb-2"
+                        recordLabel={brand.name ?? slug}
+                      />
+                    )}
+                    {/* The `/80` that used to be interpolated into the className
+                        below was a DEAD ALPHA FRAGMENT — codemod residue from a
+                        stripped `text-white/80`, which Tailwind cannot generate and
+                        silently drops. `color="inverse"` already carries the ink.
+                        Same one the category hero had. */}
+                    {brand?.description && typeof brand.description === "string" && !brand.description.startsWith("{") && (
+                      <Text color={hasCover ? "inverse" : "muted"} className="max-w-2xl mt-1" size="base">
+                        {brand.description}
+                      </Text>
+                    )}
+                  </Stack>
+                </Row>
+
+                {/* Item count chips */}
+                <Row gap="sm" wrap className="mt-3">
+                  {(counts.products ?? 0) > 0 && (
+                    <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={`${ hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400" }`} rounded="full" padding="pill-sm-tall">
+                      {counts.products!.toLocaleString()} {counts.products === 1 ? "product" : "products"}
+                    </Span>
+                  )}
+                  {(counts.collectorDrops ?? 0) > 0 && (
+                    <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                      {counts.collectorDrops!.toLocaleString()} {counts.collectorDrops === 1 ? "collector drop" : "collector drops"}
+                    </Span>
+                  )}
+                  {(counts["pre-orders"] ?? 0) > 0 && (
+                    <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "info"} surface={hasCover ? undefined : "info-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                      {counts["pre-orders"]!.toLocaleString()} {counts["pre-orders"] === 1 ? "pre-order" : "pre-orders"}
+                    </Span>
+                  )}
+                  {totalItems === 0 && (
+                    <Span size="sm" className={hasCover ? "text-white/60" : "text-zinc-400"}>
+                      No items listed yet
+                    </Span>
+                  )}
+                </Row>
+              </Div>
+            </Section>
+          ),
+          /* ── About this brand ────────────────────────────────────────────── */
+          (brand?.brandWebsite || brand?.brandCountry || brand?.brandFounded)
+            ? () => (
+                <Section border="subtle" surface="default" className="border-b" padding="y-md">
+                  <Container size="xl">
+                    <Stack gap="sm">
+                      <Heading level={2} size="sm" weight="semibold" color="muted" transform="uppercase">
+                        About this brand
+                      </Heading>
+                      <Dl divide="subtle" rounded="xl" border="subtle" className="overflow-hidden max-w-lg">
+                        {brand?.brandWebsite && (
+                          <Row gap="md" oddEven="zebra" surface="default" padding="inline">
+                            <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Website</Dt>
+                            <Dd className="flex-1">
+                              <Anchor href={brand.brandWebsite} tone="brand" underline="hover">
+                                {brand.brandWebsite}
+                              </Anchor>
+                            </Dd>
+                          </Row>
+                        )}
+                        {brand?.brandCountry && (
+                          <Row gap="md" oddEven="zebra" surface="default" padding="inline">
+                            <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Country</Dt>
+                            <Dd className="flex-1" color="muted">{brand.brandCountry}</Dd>
+                          </Row>
+                        )}
+                        {brand?.brandFounded && (
+                          <Row gap="md" oddEven="zebra" surface="default" padding="inline">
+                            <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Founded</Dt>
+                            <Dd className="flex-1" color="muted">{brand.brandFounded}</Dd>
+                          </Row>
+                        )}
+                      </Dl>
+                    </Stack>
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          /* ── The brand's OWN content ──────────────────────────────────────────
+              🛑 A brand IS a `CategoryDocument` (discriminated by
+              `categoryType: "brand"`), so it can carry `contentBody`, an admin can
+              author one through the brand editor, and the public projection already
+              lists the field. It had no render site on THIS page — only
+              `CategoryDetailPageView` grew one. So brand body copy was authorable,
+              storable and invisible, which is the same defect that page's own
+              comment records fixing for categories, left half-done one document
+              type over. Root Cause #52: the data was already fetched and the UI was
+              never wired to it.
+
+              Mirrors `CategoryDetailPageView` exactly — `RichTextRenderer` (what
+              the field's docstring specifies, SSR-safe because `RichTextEditor`
+              sanitises at save time), inside the same `Section`/`Container`, and
+              omitted entirely when absent rather than rendering an empty prose
+              block that reads as a broken page. */
+          brandContentBody && brandContentBody.trim().length > 0
+            ? () => (
+                <Section padding="y-lg">
+                  <Container size="xl">
+                    <RichTextRenderer html={brandContentBody} />
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          () => <CategoryHighlightsAndFaqSection highlights={brand?.highlights} faqs={brand?.faqs} />,
+          /* ── Tabs: Products / Collector Drops / Pre-Orders ──────────────────────── */
+          () => (
+            <Section padding="y-lg">
+              <Container size="xl">
+                {brandName ? (
+                  <BrandDetailTabs
+                    brandName={brandName}
+                    initialProductsData={productsResult ?? undefined}
+                    initialBundles={brandBundles as any}
+                    counts={counts}
+                    totals={totals}
+                    enabledListingTypes={enabledListingTypes(settings)}
+                    enabledCategoryTypes={enabledCategoryTypes(settings)}
+                  />
+                ) : (
+                  <Text paddingY="3xl" color="muted" size="sm" align="start">
+                    Brand not found.
+                  </Text>
                 )}
-                {brand?.brandCountry && (
-                  <Row gap="md" oddEven="zebra" surface="default" padding="inline">
-                    <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Country</Dt>
-                    <Dd className="flex-1" color="muted">{brand.brandCountry}</Dd>
-                  </Row>
-                )}
-                {brand?.brandFounded && (
-                  <Row gap="md" oddEven="zebra" surface="default" padding="inline">
-                    <Dt className="w-32 flex-shrink-0" color="primary" weight="medium">Founded</Dt>
-                    <Dd className="flex-1" color="muted">{brand.brandFounded}</Dd>
-                  </Row>
-                )}
-              </Dl>
-            </Stack>
-          </Container>
-        </Section>
-      )}
-
-      {/* ── The brand's OWN content ──────────────────────────────────────────
-          🛑 A brand IS a `CategoryDocument` (discriminated by
-          `categoryType: "brand"`), so it can carry `contentBody`, an admin can
-          author one through the brand editor, and the public projection already
-          lists the field. It had no render site on THIS page — only
-          `CategoryDetailPageView` grew one. So brand body copy was authorable,
-          storable and invisible, which is the same defect that page's own
-          comment records fixing for categories, left half-done one document
-          type over. Root Cause #52: the data was already fetched and the UI was
-          never wired to it.
-
-          Mirrors `CategoryDetailPageView` exactly — `RichTextRenderer` (what
-          the field's docstring specifies, SSR-safe because `RichTextEditor`
-          sanitises at save time), inside the same `Section`/`Container`, and
-          omitted entirely when absent rather than rendering an empty prose
-          block that reads as a broken page. */}
-      {brandContentBody && brandContentBody.trim().length > 0 && (
-        <Section padding="y-lg">
-          <Container size="xl">
-            <RichTextRenderer html={brandContentBody} />
-          </Container>
-        </Section>
-      )}
-
-      <CategoryHighlightsAndFaqSection highlights={brand?.highlights} faqs={brand?.faqs} />
-
-      {/* ── Tabs: Products / Collector Drops / Pre-Orders ──────────────────────── */}
-      <Section padding="y-lg">
-        <Container size="xl">
-          {brandName ? (
-            <BrandDetailTabs
-              brandName={brandName}
-              initialProductsData={productsResult ?? undefined}
-              initialBundles={brandBundles as any}
-              counts={counts}
-              totals={totals}
-              enabledListingTypes={enabledListingTypes(settings)}
-              enabledCategoryTypes={enabledCategoryTypes(settings)}
-            />
-          ) : (
-            <Text paddingY="3xl" color="muted" size="sm" align="start">
-              Brand not found.
-            </Text>
-          )}
-        </Container>
-      </Section>
-
-      {groupedListings.length > 0 && (
-        <Section padding="y-lg">
-          <Container size="xl">
-            <GroupedListingsCarousel groups={groupedListings} />
-          </Container>
-        </Section>
-      )}
-
-      <Section padding="y-md">
-        <Container size="xl">
-          <AdminComposableRegion pageId="brands-slug" initialCards={pageRegionCards} />
-        </Container>
-      </Section>
-
-      {/* ── Related brands ───────────────────────────────────────────────── */}
-      {relatedBrands.length > 0 && (
-        <Section border="subtle" surface="default" className="border-t" padding="y-lg">
-          <Container size="xl">
-            <Heading level={2} className="mb-4" size="xl" weight="semibold">
-              Related Brands
-            </Heading>
-            <CategoryGrid
-              categories={relatedBrands}
-              getHref={(b) => String(ROUTES.PUBLIC.BRAND_DETAIL(b.slug))}
-            />
-          </Container>
-        </Section>
-      )}
+              </Container>
+            </Section>
+          ),
+          groupedListings.length > 0
+            ? () => (
+                <Section padding="y-lg">
+                  <Container size="xl">
+                    <GroupedListingsCarousel groups={groupedListings} />
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          () => (
+            <Section padding="y-md">
+              <Container size="xl">
+                <AdminComposableRegion pageId="brands-slug" initialCards={pageRegionCards} />
+              </Container>
+            </Section>
+          ),
+          /* ── Related brands ───────────────────────────────────────────────── */
+          relatedBrands.length > 0
+            ? () => (
+                <Section border="subtle" surface="default" className="border-t" padding="y-lg">
+                  <Container size="xl">
+                    <Heading level={2} className="mb-4" size="xl" weight="semibold">
+                      Related Brands
+                    </Heading>
+                    <CategoryGrid
+                      categories={relatedBrands}
+                      getHref={(b) => String(ROUTES.PUBLIC.BRAND_DETAIL(b.slug))}
+                    />
+                  </Container>
+                </Section>
+              )
+            : undefined,
+        ]}
+      />
     </Main>
   );
 }
