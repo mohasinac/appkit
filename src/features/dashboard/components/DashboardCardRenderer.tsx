@@ -15,12 +15,12 @@ import { Select, type SelectOption } from "../../../ui/components/Select";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { SURFACE_MAP, type SurfaceKey } from "../../../ui/components/surface-tokens";
-import { Text } from "../../../ui/components/Typography";
+import { Span, Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { Toggle } from "../../../ui/components/Toggle";
 import { useToastSafe } from "../../../ui/components/toast-context";
-import type { CardElement, CardElementSpan, DashboardCard, FunctionalSlotId } from "../../../_internal/shared/features/dashboard/recent-entry";
-import { FUNCTIONAL_SLOT_LABELS } from "../../../_internal/shared/features/dashboard/recent-entry";
+import type { CardElement, CardElementSpan, DashboardCard, FunctionalSlotId, NavSlotId } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { FUNCTIONAL_SLOT_LABELS, NAV_SLOT_LABELS } from "../../../_internal/shared/features/dashboard/recent-entry";
 import type { ReactNode } from "react";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_ROW_HREF_BY_RESOURCE } from "../../../_internal/shared/features/admin/row-widget-resources";
@@ -156,6 +156,11 @@ const CONTENT_TAG_OPTIONS: SelectOption[] = [
 /** `<Select>` options for `functionalSlot.slotId`, derived from the closed `FunctionalSlotId` vocabulary — never hand-typed, so a new slot id can't silently go missing here. */
 const FUNCTIONAL_SLOT_OPTIONS: SelectOption[] = (
   Object.entries(FUNCTIONAL_SLOT_LABELS) as Array<[FunctionalSlotId, string]>
+).map(([value, label]) => ({ value, label }));
+
+/** `<Select>` options for `navSlot.slotId`, derived from the closed `NavSlotId` vocabulary — same reasoning as `FUNCTIONAL_SLOT_OPTIONS`. */
+const NAV_SLOT_OPTIONS: SelectOption[] = (
+  Object.entries(NAV_SLOT_LABELS) as Array<[NavSlotId, string]>
 ).map(([value, label]) => ({ value, label }));
 
 const FAQ_CATEGORY_OPTIONS = (
@@ -522,6 +527,14 @@ function DashboardCardEditPanel({
       ],
     });
   }
+  function addNavSlotElement() {
+    onUpdate({
+      elements: [
+        ...card.elements,
+        { kind: "navSlot", slotId: "sidebar-admin", href: "", label: "" },
+      ],
+    });
+  }
 
   return (
     <Stack gap="sm" padding="r-xl">
@@ -675,6 +688,38 @@ function DashboardCardEditPanel({
                         onChange={(value) => updateElement(i, { label: value })}
                       />
                     </Stack>
+                  ) : el.kind === "navSlot" ? (
+                    // Inline-authored, same free-text fields as `cta` above
+                    // (not a closed registry the way `functionalSlot`'s
+                    // picker is) — `slotId` only picks WHICH chrome a
+                    // bridge should go looking for this in; it never
+                    // constrains `href`/`label`/`icon`.
+                    <Stack gap="xs">
+                      <Select
+                        aria-label="Nav slot"
+                        options={NAV_SLOT_OPTIONS}
+                        value={el.slotId}
+                        onValueChange={(value) => updateElement(i, { slotId: value as NavSlotId })}
+                      />
+                      <FieldInput
+                        name={`card-element-${card.id}-${i}-label`}
+                        label="Label"
+                        value={el.label}
+                        onChange={(value) => updateElement(i, { label: value })}
+                      />
+                      <FieldInput
+                        name={`card-element-${card.id}-${i}-href`}
+                        label="Link"
+                        value={el.href}
+                        onChange={(value) => updateElement(i, { href: value })}
+                      />
+                      <FieldInput
+                        name={`card-element-${card.id}-${i}-icon`}
+                        label="Icon (optional emoji/glyph)"
+                        value={el.icon ?? ""}
+                        onChange={(value) => updateElement(i, { icon: value || undefined })}
+                      />
+                    </Stack>
                   ) : (
                     <Text size="sm" color="muted">{el.label} ({el.kind})</Text>
                   )}
@@ -718,6 +763,9 @@ function DashboardCardEditPanel({
           </Button>
           <Button variant="ghost" size="sm" type="button" onClick={addFunctionalSlotElement}>
             <Icon name="create" size="sm" /> Functional slot
+          </Button>
+          <Button variant="ghost" size="sm" type="button" onClick={addNavSlotElement}>
+            <Icon name="create" size="sm" /> Nav slot
           </Button>
         </Row>
       </Div>
@@ -839,6 +887,33 @@ function DashboardCardElementBody({
     return (
       <Button variant={(element.variant as ButtonProps["variant"]) ?? "primary"} asChild>
         <TextLink variant="bare" href={element.href}>{element.label}</TextLink>
+      </Button>
+    );
+  }
+  if (element.kind === "navSlot") {
+    /*
+     * Inline render is identical in SHAPE to `cta` just above — `navSlot` is
+     * inline-authored content (`href`/`label`/`icon` carried on the element
+     * itself), not a live page-supplied slot like `functionalSlot` below.
+     * `slotId` has no bearing on how this renders HERE; it only tells a
+     * separate chrome-side bridge (see `recent-entry.ts`'s `NavSlotId` doc
+     * comment) which navbar/sidebar to also pin this into. A card holding a
+     * `navSlot` element still renders it right here in the page's own
+     * body-grid too — pinning is additive, not a replacement for the inline
+     * render.
+     *
+     * `icon` rendered the same way `AdminSidebar.tsx`'s own `NavLink`
+     * renders `item.icon` — a plain, admin-typed glyph/emoji `<Span>`, not
+     * `<Icon name=...>`: that component's `name` is a closed, compile-time
+     * `IconKey` registry, which an arbitrary admin-typed string can never
+     * safely satisfy.
+     */
+    return (
+      <Button variant="secondary" asChild>
+        <TextLink variant="bare" href={element.href}>
+          {element.icon && <Span size="base" className="shrink-0 opacity-60">{element.icon}</Span>}
+          {element.label}
+        </TextLink>
       </Button>
     );
   }

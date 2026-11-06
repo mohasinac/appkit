@@ -150,6 +150,38 @@ export const FUNCTIONAL_SLOT_LABELS: Record<FunctionalSlotId, string> = {
   "pdp-primary-actions": "Primary actions (Buy Now / Add to Cart / Wishlist)",
 };
 
+/**
+ * Closed vocabulary for `navSlot` elements (below) — the four real places in
+ * the site's own chrome (not a dashboard's body-grid) a pinned shortcut can
+ * land, added 2026-11-06 (owner's direct instruction: an admin should be
+ * able to pin a shortcut link into the navbar/sidebar chrome itself, not
+ * only into a dashboard card). Grows only by a code change, same as
+ * `FunctionalSlotId`/`AdminRowResource`/`PdpSectionId` above — a slot id is
+ * a target the rendering/bridging code on that surface must already know
+ * how to reach, never admin-typed input.
+ *
+ * Only `"sidebar-admin"` has a real chrome-side bridge as of this pass (see
+ * `src/app/[locale]/admin/layout.tsx`, which merges matching elements from
+ * the dedicated `"admin-sidebar-nav"` page region into its sidebar
+ * `groups`, the same way it already merges `siteSettings.navCustomEntries`).
+ * `"sidebar-store"`, `"navbar-public"`, and `"titlebar-action"` exist here so
+ * the `CardElement`/editor support is in place for all four up front, but
+ * each needs its OWN bridge built in the surface that owns that chrome
+ * (the store dashboard layout, the public navbar component, the titlebar)
+ * — deliberately deferred rather than built speculatively, same "mechanism
+ * first, one pilot" shape `NavPermissionsPanel.tsx`'s own Admin-Sidebar-only
+ * pilot already used for `navCustomEntries`.
+ */
+export type NavSlotId = "sidebar-admin" | "sidebar-store" | "navbar-public" | "titlebar-action";
+
+/** Admin-facing labels for `NavSlotId` — used by the editor's slot picker, same pattern as `FUNCTIONAL_SLOT_LABELS`. */
+export const NAV_SLOT_LABELS: Record<NavSlotId, string> = {
+  "sidebar-admin": "Admin Sidebar",
+  "sidebar-store": "Store Sidebar",
+  "navbar-public": "Public Navbar",
+  "titlebar-action": "Titlebar Action",
+};
+
 /** Per-user recently-visited/used cards, namespaced by `"{portal}:hub"` scope — same convention as `hiddenHubCards`. */
 export type RecentlyVisitedMap = Record<string, RecentEntry[]>;
 
@@ -257,7 +289,35 @@ export type CardElement =
    * offer-action slot on EVERY standard product simultaneously, not one —
    * the same scope every other card on these pages already has.
    */
-  | { kind: "functionalSlot"; slotId: FunctionalSlotId; label: string };
+  | { kind: "functionalSlot"; slotId: FunctionalSlotId; label: string }
+  /**
+   * `navSlot` — added 2026-11-06 (owner's direct instruction: pin a
+   * shortcut link into the site's actual navigation chrome — navbar or
+   * sidebar — not just into a dashboard's body-grid content, which is all
+   * every kind above this one can reach). STRUCTURALLY THE OPPOSITE of
+   * `functionalSlot` just above, despite both being "pick a closed slot
+   * id": `navSlot` carries its OWN content inline (`href`/`label`/`icon`,
+   * exactly like `cta`'s `href`/`label` above) — an admin authors what it
+   * says and where it goes, same as any other inline-authored kind. It is
+   * NOT a live, page-supplied slot the way `functionalSlot` is — there is
+   * no `navSlotContent` map threaded down from a page the way
+   * `functionalSlots` is threaded into `DashboardCardElementBody`, because
+   * there is no "the page itself" for a piece of chrome that is the same
+   * on every page. `slotId` only says WHICH chrome surface a bridge should
+   * go looking for this element in — it does not change how the element
+   * renders inline (see `DashboardCardRenderer.tsx`'s `cta`-shaped render
+   * branch for `navSlot`).
+   *
+   * Composing a `navSlot` element onto a card does NOT, by itself, make it
+   * appear in the real navbar/sidebar — that requires a second, explicit
+   * piece of plumbing (a "bridge") on the surface that owns that chrome,
+   * reading whichever page region holds that chrome's pins and merging
+   * matching elements into its own nav data, the same shape
+   * `siteSettings.navCustomEntries` already uses for admin-added sidebar
+   * entries. See `NavSlotId`'s own doc comment above for which bridges
+   * exist today (`sidebar-admin` only) versus composable-but-not-yet-wired.
+   */
+  | { kind: "navSlot"; slotId: NavSlotId; href: string; label: string; icon?: string };
 
 /**
  * A card element's claimed width within its row — reuses `RowSpan`
