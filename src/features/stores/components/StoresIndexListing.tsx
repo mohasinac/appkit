@@ -6,6 +6,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
 import { BulkActionBar } from "../../../ui/components/BulkActionBar";
+import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Grid } from "../../../ui/components/Layout";
 import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
@@ -263,62 +264,92 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         </StickyToolbar>
       )}
 
-      {/* ── Store grid ─────────────────────────────────────────────────── */}
-      <Div padding="y-lg">
-        {isLoading ? (
-          <Grid cols="cards" gap="lg">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
-                <Div className="aspect-video" surface="subtle" />
-                <Div className={`${__P.p4} space-y-[0.625rem]`}>
-                  <Row align="center" gap="sm">
-                    <Div className="h-10 w-10" surface="subtle" rounded="lg" />
-                  </Row>
-                  <Div className="h-4 w-2/3" surface="subtle" rounded="default" />
-                  <Div className="h-3 w-full" surface="subtle" rounded="default" />
-                  <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
-                </Div>
-              </Div>
-            ))}
-          </Grid>
-        ) : stores.length === 0 ? (
-          <Text paddingY="4xl" color="muted" size="sm" align="start">
-            No stores found.
-          </Text>
-        ) : view === "list" ? (
-          <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
-            {stores.map((store) => {
-              const storeKey = store.storeSlug ?? store.id;
-              return (
-                <InteractiveStoreCard
-                  key={storeKey}
-                  store={store}
-                  href={String(ROUTES.PUBLIC.STORE_DETAIL(storeKey))}
-                  selectable={selection.isSelecting}
-                  isSelected={selection.isSelected(store.id ?? store.storeSlug)}
-                  onSelect={(id, sel) => { void sel; selection.toggle(id); }}
-                />
-              );
-            })}
-          </Stack>
-        ) : (
-          <Grid cols="cards" gap="lg">
-            {stores.map((store) => {
-              const storeKey = store.storeSlug ?? store.id;
-              return (
-                <InteractiveStoreCard
-                  key={storeKey}
-                  store={store}
-                  href={String(ROUTES.PUBLIC.STORE_DETAIL(storeKey))}
-                  selectable={selection.isSelecting}
-                  isSelected={selection.isSelected(store.id ?? store.storeSlug)}
-                  onSelect={(id, sel) => { void sel; selection.toggle(id); }}
-                />
-              );
-            })}
-          </Grid>
-        )}
+      {/*
+       * ── Persistent filter sidebar (desktop) + store grid ─────────────
+       * Same `lg:grid-cols-12` 2-column technique ProductsIndexListing.tsx
+       * (and FAQPageContent.tsx) already use — exactly ONE
+       * grid-template-columns class on this container. `StoreFilters` is the
+       * SAME component/instance the mobile `<ListingFilterDrawer>` below
+       * already renders — bound to the same `pendingTable`, same
+       * Apply/Clear handlers — no new filter logic, just a second,
+       * persistent container for it on `lg:` and up. Previously this page
+       * (and /sellers, which reuses it) offered filters via a drawer only,
+       * even on desktop — the one real UX gap this component had relative
+       * to ProductsIndexListing.
+       */}
+      <Div layout="grid" gap="8" className="lg:grid-cols-12">
+        <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
+          <Div rounded="xl" border="default" padding="lg">
+            <StoreFilters table={pendingTable} />
+            <Row gap="sm" className="mt-4" justify="end">
+              <Button type="button" variant="ghost" onClick={clearFilters}>
+                Reset all
+              </Button>
+              <Button type="button" variant="primary" onClick={applyFilters}>
+                {pendingFilterCount > 0 ? `Apply (${pendingFilterCount})` : "Apply"}
+              </Button>
+            </Row>
+          </Div>
+        </Div>
 
+        <Div className="lg:col-span-8 xl:col-span-9">
+          {/* ── Store grid ───────────────────────────────────────────────── */}
+          <Div padding="y-lg">
+            {isLoading ? (
+              <Grid cols="cards" gap="lg">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <Div key={i} className={`${__O.hidden} animate-pulse`} border="subtle" rounded="xl">
+                    <Div className="aspect-video" surface="subtle" />
+                    <Div className={`${__P.p4} space-y-[0.625rem]`}>
+                      <Row align="center" gap="sm">
+                        <Div className="h-10 w-10" surface="subtle" rounded="lg" />
+                      </Row>
+                      <Div className="h-4 w-2/3" surface="subtle" rounded="default" />
+                      <Div className="h-3 w-full" surface="subtle" rounded="default" />
+                      <Div className="h-3 w-1/2" surface="subtle" rounded="default" />
+                    </Div>
+                  </Div>
+                ))}
+              </Grid>
+            ) : stores.length === 0 ? (
+              <Text paddingY="4xl" color="muted" size="sm" align="start">
+                No stores found.
+              </Text>
+            ) : view === "list" ? (
+              <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
+                {stores.map((store) => {
+                  const storeKey = store.storeSlug ?? store.id;
+                  return (
+                    <InteractiveStoreCard
+                      key={storeKey}
+                      store={store}
+                      href={String(ROUTES.PUBLIC.STORE_DETAIL(storeKey))}
+                      selectable={selection.isSelecting}
+                      isSelected={selection.isSelected(store.id ?? store.storeSlug)}
+                      onSelect={(id, sel) => { void sel; selection.toggle(id); }}
+                    />
+                  );
+                })}
+              </Stack>
+            ) : (
+              <Grid cols="cards" gap="lg">
+                {stores.map((store) => {
+                  const storeKey = store.storeSlug ?? store.id;
+                  return (
+                    <InteractiveStoreCard
+                      key={storeKey}
+                      store={store}
+                      href={String(ROUTES.PUBLIC.STORE_DETAIL(storeKey))}
+                      selectable={selection.isSelecting}
+                      isSelected={selection.isSelected(store.id ?? store.storeSlug)}
+                      onSelect={(id, sel) => { void sel; selection.toggle(id); }}
+                    />
+                  );
+                })}
+              </Grid>
+            )}
+          </Div>
+        </Div>
       </Div>
 
 
