@@ -6,6 +6,7 @@ import { Container, Grid, Row } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Nav, Section } from "../../../ui/components/Semantic";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
 import { ROUTES } from "../../../next/routing/route-map";
 import type { Review } from "../types";
 import { ReviewDetailShell } from "./ReviewDetailShell";
@@ -84,81 +85,102 @@ export async function ReviewDetailPageView({ id, pageRegionCards = [] }: ReviewD
 
   return (
     <Main>
-      {/* Breadcrumb */}
-      <Div paddingY="y-xs-tall" className="border-b border-neutral-100 bg-neutral-50" padding="x-md">
-        <Nav layout="flex" gap="2xs" textSize="xs" color="faint" className="mx-auto max-w-3xl" aria-label="Breadcrumb">
-          <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
-            Home
-          </Link>
-          <Span>/</Span>
-          <Link href={String(ROUTES.PUBLIC.REVIEWS)} className="hover:text-primary transition-colors">
-            Reviews
-          </Link>
-          <Span>/</Span>
-          <Span className="text-neutral-700 truncate max-w-[200px]">
-            {review.title ?? review.id}
-          </Span>
-        </Nav>
-      </Div>
-
       {/*
-        🛑 The one resource here that is genuinely OWNER-visible rather than
-        admin-only, because it is the one with a real non-admin editor:
-        `/user/reviews/[id]/edit`, built in W3. So `ownerId` is passed and the
-        review's author sees the pencil on their own review — which is exactly
-        what "edit a review you have given without navigating to your reviews
-        page" asked for. Admins see it too, via the component's own term.
-
-        Every other resource in this sweep points at an `/admin/*` editor, so
-        passing an owner id there would hand a non-admin a pencil to a route
-        their role cannot open (Root Cause #37's dead-link shape).
+        Migrated onto the shared DetailViewShell ("stacked" — a pure
+        sequential host, no shared wrapper is imposed, so every pixel below
+        is identical to the pre-migration JSX). The not-found branch above
+        stays a plain early return rather than DetailViewShell's
+        `renderNotFound` prop, matching every other *DetailPageView in this
+        codebase (e.g. ProductDetailPageView): not-found is resolved before
+        the shell is ever reached, not inside it.
       */}
-      <Row justify="end" className="mb-2">
-        <OwnerQuickActions
-          resource="REVIEW"
-          placement="detail"
-          ownerId={review.userId}
-          recordLabel={review.title ?? review.id}
-          editHref={String(ROUTES.USER.REVIEW_EDIT(review.id))}
-        />
-      </Row>
+      <DetailViewShell
+        layout="stacked"
+        mainSlots={[
+          /* Breadcrumb */
+          () => (
+            <Div paddingY="y-xs-tall" className="border-b border-neutral-100 bg-neutral-50" padding="x-md">
+              <Nav layout="flex" gap="2xs" textSize="xs" color="faint" className="mx-auto max-w-3xl" aria-label="Breadcrumb">
+                <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
+                  Home
+                </Link>
+                <Span>/</Span>
+                <Link href={String(ROUTES.PUBLIC.REVIEWS)} className="hover:text-primary transition-colors">
+                  Reviews
+                </Link>
+                <Span>/</Span>
+                <Span className="text-neutral-700 truncate max-w-[200px]">
+                  {review.title ?? review.id}
+                </Span>
+              </Nav>
+            </Div>
+          ),
+          /*
+            🛑 The one resource here that is genuinely OWNER-visible rather than
+            admin-only, because it is the one with a real non-admin editor:
+            `/user/reviews/[id]/edit`, built in W3. So `ownerId` is passed and the
+            review's author sees the pencil on their own review — which is exactly
+            what "edit a review you have given without navigating to your reviews
+            page" asked for. Admins see it too, via the component's own term.
 
-      <AdminComposableRegion pageId="reviews-id" initialCards={pageRegionCards} />
-
-      <ReviewDetailShell
-        review={review}
-        storeHref={storeSlug ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug)) : null}
+            Every other resource in this sweep points at an `/admin/*` editor, so
+            passing an owner id there would hand a non-admin a pencil to a route
+            their role cannot open (Root Cause #37's dead-link shape).
+          */
+          () => (
+            <Row justify="end" className="mb-2">
+              <OwnerQuickActions
+                resource="REVIEW"
+                placement="detail"
+                ownerId={review.userId}
+                recordLabel={review.title ?? review.id}
+                editHref={String(ROUTES.USER.REVIEW_EDIT(review.id))}
+              />
+            </Row>
+          ),
+          () => <AdminComposableRegion pageId="reviews-id" initialCards={pageRegionCards} />,
+          () => (
+            <ReviewDetailShell
+              review={review}
+              storeHref={storeSlug ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug)) : null}
+            />
+          ),
+        ]}
+        belowFold={[
+          sameProductReviews.length > 0
+            ? () => (
+                <Section padding="y-lg" border="subtle" className="border-t">
+                  <Container size="sm">
+                    <Heading level={2} className="mb-4" size="lg" weight="semibold">
+                      More reviews for {review.productTitle ?? "this product"}
+                    </Heading>
+                    <Grid cols="cardsWide" gap="md">
+                      {sameProductReviews.map((r) => (
+                        <ReviewCard key={r.id} review={r} context="listing" />
+                      ))}
+                    </Grid>
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          sameStoreReviews.length > 0
+            ? () => (
+                <Section padding="y-lg" border="subtle" className="border-t">
+                  <Container size="sm">
+                    <Heading level={2} className="mb-4" size="lg" weight="semibold">
+                      More reviews for {review.storeName ?? "this store"}
+                    </Heading>
+                    <Grid cols="cardsWide" gap="md">
+                      {sameStoreReviews.map((r) => (
+                        <ReviewCard key={r.id} review={r} context="store" />
+                      ))}
+                    </Grid>
+                  </Container>
+                </Section>
+              )
+            : undefined,
+        ]}
       />
-
-      {sameProductReviews.length > 0 && (
-        <Section padding="y-lg" border="subtle" className="border-t">
-          <Container size="sm">
-            <Heading level={2} className="mb-4" size="lg" weight="semibold">
-              More reviews for {review.productTitle ?? "this product"}
-            </Heading>
-            <Grid cols="cardsWide" gap="md">
-              {sameProductReviews.map((r) => (
-                <ReviewCard key={r.id} review={r} context="listing" />
-              ))}
-            </Grid>
-          </Container>
-        </Section>
-      )}
-
-      {sameStoreReviews.length > 0 && (
-        <Section padding="y-lg" border="subtle" className="border-t">
-          <Container size="sm">
-            <Heading level={2} className="mb-4" size="lg" weight="semibold">
-              More reviews for {review.storeName ?? "this store"}
-            </Heading>
-            <Grid cols="cardsWide" gap="md">
-              {sameStoreReviews.map((r) => (
-                <ReviewCard key={r.id} review={r} context="store" />
-              ))}
-            </Grid>
-          </Container>
-        </Section>
-      )}
     </Main>
   );
 }
