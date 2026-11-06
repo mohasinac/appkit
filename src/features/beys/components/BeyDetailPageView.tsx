@@ -23,13 +23,14 @@
  */
 import React from "react";
 import { Section } from "../../../ui/components/Semantic";
-import { Container, Stack, Row } from "../../../ui/components/Layout";
+import { Stack, Row } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Text, Span } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { Anchor } from "../../../ui/components/Anchor";
 import { Badge } from "../../../ui/components/Badge";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
 import { ROUTES } from "../../../next/routing/route-map";
 import { PART_SLOT_LABEL, type PartSlot } from "../../parts/schemas/firestore";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
@@ -155,120 +156,131 @@ export function BeyDetailPageView({
 
   return (
     <Section padding="y-lg">
-      <Container size="lg">
-        <Stack gap="lg" className="min-w-0">
-          <Stack gap="xs" className="min-w-0">
-            {categoryHref && (
-              <Text size="sm" color="muted">
-                <TextLink href={categoryHref}>Listings for this model</TextLink>
-              </Text>
-            )}
-            <Heading level={1}>{bey.name}</Heading>
-            {/*
-              ── 🛑 EDIT AND DELETE, FOR STAFF ONLY ───────────────────────────
-              `OwnerQuickActions` renders nothing at all for a signed-out
-              visitor or an ordinary buyer, so this costs a public reader
-              nothing. It is the same component the category, brand and bundle
-              pages use — one implementation, so the affordance cannot drift
-              into three shapes.
-
-              🛑 `onMedia` is NOT passed. Both these pages are type on the
-              page surface with no cover image behind the title, so the default
-              (ghost on surface) is correct. Passing it would force the
-              on-media treatment and put light ink on a light background —
-              Root Cause #67, which shipped 26 invisible surfaces exactly that
-              way.
-            */}
-            <RecordOwnerQuickActions
-              resource="BEY"
-              recordId={bey.id}
-              placement="detail"
-              recordLabel={bey.name}
-            />
-
-            <Row gap="xs" wrap align="center" className="min-w-0">
-              {bey.type && <Badge variant="info">{bey.type}</Badge>}
-              {bey.spinDirection && <Badge variant="default">{bey.spinDirection}</Badge>}
-              {bey.system && <Badge variant="secondary">{bey.system}</Badge>}
-            </Row>
-            {aliases.length > 0 && (
-              <Text size="sm" color="muted">
-                {/* The Hasbro ↔ Takara-Tomy map, stated by the source. */}
-                Also known as: {aliases.join(" · ")}
-              </Text>
-            )}
-          </Stack>
-
-          <AdminComposableRegion pageId="beys-slug" initialCards={pageRegionCards} />
-
-          {/* ── what it is built from ─────────────────────────────────────── */}
-          {composition.length > 0 && (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Parts
-              </Heading>
-              <Stack gap="xs" className="min-w-0">
-                {composition.map((c, i) => {
-                  const href = c.partId ? hrefForPart(c.partId) : null;
-                  const label = PART_SLOT_LABEL[c.slot as PartSlot] ?? c.slot;
-                  return (
-                    <Row
-                      key={`${c.slot}-${c.partName}-${i}`}
-                      gap="md"
-                      align="center"
-                      className="min-w-0"
-                    >
-                      <Text size="sm" color="muted" className="w-36 flex-shrink-0">
-                        {label}
-                      </Text>
-                      {/*
-                       * 🛑 An unresolved part still renders its NAME. The join
-                       * reaches 88.9%, so ~850 slots name a part we hold no row
-                       * for — and rendering nothing there would read as a bey
-                       * with an incomplete build rather than as a part page we
-                       * happen not to have.
-                       */}
-                      {href ? (
-                        <TextLink href={href}>{c.partName}</TextLink>
-                      ) : (
-                        <Span>{c.partName}</Span>
-                      )}
-                    </Row>
-                  );
-                })}
-              </Stack>
-            </Stack>
-          )}
-
-          {/* ── ratings ──────────────────────────────────────────────────── */}
-          {ratingRows.length > 0 && (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Ratings
-              </Heading>
-              <SpecTable rows={ratingRows.map((r) => ({ name: r.label, value: String(r.value) }))} />
+      {/*
+        Migrated onto the shared DetailViewShell ("wiki" — max-w-5xl, the
+        same width `Container size="lg"` gave this page, rather than
+        "narrow"'s max-w-3xl, since the SpecTables here need the room).
+        Every section below is unchanged JSX, now passed as a mainSlots
+        entry instead of a direct child of the old Container>Stack pair —
+        a pure structural move with identical rendered output.
+      */}
+      <DetailViewShell
+        layout="wiki"
+        mainSlots={[
+          () => (
+            <Stack gap="xs" className="min-w-0">
+              {categoryHref && (
+                <Text size="sm" color="muted">
+                  <TextLink href={categoryHref}>Listings for this model</TextLink>
+                </Text>
+              )}
+              <Heading level={1}>{bey.name}</Heading>
               {/*
-               * 🛑 STATED AS DERIVED, AND STATED AS AVERAGED. These are not the
-               * source's numbers for this bey — the source rates PARTS, so
-               * these are the mean of its parts' normalised vectors. Two scales
-               * live in that data (Beyblade X 0-100, everything earlier 0-6),
-               * which is why they are normalised first and why a raw average
-               * would be meaningless. Presenting them unlabelled would pass our
-               * arithmetic off as the source's measurement.
-               */}
-              <Text size="xs" color="faint">
-                Averaged from this bey&rsquo;s parts and rescaled to 0&ndash;100 for
-                comparison across generations
-                {bey.ratingsFromPartsCoverage
-                  ? `; from ${bey.ratingsFromPartsCoverage.rated ?? 0} of ` +
-                    `${bey.ratingsFromPartsCoverage.total} parts`
-                  : ""}
-                .
-              </Text>
-            </Stack>
-          )}
+                ── 🛑 EDIT AND DELETE, FOR STAFF ONLY ───────────────────────────
+                `OwnerQuickActions` renders nothing at all for a signed-out
+                visitor or an ordinary buyer, so this costs a public reader
+                nothing. It is the same component the category, brand and bundle
+                pages use — one implementation, so the affordance cannot drift
+                into three shapes.
 
-          {/* ── modes ────────────────────────────────────────────────────────
+                🛑 `onMedia` is NOT passed. Both these pages are type on the
+                page surface with no cover image behind the title, so the default
+                (ghost on surface) is correct. Passing it would force the
+                on-media treatment and put light ink on a light background —
+                Root Cause #67, which shipped 26 invisible surfaces exactly that
+                way.
+              */}
+              <RecordOwnerQuickActions
+                resource="BEY"
+                recordId={bey.id}
+                placement="detail"
+                recordLabel={bey.name}
+              />
+
+              <Row gap="xs" wrap align="center" className="min-w-0">
+                {bey.type && <Badge variant="info">{bey.type}</Badge>}
+                {bey.spinDirection && <Badge variant="default">{bey.spinDirection}</Badge>}
+                {bey.system && <Badge variant="secondary">{bey.system}</Badge>}
+              </Row>
+              {aliases.length > 0 && (
+                <Text size="sm" color="muted">
+                  {/* The Hasbro ↔ Takara-Tomy map, stated by the source. */}
+                  Also known as: {aliases.join(" · ")}
+                </Text>
+              )}
+            </Stack>
+          ),
+          () => <AdminComposableRegion pageId="beys-slug" initialCards={pageRegionCards} />,
+          /* ── what it is built from ─────────────────────────────────────── */
+          composition.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Parts
+                  </Heading>
+                  <Stack gap="xs" className="min-w-0">
+                    {composition.map((c, i) => {
+                      const href = c.partId ? hrefForPart(c.partId) : null;
+                      const label = PART_SLOT_LABEL[c.slot as PartSlot] ?? c.slot;
+                      return (
+                        <Row
+                          key={`${c.slot}-${c.partName}-${i}`}
+                          gap="md"
+                          align="center"
+                          className="min-w-0"
+                        >
+                          <Text size="sm" color="muted" className="w-36 flex-shrink-0">
+                            {label}
+                          </Text>
+                          {/*
+                           * 🛑 An unresolved part still renders its NAME. The join
+                           * reaches 88.9%, so ~850 slots name a part we hold no row
+                           * for — and rendering nothing there would read as a bey
+                           * with an incomplete build rather than as a part page we
+                           * happen not to have.
+                           */}
+                          {href ? (
+                            <TextLink href={href}>{c.partName}</TextLink>
+                          ) : (
+                            <Span>{c.partName}</Span>
+                          )}
+                        </Row>
+                      );
+                    })}
+                  </Stack>
+                </Stack>
+              )
+            : undefined,
+          /* ── ratings ──────────────────────────────────────────────────── */
+          ratingRows.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Ratings
+                  </Heading>
+                  <SpecTable rows={ratingRows.map((r) => ({ name: r.label, value: String(r.value) }))} />
+                  {/*
+                   * 🛑 STATED AS DERIVED, AND STATED AS AVERAGED. These are not the
+                   * source's numbers for this bey — the source rates PARTS, so
+                   * these are the mean of its parts' normalised vectors. Two scales
+                   * live in that data (Beyblade X 0-100, everything earlier 0-6),
+                   * which is why they are normalised first and why a raw average
+                   * would be meaningless. Presenting them unlabelled would pass our
+                   * arithmetic off as the source's measurement.
+                   */}
+                  <Text size="xs" color="faint">
+                    Averaged from this bey&rsquo;s parts and rescaled to 0&ndash;100 for
+                    comparison across generations
+                    {bey.ratingsFromPartsCoverage
+                      ? `; from ${bey.ratingsFromPartsCoverage.rated ?? 0} of ` +
+                        `${bey.ratingsFromPartsCoverage.total} parts`
+                      : ""}
+                    .
+                  </Text>
+                </Stack>
+              )
+            : undefined,
+          /* ── modes ────────────────────────────────────────────────────────
               Only 4 of 1,988 carry this, and the section is simply absent for
               the rest — `modes` is undefined there, never `[]`, so "we do not
               know" never renders as "it has none".
@@ -284,168 +296,175 @@ export function BeyDetailPageView({
               block below stays separate: `specialMoves` is fiction about a
               character, `modes` is a property of the object. Merging them would
               put anime finishers on a product reference page as though they
-              were specifications. */}
-          {bey.modes?.length ? (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Modes
-              </Heading>
-              <Stack gap="md" className="min-w-0">
-                {bey.modes.map((mode) => (
-                  <Stack key={mode.name} gap="xs" className="min-w-0">
-                    <Row gap="sm" align="center" wrap className="min-w-0">
-                      <Text weight="semibold">{mode.name}</Text>
-                      {/*
-                        🛑 "Set before launch" vs "changes by itself" is the
-                        single most useful thing to know about a mode, and it is
-                        the distinction `switchKind` exists to carry: Dragoon S
-                        and Wyborg both switch tip shape, but one is done by
-                        hand and the other mid-battle on impact (owner,
-                        2026-10-21). A reader who cannot tell them apart will go
-                        looking for a setting that is not there.
-                      */}
-                      <Text size="xs" color="muted">
-                        {mode.switchKind === "speed" || mode.switchKind === "impact"
-                          ? "changes on its own"
-                          : "set before launch"}
-                      </Text>
-                    </Row>
-                    <Text size="sm">{mode.behaviour}</Text>
-                    <Text size="sm" color="muted">
-                      {mode.trigger}
-                    </Text>
+              were specifications. */
+          bey.modes?.length
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Modes
+                  </Heading>
+                  <Stack gap="md" className="min-w-0">
+                    {bey.modes!.map((mode) => (
+                      <Stack key={mode.name} gap="xs" className="min-w-0">
+                        <Row gap="sm" align="center" wrap className="min-w-0">
+                          <Text weight="semibold">{mode.name}</Text>
+                          {/*
+                            🛑 "Set before launch" vs "changes by itself" is the
+                            single most useful thing to know about a mode, and it is
+                            the distinction `switchKind` exists to carry: Dragoon S
+                            and Wyborg both switch tip shape, but one is done by
+                            hand and the other mid-battle on impact (owner,
+                            2026-10-21). A reader who cannot tell them apart will go
+                            looking for a setting that is not there.
+                          */}
+                          <Text size="xs" color="muted">
+                            {mode.switchKind === "speed" || mode.switchKind === "impact"
+                              ? "changes on its own"
+                              : "set before launch"}
+                          </Text>
+                        </Row>
+                        <Text size="sm">{mode.behaviour}</Text>
+                        <Text size="sm" color="muted">
+                          {mode.trigger}
+                        </Text>
+                      </Stack>
+                    ))}
                   </Stack>
-                ))}
-              </Stack>
-            </Stack>
-          ) : null}
-
-          {/* ── who used it ──────────────────────────────────────────────── */}
-          {(bey.ownerNames?.length || bey.specialMoves?.length || bey.appearAnime) && (
+                </Stack>
+              )
+            : undefined,
+          /* ── who used it ──────────────────────────────────────────────── */
+          (bey.ownerNames?.length || bey.specialMoves?.length || bey.appearAnime)
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    In the anime
+                  </Heading>
+                  <SpecTable
+                    rows={[
+                      ...(bey.ownerNames?.length
+                        ? [{ name: "Used by", value: bey.ownerNames.join(" · ") }]
+                        : []),
+                      ...(bey.appearAnime ? [{ name: "First appearance", value: bey.appearAnime }] : []),
+                      ...(bey.appearManga ? [{ name: "In the manga", value: bey.appearManga }] : []),
+                      ...(bey.specialMoves?.length
+                        ? [{ name: "Special moves", value: bey.specialMoves.join(" · ") }]
+                        : []),
+                    ]}
+                  />
+                  {/* A resolved owner gets a real link; an unresolved one stays text
+                      above, which is why both are rendered from different fields. */}
+                  {hrefForCharacter && (bey.ownerCharacters?.length ?? 0) > 0 && (
+                    <Row gap="xs" wrap align="center" className="min-w-0">
+                      {bey.ownerCharacters!.map((slug) => (
+                        <TextLink key={slug} href={hrefForCharacter(slug)}>
+                          {slug.replace(/-/g, " ")}
+                        </TextLink>
+                      ))}
+                    </Row>
+                  )}
+                </Stack>
+              )
+            : undefined,
+          /* ── specifications ───────────────────────────────────────────── */
+          specRows.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Specifications
+                  </Heading>
+                  <SpecTable rows={specRows} />
+                </Stack>
+              )
+            : undefined,
+          /* ── which products ship it ───────────────────────────────────── */
+          products.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Found in
+                  </Heading>
+                  <Stack gap="xs" className="min-w-0">
+                    {products.map((p) => (
+                      <Row key={p.id} gap="md" align="center" className="min-w-0">
+                        <Span>{p.name}</Span>
+                        {p.productType && (
+                          <Text size="xs" color="muted">
+                            {p.productType}
+                          </Text>
+                        )}
+                      </Row>
+                    ))}
+                  </Stack>
+                </Stack>
+              )
+            : undefined,
+          /* ── listings ─────────────────────────────────────────────────── */
+          () => (
             <Stack gap="sm" className="min-w-0">
               <Heading level={2} size="lg">
-                In the anime
+                {listings.length > 0 ? "Currently listed" : "Listings"}
               </Heading>
-              <SpecTable
-                rows={[
-                  ...(bey.ownerNames?.length
-                    ? [{ name: "Used by", value: bey.ownerNames.join(" · ") }]
-                    : []),
-                  ...(bey.appearAnime ? [{ name: "First appearance", value: bey.appearAnime }] : []),
-                  ...(bey.appearManga ? [{ name: "In the manga", value: bey.appearManga }] : []),
-                  ...(bey.specialMoves?.length
-                    ? [{ name: "Special moves", value: bey.specialMoves.join(" · ") }]
-                    : []),
-                ]}
-              />
-              {/* A resolved owner gets a real link; an unresolved one stays text
-                  above, which is why both are rendered from different fields. */}
-              {hrefForCharacter && (bey.ownerCharacters?.length ?? 0) > 0 && (
-                <Row gap="xs" wrap align="center" className="min-w-0">
-                  {bey.ownerCharacters!.map((slug) => (
-                    <TextLink key={slug} href={hrefForCharacter(slug)}>
-                      {slug.replace(/-/g, " ")}
-                    </TextLink>
+              {listings.length === 0 ? (
+                <Text color="muted" size="sm">
+                  {/* Honest: a statement about our catalogue, phrased as one. */}
+                  Nothing matching this model is listed right now.
+                </Text>
+              ) : (
+                <Stack gap="xs" className="min-w-0">
+                  {listings.map((l) => (
+                    <Row key={l.id} gap="md" align="center" className="min-w-0">
+                      <TextLink href={l.href}>{l.title}</TextLink>
+                      {l.condition && (
+                        <Text size="xs" color="muted">
+                          {l.condition}
+                        </Text>
+                      )}
+                    </Row>
                   ))}
-                </Row>
+                </Stack>
               )}
-            </Stack>
-          )}
-
-          {/* ── specifications ───────────────────────────────────────────── */}
-          {specRows.length > 0 && (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Specifications
-              </Heading>
-              <SpecTable rows={specRows} />
-            </Stack>
-          )}
-
-          {/* ── which products ship it ───────────────────────────────────── */}
-          {products.length > 0 && (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Found in
-              </Heading>
-              <Stack gap="xs" className="min-w-0">
-                {products.map((p) => (
-                  <Row key={p.id} gap="md" align="center" className="min-w-0">
-                    <Span>{p.name}</Span>
-                    {p.productType && (
-                      <Text size="xs" color="muted">
-                        {p.productType}
-                      </Text>
-                    )}
-                  </Row>
-                ))}
-              </Stack>
-            </Stack>
-          )}
-
-          {/* ── listings ─────────────────────────────────────────────────── */}
-          <Stack gap="sm" className="min-w-0">
-            <Heading level={2} size="lg">
-              {listings.length > 0 ? "Currently listed" : "Listings"}
-            </Heading>
-            {listings.length === 0 ? (
-              <Text color="muted" size="sm">
-                {/* Honest: a statement about our catalogue, phrased as one. */}
-                Nothing matching this model is listed right now.
+              <Text size="sm">
+                <TextLink href={allListingsHref}>
+                  {listingsTruncated ? "See all listings" : "Search listings for this model"}
+                </TextLink>
               </Text>
-            ) : (
-              <Stack gap="xs" className="min-w-0">
-                {listings.map((l) => (
-                  <Row key={l.id} gap="md" align="center" className="min-w-0">
-                    <TextLink href={l.href}>{l.title}</TextLink>
-                    {l.condition && (
-                      <Text size="xs" color="muted">
-                        {l.condition}
-                      </Text>
-                    )}
-                  </Row>
-                ))}
-              </Stack>
-            )}
-            <Text size="sm">
-              <TextLink href={allListingsHref}>
-                {listingsTruncated ? "See all listings" : "Search listings for this model"}
-              </TextLink>
-            </Text>
-          </Stack>
-
-          {/* ── attribution ──────────────────────────────────────────────── */}
-          <Div>
-            <Text size="xs" color="faint">
-              {/*
-               * 🛑 The licence link-back. The facts above are extracted from a
-               * CC-BY-SA source; we take facts only and compose our own prose,
-               * and this link is the other half of staying clear of
-               * share-alike. It is not decoration and must not be dropped to
-               * tidy the page.
-               */}
-              Facts on this page are drawn from a community wiki under CC&nbsp;BY-SA.{" "}
-              <Anchor href={bey.sourceUrl} tone="muted" underline="always">
-                Source
-              </Anchor>
-              {bey.wboThreadUrl ? (
-                <>
-                  {" · "}
-                  <Anchor href={bey.wboThreadUrl} tone="muted" underline="always">
-                    Community discussion
-                  </Anchor>
-                </>
-              ) : null}
-              {/* The same Credits link the part view carries. It was missing
-                  here, so the two surfaces built from ONE corpus credited it
-                  two different ways — and the one that names the licence holder
-                  is the half that matters. */}
-              {" · "}
-              <TextLink href={String(ROUTES.PUBLIC.CREDITS)}>Credits</TextLink>
-            </Text>
-          </Div>
-        </Stack>
-      </Container>
+            </Stack>
+          ),
+          /* ── attribution ──────────────────────────────────────────────── */
+          () => (
+            <Div>
+              <Text size="xs" color="faint">
+                {/*
+                 * 🛑 The licence link-back. The facts above are extracted from a
+                 * CC-BY-SA source; we take facts only and compose our own prose,
+                 * and this link is the other half of staying clear of
+                 * share-alike. It is not decoration and must not be dropped to
+                 * tidy the page.
+                 */}
+                Facts on this page are drawn from a community wiki under CC&nbsp;BY-SA.{" "}
+                <Anchor href={bey.sourceUrl} tone="muted" underline="always">
+                  Source
+                </Anchor>
+                {bey.wboThreadUrl ? (
+                  <>
+                    {" · "}
+                    <Anchor href={bey.wboThreadUrl} tone="muted" underline="always">
+                      Community discussion
+                    </Anchor>
+                  </>
+                ) : null}
+                {/* The same Credits link the part view carries. It was missing
+                    here, so the two surfaces built from ONE corpus credited it
+                    two different ways — and the one that names the licence holder
+                    is the half that matters. */}
+                {" · "}
+                <TextLink href={String(ROUTES.PUBLIC.CREDITS)}>Credits</TextLink>
+              </Text>
+            </Div>
+          ),
+        ]}
+      />
     </Section>
   );
 }
