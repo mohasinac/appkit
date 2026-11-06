@@ -31,9 +31,9 @@
 import { useCallback, useMemo } from "react";
 import { Badge } from "../../../ui/components/Badge";
 import { Button } from "../../../ui/components/Button";
-import { Card } from "../../../ui/components/Card";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row, Stack } from "../../../ui/components/Layout";
+import { DataTable, type DataTableColumn } from "../../../ui/DataTable";
 import { TIER_HELP } from "../constants/help-content";
 
 /** One attempt. Mirrors the route's projection — booleans, never paths. */
@@ -75,6 +75,13 @@ export interface StickerRunHistoryPanelProps {
    * active one spends the whole render budget to reach the state it is in.
    */
   onPromote?: (run: StickerRunRow) => void;
+  /**
+   * Re-fetch the list from Firestore. A one-shot, user-triggered fetch, not
+   * an interval — `audit-client-poll-cost` blocks a standing poll, but it says
+   * nothing about a button a human presses once to check a `queued` row that
+   * has not moved.
+   */
+  onRefresh?: () => void;
 }
 
 /**
@@ -120,6 +127,7 @@ export function StickerRunHistoryPanel({
   onOpenAsset,
   onRetry,
   onPromote,
+  onRefresh,
 }: StickerRunHistoryPanelProps) {
   const open = useCallback(
     (runId: string, kind: "preview" | "overlay" | "cutSvg") => () =>
@@ -132,56 +140,19 @@ export function StickerRunHistoryPanel({
     [runs],
   );
 
-  if (loading) {
-    return (
-      <Card variant="default">
-        <Text color="muted">Loading attempts…</Text>
-      </Card>
-    );
-  }
-
-  if (sorted.length === 0) {
-    return (
-      <Card variant="default">
-        <Stack gap="dense">
-          <Heading level={3}>Attempts</Heading>
-          <Text color="muted">
-            No runs yet. Tune the parameters above, give the attempt a name, and
-            commit it — every attempt is kept so you can compare them later.
-          </Text>
-        </Stack>
-      </Card>
-    );
-  }
-
-  return (
-    <Stack gap="comfortable">
-      <Heading level={3}>Attempts ({sorted.length})</Heading>
-
-      {sorted.map((run) => (
-        <Card key={run.id} variant="default">
+  const columns: DataTableColumn<StickerRunRow>[] = useMemo(
+    () => [
+      {
+        key: "name",
+        header: "Name",
+        sortable: true,
+        render: (run) => (
           <Stack gap="dense">
-            <Row align="center" justify="between" gap="sm" wrap>
-              <Row align="center" gap="sm" wrap>
-                <Text weight="bold">{run.name}</Text>
-                <Badge variant={statusTone(run.status)}>{run.status}</Badge>
-                {run.isActive ? <Badge variant="info">accepted</Badge> : null}
-                {run.isPromoted ? <Badge variant="success">promoted</Badge> : null}
-              </Row>
-              <Text size="xs" color="muted">
-                {new Date(run.createdAt).toLocaleString("en-GB", STAMP)}
-              </Text>
+            <Row align="center" gap="sm" wrap>
+              <Text weight="bold">{run.name}</Text>
+              {run.isActive ? <Badge variant="info">accepted</Badge> : null}
+              {run.isPromoted ? <Badge variant="success">promoted</Badge> : null}
             </Row>
-
-            <Text size="sm" color="muted">
-              {TIER_HELP[run.tier as keyof typeof TIER_HELP]?.title ?? run.tier}
-              {" · "}
-              {run.partCount} part{run.partCount === 1 ? "" : "s"}
-              {run.groupCount > 1 ? ` in ${run.groupCount} sheets` : ""}
-              {" · "}
-              {formatDuration(run.durationMs)}
-            </Text>
-
             {/*
               * A failed run shows the STAGE it died in and the part ordinal when
               * a shard was the thing that failed. "Something went wrong" is what
@@ -198,43 +169,96 @@ export function StickerRunHistoryPanel({
                 : {run.error.message}
               </Text>
             ) : null}
-
             {run.status === "running" && run.stage ? (
               <Text size="sm" color="muted">
                 Currently in <Span weight="semibold">{run.stage}</Span>.
               </Text>
             ) : null}
-
-            <Row gap="sm" wrap>
-              {run.has.preview ? (
-                <Button size="sm" variant="secondary" onClick={open(run.id, "preview")}>
-                  Preview
-                </Button>
-              ) : null}
-              {run.has.overlay ? (
-                <Button size="sm" variant="secondary" onClick={open(run.id, "overlay")}>
-                  Overlay
-                </Button>
-              ) : null}
-              {run.has.cutSvg ? (
-                <Button size="sm" variant="secondary" onClick={open(run.id, "cutSvg")}>
-                  Cut file
-                </Button>
-              ) : null}
-              {onRetry ? (
-                <Button size="sm" variant="ghost" onClick={() => onRetry(run)}>
-                  Retry from this
-                </Button>
-              ) : null}
-              {onPromote && run.status === "succeeded" && !run.isActive ? (
-                <Button size="sm" variant="primary" onClick={() => onPromote(run)}>
-                  Accept &amp; render
-                </Button>
-              ) : null}
-            </Row>
           </Stack>
-        </Card>
-      ))}
+        ),
+      },
+      {
+        key: "status",
+        header: "Status",
+        sortable: true,
+        render: (run) => <Badge variant={statusTone(run.status)}>{run.status}</Badge>,
+      },
+      {
+        key: "tier",
+        header: "Tier",
+        sortable: true,
+        render: (run) => TIER_HELP[run.tier as keyof typeof TIER_HELP]?.title ?? run.tier,
+      },
+      {
+        key: "partCount",
+        header: "Parts",
+        sortable: true,
+        render: (run) =>
+          `${run.partCount}${run.groupCount > 1 ? ` (${run.groupCount} sheets)` : ""}`,
+      },
+      {
+        key: "durationMs",
+        header: "Duration",
+        sortable: true,
+        render: (run) => formatDuration(run.durationMs),
+      },
+      {
+        key: "createdAt",
+        header: "Created",
+        sortable: true,
+        render: (run) => new Date(run.createdAt).toLocaleString("en-GB", STAMP),
+      },
+    ],
+    [],
+  );
+
+  return (
+    <Stack gap="comfortable">
+      <Row align="center" justify="between" gap="sm" wrap>
+        <Heading level={3}>Attempts ({sorted.length})</Heading>
+        {onRefresh ? (
+          <Button size="sm" variant="ghost" onClick={onRefresh} isLoading={loading}>
+            Refresh
+          </Button>
+        ) : null}
+      </Row>
+
+      <DataTable<StickerRunRow>
+        data={sorted}
+        columns={columns}
+        loading={loading}
+        emptyMessage="No runs yet. Tune the parameters above, give the attempt a name, and commit it — every attempt is kept so you can compare them later."
+        showViewToggle={false}
+        actions={(run) => (
+          <Row gap="sm" wrap>
+            {run.has.preview ? (
+              <Button size="sm" variant="secondary" onClick={open(run.id, "preview")}>
+                Preview
+              </Button>
+            ) : null}
+            {run.has.overlay ? (
+              <Button size="sm" variant="secondary" onClick={open(run.id, "overlay")}>
+                Overlay
+              </Button>
+            ) : null}
+            {run.has.cutSvg ? (
+              <Button size="sm" variant="secondary" onClick={open(run.id, "cutSvg")}>
+                Cut file
+              </Button>
+            ) : null}
+            {onRetry ? (
+              <Button size="sm" variant="ghost" onClick={() => onRetry(run)}>
+                Retry from this
+              </Button>
+            ) : null}
+            {onPromote && run.status === "succeeded" && !run.isActive ? (
+              <Button size="sm" variant="primary" onClick={() => onPromote(run)}>
+                Accept &amp; render
+              </Button>
+            ) : null}
+          </Row>
+        )}
+      />
     </Stack>
   );
 }

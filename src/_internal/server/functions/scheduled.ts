@@ -16,6 +16,7 @@ import {
   catalogueImageStalenessReminderHandler,
   mediaTmpCleanupHandler,
   notificationPruneHandler,
+  stickerTraceSweepHandler,
   offerExpiryHandler,
   reservationExpiryHandler,
   obligationSweepHandler,
@@ -204,6 +205,24 @@ export const reservationExpiry = defineFunction({
   trigger: { kind: "schedule", cron: "every 15 minutes" },
   handler: reservationExpiryHandler,
   options: { region: REGION, timeoutSeconds: 300, memory: "256MiB", maxInstances: 1 },
+});
+
+/**
+ * 🛑 THE ONLY MECHANISM THAT NOTICES A CRASHED CLOUD FUNCTION.
+ *
+ * `stickerTraceCoordinator`/`stickerTraceTask` hard-kill at their
+ * `timeoutSeconds` ceiling without running `catch`/`finally` — so a run can
+ * leave `queued`/`running` with no terminal write and sit there forever, a
+ * gap `shard.ts` and `progress.ts` both document from the inside ("nothing
+ * sweeps it"). 20 minutes is generous above the coordinator's 540s and a
+ * shard's 300s ceilings combined with fan-out — not a tight SLA.
+ */
+export const stickerTraceSweep = defineFunction({
+  name: "stickerTraceSweep",
+  description: "Fail sticker-trace runs stuck queued/running past 20 minutes with no terminal write.",
+  trigger: { kind: "schedule", cron: "every 15 minutes" },
+  handler: stickerTraceSweepHandler,
+  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
 export const productStatsSync = defineFunction({
@@ -626,6 +645,7 @@ export const SCHEDULED_FUNCTIONS = [
   couponExpiry,
   offerExpiry,
   reservationExpiry,
+  stickerTraceSweep,
   productStatsSync,
   revenueRollup,
   sellerStandingRollup,

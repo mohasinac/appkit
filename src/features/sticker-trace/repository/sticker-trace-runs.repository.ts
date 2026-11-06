@@ -199,6 +199,26 @@ export class StickerTraceRunsRepository extends BaseRepository<StickerTraceRunDo
     return snap.docs.map((doc) => this.mapDoc(doc));
   }
 
+  /**
+   * Runs stuck in one non-terminal status past a cutoff — the sweep's query.
+   *
+   * Covered by the existing `(status ASC, createdAt DESC)` composite index;
+   * no new index is needed. Queried per-status rather than `status in [...]`
+   * so the result stays a simple equality + range match against that index.
+   */
+  async listStuckByStatus(
+    status: StickerTraceRunDocument["status"],
+    olderThan: Date,
+    limit = 50,
+  ): Promise<StickerTraceRunDocument[]> {
+    const snap = await this.getCollection()
+      .where(STICKER_TRACE_RUN_FIELDS.STATUS, "==", status)
+      .where(STICKER_TRACE_RUN_FIELDS.CREATED_AT, "<", olderThan)
+      .limit(limit)
+      .get();
+    return snap.docs.map((doc) => this.mapDoc(doc));
+  }
+
   async listForAdmin(model: SieveModel): Promise<FirebaseSieveResult<StickerTraceRunDocument>> {
     return this.sieveQuery<StickerTraceRunDocument>(model, StickerTraceRunsRepository.SIEVE_FIELDS, {
       defaultPageSize: 25,

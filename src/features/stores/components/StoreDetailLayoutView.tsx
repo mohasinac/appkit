@@ -6,6 +6,7 @@ import { safeRead } from "../../../errors/safe-read";
 import { Container } from "../../../ui/components/Layout";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { Text } from "../../../ui/components/Typography";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
 import { getSellerTrustStatus } from "../../scams/actions/scam-actions";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";
@@ -78,18 +79,31 @@ export async function StoreDetailLayoutView({
 
   return (
     <Main>
-      {/* Projected, not cast: the raw document carries secrets, and the cast
-          also skipped the stats flattening StoreHeader's counters rely on. */}
-      <StoreHeader store={toStoreDetail(store)} trust={trust} />
-      <Container size="xl" className="mt-6">
-        <StoreNavTabs
-          dropdownTabs={dropdownTabs}
-          dropdownPlaceholder="Browse listings"
-          tabs={tabs}
-          activeValue={activeTab}
-        />
-        <Section padding="t-lg">{children}</Section>
-      </Container>
+      {/*
+        Migrated onto the shared DetailViewShell ("hub" — tabs + browse
+        listing layout, renders like "stacked", no shared wrapper imposed —
+        the header and the tabbed Container below it keep their existing
+        widths exactly as before).
+      */}
+      <DetailViewShell
+        layout="hub"
+        mainSlots={[
+          /* Projected, not cast: the raw document carries secrets, and the cast
+              also skipped the stats flattening StoreHeader's counters rely on. */
+          () => <StoreHeader store={toStoreDetail(store)} trust={trust} />,
+          () => (
+            <Container size="xl" className="mt-6">
+              <StoreNavTabs
+                dropdownTabs={dropdownTabs}
+                dropdownPlaceholder="Browse listings"
+                tabs={tabs}
+                activeValue={activeTab}
+              />
+              <Section padding="t-lg">{children}</Section>
+            </Container>
+          ),
+        ]}
+      />
     </Main>
   );
 }

@@ -100,3 +100,5 @@ export { onShipmentDeletedHandler } from "./onShipmentDeleted";
 // Personal Catalogue (Feature B) — freshness reminder + admin approval-request notification
 export { catalogueImageStalenessReminderHandler } from "./catalogueImageStalenessReminder";
 export { onCatalogueSubmittedForApprovalHandler } from "./onCatalogueSubmittedForApproval";
+// Sticker sheet tracer — stuck-run sweep (queued/running past 20 minutes with no terminal write)
+export { stickerTraceSweepHandler } from "./stickerTraceSweep";

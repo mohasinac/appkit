@@ -108,6 +108,23 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
   const [params, setParams] = useState<TraceParams>(() => paramsForTier(TIER));
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  /*
+   * The raw scan, shown immediately — before any trace exists. The canvas
+   * below answers "what will this cut"; this answers "what did I pick",
+   * which otherwise had no answer until the first trace finished (or never,
+   * if it errored). An object URL, not a data URL: a multi-megabyte scan
+   * through `FileReader.readAsDataURL` would duplicate the whole file as a
+   * base64 string purely to display it.
+   */
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const previewUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    };
+  }, []);
+
   const { parts, diagnostics, raster, tracing, lastMs, error } = useLiveTrace(source, params);
 
   /*
@@ -153,6 +170,10 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
 
   const onFile = useCallback((picked: File) => {
     setFile(picked);
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+    const url = URL.createObjectURL(picked);
+    previewUrlRef.current = url;
+    setPreviewUrl(url);
     void picked.arrayBuffer().then((buf) => setSource(new Uint8Array(buf)));
   }, []);
 
@@ -243,74 +264,109 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
         ) : null}
 
         {source ? (
-          <Grid cols="cards">
-            <Card variant="default">
-              <Stack gap="comfortable">
-                <Heading level={3}>Parameters</Heading>
-                {CONTROLS.map((c) => (
-                  <Stack key={c.key} gap="dense">
-                    <FieldInput
-                      name={c.key}
-                      type="number"
-                      label={PARAM_HELP[c.key]?.title ?? c.key}
-                      step={c.step}
-                      value={String(params[c.key])}
-                      onChange={(v) => {
-                        const n = Number(v);
-                        // A half-typed "0." parses NaN; keeping the old value
-                        // beats re-tracing against a NaN and blanking the canvas.
-                        if (Number.isFinite(n)) setParam(c.key, n);
-                      }}
-                    />
-                    <Text size="xs" color="muted">
-                      {PARAM_HELP[c.key]?.body}
-                    </Text>
-                  </Stack>
-                ))}
-                <FieldSelect
-                  name="tier"
-                  label="Tier"
-                  value={TIER}
-                  disabled
-                  options={[{ value: TIER, label: TIER_HELP[TIER].title }]}
-                  onChange={() => undefined}
-                />
-                <Text size="xs" color="muted">
-                  {TIER_HELP[TIER].body}
-                </Text>
-              </Stack>
-            </Card>
-
-            <Card variant="default">
-              <Stack gap="dense">
-                <Heading level={3}>Result</Heading>
-                <Text>
+          <Grid cols="halves">
+            {/*
+              * Left column: what was uploaded. The raw preview answers that
+              * immediately; the traced canvas and the Result diagnostics
+              * answer "what will this cut" once a trace lands — both about
+              * the same image, so they stay together rather than splitting
+              * across the grid.
+              */}
+            <Stack gap="comfortable">
+              <Card variant="default">
+                <Stack gap="dense">
+                  <Heading level={3}>Preview</Heading>
+                  {previewUrl ? (
+                    <img src={previewUrl} alt="Uploaded scan" className="w-full h-auto" />
+                  ) : null}
                   {/*
-                    * Parts and sheets are shown together on purpose: zero parts
-                    * with one sheet-sized component is the montage signature,
-                    * and separating the two numbers hides it.
+                    * Scaled to fit by CLASS, not an inline style — the width is
+                    * static, so there is nothing dynamic to justify one
+                    * (audit-inline-styles caught it). The canvas keeps the raster's
+                    * own pixel size via width/height attributes set in the effect;
+                    * only its DISPLAY size is responsive.
                     */}
-                  <Span weight="bold">{parts.length}</Span> part(s)
-                  {diagnostics ? ` · ${diagnostics.droppedSheetSized} sheet-sized` : ""}
-                  {diagnostics ? ` · ${diagnostics.droppedBelowMinArea} too small` : ""}
-                </Text>
-                <Text size="sm" color="muted">
-                  background: {bgLabel}
-                  {diagnostics
-                    ? ` · ridge ${(diagnostics.ridgeCoverage * 100).toFixed(1)}%`
-                    : ""}
-                  {lastMs !== null ? ` · ${lastMs} ms` : ""}
-                  {tracing ? " · tracing…" : ""}
-                </Text>
-                {diagnostics && parts.length === 0 && diagnostics.droppedSheetSized >= 1 ? (
-                  <Text size="sm" color="warning">
-                    No parts, and one component covers the whole sheet — this looks
-                    like several sheets in one scan, which is unsupported. Scan them
-                    individually or crop.
+                  <canvas ref={canvasRef} className="w-full h-auto" />
+                </Stack>
+              </Card>
+
+              <Card variant="default">
+                <Stack gap="dense">
+                  <Heading level={3}>Result</Heading>
+                  <Text>
+                    {/*
+                      * Parts and sheets are shown together on purpose: zero parts
+                      * with one sheet-sized component is the montage signature,
+                      * and separating the two numbers hides it.
+                      */}
+                    <Span weight="bold">{parts.length}</Span> part(s)
+                    {diagnostics ? ` · ${diagnostics.droppedSheetSized} sheet-sized` : ""}
+                    {diagnostics ? ` · ${diagnostics.droppedBelowMinArea} too small` : ""}
                   </Text>
-                ) : null}
-              </Stack>
-            </Card>
+                  <Text size="sm" color="muted">
+                    background: {bgLabel}
+                    {diagnostics
+                      ? ` · ridge ${(diagnostics.ridgeCoverage * 100).toFixed(1)}%`
+                      : ""}
+                    {lastMs !== null ? ` · ${lastMs} ms` : ""}
+                    {tracing ? " · tracing…" : ""}
+                  </Text>
+                  {diagnostics && parts.length === 0 && diagnostics.droppedSheetSized >= 1 ? (
+                    <Text size="sm" color="warning">
+                      No parts, and one component covers the whole sheet — this looks
+                      like several sheets in one scan, which is unsupported. Scan them
+                      individually or crop.
+                    </Text>
+                  ) : null}
+                </Stack>
+              </Card>
+            </Stack>
+
+            {/* Right column: how it is tuned, and committing it as a run. */}
+            <Stack gap="comfortable">
+              <Card variant="default">
+                <Stack gap="comfortable">
+                  <Heading level={3}>Parameters</Heading>
+                  {CONTROLS.map((c) => (
+                    <Stack key={c.key} gap="dense">
+                      <FieldInput
+                        name={c.key}
+                        type="number"
+                        label={PARAM_HELP[c.key]?.title ?? c.key}
+                        step={c.step}
+                        value={String(params[c.key])}
+                        onChange={(v) => {
+                          const n = Number(v);
+                          // A half-typed "0." parses NaN; keeping the old value
+                          // beats re-tracing against a NaN and blanking the canvas.
+                          if (Number.isFinite(n)) setParam(c.key, n);
+                        }}
+                      />
+                      <Text size="xs" color="muted">
+                        {PARAM_HELP[c.key]?.body}
+                      </Text>
+                    </Stack>
+                  ))}
+                  <FieldSelect
+                    name="tier"
+                    label="Tier"
+                    value={TIER}
+                    disabled
+                    options={[{ value: TIER, label: TIER_HELP[TIER].title }]}
+                    onChange={() => undefined}
+                  />
+                  <Text size="xs" color="muted">
+                    {TIER_HELP[TIER].body}
+                  </Text>
+                </Stack>
+              </Card>
+
+              {renderCommit?.({
+                params,
+                file,
+                dimensions: natural,
+              })}
+            </Stack>
           </Grid>
         ) : (
           <Text color="muted">
@@ -318,25 +374,6 @@ export function StickerTraceStudio({ renderCommit }: StickerTraceStudioProps) {
             runs entirely in this tab.
           </Text>
         )}
-
-        {source ? (
-          <Card variant="default">
-            {/*
-              * Scaled to fit by CLASS, not an inline style — the width is
-              * static, so there is nothing dynamic to justify one
-              * (audit-inline-styles caught it). The canvas keeps the raster's
-              * own pixel size via width/height attributes set in the effect;
-              * only its DISPLAY size is responsive.
-              */}
-            <canvas ref={canvasRef} className="w-full h-auto" />
-          </Card>
-        ) : null}
-
-        {renderCommit?.({
-          params,
-          file,
-          dimensions: natural,
-        })}
       </Stack>
     </Section>
   );

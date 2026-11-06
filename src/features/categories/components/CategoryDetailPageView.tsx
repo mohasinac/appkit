@@ -14,6 +14,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";
 import { Main, Section } from "../../../ui/components/Semantic";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
 import { SplitTile } from "../../../ui/components/SplitTile";
 import { TextLink } from "../../../ui/components/TextLink";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
@@ -701,443 +702,466 @@ export async function CategoryDetailPageView({ slug, pageRegionCards = [] }: Cat
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
         />
       )}
-      {/* ── Hero / Banner ───────────────────────────────────────────────── */}
-      <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
-        {hasCover && (
-          <>
-            <Div className="absolute inset-0">
-              <MediaImage src={coverImage} alt="" size="banner" />
-            </Div>
-            <Div surface="overlay-md" className="absolute inset-0" />
-          </>
-        )}
-
-        {/*
-          * D3 — the mosaic, for a category with no cover photo of its own.
-          *
-          * 🛑 Rendered as CONTENT above the title rather than as a background
-          * behind it. A faint collage under white text is the pattern that made
-          * `tone="on-media"` necessary in the first place, and these are
-          * unknown product photos rather than an art-directed banner: some are
-          * light, some dark, and no single ink colour is readable over all of
-          * them. Above the title it needs no scrim and no contrast gamble.
-          */}
-        {!hasCover && hasMosaic && (
-          <Div className="relative z-10 max-w-7xl mx-auto" padding="x-md">
-            <Div padding="t-lg">
-              <ImageMosaic images={mosaicImages} alt={`${category?.name ?? slug} on ${getBrandName()}`} />
-            </Div>
-          </Div>
-        )}
-
-        <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
-          {/*
-            * 🛑 ONE trail component, fed the SAME `trail` array the JSON-LD
-            * above serialises. This was a hand-rolled `<Nav>` with
-            * `text-white/70` conditionals — three crumbs, no collapse — beside
-            * a `BreadcrumbList` carrying the full chain, so a tier-4 category
-            * showed a visitor three levels and a crawler eight. The cover-photo
-            * ink it existed for is now `tone="on-media"` on the primitive.
-            */}
-          <BreadcrumbTrail
-            crumbs={trail}
-            className="mb-4"
-            tone={hasCover ? "on-media" : "default"}
-          />
-          {/* Records this category for a product page's contextual trail (I5b).
-              sessionStorage, one key, no network. */}
-          {category?.id && <LastCategoryBeacon categoryId={category.id} />}
-
-          {/*
-            Owner quick-actions. Rendered DIRECTLY, with no slot prop threaded
-            through this view — `OwnerQuickActions` is a client component that
-            self-gates on the session, so a Server Component can hand it the
-            record and let it decide whether to appear. Threading a render prop
-            through twelve async RSC detail views would buy nothing.
-
-            🛑 Admin-only in practice: a category has no `ownerId`, so the
-            owner branch can never match. That is also why the component takes
-            `isAdmin` as its own term — `useIsOwner` returns false for an
-            ownerless record even to an admin.
-
-            No clone: a category's parentIds / ancestors / tier / path /
-            position / subtreeSize are all derived by buildCategoryTree and an
-            insert shifts sibling position ranges, so a copy would carry stale
-            derived state.
-          */}
-          {/* Title + metrics */}
-          <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
-            {category?.name ?? slug}
-          </Heading>
-
-          {/*
-            🛑 BELOW the `<h1>`, not above it.
-
-            This block used to render BEFORE the heading, so on a cover hero
-            the three icons sat on top of the title — "Spinning Tops" with a
-            pencil overlapping it. Above a heading there is nothing for a
-            control strip to belong to; below one it reads as "actions for
-            this record", which is what it is.
-
-            The toolbar supplies its own bordered box, so it no longer depends
-            on the caller finding a free corner.
-          */}
-          {category?.id && (
-            <RecordOwnerQuickActions
-              resource="CATEGORY"
-              recordId={category.id}
-              placement="detail"
-              /*
-               * Same flag the rest of this hero branches on. Without it the
-               * pencil renders `ghost` (zinc-600) on the dark cover and is
-               * invisible — see Root Cause #67 and `OwnerQuickActions.onMedia`.
-               */
-              onMedia={hasCover}
-              className="mb-3"
-              recordLabel={category.name ?? slug}
-            />
-          )}
-
-          {/*
-            The `${hasCover ? "/80" : ""}` that used to sit in the className
-            below was a DEAD ALPHA FRAGMENT — codemod residue from a stripped
-            `text-white/80`, a class Tailwind cannot generate and silently
-            drops. It did nothing; `color="inverse"` already carries the ink.
-          */}
-          {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            <Text color={hasCover ? "inverse" : "muted"} className="max-w-2xl mb-4" size="base">
-              {category.description}
-            </Text>
-          )}
-
-          <Row wrap gap="sm">
-            {productCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"} rounded="full" padding="pill-sm-tall">
-                {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
-              </Span>
-            )}
-            {/*
-              * G3b — the split, as its own pill rather than inside the one above.
-              *
-              * 🛑 The two figures are NEVER added: `total` already includes
-              * `own`, so `ownHere + inSubcategories === total` by construction
-              * and printing their sum would double every item filed here. Shown
-              * only when something is actually below (a leaf would read
-              * "0 in subcategories", which looks like a missing number).
-              */}
-            {showCountSplit && (
-              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "muted"} size="xs" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {ownHere!.toLocaleString()} here · {inSubcategories!.toLocaleString()} in subcategories
-              </Span>
-            )}
-            {collectorDropCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {collectorDropCount.toLocaleString()} {collectorDropCount === 1 ? "collector drop" : "collector drops"}
-              </Span>
-            )}
-            {preOrderCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "info"} surface={hasCover ? undefined : "info-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
-              </Span>
-            )}
-            {storeCount > 0 && (
-              <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "success"} surface={hasCover ? undefined : "success-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
-                {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
-              </Span>
-            )}
-          </Row>
-        </Div>
-      </Section>
-
-      {/* ── Regional naming: the Hasbro name for this wave ──────────────────
-          A buyer who grew up on Hasbro's seasons knows "Turbo", not "Cho-Z",
-          and the catalogue has always been FINDABLE by either — per-model
-          Hasbro names are folded into `aliases`. But `aliases` feeds
-          `searchTxt` and is rendered nowhere, so nothing on the page ever
-          stated the correspondence. Someone who searched "Turbo", landed on
-          Cho-Z and saw no mention of Turbo had no way to know they were in the
-          right place.
-
-          Renders nothing when unset, which is the common case: five of the
-          seven Burst waves have a confirmed divergence and nothing else in the
-          forest does. */}
-      {category?.hasbroName && (
-        <Section padding="y-md">
-          <Container size="xl">
-            <Row gap="md" align="center" wrap>
-              {category.hasbroCoverImage && (
-                <MediaImage
-                  src={category.hasbroCoverImage}
-                  alt={`${category.hasbroName} logo`}
-                  size="thumbnail"
-                  className="h-12 w-auto flex-shrink-0"
-                />
+      {/*
+        Migrated onto the shared DetailViewShell ("hub" — taxonomy hub
+        pages: hero band, tabs, browse grid. Renders like "stacked", no
+        shared wrapper imposed, since every section below already manages
+        its own width via its own Section/Container, so this is a pure
+        structural move with identical rendered output. Mirrors the same
+        migration on BrandDetailPageView, which this file's own comments
+        repeatedly cross-reference as the parallel case.
+      */}
+      <DetailViewShell
+        layout="hub"
+        mainSlots={[
+          /* ── Hero / Banner ───────────────────────────────────────────────── */
+          () => (
+            <Section className={`relative ${__O.hidden} ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-[var(--appkit-color-bg)]"}`}>
+              {hasCover && (
+                <>
+                  <Div className="absolute inset-0">
+                    <MediaImage src={coverImage} alt="" size="banner" />
+                  </Div>
+                  <Div surface="overlay-md" className="absolute inset-0" />
+                </>
               )}
-              <Stack gap="xs">
-                <Text size="xs" color="muted" transform="uppercase" weight="medium">
-                  Also known as
-                </Text>
-                <Text weight="semibold">{category.hasbroName}</Text>
-                <Text size="xs" color="muted">
-                  The same wave, named differently outside Japan — Takara-Tomy
-                  releases it as {category.name}, Hasbro as {category.hasbroName}.
-                  Both names find these listings.
-                </Text>
-              </Stack>
-            </Row>
-          </Container>
-        </Section>
-      )}
 
-      {/* ── D4 / I7: the category's OWN content ────────────────────────────
-          🛑 `contentBody` has existed on the schema since B3, has an admin
-          editor, and `category-content.ts` claimed it rendered "on the category
-          page" — it had NO render site anywhere. So the one field this plan
-          measured as worldhobbyshop's actual ranking mechanism (36 of their 46
-          categories carry one; no Shopify competitor in the crawl has any) was
-          authorable, storable, and invisible.
-
-          Rendered through `RichTextRenderer`, which is what the field's own
-          docstring specifies and is SSR-safe (content is sanitised at save
-          time by `RichTextEditor`). Omitted entirely when absent — an empty
-          prose block reads as a broken page, which is the `{{partBreakdown}}`
-          lesson. */}
-      {contentBody && contentBody.trim().length > 0 && (
-        <Section padding="y-lg">
-          <Container size="xl">
-            <RichTextRenderer html={contentBody} />
-          </Container>
-        </Section>
-      )}
-
-      <CategoryHighlightsAndFaqSection highlights={category?.highlights} faqs={category?.faqs} />
-
-      {/* ── D12: what this model is MADE OF ─────────────────────────────────
-          Renders only on a named-model leaf, because only a leaf has a
-          composition. No `parts` map is passed: 963 of 963 slots carry their
-          own `weightG`, which is the weight AS FITTED and the better figure
-          than the mould's — so hydrating the glossary would be a second read
-          for a value we already have. */}
-      {/* ── B5: the reference page for the model this leaf names ───────────
-          🛑 `ROUTES.PUBLIC.BEY_DETAIL` had ZERO call sites before this —
-          1,988 bey pages, every one routable and unreachable from anywhere in
-          the product. The link already ran the other way (a bey page links to
-          its category leaf via `categoryId`), so this closes the loop.
-
-          Rendered ABOVE "What it is made of" deliberately: the bey page is the
-          reference for the WHOLE model (mass, ratings, owner, release), while
-          the composition panel below is one section of it. Reading order
-          follows that.
-
-          🛑 Plural, and not `[0]`. Measured: 1,880 beys across 1,858 leaves,
-          so 22 leaves carry TWO — the vendor pairs, a Takara-Tomy release and
-          its Hasbro equivalent on one taxonomy leaf. Rendering only the first
-          would drop the other with nothing to show one existed.
-
-          No money and no image: the amounts live on the listings below, and a
-          price here would need `<GatedPrice>` and make this a client
-          component. */}
-      {pairedBeys.length > 0 && (
-        <Section border="subtle" surface="default" className="border-b">
-          <Div className={__W} padding="section">
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                {pairedBeys.length === 1 ? "Specifications" : "Releases"}
-              </Heading>
-              <Stack gap="xs" className="min-w-0">
-                {pairedBeys.map((bey) => (
-                  <Row key={bey.id} gap="sm" align="center" wrap className="min-w-0">
-                    <TextLink href={String(ROUTES.PUBLIC.BEY_DETAIL(bey.slug))}>
-                      {bey.name}
-                    </TextLink>
-                    {/* The one-line provenance a visitor needs to tell two
-                        vendor releases apart. Each is optional on the document,
-                        so an absent field contributes nothing rather than an
-                        em-dash that claims we looked. */}
-                    {[bey.system, bey.productCodes?.[0]]
-                      .filter(Boolean)
-                      .map((bit) => (
-                        <Text key={String(bit)} size="sm" color="muted">
-                          {String(bit)}
-                        </Text>
-                      ))}
-                  </Row>
-                ))}
-              </Stack>
-            </Stack>
-          </Div>
-        </Section>
-      )}
-
-      {compositions.length > 0 && (
-        <Section border="subtle" surface="default" className="border-b">
-          <Div className={__W} padding="section">
-            <Stack gap="md" className="min-w-0">
-              <Heading level={2} size="lg">
-                What it is made of
-              </Heading>
-              <ModelCompositionPanel
-                compositions={compositions}
-                hrefForPart={(slot, tail) => String(ROUTES.PUBLIC.PART_DETAIL(slot, tail))}
-              />
-            </Stack>
-          </Div>
-        </Section>
-      )}
-
-      {/* ── D3: two real branches, side by side ─────────────────────────────
-          Only when this is a ROOT with EXACTLY TWO tier-1 children and BOTH
-          carry a real cover photo. Three or more is what the scroller below
-          already does; one or zero photographed children means there is
-          nothing honest to split — so it falls through silently to the
-          scroller rather than inventing a placeholder side. */}
-      {(() => {
-        if (category?.tier !== 0) return null;
-        const branches = childCategories.filter((c) => c.tier === 1);
-        if (branches.length !== 2) return null;
-        const [a, b] = branches;
-        const coverOf = (c: typeof a) => c?.display?.coverImage;
-        if (!a || !b || !coverOf(a) || !coverOf(b)) return null;
-        const countOf = (c: typeof a) => {
-          const n = c?.metrics?.totalProductCount ?? c?.metrics?.productCount ?? 0;
-          return n > 0 ? `${n.toLocaleString()} listing${n === 1 ? "" : "s"}` : undefined;
-        };
-        return (
-          <Section padding="y-lg">
-            <Div className={__W} padding="x-md">
-              <SplitTile
-                left={{
-                  href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.slug)),
-                  label: a.name,
-                  imageUrl: coverOf(a)!,
-                  countLabel: countOf(a),
-                }}
-                right={{
-                  href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(b.slug)),
-                  label: b.name,
-                  imageUrl: coverOf(b)!,
-                  countLabel: countOf(b),
-                }}
-              />
-            </Div>
-          </Section>
-        );
-      })()}
-
-      {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
-      {directChildrenWithListings.length > 0 && (
-        <Section border="subtle" surface="default" className="border-b">
-          <Div className={__W} padding="inline">
-            {/*
-              * 🛑 DIRECT CHILDREN ONLY — one depth, one scroller.
-              *
-              * This used to render one scroller per depth below the category,
-              * labelled "Subcategories" / "2 levels down" / "3 levels down" /
-              * "4 levels down". On a root that is the ENTIRE SUBTREE: the
-              * spinning-tops root produced four rows totalling ~1,289 chips,
-              * including every tier-4 part size ("0 / 0Wall", "00 / 00Turn",
-              * "1-60", "105", "130"…). Those are terminal leaves with one
-              * listing each and no meaning outside their parent, so the row
-              * read as noise and buried the five chips anyone wanted.
-              *
-              * Depth is the wrong axis for this control. Navigating down is
-              * what the page itself is for — `CategoryDetailPageView` already
-              * renders the full descendant set tier-grouped further down, and
-              * clicking a child opens that child's own page with ITS children
-              * in this bar. Showing four generations at once collapses that
-              * walk into a wall and still says nothing about which row belongs
-              * to which parent, which is the defect the per-depth labels were
-              * added to paper over.
-              */}
-            <Div padding="b-2xs">
               {/*
-                * Small CARDS in the shared `<HorizontalScroller>`, not pills.
+                * D3 — the mosaic, for a category with no cover photo of its own.
                 *
-                * A pill carries a name and a count and nothing else, so on a
-                * wide tree every child looked identical and the row read as a
-                * wall of words. A card shows the category's own artwork, which
-                * is the fastest way to tell "Beyblade Burst" from "Beyblade X"
-                * at a glance.
-                *
-                * 🛑 This gives up `OverflowRow`'s collapse-to-dropdown, which
-                * existed because a bare scroller hid items past the right edge
-                * with no affordance. Two things replace it: the scroller's own
-                * arrows, and a filter box that matches ONE LEVEL deeper than
-                * the cards — so an off-screen subcategory is reachable by
-                * typing the name of something inside it, not only by scrolling.
+                * 🛑 Rendered as CONTENT above the title rather than as a background
+                * behind it. A faint collage under white text is the pattern that made
+                * `tone="on-media"` necessary in the first place, and these are
+                * unknown product photos rather than an art-directed banner: some are
+                * light, some dark, and no single ink colour is readable over all of
+                * them. Above the title it needs no scrim and no contrast gamble.
                 */}
-              {/*
-                * One card: the immediate parent, as the way back UP.
-                *
-                * The breadcrumb at the top of the page already spells out the
-                * full path, but by the time you have scrolled to this row it
-                * is off-screen — so the one move this row needs to afford is
-                * "up one level", at the point you are choosing where to go
-                * next. Grandparents and uncles are not that move and are left
-                * to the breadcrumb.
-                *
-                * 🛑 `ancestors` excludes the current category, so a ROOT
-                * renders no row rather than a card pointing at the page you
-                * are already on.
-                */}
-              {parentLadder.length > 0 && (
-                <Div padding="b-2xs">
-                  <SubcategoryCardRow items={parentLadder} label="Parent category" />
+              {!hasCover && hasMosaic && (
+                <Div className="relative z-10 max-w-7xl mx-auto" padding="x-md">
+                  <Div padding="t-lg">
+                    <ImageMosaic images={mosaicImages} alt={`${category?.name ?? slug} on ${getBrandName()}`} />
+                  </Div>
                 </Div>
               )}
-              <SubcategoryCardRow
-                items={toSubcategoryItems(directChildrenWithListings, childCategories)}
-              />
-            </Div>
-          </Div>
-        </Section>
-      )}
 
-      {/* ── Tabs: Products / Collector Drops / Pre-Orders ──────────────────────── */}
-      <Section padding="y-lg">
-        <Container size="xl">
-          <CategoryDetailTabs
-            categorySlug={slug}
-            categoryId={category?.id}
-            initialProductsData={productsResult ?? undefined}
-            initialBundles={bundlesResult ?? []}
-            initialStores={categoryStores}
-            counts={counts}
-            totals={totals}
-            enabledListingTypes={enabledListingTypes(settings)}
-            enabledCategoryTypes={enabledCategoryTypes(settings)}
-          />
-        </Container>
-      </Section>
+              <Div className="relative z-10 max-w-7xl mx-auto" paddingY={hasCover ? "y-3xl" : "y-xl"} padding="x-md">
+                {/*
+                  * 🛑 ONE trail component, fed the SAME `trail` array the JSON-LD
+                  * above serialises. This was a hand-rolled `<Nav>` with
+                  * `text-white/70` conditionals — three crumbs, no collapse — beside
+                  * a `BreadcrumbList` carrying the full chain, so a tier-4 category
+                  * showed a visitor three levels and a crawler eight. The cover-photo
+                  * ink it existed for is now `tone="on-media"` on the primitive.
+                  */}
+                <BreadcrumbTrail
+                  crumbs={trail}
+                  className="mb-4"
+                  tone={hasCover ? "on-media" : "default"}
+                />
+                {/* Records this category for a product page's contextual trail (I5b).
+                    sessionStorage, one key, no network. */}
+                {category?.id && <LastCategoryBeacon categoryId={category.id} />}
 
-      {groupedListings.length > 0 && (
-        <Section padding="y-lg">
-          <Container size="xl">
-            <GroupedListingsCarousel groups={groupedListings} />
-          </Container>
-        </Section>
-      )}
+                {/*
+                  Owner quick-actions. Rendered DIRECTLY, with no slot prop threaded
+                  through this view — `OwnerQuickActions` is a client component that
+                  self-gates on the session, so a Server Component can hand it the
+                  record and let it decide whether to appear. Threading a render prop
+                  through twelve async RSC detail views would buy nothing.
 
-      <Section padding="y-md">
-        <Container size="xl">
-          <AdminComposableRegion pageId="categories-slug-tab-sort-sortkey-page-page" initialCards={pageRegionCards} />
-        </Container>
-      </Section>
+                  🛑 Admin-only in practice: a category has no `ownerId`, so the
+                  owner branch can never match. That is also why the component takes
+                  `isAdmin` as its own term — `useIsOwner` returns false for an
+                  ownerless record even to an admin.
 
-      {/* ── Related categories ───────────────────────────────────────────── */}
-      {relatedCategories.length > 0 && (
-        <Section border="subtle" surface="default" className="border-t" padding="y-lg">
-          <Container size="xl">
-            <Heading level={2} className="mb-4" size="xl" weight="semibold">
-              Related Categories
-            </Heading>
-            <CategoryGrid
-              categories={relatedCategories}
-              getHref={(c) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(c.slug))}
-            />
-          </Container>
-        </Section>
-      )}
+                  No clone: a category's parentIds / ancestors / tier / path /
+                  position / subtreeSize are all derived by buildCategoryTree and an
+                  insert shifts sibling position ranges, so a copy would carry stale
+                  derived state.
+                */}
+                {/* Title + metrics */}
+                <Heading color="inverse" level={1} className={`mb-2 ${hasCover ? "" : "text-[var(--appkit-color-text)]"}`} size="3xl" mdSize="4xl" weight="bold">
+                  {category?.name ?? slug}
+                </Heading>
+
+                {/*
+                  🛑 BELOW the `<h1>`, not above it.
+
+                  This block used to render BEFORE the heading, so on a cover hero
+                  the three icons sat on top of the title — "Spinning Tops" with a
+                  pencil overlapping it. Above a heading there is nothing for a
+                  control strip to belong to; below one it reads as "actions for
+                  this record", which is what it is.
+
+                  The toolbar supplies its own bordered box, so it no longer depends
+                  on the caller finding a free corner.
+                */}
+                {category?.id && (
+                  <RecordOwnerQuickActions
+                    resource="CATEGORY"
+                    recordId={category.id}
+                    placement="detail"
+                    /*
+                     * Same flag the rest of this hero branches on. Without it the
+                     * pencil renders `ghost` (zinc-600) on the dark cover and is
+                     * invisible — see Root Cause #67 and `OwnerQuickActions.onMedia`.
+                     */
+                    onMedia={hasCover}
+                    className="mb-3"
+                    recordLabel={category.name ?? slug}
+                  />
+                )}
+
+                {/*
+                  The `${hasCover ? "/80" : ""}` that used to sit in the className
+                  below was a DEAD ALPHA FRAGMENT — codemod residue from a stripped
+                  `text-white/80`, a class Tailwind cannot generate and silently
+                  drops. It did nothing; `color="inverse"` already carries the ink.
+                */}
+                {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
+                  <Text color={hasCover ? "inverse" : "muted"} className="max-w-2xl mb-4" size="base">
+                    {category.description}
+                  </Text>
+                )}
+
+                <Row wrap gap="sm">
+                  {productCount > 0 && (
+                    <Span layout="inline-flex" gap="xs" color="inverse" size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"} rounded="full" padding="pill-sm-tall">
+                      {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
+                    </Span>
+                  )}
+                  {/*
+                    * G3b — the split, as its own pill rather than inside the one above.
+                    *
+                    * 🛑 The two figures are NEVER added: `total` already includes
+                    * `own`, so `ownHere + inSubcategories === total` by construction
+                    * and printing their sum would double every item filed here. Shown
+                    * only when something is actually below (a leaf would read
+                    * "0 in subcategories", which looks like a missing number).
+                    */}
+                  {showCountSplit && (
+                    <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "muted"} size="xs" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                      {ownHere!.toLocaleString()} here · {inSubcategories!.toLocaleString()} in subcategories
+                    </Span>
+                  )}
+                  {collectorDropCount > 0 && (
+                    <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "warning"} surface={hasCover ? undefined : "warning-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                      {collectorDropCount.toLocaleString()} {collectorDropCount === 1 ? "collector drop" : "collector drops"}
+                    </Span>
+                  )}
+                  {preOrderCount > 0 && (
+                    <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "info"} surface={hasCover ? undefined : "info-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                      {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
+                    </Span>
+                  )}
+                  {storeCount > 0 && (
+                    <Span layout="inline-flex" gap="xs" color={hasCover ? "inverse" : "success"} surface={hasCover ? undefined : "success-surface"} size="xs" weight="medium" className={hasCover ? "bg-[rgba(255,255,255,0.2)] backdrop-blur-sm" : ""} rounded="full" padding="pill-sm-tall">
+                      {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
+                    </Span>
+                  )}
+                </Row>
+              </Div>
+            </Section>
+          ),
+          /* ── Regional naming: the Hasbro name for this wave ──────────────────
+              A buyer who grew up on Hasbro's seasons knows "Turbo", not "Cho-Z",
+              and the catalogue has always been FINDABLE by either — per-model
+              Hasbro names are folded into `aliases`. But `aliases` feeds
+              `searchTxt` and is rendered nowhere, so nothing on the page ever
+              stated the correspondence. Someone who searched "Turbo", landed on
+              Cho-Z and saw no mention of Turbo had no way to know they were in the
+              right place.
+
+              Renders nothing when unset, which is the common case: five of the
+              seven Burst waves have a confirmed divergence and nothing else in the
+              forest does. */
+          category?.hasbroName
+            ? () => (
+                <Section padding="y-md">
+                  <Container size="xl">
+                    <Row gap="md" align="center" wrap>
+                      {category.hasbroCoverImage && (
+                        <MediaImage
+                          src={category.hasbroCoverImage}
+                          alt={`${category.hasbroName} logo`}
+                          size="thumbnail"
+                          className="h-12 w-auto flex-shrink-0"
+                        />
+                      )}
+                      <Stack gap="xs">
+                        <Text size="xs" color="muted" transform="uppercase" weight="medium">
+                          Also known as
+                        </Text>
+                        <Text weight="semibold">{category.hasbroName}</Text>
+                        <Text size="xs" color="muted">
+                          The same wave, named differently outside Japan — Takara-Tomy
+                          releases it as {category.name}, Hasbro as {category.hasbroName}.
+                          Both names find these listings.
+                        </Text>
+                      </Stack>
+                    </Row>
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          /* ── D4 / I7: the category's OWN content ────────────────────────────
+              🛑 `contentBody` has existed on the schema since B3, has an admin
+              editor, and `category-content.ts` claimed it rendered "on the category
+              page" — it had NO render site anywhere. So the one field this plan
+              measured as worldhobbyshop's actual ranking mechanism (36 of their 46
+              categories carry one; no Shopify competitor in the crawl has any) was
+              authorable, storable, and invisible.
+
+              Rendered through `RichTextRenderer`, which is what the field's own
+              docstring specifies and is SSR-safe (content is sanitised at save
+              time by `RichTextEditor`). Omitted entirely when absent — an empty
+              prose block reads as a broken page, which is the `{{partBreakdown}}`
+              lesson. */
+          contentBody && contentBody.trim().length > 0
+            ? () => (
+                <Section padding="y-lg">
+                  <Container size="xl">
+                    <RichTextRenderer html={contentBody} />
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          () => <CategoryHighlightsAndFaqSection highlights={category?.highlights} faqs={category?.faqs} />,
+          /* ── D12: what this model is MADE OF ─────────────────────────────────
+              Renders only on a named-model leaf, because only a leaf has a
+              composition. No `parts` map is passed: 963 of 963 slots carry their
+              own `weightG`, which is the weight AS FITTED and the better figure
+              than the mould's — so hydrating the glossary would be a second read
+              for a value we already have. */
+          /* ── B5: the reference page for the model this leaf names ───────────
+              🛑 `ROUTES.PUBLIC.BEY_DETAIL` had ZERO call sites before this —
+              1,988 bey pages, every one routable and unreachable from anywhere in
+              the product. The link already ran the other way (a bey page links to
+              its category leaf via `categoryId`), so this closes the loop.
+
+              Rendered ABOVE "What it is made of" deliberately: the bey page is the
+              reference for the WHOLE model (mass, ratings, owner, release), while
+              the composition panel below is one section of it. Reading order
+              follows that.
+
+              🛑 Plural, and not `[0]`. Measured: 1,880 beys across 1,858 leaves,
+              so 22 leaves carry TWO — the vendor pairs, a Takara-Tomy release and
+              its Hasbro equivalent on one taxonomy leaf. Rendering only the first
+              would drop the other with nothing to show one existed.
+
+              No money and no image: the amounts live on the listings below, and a
+              price here would need `<GatedPrice>` and make this a client
+              component. */
+          pairedBeys.length > 0
+            ? () => (
+                <Section border="subtle" surface="default" className="border-b">
+                  <Div className={__W} padding="section">
+                    <Stack gap="sm" className="min-w-0">
+                      <Heading level={2} size="lg">
+                        {pairedBeys.length === 1 ? "Specifications" : "Releases"}
+                      </Heading>
+                      <Stack gap="xs" className="min-w-0">
+                        {pairedBeys.map((bey) => (
+                          <Row key={bey.id} gap="sm" align="center" wrap className="min-w-0">
+                            <TextLink href={String(ROUTES.PUBLIC.BEY_DETAIL(bey.slug))}>
+                              {bey.name}
+                            </TextLink>
+                            {/* The one-line provenance a visitor needs to tell two
+                                vendor releases apart. Each is optional on the document,
+                                so an absent field contributes nothing rather than an
+                                em-dash that claims we looked. */}
+                            {[bey.system, bey.productCodes?.[0]]
+                              .filter(Boolean)
+                              .map((bit) => (
+                                <Text key={String(bit)} size="sm" color="muted">
+                                  {String(bit)}
+                                </Text>
+                              ))}
+                          </Row>
+                        ))}
+                      </Stack>
+                    </Stack>
+                  </Div>
+                </Section>
+              )
+            : undefined,
+          compositions.length > 0
+            ? () => (
+                <Section border="subtle" surface="default" className="border-b">
+                  <Div className={__W} padding="section">
+                    <Stack gap="md" className="min-w-0">
+                      <Heading level={2} size="lg">
+                        What it is made of
+                      </Heading>
+                      <ModelCompositionPanel
+                        compositions={compositions}
+                        hrefForPart={(slot, tail) => String(ROUTES.PUBLIC.PART_DETAIL(slot, tail))}
+                      />
+                    </Stack>
+                  </Div>
+                </Section>
+              )
+            : undefined,
+          /* ── D3: two real branches, side by side ─────────────────────────────
+              Only when this is a ROOT with EXACTLY TWO tier-1 children and BOTH
+              carry a real cover photo. Three or more is what the scroller below
+              already does; one or zero photographed children means there is
+              nothing honest to split — so it falls through silently to the
+              scroller rather than inventing a placeholder side. */
+          () => {
+            if (category?.tier !== 0) return null;
+            const branches = childCategories.filter((c) => c.tier === 1);
+            if (branches.length !== 2) return null;
+            const [a, b] = branches;
+            const coverOf = (c: typeof a) => c?.display?.coverImage;
+            if (!a || !b || !coverOf(a) || !coverOf(b)) return null;
+            const countOf = (c: typeof a) => {
+              const n = c?.metrics?.totalProductCount ?? c?.metrics?.productCount ?? 0;
+              return n > 0 ? `${n.toLocaleString()} listing${n === 1 ? "" : "s"}` : undefined;
+            };
+            return (
+              <Section padding="y-lg">
+                <Div className={__W} padding="x-md">
+                  <SplitTile
+                    left={{
+                      href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(a.slug)),
+                      label: a.name,
+                      imageUrl: coverOf(a)!,
+                      countLabel: countOf(a),
+                    }}
+                    right={{
+                      href: String(ROUTES.PUBLIC.CATEGORY_DETAIL(b.slug)),
+                      label: b.name,
+                      imageUrl: coverOf(b)!,
+                      countLabel: countOf(b),
+                    }}
+                  />
+                </Div>
+              </Section>
+            );
+          },
+          /* ── Sub-categories horizontal scroller ──────────────────────────── */
+          directChildrenWithListings.length > 0
+            ? () => (
+                <Section border="subtle" surface="default" className="border-b">
+                  <Div className={__W} padding="inline">
+                    {/*
+                      * 🛑 DIRECT CHILDREN ONLY — one depth, one scroller.
+                      *
+                      * This used to render one scroller per depth below the category,
+                      * labelled "Subcategories" / "2 levels down" / "3 levels down" /
+                      * "4 levels down". On a root that is the ENTIRE SUBTREE: the
+                      * spinning-tops root produced four rows totalling ~1,289 chips,
+                      * including every tier-4 part size ("0 / 0Wall", "00 / 00Turn",
+                      * "1-60", "105", "130"…). Those are terminal leaves with one
+                      * listing each and no meaning outside their parent, so the row
+                      * read as noise and buried the five chips anyone wanted.
+                      *
+                      * Depth is the wrong axis for this control. Navigating down is
+                      * what the page itself is for — `CategoryDetailPageView` already
+                      * renders the full descendant set tier-grouped further down, and
+                      * clicking a child opens that child's own page with ITS children
+                      * in this bar. Showing four generations at once collapses that
+                      * walk into a wall and still says nothing about which row belongs
+                      * to which parent, which is the defect the per-depth labels were
+                      * added to paper over.
+                      */}
+                    <Div padding="b-2xs">
+                      {/*
+                        * Small CARDS in the shared `<HorizontalScroller>`, not pills.
+                        *
+                        * A pill carries a name and a count and nothing else, so on a
+                        * wide tree every child looked identical and the row read as a
+                        * wall of words. A card shows the category's own artwork, which
+                        * is the fastest way to tell "Beyblade Burst" from "Beyblade X"
+                        * at a glance.
+                        *
+                        * 🛑 This gives up `OverflowRow`'s collapse-to-dropdown, which
+                        * existed because a bare scroller hid items past the right edge
+                        * with no affordance. Two things replace it: the scroller's own
+                        * arrows, and a filter box that matches ONE LEVEL deeper than
+                        * the cards — so an off-screen subcategory is reachable by
+                        * typing the name of something inside it, not only by scrolling.
+                        */}
+                      {/*
+                        * One card: the immediate parent, as the way back UP.
+                        *
+                        * The breadcrumb at the top of the page already spells out the
+                        * full path, but by the time you have scrolled to this row it
+                        * is off-screen — so the one move this row needs to afford is
+                        * "up one level", at the point you are choosing where to go
+                        * next. Grandparents and uncles are not that move and are left
+                        * to the breadcrumb.
+                        *
+                        * 🛑 `ancestors` excludes the current category, so a ROOT
+                        * renders no row rather than a card pointing at the page you
+                        * are already on.
+                        */}
+                      {parentLadder.length > 0 && (
+                        <Div padding="b-2xs">
+                          <SubcategoryCardRow items={parentLadder} label="Parent category" />
+                        </Div>
+                      )}
+                      <SubcategoryCardRow
+                        items={toSubcategoryItems(directChildrenWithListings, childCategories)}
+                      />
+                    </Div>
+                  </Div>
+                </Section>
+              )
+            : undefined,
+          /* ── Tabs: Products / Collector Drops / Pre-Orders ──────────────────────── */
+          () => (
+            <Section padding="y-lg">
+              <Container size="xl">
+                <CategoryDetailTabs
+                  categorySlug={slug}
+                  categoryId={category?.id}
+                  initialProductsData={productsResult ?? undefined}
+                  initialBundles={bundlesResult ?? []}
+                  initialStores={categoryStores}
+                  counts={counts}
+                  totals={totals}
+                  enabledListingTypes={enabledListingTypes(settings)}
+                  enabledCategoryTypes={enabledCategoryTypes(settings)}
+                />
+              </Container>
+            </Section>
+          ),
+          groupedListings.length > 0
+            ? () => (
+                <Section padding="y-lg">
+                  <Container size="xl">
+                    <GroupedListingsCarousel groups={groupedListings} />
+                  </Container>
+                </Section>
+              )
+            : undefined,
+          () => (
+            <Section padding="y-md">
+              <Container size="xl">
+                <AdminComposableRegion pageId="categories-slug-tab-sort-sortkey-page-page" initialCards={pageRegionCards} />
+              </Container>
+            </Section>
+          ),
+          /* ── Related categories ───────────────────────────────────────────── */
+          relatedCategories.length > 0
+            ? () => (
+                <Section border="subtle" surface="default" className="border-t" padding="y-lg">
+                  <Container size="xl">
+                    <Heading level={2} className="mb-4" size="xl" weight="semibold">
+                      Related Categories
+                    </Heading>
+                    <CategoryGrid
+                      categories={relatedCategories}
+                      getHref={(c) => String(ROUTES.PUBLIC.CATEGORY_DETAIL(c.slug))}
+                    />
+                  </Container>
+                </Section>
+              )
+            : undefined,
+        ]}
+      />
     </Main>
   );
 }
