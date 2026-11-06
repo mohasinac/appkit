@@ -29,7 +29,32 @@ export type DetailViewLayout =
   /** Single column stacked */
   | "stacked"
   /** Narrow centered column (max-w-3xl) */
-  | "narrow";
+  | "narrow"
+  /**
+   * Taxonomy hub pages (brand / category / franchise / store): a hero band,
+   * tabs, and a browse grid, each slot already managing its own width (most
+   * wrap themselves in their own `<Section>`/`<Container>`). Renders exactly
+   * like `"stacked"` today — no shared wrapper is imposed — so a hub page's
+   * existing section-by-section widths are preserved untouched. Kept as its
+   * own named mode (rather than reusing `"stacked"` directly) so hub-specific
+   * behaviour (e.g. a shared sticky tab bar) has somewhere to land later
+   * without re-touching every adopter.
+   */
+  | "hub"
+  /**
+   * Single-column reference/wiki pages (bey, part) that want the WIDER
+   * `Container size="lg"` measure (`max-w-5xl`) rather than `"narrow"`'s
+   * `max-w-3xl` — these pages carry wide `SpecTable`s that would be cramped
+   * at the narrower width.
+   */
+  | "wiki"
+  /**
+   * Long-form article pages (blog post): a full-bleed hero band followed by
+   * a narrower prose column and a wider related-rail section, where each
+   * slot already manages its own width internally. Renders like `"stacked"`
+   * for the same reason `"hub"` does — see that mode's comment.
+   */
+  | "article";
 
 export interface DetailViewShellProps {
   /** Layout mode for the main content area. */
@@ -137,6 +162,16 @@ export function DetailViewShell({
             ))}
           </Div>
         );
+      case "wiki":
+        return (
+          <Div className="max-w-5xl mx-auto space-y-6">
+            {mainSlots.map((slot, i) => (
+              <React.Fragment key={i}>{resolveSlot(slot)}</React.Fragment>
+            ))}
+          </Div>
+        );
+      case "hub":
+      case "article":
       case "stacked":
       default:
         return (
