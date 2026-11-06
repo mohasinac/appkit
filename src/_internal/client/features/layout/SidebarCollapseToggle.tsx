@@ -51,20 +51,38 @@ export function SidebarCollapseToggle({
    * 🛑 MUST be `position: absolute`, pinned to the panel's INNER (content-
    * facing) edge — never a normal flex sibling after the nav panel.
    *
-   * The collapsed state translates the WHOLE panel by `100% - 1.25rem`
-   * (`sidebarPositionClasses.ts`), leaving only a 1.25rem sliver at the
-   * panel's inner edge inside the viewport; the rest, including whatever
-   * sits at the panel's OUTER edge in normal flex flow, lands past the
-   * viewport edge, clipped by `overflow-x: hidden` — genuinely unreachable,
-   * not just visually awkward. `roundedClass` above already encodes the
-   * correct edge (rounds toward the content side), which is the tell that
-   * this was always meant to dock there; only the positioning mechanism was
-   * wrong. Absolute positioning relative to the panel (its `fixed` ancestor
-   * still establishes a containing block) keeps the handle at the same
-   * viewport position in BOTH collapsed and expanded states, instead of
-   * moving with panel content as a flex child would.
+   * 🛑 `position: absolute` does NOT decouple this handle from the parent
+   * panel's `transform`. A CSS `transform` on an ancestor moves its entire
+   * rendered subtree — including absolutely-positioned descendants — as one
+   * painted unit; `position: absolute` only controls which box the element
+   * is positioned *relative to*, not whether it rides along with an
+   * ancestor's transform. (An earlier version of this comment claimed the
+   * opposite — that was the root cause of the "Expand sidebar" handle
+   * rendering flush against, and reading as clipped by, the viewport edge.)
+   *
+   * `sidebarPositionClasses.ts`'s collapsed state now translates the WHOLE
+   * panel by a full `100%` (off-screen, no readable-text sliver left
+   * bleeding into the viewport — see that file's own comment). Because this
+   * handle is a child of that same transformed panel, it rides the full
+   * 100% shift too, landing with ZERO clearance from the viewport edge —
+   * which, combined with its half-pill shape (`roundedClass` rounds only
+   * the content-facing side, square on the outer/edge side by design), is
+   * visually indistinguishable from a circle clipped in half.
+   *
+   * `edgeOffsetClass` below compensates for exactly that: expanded state is
+   * unchanged (flush against the panel's inner edge, which was never
+   * broken); collapsed state adds back `+1.25rem` of inward offset — same
+   * magic number as `roundedClass`'s corner radius, not a new constant — so
+   * the handle keeps real clearance from the viewport edge specifically
+   * when the panel's full-width shift would otherwise push it flush.
    */
-  const edgeOffsetClass = edge === "left" ? "right-0 translate-x-full" : "left-0 -translate-x-full";
+  const edgeOffsetClass = edge === "left"
+    ? expanded
+      ? "right-0 translate-x-full"
+      : "right-0 translate-x-[calc(100%+1.25rem)]"
+    : expanded
+      ? "left-0 -translate-x-full"
+      : "left-0 -translate-x-[calc(100%+1.25rem)]";
   return (
     <IconButton
       type="button"
