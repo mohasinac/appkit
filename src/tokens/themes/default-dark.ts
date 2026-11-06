@@ -1,10 +1,11 @@
 import type { ThemeRecord } from "./types";
 
 /**
- * Built-in dark theme — crimson red unified primary + cyan secondary-highlight.
- * Rebranded 2026-08-17 from the previous hot-pink identity to match the
- * red/cyan "Meteo L-Drago"-style Beyblade reference art supplied for the
- * rebrand (red metallic body + cyan energy-ring highlight + silver accents).
+ * Built-in dark theme — navy primary + gold secondary-highlight.
+ * Refreshed 2026-11-06 from the previous crimson+cyan identity to the new
+ * owner-approved brand palette: a deep, rich navy body colour paired with
+ * the same warm metallic-gold accent used by the light theme, so the gold
+ * identity carries through both modes consistently.
  * Mirrors the `[data-theme="dark"]` block in `appkit/src/tokens/tokens.css`.
  * Cannot be deleted; can be cloned by the admin into a new theme.
  *
@@ -13,35 +14,35 @@ import type { ThemeRecord } from "./types";
  */
 export const DEFAULT_DARK_THEME: ThemeRecord = {
   id: "default-dark",
-  name: "Default Dark (Crimson + Cyan)",
+  name: "Default Dark (Navy + Gold)",
   mode: "dark",
   builtIn: true,
   tokens: {
-    "appkit-color-primary": "#ef4444",
-    "appkit-color-primary-50": "#fef2f2",
-    "appkit-color-primary-100": "#fee2e2",
-    "appkit-color-primary-200": "#fecaca",
-    "appkit-color-primary-300": "#fca5a5",
-    "appkit-color-primary-400": "#f87171",
-    "appkit-color-primary-500": "#ef4444",
-    "appkit-color-primary-600": "#dc2626",
-    "appkit-color-primary-700": "#b91c1c",
-    "appkit-color-primary-800": "#991b1b",
-    "appkit-color-primary-900": "#7f1d1d",
-    "appkit-color-primary-950": "#450a0a",
+    "appkit-color-primary": "#1e3a8a",
+    "appkit-color-primary-50": "#ebeffb",
+    "appkit-color-primary-100": "#d0dbfb",
+    "appkit-color-primary-200": "#a8bdfb",
+    "appkit-color-primary-300": "#6e90f4",
+    "appkit-color-primary-400": "#1f52e4",
+    "appkit-color-primary-500": "#1e3a8a",
+    "appkit-color-primary-600": "#20346e",
+    "appkit-color-primary-700": "#192a5b",
+    "appkit-color-primary-800": "#17254c",
+    "appkit-color-primary-900": "#16213f",
+    "appkit-color-primary-950": "#091022",
 
-    "appkit-color-secondary": "#036272",
-    "appkit-color-secondary-50": "#ecfeff",
-    "appkit-color-secondary-100": "#cffafe",
-    "appkit-color-secondary-200": "#a5f3fc",
-    "appkit-color-secondary-300": "#67e8f9",
-    "appkit-color-secondary-400": "#22d3ee",
-    "appkit-color-secondary-500": "#06b6d4",
-    "appkit-color-secondary-600": "#0891b2",
-    "appkit-color-secondary-700": "#0e7490",
-    "appkit-color-secondary-800": "#155e75",
-    "appkit-color-secondary-900": "#164e63",
-    "appkit-color-secondary-950": "#083344",
+    "appkit-color-secondary": "#695617",
+    "appkit-color-secondary-50": "#fffbef",
+    "appkit-color-secondary-100": "#faf3dc",
+    "appkit-color-secondary-200": "#f1e5c0",
+    "appkit-color-secondary-300": "#e7d394",
+    "appkit-color-secondary-400": "#d6bb62",
+    "appkit-color-secondary-500": "#d4af37",
+    "appkit-color-secondary-600": "#b9982b",
+    "appkit-color-secondary-700": "#977e2a",
+    "appkit-color-secondary-800": "#7d6a2c",
+    "appkit-color-secondary-900": "#6a5b2a",
+    "appkit-color-secondary-950": "#483c15",
 
     "appkit-color-bg": "#020617",
     "appkit-color-surface": "#0f172a",
@@ -52,7 +53,7 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     // compares them.
     "appkit-color-surface-hover": "rgba(148, 163, 184, 0.12)",
     "appkit-color-surface-raised": "rgba(30, 41, 59, 0.7)",
-    "appkit-color-primary-surface": "rgba(239, 68, 68, 0.16)",
+    "appkit-color-primary-surface": "rgba(30, 58, 138, 0.16)",
     "appkit-color-border": "#334155",
     "appkit-color-border-subtle": "rgba(30, 41, 59, 0.6)",
     "appkit-color-text": "#fafafa",
@@ -77,12 +78,12 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-color-accent-c": "#c084fc",   // purple-400 on purple-900 tint
     "appkit-color-accent-c-surface": "rgba(88, 28, 135, 0.25)",
 
-    "appkit-color-focus-ring": "#f87171",
+    "appkit-color-focus-ring": "#1f52e4",
 
     "appkit-shadow-glow":
-      "0 0 0 1px rgba(239,68,68,0.12), 0 4px 16px -4px rgba(239,68,68,0.22)",
+      "0 0 0 1px rgba(31,82,228,0.12), 0 4px 16px -4px rgba(31,82,228,0.22)",
     "appkit-shadow-glow-pink":
-      "0 0 0 1px rgba(6,182,212,0.14), 0 4px 20px -4px rgba(6,182,212,0.28)",
+      "0 0 0 1px rgba(212,175,55,0.14), 0 4px 20px -4px rgba(212,175,55,0.28)",
 
     "appkit-font-display":
       "var(--font-display), \"Poppins\", ui-sans-serif, system-ui, sans-serif",
@@ -135,27 +136,27 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "accent-divider":
       "linear-gradient(to right, transparent, var(--appkit-color-primary), transparent)",
     "page-header":
-      "linear-gradient(to bottom right, rgba(239,68,68,0.10), transparent 60%, transparent)",
+      "linear-gradient(to bottom right, rgba(30,58,138,0.10), transparent 60%, transparent)",
     "section-warm":
       "linear-gradient(to bottom right, var(--appkit-color-warning-surface), transparent)",
     "section-cool":
-      "linear-gradient(to bottom right, rgba(6,182,212,0.10), transparent)",
+      "linear-gradient(to bottom right, rgba(212,175,55,0.10), transparent)",
     "section-mesh":
-      "radial-gradient(ellipse at top, rgba(239,68,68,0.10), var(--appkit-color-surface), rgba(6,182,212,0.08))",
+      "radial-gradient(ellipse at top, rgba(30,58,138,0.10), var(--appkit-color-surface), rgba(212,175,55,0.08))",
     "accent-banner":
       "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary))",
     promotion:
       "linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning))",
     spotlight:
-      "linear-gradient(to bottom right, rgba(6,182,212,0.10), var(--appkit-color-bg), rgba(6,182,212,0.10))",
+      "linear-gradient(to bottom right, rgba(212,175,55,0.10), var(--appkit-color-bg), rgba(212,175,55,0.10))",
     "whatsapp-card":
       "linear-gradient(135deg, var(--appkit-color-whatsapp) 0%, var(--appkit-color-whatsapp-light) 48%, var(--appkit-color-whatsapp-dark) 100%)",
     glass:
       "linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent))",
     "card-indigo":
-      "linear-gradient(to bottom right, rgba(239,68,68,0.10), var(--appkit-color-surface), var(--appkit-color-surface))",
+      "linear-gradient(to bottom right, rgba(30,58,138,0.10), var(--appkit-color-surface), var(--appkit-color-surface))",
     "card-teal":
-      "linear-gradient(to bottom right, rgba(6,182,212,0.10), var(--appkit-color-surface), var(--appkit-color-surface))",
+      "linear-gradient(to bottom right, rgba(212,175,55,0.10), var(--appkit-color-surface), var(--appkit-color-surface))",
     "card-amber":
       "linear-gradient(to bottom right, var(--appkit-color-warning-surface), var(--appkit-color-surface), var(--appkit-color-surface))",
     "card-rose":
