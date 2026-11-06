@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { Section } from "../../../ui/components/Semantic";
-import { Container, Stack, Row } from "../../../ui/components/Layout";
+import { Stack, Row } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Text, Span } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
@@ -31,6 +31,7 @@ import { Badge } from "../../../ui/components/Badge";
 import { Anchor } from "../../../ui/components/Anchor";
 import { SpecTable, type SpecTableRow } from "../../../ui/components/SpecTable";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
+import { DetailViewShell } from "../../../ui/components/DetailViewShell";
 import { ROUTES } from "../../../next/routing/route-map";
 import {
   PART_SLOT_LABEL,
@@ -200,314 +201,348 @@ export function PartDetailPageView({
 
   return (
     <Section padding="y-lg">
-      <Container size="lg">
-        <Stack gap="lg" className="min-w-0">
-          <Stack gap="xs" className="min-w-0">
-            <Text size="sm" color="muted">
-              <TextLink href={hrefForClassification(part.slot)}>{classification}</TextLink>
-            </Text>
-            <Heading level={1}>{part.name}</Heading>
-            {/*
-              ── 🛑 EDIT AND DELETE, FOR STAFF ONLY ───────────────────────────
-              `OwnerQuickActions` renders nothing at all for a signed-out
-              visitor or an ordinary buyer, so this costs a public reader
-              nothing. It is the same component the category, brand and bundle
-              pages use — one implementation, so the affordance cannot drift
-              into three shapes.
-
-              🛑 `onMedia` is NOT passed. Both these pages are type on the
-              page surface with no cover image behind the title, so the default
-              (ghost on surface) is correct. Passing it would force the
-              on-media treatment and put light ink on a light background —
-              Root Cause #67, which shipped 26 invisible surfaces exactly that
-              way.
-            */}
-            <RecordOwnerQuickActions
-              resource="PART"
-              recordId={part.id}
-              placement="detail"
-              recordLabel={part.name}
-            />
-
-            <Row gap="xs" wrap align="center" className="min-w-0">
-              {part.code && <Badge variant="info">{part.code}</Badge>}
-              {typeof part.weightG === "number" && (
-                <Badge variant="default">{part.weightG} g</Badge>
-              )}
-            </Row>
-            {aliases.length > 0 && (
+      {/*
+        Migrated onto the shared DetailViewShell ("wiki" — max-w-5xl, the
+        same width `Container size="lg"` gave this page, rather than
+        "narrow"'s max-w-3xl, since the SpecTables here need the room).
+        Every section below is unchanged JSX, now passed as a mainSlots
+        entry instead of a direct child of the old Container>Stack pair —
+        a pure structural move with identical rendered output. Mirrors the
+        same migration on BeyDetailPageView.
+      */}
+      <DetailViewShell
+        layout="wiki"
+        mainSlots={[
+          () => (
+            <Stack gap="xs" className="min-w-0">
               <Text size="sm" color="muted">
-                Also written: {aliases.join(" · ")}
+                <TextLink href={hrefForClassification(part.slot)}>{classification}</TextLink>
               </Text>
-            )}
-          </Stack>
-
-          <AdminComposableRegion pageId="parts-classification-code" initialCards={pageRegionCards} />
-
-          {/* ── specifications ───────────────────────────────────────────── */}
-          {specRows.length > 1 && (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Specifications
-              </Heading>
-              <SpecTable rows={specRows} />
-            </Stack>
-          )}
-
-          {/* ── ratings ──────────────────────────────────────────────────── */}
-          {ratingRows.length > 0 && (
-            <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Ratings
-              </Heading>
+              <Heading level={1}>{part.name}</Heading>
               {/*
-               * ── 🛑 NUMBERS, NOT BARS, AND THAT IS A DELIBERATE RETREAT ────
-               *
-               * A proportional bar reads better and was the first build. It
-               * needs a runtime width, and there is no way to express one here
-               * that I could VERIFY:
-               *
-               *   · `style={{ width: … }}` is blocked by audit-inline-styles,
-               *     whose regex is a bare `/style\s*=\s*\{\{/` and so flags a
-               *     CSS custom property too, despite its own header listing
-               *     custom properties as exempt.
-               *   · `// audit-inline-style-ok` is one of the 24 markers
-               *     `audit-no-suppression-comments` blocks outright.
-               *   · A lookup of 21 literal `w-[N%]` classes would compile IF
-               *     appkit's own Tailwind config generates them — and appkit
-               *     builds its CSS separately (`@source not "../../appkit"`),
-               *     so that is exactly the Root Cause #67 shape: a class the
-               *     build never emits, failing silently as a zero-width bar.
-               *
-               * I cannot run an appkit build to check which of those is true,
-               * and an unverified bar is a silent visual failure — the precise
-               * class of bug this session spent its time removing. So the
-               * table states the numbers, which cannot fail to render, and the
-               * bar is left for whoever can verify the generated CSS.
-               */}
-              <SpecTable
-                rows={ratingRows.map((r) => ({
-                  name: r.label,
-                  value: `${r.value} / 100`,
-                }))}
+                ── 🛑 EDIT AND DELETE, FOR STAFF ONLY ───────────────────────────
+                `OwnerQuickActions` renders nothing at all for a signed-out
+                visitor or an ordinary buyer, so this costs a public reader
+                nothing. It is the same component the category, brand and bundle
+                pages use — one implementation, so the affordance cannot drift
+                into three shapes.
+
+                🛑 `onMedia` is NOT passed. Both these pages are type on the
+                page surface with no cover image behind the title, so the default
+                (ghost on surface) is correct. Passing it would force the
+                on-media treatment and put light ink on a light background —
+                Root Cause #67, which shipped 26 invisible surfaces exactly that
+                way.
+              */}
+              <RecordOwnerQuickActions
+                resource="PART"
+                recordId={part.id}
+                placement="detail"
+                recordLabel={part.name}
               />
-              {/*
-               * 🛑 The scale is STATED. These numbers are ours — rescaled to
-               * 0-100 so a Burst part and a Beyblade X part can be compared at
-               * all — and presenting them unlabelled would pass them off as
-               * the source's own figures.
-               */}
-              <Text size="xs" color="faint">
-                Rescaled to 0&ndash;100 for comparison across generations
-                {typeof part.ratingScale === "number"
-                  ? `; rated 0–${part.ratingScale} at source`
-                  : ""}
-                .
-              </Text>
-            </Stack>
-          )}
 
-          {/* ── tournament legality ──────────────────────────────────────── */}
-          {legalFormats.length > 0 && (
+              <Row gap="xs" wrap align="center" className="min-w-0">
+                {part.code && <Badge variant="info">{part.code}</Badge>}
+                {typeof part.weightG === "number" && (
+                  <Badge variant="default">{part.weightG} g</Badge>
+                )}
+              </Row>
+              {aliases.length > 0 && (
+                <Text size="sm" color="muted">
+                  Also written: {aliases.join(" · ")}
+                </Text>
+              )}
+            </Stack>
+          ),
+          () => <AdminComposableRegion pageId="parts-classification-code" initialCards={pageRegionCards} />,
+          /* ── specifications ───────────────────────────────────────────── */
+          specRows.length > 1
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Specifications
+                  </Heading>
+                  <SpecTable rows={specRows} />
+                </Stack>
+              )
+            : undefined,
+          /* ── ratings ──────────────────────────────────────────────────── */
+          ratingRows.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Ratings
+                  </Heading>
+                  {/*
+                   * ── 🛑 NUMBERS, NOT BARS, AND THAT IS A DELIBERATE RETREAT ────
+                   *
+                   * A proportional bar reads better and was the first build. It
+                   * needs a runtime width, and there is no way to express one here
+                   * that I could VERIFY:
+                   *
+                   *   · `style={{ width: … }}` is blocked by audit-inline-styles,
+                   *     whose regex is a bare `/style\s*=\s*\{\{/` and so flags a
+                   *     CSS custom property too, despite its own header listing
+                   *     custom properties as exempt.
+                   *   · `// audit-inline-style-ok` is one of the 24 markers
+                   *     `audit-no-suppression-comments` blocks outright.
+                   *   · A lookup of 21 literal `w-[N%]` classes would compile IF
+                   *     appkit's own Tailwind config generates them — and appkit
+                   *     builds its CSS separately (`@source not "../../appkit"`),
+                   *     so that is exactly the Root Cause #67 shape: a class the
+                   *     build never emits, failing silently as a zero-width bar.
+                   *
+                   * I cannot run an appkit build to check which of those is true,
+                   * and an unverified bar is a silent visual failure — the precise
+                   * class of bug this session spent its time removing. So the
+                   * table states the numbers, which cannot fail to render, and the
+                   * bar is left for whoever can verify the generated CSS.
+                   */}
+                  <SpecTable
+                    rows={ratingRows.map((r) => ({
+                      name: r.label,
+                      value: `${r.value} / 100`,
+                    }))}
+                  />
+                  {/*
+                   * 🛑 The scale is STATED. These numbers are ours — rescaled to
+                   * 0-100 so a Burst part and a Beyblade X part can be compared at
+                   * all — and presenting them unlabelled would pass them off as
+                   * the source's own figures.
+                   */}
+                  <Text size="xs" color="faint">
+                    Rescaled to 0&ndash;100 for comparison across generations
+                    {typeof part.ratingScale === "number"
+                      ? `; rated 0–${part.ratingScale} at source`
+                      : ""}
+                    .
+                  </Text>
+                </Stack>
+              )
+            : undefined,
+          /* ── tournament legality ──────────────────────────────────────── */
+          legalFormats.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Tournament legality
+                  </Heading>
+                  <Row gap="xs" wrap align="center" className="min-w-0">
+                    {legalFormats.map(([format, allowed]) => (
+                      <Badge key={format} variant={allowed ? "success" : "danger"}>
+                        {WBO_FORMAT_LABEL[format] ?? format}
+                        {allowed ? " ✓" : " ✗"}
+                      </Badge>
+                    ))}
+                  </Row>
+                  {/*
+                   * 🛑 ONLY THE FORMATS THE SOURCE RULES ON. A part absent from a
+                   * format's list is unaddressed, not banned — most parts are
+                   * simply irrelevant to most formats, and rendering every format
+                   * with a cross would claim a ruling that does not exist.
+                   */}
+                  <Text size="xs" color="faint">
+                    World Beyblade Organization formats this part is ruled on. A format not
+                    listed has no ruling for it.
+                  </Text>
+                </Stack>
+              )
+            : undefined,
+          /*
+            ── attribution ────────────────────────────────────────────────
+            `sourceUrl` is read into a local `const` here rather than
+            referenced as `part.sourceUrl` inside the closure below:
+            TypeScript narrows a member expression's truthiness at the
+            ternary site, but that narrowing does not cross a function
+            boundary (the `() => (...)` closure), so `<Anchor
+            href={part.sourceUrl}>` still saw `string | undefined` even
+            though it is only ever reached when the check above passed.
+            A `const` alias IS narrowed across closures (TS 4.4+'s control
+            flow analysis of aliased conditions), so this is the real fix
+            rather than a suppressing cast.
+          */
+          (() => {
+            const sourceUrl = part.sourceUrl;
+            return sourceUrl
+              ? () => (
+                  <Div>
+                    <Text size="xs" color="faint">
+                      {/*
+                       * 🛑 THE LICENCE LINK-BACK, and it was the one real exposure in
+                       * this work. `sourceUrl` is stored on 2,087 of 2,488 parts —
+                       * and across beys, characters and products it is on roughly
+                       * 5,500 rows — while being RENDERED ON NONE of them.
+                       *
+                       * The facts here come from a CC-BY-SA community wiki. Two
+                       * things keep us clear of share-alike: taking facts only (no
+                       * source sentence is reproduced; the prose is composed from the
+                       * facts by our own generator) and linking back. Storing the URL
+                       * discharges neither — only rendering it does.
+                       *
+                       * Do not remove this to tidy the page.
+                       */}
+                      Facts on this page are drawn from a community wiki under CC&nbsp;BY-SA.{" "}
+                      <Anchor href={sourceUrl} tone="muted" underline="always">
+                        Source
+                      </Anchor>
+                      {" · "}
+                      <TextLink href={String(ROUTES.PUBLIC.CREDITS)}>Credits</TextLink>
+                    </Text>
+                  </Div>
+                )
+              : undefined;
+          })(),
+          /* ── which beys use it ─────────────────────────────────────────── */
+          () => (
             <Stack gap="sm" className="min-w-0">
               <Heading level={2} size="lg">
-                Tournament legality
+                {usedBy.length > 0
+                  ? `Used by ${usedBy.length} ${usedBy.length === 1 ? "model" : "models"}`
+                  : "Used by"}
               </Heading>
-              <Row gap="xs" wrap align="center" className="min-w-0">
-                {legalFormats.map(([format, allowed]) => (
-                  <Badge key={format} variant={allowed ? "success" : "danger"}>
-                    {WBO_FORMAT_LABEL[format] ?? format}
-                    {allowed ? " ✓" : " ✗"}
-                  </Badge>
-                ))}
-              </Row>
-              {/*
-               * 🛑 ONLY THE FORMATS THE SOURCE RULES ON. A part absent from a
-               * format's list is unaddressed, not banned — most parts are
-               * simply irrelevant to most formats, and rendering every format
-               * with a cross would claim a ruling that does not exist.
-               */}
-              <Text size="xs" color="faint">
-                World Beyblade Organization formats this part is ruled on. A format not
-                listed has no ruling for it.
-              </Text>
+              {usedBy.length === 0 ? (
+                <Text color="muted" size="sm">
+                  {/* Honest: the corpus describes 259 models, not every model
+                      ever made, so "none recorded" is a statement about our
+                      data and is phrased as one. */}
+                  No model in our database records this part yet.
+                </Text>
+              ) : (
+                <Stack gap="xs" className="min-w-0">
+                  {usedBy.map((m) => (
+                    <Row
+                      key={m.id}
+                      gap="sm"
+                      align="center"
+                      padding="inline"
+                      surface="card"
+                      rounded="md"
+                      border="subtle"
+                      className="min-w-0"
+                    >
+                      <Div className="flex-1 min-w-0">
+                        {m.categoryId ? (
+                          <TextLink href={hrefForModel(m.categoryId)}>{m.name}</TextLink>
+                        ) : (
+                          /* 49 of 259 compositions did not join to a category.
+                             A link to a page that does not exist is worse than
+                             plain text, so the name renders unlinked. */
+                          <Text color="primary">{m.name}</Text>
+                        )}
+                        {m.system && (
+                          <Span size="xs" color="muted">
+                            {" "}
+                            · {m.system}
+                          </Span>
+                        )}
+                      </Div>
+                      {m.productCode && (
+                        <Text size="xs" color="faint" className="flex-shrink-0">
+                          {m.productCode}
+                        </Text>
+                      )}
+                    </Row>
+                  ))}
+                </Stack>
+              )}
             </Stack>
-          )}
-
-          {/* ── attribution ──────────────────────────────────────────────── */}
-          {part.sourceUrl && (
-            <Div>
-              <Text size="xs" color="faint">
-                {/*
-                 * 🛑 THE LICENCE LINK-BACK, and it was the one real exposure in
-                 * this work. `sourceUrl` is stored on 2,087 of 2,488 parts —
-                 * and across beys, characters and products it is on roughly
-                 * 5,500 rows — while being RENDERED ON NONE of them.
-                 *
-                 * The facts here come from a CC-BY-SA community wiki. Two
-                 * things keep us clear of share-alike: taking facts only (no
-                 * source sentence is reproduced; the prose is composed from the
-                 * facts by our own generator) and linking back. Storing the URL
-                 * discharges neither — only rendering it does.
-                 *
-                 * Do not remove this to tidy the page.
-                 */}
-                Facts on this page are drawn from a community wiki under CC&nbsp;BY-SA.{" "}
-                <Anchor href={part.sourceUrl} tone="muted" underline="always">
-                  Source
-                </Anchor>
-                {" · "}
-                <TextLink href={String(ROUTES.PUBLIC.CREDITS)}>Credits</TextLink>
-              </Text>
-            </Div>
-          )}
-
-          {/* ── which beys use it ─────────────────────────────────────────── */}
-          <Stack gap="sm" className="min-w-0">
-            <Heading level={2} size="lg">
-              {usedBy.length > 0
-                ? `Used by ${usedBy.length} ${usedBy.length === 1 ? "model" : "models"}`
-                : "Used by"}
-            </Heading>
-            {usedBy.length === 0 ? (
-              <Text color="muted" size="sm">
-                {/* Honest: the corpus describes 259 models, not every model
-                    ever made, so "none recorded" is a statement about our
-                    data and is phrased as one. */}
-                No model in our database records this part yet.
-              </Text>
-            ) : (
-              <Stack gap="xs" className="min-w-0">
-                {usedBy.map((m) => (
-                  <Row
-                    key={m.id}
-                    gap="sm"
-                    align="center"
-                    padding="inline"
-                    surface="card"
-                    rounded="md"
-                    border="subtle"
-                    className="min-w-0"
-                  >
-                    <Div className="flex-1 min-w-0">
-                      {m.categoryId ? (
-                        <TextLink href={hrefForModel(m.categoryId)}>{m.name}</TextLink>
-                      ) : (
-                        /* 49 of 259 compositions did not join to a category.
-                           A link to a page that does not exist is worse than
-                           plain text, so the name renders unlinked. */
-                        <Text color="primary">{m.name}</Text>
-                      )}
-                      {m.system && (
-                        <Span size="xs" color="muted">
-                          {" "}
-                          · {m.system}
-                        </Span>
-                      )}
-                    </Div>
-                    {m.productCode && (
-                      <Text size="xs" color="faint" className="flex-shrink-0">
-                        {m.productCode}
-                      </Text>
-                    )}
-                  </Row>
-                ))}
-              </Stack>
-            )}
-          </Stack>
-
-          {/* ── buy this exact part ──────────────────────────────────────────
+          ),
+          /* ── buy this exact part ──────────────────────────────────────────
             * 🛑 NO MONEY on this page — it stays a Server Component, and a
             * gated price would make it a client one. Rows carry only title,
             * condition and a link; the price is on the listing's own page,
             * where the gate already applies.
-            */}
-          {exactListings.length > 0 && (
+            */
+          exactListings.length > 0
+            ? () => (
+                <Stack gap="sm" className="min-w-0">
+                  <Heading level={2} size="lg">
+                    Buy this part
+                    {exactListingsTruncated && (
+                      <Span size="sm" color="muted">
+                        {" "}
+                        ({exactListings.length}+)
+                      </Span>
+                    )}
+                  </Heading>
+                  <Stack gap="xs" className="min-w-0">
+                    {exactListings.map((l) => (
+                      <Div
+                        key={l.id}
+                        surface="card"
+                        padding="sm"
+                        rounded="md"
+                        border="subtle"
+                        className="min-w-0"
+                      >
+                        <TextLink href={l.href}>{l.title}</TextLink>
+                        {l.condition && (
+                          <Text size="xs" color="muted">
+                            {l.condition}
+                          </Text>
+                        )}
+                      </Div>
+                    ))}
+                  </Stack>
+                </Stack>
+              )
+            : undefined,
+          /* ── live listings ─────────────────────────────────────────────── */
+          () => (
             <Stack gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Buy this part
-                {exactListingsTruncated && (
-                  <Span size="sm" color="muted">
-                    {" "}
-                    ({exactListings.length}+)
-                  </Span>
+              <Row justify="between" align="center" wrap gap="sm" className="min-w-0">
+                <Heading level={2} size="lg">
+                  Listings
+                  {listingsTruncated && (
+                    <Span size="sm" color="muted">
+                      {" "}
+                      ({listings.length}+)
+                    </Span>
+                  )}
+                </Heading>
+                {listings.length > 0 && (
+                  <TextLink href={allListingsHref}>See all listings →</TextLink>
                 )}
-              </Heading>
-              <Stack gap="xs" className="min-w-0">
-                {exactListings.map((l) => (
-                  <Div
-                    key={l.id}
-                    surface="card"
-                    padding="sm"
-                    rounded="md"
-                    border="subtle"
-                    className="min-w-0"
-                  >
-                    <TextLink href={l.href}>{l.title}</TextLink>
-                    {l.condition && (
-                      <Text size="xs" color="muted">
-                        {l.condition}
-                      </Text>
-                    )}
-                  </Div>
-                ))}
-              </Stack>
-            </Stack>
-          )}
-
-          {/* ── live listings ─────────────────────────────────────────────── */}
-          <Stack gap="sm" className="min-w-0">
-            <Row justify="between" align="center" wrap gap="sm" className="min-w-0">
-              <Heading level={2} size="lg">
-                Listings
-                {listingsTruncated && (
-                  <Span size="sm" color="muted">
-                    {" "}
-                    ({listings.length}+)
-                  </Span>
-                )}
-              </Heading>
-              {listings.length > 0 && (
-                <TextLink href={allListingsHref}>See all listings →</TextLink>
+              </Row>
+              {listings.length === 0 ? (
+                <Stack gap="xs" className="min-w-0">
+                  <Text color="muted" size="sm">
+                    Nobody is selling this part right now.
+                  </Text>
+                  <TextLink href={allListingsHref}>Search the catalogue →</TextLink>
+                </Stack>
+              ) : (
+                <Stack gap="xs" className="min-w-0">
+                  {listings.map((l) => (
+                    <Div
+                      key={l.id}
+                      surface="card"
+                      padding="sm"
+                      rounded="md"
+                      border="subtle"
+                      className="min-w-0"
+                    >
+                      <TextLink href={l.href}>{l.title}</TextLink>
+                      {l.condition && (
+                        <Text size="xs" color="muted">
+                          {l.condition}
+                        </Text>
+                      )}
+                    </Div>
+                  ))}
+                </Stack>
               )}
-            </Row>
-            {listings.length === 0 ? (
-              <Stack gap="xs" className="min-w-0">
-                <Text color="muted" size="sm">
-                  Nobody is selling this part right now.
+            </Stack>
+          ),
+          part.source
+            ? () => (
+                <Text size="xs" color="faint">
+                  Source: {part.source}
                 </Text>
-                <TextLink href={allListingsHref}>Search the catalogue →</TextLink>
-              </Stack>
-            ) : (
-              <Stack gap="xs" className="min-w-0">
-                {listings.map((l) => (
-                  <Div
-                    key={l.id}
-                    surface="card"
-                    padding="sm"
-                    rounded="md"
-                    border="subtle"
-                    className="min-w-0"
-                  >
-                    <TextLink href={l.href}>{l.title}</TextLink>
-                    {l.condition && (
-                      <Text size="xs" color="muted">
-                        {l.condition}
-                      </Text>
-                    )}
-                  </Div>
-                ))}
-              </Stack>
-            )}
-          </Stack>
-
-          {part.source && (
-            <Text size="xs" color="faint">
-              Source: {part.source}
-            </Text>
-          )}
-        </Stack>
-      </Container>
+              )
+            : undefined,
+        ]}
+      />
     </Section>
   );
 }
