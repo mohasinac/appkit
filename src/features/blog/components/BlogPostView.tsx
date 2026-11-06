@@ -3,6 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Main } from "../../../ui/components/Semantic";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { Scrim } from "../../../ui/components/Scrim";
@@ -176,7 +177,7 @@ export function BlogPostView({
   const coverImageUrl = getMediaUrl(post.coverImage);
 
   return (
-    <Div className={`min-h-screen ${className}`}>
+    <Main className={`min-h-screen ${className}`}>
       {/*
         * 🛑 THE SCRIM NOW HAS SOMETHING TO DARKEN.
         *
@@ -294,6 +295,6 @@ export function BlogPostView({
           {renderBlogPostRelated(relatedByAuthor, labels?.relatedByAuthorTitle ?? `More from ${post.authorName}`, renderRelatedCard)}
         </Stack>
       </Div>
-    </Div>
+    </Main>
   );
 }
