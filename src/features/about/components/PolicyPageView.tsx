@@ -28,8 +28,15 @@ export type PolicyKey =
   | "grievance";
 
 export interface PolicyPageViewProps {
-  /** Which policy to render */
-  policy: PolicyKey;
+  /**
+   * Which policy to render. Omit for a non-policy "guide" page (the
+   * how-X-works family) — in that mode the i18n sections, the admin-HTML
+   * override and the related-policies footer are all skipped entirely, and
+   * `title` / `subtitle` / `children` drive the page instead. See the guard
+   * clause at the top of the function body for exactly what guide mode does
+   * and does not touch of the policy-mode code below it.
+   */
+  policy?: PolicyKey;
   /**
    * Stable, hand-chosen id for this page's admin-composable region (Phase
    * 12). Follows the ROUTE, not the `policy` value — every caller computes
@@ -56,8 +63,120 @@ export interface PolicyPageViewProps {
    * override is present — an override replaces the page's body, and silently
    * appending a block the admin cannot see or edit would make the override a
    * half-truth.
+   *
+   * In guide mode (no `policy`) this is the WHOLE page body — there is no
+   * i18n-sections/admin-HTML branch to skip, so `children` always renders.
    */
   children?: React.ReactNode;
+
+  /**
+   * Guide-mode hero title. Required in practice when `policy` is omitted —
+   * `PolicyKey`'s i18n path supplies its own title, this is what replaces it
+   * for a page that has none. Ignored when `policy` is set.
+   */
+  title?: string;
+  /** Guide-mode hero subtitle. Ignored when `policy` is set. */
+  subtitle?: string;
+  /**
+   * Content max-width. Every one of the 8 real policy pages relies on the
+   * `sm` default below (unchanged from before this prop existed); every one
+   * of the 7 how-X-works guides used `page.container.md` directly before
+   * their migration onto this component, so that becomes guide mode's
+   * default too. Override only if a future page genuinely needs the other.
+   */
+  containerSize?: "sm" | "md";
+}
+
+/**
+ * The numbered "step 1 → step N" card list six of the seven how-X-works
+ * guides each hand-rolled as their own `renderXStepsSection` — same circle
+ * icon, same number-dot title, same secondary description, differing only in
+ * the data. Lifted here verbatim (not generalised further) once a seventh
+ * near-identical copy made the duplication the thing worth fixing.
+ *
+ * Deliberately NOT wired into `PolicyPageViewProps` as a positioned slot —
+ * guide pages differ in WHERE this sits relative to their other content
+ * (EMI's eligibility alert has to come before it, everyone else's doesn't),
+ * so this is a plain composable export a caller places inside `children`
+ * wherever its own order requires, same as `FlowDiagram` already is.
+ */
+export function PolicySteps({ title, items }: PolicyStepsProps) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-8" align="center">{title}</Heading>
+      <Stack gap="5">
+        {items.map(({ number, icon, title: stepTitle, text }) => (
+          <Row
+            key={number}
+            className="p-[var(--appkit-space-5)]"
+            border="default"
+            surface="muted"
+            align="start"
+            gap="md"
+            rounded="xl"
+          >
+            <Row
+              align="center"
+              justify="center"
+              className="flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15"
+              rounded="full"
+            >
+              {icon}
+            </Row>
+            <Div>
+              <Text className="mb-0.5" weight="semibold">{number}. {stepTitle}</Text>
+              <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
+            </Div>
+          </Row>
+        ))}
+      </Stack>
+    </Section>
+  );
+}
+
+export interface PolicyStepItem {
+  number: number;
+  icon: string;
+  title: string;
+  text: string;
+}
+
+export interface PolicyStepsProps {
+  title: string;
+  items: PolicyStepItem[];
+}
+
+export interface PolicyCtaLink {
+  label: string;
+  href: string;
+}
+
+export interface PolicyCtaProps {
+  title: string;
+  text: string;
+  primary: PolicyCtaLink;
+  secondary?: PolicyCtaLink;
+}
+
+/**
+ * The centered, bordered "browse more / related guide" panel every one of
+ * the seven how-X-works guides ends on — each had its own byte-for-byte
+ * `renderXCtaSection` differing only in copy and links. Lifted here verbatim
+ * for the same reason as `PolicySteps` above.
+ */
+export function PolicyCta({ title, text, primary, secondary }: PolicyCtaProps) {
+  return (
+    <Section className="p-[var(--appkit-space-8)] text-center" border="default" surface="subtle" rounded="2xl">
+      <Heading level={2} className="mb-3">{title}</Heading>
+      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{text}</Text>
+      <Row align="center" justify="center" gap="md" wrap>
+        <TextLink href={primary.href}>{primary.label}</TextLink>
+        {secondary && (
+          <TextLink href={secondary.href} variant="muted">{secondary.label}</TextLink>
+        )}
+      </Row>
+    </Section>
+  );
 }
 
 /**
@@ -140,8 +259,34 @@ export async function PolicyPageView({
   pageId,
   pageRegionCards = [],
   children,
+  title,
+  subtitle,
+  containerSize,
 }: PolicyPageViewProps) {
   const page = { container: PAGE_CONTAINER };
+
+  /*
+   * Guide mode — no `policy`, so none of the i18n/admin-HTML-override/
+   * related-policies machinery below applies. This is the shell every
+   * how-X-works guide used to hand-roll (identical negative-margin wrapper,
+   * identical `ProseHero` call with no overrides, identical
+   * `AdminComposableRegion` mount) — lifted here so it is ONE copy instead
+   * of eight. Everything from the `meta = POLICY_META[policy]` line down is
+   * the original policy-mode implementation, untouched.
+   */
+  if (!policy) {
+    const size = containerSize ?? "md";
+    return (
+      <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+        <ProseHero title={title} subtitle={subtitle} />
+        <Stack gap="14" className={`${page.container[size]}`} padding="content-banner">
+          <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
+          {children}
+        </Stack>
+      </Div>
+    );
+  }
+
   const meta = POLICY_META[policy];
   const { getTranslations, getLocale } = await import("next-intl/server");
 

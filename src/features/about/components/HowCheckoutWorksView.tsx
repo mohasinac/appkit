@@ -1,20 +1,16 @@
 import { ROUTES } from "../../../constants";
-import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { ProseHero } from "./ProseHero";
 import { Div } from "../../../ui/components/Div";
 import { FlowDiagram } from "../../../ui/components/FlowDiagram";
 import { Heading, Text } from "../../../ui/components/Typography";
-import { Row, Stack } from "../../../ui/components/Layout";
+import { Row } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
-import { TextLink } from "../../../ui/components/TextLink";
 import { Wallet, Smartphone, Banknote, CalendarClock } from "lucide-react";
-import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import { PolicyCta, PolicyPageView, PolicySteps } from "./PolicyPageView";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
-  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 
@@ -26,7 +22,6 @@ export interface HowCheckoutWorksViewProps {
 export async function HowCheckoutWorksView({
   pageRegionCards = [],
 }: HowCheckoutWorksViewProps = {}) {
-  const page = { container: PAGE_CONTAINER };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howCheckoutWorks");
 
@@ -121,46 +116,31 @@ export async function HowCheckoutWorksView({
   ];
 
   return (
-    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      {/* One hero for every prose page — see ProseHero for the eleven
-          byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
-      <ProseHero title={t("title")} subtitle={t("subtitle")} />
-      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderCheckoutStepsSection(t, STEPS)}
-        <Section>
-          <FlowDiagram title={`🗺️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
-        </Section>
-        {renderPaymentMethodsSection(t, PAYMENT_METHODS)}
-        {renderCheckoutCtaSection(t)}
-        <AdminComposableRegion pageId="how-checkout-works" initialCards={pageRegionCards} />
-      </Stack>
-    </Div>
+    <PolicyPageView
+      pageId="how-checkout-works"
+      pageRegionCards={pageRegionCards}
+      title={t("title")}
+      subtitle={t("subtitle")}
+      containerSize="md"
+    >
+      <PolicySteps title={t("stepsTitle")} items={STEPS} />
+      <Section>
+        <FlowDiagram title={`🗺️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
+      </Section>
+      {renderPaymentMethodsSection(t, PAYMENT_METHODS)}
+      <PolicyCta
+        title={t("ctaTitle")}
+        text={t("ctaText")}
+        primary={{ label: t("ctaBrowse"), href: String(ROUTES.PUBLIC.PRODUCTS) }}
+        secondary={{ label: t("ctaOrders"), href: String(ROUTES.PUBLIC.HOW_ORDERS_WORK) }}
+      />
+    </PolicyPageView>
   );
 }
 
 type CheckoutT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
- 
-type CheckoutMethod = { icon: any; title: string; text: string; color: string; iconColor: string };
-type CheckoutStep = { number: number; icon: string; title: string; text: string };
 
-function renderCheckoutStepsSection(t: CheckoutT, steps: CheckoutStep[]) {
-  return (
-    <Section>
-      <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
-      <Stack gap="5">
-        {steps.map(({ number, icon, title, text }) => (
-          <Row key={number} className={`${__P.p5}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Row align="center" justify="center" className={`flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15`} rounded="full">{icon}</Row>
-            <Div>
-              <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
-              <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
-            </Div>
-          </Row>
-        ))}
-      </Stack>
-    </Section>
-  );
-}
+type CheckoutMethod = { icon: any; title: string; text: string; color: string; iconColor: string };
 
 function renderPaymentMethodsSection(t: CheckoutT, methods: CheckoutMethod[]) {
   return (
@@ -178,19 +158,6 @@ function renderPaymentMethodsSection(t: CheckoutT, methods: CheckoutMethod[]) {
           </Div>
         ))}
       </Div>
-    </Section>
-  );
-}
-
-function renderCheckoutCtaSection(t: CheckoutT) {
-  return (
-    <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
-      <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
-      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <Row align="center" justify="center" gap="md" wrap >
-        <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>{t("ctaBrowse")}</TextLink>
-        <TextLink href={String(ROUTES.PUBLIC.HOW_ORDERS_WORK)} variant="muted">{t("ctaOrders")}</TextLink>
-      </Row>
     </Section>
   );
 }

@@ -1,22 +1,18 @@
 import { ROUTES } from "../../../constants";
-import { PAGE_CONTAINER } from "../../../_internal/shared/styles/page";
-import { ProseHero } from "./ProseHero";
 import { THEMED_BG_PRIMARY, THEMED_BG_SECONDARY } from "../../../_internal/shared/styles/themed";
 import { Alert } from "../../../ui/components/Alert";
 import { Caption, Heading, Text } from "../../../ui/components/Typography";
 import { Div } from "../../../ui/components/Div";
 import { FlowDiagram } from "../../../ui/components/FlowDiagram";
-import { Row, Stack } from "../../../ui/components/Layout";
+import { Row } from "../../../ui/components/Layout";
 import { Section, Table, Tbody, Td, Th, Thead, Tr } from "../../../ui/components/Semantic";
 import type { FlowStep } from "../../../ui/components/FlowDiagram";
-import { TextLink } from "../../../ui/components/TextLink";
 import { CalendarClock, Wallet, TrendingUp, ShieldCheck } from "lucide-react";
-import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
+import { PolicyCta, PolicyPageView, PolicySteps } from "./PolicyPageView";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 const __P = {
   p5: "p-[var(--appkit-space-5)]",
-  p8: "p-[var(--appkit-space-8)]",
 } as const;
 
 const __O = {
@@ -31,7 +27,6 @@ export interface HowEmiWorksViewProps {
 export async function HowEmiWorksView({
   pageRegionCards = [],
 }: HowEmiWorksViewProps = {}) {
-  const page = { container: PAGE_CONTAINER };
   const themed = { bgPrimary: THEMED_BG_PRIMARY, bgSecondary: THEMED_BG_SECONDARY };
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howEmiWorks");
@@ -122,29 +117,33 @@ export async function HowEmiWorksView({
   ];
 
   return (
-    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
-      {/* One hero for every prose page — see ProseHero for the eleven
-          byte-identical copies this replaced, and the mb-3/mb-4 drift. */}
-      <ProseHero title={t("title")} subtitle={t("subtitle")} />
-      <Stack gap="14" className={`${page.container.md}`} padding="content-banner">
-        {renderEligibilityAlert(t)}
-        {renderEmiSteps(t, STEPS)}
-        <Section>
-          <FlowDiagram title={`💳 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
-        </Section>
-        {renderEmiInfoCards(INFO_CARDS)}
-        {renderEmiExample(t, themed, EXAMPLE_ROWS)}
-        {renderEmiCta(t)}
-        <AdminComposableRegion pageId="how-emi-works" initialCards={pageRegionCards} />
-      </Stack>
-    </Div>
+    <PolicyPageView
+      pageId="how-emi-works"
+      pageRegionCards={pageRegionCards}
+      title={t("title")}
+      subtitle={t("subtitle")}
+      containerSize="md"
+    >
+      {renderEligibilityAlert(t)}
+      <PolicySteps title={t("stepsTitle")} items={STEPS} />
+      <Section>
+        <FlowDiagram title={`💳 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
+      </Section>
+      {renderEmiInfoCards(INFO_CARDS)}
+      {renderEmiExample(t, themed, EXAMPLE_ROWS)}
+      <PolicyCta
+        title={t("ctaTitle")}
+        text={t("ctaText")}
+        primary={{ label: t("ctaBrowse"), href: String(ROUTES.PUBLIC.PRODUCTS) }}
+        secondary={{ label: t("ctaCheckout"), href: String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS) }}
+      />
+    </PolicyPageView>
   );
 }
 
 type EmiT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
 type ThemedTokens = { bgPrimary: string; bgSecondary: string };
 type EmiInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
-type EmiStep = { number: number; icon: string; title: string; text: string };
 type EmiExampleRow = { label: string; example: string; highlight?: boolean };
 
 function renderEligibilityAlert(t: EmiT) {
@@ -152,25 +151,6 @@ function renderEligibilityAlert(t: EmiT) {
     <Alert variant="info" title={t("eligibilityTitle")}>
       {t("eligibilityText")}
     </Alert>
-  );
-}
-
-function renderEmiSteps(t: EmiT, steps: EmiStep[]) {
-  return (
-    <Section>
-      <Heading level={2} className="mb-8" align="center">{t("stepsTitle")}</Heading>
-      <Stack gap="5">
-        {steps.map(({ number, icon, title, text }) => (
-          <Row key={number} className={`${__P.p5}`} border="default" surface="muted" align="start" gap="md" rounded="xl">
-            <Row align="center" justify="center" className="flex-shrink-0 w-10 h-10 bg-primary/10 dark:bg-primary/15" rounded="full">{icon}</Row>
-            <Div>
-              <Text className="mb-0.5" weight="semibold">{number}. {title}</Text>
-              <Text variant="secondary" className="leading-relaxed" size="sm">{text}</Text>
-            </Div>
-          </Row>
-        ))}
-      </Stack>
-    </Section>
   );
 }
 
@@ -216,19 +196,6 @@ function renderEmiExample(t: EmiT, themed: ThemedTokens, rows: EmiExampleRow[]) 
         </Table>
       </Div>
       <Caption className="mt-3 block" color="muted">{t("exampleNote")}</Caption>
-    </Section>
-  );
-}
-
-function renderEmiCta(t: EmiT) {
-  return (
-    <Section className={`${__P.p8} text-center`} border="default" surface="subtle" rounded="2xl">
-      <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
-      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
-      <Row align="center" justify="center" gap="md" wrap>
-        <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>{t("ctaBrowse")}</TextLink>
-        <TextLink href={String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS)} variant="muted">{t("ctaCheckout")}</TextLink>
-      </Row>
     </Section>
   );
 }
