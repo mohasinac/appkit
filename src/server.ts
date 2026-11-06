@@ -46,14 +46,15 @@ export {
 } from "./_internal/server/features/search/scoped-sources";
 export type { SearchViewer } from "./_internal/server/features/search/scoped-sources";
 // D12 — part + composition reads. Every one is by document id or ONE
-// indexed equality; none needs a composite index.
+// indexed equality; none needs a composite index. `getPartByKey` and
+// `listPartsBySlot` (the parts-gallery-exclusive reads) were removed along
+// with the gallery UI — these four stay, used by product/category pages
+// and checkout.
 export {
-  getPartByKey,
   getModelsUsingPart,
   getCompositionById,
   getPartsForComposition,
   getCompositionsForCategory,
-  listPartsBySlot,
 } from "./_internal/server/features/parts/data";
 /*
  * The BEY reads. `getBeyBySlug` is a direct doc read (`id === slug`);
@@ -83,10 +84,6 @@ export {
   type BuildableResult,
   type BuildableSlot,
 } from "./_internal/server/features/parts/buildable";
-export {
-  renderPartOg,
-  renderPartClassificationOg,
-} from "./_internal/server/features/parts/og";
 // D13 — assembly and part-out. Both run in a real transaction that RE-READS.
 export {
   assembleFromComponents,
@@ -2027,7 +2024,6 @@ export {
   franchiseDetailSlugs,
   blogPostSlugs,
   beyDetailSlugs,
-  partDetailParams,
 } from "./_internal/server/features/seo";
 
 // -- Taxonomy hub link indexes --

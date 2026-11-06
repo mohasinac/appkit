@@ -12,7 +12,6 @@ export {
   franchiseDetailSlugs,
   blogPostSlugs,
   beyDetailSlugs,
-  partDetailParams,
 } from "./static-params";
 export { brandLinks, franchiseLinks, categoryRootLinks } from "./taxonomy-links";
 export type { TaxonomyLink } from "./taxonomy-links";

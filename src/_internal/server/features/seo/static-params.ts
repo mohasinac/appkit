@@ -53,7 +53,6 @@ import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firest
 import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog/schemas/firestore";
 import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories/schemas/firestore";
 import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
-import { PART_GLOSSARY_COLLECTION, ALL_PART_SLOTS } from "../../../../features/parts/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
@@ -204,58 +203,3 @@ export function beyDetailSlugs(): Promise<string[]> {
   return slugsFrom("bey", (db) => db.collection(BEYS_COLLECTION));
 }
 
-/**
- * `/parts/[classification]/[code]` — 2,488 part reference pages.
- *
- * Two params, so this cannot use `slugsFrom`: the document id is
- * `{slot}--{tail}` and the route splits it across both segments. The URL
- * segment IS the slot (`partSlotFromSegment` is an identity lookup against
- * `ALL_PART_SLOTS`), so the split is the whole derivation.
- *
- * 🛑 Ids carrying no `--`, or an unrecognised slot, are SKIPPED rather than
- * guessed at — a prerendered param that does not resolve is a build-time 404
- * baked into the output. The count of skips is logged so a generator change
- * that breaks the id shape is visible rather than silently halving the set.
- */
-export async function partDetailParams(): Promise<{ classification: string; code: string }[]> {
-  try {
-    const snap = await getAdminDb()
-      .collection(PART_GLOSSARY_COLLECTION)
-      .select()
-      .limit(MAX_PRERENDER)
-      .get();
-    const slots = new Set<string>(ALL_PART_SLOTS as readonly string[]);
-    let skipped = 0;
-    const params: { classification: string; code: string }[] = [];
-    for (const doc of snap.docs) {
-      const sep = doc.id.indexOf("--");
-      const classification = sep === -1 ? "" : doc.id.slice(0, sep);
-      const code = sep === -1 ? "" : doc.id.slice(sep + 2);
-      if (!code || !slots.has(classification)) {
-        skipped++;
-        continue;
-      }
-      params.push({ classification, code });
-    }
-    if (skipped > 0) {
-      serverLogger.warn(
-        `generateStaticParams: "part" skipped ${skipped} glossary id(s) that are not {slot}--{tail}`,
-        { section: "part", skipped },
-      );
-    }
-    if (snap.size >= MAX_PRERENDER) {
-      serverLogger.warn(
-        `generateStaticParams: "part" hit the ${MAX_PRERENDER}-document prerender budget; the remainder render on demand`,
-        { section: "part" },
-      );
-    }
-    return params;
-  } catch (err) {
-    void normalizeError(err);
-    serverLogger.error('generateStaticParams: "part" failed and prerendered 0 pages', {
-      section: "part",
-      error: err,
-    });
-    return [];
-  }
-}

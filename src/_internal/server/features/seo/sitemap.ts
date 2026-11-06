@@ -11,7 +11,6 @@ import { isListingCategory } from "../../../../features/categories/constants/lis
 import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores/schemas/firestore";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
 import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
-import { PART_GLOSSARY_COLLECTION, ALL_PART_SLOTS } from "../../../../features/parts/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
@@ -194,13 +193,13 @@ function staticPages(baseUrl: string): MetadataRoute.Sitemap {
      */
     page(String(ROUTES.PUBLIC.ART), "weekly", 0.6),
     /*
-     * Hubs that exist, are linked, and were never submitted.
-     * `/franchise` is the index for a whole `categoryType`; `/parts` is the
-     * Beyblade parts gallery — both are real pages with real content and both
-     * were absent from the sitemap entirely (measured 2026-10-24).
+     * Hub that exists, is linked, and was never submitted — the index for a
+     * whole `categoryType`, a real page with real content (measured
+     * 2026-10-24). `/parts` (the Beyblade parts gallery) used to be listed
+     * here too; that gallery was removed from this site in favour of the
+     * existing wiki.letitrip.in, which covers the same ground.
      */
     page(String(ROUTES.PUBLIC.FRANCHISE), "weekly", 0.6),
-    page(String(ROUTES.PUBLIC.PARTS), "weekly", 0.6),
     /*
      * `daily`, matching the other one-of-a-kind types rather than `/art`'s
      * weekly: most spares are quantity 1, so the page turns over as fast as
@@ -655,15 +654,14 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
 }
 
 /**
- * `/beys/{slug}` — 1,988 model reference pages, and `/parts/{slot}/{code}` —
- * 2,488 part pages. Both carry real measured data (type, system, weight, spin,
- * release code, WBO legality, which models use a part) and both had **zero**
- * sitemap URLs, while 4,658 empty category pages were submitted. The index was
- * precisely inverted.
+ * `/beys/{slug}` — 1,988 model reference pages. Carries real measured data
+ * (type, system, weight, spin, release code, WBO legality, which parts make
+ * it up) and had **zero** sitemap URLs, while 4,658 empty category pages
+ * were submitted. The index was precisely inverted.
  *
- * They are submitted together with their prerendering (`static-params.ts`), not
- * before it: a page whose `<title>` still streams into `<body>` is not ready to
- * be advertised.
+ * Submitted together with its prerendering (`static-params.ts`), not before
+ * it: a page whose `<title>` still streams into `<body>` is not ready to be
+ * advertised.
  */
 async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   try {
@@ -687,38 +685,6 @@ async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   }
 }
 
-async function fetchPartUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
-  try {
-    const docs = await readAllDocs(
-      getAdminDb().collection(PART_GLOSSARY_COLLECTION).select(PRODUCT_UPDATED_AT, TEST_DATA_FIELD),
-      "part",
-    );
-    const slots = new Set<string>(ALL_PART_SLOTS as readonly string[]);
-    return docs
-      .filter((doc) => !isTestDoc(doc.data()))
-      .map((doc) => {
-        // Document id is `{slot}--{tail}`, and the route segment IS the slot.
-        const sep = doc.id.indexOf("--");
-        if (sep === -1) return null;
-        const classification = doc.id.slice(0, sep);
-        const code = doc.id.slice(sep + 2);
-        if (!code || !slots.has(classification)) return null;
-        return {
-          url: `${baseUrl}${ROUTES.PUBLIC.PART_DETAIL(classification, code)}`,
-          lastModified:
-            (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
-            new Date(),
-          changeFrequency: "monthly" as const,
-          priority: 0.4,
-        };
-      })
-      .filter((row): row is NonNullable<typeof row> => row !== null);
-  } catch (err) {
-    void normalizeError(err);
-    return sitemapSectionFailed("part", err);
-  }
-}
-
 export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
   const [
     productUrls,
@@ -738,7 +704,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     storeUrls,
     scammerUrls,
     beyUrls,
-    partUrls,
   ] = await Promise.all([
     fetchProductUrls(baseUrl),
     fetchCategoryUrls(baseUrl),
@@ -757,7 +722,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchStoreUrls(baseUrl),
     fetchScammerUrls(baseUrl),
     fetchBeyUrls(baseUrl),
-    fetchPartUrls(baseUrl),
   ]);
   const staticUrls = staticPages(baseUrl);
 
@@ -788,7 +752,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     store: storeUrls.length,
     scammer: scammerUrls.length,
     bey: beyUrls.length,
-    part: partUrls.length,
   };
   /*
    * Drop every URL belonging to a CLOSED browse section.
@@ -923,7 +886,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...storeUrls,
     ...scammerUrls,
     ...beyUrls,
-    ...partUrls,
   ].filter(keep);
 
   /*

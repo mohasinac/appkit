@@ -9388,13 +9388,13 @@ export type {
 } from "./features/beys/schemas/firestore";
 export { BeyDetailPageView } from "./features/beys/components/BeyDetailPageView";
 export type { BeyDetailPageViewProps, BeyListingRow } from "./features/beys/components/BeyDetailPageView";
-// D12 — the public part surfaces.
+// D12 — the public part surfaces. The parts GALLERY UI (index/classification/
+// detail page views, search box, OG renderers) was removed — both consumers
+// (letitrip.in's /parts and beybladetools' /parts) dropped it in favour of
+// the existing wiki.letitrip.in parts wiki. `ModelCompositionPanel` and
+// `AssemblyDrawer` stay: core product-page / seller-dashboard features,
+// unrelated to the gallery.
 export { ModelCompositionPanel } from "./features/parts/components/ModelCompositionPanel";
-export {
-  PartsIndexPageView,
-  PartClassificationPageView,
-} from "./features/parts/components/PartsIndexPageView";
-export { PartDetailPageView } from "./features/parts/components/PartDetailPageView";
 export { AssemblyDrawer } from "./features/parts/components/AssemblyDrawer";
 export type {
   AssemblyDrawerProps,
@@ -9402,7 +9402,6 @@ export type {
   AssemblyRow,
   AssemblyOutcome,
 } from "./features/parts/components/AssemblyDrawer";
-export type { PartListingRow } from "./features/parts/components/PartDetailPageView";
 
 // Scam registry â€" schema types and constants
 export {
