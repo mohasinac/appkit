@@ -2,6 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBlogPosts } from "../hooks/useBlog";
+import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
 import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
@@ -209,8 +210,36 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
         </StickyToolbar>
       )}
 
-      {/* ── Blog grid ──────────────────────────────────────────────────── */}
-      <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view })}</Div>
+      {/*
+       * ── Persistent filter sidebar (desktop) + blog grid ──────────────
+       * Same `lg:grid-cols-12` 2-column technique ProductsIndexListing.tsx
+       * (and FAQPageContent.tsx) already use. `BlogFilters` is the SAME
+       * component/instance the mobile `<ListingFilterDrawer>` below already
+       * renders — bound to the same `pendingTable`, same Apply/Clear
+       * handlers — no new filter logic, just a second, persistent container
+       * for it on `lg:` and up. Previously this page offered filters via a
+       * drawer only, even on desktop.
+       */}
+      <Div layout="grid" gap="8" className="lg:grid-cols-12">
+        <Div className="hidden lg:col-span-4 lg:block xl:col-span-3">
+          <Div rounded="xl" border="default" padding="lg">
+            <BlogFilters table={pendingTable} variant="public" />
+            <Row gap="sm" className="mt-4" justify="end">
+              <Button type="button" variant="ghost" onClick={clearFilters}>
+                Reset all
+              </Button>
+              <Button type="button" variant="primary" onClick={applyFilters}>
+                {activeFilterCount > 0 ? `Apply (${activeFilterCount})` : "Apply"}
+              </Button>
+            </Row>
+          </Div>
+        </Div>
+
+        <Div className="lg:col-span-8 xl:col-span-9">
+          {/* ── Blog grid ────────────────────────────────────────────────── */}
+          <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view })}</Div>
+        </Div>
+      </Div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {renderBlogFilterDrawer({ filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable })}
