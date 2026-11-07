@@ -10,6 +10,8 @@ import type { AuthPayload } from "../../contracts";
 import type { NextRequest } from "next/server";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 import { createSessionCookieFromToken } from "./session";
+import { holdsAnyRole } from "../../features/auth/role-predicates";
+import type { UserRole } from "../../features/auth/types";
 
 export { createSessionCookieFromToken };
 
@@ -248,11 +250,33 @@ export async function requireRoleFromRequest<T = unknown>(
   request: Request,
   findById: (uid: string) => Promise<T | null>,
   roles: string | string[],
+  /**
+   * @deprecated Kept so the 18 host call sites compile unchanged, but it is
+   * NOT what decides access any more — see the role-SET note below.
+   */
   getRole: (user: T) => string,
 ): Promise<T> {
   const user = await requireAuthFromRequest(request, findById);
   const allowed = Array.isArray(roles) ? roles : [roles];
-  if (!allowed.includes(getRole(user))) {
+  /*
+   * ── Intersect the role SET, not one scalar (1.43) ───────────────────────
+   *
+   * 🛑 Was `allowed.includes(getRole(user))`. `getRole` is supplied by the
+   * consumer as `(u) => u.role`, and `UserRepository.mapDoc` resolves that
+   * scalar to the HIGHEST-RANKED held role — so a seller who also holds
+   * `employee` produced `"employee"`, and every `requireRoleFromRequest(req,
+   * ["seller"])` route 403'd them off their own store. Exact-match gates are
+   * the case where "highest rank wins" is not a safe approximation, which is
+   * why this had to be converted rather than left to the derived scalar.
+   *
+   * `holdsAnyRole` reads `roles[]` with the scalar as fallback and folds
+   * `moderator` → `employee`. `getRole` is still consulted as a last-resort
+   * carrier for a consumer whose document shape this cannot see.
+   */
+  const carrier = user as { role?: string; roles?: readonly string[] };
+  const held = holdsAnyRole(carrier, allowed as UserRole[]);
+  const legacyMatch = allowed.includes(getRole(user));
+  if (!held && !legacyMatch) {
     throw Object.assign(
       new Error(`Forbidden — requires role: ${allowed.join(" | ")}`),
       { statusCode: 403 },
