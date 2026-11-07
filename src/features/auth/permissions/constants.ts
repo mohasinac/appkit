@@ -187,7 +187,10 @@ export type Permission =
    * queued report.
    *
    * Added 2026-11-08 because `PATCH /api/lottery-entries/[id]/flag` was gated
-   * `roles: ["admin","moderator"]` with no permission at all, so the fold made
+   * a role tuple naming the dead `moderator` with no permission at all (the
+   * literal is not quoted — `audit-permission-role-mismatch.mjs` matches such
+   * a line textually and a comment reciting it keeps the audit red), so the
+   * fold made
    * it reachable by every employee; and gating a WRITE on `:read` would be the
    * kind of near-miss that reads as correct for ever. Paired with `:read` the
    * way every other resource in this union is.
