@@ -234,6 +234,14 @@ import {
  * registry — the registry decides, this performs.
  */
 import { markAwaitingRelease } from "../digital-code/release";
+/*
+ * 🛑 The ONLY legal way to read `finalSale`. The field is optional and the
+ * platform default is TRUE, so `!p.finalSale` and `p.finalSale === true` both
+ * misread absence — see the helper's own header. Imported from the defining
+ * module rather than a barrel: it is a pure predicate with no firebase-admin
+ * in its chain.
+ */
+import { isFinalSale } from "../../../../features/products/constants/final-sale";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
 
@@ -3321,8 +3329,18 @@ export async function previewCheckoutPricing(
      * to have snapshotted it. The snapshot matters at the other two moments —
      * order creation (so the written row is authoritative) and claim time (so a
      * seller cannot flip the switch after the sale).
+     *
+     * 🛑 THROUGH `isFinalSale`, never `product?.finalSale === true`. The field
+     * is optional and the platform default is TRUE, so the bare comparison
+     * reads "not final sale" for every listing that has never set it — which
+     * is 53 of 53 products in the live catalogue (measured 2026-11-08). That
+     * made this preview offer SALE protection on lines that the order row
+     * written seconds later marks `finalSale: true`, and which
+     * `requestReturnAction`/`processRefundAction` then refuse: a fee quoted and
+     * charged for cover whose claim is guaranteed to be declined.
+     * `final-sale.ts` names this exact spelling as wrong in its header.
      */
-    const groupHasFinalSale = group.some(({ product }) => product?.finalSale === true);
+    const groupHasFinalSale = group.some(({ product }) => isFinalSale(product));
     /*
      * ── S5a in the PREVIEW ───────────────────────────────────────────────────
      *
@@ -4101,8 +4119,15 @@ async function createPhonePeGroupOrder(
    * and the one live store has `supportsSaleProtection` unset — but both of
    * those are a settings toggle away, and an under-charge that appears the
    * moment a flag flips is worse than one that is visible now.
+   *
+   * 🛑 `isFinalSale(product)`, not `product?.finalSale === true` — see the
+   * matching note in the preview above. `finalSale` is optional with a default
+   * of TRUE, so the bare comparison opted every one of the 53 catalogue
+   * listings OUT of final sale and let sale protection be billed on a line the
+   * written order row marks `finalSale: true`. This is the CHARGED path, so
+   * here it was money taken for a claim the refund gate will decline.
    */
-  const groupHasFinalSale = group.some(({ product }) => product?.finalSale === true);
+  const groupHasFinalSale = group.some(({ product }) => isFinalSale(product));
   const { shippingProtectionFee: shipmentProtectionFee, saleProtectionFee } = computeProtectionFees({
     subtotal: groupTotal,
     selected: {
