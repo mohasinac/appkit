@@ -136,14 +136,55 @@ export async function runSurfaceCountsRollup(
   const result = await computeSurfaceCounts(ctx, only);
 
   const payload: Partial<SurfaceCountsDocument> = { updatedAt: new Date() };
-  // Dot-path merge for a narrowed run: `{ listingTypes: {...} }` with
-  // `merge: true` would still replace the whole map on some drivers, and we
-  // must not drop a key this run did not probe.
-  for (const [k, v] of Object.entries(result.listingTypes)) {
-    (payload as Record<string, unknown>)[`listingTypes.${k}`] = v;
+
+  /*
+   * 🛑 NESTED MAPS, NOT DOT-PATHED KEYS — and the previous spelling here was a
+   * silently-failed safety gate, which is the worst failure shape there is.
+   *
+   * This wrote `payload["listingTypes." + k] = v` and then called
+   * `.set(payload, { merge: true })`. **Firestore resolves `"a.b"` as a nested
+   * field path only in `update()`. In `set()` it is a literal field name that
+   * happens to contain a dot.** So `surfaceCounts/global` held top-level fields
+   * NAMED `listingTypes.standard`, `surfaces.reviews`, … and no `listingTypes`
+   * map at all. `getSurfaceCounts` reads `data.listingTypes` → `undefined` →
+   * `sanitize(undefined)` → `undefined` → both maps absent → the function
+   * returns `undefined` and every reader takes the fail-open path. The module's
+   * own warning names the consequence: "surfaces will all render visible".
+   *
+   * The gate had therefore never fired, on any surface, ever. Corroborated
+   * live: `GET /api/site-settings` returned `hiddenSurfacePaths:
+   * ["/classified","/live"]` — exactly the two listing types flagged `false`,
+   * i.e. hidden by FLAG. Not one path was contributed by a measured count.
+   *
+   * The comment that justified the dot-paths had it exactly backwards: it
+   * feared `{ listingTypes: {...} }` with `merge: true` would "replace the
+   * whole map on some drivers". Verified against the SHIPPED driver
+   * (`@google-cloud/firestore/build/src/document.js`, `DocumentMask.fromObject`):
+   * it recurses into plain objects and pushes only LEAF paths, so
+   * `{ listingTypes: { standard: 5 } }` produces the update mask
+   * `["listingTypes.standard"]`. A narrowed run cannot touch a sibling key.
+   * That is the merge behaviour this job needs, and it is what the hazard
+   * story claimed was unavailable.
+   *
+   * ⚠ ONE REAL HAZARD IN THE SAME FUNCTION, which is why the guards below are
+   * not defensive clutter. `extractFieldPaths` ends with *"Add a field path for
+   * an explicitly updated empty map"* — `if (currentPath && isEmpty)
+   * fieldPaths.push(currentPath)`. So writing `{ listingTypes: {} }` masks
+   * `listingTypes` ITSELF and **wipes the whole map**. An all-probes-failed run
+   * (`listingTypes` empty, every type in `failed`) would therefore erase every
+   * figure the last good run recorded — turning a transient query failure into
+   * "nothing is measured". Omit an empty map and the run writes only
+   * `updatedAt`, which is the correct no-op.
+   *
+   * The contrast case lives in this repo and is correct as written:
+   * `scripts/seed-demo-inventory.mjs:485` dot-paths an `.update()`. Dotted keys
+   * are not the defect — dotted keys in `set()` are.
+   */
+  if (Object.keys(result.listingTypes).length > 0) {
+    payload.listingTypes = result.listingTypes;
   }
-  for (const [k, v] of Object.entries(result.surfaces)) {
-    (payload as Record<string, unknown>)[`surfaces.${k}`] = v;
+  if (Object.keys(result.surfaces).length > 0) {
+    payload.surfaces = result.surfaces;
   }
 
   await ctx.db
