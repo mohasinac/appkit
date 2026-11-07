@@ -70,7 +70,7 @@ import {
 import {
   GENERATED_CATEGORY_IMAGES,
   GENERATED_CATEGORY_IMAGE_COUNT,
-  GENERATED_CATEGORY_HASBRO_IMAGES,
+  GENERATED_CATEGORY_ALT_REGION_IMAGES,
 } from "./_helpers/category-images-generated";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 import { productsBeybladeXSeedData } from "./products-beyblade-x-seed-data";
@@ -618,7 +618,7 @@ function withGeneratedCoverImage<T extends Partial<CategoryDocument>>(row: T): T
 }
 
 /**
- * Attach the REGIONAL-VARIANT logo to a row that names a Hasbro equivalent.
+ * Attach the REGIONAL-VARIANT logo to a row that names an alternate-region equivalent.
  *
  * 🛑 Gated on `altRegionName`, not merely on the map having an entry. The image is
  * rendered beside the "Also known as" line, so without the name there is
@@ -629,11 +629,11 @@ function withGeneratedCoverImage<T extends Partial<CategoryDocument>>(row: T): T
  * editor can set `altRegionCoverImage` on a row the generator knows nothing
  * about, and a reseed must not take that away.
  */
-function withGeneratedHasbroCover<T extends Partial<CategoryDocument>>(row: T): T {
+function withGeneratedAltRegionCover<T extends Partial<CategoryDocument>>(row: T): T {
   if (!row.altRegionName) return row;
   const existing = row.altRegionCoverImage;
   if (typeof existing === "string" && existing.trim().length > 0) return row;
-  const generated = row.id ? GENERATED_CATEGORY_HASBRO_IMAGES[row.id] : undefined;
+  const generated = row.id ? GENERATED_CATEGORY_ALT_REGION_IMAGES[row.id] : undefined;
   return generated ? { ...row, altRegionCoverImage: generated } : row;
 }
 
@@ -647,7 +647,7 @@ const allCategoryRows: Partial<CategoryDocument>[] = [
 ]
   .map(withGeneratedContent)
   .map(withGeneratedCoverImage)
-  .map(withGeneratedHasbroCover)
+  .map(withGeneratedAltRegionCover)
   .map(withCategorySearchTxt);
 
 /*
@@ -746,8 +746,8 @@ if (generatedImagesApplied < Math.floor(GENERATED_CATEGORY_IMAGE_COUNT * 0.9)) {
  * 🛑 The two directions are NOT symmetric, which a first draft of this comment
  * got wrong until a negative control was actually run against it:
  *
- *   - **A map entry whose row does not name a Hasbro wave is an ERROR.**
- *     `withGeneratedHasbroCover` gates on `altRegionName`, so that image can
+ *   - **A map entry whose row does not name an alternate-region release is an ERROR.**
+ *     `withGeneratedAltRegionCover` gates on `altRegionName`, so that image can
  *     never render — it was fetched, uploaded to Storage and mapped, and is
  *     now a stored object nothing will ever serve. Silent waste. Throw.
  *
@@ -764,9 +764,9 @@ if (generatedImagesApplied < Math.floor(GENERATED_CATEGORY_IMAGE_COUNT * 0.9)) {
  */
 const altRegionNamed = allCategoryRows.filter((c) => typeof c.altRegionName === "string" && c.altRegionName);
 const hasbroCovered = altRegionNamed.filter(
-  (c) => typeof c.id === "string" && GENERATED_CATEGORY_HASBRO_IMAGES[c.id] === c.altRegionCoverImage,
+  (c) => typeof c.id === "string" && GENERATED_CATEGORY_ALT_REGION_IMAGES[c.id] === c.altRegionCoverImage,
 );
-const hasbroMapKeys = Object.keys(GENERATED_CATEGORY_HASBRO_IMAGES);
+const hasbroMapKeys = Object.keys(GENERATED_CATEGORY_ALT_REGION_IMAGES);
 if (hasbroCovered.length !== hasbroMapKeys.length) {
   const namedIds = new Set(altRegionNamed.map((c) => c.id));
   const orphanLogos = hasbroMapKeys.filter((k) => !namedIds.has(k));

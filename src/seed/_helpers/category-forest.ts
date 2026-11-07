@@ -110,7 +110,7 @@ const cover = (slug: string) => seedPhoto(`category-image-${slug}-20260101`, 120
  * 🛑 There is no `altRegionCoverImage` here on purpose. The name is an editorial
  * FACT and belongs in source; the image is a resolved asset and belongs in the
  * generated map, exactly like `display.coverImage` — see
- * `GENERATED_CATEGORY_HASBRO_IMAGES` and `withGeneratedHasbroCover` in
+ * `GENERATED_CATEGORY_ALT_REGION_IMAGES` and `withGeneratedAltRegionCover` in
  * `categories-seed-data.ts`. Hard-coding a `/media/…` string here would put
  * the one field that changes on every re-upload into the one file that should
  * not have to be edited for it.
