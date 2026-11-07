@@ -46,6 +46,36 @@ export interface ListingTypeCapability {
    * verified vendor on the hook for it.
    */
   canMakeOffer: boolean;
+
+  /**
+   * Loyalty coins may be spent against this listing type.
+   *
+   * 🛑 A CAPABILITY, not a hardcoded listing-type check — this is the whole
+   * point. The owner's decision (2026-11-07) was "coins work on clearance by
+   * default, but if in future we allow another type we must not have to write
+   * code for it". So enabling coins on any type, including one that does not
+   * exist yet, is a change to this table plus a `siteSettings` flag; never an
+   * `if (listingType === ...)` anywhere else.
+   *
+   * Economics live in config, not here: earn rate (1 coin per ₹1), redemption
+   * ratio (10 coins = ₹1) and any per-order cap are tunable without a deploy.
+   * This flag answers only "is this type eligible at all".
+   */
+  acceptsPointsTender: boolean;
+
+  /**
+   * The seller may mark listings of this type as a concealed/"surprise" item,
+   * whose contents are revealed to the buyer as a distinct, auditable step.
+   *
+   * Gates the reveal mechanic AND its refund consequences: cancellation is
+   * permitted only while an order is both unconfirmed and unrevealed, and the
+   * allocation is generated server-side and immutable so a seller cannot
+   * substitute after the fact.
+   *
+   * Capability-level only. A seller still opts a given product in — the same
+   * two-level model as `canMakeOffer` + `allowOffers`.
+   */
+  supportsSurpriseReveal: boolean;
 }
 
 export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapability> = {
@@ -67,6 +97,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: true,
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   standard: {
     canAddToCart: true,
@@ -76,6 +108,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: true,   // the ordinary negotiable listing
+    acceptsPointsTender: false,  // flip to true the day the owner widens coins
+    supportsSurpriseReveal: false,
   },
   "collector-drop": {
     canAddToCart: false,
@@ -85,6 +119,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: false,  // bidding IS the price mechanism
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   "pre-order": {
     canAddToCart: true,
@@ -94,6 +130,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: false,  // deposit against a future price, not a price to haggle
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   "clearance": {
     canAddToCart: true,
@@ -103,6 +141,12 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: false,  // fixed-price entries; a discounted entry breaks the draw's economics
+    // The two capabilities clearance actually carries today (owner, 2026-11-07).
+    // Coins are scoped here first; surprise/reveal is the mechanic clearance
+    // exists for. Both are capability flags precisely so widening them later is
+    // a table edit, not a code change.
+    acceptsPointsTender: true,
+    supportsSurpriseReveal: true,
   },
   // SB-UNI-F 2026-05-13 — Phase 2 union extension.
   classified: {
@@ -118,6 +162,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: true,   // haggling is the norm here — see the `negotiable` flag
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   "digital-code": {
     canAddToCart: true,
@@ -127,6 +173,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: true, // atomic code claim at order paid
     canMakeOffer: false,  // fungible pool item, priced per code
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   live: {
     canAddToCart: true,         // but jurisdictionAllowed must include buyer's state
@@ -136,6 +184,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: true,
     hasInstantFulfillment: false,
     canMakeOffer: false,  // jurisdiction-gated with a verified vendor accountable for the price
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   // Art/stickers session — printed-only physical goods, standard-like checkout.
   art: {
@@ -146,6 +196,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: true,   // printed goods, standard-like
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
   stickers: {
     canAddToCart: true,
@@ -155,6 +207,8 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
     canMakeOffer: true,   // printed goods, standard-like
+    acceptsPointsTender: false,
+    supportsSurpriseReveal: false,
   },
 };
 
@@ -188,6 +242,27 @@ export function hasInstantFulfillment(type: ListingType): boolean {
 
 export function canMakeOffer(type: ListingType): boolean {
   return LISTING_TYPE_CAPABILITIES[type].canMakeOffer;
+}
+
+/**
+ * Whether loyalty coins may be tendered against this listing type.
+ *
+ * Call this instead of writing `listingType === "clearance"` at a cart or
+ * checkout site. Widening coins to another type then means editing one row in
+ * the table above — which is the entire point of the capability model.
+ */
+export function acceptsPointsTender(type: ListingType): boolean {
+  return LISTING_TYPE_CAPABILITIES[type].acceptsPointsTender;
+}
+
+/**
+ * Whether sellers may mark listings of this type as concealed/"surprise".
+ *
+ * Capability only. A given product still opts in, and the order-level reveal
+ * state is what actually gates cancellation and refunds.
+ */
+export function supportsSurpriseReveal(type: ListingType): boolean {
+  return LISTING_TYPE_CAPABILITIES[type].supportsSurpriseReveal;
 }
 
 /**
