@@ -96,6 +96,10 @@ function scroller(id, source, title, order, state) {
 function card(id, parentId, order, state) {
   return { id, type: "card.product", regionId: REGION, parentId, order, state, config: {} };
 }
+/** A T3 leaf element — the bottom of the addressable model after the owner's ruling. */
+function el(id, type, parentId, order, state) {
+  return { id, type, regionId: REGION, parentId, order, state, config: {} };
+}
 
 /** The four real branches, plus three card.product children under two of them. */
 function baseInstances() {
@@ -297,14 +301,38 @@ function run(instances, ctxOverride = {}) {
 }
 
 {
-  // A card-inside-a-card: card.product declares childTypes: [].
+  /*
+   * REWRITTEN for the owner's 2026-11-08 granularity ruling. This used to
+   * assert "a card inside a card is refused because card.product is a LEAF".
+   * A card is now a CONTAINER, so the leaf moved down a level: the thing that
+   * may hold nothing is `element.price`. The assertion did not merely change
+   * its expected value — its subject changed, which is what "this is
+   * structural, not a config tweak" means in practice.
+   */
+  const r = run([
+    scroller(SCROLLER_CATEGORY, "category", "t", 0),
+    card("w-card-c0", SCROLLER_CATEGORY, 0),
+    el("w-price", "element.price", "w-card-c0", 0),
+    el("w-under-price", "element.badge", "w-price", 0),
+  ]);
+  ok("E6a a card is now a CONTAINER: an element child is accepted",
+    r.byId.get("w-price").visible === true, r.byId.get("w-price").reason);
+  eq("E6 nesting under a leaf ELEMENT is refused", r.byId.get("w-under-price").reason, "disallowed-child");
+  ok("E7 with a problem naming the leaf", r.problems.some((p) => /is a leaf widget/.test(p.problem)));
+  eq("E7a the real containment depth is region > row > card > element",
+    r.byId.get("w-price").depth, 2);
+}
+
+{
+  // A card inside a card is STILL refused — not because cards are leaves, but
+  // because `card.product` does not list itself in `childTypes`.
   const r = run([
     scroller(SCROLLER_CATEGORY, "category", "t", 0),
     card("w-card-c0", SCROLLER_CATEGORY, 0),
     card("w-card-nested", "w-card-c0", 0),
   ]);
-  eq("E6 nesting under a leaf widget is refused", r.byId.get("w-card-nested").reason, "disallowed-child");
-  ok("E7 with a problem naming the leaf", r.problems.some((p) => /is a leaf widget/.test(p.problem)));
+  eq("E6b a card inside a card is refused by `childTypes`, not by leafness",
+    r.byId.get("w-card-nested").reason, "disallowed-child");
 }
 
 {
@@ -326,7 +354,7 @@ function run(instances, ctxOverride = {}) {
 }
 
 {
-  // A chain the walk ENTERS from a real root, three levels deep under a leaf.
+  // A chain the walk ENTERS from a real root, three levels deep under a card.
   const r = run([
     scroller(SCROLLER_CATEGORY, "category", "t", 0),
     card("w-k1", SCROLLER_CATEGORY, 0),
@@ -349,9 +377,18 @@ function run(instances, ctxOverride = {}) {
 }
 
 {
-  const r = run([{ id: "w-pc", type: "card.product", regionId: REGION, parentId: null, order: 0, config: {} }]);
-  eq("E11 a type the REGION does not accept is refused", r.roots[0].reason, "disallowed-child");
-  ok("E12 with the allowed list named", r.problems.some((p) => /does not accept "card.product"/.test(p.problem)));
+  /*
+   * `element.price` is a legal widget type and a legal CHILD of a card, but
+   * the region does not accept it as a root — an element belongs inside a
+   * card, not loose in a page region. The region allow-list and the parent's
+   * `childTypes` are two different gates and both have to hold.
+   */
+  const r = run([el("w-loose-price", "element.price", null, 0)]);
+  eq("E11 a type the REGION does not accept as a ROOT is refused", r.roots[0].reason, "disallowed-child");
+  ok("E12 with the allowed list named", r.problems.some((p) => /does not accept "element\.price"/.test(p.problem)));
+  ok("E12a and the same type IS accepted inside a card",
+    run([scroller(SCROLLER_CATEGORY, "category", "t", 0), card("w-c", SCROLLER_CATEGORY, 0), el("w-p", "element.price", "w-c", 0)])
+      .byId.get("w-p").visible === true);
 }
 
 // ---------------------------------------------------------------------------
@@ -455,6 +492,93 @@ const RESOLVED_RULES = [
     !r.unreachableFields.includes("offerAmount"), JSON.stringify(r.unreachableFields));
   ok("F23 the field only that blocked widget owns is unreachable",
     r.unreachableFields.includes("offerMessage"));
+}
+
+// ---------------------------------------------------------------------------
+// H. `removable: false` — A16's "required elements cannot be removed",
+//    with a mechanism behind it for the first time. Added because the owner's
+//    granularity ruling made `price` a WIDGET, so the guardrail can no longer
+//    be a required-FIELD rule.
+// ---------------------------------------------------------------------------
+
+{
+  const insts = [
+    scroller(SCROLLER_CATEGORY, "category", "t", 0),
+    card("w-c", SCROLLER_CATEGORY, 0),
+    el("w-price", "element.price", "w-c", 0, "off"),      // vendor tries to remove the price
+    el("w-badge", "element.badge", "w-c", 1, "off"),      // and a badge, which IS removable
+  ];
+  const r = run(insts);
+
+  ok("H1 a non-removable element stays VISIBLE despite `state: \"off\"`",
+    r.byId.get("w-price").visible === true, r.byId.get("w-price").reason);
+  ok("H2 and the operator is TOLD the setting had no effect",
+    r.problems.some((p) => p.scope === "widget:w-price" && /cannot be removed by configuration/.test(p.problem)),
+    JSON.stringify(r.problems));
+  ok("H3 the problem names the element, so the message is actionable",
+    r.problems.some((p) => /"Price" cannot be removed/.test(p.problem)));
+  ok("H4 a REMOVABLE sibling is still removed — the rule is per-definition, not blanket",
+    r.byId.get("w-badge").visible === false);
+  eq("H5 and its reason is the ordinary `state-off`", r.byId.get("w-badge").reason, "state-off");
+  ok("H6 only one refusal is reported, not one per element",
+    r.problems.filter((p) => /cannot be removed by configuration/.test(p.problem)).length === 1);
+}
+
+{
+  // `removable: false` does NOT outrank a capability denial or a blocked
+  // parent — it only outranks an explicit `off` on that widget itself.
+  const insts = [
+    scroller(SCROLLER_CATEGORY, "category", "t", 0, "off"),
+    card("w-c", SCROLLER_CATEGORY, 0),
+    el("w-price", "element.price", "w-c", 0),
+  ];
+  const r = run(insts);
+  ok("H7 a non-removable element still goes with a blocked ancestor",
+    r.byId.get("w-price").visible === false);
+  eq("H8 with reason `parent-off`", r.byId.get("w-price").reason, "parent-off");
+  ok("H9 so `price` becomes unreachable and its requirement is in play",
+    r.unreachableFields.includes("price"));
+}
+
+{
+  // The full depth the owner's ruling produces, end to end.
+  const insts = [
+    scroller(SCROLLER_CATEGORY, "category", "More in this category", 0),
+    card("w-c", SCROLLER_CATEGORY, 0),
+    el("w-img", "element.image", "w-c", 0),
+    el("w-title", "element.title", "w-c", 1),
+    el("w-price", "element.price", "w-c", 2),
+    el("w-cond", "element.condition", "w-c", 3),
+    el("w-cta", "element.cta", "w-c", 4),
+    el("w-link", "element.link", "w-c", 5),
+  ];
+  const r = run(insts);
+  eq("H10 one card carries 6 element widgets", r.byId.get("w-c").children.length, 6);
+  ok("H11 all six resolve visible", r.byId.get("w-c").children.every((n) => n.visible));
+  eq("H12 element depth is 2 (region > row > card > element)", r.byId.get("w-price").depth, 2);
+  eq("H13 elements keep their configured order",
+    r.byId.get("w-c").children.map((n) => n.instance.type),
+    ["element.image", "element.title", "element.price", "element.condition", "element.cta", "element.link"]);
+  eq("H14 no problems on a well-formed deep tree", r.problems.length, 0);
+  eq("H15 every element field is reachable", r.unreachableFields, []);
+}
+
+{
+  // The measured shape of a real grid: 1 scroller, 24 cards, 6 elements each.
+  const insts = [scroller(SCROLLER_CATEGORY, "category", "t", 0)];
+  for (let c = 0; c < 24; c += 1) {
+    insts.push(card(`w-c${c}`, SCROLLER_CATEGORY, c));
+    for (const [i, t] of ["element.image", "element.title", "element.price", "element.condition", "element.cta", "element.link"].entries()) {
+      insts.push(el(`w-c${c}-e${i}`, t, `w-c${c}`, i));
+    }
+  }
+  const t0 = process.hrtime.bigint();
+  const r = run(insts);
+  const ms = Number(process.hrtime.bigint() - t0) / 1e6;
+  eq("H16 a 24-card grid resolves every node", r.byId.size, 1 + 24 + 24 * 6);
+  ok("H17 and resolves in under 25ms", ms < 25, `${ms.toFixed(2)}ms for ${r.byId.size} nodes`);
+  eq("H18 with no spurious problems", r.problems.length, 0);
+  console.log(`  (H17 observed: ${ms.toFixed(2)}ms for ${r.byId.size} nodes)`);
 }
 
 // ---------------------------------------------------------------------------

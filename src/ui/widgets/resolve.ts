@@ -92,10 +92,21 @@ function capabilityBlock(
   return undefined;
 }
 
-/** An instance's own verdict, before its ancestors are consulted. Absent `state` inherits the definition's `defaultOn` (which itself defaults to true). */
+/**
+ * An instance's own verdict, before its ancestors are consulted. Absent
+ * `state` inherits the definition's `defaultOn` (which itself defaults to
+ * true).
+ *
+ * 🛑 `removable: false` wins over an explicit `off`, and the caller REPORTS
+ * it. This is the structural mirror of Lane G's `system` tier — see
+ * `WidgetDef.removable`. Returning "still on" silently would be the worse of
+ * the two failures available here: the operator would believe the price was
+ * hidden and the card would keep showing it, with nothing to explain the
+ * disagreement.
+ */
 function ownState(instance: WidgetInstance, def: WidgetDef): boolean {
   if (instance.state === "on") return true;
-  if (instance.state === "off") return false;
+  if (instance.state === "off") return def.removable === false;
   return def.defaultOn !== false;
 }
 
@@ -145,7 +156,7 @@ export function resolveWidgetTree(
     parentVisible: boolean,
     parentDef: WidgetDef | undefined,
     depth: number,
-    seen: ReadonlySet<string>,
+    seen: Set<string>,
   ): ResolvedWidget {
     const def = defByType.get(inst.type);
 
@@ -193,6 +204,24 @@ export function resolveWidgetTree(
     } else {
       reason = capabilityBlock(inst, def, ctx);
 
+      if (!reason && inst.state === "off" && def.removable === false) {
+        /*
+         * A16's guardrail, enforced rather than documented: "Required
+         * elements cannot be removed: price, condition, authenticity claim,
+         * the risk banner, consent affordances … A vendor may restyle them,
+         * never hide them." The widget stays on; the operator is told the
+         * setting had no effect, at the only moment the feedback is useful.
+         */
+        problems.push({
+          scope: `widget:${inst.id}`,
+          field: "state",
+          problem:
+            `"${def.label}" cannot be removed by configuration (price, condition, authenticity, ` +
+            `risk banner, consent and legally-mandated elements). It may be restyled, never hidden. ` +
+            `The widget is still shown.`,
+        });
+      }
+
       if (!reason && !ownState(inst, def)) reason = "state-off";
 
       if (!reason && !parentVisible) {
@@ -219,11 +248,22 @@ export function resolveWidgetTree(
     const node: ResolvedWidget = { instance: inst, def, visible, reason, children: [], depth };
     byId.set(inst.id, node);
 
-    const nextSeen = new Set(seen);
-    nextSeen.add(inst.id);
+    /*
+     * 🛑 Mutate-and-restore, not a per-node `new Set(seen)` copy.
+     *
+     * The first draft cloned the ancestor set at every node, which is
+     * O(nodes x depth) allocation. That was defensible while a card was a
+     * LEAF and a region held a handful of widgets. The owner's granularity
+     * ruling (2026-11-08) makes every card a container of element widgets, so
+     * a single product grid is now region > scroller > 24 cards > ~6 elements
+     * each = ~170 nodes where it used to be ~25. Same correctness, O(1) per
+     * node instead of O(depth).
+     */
+    seen.add(inst.id);
     for (const child of childrenOf.get(inst.id) ?? []) {
-      node.children.push(build(child, visible, def, depth + 1, nextSeen));
+      node.children.push(build(child, visible, def, depth + 1, seen));
     }
+    seen.delete(inst.id);
 
     return node;
   }

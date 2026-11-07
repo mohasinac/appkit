@@ -122,6 +122,29 @@ export interface WidgetDef {
   ownsFields?: readonly string[];
   /** Default state when an instance says nothing. `false` = present in the template but off until enabled. */
   defaultOn?: boolean;
+  /**
+   * `false` = this widget CANNOT be switched off by configuration.
+   *
+   * 🛑 Added because of the owner's granularity ruling (2026-11-08): `price`
+   * on a product card is a WIDGET, not a field. The moment that is true,
+   * "price can never be removed from a card" stops being expressible as a
+   * required-FIELD rule and has to become a widget capability — otherwise the
+   * guardrail A16 states plainly has no mechanism behind it:
+   *
+   *   *"Required elements cannot be removed: price, condition, authenticity
+   *   claim, the risk banner, consent affordances, and anything legally
+   *   mandated (GST-inclusive labelling, country of origin, seller identity).
+   *   A vendor may restyle them, never hide them."*
+   *
+   * This is the STRUCTURAL MIRROR of Lane G's `system` tier, and it behaves
+   * the same way: an explicit `state: "off"` on a non-removable widget is
+   * REFUSED and REPORTED at save time, not silently honoured and not silently
+   * ignored. The widget stays visible.
+   *
+   * Absent = `true` (removable), so every pre-existing definition keeps its
+   * current behaviour.
+   */
+  removable?: boolean;
 }
 
 /**

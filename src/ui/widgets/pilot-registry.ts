@@ -53,7 +53,7 @@ export const PILOT_REGIONS: readonly WidgetRegionDef[] = [
     id: "products-slug:body",
     surface: "product",
     label: "Product detail — body",
-    allowedTypes: ["row.horizontalScroller", "section.offerBoard", "section.liveMediaProof"],
+    allowedTypes: ["row.horizontalScroller", "card.product", "section.offerBoard", "section.liveMediaProof"],
   },
 ];
 
@@ -90,7 +90,16 @@ export const PILOT_WIDGET_DEFS: readonly WidgetDef[] = [
   },
 
   /*
-   * T3 — the card child. A leaf: `childTypes: []`.
+   * T3 — the card. 🛑 A CONTAINER, not a leaf, as of the owner's granularity
+   * ruling (2026-11-08): *"`price` on a product card is a WIDGET, not a
+   * field."* So a card holds element widgets, and the containment tree the
+   * mock's Composition page draws is now the real one:
+   *
+   *   region > row.horizontalScroller > card.product > element.price
+   *
+   * This was `childTypes: []` in the first draft and the change is structural,
+   * not a config tweak — the resolver's leaf-nesting refusal, its cycle guard
+   * cost and five assertions all moved with it.
    *
    * 🛑 Registry keys are `category.type`, deliberately matching the key
    * convention the concurrent mock-UI session already settled on
@@ -104,8 +113,86 @@ export const PILOT_WIDGET_DEFS: readonly WidgetDef[] = [
    */
   {
     type: "card.product",
-    tier: "element",
+    tier: "section",
     label: "Product card",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [
+      "element.image",
+      "element.title",
+      "element.price",
+      "element.condition",
+      "element.badge",
+      "element.cta",
+      "element.link",
+    ],
+  },
+
+  /*
+   * T3 leaf elements — the bottom of the addressable model. Below these are
+   * only T5 atoms (`Div`, `Stack`, `Row`, `Grid`), which stay token-themed and
+   * never get a config key. Measured: 5,210 leaf render sites across 888
+   * components in `appkit/src` vs 4,604 pure-layout sites that do NOT get keys.
+   *
+   * 🛑 `removable: false` on price and condition is A16's guardrail with a
+   * mechanism behind it for the first time: *"Required elements cannot be
+   * removed: price, condition, authenticity claim, the risk banner, consent
+   * affordances … A vendor may restyle them, never hide them."* Before the
+   * owner's ruling this was a required-FIELD rule; now that `price` is a
+   * widget, it has to be a widget capability or it has no enforcement at all.
+   */
+  {
+    type: "element.price",
+    tier: "element",
+    label: "Price",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [],
+    removable: false,
+    ownsFields: ["price"],
+  },
+  {
+    type: "element.condition",
+    tier: "element",
+    label: "Condition",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [],
+    removable: false,
+    ownsFields: ["condition"],
+  },
+  {
+    type: "element.title",
+    tier: "element",
+    label: "Title",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [],
+    ownsFields: ["name"],
+  },
+  {
+    type: "element.image",
+    tier: "element",
+    label: "Image",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [],
+    ownsFields: ["images"],
+  },
+  {
+    type: "element.badge",
+    tier: "element",
+    label: "Badge",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [],
+  },
+  {
+    type: "element.cta",
+    tier: "element",
+    label: "Call to action",
+    surfaces: ["product", "category", "store", "homepage"],
+    childTypes: [],
+  },
+  /** The owner's "down to a single link". A leaf that carries its own `href` + `label` in config. */
+  {
+    type: "element.link",
+    tier: "element",
+    label: "Link",
     surfaces: ["product", "category", "store", "homepage"],
     childTypes: [],
   },
