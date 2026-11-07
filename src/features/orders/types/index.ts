@@ -48,11 +48,28 @@ export interface OrderItem {
   /** Listing kind at the time of order — needed for prize-draw UI hints (SB8-F). */
   listingType?: ListingType;
   /**
-   * Per-item prize-draw reveal status (SB8-F). Populated by the checkout
-   * actions when listingType === "prize-draw". Used to render the
-   * "X reveals pending" badge on user orders.
+   * Per-item concealed-item reveal status (SB8-F). Populated by the checkout
+   * actions for a line whose listing type carries `supportsSurpriseReveal`.
+   * Used to render the "X reveals pending" badge on user orders.
    */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
+  /**
+   * When this line's concealed contents became visible to the buyer.
+   * See `OrderDocumentItem.revealedAt` for why it is not the same instant as
+   * the allocation.
+   */
+  revealedAt?: Date;
+  /**
+   * Pointer to the immutable `adminAuditLog` row recording how this line's
+   * concealed item was chosen.
+   *
+   * 🛑 Surfaced to the CLIENT deliberately. The owner's anti-fraud claim is
+   * that the buyer can see the pick was the platform's and not the seller's —
+   * a trace only an admin can reach does not answer "no seller can say you
+   * got trash when you got the prize". It is an opaque id, so it discloses
+   * nothing about other buyers' allocations.
+   */
+  allocationId?: string;
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
   cancelledQuantity?: number;
   /**
@@ -431,7 +448,14 @@ export interface Order {
    * draw expiry, or sellout — see assignClearanceWinner); drives the
    * PrizeRevealModal's "won" display on the order-detail page.
    */
-  prizeWon?: { itemNumber: number; title: string; images: string[]; wonAt: string };
+  prizeWon?: {
+    itemNumber: number;
+    title: string;
+    images: string[];
+    wonAt: string;
+    /** The immutable `adminAuditLog` row recording how this item was chosen — see the document interface. */
+    allocationId?: string;
+  };
   /** Source prize-draw product id, when this order came from one. */
   prizeDrawProductId?: string;
   /** Denormalized from the product at order-creation time — drives PrizeRevealModal copy. */

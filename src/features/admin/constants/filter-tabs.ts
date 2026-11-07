@@ -126,6 +126,13 @@ export const ADMIN_AUDIT_LOG_ACTION_TABS = [
   { id: "offer_cancel", label: "Offer cancelled" },
   { id: "store_status_change", label: "Store status" },
   { id: "user_role_change", label: "Role change" },
+  /*
+   * 🛑 A chip for the allocation trace is load-bearing, not cosmetic: the row
+   * exists so a buyer's "I was sent the wrong item" claim can be adjudicated
+   * against an immutable record, and a record nobody can FILTER to is one
+   * nobody will produce under time pressure.
+   */
+  { id: "allocation_random_assign", label: "Allocation (RNG)" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Orders — order-state filter chip set. Lowercase IDs match

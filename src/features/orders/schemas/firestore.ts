@@ -359,8 +359,55 @@ export interface OrderDocumentItem {
    * with the same stats, and one is rare and costly.
    */
   colourway?: string;
- /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
+ /**
+  * SB8-F — per-item reveal status; flips through pending → open →
+  * revealed/closed.
+  *
+  * 🛑 THIS IS THE REVEAL STATE. There is deliberately no second
+  * `revealState` field beside it: the workflow registry's `RevealState`
+  * ("unrevealed" | "revealed") is a NORMALISED VIEW of this one, derived in
+  * `assertCancellable`, and a stored duplicate would be two fields that can
+  * disagree about whether a buyer has seen their item — on the field the
+  * cancel/refund gate reads. One fact, one home.
+  *
+  * ⚠ NAMING, flagged not fixed: `prize*` names a mechanism (a draw) on what
+  * is now a generic capability — `supportsSurpriseReveal` is a flag any
+  * listing type may carry. The honest name is `revealState`, but renaming it
+  * collides with the PRODUCT-level `prizeRevealStatus` (a different,
+  * three-state draw status) and is the size of the `collector-drop`/`bids`
+  * rename, so it belongs with that lane, not half-done here.
+  */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
+  /**
+   * When the concealed contents of THIS line became visible to the buyer.
+   *
+   * 🛑 On the order ITEM, never the product: two buyers of the same concealed
+   * product are in different states, and this is the timestamp a dispute is
+   * adjudicated against ("the reveal happened before the cancellation
+   * request", "the reveal happened at shipment, not at the seller's
+   * convenience"). `prizeWon.wonAt` on the ORDER records when the platform
+   * ALLOCATED; this records when the BUYER SAW. They are the same instant for
+   * immediate-reveal clearance and days apart for a delayed reveal, so one
+   * field cannot answer both.
+   */
+  revealedAt?: Date;
+  /**
+   * The id of the immutable `adminAuditLog` row that records how this line's
+   * concealed item was chosen.
+   *
+   * 🛑 THE ANTI-FRAUD HANDLE, and it is a pointer rather than a copy on
+   * purpose. The allocation facts live in a collection no seller can write to
+   * or update; duplicating them here would put an editable copy beside the
+   * immutable one, and a dispute would then have two answers. This field is
+   * what lets a buyer, an admin or a support agent go from "my order" to "the
+   * record of why I got this one" in a single lookup.
+   *
+   * Written inside the allocation transaction (`clearanceAssignWinner`) and
+   * never set or changed by any seller-reachable path. Absent on every line
+   * allocated before this field existed, which is why no reader may treat its
+   * absence as tampering.
+   */
+  allocationId?: string;
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
   cancelledQuantity?: number;
   cancelledAt?: Date;
@@ -1334,6 +1381,20 @@ export interface OrderDocument extends BaseDocument {
     title: string;
     images: string[];
     wonAt: Date;
+    /**
+     * The `adminAuditLog` row that records how this item was chosen.
+     *
+     * 🛑 Mirrored from the order LINE's `allocationId` (the canonical home —
+     * two buyers of the same concealed product are in different states, so the
+     * line is where the fact belongs). It is here as well because `prizeWon`
+     * is the object every reveal surface already reads, and an anti-fraud
+     * trace a page cannot reach without an extra derivation is a trace nobody
+     * will show. Written only by `clearanceAssignWinner`, inside the same
+     * transaction as the allocation.
+     *
+     * Absent on every order allocated before the record existed.
+     */
+    allocationId?: string;
   };
   /** Source product id when the order came from a prize-draw entry. */
  prizeDrawProductId?: string;

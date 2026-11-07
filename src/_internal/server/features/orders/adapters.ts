@@ -74,6 +74,16 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
         ...(item.prizeRevealStatus
           ? { prizeRevealStatus: item.prizeRevealStatus }
           : {}),
+        /*
+         * The reveal timestamp and the allocation pointer, for the same
+         * Root-Cause-#57 reason as every other snapshot in this mapper: a
+         * field that exists on the document and reaches no client might as
+         * well not exist. Here it is the buyer's own evidence that the pick
+         * was the platform's — withholding it would leave the anti-fraud
+         * trace visible only to the party being audited's adjudicator.
+         */
+        ...(item.revealedAt ? { revealedAt: item.revealedAt } : {}),
+        ...(item.allocationId ? { allocationId: item.allocationId } : {}),
         ...(item.cancelledQuantity != null
           ? { cancelledQuantity: item.cancelledQuantity }
           : {}),

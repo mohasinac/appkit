@@ -10,6 +10,14 @@
  * This is deliberately an MVP scope (instrumenting existing high-value call
  * sites), not an exhaustive every-write-path audit trail — see CLAUDE.md's
  * "Admin Audit Log" section for the full instrumented-action list.
+ *
+ * 🛑 NOT STRICTLY "ADMIN" ANY MORE. `allocation_random_assign` is written by
+ * the platform itself under a `"system:allocation"` sentinel, because the one
+ * property that action needs — an immutable, queryable record no seller can
+ * write or edit — is the property this collection already has and a log line
+ * does not. The collection name stays `adminAuditLog`; the question it answers
+ * widens from "what have admins done" to "what privileged or fairness-critical
+ * act happened, and on whose authority". See that value's own docstring.
  */
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
@@ -145,6 +153,40 @@ export const AdminAuditActionValues = {
    * is the same question `store_status_change` already answers for stores.
    */
   COMMON_TOGGLE_CHANGE: "common_toggle_change",
+  /**
+   * The platform's RNG allocated a concealed item to one buyer's order line.
+   *
+   * 🛑 THE ONLY NON-ADMIN ACTION IN THIS TABLE, and the reason it belongs
+   * here anyway is the whole point of the surprise/reveal mechanic. The
+   * owner's framing: *"it is randomly generated so we have a trace — no
+   * seller can say you got a trash item when in reality you got the prize,
+   * because it was not transparent."*
+   *
+   * A trace is only a trace if it is immutable and inspectable. Until now the
+   * pick was recorded with `ctx.logger.info`, which is neither: logs rotate,
+   * are not queryable per order, and are not something a buyer or an auditor
+   * can be shown when a seller disputes what was sent. This collection is
+   * admin-SDK-write-only (`firestore.rules` is a blanket deny-all), carries no
+   * update path anywhere in the codebase, and is already rendered by
+   * `AdminAuditLogView` — so it is exactly the "immutable record someone can
+   * point at" the claim needs, and **a seller cannot write or edit a row in
+   * it.**
+   *
+   * `actorUid` is the `"system:allocation"` sentinel: the pick is a rule with
+   * an RNG attached, not a discretionary decision, and the same sentinel
+   * convention already exists for `"system:points-expiry"`. The absence of a
+   * human actor is itself the evidence — if an allocation row ever carried a
+   * real uid, that would be the fraud.
+   *
+   * Written INSIDE the assignment transaction, so the allocation and its trace
+   * commit or fail together. A best-effort `recordAdminAction` after the fact
+   * could leave an allocated order with no record of why it got what it got,
+   * which is the one state this must not be able to reach.
+   *
+   * `targetType: "orderItem"`, `targetId: "<orderId>"`, and the audit row's
+   * own id becomes the order line's `allocationId`.
+   */
+  ALLOCATION_RANDOM_ASSIGN: "allocation_random_assign",
 } as const;
 
 export type AdminAuditAction = (typeof AdminAuditActionValues)[keyof typeof AdminAuditActionValues];

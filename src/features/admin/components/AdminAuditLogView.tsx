@@ -54,6 +54,8 @@ const ACTION_LABELS: Record<string, string> = {
   offer_cancel: "Offer cancelled",
   store_status_change: "Store status changed",
   user_role_change: "User role changed",
+  /* Not an admin act — the platform's RNG. See the action value's docstring. */
+  allocation_random_assign: "Concealed item allocated (RNG)",
 };
 
 export interface AdminAuditLogViewProps extends ListingLayoutProps {

@@ -59,11 +59,48 @@ export function assertClearanceNotLocked(
 }
 
 /**
- * Anti-scam guard — once a prize item has been won, its title/images/
- * description/condition/estimatedValue become immutable server-side (the
- * client editor already locks this visually via ClearanceItemsEditor's
- * `locked` state, but that's UI-only — this is the enforcement). Prevents a
- * seller from swapping in a cheaper item after a buyer has already won.
+ * Anti-scam guard — a won prize item is immutable, and **no seller may set or
+ * clear an allocation.**
+ *
+ * The client editor also locks won rows visually (`ClearanceItemsEditor`'s
+ * `locked` state), but that is UI-only; this is the enforcement, and it runs
+ * on all three product-update paths (seller action, admin action, API).
+ *
+ * ## 🛑 Three holes this closes (found auditing 1.35, 2026-11-07)
+ *
+ * The original guard only compared the DESCRIPTIVE fields of items that were
+ * already `isWon` in the stored document. `isWon` and `wonByOrderId` — the
+ * allocation itself — were accepted straight from seller input
+ * (`prizeDrawItems[].isWon` is `z.boolean()` in the product input schema), and
+ * the loop skipped anything it could not match. So a seller could:
+ *
+ *  1. **Delete a won item.** `if (!incoming) continue` passed a payload that
+ *     simply omitted prize #3 — the won prize left the pool entirely, taking
+ *     the record of what the buyer was owed with it. This was the worst of the
+ *     three, because it looked like the guard's "unchanged" case.
+ *  2. **Un-win a won item** by sending `isWon: false`, freeing an
+ *     already-allocated prize to be handed to someone else.
+ *  3. **Invent a win** by sending `isWon: true` (and any `wonByOrderId`) on an
+ *     item the platform never picked — removing it from the RNG's candidate
+ *     pool, or making an order appear to have won something it did not.
+ *
+ * Every one of those defeats the stated purpose of the mechanic: *"no seller
+ * can say you got a trash item when in reality you got the prize."* An
+ * auditable random allocation is worth nothing if the seller can edit the
+ * result afterwards.
+ *
+ * The allocation engine (`clearanceAssignWinner`) is unaffected: it writes the
+ * array through a Firestore transaction on the raw document and never passes
+ * through this action layer. This guard therefore constrains exactly the
+ * human-reachable paths, which is the intent — the engine is the only writer
+ * of `isWon`.
+ *
+ * ## Compares VALUES, never key presence
+ *
+ * Same reasoning as `assertCollectorDropTermsMutable`: the seller editor
+ * round-trips the whole array, so every save resubmits each item unchanged.
+ * Rejecting on presence would make a draw with one won prize entirely
+ * unsaveable and the seller could not fix so much as a typo on an unwon row.
  */
 export function assertClearanceWonItemsImmutable(
   currentProduct: Pick<ProductDocument, "prizeDrawItems">,
@@ -71,12 +108,22 @@ export function assertClearanceWonItemsImmutable(
 ): void {
   if (!Array.isArray(input)) return;
   const current = currentProduct.prizeDrawItems ?? [];
+  const incomingItems = input as PrizeDrawItem[];
+
   for (const currentItem of current) {
     if (!currentItem.isWon) continue;
-    const incoming = (input as PrizeDrawItem[]).find(
+    const incoming = incomingItems.find(
       (it) => it.itemNumber === currentItem.itemNumber,
     );
-    if (!incoming) continue;
+    /*
+     * 🛑 THROW on a missing row, do not `continue`. Omitting a won item is a
+     * deletion, and it was the one edit that passed the old guard untouched.
+     */
+    if (!incoming) {
+      throw new ValidationError(
+        `Prize #${currentItem.itemNumber} has already been won and cannot be removed from the draw.`,
+      );
+    }
     const changed =
       incoming.title !== currentItem.title ||
       incoming.description !== currentItem.description ||
@@ -88,6 +135,34 @@ export function assertClearanceWonItemsImmutable(
         `Prize #${currentItem.itemNumber} has already been won and can no longer be edited.`,
       );
     }
+    /*
+     * The allocation fields, checked separately from the descriptive ones so
+     * the refusal says what was actually attempted. Un-winning or re-pointing
+     * a win is tampering with the result, not an edit to a listing.
+     */
+    if (
+      incoming.isWon !== currentItem.isWon ||
+      (incoming.wonByOrderId ?? null) !== (currentItem.wonByOrderId ?? null)
+    ) {
+      throw new ValidationError(
+        `Prize #${currentItem.itemNumber} has already been allocated to a buyer. Allocations are recorded by the platform and cannot be changed.`,
+      );
+    }
+  }
+
+  /*
+   * 🛑 And the inverse direction: nothing may become won through this path.
+   * Only `clearanceAssignWinner` marks a win, so any incoming `isWon: true`
+   * on an item the stored document does not already have won is a forged
+   * allocation — including on a brand-new item number.
+   */
+  for (const incoming of incomingItems) {
+    if (!incoming.isWon && !incoming.wonByOrderId) continue;
+    const stored = current.find((it) => it.itemNumber === incoming.itemNumber);
+    if (stored?.isWon) continue; // equality already verified above
+    throw new ValidationError(
+      `Prize #${incoming.itemNumber} cannot be marked as won. Winners are drawn by the platform, never set by hand.`,
+    );
   }
 }
 

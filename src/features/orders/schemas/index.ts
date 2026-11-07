@@ -61,6 +61,16 @@ export const orderDocumentItemSchema = z.object({
   totalPrice: rupeesSchema,
   listingType: orderListingTypeSchema.optional(),
   prizeRevealStatus: z.enum(["pending", "open", "closed", "revealed"]).optional(),
+  /*
+   * 🛑 Both MUST be here even though nothing validates an order item on the
+   * way out: `z.object()` STRIPS unknown keys, so a field on the interface
+   * and absent from this mirror is REMOVED on parse rather than erroring —
+   * the exact silent drift the `OrderRefundEvent` note below documents. For
+   * `allocationId` that would mean the pointer to the immutable allocation
+   * record quietly disappearing from a line whose contents are in dispute.
+   */
+  revealedAt: z.date().optional(),
+  allocationId: z.string().optional(),
 });
 
 /**
