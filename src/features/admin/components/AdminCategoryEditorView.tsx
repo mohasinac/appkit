@@ -168,13 +168,13 @@ const categoryFormSchema = z.object({
     .or(z.literal("")),
   highlightsText: z.string().optional().or(z.literal("")),
   /*
-   * The Hasbro / international-market name for a generation wave, rendered on
+   * The alternate regional / international-market name for a release, rendered on
    * the category page as "Also known as". Editable here because wave naming is
    * editorial and gets corrected — the seed deliberately leaves it unset
    * wherever a divergence is not evidenced, and this is how one gets filled in
    * later without a reseed.
    */
-  hasbroName: z.string().max(120, "Keep the name under 120 characters").optional().or(z.literal("")),
+  altRegionName: z.string().max(120, "Keep the name under 120 characters").optional().or(z.literal("")),
   taxCodeId: z.string().optional().or(z.literal("")),
   defaultCondition: z.string().optional().or(z.literal("")),
   defaultAuthenticity: z.string().optional().or(z.literal("")),
@@ -218,7 +218,7 @@ interface CategoryFormValues {
   coverImage: string;
   contentBody: string;
   highlightsText: string;
-  hasbroName: string;
+  altRegionName: string;
   taxCodeId: string;
   defaultCondition: string;
   defaultAuthenticity: string;
@@ -250,7 +250,7 @@ const EMPTY_VALUES: CategoryFormValues = {
   coverImage: "",
   contentBody: "",
   highlightsText: "",
-  hasbroName: "",
+  altRegionName: "",
   taxCodeId: "",
   defaultCondition: "",
   defaultAuthenticity: "",
@@ -319,7 +319,7 @@ interface CategoryPayload {
   contentBody?: string;
   highlights?: string[];
   faqs?: CategoryFaq[];
-  hasbroName?: string;
+  altRegionName?: string;
   descriptionTemplates?: CategoryTemplateRow[];
   /*
    * The REAL type, not a `Record<string, unknown>`.
@@ -427,7 +427,7 @@ function buildContentPayload(
      * to mean "do not write it", not "write an empty string every reader then
      * has to treat as absent".
      */
-    ...(String(v.hasbroName ?? "").trim() ? { hasbroName: String(v.hasbroName).trim() } : {}),
+    ...(String(v.altRegionName ?? "").trim() ? { altRegionName: String(v.altRegionName).trim() } : {}),
     descriptionTemplates: templates
       .filter((t) => t.label.trim() !== "" && t.body.trim() !== "")
       .map((t) => ({ ...t, id: t.id || toCategorySlug(t.label) || "template" })),
@@ -519,7 +519,7 @@ export function AdminCategoryEditorView({
       coverImage: cat.display?.coverImage ?? "",
       contentBody: cat.contentBody ?? "",
       highlightsText: listToLines(cat.highlights),
-      hasbroName: cat.hasbroName ?? "",
+      altRegionName: cat.altRegionName ?? "",
       taxCodeId: cat.productDefaults?.taxCodeId ?? "",
       defaultCondition: cat.productDefaults?.defaultCondition ?? "",
       defaultAuthenticity: cat.productDefaults?.defaultAuthenticity ?? "",
@@ -808,7 +808,7 @@ export function AdminCategoryEditorView({
           {
             id: "content",
             label: "Content & Templates",
-            fields: ["contentBody", "highlightsText", "hasbroName"],
+            fields: ["contentBody", "highlightsText", "altRegionName"],
             render: ({ values: v, onChange, errors }) => (
               <Stack gap="md">
                 <Stack gap="xs">
@@ -833,13 +833,13 @@ export function AdminCategoryEditorView({
                 </Stack>
 
                 <FieldInput
-                  name="hasbroName"
-                  label="Hasbro / international name"
-                  value={String(v.hasbroName ?? "")}
-                  onChange={(val) => onChange({ hasbroName: val })}
+                  name="altRegionName"
+                  label="Alternate regional name"
+                  value={String(v.altRegionName ?? "")}
+                  onChange={(val) => onChange({ altRegionName: val })}
                   placeholder="e.g. Beyblade Burst Turbo"
-                  error={errors.hasbroName}
-                  hint="Only when the Hasbro season name genuinely differs from the Takara-Tomy one — Cho-Z ships as Turbo, God as Evolution. Rendered on the category page as 'Also known as'. Leave blank if there is no divergence, or if you cannot confirm one: a guessed pairing reads as fact."
+                  error={errors.altRegionName}
+                  hint="Only when this release genuinely ships under a different name in another region — e.g. Cho-Z sells as Turbo, God as Evolution. Rendered on the category page as 'Also known as'. Leave blank if there is no divergence, or if you cannot confirm one: a guessed pairing reads as fact."
                 />
 
                 <Stack gap="xs">

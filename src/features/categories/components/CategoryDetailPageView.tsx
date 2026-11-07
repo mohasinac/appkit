@@ -863,27 +863,30 @@ export async function CategoryDetailPageView({ slug, pageRegionCards = [] }: Cat
               </Div>
             </Section>
           ),
-          /* ── Regional naming: the Hasbro name for this wave ──────────────────
-              A buyer who grew up on Hasbro's seasons knows "Turbo", not "Cho-Z",
-              and the catalogue has always been FINDABLE by either — per-model
-              Hasbro names are folded into `aliases`. But `aliases` feeds
-              `searchTxt` and is rendered nowhere, so nothing on the page ever
-              stated the correspondence. Someone who searched "Turbo", landed on
-              Cho-Z and saw no mention of Turbo had no way to know they were in the
-              right place.
+          /* ── Regional naming: the alternate-market name for this release ─────
+              Renamed from `hasbroName` 2026-11-07 — the concept is real, but a
+              core schema field named after one company hardcodes a vertical.
+
+              A buyer who grew up on the other region's naming knows "Turbo", not
+              "Cho-Z", and the catalogue has always been FINDABLE by either —
+              per-model alternate names are folded into `aliases`. But `aliases`
+              feeds `searchTxt` and is rendered nowhere, so nothing on the page
+              ever stated the correspondence. Someone who searched "Turbo", landed
+              on Cho-Z and saw no mention of Turbo had no way to know they were in
+              the right place.
 
               Renders nothing when unset, which is the common case: five of the
               seven Burst waves have a confirmed divergence and nothing else in the
               forest does. */
-          category?.hasbroName
+          category?.altRegionName
             ? () => (
                 <Section padding="y-md">
                   <Container size="xl">
                     <Row gap="md" align="center" wrap>
-                      {category.hasbroCoverImage && (
+                      {category.altRegionCoverImage && (
                         <MediaImage
-                          src={category.hasbroCoverImage}
-                          alt={`${category.hasbroName} logo`}
+                          src={category.altRegionCoverImage}
+                          alt={`${category.altRegionName} logo`}
                           size="thumbnail"
                           className="h-12 w-auto flex-shrink-0"
                         />
@@ -892,11 +895,16 @@ export async function CategoryDetailPageView({ slug, pageRegionCards = [] }: Cat
                         <Text size="xs" color="muted" transform="uppercase" weight="medium">
                           Also known as
                         </Text>
-                        <Text weight="semibold">{category.hasbroName}</Text>
+                        <Text weight="semibold">{category.altRegionName}</Text>
+                        {/* Generic copy: names the two VALUES rather than two
+                            companies, so the component works for any vertical
+                            with regional naming. The Beyblade data still reads
+                            correctly — "released as Cho-Z in one region and
+                            Turbo in another". */}
                         <Text size="xs" color="muted">
-                          The same wave, named differently outside Japan — Takara-Tomy
-                          releases it as {category.name}, Hasbro as {category.hasbroName}.
-                          Both names find these listings.
+                          The same release, named differently by region — sold as{" "}
+                          {category.name} in one market and {category.altRegionName} in
+                          another. Both names find these listings.
                         </Text>
                       </Stack>
                     </Row>

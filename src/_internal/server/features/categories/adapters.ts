@@ -67,11 +67,16 @@ export const PUBLIC_CATEGORY_FIELDS = [
   "brandCountry",
   "brandFounded",
   /*
-   * The Hasbro alternate name and its cover, rendered as "Also known as" by
+   * The alternate regional name and its cover, rendered as "Also known as" by
    * `CategoryDetailPageView`. Public because the whole point of the field is
-   * that a buyer who only knows the Hasbro season name can SEE the
-   * correspondence — a name on a toy box is not sensitive.
+   * that a buyer who only knows the other regional name can SEE the
+   * correspondence — a name on a retail box is not sensitive.
+   *
+   * The deprecated `hasbro*` keys stay listed so documents written before the
+   * 2026-11-07 rename still project; drop them after the backfill.
    */
+  "altRegionName",
+  "altRegionCoverImage",
   "hasbroName",
   "hasbroCoverImage",
   // Rollup counts only — see `metrics` in the private list.
@@ -276,8 +281,12 @@ export function toCategoryListItem(doc: CategoryDocument): CategoryItem {
     brandCountry: doc.brandCountry,
     brandFounded: doc.brandFounded,
 
-    hasbroName: doc.hasbroName,
-    hasbroCoverImage: doc.hasbroCoverImage,
+    // 🛑 Dual-read across the 2026-11-07 rename. Stored category documents
+    // written before it carry `hasbroName`/`hasbroCoverImage`; a bare rename
+    // would silently blank the "Also known as" line on every existing category
+    // rather than failing loudly. Drop the fallback once the backfill has run.
+    altRegionName: doc.altRegionName ?? doc.hasbroName,
+    altRegionCoverImage: doc.altRegionCoverImage ?? doc.hasbroCoverImage,
 
     metrics: toPublicMetrics(doc.metrics),
 

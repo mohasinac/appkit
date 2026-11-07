@@ -159,25 +159,44 @@ export interface CategoryDocument extends BaseDocument {
   brandFounded?: number;
 
   /**
-   * The Hasbro / international-market name for this generation or wave, where
-   * it genuinely differs from the Takara-Tomy one. Two real pairs exist and
-   * they are separate waves, not one renaming: TT **God** ships as Hasbro
-   * **Evolution**, and TT **Cho-Z** ships as Hasbro **Turbo**.
+   * The alternate regional / international-market name for this generation or
+   * wave, where it genuinely differs from the primary one.
+   *
+   * 🛑 RENAMED from `hasbroName` (2026-11-07). The concept is real — regional
+   * licensing genuinely produces two names for one wave — but naming a core
+   * schema field after one specific real company hardcodes a single product
+   * vertical into what must stay a vertical-neutral platform. The Beyblade
+   * DATA is correct and stays; the FIELD NAME was the defect.
+   *
+   * In the current Beyblade catalogue the divergences are: TT **God** ships as
+   * **Evolution**, and TT **Cho-Z** ships as **Turbo**. These are separate
+   * waves, not one renaming.
    *
    * 🛑 RENDERED — "Also known as" on the category detail page. That is the
    * whole difference from `aliases` below, which feeds `searchTxt` and is
-   * rendered nowhere. A buyer who only knows the Hasbro season name needs to
+   * rendered nowhere. A buyer who only knows the other regional name needs to
    * SEE the correspondence, not merely be found by it.
    *
    * Left unset wherever a divergence is not confirmed. An honest gap beats a
    * guessed pairing — same precedent as the 25 of 220 models with no cover and
    * the deliberately partial `FRANCHISE_BY_CATEGORY_ROOT`.
    */
-  hasbroName?: string;
+  altRegionName?: string;
   /**
-   * Cover for the Hasbro-named variant, shown beside the primary cover when
-   * both exist. Same `/media/<slug>` form as `display.coverImage`.
+   * Cover for the alternate-regional-named variant, shown beside the primary
+   * cover when both exist. Same `/media/<slug>` form as `display.coverImage`.
    */
+  altRegionCoverImage?: string;
+
+  /**
+   * @deprecated Pre-2026-11-07 spelling of `altRegionName` /
+   * `altRegionCoverImage`. Still DECLARED because stored Firestore category
+   * documents written before the rename carry these keys — the read path falls
+   * back to them so nothing blanks out before a backfill runs. Do not write
+   * them; remove both once the backfill is confirmed.
+   */
+  hasbroName?: string;
+  /** @deprecated See `hasbroName`. */
   hasbroCoverImage?: string;
 
   /**
@@ -466,8 +485,8 @@ export const CATEGORIES_UPDATABLE_FIELDS = [
    * QuadStrike) is exactly the kind a human may later confirm and want to fill
    * in without a reseed.
    */
-  "hasbroName",
-  "hasbroCoverImage",
+  "altRegionName",
+  "altRegionCoverImage",
 ] as const;
 
 export type CategoryCreateInput = Omit<

@@ -180,6 +180,10 @@ export const categoryFirestoreSchema = z.object({
   brandWebsite: z.string().optional(),
   brandCountry: z.string().optional(),
   brandFounded: z.number().int().optional(),
+  altRegionName: z.string().optional(),
+  altRegionCoverImage: z.string().optional(),
+  // @deprecated pre-2026-11-07 spelling — accepted on READ so documents written
+  // before the rename still validate. Not written by any new code.
   hasbroName: z.string().optional(),
   hasbroCoverImage: z.string().optional(),
   highlights: z.array(z.string()).optional(),

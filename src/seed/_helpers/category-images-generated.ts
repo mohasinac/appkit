@@ -606,9 +606,9 @@ export const GENERATED_CATEGORY_IMAGE_COUNT = 554;
  * mean one silently overwriting the other, and the loser would be whichever
  * the directory listing happened to reach second.
  *
- * Applied by `withGeneratedHasbroCover` to `hasbroCoverImage`, and rendered
+ * Applied by `withGeneratedHasbroCover` to `altRegionCoverImage`, and rendered
  * beside the "Also known as" name. Only populated for a category that also
- * carries `hasbroName` — an image with no name to label it has nothing to say.
+ * carries `altRegionName` — an image with no name to label it has nothing to say.
  */
 export const GENERATED_CATEGORY_HASBRO_IMAGES: Readonly<Record<string, string>> = {
   "category-burst-cho-z": "/media/category-burst-cho-z-hasbro-image",

@@ -88,13 +88,16 @@ export interface CategoryItem {
   /** Brand founded year — only set when categoryType==="brand". */
   brandFounded?: number;
   /**
-   * Hasbro / international-market name for this generation or wave (TT "God" →
-   * Hasbro "Evolution"; TT "Cho-Z" → Hasbro "Turbo"). Rendered as "Also known
+   * Alternate regional / international-market name for this generation or wave
+   * (TT "God" → "Evolution"; TT "Cho-Z" → "Turbo"). Rendered as "Also known
    * as" — unlike `aliases`, which only feeds search.
+   *
+   * Renamed from `hasbroName` 2026-11-07: a core schema field must not be named
+   * after one real company. The data is right; the field name was not.
    */
-  hasbroName?: string;
-  /** Cover for the Hasbro-named variant, shown beside the primary cover. */
-  hasbroCoverImage?: string;
+  altRegionName?: string;
+  /** Cover for the alternate-regional-named variant, beside the primary cover. */
+  altRegionCoverImage?: string;
   /** Short bullet points — "why shop this category/brand." */
   highlights?: string[];
   /** A handful of Q&A pairs shown on the category/brand detail page. */

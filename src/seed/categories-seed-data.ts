@@ -620,21 +620,21 @@ function withGeneratedCoverImage<T extends Partial<CategoryDocument>>(row: T): T
 /**
  * Attach the REGIONAL-VARIANT logo to a row that names a Hasbro equivalent.
  *
- * 🛑 Gated on `hasbroName`, not merely on the map having an entry. The image is
+ * 🛑 Gated on `altRegionName`, not merely on the map having an entry. The image is
  * rendered beside the "Also known as" line, so without the name there is
  * nothing to label it and a bare second logo reads as a duplicate of the
  * cover. The name is the fact; the image only illustrates it.
  *
  * Same hand-authored-wins rule as the cover, for the same reason: the admin
- * editor can set `hasbroCoverImage` on a row the generator knows nothing
+ * editor can set `altRegionCoverImage` on a row the generator knows nothing
  * about, and a reseed must not take that away.
  */
 function withGeneratedHasbroCover<T extends Partial<CategoryDocument>>(row: T): T {
-  if (!row.hasbroName) return row;
-  const existing = row.hasbroCoverImage;
+  if (!row.altRegionName) return row;
+  const existing = row.altRegionCoverImage;
   if (typeof existing === "string" && existing.trim().length > 0) return row;
   const generated = row.id ? GENERATED_CATEGORY_HASBRO_IMAGES[row.id] : undefined;
-  return generated ? { ...row, hasbroCoverImage: generated } : row;
+  return generated ? { ...row, altRegionCoverImage: generated } : row;
 }
 
 const allCategoryRows: Partial<CategoryDocument>[] = [
@@ -747,7 +747,7 @@ if (generatedImagesApplied < Math.floor(GENERATED_CATEGORY_IMAGE_COUNT * 0.9)) {
  * got wrong until a negative control was actually run against it:
  *
  *   - **A map entry whose row does not name a Hasbro wave is an ERROR.**
- *     `withGeneratedHasbroCover` gates on `hasbroName`, so that image can
+ *     `withGeneratedHasbroCover` gates on `altRegionName`, so that image can
  *     never render — it was fetched, uploaded to Storage and mapped, and is
  *     now a stored object nothing will ever serve. Silent waste. Throw.
  *
@@ -762,21 +762,21 @@ if (generatedImagesApplied < Math.floor(GENERATED_CATEGORY_IMAGE_COUNT * 0.9)) {
  * than a 90% floor because there are five, hand-set against five confirmed
  * pairings: "most of them" is not a meaningful tolerance at that size.
  */
-const hasbroNamed = allCategoryRows.filter((c) => typeof c.hasbroName === "string" && c.hasbroName);
-const hasbroCovered = hasbroNamed.filter(
-  (c) => typeof c.id === "string" && GENERATED_CATEGORY_HASBRO_IMAGES[c.id] === c.hasbroCoverImage,
+const altRegionNamed = allCategoryRows.filter((c) => typeof c.altRegionName === "string" && c.altRegionName);
+const hasbroCovered = altRegionNamed.filter(
+  (c) => typeof c.id === "string" && GENERATED_CATEGORY_HASBRO_IMAGES[c.id] === c.altRegionCoverImage,
 );
 const hasbroMapKeys = Object.keys(GENERATED_CATEGORY_HASBRO_IMAGES);
 if (hasbroCovered.length !== hasbroMapKeys.length) {
-  const namedIds = new Set(hasbroNamed.map((c) => c.id));
+  const namedIds = new Set(altRegionNamed.map((c) => c.id));
   const orphanLogos = hasbroMapKeys.filter((k) => !namedIds.has(k));
   throw new Error(
     `category seed: ${hasbroCovered.length} of ${hasbroMapKeys.length} regional-variant logos ` +
       `reached a row that names one. ` +
       (orphanLogos.length > 0
-        ? `These have a logo but no hasbroName: ${orphanLogos.join(", ")}. `
+        ? `These have a logo but no altRegionName: ${orphanLogos.join(", ")}. `
         : "") +
-      `Either set hasbroName in category-forest.ts, or drop the entry from the manifest and ` +
+      `Either set altRegionName in category-forest.ts, or drop the entry from the manifest and ` +
       `re-run scripts/fetch-category-images.mjs. Nothing would error at load time — the ` +
       `"Also known as" block would just render without its logo.`,
   );
