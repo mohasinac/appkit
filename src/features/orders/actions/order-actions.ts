@@ -18,6 +18,15 @@ import type { OrderDocument, OrderDocumentItem, OrderPlain } from "../schemas";
 import type { CancellationRefundOutcome } from "../types/index";
 import type { TrackingInfo } from "../../../contracts/shipping";
 import { ORDER_CANCELLABLE_STATUSES } from "../../../_internal/shared/features/orders/config";
+import {
+  canBuyerCancel,
+  canBuyerCancelOrder,
+  workflowRuleFor,
+} from "../../../_internal/shared/features/orders/workflow-registry";
+import type {
+  RevealState,
+  WorkflowStatus,
+} from "../../../_internal/shared/features/orders/workflow-registry";
 import { cancelOrderWithRefund } from "../../../_internal/server/features/orders/cancellation-refund";
 
 const ERR_ORDER_NOT_FOUND = "Order not found";
@@ -31,6 +40,48 @@ function assertCancellable(order: OrderDocument): void {
     throw new ValidationError(
       "Only pending or confirmed orders can be cancelled",
     );
+  }
+
+  /*
+   * Per-listing-type rules on top of the blanket status check above.
+   *
+   * 🛑 The status list alone says `confirmed` is cancellable, which is right
+   * for ordinary goods and WRONG for a concealed item: once a surprise order
+   * is confirmed — or its contents revealed — it is locked, because otherwise
+   * cancellation is a free option on what the buyer has already seen.
+   *
+   * That cannot be expressed as a status list, since the lock depends on the
+   * item's reveal state as well as the order's status. So the registry decides,
+   * keyed off the `supportsSurpriseReveal` CAPABILITY rather than a type name.
+   *
+   * The strictest line governs the whole order (`canBuyerCancelOrder` is an
+   * AND): a mixed order holding one revealed surprise item must not be
+   * cancelled wholesale. Partial cancellation is a separate feature.
+   *
+   * Admin override is deliberately NOT routed through here — admin may act on
+   * a locked order by design, on its own audited path.
+   */
+  const lines = (order.items ?? []).map((item: OrderDocumentItem) => ({
+    listingType: item.listingType,
+    ctx: {
+      status: order.status as WorkflowStatus,
+      // `prizeRevealStatus` is a four-state enum ("pending"|"open"|"closed"|
+      // "revealed"); the registry only cares whether the buyer has SEEN the
+      // contents, so anything short of "revealed" is still concealed.
+      revealState: (item.prizeRevealStatus === "revealed"
+        ? "revealed"
+        : "unrevealed") as RevealState,
+    },
+  }));
+
+  if (lines.length > 0 && !canBuyerCancelOrder(lines)) {
+    const blocked = lines.find(
+      (l) => l.listingType && !canBuyerCancel(l.listingType, l.ctx),
+    );
+    const reason = blocked?.listingType
+      ? workflowRuleFor(blocked.listingType).cancelBlockedReason(blocked.ctx)
+      : null;
+    throw new ValidationError(reason ?? "This order can no longer be cancelled.");
   }
 }
 
