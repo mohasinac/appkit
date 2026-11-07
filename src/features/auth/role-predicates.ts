@@ -128,16 +128,28 @@ export const isSellerUser = (input: RoleCarrier): boolean =>
 export const isStrictSellerUser = (input: RoleCarrier): boolean =>
   holdsRole(input, "seller");
 
-/**
- * @deprecated `moderator` is collapsed into `employee` (A9, owner 2026-11-07),
- * so this is now exactly `isEmployeeUser`. Kept as a named alias rather than
- * deleted because ~20 call sites read `isAdminUser(u) || isModeratorUser(u)`
- * and that sentence is still TRUE under the fold — a moderator is an employee.
- * New code should call `isEmployeeUser`, or better, check the moderation
- * permission (`admin:moderation:read`) via `permissionsFor`.
+/*
+ * ── 🛑 `isModeratorUser` IS DELETED. Do not reintroduce it. ──────────────────
+ *
+ * It survived the `moderator`→`employee` fold (A9) as an alias of
+ * `isEmployeeUser`, on the reasoning that "a moderator is an employee" is true
+ * under the fold. It is true — and that was exactly the problem. The ~20 sites
+ * reading `isAdminUser(u) || isModeratorUser(u)` kept compiling and kept
+ * reading as if they gated moderation, while in fact admitting EVERY employee:
+ * order payment overrides, review and product moderation, support tickets,
+ * draw-entry oversight. A function whose name asks one question and whose body
+ * answers a wider one is worse than no function.
+ *
+ * Owner, 2026-11-08, choosing how to resolve it: keep the fold, and gate those
+ * sites on an explicit moderation PERMISSION. All ~20 now call
+ * `canModerateServer(uid, action)` (`_internal/server/features/auth/permissions`)
+ * against `MODERATION_PERMISSIONS` in `features/auth/auth-helpers`, and the
+ * default grant is **not granted** — `ROLE_PERMISSION_BUNDLES.employee` is `[]`.
+ *
+ * If you need "is this person staff", that is `isEmployeeUser`, below, and it
+ * is a routing/chrome question. If you need "may this person moderate", that
+ * is a permission, and it does not live in this file.
  */
-export const isModeratorUser = (input: RoleCarrier): boolean =>
-  holdsRole(input, "employee");
 
 export const isEmployeeUser = (input: RoleCarrier): boolean =>
   holdsRole(input, "employee");

@@ -7254,7 +7254,8 @@ export type {
 export {
   isAdminUser,
   isSellerUser,
-  isModeratorUser,
+  // `isModeratorUser` is deliberately absent — deleted 2026-11-08, see the
+  // 🛑 block in role-predicates. Moderation is a permission, not a predicate.
   isEmployeeUser,
   isBuyerUser,
   isEffectiveAdminUser,

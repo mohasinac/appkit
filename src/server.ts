@@ -1989,6 +1989,14 @@ export {
   getServerPermissions,
   checkPermission,
   checkAnyPermission,
+  /*
+   * The async permission checks. `serverCan` / `canModerateServer` read the
+   * user document before applying `permissionsFor`, which is the only correct
+   * form inside an API route — `RouteUser` carries no `permissions[]`, so the
+   * synchronous `can()` cannot see a per-person grant.
+   */
+  serverCan,
+  canModerateServer,
   makeAdminSectionLayout,
 } from "./_internal/server/features/auth/permissions";
 export type {
