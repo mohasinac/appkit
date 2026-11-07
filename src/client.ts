@@ -1086,10 +1086,28 @@ export {
   isListingSurfaceVisible,
   isCountedSurfaceVisible,
   visibleListingTypes,
+  /*
+   * "Listed" gates (listed / unlisted / off). Client-safe, and needed here
+   * for a sharper reason than the siblings above: the *Enabled helpers stay
+   * TRUE for `"unlisted"`, so any client tab bar, filter chip group or link
+   * that reads them re-advertises a withdrawn type. Review found exactly that
+   * on the /products type filter and the "Browse collector drops" link.
+   */
+  isListingTypeListed,
+  isCategoryTypeListed,
+  isBrowsePageListed,
+  listedListingTypes,
+  /* Three-state admin choice codec — the admin Listings tab renders it. */
+  FLAG_CHOICE_OPTIONS,
+  flagValueToChoice,
+  choiceToFlagValue,
+  isFlagChoice,
 } from "./_internal/shared/listing-types/feature-flags";
 export type {
   BrowsePageKey,
   SurfaceCountSnapshot,
+  FlagValue,
+  FlagChoice,
 } from "./_internal/shared/listing-types/feature-flags";
 // Basic/advanced listing-type split. Client-safe: the nav filter and any
 // seller-facing picker need the same rule the server enforces, and deriving it

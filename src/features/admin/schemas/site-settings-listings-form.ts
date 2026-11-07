@@ -46,7 +46,23 @@
 import { z } from "zod";
 import { annotate } from "../../shell/field-ui-meta";
 
-const flagRecord = () => z.record(z.string(), z.boolean());
+/**
+ * 🛑 `boolean | "unlisted"`, not `boolean` — THREE states, because all three
+ * stored axes are declared `boolean | "unlisted"` and a two-state schema made
+ * the middle one unreachable from the admin UI.
+ *
+ * `"unlisted"` has been a real stored value since 2026-11-07 (the owner's
+ * *"do not show their links or filters, but do not 404 their pages"*), and
+ * `isListingTypeEnabled` / `isListingTypeListed` read it correctly. But this
+ * schema said `z.boolean()` and the renderer drew a two-state `Toggle`, so a
+ * stored `"unlisted"` appeared as fully ON and flipping that toggle wrote a
+ * boolean over it — the state was invisible and destroyable, settable only by
+ * editing Firestore by hand. A capability that is data but has no control is
+ * still a code change in practice, which is what the capability model exists
+ * to prevent.
+ */
+const flagRecord = () =>
+  z.record(z.string(), z.union([z.boolean(), z.literal("unlisted")]));
 
 export const siteSettingsListingsFormSchema = z.object({
   listingTypeFlags: annotate(flagRecord(), {

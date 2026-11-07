@@ -35,6 +35,69 @@ import { ROUTES } from "../../../next/routing/route-map";
  */
 export type FlagValue = boolean | "unlisted";
 
+/**
+ * The three states as an ADMIN-EDITABLE choice.
+ *
+ * 🛑 This exists because the third state had no control surface. `"unlisted"`
+ * has been a real stored value since 2026-11-07, read correctly by
+ * `isListingTypeEnabled` / `isListingTypeListed` — but the admin Listings tab
+ * rendered each flag as a two-state `Toggle` (`checked={flags[key] ?? true}`),
+ * which means:
+ *
+ *   · a stored `"unlisted"` is a truthy STRING, so the toggle drew it as fully
+ *     ON — an admin could not tell "unlisted" from "listed"; and
+ *   · flipping that toggle wrote a `boolean`, DESTROYING the third state with
+ *     no way to put it back.
+ *
+ * So the state the owner asked for ("do not show their links or filters, but
+ * do not 404 their pages") was reachable only by editing Firestore by hand.
+ * A capability that is data but has no control is still a code change in
+ * practice, which is exactly what the governing principle forbids.
+ *
+ * Deliberately generic over all THREE flag axes (listing types, category
+ * types, browse pages). All three are declared `boolean | "unlisted"` and all
+ * three had the same two-state renderer, so a listing-type-only fix would
+ * leave two divergent copies of the same bug.
+ */
+export type FlagChoice = "listed" | "unlisted" | "off";
+
+/**
+ * Option list for a three-state admin control, in deliberate order
+ * most-open → most-closed.
+ *
+ * Labels say what each state DOES rather than naming the stored value: an
+ * admin choosing between "unlisted" and "off" needs to know one still serves
+ * the page and the other 404s it, and that distinction is the whole reason
+ * the third state exists.
+ */
+export const FLAG_CHOICE_OPTIONS: ReadonlyArray<{ value: FlagChoice; label: string }> = [
+  { value: "listed", label: "Listed — browsable and advertised" },
+  { value: "unlisted", label: "Unlisted — pages still serve, no links" },
+  { value: "off", label: "Off — pages return Not Found" },
+];
+
+/**
+ * Stored value → choice. `undefined` maps to `"listed"`, matching the
+ * absent-means-enabled contract every reader in this file already honours.
+ */
+export function flagValueToChoice(value: FlagValue | undefined): FlagChoice {
+  if (value === false) return "off";
+  if (value === "unlisted") return "unlisted";
+  return "listed";
+}
+
+/** Choice → stored value. The exact inverse of `flagValueToChoice`. */
+export function choiceToFlagValue(choice: FlagChoice): FlagValue {
+  if (choice === "off") return false;
+  if (choice === "unlisted") return "unlisted";
+  return true;
+}
+
+/** Narrow an untrusted string (a form value) to a `FlagChoice`. */
+export function isFlagChoice(value: unknown): value is FlagChoice {
+  return value === "listed" || value === "unlisted" || value === "off";
+}
+
 export interface FeatureFlagSnapshot {
   listings?: {
     listingTypes?: Partial<Record<ListingType, FlagValue>>;
@@ -274,6 +337,27 @@ export function enabledListingTypes(
   settings: FeatureFlagSnapshot | null | undefined,
 ): ListingType[] {
   return ALL_LISTING_TYPES.filter((t) => isListingTypeEnabled(t, settings));
+}
+
+/**
+ * The listing types a visitor may be OFFERED a way into — tabs, chips, filter
+ * options, nav entries.
+ *
+ * 🛑 The counterpart of `enabledListingTypes`, and the distinction is the one
+ * that review found being lost: `enabled` stays TRUE for `"unlisted"` (its
+ * pages must keep serving), so a tab list built from `enabledListingTypes`
+ * silently re-advertises every type an admin just unlisted. `enabled` is the
+ * right answer for a QUERY span or an authoring control; this is the right
+ * answer for anything a visitor clicks.
+ *
+ * Sits BELOW `visibleListingTypes`, which additionally drops types measured
+ * empty — use that one where a count snapshot is available, this one where
+ * the caller does its own count-based hiding (the category/brand tab bars).
+ */
+export function listedListingTypes(
+  settings: FeatureFlagSnapshot | null | undefined,
+): ListingType[] {
+  return ALL_LISTING_TYPES.filter((t) => isListingTypeListed(t, settings));
 }
 
 // ---------------------------------------------------------------------------

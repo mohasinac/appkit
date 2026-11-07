@@ -23,6 +23,11 @@ import { NOTIFICATION_TYPE_TABS } from "../../../constants/notification-types";
 import {
   ALL_LISTING_TYPES,
   ALL_BROWSE_PAGES,
+  FLAG_CHOICE_OPTIONS,
+  flagValueToChoice,
+  choiceToFlagValue,
+  type FlagChoice,
+  type FlagValue,
 } from "../../../_internal/shared/listing-types/feature-flags";
 import { pluginFor, type ActionKind } from "../../../_internal/shared/listing-types/_registry";
 import {
@@ -1162,12 +1167,30 @@ export function AdminSiteSettingsView({
     () =>
       buildSectionsFromSchema<SiteSettingsListingsFormValues>(siteSettingsListingsFormSchema, {
         renderers: {
+          /*
+           * 🛑 A THREE-STATE SELECT, not a Toggle — all three grids.
+           *
+           * Every one of these axes stores `boolean | "unlisted"`, and
+           * `"unlisted"` is the state the owner asked for on 2026-11-07:
+           * *"do not show their links or filters or any way to jump to them,
+           * but do not 404 their pages."* A `Toggle` cannot carry it. Worse
+           * than cannot: a stored `"unlisted"` is a truthy STRING, so the
+           * toggle drew it fully ON — indistinguishable from "listed" — and
+           * flipping it wrote a boolean, destroying the state with no way to
+           * put it back from this screen. The only way to set it was editing
+           * Firestore by hand, which is precisely the "code change to flip a
+           * flag" the capability model exists to abolish.
+           *
+           * Labels come from `FLAG_CHOICE_OPTIONS` and say what each state
+           * DOES, because the one thing an admin must not get wrong here is
+           * that "unlisted" keeps serving the page and "off" 404s it.
+           */
           listingTypeFlags: ({ values, onChange }) => {
-            const flags = (values.listingTypeFlags as Record<string, boolean>) ?? {};
+            const flags = (values.listingTypeFlags as Record<string, FlagValue>) ?? {};
             return (
               <Grid cols={2} gap="sm">
                 {LISTING_TYPE_KEYS.map((key) => (
-                  <Toggle
+                  <Select
                     key={key}
                     // The plugin's own display label, not the raw key — the
                     // literal version rendered "pre-order" and
@@ -1176,42 +1199,66 @@ export function AdminSiteSettingsView({
                     // disabling this type actually turns off (bid/reserve/
                     // offer, not just "buy").
                     label={`${pluginFor(key).typeLabel} — ${ACTION_KIND_LABELS[pluginFor(key).primaryActionKind]}`}
-                    checked={flags[key] ?? true}
-                    onChange={(v) => onChange({ listingTypeFlags: { ...flags, [key]: v } })}
+                    value={flagValueToChoice(flags[key])}
+                    options={[...FLAG_CHOICE_OPTIONS]}
+                    onValueChange={(choice) =>
+                      onChange({
+                        listingTypeFlags: {
+                          ...flags,
+                          [key]: choiceToFlagValue(choice as FlagChoice),
+                        },
+                      })
+                    }
                   />
                 ))}
               </Grid>
             );
           },
           categoryTypeFlags: ({ values, onChange }) => {
-            const flags = (values.categoryTypeFlags as Record<string, boolean>) ?? {};
+            const flags = (values.categoryTypeFlags as Record<string, FlagValue>) ?? {};
             return (
               <Grid cols={2} gap="sm">
                 {CATEGORY_TYPE_KEYS.map((key) => (
-                  <Toggle
+                  <Select
                     key={key}
                     label={key}
-                    checked={flags[key] ?? true}
-                    onChange={(v) => onChange({ categoryTypeFlags: { ...flags, [key]: v } })}
+                    value={flagValueToChoice(flags[key])}
+                    options={[...FLAG_CHOICE_OPTIONS]}
+                    onValueChange={(choice) =>
+                      onChange({
+                        categoryTypeFlags: {
+                          ...flags,
+                          [key]: choiceToFlagValue(choice as FlagChoice),
+                        },
+                      })
+                    }
                   />
                 ))}
               </Grid>
             );
           },
           browsePageFlags: ({ values, onChange }) => {
-            const flags = (values.browsePageFlags as Record<string, boolean>) ?? {};
+            const flags = (values.browsePageFlags as Record<string, FlagValue>) ?? {};
             return (
               <Grid cols={2} gap="sm">
-                {/* The hint sits BESIDE the toggle rather than inside its
-                    `label`: Toggle has no `description` prop, and widening a
-                    primitive used on ~70 surfaces to carry a hint for four
-                    rows is the wrong trade. */}
+                {/* The hint sits BESIDE the control rather than inside its
+                    `label`: it is per-section prose about what closing that
+                    door actually withdraws, which no shared primitive should
+                    carry for four rows. */}
                 {BROWSE_PAGE_KEYS.map((key) => (
                   <Stack key={key} gap="xs">
-                    <Toggle
+                    <Select
                       label={BROWSE_PAGE_META[key]?.label ?? key}
-                      checked={flags[key] ?? true}
-                      onChange={(v) => onChange({ browsePageFlags: { ...flags, [key]: v } })}
+                      value={flagValueToChoice(flags[key])}
+                      options={[...FLAG_CHOICE_OPTIONS]}
+                      onValueChange={(choice) =>
+                        onChange({
+                          browsePageFlags: {
+                            ...flags,
+                            [key]: choiceToFlagValue(choice as FlagChoice),
+                          },
+                        })
+                      }
                     />
                     <Text size="xs" color="muted">{BROWSE_PAGE_META[key]?.hint}</Text>
                   </Stack>
@@ -1910,10 +1957,16 @@ export function AdminSiteSettingsView({
       platformShippingFixedMin: s.commissions?.platformShippingFixedMin ?? 0,
     });
 
+    /*
+     * 🛑 `FlagValue`, not `boolean`. These three maps store
+     * `boolean | "unlisted"`; the old `as Record<string, boolean>` cast was a
+     * lie that let a truthy `"unlisted"` string flow into a two-state Toggle,
+     * which rendered it as "on" and overwrote it on the next click.
+     */
     setListingsForm({
-      listingTypeFlags: (s.listings?.listingTypes as Record<string, boolean> | undefined) ?? {},
-      categoryTypeFlags: (s.listings?.categoryTypes as Record<string, boolean> | undefined) ?? {},
-      browsePageFlags: (s.listings?.browsePages as Record<string, boolean> | undefined) ?? {},
+      listingTypeFlags: (s.listings?.listingTypes as Record<string, FlagValue> | undefined) ?? {},
+      categoryTypeFlags: (s.listings?.categoryTypes as Record<string, FlagValue> | undefined) ?? {},
+      browsePageFlags: (s.listings?.browsePages as Record<string, FlagValue> | undefined) ?? {},
     });
 
     setCollectorDropForm({

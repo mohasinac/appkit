@@ -50,7 +50,15 @@ export function UserBidsView({ pageRegionCards = [] }: UserBidsViewProps = {}) {
   // not an affordance: it is not row-scoped, and it only shows when there are
   // no bids at all.
   const [detail, setDetail] = useState<BidDocument | null>(null);
-  const collectorDropsEnabled = useListingTypeFlags()["collector-drop"];
+  /*
+   * 🛑 `isListed`, not the indexed/`isEnabled` form. This gates a LINK a
+   * visitor clicks, and an `"unlisted"` type is one the owner asked to leave
+   * with "no way to jump to them" while its own pages keep serving. The
+   * indexed form answers "does the site still sell this", which stays true for
+   * unlisted — so reading it here put this link back on screen after the type
+   * was unlisted, which is exactly the dead end the comment below forbids.
+   */
+  const collectorDropsListed = useListingTypeFlags().isListed("collector-drop");
 
   const config: ListingViewConfig<UserBidsResponse, BidDocument> = {
     portal: "user",
@@ -105,7 +113,7 @@ export function UserBidsView({ pageRegionCards = [] }: UserBidsViewProps = {}) {
                   past bids outlive collector drops being switched off, so the page
                   stays; inviting them to browse a catalogue the site no
                   longer offers would be a dead end. */}
-              {collectorDropsEnabled && (
+              {collectorDropsListed && (
                 <>
                   {" "}
                   <TextLink href={String(ROUTES.PUBLIC.COLLECTOR_DROPS)}>

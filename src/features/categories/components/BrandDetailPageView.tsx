@@ -35,7 +35,7 @@ import {
   type ListingTabCountResult,
 } from "../../../_internal/server/features/products/listing-tab-counts";
 import { CATEGORY_PAGE_TABS } from "../../products/constants/listing-tabs";
-import { enabledCategoryTypes, enabledListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
+import { enabledCategoryTypes, listedListingTypes } from "../../../_internal/shared/listing-types/feature-flags";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { safeRead } from "../../../errors/safe-read";
 import type { CategoryItem } from "../types";
@@ -450,7 +450,7 @@ export async function BrandDetailPageView({ slug, initialBrand, pageRegionCards 
                     initialBundles={brandBundles as any}
                     counts={counts}
                     totals={totals}
-                    enabledListingTypes={enabledListingTypes(settings)}
+                    listedListingTypes={listedListingTypes(settings)}
                     enabledCategoryTypes={enabledCategoryTypes(settings)}
                   />
                 ) : (

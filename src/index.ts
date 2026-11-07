@@ -7022,11 +7022,23 @@ export {
   isListingTypeListed,
   isCategoryTypeListed,
   isBrowsePageListed,
+  /*
+   * The "listed" counterpart of `enabledListingTypes`, plus the three-state
+   * admin choice codec. Both exported because the distinction is load-bearing
+   * and was already lost once: a tab/filter/nav list built from the *Enabled
+   * helpers silently re-advertises every `"unlisted"` type.
+   */
+  listedListingTypes,
+  FLAG_CHOICE_OPTIONS,
+  flagValueToChoice,
+  choiceToFlagValue,
+  isFlagChoice,
 } from "./_internal/shared/listing-types/feature-flags";
 export type {
   BrowsePageKey,
   SurfaceCountSnapshot,
   FlagValue,
+  FlagChoice,
 } from "./_internal/shared/listing-types/feature-flags";
 // Content tagging — does a stored document's own governing flag still allow
 // it to be shown. Same barrel choice as the feature-flag helpers above.

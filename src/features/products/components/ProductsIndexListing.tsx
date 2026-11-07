@@ -182,15 +182,44 @@ export function ProductsIndexListing({
    * listing is more useful than rendering an empty one. `useListingTypeFlags`
    * already fails open while settings load, so there is no first-paint flash.
    */
+  /*
+   * 🛑 TWO SPANS, because the flag has three states and they answer two
+   * different questions here (see `useListingTypeFlags`' own table).
+   *
+   *   `enabledSpan`     — what this page QUERIES. Reads `isEnabled`, so an
+   *                       `"unlisted"` type stays in it: its listings are
+   *                       still sold and a held URL (`?listingType=clearance`)
+   *                       must keep narrowing correctly rather than silently
+   *                       widening to the full span.
+   *   `listedTypeTabs`  — what this page OFFERS as a filter option. Reads
+   *                       `isListed`, so an `"unlisted"` type is withdrawn.
+   *
+   * They were one value until review found the bug: the hook's indexed form is
+   * `isEnabled`, and `"unlisted" !== false`, so an unlisted type stayed in the
+   * type tabs and the type filter even though the whole point of the state is
+   * "no way to jump to them".
+   */
   const listingTypeFlags = useListingTypeFlags();
   const enabledSpan = useMemo(() => {
-    const kept = listingTypes.filter((t) => listingTypeFlags[t as ListingType]);
+    const kept = listingTypes.filter((t) => listingTypeFlags.isEnabled(t as ListingType));
     return (kept.length > 0 ? kept : listingTypes) as readonly ListingType[];
   }, [listingTypes, listingTypeFlags]);
-  const enabledTypeTabs = useMemo(() => {
-    const kept = typeTabs.filter((tab) => enabledSpan.includes(tab.id as ListingType));
-    return kept.length > 0 ? kept : typeTabs;
-  }, [typeTabs, enabledSpan]);
+  /*
+   * 🛑 NO "fall back to every tab when the filter empties it" here, unlike
+   * `enabledSpan` above — and the asymmetry is deliberate. That fallback
+   * exists so an all-off settings document still renders a listing rather
+   * than an empty page; applied to the LISTED span it would re-offer exactly
+   * the types just withdrawn the moment every type on the page is unlisted.
+   * An empty type filter is the correct output there: the listing itself
+   * still renders, it simply offers no way to pivot by type.
+   *
+   * There is no first-paint flash to protect against either —
+   * `isListingTypeListed` treats an absent/unloaded flag as listed.
+   */
+  const listedTypeTabs = useMemo(
+    () => typeTabs.filter((tab) => listingTypeFlags.isListed(tab.id as ListingType)),
+    [typeTabs, listingTypeFlags],
+  );
 
   // ── Type filter (multi-select) ───────────────────────────────────────────
   // The URL value is a pipe-joined set; empty means "every type this page
@@ -252,7 +281,7 @@ export function ProductsIndexListing({
   ).filter((t) => enabledSpan.includes(t));
   const dedicatedPage = dedicatedPageFor(pendingTypes);
 
-  const listingTypeOptions = enabledTypeTabs.map((t) => ({ value: t.id, label: t.label }));
+  const listingTypeOptions = listedTypeTabs.map((t) => ({ value: t.id, label: t.label }));
 
   const openFilters = useCallback(() => {
     onFilterReset();

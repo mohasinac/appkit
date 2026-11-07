@@ -87,8 +87,17 @@ export interface BrandDetailTabsProps {
    * and the "N ended — show all" hint; see `ListingTabCountResult`.
    */
   totals?: Record<string, number | undefined>;
-  /** Enabled listing types (e.g. ["standard","collector-drop"]). When omitted, all tabs shown. */
-  enabledListingTypes?: string[];
+  /**
+   * Listing types a visitor may be OFFERED a tab for — i.e.
+   * `listedListingTypes(settings)`, NOT `enabledListingTypes(settings)`.
+   * When omitted, all tabs shown.
+   *
+   * 🛑 LISTED, not enabled, and the difference is a bug review already found
+   * elsewhere: `enabled` stays true for an `"unlisted"` type (its pages must
+   * keep serving), so a tab built from it re-advertises exactly what the
+   * admin withdrew. A tab is a way IN, so it follows `isListingTypeListed`.
+   */
+  listedListingTypes?: string[];
   /** Enabled category types (e.g. ["category","brand","bundle"]). When omitted, all tabs shown. */
   enabledCategoryTypes?: string[];
 }
@@ -99,7 +108,7 @@ export function BrandDetailTabs({
   initialBundles = [],
   counts,
   totals,
-  enabledListingTypes,
+  listedListingTypes,
   enabledCategoryTypes,
 }: BrandDetailTabsProps) {
   const countFor = (id: CategoryTabId): number | undefined => counts?.[id];
@@ -113,8 +122,8 @@ export function BrandDetailTabs({
     // Today that's only `stores` — a brand has no store roster. Every listing
     // type IS mapped now (it used to also silently drop four real types).
     if (!mapping) return false;
-    if (mapping.kind === "listing" && enabledListingTypes) {
-      if (!enabledListingTypes.includes(mapping.type)) return false;
+    if (mapping.kind === "listing" && listedListingTypes) {
+      if (!listedListingTypes.includes(mapping.type)) return false;
     }
     if (mapping.kind === "category" && enabledCategoryTypes) {
       if (!enabledCategoryTypes.includes(mapping.type)) return false;
