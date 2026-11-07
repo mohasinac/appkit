@@ -92,7 +92,7 @@ export async function submitLotteryPullAction(
     } else {
       const product = await productRepository.findById(sourceId);
       if (!product || product.listingType !== "clearance") {
-        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Random-lots product not found.");
+        throw new LotteryError("LOTTERY_WINDOW_CLOSED", "Clearance product not found.");
       }
       if (product.status !== "published") {
         throw new LotteryError("LOTTERY_WINDOW_CLOSED", "This clearance draw is not currently active.");

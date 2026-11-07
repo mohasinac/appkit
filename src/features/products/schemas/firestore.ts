@@ -836,7 +836,7 @@ export interface ProductDocument extends BaseDocument {
   sourceCatalogueItemId?: string;
   sourceCatalogueOwnerId?: string;
 
-  // ── Random-lots fields (SB1-B). Only populated when listingType === "clearance".
+  // ── Clearance fields (SB1-B). Only populated when listingType === "clearance".
   prizeDrawItems?: PrizeDrawItem[];
   pricePerEntry?: number;
   prizeMaxEntries?: number;

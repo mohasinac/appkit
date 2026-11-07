@@ -1023,7 +1023,7 @@ export function ProductForm({
             </Alert>
           ) : null}
           <Alert variant="warning" title="Non-refundable">
-            Random-lots entries are non-refundable once purchased. Buyers see
+            Clearance entries are non-refundable once purchased. Buyers see
             and must accept this notice before paying.
           </Alert>
 

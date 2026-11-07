@@ -65,7 +65,7 @@ export {
 } from "./listingProcessor";
 
 // SB1-L (S7-PrizeDraws) — bundle sync, event raffles, and spin-the-wheel.
-// Random-lots reveal itself was redesigned to a fully-automatic model — see
+// Clearance reveal itself was redesigned to a fully-automatic model — see
 // clearanceAssignWinner.ts (shared core), onClearancePaymentConfirmed
 // (instant mode), clearanceSoldOutReveal (scheduled mode, sellout half), and
 // clearanceExpiryReveal (scheduled mode, expiry half) below.

@@ -2099,7 +2099,7 @@ function SectionEditorPanel({
           onChange={(e) => setClearanceBuilder((prev) => ({ ...prev, showEntriesRemaining: e.target.checked }))}
         />
         <Text size="xs" color="muted">
-          Random-lots listing type is added with the clearance feature; until then this section renders an empty state.
+          The clearance listing type is added with the clearance feature; until then this section renders an empty state.
         </Text>
       </Div>
     );
