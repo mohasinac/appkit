@@ -115,11 +115,54 @@ export const DEFAULT_CHECKOUT_POLICY_CLAUSES: readonly CheckoutPolicyClause[] = 
     text:
       "This order contains a concealed item. Once its contents are revealed to me — including a reveal that happens automatically when the seller ships it — the order can no longer be cancelled, and the allocation I received is final.",
   },
+  /*
+   * ── These two replaced a single `no-refund-after-ship` clause ────────────
+   *
+   * 🛑 That clause was WRONG IN BOTH DIRECTIONS, which is the worst outcome
+   * available for a document whose only purpose is to be relied on in a
+   * dispute. It read "once dispatched it can no longer be refunded on request",
+   * and the code says otherwise on both halves (verified 2026-11-07, by reading
+   * the rules rather than assuming them):
+   *
+   *   · TOO GENEROUS about cancellation. `TERMINAL_OR_IN_FLIGHT` in the order
+   *     workflow registry includes `processing`, so buyer cancellation closes
+   *     when the SELLER STARTS PREPARING the order — one status BEFORE
+   *     dispatch. A buyer who read the old clause would have believed they
+   *     could cancel right up to dispatch, and the consent record would have
+   *     proved they agreed to a weaker restriction than the one actually
+   *     applied to them.
+   *
+   *   · TOO RESTRICTIVE about returns. `requestReturnAction` →
+   *     `assertReturnWindowOpen` gives the buyer a self-service return request
+   *     once the order is `delivered`, inside `siteSettings.returns.windowDays`.
+   *     So "no refund on request after dispatch" asserted a waiver of a right
+   *     the buyer does in fact keep — and a consent record over-claiming a
+   *     waiver is exactly the kind of clause that gets struck and takes the
+   *     rest of the document's credibility with it. (A10 already flags that
+   *     consent does not override statutory consumer rights regardless.)
+   *
+   * Split in two because they are two different facts about two different
+   * windows, and one sentence covering both is how the original got both wrong.
+   */
   {
-    id: "no-refund-after-ship",
+    id: "cancel-window-closes-at-processing",
     appliesWhen: "supportsShipping",
     text:
-      "Once this order has been dispatched it can no longer be refunded on request. After dispatch a refund is only possible through a platform decision on a dispute, for example an item that does not match its description.",
+      "I can cancel this order myself only until the seller starts preparing it. Once it moves to processing — which can happen quickly, and before anything is dispatched — self-service cancellation is no longer available to me.",
+  },
+  {
+    id: "returns-after-delivery",
+    appliesWhen: "supportsShipping",
+    /*
+     * The window is deliberately described rather than numbered.
+     * `siteSettings.returns.windowDays` is config (7 today), and baking "7
+     * days" into a clause would make the stored consent text disagree with the
+     * live rule the day an admin changes it — the same two-owners defect, in a
+     * legal document. An admin who wants the number stated edits this clause in
+     * Site Settings, where both values are in front of them.
+     */
+    text:
+      "After delivery I may request a return within the published returns window, and a refund is issued after review rather than automatically. Between dispatch and delivery I have no self-service cancellation or refund — my route then is to raise a dispute.",
   },
   {
     id: "instant-fulfilment-final",
@@ -135,7 +178,19 @@ export const DEFAULT_CHECKOUT_POLICY_CLAUSES: readonly CheckoutPolicyClause[] = 
   },
 ];
 
-export const DEFAULT_CHECKOUT_POLICY_VERSION = 1;
+/**
+ * 2, not 1 — bumped when `no-refund-after-ship` was split into the
+ * cancellation-window and returns-window clauses above.
+ *
+ * 🛑 Bumping is not cosmetic and is not optional on a wording change. The hash
+ * proves WHAT was accepted; the version is the handle a human uses to talk
+ * about it ("they accepted policy v1, which said the wrong thing about
+ * cancellation"). Leaving it at 1 across a material rewrite would make two
+ * genuinely different documents indistinguishable by name, and the only way to
+ * tell them apart would be to re-derive a hash from an old settings snapshot
+ * nobody kept.
+ */
+export const DEFAULT_CHECKOUT_POLICY_VERSION = 2;
 
 /**
  * Does any listing type present in this checkout carry the capability the
