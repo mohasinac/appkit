@@ -459,10 +459,21 @@ export const DEFAULT_ROUTE_MAP = {
     LIVE_ITEMS: "/store/live",
     LIVE_ITEMS_NEW: "/store/live/new",
     LIVE_ITEMS_EDIT: (id: string) => `/store/live/${id}/edit`,
-    // EMI/art-stickers session — art / stickers
+    /*
+     * The single `art-and-stickers` seller surface (1.34 merged `art` and
+     * `stickers` into one type). The `art` spelling is the live one.
+     */
     ART: "/store/art",
     ART_NEW: "/store/art/new",
     ART_EDIT: (id: string) => `/store/art/${id}/edit`,
+    /*
+     * 🛑 REDIRECT-ONLY. These three paths still EXIST — their page.tsx
+     * files `permanentRedirect` to the `ART*` entries above — so an old
+     * seller bookmark resolves instead of 404ing. They are declared here
+     * because route-map is the authority on what paths EXIST, not on what is
+     * linked: nothing links to them any more (every nav map is keyed by
+     * `ListingType`, which now has one entry for this type).
+     */
     STICKERS: "/store/stickers",
     STICKERS_NEW: "/store/stickers/new",
     STICKERS_EDIT: (id: string) => `/store/stickers/${id}/edit`,
@@ -632,8 +643,9 @@ export const DEFAULT_ROUTE_MAP = {
     CLASSIFIED: "/admin/classified",
     DIGITAL_CODES: "/admin/digital-codes",
     LIVE: "/admin/live",
-    // EMI/art-stickers session — art / stickers
+    // The single `art-and-stickers` admin surface (1.34).
     ART: "/admin/art",
+    // 🛑 REDIRECT-ONLY — see STORE.STICKERS above.
     STICKERS: "/admin/stickers",
     // Part Two — spares
     SPARES: "/admin/spares",
