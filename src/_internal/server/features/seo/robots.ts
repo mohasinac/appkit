@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 // The defining module, not the `/client` entry — this is reached from
 // server-only metadata paths (Root Cause #76).
 import { ROUTES } from "../../../../next/routing/route-map";
+import { PORTAL_SECTIONS } from "../../../../next/routing/portals";
 
 export interface RobotsOptions {
   siteUrl: string;
@@ -14,11 +15,25 @@ export function buildRobots({ siteUrl }: RobotsOptions): MetadataRoute.Robots {
         userAgent: "*",
         allow: "/",
         disallow: [
-          "/admin/",
+          /*
+           * 🛑 DERIVED from the portal registry, not listed. Every dashboard
+           * portal section is non-public by definition, so this answers
+           * "which trees are a portal?" once instead of restating it.
+           *
+           * This replaced four hand-written entries (`/admin/`, `/store/`,
+           * `/user/`, `/auth/`) and, in doing so, closed a live hole: the
+           * `/employee` staff portal had just been added as a route section
+           * and WAS NOT IN THIS LIST, so the whole permission-scoped staff
+           * dashboard was crawlable. That is the same class of miss as the
+           * three subdomains that went live with no proxy mapping — a list a
+           * human has to remember to extend will eventually not be extended.
+           * A new portal is now disallowed the moment it is registered.
+           *
+           * Trailing slash, so each entry disallows the TREE and not just the
+           * bare path — matching what the four replaced entries did.
+           */
+          ...PORTAL_SECTIONS.map((section) => `${section}/`),
           "/api/", // audit-hardcoded-api-routes-ok: robots.txt disallow prefix, not an endpoint reference
-          "/store/",
-          "/user/",
-          "/auth/",
           "/checkout/",
           "/cart/",
           /*
