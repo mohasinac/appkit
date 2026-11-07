@@ -67,6 +67,21 @@ export interface PortalDefinition {
    * auditor / bookkeeping / management roles all arrive there.
    */
   roleCatchAll?: boolean;
+  /**
+   * Where a bare `/` on this portal's host LANDS, when that is not the section
+   * root. Defaults to `section`.
+   *
+   * 🛑 Exists because `auth.<domain>/` measured a hard 404: `/auth` is a
+   * directory of flows (`login`, `register`, `reset-password`) with no index
+   * page, so resolving the host root to the section root sent every visitor to
+   * the auth portal's front door to "404 — Page not found". A portal host that
+   * 404s at its root is indistinguishable from a broken domain.
+   *
+   * Kept as DATA on the definition rather than a special case in the resolver,
+   * so the next portal whose section has no index page is one field, not
+   * another branch.
+   */
+  home?: string;
 }
 
 /**
@@ -95,7 +110,7 @@ export const PORTAL_DEFINITIONS: readonly PortalDefinition[] = [
    * test both need it, and a second list of portals is exactly the drift
    * this module exists to end.
    */
-  { label: "auth", section: "/auth", roles: [] },
+  { label: "auth", section: "/auth", roles: [], home: "/auth/login" },
 ];
 
 /** Every route section a portal serves. Derived; never hand-maintained. */
@@ -228,7 +243,11 @@ const PORTAL_PREFIX_BYPASS: readonly string[] = ["/unauthorized", "/error.html"]
  */
 export function resolvePortalPath(path: string, section: string | null): string {
   if (!section) return path;
-  if (path === "/" || path === "") return section;
+  if (path === "/" || path === "") {
+    // `home` when the definition declares one — `/auth` has no index page, so
+    // its host root must land on `/auth/login` rather than a 404.
+    return PORTAL_DEFINITIONS.find((p) => p.section === section)?.home ?? section;
+  }
   if (isPortalSectionPath(path)) return path;
   if (PORTAL_PREFIX_BYPASS.some((p) => isUnderSection(path, p))) return path;
   return `${section}${path}`;
