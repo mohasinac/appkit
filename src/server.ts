@@ -2515,6 +2515,39 @@ export type { PlatformSupplierIdentity } from "./_internal/shared/features/site-
 // at construction when unconfigured. See the module header.
 export { ShiprocketShippingProvider } from "./providers/shipping-shiprocket/index";
 export type { ShiprocketConfig } from "./providers/shipping-shiprocket/index";
+/*
+ * [SERVER-ONLY] Item 1.38 — the inbound carrier webhook's credential check.
+ *
+ * Exported beside the provider it belongs to, so `/api/shipping/webhook` reads
+ * the header name and the comparison from the adapter that defines Shiprocket's
+ * contract rather than restating either. A route that spells the header itself
+ * is a route that can drift from the provider and 401 everything.
+ */
+export {
+  SHIPROCKET_WEBHOOK_TOKEN_HEADER,
+  verifyShiprocketWebhookToken,
+} from "./providers/shipping-shiprocket/index";
+
+/*
+ * [SERVER-ONLY] Item 1.38 — the webhook configuration + registration report.
+ *
+ * 🛑 Reads NO letitrip literal. The base URL is resolved from
+ * `APPKIT_PUBLIC_BASE_URL` / `NEXT_PUBLIC_SITE_URL` / Vercel's production
+ * alias, and an unresolvable base is reported as a configuration gap rather
+ * than defaulted — a default host would hand another client's admin OUR domain
+ * to paste into their payment gateway.
+ */
+export {
+  WEBHOOK_CONCERNS,
+  resolveWebhookBaseUrl,
+  resolveWebhookRegistrations,
+  webhookUrlFor,
+} from "./_internal/server/payments/webhook-registry";
+export type {
+  WebhookConcern,
+  WebhookProviderBinding,
+  ResolvedWebhookBinding,
+} from "./_internal/server/payments/webhook-registry";
 
 /*
  * [SERVER-ONLY] grievance — Phase 10 intake and clock.
@@ -2884,6 +2917,8 @@ export {
   POLICY_CONSENT_REQUIRED_CODE,
   POLICY_CONSENT_STALE_CODE,
   POLICY_CONSENT_UNRESOLVED_CODE,
+  POLICY_CONSENT_NO_SUBJECT_CODE,
+  POLICY_CONSENT_BYPASS_FORBIDDEN_CODE,
 } from "./_internal/server/payments/policy-consent";
 export type {
   AssertBuyerPolicyConsentInput,

@@ -2292,37 +2292,6 @@ export async function createCheckoutOrderAction(
     adminBypass,
   });
 
-  /*
-   * ── ITEM 1.39 — THE BLOCKING BUYER POLICY AGREEMENT ──────────────────────
-   *
-   * Here, beside the other two checkout gates, and BEFORE any mutation: this
-   * is the last point at which refusing costs nothing. The COD/manual path
-   * creates orders directly, so "before the order" and "before the money" are
-   * the same instant; on the gateway path they are two different requests,
-   * which is why that path takes its consent at create-order time instead (see
-   * `verifyAndPlaceGatewayOrderAction`).
-   *
-   * 🛑 Throws on absence or mismatch. A consentless order is REJECTED, never
-   * placed-with-a-warning — the no-refund-after-reveal mechanic is only
-   * defensible if the agreement that enables it was actually taken.
-   *
-   * 🛑 `listingTypes` comes off the cart items, which are written SERVER-SIDE
-   * from the product at add-to-cart time (`POST /api/cart` calls
-   * `normalizeListingType(product)`), so this is not a client-supplied fact.
-   * A line that somehow carries none falls back to `standard`, which is the
-   * conservative direction: `standard` carries `supportsShipping`, so the
-   * no-refund-after-dispatch clause is still required.
-   */
-  const policyConsent = await assertBuyerPolicyConsent({
-    uid,
-    listingTypes: cartItems.map(
-      (item) => (item.listingType ?? "standard") as ListingType,
-    ),
-    settings: siteSettings?.checkoutPolicies,
-    submitted: input.policyConsent,
-    capturedOn: "checkout",
-    adminBypass,
-  });
 
   /*
    * COD value cap — the SERVER half of the gate.
@@ -2424,6 +2393,56 @@ export async function createCheckoutOrderAction(
       );
     }
   }
+
+  /*
+   * ── ITEM 1.39 — THE BLOCKING BUYER POLICY AGREEMENT ───────────────
+   *
+   * Pre-mutation and pre-capture. Everything between the cart read and here is
+   * reads and validation; the transaction is far below. This is the last point
+   * at which refusing costs nothing. On the COD/manual path "before the order"
+   * and "before the money" are the same instant; on the gateway path they are
+   * two different requests, which is why that path takes its consent at
+   * create-order time instead (see `verifyAndPlaceGatewayOrderAction`).
+   *
+   * 🛑 Throws on absence or mismatch. A consentless order is REJECTED, never
+   * placed-with-a-warning — the no-refund-after-reveal mechanic is only
+   * defensible if the agreement that enables it was actually taken.
+   *
+   * 🛑 LISTING TYPES COME FROM THE PRODUCT DOCUMENTS — not the cart's
+   * denormalised copy, and never the request. `CartItemDocument.listingType` is
+   * written server-side at add-to-cart time, which makes it untampered but not
+   * CURRENT: a product retyped to a concealed listing after it was added would
+   * leave a stale `standard` on the line, and the reveal clause would be
+   * silently dropped from the one order that most needs it.
+   * `preTxProductById` is the authoritative read and is already in hand for the
+   * max-per-user gate, so this costs no extra round trip — which is why the
+   * gate sits here rather than beside the OTP check above.
+   *
+   * The cart copy is the FALLBACK for a line whose product could not be read
+   * (deleted mid-checkout — the stock check below refuses it anyway), and
+   * `standard` is the last resort: it carries `supportsShipping`, so the
+   * no-refund-after-dispatch clause still applies rather than vanishing.
+   */
+  const policyConsent = await assertBuyerPolicyConsent({
+    uid,
+    listingTypes: cartItems.map(
+      (item) =>
+        (preTxProductById.get(item.productId)?.listingType ??
+          item.listingType ??
+          "standard") as ListingType,
+    ),
+    settings: siteSettings?.checkoutPolicies,
+    submitted: input.policyConsent,
+    capturedOn: "checkout",
+    /*
+     * 🛑 A REQUEST, re-verified inside the gate against
+     * `admin:checkout:bypass` — never a trusted boolean. `adminBypass` arrives
+     * on this action's own input, so the day a route wires it from a request
+     * body a trusted flag here would make the whole consent gate switchable off
+     * by any client. The gate answers 403 when the uid does not hold it.
+     */
+    requestAdminBypass: adminBypass,
+  });
   /*
    * Payment-method gate — before `enforceMaxPerUserForCart`, which runs count
    * queries, because this answer needs no reads at all.

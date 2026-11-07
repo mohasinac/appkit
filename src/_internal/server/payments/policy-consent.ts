@@ -41,9 +41,22 @@
  * UI response to the two is different.
  */
 
-import { createHash } from "crypto";
+/* `node:crypto`, not the bare `crypto` specifier — the bare form also resolves
+ * to the WHATWG `Crypto` global in some bundler configurations, and silently
+ * getting a different module on the call that hashes a legal record is not a
+ * failure worth risking for one saved prefix. */
+import { createHash } from "node:crypto";
 
 import { ApiError } from "../../../errors/api-error";
+/*
+ * The authority check for the admin bypass. Lane R's `permissionsFor` union,
+ * reached through the one server resolver — never a second role comparison
+ * here. See `requestAdminBypass`.
+ */
+import {
+  checkPermission,
+  getServerPermissions,
+} from "../features/auth/permissions";
 import { serverLogger } from "../../../monitoring/server-logger";
 import { normalizeError } from "../../../errors/normalize";
 import {
@@ -74,6 +87,22 @@ export const POLICY_CONSENT_STALE_CODE = "BUYER_POLICY_CONSENT_STALE";
  * must NOT do is place a consentless order and move on.
  */
 export const POLICY_CONSENT_UNRESOLVED_CODE = "BUYER_POLICY_CONSENT_UNRESOLVED";
+/**
+ * The caller supplied no listing types, so there was nothing to consent ABOUT.
+ *
+ * 400 rather than 403: this is a malformed call, not a refused buyer. It must
+ * never be reachable from a real checkout (an empty cart is refused upstream),
+ * which is exactly why it is an explicit code — if it ever appears in the logs
+ * it names a caller that would otherwise have been issued a consent record
+ * attesting to nothing.
+ */
+export const POLICY_CONSENT_NO_SUBJECT_CODE = "BUYER_POLICY_CONSENT_NO_SUBJECT";
+/**
+ * An admin-bypass was REQUESTED by a caller that does not hold
+ * `admin:checkout:bypass`. A hard 403, never a quiet fall-through to the normal
+ * consent path — see `requestAdminBypass`.
+ */
+export const POLICY_CONSENT_BYPASS_FORBIDDEN_CODE = "BUYER_POLICY_CONSENT_BYPASS_FORBIDDEN";
 
 export function hashPolicyClauses(
   clauses: readonly { id: string; text: string }[],
@@ -124,14 +153,31 @@ export interface AssertBuyerPolicyConsentInput {
   submitted: SubmittedPolicyConsent | undefined;
   capturedOn: OrderPolicyConsent["capturedOn"];
   /**
-   * 🛑 NOT an exemption from consent — an admin TEST order is the platform
-   * agreeing with itself, and the record still gets written (tagged
-   * `admin-bypass`) so the audit trail has no silent holes. What the bypass
-   * skips is the requirement that a human ticked a box, because on this path
-   * there is no buyer in the room.
+   * REQUEST the admin-bypass path — a request, never a claim that is believed.
+   *
+   * 🛑 THIS FIELD GRANTS NOTHING ON ITS OWN, and the previous shape
+   * (`adminBypass?: boolean`, trusted) was a privilege escalation waiting for
+   * a call site: the first handler to write `adminBypass: body.adminBypass`
+   * would have made the entire consent gate switchable off by any client, on
+   * the one gate whose whole purpose is legal defensibility. A boolean
+   * parameter cannot carry proof of authority — only an authority check can.
+   *
+   * So when this is true the gate RE-RESOLVES the caller's permissions for
+   * `uid` and requires `admin:checkout:bypass`. Absent → **403**, not a
+   * silent downgrade to the normal path: a caller asking for a bypass it does
+   * not hold is either a bug or an attack, and both deserve to be loud.
+   *
+   * 🛑 Even when granted, this is NOT an exemption from the consent RECORD. An
+   * admin test order is the platform agreeing with itself, and the record is
+   * still written (tagged `admin-bypass`) so the audit trail has no silent
+   * holes. What the bypass skips is only the requirement that a human ticked a
+   * box — because on that path there is no buyer in the room.
    */
-  adminBypass?: boolean;
+  requestAdminBypass?: boolean;
 }
+
+/** The permission an admin-bypass checkout must hold. Same string the route gates on. */
+const ADMIN_BYPASS_PERMISSION = "admin:checkout:bypass" as const;
 
 /**
  * Enforce the agreement and RETURN THE RECORD to stamp on the order(s).
@@ -148,7 +194,50 @@ export interface AssertBuyerPolicyConsentInput {
 export async function assertBuyerPolicyConsent(
   input: AssertBuyerPolicyConsentInput,
 ): Promise<OrderPolicyConsent> {
-  const { uid, listingTypes, settings, submitted, capturedOn, adminBypass } = input;
+  const { uid, listingTypes, settings, submitted, capturedOn, requestAdminBypass } = input;
+
+  /*
+   * 🛑 AN EMPTY SUBJECT IS A REFUSAL, NOT A TRIVIAL PASS.
+   *
+   * With `listingTypes: []` every capability-gated clause drops out, the
+   * baseline clause alone resolves, it hashes consistently, and the gate would
+   * PASS — manufacturing a valid-looking consent record that attests to
+   * nothing about the goods. A caller that reaches a consent gate with nothing
+   * to consent to has already gone wrong (an empty cart is refused upstream
+   * with CART_EMPTY), so the honest answer is to refuse rather than to issue a
+   * record whose silence would later read as agreement.
+   *
+   * Asserted here rather than left to each call site precisely because "the
+   * caller already checked" is how a gate ends up with one caller that did not.
+   */
+  if (listingTypes.length === 0) {
+    serverLogger.error("policy consent refused: no listing types supplied", {
+      uid,
+      capturedOn,
+    });
+    throw new ApiError(400, POLICY_CONSENT_NO_SUBJECT_CODE);
+  }
+
+  /*
+   * ── THE AUTHORITY CHECK, before anything is skipped ──────────────────────
+   *
+   * Resolved through Lane R's `permissionsFor` union (via
+   * `getServerPermissions`), never a second role comparison of our own — one
+   * authority helper, so a change to what `admin:checkout:bypass` means cannot
+   * leave this gate behind.
+   */
+  let adminBypass = false;
+  if (requestAdminBypass) {
+    const resolved = await getServerPermissions(uid);
+    if (!checkPermission(resolved, ADMIN_BYPASS_PERMISSION)) {
+      serverLogger.error(
+        "policy consent: admin-bypass REQUESTED by a caller without admin:checkout:bypass — refused",
+        { uid },
+      );
+      throw new ApiError(403, POLICY_CONSENT_BYPASS_FORBIDDEN_CODE);
+    }
+    adminBypass = true;
+  }
 
   const offer = resolveCheckoutPolicyOffer(settings, listingTypes);
   const snapshotClauses = offer.clauses.map((clause) => ({

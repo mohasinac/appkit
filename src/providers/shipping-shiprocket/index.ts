@@ -54,18 +54,25 @@
  *
  * ── What is deliberately NOT here ────────────────────────────────────────
  *
- * Inbound webhooks. Shiprocket pushes status updates to a URL configured in
+ * The webhook ROUTE. Shiprocket pushes status updates to a URL configured in
  * its dashboard and authenticates them with an `x-api-key` header whose value
- * you set there — a THIRD secret, and an inbound route rather than a provider
- * method. `trackShipment` below polls instead, which is correct for a provider
- * contract and wasteful as a status mechanism; the webhook is the better
- * answer and belongs in its own route with its own verification.
+ * you set there — an inbound route rather than a provider method, so the route
+ * lives at `/api/shipping/webhook` (item 1.38) and not on this class.
+ * `trackShipment` below polls instead, which is correct for a provider contract
+ * and wasteful as a status mechanism.
+ *
+ * What DOES live here is the credential check itself —
+ * `verifyShiprocketWebhookToken` below — for the same reason
+ * `packCashfreeWebhookSignature` lives in the Cashfree adapter: the encoding of
+ * a provider's authentication belongs to that provider, so no route invents its
+ * own comparison.
  *
  * @tag domain:shipping
  * @tag layer:providers
  * @tag access:server-only
  */
 
+import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { IShippingProvider } from "../../contracts";
 import type {
@@ -81,6 +88,46 @@ import { normalizeError } from "../../errors/normalize";
 import { serverLogger } from "../../monitoring/server-logger";
 
 const API_BASE = "https://apiv2.shiprocket.in/v1/external";
+
+/**
+ * The header Shiprocket echoes its configured webhook token back on.
+ *
+ * Named here rather than inline at the route, so the route cannot drift from
+ * the provider's actual contract — the mistake that makes a webhook endpoint
+ * 401 everything in production while reading as correct.
+ */
+export const SHIPROCKET_WEBHOOK_TOKEN_HEADER = "x-api-key";
+
+/**
+ * Authenticate an inbound Shiprocket delivery.
+ *
+ * 🛑 BE HONEST ABOUT WHAT THIS IS. Shiprocket offers a SHARED SECRET echoed in
+ * a header, not an HMAC over the body — you choose the value in its dashboard
+ * and it sends that same value on every delivery. So unlike Razorpay or
+ * Cashfree, this proves the CALLER knows the secret; it does **not** prove the
+ * body was not altered in transit, and no amount of care here can make it do
+ * so. That is the strongest check the provider offers. It is written down
+ * rather than glossed over because the difference matters for what the route
+ * is allowed to do with the payload: authenticated-but-unsigned data is good
+ * enough to RECORD, which is what the route does with it.
+ *
+ * 🛑 FAILS CLOSED on every path, and `timingSafeEqual` rather than `===`. A
+ * plain comparison on a secret returns after the first differing byte, which
+ * leaks the secret one character at a time to anyone who can measure the
+ * response. The length guard is there because `timingSafeEqual` THROWS on
+ * differing lengths — and the throw would itself be a side channel, besides
+ * turning a rejection into a 500 (the one status a sender retries).
+ */
+export function verifyShiprocketWebhookToken(
+  received: string | null | undefined,
+  expected: string | undefined,
+): boolean {
+  if (!expected || !received) return false;
+  const a = Buffer.from(received, "utf8");
+  const b = Buffer.from(expected, "utf8");
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
 
 export interface ShiprocketConfig {
   /** The API user's email. See the header on why this is not a "login id". */
