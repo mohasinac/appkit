@@ -1189,6 +1189,9 @@ export {
   requiresVendorVerified,
   requiresJurisdictionCheck,
   hasInstantFulfillment,
+  canMakeOffer,
+  acceptsPointsTender,
+  supportsSurpriseReveal,
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
