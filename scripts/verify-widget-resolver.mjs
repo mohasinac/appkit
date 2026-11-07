@@ -708,6 +708,49 @@ const ALL_FOUR = { category: 3, brand: 3, tags: 3, store: 3 };
 }
 
 {
+  /*
+   * 🛑 EQUIVALENCE PIN, added 2026-11-08 after a live divergence that turned
+   * out NOT to be a regression.
+   *
+   * The rail heading changed from "More from this seller" to "More from
+   * LetItRip Official" between two builds. Cause: `sellerIdentityVisible`
+   * flipped false->true page-wide (the store directory re-opened in
+   * siteSettings — `>LetItRip Official<` appears 31x on the page, almost all
+   * of it in code this lane does not own), so `storeLabel` went from absent to
+   * present. The ORIGINAL hardcoded expression would have produced exactly the
+   * same new string.
+   *
+   * That is a DATA-driven change in a label, not a code regression — but the
+   * only honest way to keep saying so is to pin the equivalence rather than
+   * re-argue it. These assertions compare `resolveScrollerTitle` against the
+   * literal expressions this file replaced, for BOTH label states. If the two
+   * ever diverge, that IS a regression and this fails.
+   */
+  const ORIGINALS = {
+    category: (l) => (l ? `More in ${l}` : "More in this category"),
+    brand: (l) => (l ? `More by ${l}` : "More by this brand"),
+    tags: () => "You might also like",
+    store: (l) => (l ? `More from ${l}` : "More from this seller"),
+  };
+
+  for (const labelState of [
+    { name: "labels PRESENT", labels: { category: "Basic Line", brand: "Takara-Tomy", tags: undefined, store: "LetItRip Official" } },
+    { name: "labels ABSENT", labels: { category: undefined, brand: undefined, tags: undefined, store: undefined } },
+  ]) {
+    for (const inst of RELATED_DEFAULT_INSTANCES) {
+      const cfg = asRelatedScrollerConfig(inst.config);
+      const mine = resolveScrollerTitle(cfg, labelState.labels[cfg.source]);
+      const original = ORIGINALS[cfg.source](labelState.labels[cfg.source]);
+      ok(
+        `J7.${cfg.source} config output === the original expression (${labelState.name})`,
+        mine === original,
+        `config gave ${JSON.stringify(mine)}, original gives ${JSON.stringify(original)}`,
+      );
+    }
+  }
+}
+
+{
   // The payoff: removing one carousel is now CONFIG, not a code edit.
   const off = RELATED_DEFAULT_INSTANCES.map((i) =>
     i.id === "w-related-store" ? { ...i, state: "off" } : i,

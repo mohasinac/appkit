@@ -13,6 +13,7 @@ import {
 import { getWidgetInstances } from "../../../_internal/server/features/widgets/widget-instances";
 import type { ProductItem } from "../types";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
+import { EditableWidget } from "../../dashboard/components/EditableWidget";
 
 /** The region every listing-type detail view resolves for its related rail. See the note on sharing below. */
 const RELATED_REGION_ID = "products-slug:related";
@@ -163,8 +164,21 @@ export async function RelatedItemsSection({
     surface: "product",
   });
 
-  const rows = resolved.roots
-    .filter((node) => node.visible && node.instance.regionId === RELATED_REGION_ID)
+  /*
+   * In EDIT mode an admin must also see the rails that are switched OFF, or
+   * they can never turn one back on — the same "an admin can always reach what
+   * they just turned off" rule `AdminComposableRegion` already states. So the
+   * region's own nodes are kept here regardless of `visible`, and
+   * `WidgetInstanceEditor` is what renders an off one dimmed with its reason.
+   * A visitor never reaches this branch: `editMode` is false for them, so the
+   * `visible` filter below is the only thing that applies.
+   */
+  const regionNodes = resolved.roots.filter(
+    (node) => node.instance.regionId === RELATED_REGION_ID,
+  );
+
+  const rows = regionNodes
+    .filter((node) => node.visible)
     .map((node) => {
       const cfg = asRelatedScrollerConfig(node.instance.config);
       if (!cfg) return null;
@@ -172,11 +186,15 @@ export async function RelatedItemsSection({
       if (!items || items.length === 0) return null;
       return {
         id: node.instance.id,
+        node,
         title: resolveScrollerTitle(cfg, labelBySource[cfg.source]),
         items: cfg.maxItems ? items.slice(0, cfg.maxItems) : items,
       };
     })
-    .filter((row): row is { id: string; title: string; items: ProductItem[] } => row !== null);
+    .filter(
+      (row): row is { id: string; node: (typeof regionNodes)[number]; title: string; items: ProductItem[] } =>
+        row !== null,
+    );
 
   // Identical to the original's combined emptiness guard: nothing to show
   // means no heading, no empty frame and no grid space taken.
@@ -185,7 +203,24 @@ export async function RelatedItemsSection({
   return (
     <Stack gap="xl">
       {rows.map((row) => (
-        <RelatedProductsCarousel key={row.id} items={row.items} title={row.title} />
+        <EditableWidget
+          key={row.id}
+          node={row.node}
+          instances={effective}
+          regionId={RELATED_REGION_ID}
+          /*
+           * 🛑 The blast radius, stated on screen. This region is resolved by
+           * ALL SEVEN listing-type detail views, so an edit here is not "this
+           * product" — it is every product of every enabled type. The
+           * per-TEMPLATE invariant is what keeps the config table bounded by
+           * code (~5,210) instead of by data (~60,000 for one template), and
+           * an editor that does not say so invites exactly the per-product
+           * expectation that breaks it.
+           */
+          scopeLabel="every product detail page"
+        >
+          <RelatedProductsCarousel items={row.items} title={row.title} />
+        </EditableWidget>
       ))}
     </Stack>
   );
