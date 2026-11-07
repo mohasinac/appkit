@@ -741,6 +741,20 @@ export const PERMISSION_GROUPS: Record<
     "admin:orders:read",
     "admin:products:read",
     "admin:products:write",
+    /*
+     * ⚠ Added 2026-11-08 by the lane that gated `DELETE /api/products/[id]` on
+     * this key, because `verify-moderation-permissions.mjs` caught that
+     * `admin:products:delete` appeared in NO preset — so it matched no
+     * `getPermissionsForDomain()` result, had no checkbox in the employee
+     * editor, and was therefore declarable in code and ungrantable in the UI.
+     * Same latent defect as `admin:moderation:read` had, and the same reason a
+     * permission ends up bolted onto a role instead.
+     *
+     * `trust_and_safety` and not `catalog_manager`: taking down a counterfeit
+     * or illegal listing is a safety act. Curating the catalogue is not a
+     * mandate to archive someone else's listing.
+     */
+    "admin:products:delete",
     "admin:reviews:read",
     "admin:reviews:write",
     "admin:reviews:delete",
