@@ -46,6 +46,43 @@ import type { FirestoreDocument, JsonValue } from "../../../schemas/types";
 type CategoryWrite = { id: string; data: FirestoreDocument };
 
 export class CategoriesRepository extends BaseRepository<CategoryDocument> {
+  /**
+   * Normalise the 2026-11-07 `hasbroName` → `altRegionName` rename on READ.
+   *
+   * 🛑 This belongs at the repository boundary, not in a view or an adapter.
+   * The public-projection adapter (`toCategoryListItem`) only runs on the LIST
+   * route; `getCategoryBySlug` / `findById` hand the RAW document straight to
+   * server components, so `CategoryDetailPageView` was reading `altRegionName`
+   * off a document that still only had `hasbroName` — the "Also known as" block
+   * silently stopped rendering. Verified live before this override existed.
+   *
+   * Overriding `mapDoc` fixes every read path at once (slug, id, list,
+   * children, tree) because they all map through it — which is exactly what
+   * `BaseRepository.mapDoc` documents it is there for.
+   *
+   * Remove once `scripts/backfill-alt-region-name.mjs --apply --drop-old` has
+   * run and no stored document carries the old keys.
+   */
+  // Structural snapshot type rather than importing Firestore's `DocumentSnapshot`:
+  // this file sits outside `providers/`, and appkit must not grow a 65th direct
+  // Firebase import. Shape-compatible, so the override still typechecks.
+  protected override mapDoc<D = CategoryDocument>(
+    snap: Parameters<BaseRepository<CategoryDocument>["mapDoc"]>[0],
+  ): D {
+    const doc = super.mapDoc<CategoryDocument>(snap);
+    const legacy = doc as CategoryDocument & {
+      hasbroName?: string;
+      hasbroCoverImage?: string;
+    };
+    if (legacy.altRegionName == null && legacy.hasbroName != null) {
+      legacy.altRegionName = legacy.hasbroName;
+    }
+    if (legacy.altRegionCoverImage == null && legacy.hasbroCoverImage != null) {
+      legacy.altRegionCoverImage = legacy.hasbroCoverImage;
+    }
+    return legacy as unknown as D;
+  }
+
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     name: { canFilter: true, canSort: true },
     slug: { canFilter: true, canSort: false },
