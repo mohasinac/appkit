@@ -21,7 +21,12 @@ import type { JsonValue } from "../../../../schemas/types";
 import { numParam } from "../../../../utils/search-params";
 
 export const GET = createRouteHandler({
-  roles: ["seller", "admin", "moderator"],
+  /*
+   * 🛑 Was ["seller", "admin", "moderator"]. `moderator` folds to `employee`,
+   * so it admitted every employee to a SELLER surface whose scope is ownership.
+   * Staff reach the same data through the permission-gated admin routes.
+   */
+  roles: ["seller", "admin"],
   handler: async ({ request, user }): Promise<NextResponse> => {
     const url = new URL(request.url);
     const page = Math.max(1, numParam(url, "page", 1));

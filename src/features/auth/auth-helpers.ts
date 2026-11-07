@@ -261,6 +261,12 @@ export const MODERATION_PERMISSIONS = {
    */
   "draw-entries:view": "admin:moderation:read",
   /**
+   * Flag a suspicious draw entry with a moderator note — a WRITE on the
+   * moderation queue, so `admin:moderation:write` and not the `:read` key that
+   * gates merely looking at it.
+   */
+  "draw-entries:flag": "admin:moderation:write",
+  /**
    * Verify a manual payment, extend a payment window, or reject a proof as
    * fraud. 🛑 The money path — its own key, in one narrow preset only.
    */

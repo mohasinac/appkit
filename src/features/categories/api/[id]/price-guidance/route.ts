@@ -53,7 +53,12 @@ import {
 } from "../../../../../_internal/server/features/categories/price-guidance-resolve";
 
 export const GET = createRouteHandler<unknown, { id: string }>({
-  roles: ["seller", "admin", "moderator"],
+  /*
+   * 🛑 Was ["seller", "admin", "moderator"]. `moderator` folds to `employee`,
+   * so it admitted every employee to a SELLER surface whose scope is ownership.
+   * Staff reach the same data through the permission-gated admin routes.
+   */
+  roles: ["seller", "admin"],
   handler: async ({ user, params }): Promise<NextResponse> => {
     try {
       const categoryId = params?.id;

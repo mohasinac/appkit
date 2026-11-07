@@ -182,6 +182,17 @@ export type Permission =
    * Both gaps are closed below; neither may be reopened.
    */
   | "admin:moderation:read"
+  /**
+   * ACT on the moderation queue — flag a suspicious draw entry, resolve a
+   * queued report.
+   *
+   * Added 2026-11-08 because `PATCH /api/lottery-entries/[id]/flag` was gated
+   * `roles: ["admin","moderator"]` with no permission at all, so the fold made
+   * it reachable by every employee; and gating a WRITE on `:read` would be the
+   * kind of near-miss that reads as correct for ever. Paired with `:read` the
+   * way every other resource in this union is.
+   */
+  | "admin:moderation:write"
   | "admin:roles:read"
 
   /**
@@ -507,6 +518,7 @@ export const PERMISSION_GROUPS: Record<
      * a content moderator" is now the act that grants it.
      */
     "admin:moderation:read",
+    "admin:moderation:write",
     "admin:reviews:read",
     "admin:reviews:write",
     "admin:reviews:delete",
@@ -721,6 +733,7 @@ export const PERMISSION_GROUPS: Record<
   trust_and_safety: [
     "admin:dashboard:view",
     "admin:moderation:read",
+    "admin:moderation:write",
     "admin:users:read",
     "admin:users:write",
     "admin:user-bans:read",
@@ -761,6 +774,7 @@ export const PERMISSION_GROUPS: Record<
   scam_moderator: [
     "admin:dashboard:view",
     "admin:moderation:read",
+    "admin:moderation:write",
     "admin:scammers:read",
     "admin:scammers:write",
     "admin:scammers:verify",

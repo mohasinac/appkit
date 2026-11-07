@@ -19,7 +19,12 @@ import { createRouteHandler } from "../../../../next/api/routeHandler";
 import type { JsonValue } from "../../../../schemas/types";
 
 export const GET = createRouteHandler({
-  roles: ["seller", "admin", "moderator"],
+  /*
+   * 🛑 Was ["seller", "admin", "moderator"]. `moderator` folds to `employee`,
+   * so it admitted every employee to a SELLER surface whose scope is ownership.
+   * Staff reach the same data through the permission-gated admin routes.
+   */
+  roles: ["seller", "admin"],
   handler: async ({ user }): Promise<NextResponse> => {
     const { db } = getProviders();
     if (!db)

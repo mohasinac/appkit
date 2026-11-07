@@ -161,11 +161,18 @@ export async function GET(request: Request): Promise<NextResponse> {
 }
 
 // --- POST /api/products -------------------------------------------------------
-// Requires seller, moderator, or admin role.
+// Requires the seller or admin role.
 
 export const POST = createRouteHandler({
   auth: true,
-  roles: ["seller", "moderator", "admin"],
+  /*
+   * 🛑 Was ["seller", "moderator", "admin"]. `moderator` folds to `employee`
+   * inside `holdsAnyRole`, so naming it let every employee account CREATE
+   * listings — and with no `permission:` declared, this tuple was the only
+   * gate. Creating a listing is a seller act; an employee who genuinely needs
+   * to does it through the permission-gated admin products surface.
+   */
+  roles: ["seller", "admin"],
   schema: productMutateSchema,
   handler: async ({ body }) => {
     const payload = body as Record<string, JsonValue>;

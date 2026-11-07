@@ -17,7 +17,13 @@ import type { JsonValue } from "../../../../schemas/types";
 import { numParam } from "../../../../utils/search-params";
 
 export const GET = createRouteHandler({
-  roles: ["admin", "moderator"],
+  /*
+   * 🛑 Was ["admin", "moderator"]. `moderator` folds to `employee` inside
+   * `holdsAnyRole`, so naming it admitted EVERY employee account — and this
+   * route declares no `permission:`, so the tuple was the only gate. Admin-only
+   * until a permission is chosen for it; narrowing is the safe direction.
+   */
+  roles: ["admin"],
   handler: async ({ request }): Promise<NextResponse> => {
     const url = new URL(request.url);
     const page = Math.max(1, numParam(url, "page", 1));
