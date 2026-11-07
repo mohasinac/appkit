@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useMemo } from "react";
-import { isAccountDisabled } from "../role-predicates";
+import { isAccountDisabled, holdsAnyRole } from "../role-predicates";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Text } from "../../../ui/components/Typography";
@@ -13,7 +13,17 @@ import type { UserRole } from "../types";
  */
 export interface AuthGuardUser {
   id?: string;
+  /**
+   * Legacy scalar — the HIGHEST-RANKED role held. 🛑 Not the authority; see
+   * `roles`. Kept because some consumer payloads still carry only this.
+   */
   role?: UserRole | string;
+  /**
+   * THE role authority — every role this account holds. The guards below read
+   * it through `holdsAnyRole`, so an account holding two roles clears a gate
+   * naming either one.
+   */
+  roles?: readonly string[] | null;
   disabled?: boolean;
   emailVerified?: boolean;
 }
@@ -55,12 +65,24 @@ export function RoleGate({
   allowedRoles,
   fallback = null,
 }: RoleGateProps) {
-  if (!user?.role) {
+  if (!user) {
     return <>{fallback}</>;
   }
 
+  /*
+   * ── Set intersection, not scalar equality (1.44) ─────────────────────────
+   *
+   * Was `allowed.some((role) => role === user.role)`. `user.role` resolves to
+   * the HIGHEST-RANKED held role, so a seller who also holds `employee` failed
+   * `allowedRoles="seller"` and silently got the fallback — a gate denying
+   * someone who holds the role it names.
+   *
+   * The `!user?.role` guard became `!user` for the same reason as in
+   * `useHasRole`: `roles` can be populated while the scalar is absent, and the
+   * old guard refused those outright.
+   */
   const allowed = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
-  if (!allowed.some((role) => role === user.role)) {
+  if (!holdsAnyRole(user, allowed)) {
     return <>{fallback}</>;
   }
 
@@ -161,11 +183,23 @@ export function ProtectedRoute({
         return { isAuthorized: false, redirectPath: emailVerifyPath };
       }
 
-      // Check role
+      /*
+       * Check role — against the SET (1.44).
+       *
+       * 🛑 This is the CLIENT mirror of the server gate in
+       * `requireRoleFromRequest` / `createRouteHandler`, and the two must
+       * agree: `RoleGuard` wraps the /admin, /store and /user dashboard
+       * layouts, so a scalar comparison here redirected a seller+employee to
+       * /unauthorized off their own store while every API call behind that
+       * page would have succeeded. A client gate stricter than the server it
+       * fronts reads as a broken page, not as a permission decision.
+       *
+       * `holdsAnyRole` also folds `moderator` → `employee`, so a layout still
+       * written as `role="moderator"` admits the folded employee.
+       */
       if (requireRole) {
         const roles = Array.isArray(requireRole) ? requireRole : [requireRole];
-        const userRole = user.role;
-        if (!userRole || !roles.some((role) => role === userRole)) {
+        if (!holdsAnyRole(user, roles)) {
           return { isAuthorized: false, redirectPath: unauthorizedPath };
         }
       }
