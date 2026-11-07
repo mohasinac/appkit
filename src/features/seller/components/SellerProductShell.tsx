@@ -800,10 +800,14 @@ function StepDetails({
           Some are filled in from the category when you save — remove any that
           do not apply and your choice sticks.
         </Text>
+        {/* `"bundle"` was removed from the ListingType union (SB-UNI-D) — bundles
+            are a category type now and no product record carries that
+            listingType, so the old `=== "bundle" ? "all" : …` ternary here could
+            never take its true branch. */}
         <ProductFeaturesSelector
           value={values.features ?? []}
           onChange={(next) => onChange({ features: next })}
-          productType={listingType === "bundle" ? "all" : (listingType as ProductFeatureProductType)}
+          productType={listingType as ProductFeatureProductType}
           {...(storeId ? { storeId } : {})}
         />
       </Stack>
