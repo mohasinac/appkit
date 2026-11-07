@@ -16,6 +16,8 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next/api/routeHandler";
 import type { CategoryItem } from "../../types/index";
 import { normalizeError } from "../../../../errors/normalize";
+import { categoriesRepository } from "../../repository/categories.repository";
+import { toCategoryListItem } from "../../../../_internal/server/features/categories/adapters";
 
 const ERR_CATEGORY_NOT_FOUND = "Category not found";
 
@@ -36,8 +38,23 @@ export async function GET(
       );
     }
 
-    const repo = db.getRepository<CategoryItem>("categories");
-    const category = await repo.findById(id);
+    /*
+     * 🛑 Uses the TYPED repository + the public projection, not the generic
+     * `db.getRepository("categories")` this route used to call.
+     *
+     * The generic path returned the RAW Firestore document — every field,
+     * unprojected, on an unauthenticated route. That is the exact leak the
+     * adapters module records fixing for the LIST route on 2026-10-10, when
+     * `GET /api/categories` was publishing `createdBy` (a uid),
+     * `createdByStoreId`, `createdByStoreName` and — worst — the UNBOUNDED
+     * `metrics.productIds[]` / `metrics.collectorDropIds[]` arrays. The detail
+     * route was never converted alongside it.
+     *
+     * Routing through `categoriesRepository` also picks up its `mapDoc`
+     * normalisation, so the 2026-11-07 `hasbroName` → `altRegionName` rename
+     * is applied here too; the generic repository bypassed that as well.
+     */
+    const category = await categoriesRepository.findById(id);
     if (!category) {
       return NextResponse.json(
         { success: false, error: ERR_CATEGORY_NOT_FOUND },
@@ -45,7 +62,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ success: true, data: category });
+    return NextResponse.json({ success: true, data: toCategoryListItem(category) });
   } catch (error) {
     void normalizeError(error);
     console.error("[feat-categories] GET /api/categories/[id] failed", error);
