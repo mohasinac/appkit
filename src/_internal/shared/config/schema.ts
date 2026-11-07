@@ -283,15 +283,22 @@ export interface AppkitI18nConfig {
 }
 
 /**
- * Hostnames that serve one dashboard portal directly at its root, instead of
- * the public homepage. e.g. `admin.letitrip.in` should land on the admin
- * dashboard, not `/`.
+ * @deprecated Superseded by `next/routing/portals.ts` — do not add a consumer.
  *
- * 🛑 This is the ONE definition — a host-rewrite gate (proxy.ts) and a
- * cookie-domain helper both derive from it. Keep any inlined edge-runtime
- * copy of these three strings in sync by comment reference, the same
- * discipline `seo.siteUrl` already requires (Root Cause #81's pattern,
- * applied to a second host-owning value).
+ * This type used to declare itself "the ONE definition" of the portal
+ * hostnames, with a host-rewrite gate keeping a hand-synced copy of the same
+ * strings. In practice NOTHING ever read it (the "cookie-domain helper" the
+ * old comment credited does not exist), while the hand-synced copy in
+ * `src/proxy.ts` was the thing actually routing traffic — so the configured
+ * list and the live behaviour could never have disagreed loudly enough to be
+ * noticed. On 2026-11-07 three subdomains went live with an entry in neither
+ * place and silently served the public homepage from a portal host.
+ *
+ * `PORTAL_DEFINITIONS` in `next/routing/portals.ts` replaces both: a portal is
+ * recognised by its first hostname LABEL, so the mapping is derived from the
+ * request rather than configured per host, and a new domain needs no entry
+ * anywhere. The type survives only because it is re-exported from the public
+ * entry barrels; it carries no data in `appkit.config.js` any more.
  */
 export interface AppkitPortalHostsConfig {
   /** Serves the admin dashboard (`/admin/*`) at its root. */
@@ -352,11 +359,9 @@ export interface AppkitConfig {
   /** Vercel project configuration (used by vercel-* CLI binaries) */
   vercel?: AppkitVercelConfig;
   /**
-   * Dashboard-portal subdomains — each one serves its dashboard at `/`
-   * instead of the public homepage. Owner action required before these do
-   * anything: register the hostnames as Vercel domains and point DNS at
-   * Vercel. Absent/undefined means "not deployed yet" — the host-rewrite
-   * gate must no-op rather than guess.
+   * @deprecated Portal routing is derived, not configured — see
+   * `next/routing/portals.ts`. Left optional so an older consumer config that
+   * still sets it keeps type-checking; no code reads it.
    */
   portalHosts?: AppkitPortalHostsConfig;
 }

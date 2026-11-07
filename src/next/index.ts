@@ -41,12 +41,34 @@ export {
 export {
   DEFAULT_ROUTE_MAP,
   createRouteMap,
+  routesForPortal,
   ROUTES,
   PUBLIC_ROUTES,
   PROTECTED_ROUTES,
   AUTH_ROUTES,
 } from "./routing/route-map";
 export type { RouteMap, RoutePath } from "./routing/route-map";
+
+// Portal hosts — the `role.<domain>` convention, derived rather than listed.
+// Zero-import and pure, so `src/proxy.ts` (Edge) and the ROUTES layer share
+// ONE definition instead of the two hand-synced hostname lists this replaced.
+export {
+  PORTAL_DEFINITIONS,
+  PORTAL_SECTIONS,
+  portalForHost,
+  portalSectionForHost,
+  portalHostFor,
+  portalSectionForRoles,
+  isPortalSectionPath,
+  resolvePortalPath,
+  portalHref,
+  canonicalHostFromSiteUrl,
+  canonicalSiteHref,
+  mainSiteOriginFromPortalHost,
+  isNonPublicHost,
+  isOffCanonicalHost,
+} from "./routing/portals";
+export type { PortalDefinition } from "./routing/portals";
 
 // Response caching middleware
 export { withCache, invalidateCache } from "./cache-middleware";

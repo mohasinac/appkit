@@ -33,6 +33,7 @@ import { UserSidebar, type UserNavGroup } from "../../../../features/account/com
 import type { DashboardVariant, SidebarNavGroup, SectionResponsive } from "../../../shared/features/layout/types";
 import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/config";
 import { filterNavGroups } from "./filterNavItems";
+import { PortalBackLink } from "./PortalBackLink";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
 import { useHandMode } from "../../hand-mode";
@@ -80,6 +81,14 @@ export interface DashboardLayoutClientProps {
     storeHref?: string;
     /** Seller only: shown when the signed-in seller account is also an admin/employee. */
     adminHref?: string;
+    /**
+     * Overrides the origin the "Back to main site" link points at. Optional
+     * by design: the link derives the main site's origin from the portal
+     * hostname itself, so every portal gets a correct link with no caller
+     * doing anything. Supply this only to skip the apex->www hop that
+     * derivation accepts — see `mainSiteOriginFromPortalHost`.
+     */
+    canonicalOrigin?: string;
   };
   /** Optional className passed through to the sidebar component. */
   className?: string;
@@ -333,6 +342,17 @@ export function DashboardLayoutClient({
           My Profile
         </Link>
       )}
+      {/*
+       * The persistent way out of a portal subdomain. Mounted
+       * unconditionally and renders itself only on a portal host, so no
+       * caller has to know whether it is on one — see PortalBackLink's
+       * header for why the host is read client-side.
+       */}
+      <PortalBackLink
+        canonicalOrigin={crossNav?.canonicalOrigin}
+        onNavigate={closeMobile}
+        className={crossNavLinkClass}
+      />
       <button
         type="button"
         onClick={() => { closeMobile(); void handleLogout(); }}

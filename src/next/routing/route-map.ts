@@ -1,3 +1,8 @@
+// The portal registry is a sibling module with ZERO imports of its own, so
+// taking this dependency keeps route-map.ts importable from the Edge proxy and
+// from the browser alike. See `portals.ts`'s header.
+import { portalHref } from "./portals";
+
 export type RoutePath = string | ((...args: string[]) => string);
 
 export interface RouteMap {
@@ -8,6 +13,8 @@ export interface RouteMap {
   USER: Record<string, RoutePath>;
   /** Store management dashboard (requires seller role). Replaces the old SELLER section. */
   STORE: Record<string, RoutePath>;
+  /** The `employee.<domain>` catch-all portal — see DEFAULT_ROUTE_MAP.EMPLOYEE. */
+  EMPLOYEE: Record<string, RoutePath>;
   ADMIN: Record<string, RoutePath>;
   BLOG: Record<string, RoutePath>;
 }
@@ -492,6 +499,24 @@ export const DEFAULT_ROUTE_MAP = {
     GUIDE_CAPABILITIES: "/store/guide/capabilities",
     GUIDE_SETTINGS: "/store/guide/settings",
   },
+  /**
+   * The `employee.<domain>` portal — the catch-all entry point for every role
+   * that is not `admin`, `seller` or `user` (owner, 2026-11-07: "3 main and
+   * rest go to employee"). `moderator`, `tester`, and the future auditor /
+   * bookkeeping / management roles all arrive here.
+   *
+   * 🛑 Deliberately TINY, and it must stay that way. `employee.<domain>` is an
+   * ENTRY POINT, not a section with its own screens: what a visitor sees is
+   * resolved from their ROLE SET, and for a privileged role that resolution
+   * lands on the existing permission-scoped admin dashboard rather than a
+   * parallel copy of it. Growing a second tree of employee screens here is how
+   * the two-divergent-copies failure starts; a screen an employee needs belongs
+   * in `ADMIN` behind a permission, which is already how `admin/layout.tsx`
+   * admits non-admins.
+   */
+  EMPLOYEE: {
+    HOME: "/employee",
+  },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
     /**
@@ -781,6 +806,10 @@ export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
       ...DEFAULT_ROUTE_MAP.STORE,
       ...(overrides.STORE ?? {}),
     },
+    EMPLOYEE: {
+      ...DEFAULT_ROUTE_MAP.EMPLOYEE,
+      ...(overrides.EMPLOYEE ?? {}),
+    },
     ADMIN: {
       ...DEFAULT_ROUTE_MAP.ADMIN,
       ...(overrides.ADMIN ?? {}),
@@ -793,6 +822,69 @@ export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
 }
 
 export const ROUTES = DEFAULT_ROUTE_MAP;
+
+/**
+ * ── Host-aware ROUTES (item 1.28) ───────────────────────────────────────────
+ *
+ * Every `ROUTES.*` entry bakes its portal segment in — `ROUTES.ADMIN.PRODUCTS`
+ * is `/admin/products` — because that IS the real app path and must stay so on
+ * the canonical host. On `admin.<domain>` the segment is already implied by the
+ * hostname, so the URL a visitor should see is `admin.<domain>/products`, not
+ * `admin.<domain>/admin/products`. The subdomain's entire point is that the
+ * prefix is implied.
+ *
+ * 🛑 ONE transform at the ROUTES layer, never per-link edits across the tree.
+ * There are hundreds of `ROUTES.*` references; converting them individually
+ * would be a half-done rename the first time one was missed, and a missed one
+ * is invisible (it still resolves — `src/proxy.ts` accepts both the prefixed
+ * and the stripped form on a portal host, by design, precisely so this can be
+ * adopted incrementally instead of in one all-or-nothing commit).
+ *
+ * Pure and server-safe, so the same call works in an RSC, a client component
+ * and the Edge proxy. `section` is null on the canonical host, where this is
+ * the identity transform and today's behaviour is preserved exactly.
+ */
+function portalizeGroup<T extends Record<string, RoutePath>>(group: T, section: string): T {
+  const out: Record<string, RoutePath> = {};
+  for (const [key, value] of Object.entries(group)) {
+    out[key] =
+      typeof value === "function"
+        ? (...args: string[]) => portalHref(value(...args), section)
+        : portalHref(value, section);
+  }
+  return out as T;
+}
+
+/**
+ * The route map as it should RENDER on a given portal host.
+ *
+ * ```ts
+ * const R = routesForPortal(portalSectionForHost(host)); // "/admin" | null
+ * R.ADMIN.PRODUCTS; // "/products" on admin.<domain>, "/admin/products" on www
+ * R.USER.PROFILE;   // "/user/profile" on BOTH — it leaves the admin section,
+ *                   // so its prefix is load-bearing and is kept
+ * ```
+ *
+ * Only the ACTIVE section is stripped. That asymmetry is the correctness
+ * property: a cross-portal link must keep its prefix or it would resolve to the
+ * wrong portal's page (and, before the proxy fix that came with this, to a
+ * 404 — `/user/profile` on the admin host was being rewritten to
+ * `/admin/user/profile`).
+ */
+export function routesForPortal(section: string | null): RouteMap {
+  if (!section) return DEFAULT_ROUTE_MAP;
+  return {
+    HOME: DEFAULT_ROUTE_MAP.HOME,
+    PUBLIC: portalizeGroup(DEFAULT_ROUTE_MAP.PUBLIC, section),
+    ERRORS: portalizeGroup(DEFAULT_ROUTE_MAP.ERRORS, section),
+    AUTH: portalizeGroup(DEFAULT_ROUTE_MAP.AUTH, section),
+    USER: portalizeGroup(DEFAULT_ROUTE_MAP.USER, section),
+    STORE: portalizeGroup(DEFAULT_ROUTE_MAP.STORE, section),
+    EMPLOYEE: portalizeGroup(DEFAULT_ROUTE_MAP.EMPLOYEE, section),
+    ADMIN: portalizeGroup(DEFAULT_ROUTE_MAP.ADMIN, section),
+    BLOG: portalizeGroup(DEFAULT_ROUTE_MAP.BLOG, section),
+  };
+}
 
 /** @deprecated Use ROUTES.STORE instead */
 export const SELLER_ROUTES = ROUTES.STORE;
