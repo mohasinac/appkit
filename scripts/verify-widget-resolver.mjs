@@ -91,13 +91,13 @@ const OFFER_BOARD = "w-offer-board";
 const LIVE_PROOF = "w-live-proof";
 
 function scroller(id, source, title, order, state) {
-  return { id, type: "related-scroller", regionId: REGION, parentId: null, order, state, config: { source, title } };
+  return { id, type: "row.horizontalScroller", regionId: REGION, parentId: null, order, state, config: { source, title } };
 }
 function card(id, parentId, order, state) {
-  return { id, type: "product-card", regionId: REGION, parentId, order, state, config: {} };
+  return { id, type: "card.product", regionId: REGION, parentId, order, state, config: {} };
 }
 
-/** The four real branches, plus three product-card children under two of them. */
+/** The four real branches, plus three card.product children under two of them. */
 function baseInstances() {
   return [
     scroller(SCROLLER_CATEGORY, "category", "More in this category", 0),
@@ -107,8 +107,8 @@ function baseInstances() {
     card("w-card-c1", SCROLLER_CATEGORY, 1),
     card("w-card-c0", SCROLLER_CATEGORY, 0),
     card("w-card-s0", SCROLLER_STORE, 0),
-    { id: OFFER_BOARD, type: "offer-board", regionId: REGION, parentId: null, order: 4, config: {} },
-    { id: LIVE_PROOF, type: "live-media-proof", regionId: REGION, parentId: null, order: 5, config: {} },
+    { id: OFFER_BOARD, type: "section.offerBoard", regionId: REGION, parentId: null, order: 4, config: {} },
+    { id: LIVE_PROOF, type: "section.liveMediaProof", regionId: REGION, parentId: null, order: 5, config: {} },
   ];
 }
 
@@ -153,7 +153,7 @@ function run(instances, ctxOverride = {}) {
   eq("A7 'seller's other items' scroller carries its own child", store.children.length, 1);
   eq("A8 titles live in config, not identity", cat.instance.config.title, "More in this category");
   eq("A9 all four hardcoded branches are now instances of ONE type",
-    new Set(r.roots.filter((n) => n.instance.type === "related-scroller").map((n) => n.instance.config.source)).size, 4);
+    new Set(r.roots.filter((n) => n.instance.type === "row.horizontalScroller").map((n) => n.instance.config.source)).size, 4);
   eq("A10 no config problems on a clean tree", r.problems.length, 0);
 }
 
@@ -222,11 +222,11 @@ function run(instances, ctxOverride = {}) {
   eq("C4 a widget on a surface its region does not belong to is blocked", r.roots[0].reason, "wrong-surface");
   const r2 = resolveWidgetTree(
     PILOT_WIDGET_DEFS,
-    [{ id: REGION, surface: "homepage", label: "x", allowedTypes: ["offer-board"] }],
-    [{ id: "w-ob", type: "offer-board", regionId: REGION, parentId: null, order: 0, config: {} }],
+    [{ id: REGION, surface: "homepage", label: "x", allowedTypes: ["section.offerBoard"] }],
+    [{ id: "w-ob", type: "section.offerBoard", regionId: REGION, parentId: null, order: 0, config: {} }],
     { surface: "homepage", permissions: ALL_PERMS },
   );
-  eq("C5 `WidgetDef.surfaces` is read: offer-board is product-only", r2.roots[0].reason, "wrong-surface");
+  eq("C5 `WidgetDef.surfaces` is read: section.offerBoard is product-only", r2.roots[0].reason, "wrong-surface");
 }
 
 {
@@ -266,7 +266,7 @@ function run(instances, ctxOverride = {}) {
   moved[0].regionId = "store-storefront:body";
   const r3 = resolveWidgetTree(
     PILOT_WIDGET_DEFS,
-    [...PILOT_REGIONS, { id: "store-storefront:body", surface: "store", label: "Storefront body", allowedTypes: ["related-scroller"] }],
+    [...PILOT_REGIONS, { id: "store-storefront:body", surface: "store", label: "Storefront body", allowedTypes: ["row.horizontalScroller"] }],
     moved,
     { surface: "store", permissions: ALL_PERMS },
   );
@@ -291,13 +291,13 @@ function run(instances, ctxOverride = {}) {
 }
 
 {
-  const r = run([{ id: "w-x", type: "related-scroller", regionId: "nope:body", parentId: null, order: 0, config: {} }]);
+  const r = run([{ id: "w-x", type: "row.horizontalScroller", regionId: "nope:body", parentId: null, order: 0, config: {} }]);
   eq("E4 unknown region is reported", r.roots[0].reason, "unknown-region");
   ok("E5 config cannot create a region", r.problems.some((p) => /config cannot create one/.test(p.problem)));
 }
 
 {
-  // A card-inside-a-card: product-card declares childTypes: [].
+  // A card-inside-a-card: card.product declares childTypes: [].
   const r = run([
     scroller(SCROLLER_CATEGORY, "category", "t", 0),
     card("w-card-c0", SCROLLER_CATEGORY, 0),
@@ -349,9 +349,9 @@ function run(instances, ctxOverride = {}) {
 }
 
 {
-  const r = run([{ id: "w-pc", type: "product-card", regionId: REGION, parentId: null, order: 0, config: {} }]);
+  const r = run([{ id: "w-pc", type: "card.product", regionId: REGION, parentId: null, order: 0, config: {} }]);
   eq("E11 a type the REGION does not accept is refused", r.roots[0].reason, "disallowed-child");
-  ok("E12 with the allowed list named", r.problems.some((p) => /does not accept "product-card"/.test(p.problem)));
+  ok("E12 with the allowed list named", r.problems.some((p) => /does not accept "card.product"/.test(p.problem)));
 }
 
 // ---------------------------------------------------------------------------
@@ -424,7 +424,7 @@ const RESOLVED_RULES = [
 {
   // Blocking a PARENT must make a child's fields unreachable too.
   const insts = [
-    { id: "w-wrap", type: "related-scroller", regionId: REGION, parentId: null, order: 0, state: "off", config: {} },
+    { id: "w-wrap", type: "row.horizontalScroller", regionId: REGION, parentId: null, order: 0, state: "off", config: {} },
   ];
   const r = run(insts);
   eq("F19 a blocked container is not visible", r.roots[0].visible, false);
@@ -440,14 +440,14 @@ const RESOLVED_RULES = [
   // Two widgets claiming one field: one visible is enough to keep it reachable.
   const defs = [
     ...PILOT_WIDGET_DEFS,
-    { type: "offer-compact", tier: "section", label: "Offer (compact)", surfaces: ["product"], childTypes: [], ownsFields: ["offerAmount"] },
+    { type: "section.offerCompact", tier: "section", label: "Offer (compact)", surfaces: ["product"], childTypes: [], ownsFields: ["offerAmount"] },
   ];
   const r = resolveWidgetTree(
     defs,
-    [{ id: REGION, surface: "product", label: "x", allowedTypes: ["offer-board", "offer-compact"] }],
+    [{ id: REGION, surface: "product", label: "x", allowedTypes: ["section.offerBoard", "section.offerCompact"] }],
     [
-      { id: "w-ob", type: "offer-board", regionId: REGION, parentId: null, order: 0, state: "off", config: {} },
-      { id: "w-oc", type: "offer-compact", regionId: REGION, parentId: null, order: 1, config: {} },
+      { id: "w-ob", type: "section.offerBoard", regionId: REGION, parentId: null, order: 0, state: "off", config: {} },
+      { id: "w-oc", type: "section.offerCompact", regionId: REGION, parentId: null, order: 1, config: {} },
     ],
     { surface: "product", permissions: ALL_PERMS },
   );
@@ -478,7 +478,7 @@ const RESOLVED_RULES = [
 
 {
   const defs = PILOT_WIDGET_DEFS.map((d) =>
-    d.type === "related-scroller" ? { ...d, defaultOn: false } : d,
+    d.type === "row.horizontalScroller" ? { ...d, defaultOn: false } : d,
   );
   const r = resolveWidgetTree(defs, PILOT_REGIONS, [scroller("w-s", "category", "t", 0)], {
     surface: "product", permissions: ALL_PERMS,

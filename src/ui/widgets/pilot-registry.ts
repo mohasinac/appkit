@@ -53,7 +53,7 @@ export const PILOT_REGIONS: readonly WidgetRegionDef[] = [
     id: "products-slug:body",
     surface: "product",
     label: "Product detail — body",
-    allowedTypes: ["related-scroller", "offer-board", "live-media-proof"],
+    allowedTypes: ["row.horizontalScroller", "section.offerBoard", "section.liveMediaProof"],
   },
 ];
 
@@ -67,7 +67,7 @@ export const PILOT_REGIONS: readonly WidgetRegionDef[] = [
 export const RELATED_SOURCES = ["category", "brand", "tags", "store"] as const;
 export type RelatedSource = (typeof RELATED_SOURCES)[number];
 
-/** `related-scroller`'s config bag. The four hardcoded JSX branches become four of these. */
+/** `row.horizontalScroller`'s config bag. The four hardcoded JSX branches become four of these. */
 export interface RelatedScrollerConfig {
   source: RelatedSource;
   /** Title. A CONFIG value, which is exactly why it must not participate in the instance identity. */
@@ -77,26 +77,33 @@ export interface RelatedScrollerConfig {
 
 export const PILOT_WIDGET_DEFS: readonly WidgetDef[] = [
   /*
-   * T2 — the container. `childTypes: ["product-card"]` is what makes "a
+   * T2 — the container. `childTypes: ["card.product"]` is what makes "a
    * widget inside another widget" a declared capability rather than an
    * accident, and what caps nesting depth without a runtime guard.
    */
   {
-    type: "related-scroller",
+    type: "row.horizontalScroller",
     tier: "section",
     label: "Related items scroller",
     surfaces: ["product", "category", "store"],
-    childTypes: ["product-card"],
+    childTypes: ["card.product"],
   },
 
   /*
-   * T3 — the card child. A leaf: `childTypes: []`. Reuses the existing
-   * `CardElement` kind spelling `productCard` in intent; named
-   * `product-card` here to match the kebab-case registry convention
-   * `SectionType` already uses (`collector-drops`, `trust-indicators`).
+   * T3 — the card child. A leaf: `childTypes: []`.
+   *
+   * 🛑 Registry keys are `category.type`, deliberately matching the key
+   * convention the concurrent mock-UI session already settled on
+   * (`mocks/01-widgets.qm`, page "Catalogue": *"Registry key = category.type"*
+   * — `card.product`, `row.horizontalScroller`, `section.clearanceStrip`,
+   * `form.section`). Adopted rather than invented: two spellings for one
+   * registry is precisely the defect that produced `nav-brands` vs
+   * `nav-public-brands` and three incompatible `HomepageSectionType`
+   * vocabularies. The `category.` prefix also carries real information — it
+   * is the tier, readable without a registry lookup.
    */
   {
-    type: "product-card",
+    type: "card.product",
     tier: "element",
     label: "Product card",
     surfaces: ["product", "category", "store", "homepage"],
@@ -113,7 +120,7 @@ export const PILOT_WIDGET_DEFS: readonly WidgetDef[] = [
    * possible this way.
    */
   {
-    type: "offer-board",
+    type: "section.offerBoard",
     tier: "section",
     label: "Offer board",
     surfaces: ["product"],
@@ -129,7 +136,7 @@ export const PILOT_WIDGET_DEFS: readonly WidgetDef[] = [
    * default video of an unfilmed animal exists.
    */
   {
-    type: "live-media-proof",
+    type: "section.liveMediaProof",
     tier: "section",
     label: "Live-item media proof",
     surfaces: ["product"],
