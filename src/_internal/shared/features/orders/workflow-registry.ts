@@ -103,28 +103,43 @@ function standardRule(): OrderWorkflowRule {
 }
 
 /**
- * Concealable lifecycle: the baseline, PLUS two locks.
+ * Concealable lifecycle: the baseline, plus ONE additional lock — reveal.
  *
- * 1. Revealing forfeits cancellation. The buyer has seen the allocation, so
- *    allowing a cancel after that is a free option on the contents.
- * 2. Confirmation locks it, per the owner's rule. For an ordinary item
- *    `confirmed` is still cancellable; for a concealed one it is not.
+ * **Cancellable while UNREVEALED, and not a moment longer.** Confirmation does
+ * NOT lock it; reveal does. Owner, 2026-11-07: *"it can be cancelled till the
+ * reveal status is not true; once revealed it will be uncancellable and
+ * non-refundable."*
+ *
+ * One predicate covers BOTH clearance modes, which is why it is expressed this
+ * way rather than as two rules:
+ *
+ *   · **immediate reveal** — contents are revealed on the order-details page
+ *     once payment succeeds (not at checkout). The item is therefore `revealed`
+ *     from the outset, so this rule locks it immediately. Correct: the buyer
+ *     did not gamble on anything they can now back out of.
+ *   · **surprise / delayed reveal** — stays `unrevealed`, and so stays
+ *     cancellable, until the buyer reveals at their discretion OR the seller
+ *     ships (shipment auto-reveals, making the allocation public).
+ *
+ * 🛑 An earlier version of this rule also required `status === "pending"`. That
+ * was too strict and is corrected here — it would have stopped a buyer
+ * cancelling an unrevealed surprise order after confirmation, which the owner
+ * explicitly allows.
+ *
+ * Claims for "what arrived is not what was revealed" are deliberately NOT
+ * modelled here — that is the existing item-not-as-described claim type in
+ * support, adjudicated against the immutable allocation record.
  */
 function concealableRule(): OrderWorkflowRule {
   const base = standardRule();
   return {
     cancellableByBuyer: (ctx) =>
-      base.cancellableByBuyer(ctx) &&
-      ctx.revealState !== "revealed" &&
-      ctx.status === "pending",
+      base.cancellableByBuyer(ctx) && ctx.revealState !== "revealed",
     cancelBlockedReason: (ctx) => {
       const baseReason = base.cancelBlockedReason(ctx);
       if (baseReason) return baseReason;
       if (ctx.revealState === "revealed") {
-        return "Revealed items cannot be cancelled — this was shown before you revealed.";
-      }
-      if (ctx.status !== "pending") {
-        return "Confirmed surprise orders cannot be cancelled.";
+        return "Revealed items cannot be cancelled or refunded — you were warned before revealing.";
       }
       return null;
     },
