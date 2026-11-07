@@ -251,7 +251,7 @@ export async function promoteStickerSheetToListings(
     featured: false,
     tags: ["stickers"],
     condition: "new",
-    listingType: "stickers",
+    listingType: "art-and-stickers",
     groupTitle: sheet.title,
     sourceStickerSheetId: sheet.id,
   } as never)) as ProductDocument;
@@ -281,7 +281,7 @@ export async function promoteStickerSheetToListings(
       featured: false,
       tags: ["stickers"],
       condition: "new",
-      listingType: "stickers",
+      listingType: "art-and-stickers",
       sourceStickerSheetId: sheet.id,
       sourceStickerPartOrdinal: part.ordinal,
     } as never)) as ProductDocument;

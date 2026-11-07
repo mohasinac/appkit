@@ -79,8 +79,14 @@ export interface ListingTab {
 export const GENERIC_PRODUCT_LISTING_TYPES: readonly ListingType[] =
   ALL_LISTING_TYPES.filter((t) => pluginFor(t).inGeneralCatalogue);
 
-/** The listing types the combined `/art` page spans. */
-export const ART_STICKERS_LISTING_TYPES: readonly ListingType[] = ["art", "stickers"];
+/**
+ * The listing types the `/art` page spans.
+ *
+ * 🛑 ONE member since 1.34 merged `art` + `stickers` into `art-and-stickers`.
+ * Kept as a named constant rather than inlined because the tab-body coverage
+ * audit and the category/brand tab maps both key off it.
+ */
+export const ART_AND_STICKERS_LISTING_TYPES: readonly ListingType[] = ["art-and-stickers"];
 
 /**
  * A FILTER chip — `id` is the canonical `listingType`, because it is passed
@@ -101,28 +107,19 @@ function pluralTab(type: ListingType): ListingTab {
   return { id: plugin.tabSlug, label: plugin.pluralLabel, listingType: type, iconName: plugin.iconKey };
 }
 
-/**
- * Art and stickers share the combined `/art` browse page, so category/brand/
- * store tab bars show them as ONE tab backed by a two-value OR-group. Derived
- * from both plugins rather than a hardcoded `"art|stickers"` string so the
- * pipe-group can't drift from the registry.
+/*
+ * 🛑 The combined-tab machinery is GONE (1.34). `art` and `stickers` used to
+ * be two union members sharing one `/art` page, which forced a bespoke tab
+ * built from a two-value `"art|stickers"` pipe OR-group plus a
+ * `SEPARATELY_TABBED_TYPES` filter that excluded them from the generic map.
+ * One merged type needs none of that — `pluralTab` now produces the Art &
+ * Stickers tab like every other type's, keyed on the unchanged `art` tabSlug.
  */
-const ART_STICKERS_COMBINED_TAB: ListingTab = {
-  id: pluginFor("art").tabSlug,
-  label: `${pluginFor("art").pluralLabel} & ${pluginFor("stickers").pluralLabel}`,
-  listingType: ART_STICKERS_LISTING_TYPES.join("|"),
-};
-
-/** Listing types that get their own tab on a combined surface (art+stickers merge into one). */
-const SEPARATELY_TABBED_TYPES = ALL_LISTING_TYPES.filter(
-  (t) => t !== "art" && t !== "stickers",
-);
 
 /** Tabs shown on `/categories/[slug]` and `/brands/[slug]` detail pages. */
 export const CATEGORY_PAGE_TABS: readonly ListingTab[] = [
-  ...SEPARATELY_TABBED_TYPES.map(pluralTab),
+  ...ALL_LISTING_TYPES.map(pluralTab),
   { id: "bundles", label: "Bundles", collection: "bundles" },
-  ART_STICKERS_COMBINED_TAB,
   { id: "stores", label: "Stores", entity: "stores" },
 ];
 
@@ -130,9 +127,8 @@ export type CategoryTabId = string;
 
 /** Tabs shown on the public `/stores/[slug]` nav bar. */
 export const STORE_PAGE_TABS: readonly ListingTab[] = [
-  ...SEPARATELY_TABBED_TYPES.map(pluralTab),
+  ...ALL_LISTING_TYPES.map(pluralTab),
   { id: "bundles", label: "Bundles", collection: "bundles" },
-  ART_STICKERS_COMBINED_TAB,
 ];
 
 export type StoreTabId = string;
@@ -165,4 +161,4 @@ export const PRODUCT_TYPE_FILTER_TABS: readonly ListingTab[] =
 
 /** In-page type-filter chips on the combined `/art` (Art & Stickers) page. */
 export const ART_STICKERS_TYPE_FILTER_TABS: readonly ListingTab[] =
-  ART_STICKERS_LISTING_TYPES.map(chipTab);
+  ART_AND_STICKERS_LISTING_TYPES.map(chipTab);

@@ -20,9 +20,8 @@ export {
   isClassifiedListing,
   isDigitalCodeListing,
   isLiveListing,
-  // Art/stickers session.
-  isArtListing,
-  isStickersListing,
+  // Printed-only physical goods — one merged type (1.34).
+  isArtAndStickersListing,
 } from "./utils/listing-type";
 export {
   sanitizeProductForPublic,

@@ -1051,8 +1051,7 @@ export {
   isClassifiedListing,
   isDigitalCodeListing,
   isLiveListing,
-  isArtListing,
-  isStickersListing,
+  isArtAndStickersListing,
 } from "./features/products/utils/listing-type";
 
 // Final sale — ABSENT MEANS TRUE, so these are the only legal reads of the
@@ -1201,10 +1200,21 @@ export {
   validateRoleSet,
   getMaxRolesPerUser,
   setMaxRolesPerUser,
+  /*
+   * Moderation as a GRANT, not a role (owner 2026-11-08). `canModerate` is
+   * client-safe and reads the `permissions[]` on the carrier it is handed — so
+   * it answers correctly for a `SessionUser` hydrated from a user document and
+   * NOT for a bare JWT claims bag. UI that only decides what to render may use
+   * it; the server gate is `canModerateServer` and is the authority.
+   */
+  MODERATION_PERMISSIONS,
+  ALL_MODERATION_ACTIONS,
+  canModerate,
 } from "./features/auth/auth-helpers";
 export type {
   ResolvedPermissions,
   PermissionCarrier,
+  ModerationAction,
 } from "./features/auth/auth-helpers";
 export {
   ROLE_PERMISSION_BUNDLES,
@@ -1347,10 +1357,8 @@ export { SellerBundlesView } from "./features/seller/components/SellerBundlesVie
 export type { SellerBundlesViewProps } from "./features/seller/components/SellerBundlesView";
 export { SellerClassifiedView } from "./features/seller/components/SellerClassifiedView";
 export type { SellerClassifiedViewProps } from "./features/seller/components/SellerClassifiedView";
-export { SellerArtView } from "./features/seller/components/SellerArtView";
-export type { SellerArtViewProps } from "./features/seller/components/SellerArtView";
-export { SellerStickersView } from "./features/seller/components/SellerStickersView";
-export type { SellerStickersViewProps } from "./features/seller/components/SellerStickersView";
+export { SellerArtAndStickersView } from "./features/seller/components/SellerArtAndStickersView";
+export type { SellerArtAndStickersViewProps } from "./features/seller/components/SellerArtAndStickersView";
 export { SellerSparesView } from "./features/seller/components/SellerSparesView";
 export type { SellerSparesViewProps } from "./features/seller/components/SellerSparesView";
 export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";

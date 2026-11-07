@@ -443,14 +443,14 @@ export const ACTIONS: ActionTree = {
       /*
        * Scope corrected 2026-08-31: this was `["classified"]`, but the button it
        * labels (`MakeOfferButton`) mounts on every type whose capability says
-       * `canMakeOffer` — which is standard, art and stickers as well. On
+       * `canMakeOffer` — which is standard and art-and-stickers as well. On
        * classified specifically it is the ONLY purchase path, and a seller who
        * has not opted into haggling receives a request to buy at the asking
        * price rather than a lower offer.
        */
       description: "Propose a price to the seller, or request to buy at the asking price.",
       kind: "secondary",
-      listingTypeScope: ["standard", "classified", "art", "stickers"],
+      listingTypeScope: ["standard", "classified", "art-and-stickers"],
     },
   },
   COLLECTOR_DROP: {

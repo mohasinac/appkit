@@ -2,7 +2,7 @@ import React from "react";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 import { listStoreProducts } from "../../../_internal/server/features/products/list-public";
-import { ART_STICKERS_LISTING_TYPES } from "../../products/constants/listing-tabs";
+import { ART_AND_STICKERS_LISTING_TYPES } from "../../products/constants/listing-tabs";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreProductsListing } from "./StoreProductsListing";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
@@ -44,7 +44,7 @@ export async function StoreArtStickersPageView({
 
   const result = await listStoreProducts(
     storeId,
-    ART_STICKERS_LISTING_TYPES,
+    ART_AND_STICKERS_LISTING_TYPES,
     searchParams ?? {},
     { pageSize: DEFAULT_PAGE_SIZE, sorts: DEFAULT_SORT },
   );
@@ -54,7 +54,7 @@ export async function StoreArtStickersPageView({
       <AdminComposableRegion pageId="stores-storeslug-art" initialCards={pageRegionCards} />
       <StoreProductsListing
         storeId={storeId}
-        listingTypes={ART_STICKERS_LISTING_TYPES}
+        listingTypes={ART_AND_STICKERS_LISTING_TYPES}
         initialData={result ?? undefined}
       />
     </>

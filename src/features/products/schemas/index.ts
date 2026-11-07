@@ -23,7 +23,7 @@ export const productSeoSchema = z.object({
   keywords: z.array(z.string()).optional(),
 });
 
-/** Print-specific metadata for "art" / "stickers" listings. */
+/** Print-specific metadata for "art-and-stickers" listings. */
 export const printMetaSchema = z.object({
   size: z.string().max(80).optional(),
   material: z.string().max(80).optional(),

@@ -20,7 +20,7 @@
  *
  * | | rule | why the other rule would break it |
  * |---|---|---|
- * | `hiddenSurfaceRoutes` — listing-type browse pages | **exact path** | `art`, `stickers`, `spares` and `standard` all detail at `/products/{slug}`, so a prefix rule would 404 the whole standard catalogue the day `spares` emptied |
+ * | `hiddenSurfaceRoutes` — listing-type browse pages | **exact path** | `art-and-stickers`, `spares` and `standard` all detail at `/products/{slug}`, so a prefix rule would 404 the whole standard catalogue the day `spares` emptied |
  * | `closedSurfacePrefixes` — browse sections, bundles, `disabledRoutes` | **prefix** | `/categories/{slug}` is owned by `categories` alone, and exact-only matching left all 4,698 of them serving a real 200 while `/categories` said 404 |
  *
  * Do not merge them. Picking either rule for both is a live defect one way or
@@ -28,9 +28,10 @@
  *
  * ## 🛑 A SHARED route survives while ANY of its types is visible
  *
- * `/art` spans `art` and `stickers`; `/products` spans `standard` plus several
- * others. Without `hiddenSurfaceRoutes`' second pass, hiding `stickers` alone
- * would close a page `art` still fills — and hiding `spares` alone would close
+ * `/art` is `art-and-stickers`' own page; `/products` spans `standard` plus
+ * several others. Without `hiddenSurfaceRoutes`' second pass, hiding one
+ * claimant of a SHARED route would close a page its co-claimant still fills —
+ * and hiding `spares` alone would close
  * `/products`.
  *
  * @tag domain:products
@@ -104,7 +105,7 @@ export function hiddenSurfaceRoutes(
  * ## Why this is a second function and not more entries in the first
  *
  * `hiddenSurfaceRoutes` above is exact-path-only, and its docstring explains
- * why it has to be: `art`, `stickers`, `spares` and `standard` all detail at
+ * why it has to be: `art-and-stickers`, `spares` and `standard` all detail at
  * `/products/{slug}`, so a prefix rule there would 404 the whole standard
  * catalogue the day `spares` emptied.
  *

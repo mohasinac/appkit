@@ -1,13 +1,13 @@
 /*
- * WHY: `listingType: "stickers"` shares ProductPrintMeta (size/material/finish/editionSize)
- *      with "art" — both printed-only physical goods. Previously left as an empty stub,
+ * WHY: `listingType: "art-and-stickers"` carries ProductPrintMeta (size/material/finish/editionSize)
+ *      — printed-only physical goods. Previously left as an empty stub,
  *      but sticker sheets fit the Beyblade theme naturally (see CLAUDE.md seed-data
  *      blandness sweep, 2026-08-20 session).
  * WHAT: Exports 6 Beyblade sticker-sheet listings on Beyblade Arena, varying size,
  *       material, and finish (including a holographic variant and a die-cut vinyl set).
  *
  * EXPORTS:
- *   productsStickersSeedData — Array of 6 Partial<ProductDocument> with listingType:"stickers"
+ *   productsStickersSeedData — Array of 6 Partial<ProductDocument> with listingType:"art-and-stickers"
  *
  * @tag domain:products,stickers
  * @tag layer:seed
@@ -44,7 +44,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(seedPhoto("stickers-image-original-classic-1-20260817", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "5x5 cm sheet", material: "Vinyl", finish: "Glossy" },
@@ -86,7 +86,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "8x10 cm sheet", material: "Holographic vinyl", finish: "Holographic" },
@@ -125,7 +125,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(seedPhoto("stickers-image-burst-diecut-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "Individually die-cut, ~6x6 cm each", material: "Weatherproof vinyl", finish: "Matte" },
@@ -164,7 +164,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(seedPhoto("stickers-image-metal-retro-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "6x8 cm sheet", material: "Vinyl", finish: "Matte", editionSize: 500 },
@@ -206,7 +206,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "7x9 cm sheet", material: "Glow-in-the-dark vinyl", finish: "Matte" },
@@ -248,7 +248,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "10x15 cm sheet", material: "Matte vinyl", finish: "Matte" },
@@ -300,7 +300,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(seedPhoto("stickers-image-x-glow-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "5x5 cm sheet", material: "Vinyl", finish: "Glossy" },
@@ -355,7 +355,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(editorialImage("sticker-image-beyblade-x-event-sheet")),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     printMeta: { size: "A5 (14.8 x 21 cm) sheet", material: "Vinyl", finish: "Matte UV-laminated" },
@@ -397,7 +397,7 @@ const _rawProductsStickersSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(editorialImage("sticker-image-beyblade-x-event-holo")),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "stickers" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-letitrip-official",
     storeName: "LetItRip Official",
     printMeta: { size: "10 x 15 cm sheet", material: "Holographic vinyl", finish: "Holographic" },

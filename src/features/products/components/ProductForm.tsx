@@ -85,8 +85,7 @@ const LISTING_TYPE_TO_FEATURE_PRODUCT_TYPE: Record<ListingType, ProductFeaturePr
   classified: "classified",
   "digital-code": "digital-code",
   live: "live",
-  art: "art",
-  stickers: "stickers",
+  "art-and-stickers": "art-and-stickers",
 };
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =

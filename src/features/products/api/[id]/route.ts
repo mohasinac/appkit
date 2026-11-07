@@ -24,7 +24,24 @@ import { storeRepository } from "../../../stores/repository/store.repository";
 import { sanitizeProductForPublic } from "../../utils/sanitize";
 import { printMetaSchema } from "../../schemas/index";
 
-import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
+/*
+ * ── "Not the owner" is a PERMISSION question, not a role one ──────────────────
+ *
+ * These two gates read `isOwner || isModeratorUser(user) || isAdminUser(user)`
+ * until 2026-11-08. Folding `moderator` into `employee` (A9) made the middle
+ * term true for every employee, so editing and archiving ANY seller's listing
+ * widened to every employee account as a side effect of a role rename.
+ *
+ * Owner's decision: keep the fold, gate on an explicit permission. PATCH now
+ * asks for `admin:products:write` and DELETE for `admin:products:delete` — the
+ * keys that already name those powers and already appear in the admin grant UI,
+ * rather than a parallel `moderation:products` saying the same thing twice.
+ *
+ * `canModerateServer` reads the user document because the per-person grant is
+ * in `permissions[]` and never reaches the session cookie; it is called only
+ * after the cheap ownership test fails, so an owner pays no extra read.
+ */
+import { canModerateServer } from "../../../../_internal/server/features/auth/permissions";
 
 import { normalizeError } from "../../../../errors/normalize";
 const ERR_DB_NOT_REGISTERED = "Database provider not registered";
@@ -166,10 +183,10 @@ export const PATCH = createRouteHandler<
 
     const ownerStore = product.storeId ? await storeRepository.findByOwnerId(user?.uid ?? "") : null;
     const isOwner = !!ownerStore && ownerStore.id === product.storeId;
-    const isModerator = isModeratorUser(user);
-    const isAdmin = isAdminUser(user);
+    const mayModerate =
+      isOwner || (await canModerateServer(user?.uid, "products:moderate"));
 
-    if (!isOwner && !isModerator && !isAdmin) {
+    if (!mayModerate) {
       return NextResponse.json(
         { success: false, error: "Not authorized to update this product" },
         { status: 403 },
@@ -249,10 +266,13 @@ export const DELETE = createRouteHandler<never, { id: string }>({
 
     const ownerStore = product.storeId ? await storeRepository.findByOwnerId(user?.uid ?? "") : null;
     const isOwner = !!ownerStore && ownerStore.id === product.storeId;
-    const isModerator = isModeratorUser(user);
-    const isAdmin = isAdminUser(user);
+    // DELETE asks for `products:remove` (`admin:products:delete`), not the
+    // PATCH key: archiving someone else's listing is a strictly larger power
+    // than editing it, and the two permissions already exist separately.
+    const mayModerate =
+      isOwner || (await canModerateServer(user?.uid, "products:remove"));
 
-    if (!isOwner && !isModerator && !isAdmin) {
+    if (!mayModerate) {
       return NextResponse.json(
         { success: false, error: "Not authorized to delete this product" },
         { status: 403 },

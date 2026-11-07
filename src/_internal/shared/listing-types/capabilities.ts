@@ -224,20 +224,13 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     supportsSurpriseReveal: false,
     supportsDeferredFulfilment: false,
   },
-  // Art/stickers session — printed-only physical goods, standard-like checkout.
-  art: {
-    canAddToCart: true,
-    canBid: false,
-    supportsShipping: true,
-    requiresVendorVerified: false,
-    requiresJurisdictionCheck: false,
-    hasInstantFulfillment: false,
-    canMakeOffer: true,   // printed goods, standard-like
-    acceptsPointsTender: false,
-    supportsSurpriseReveal: false,
-    supportsDeferredFulfilment: false,
-  },
-  stickers: {
+  /*
+   * Printed-only physical goods — prints, sheets and cut-out stickers.
+   *
+   * 🛑 ONE row, not two. `art` and `stickers` were separate union members
+   * with byte-identical rows here; the merge (1.34) collapsed them.
+   */
+  "art-and-stickers": {
     canAddToCart: true,
     canBid: false,
     supportsShipping: true,

@@ -5,7 +5,7 @@
  *
  * A thin wrapper over the shared per-listing-type config, matching its five
  * siblings exactly. Nothing about spares needs a bespoke ListingViewConfig:
- * the difference between this and `AdminStickersView` is one string, which is
+ * the difference between this and `AdminArtAndStickersView` is one string, which is
  * precisely why those five were collapsed onto one builder in the first place.
  */
 

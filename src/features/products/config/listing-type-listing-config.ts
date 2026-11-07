@@ -19,7 +19,7 @@
  * @tag layer:config
  * @tag pattern:factory
  * @tag access:client
- * @tag consumers:AdminArtView,AdminStickersView,AdminClassifiedView,AdminDigitalCodesView,AdminLiveView
+ * @tag consumers:AdminArtAndStickersView,AdminClassifiedView,AdminDigitalCodesView,AdminLiveView
  * @tag sideEffects:none
  */
 

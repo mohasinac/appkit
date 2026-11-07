@@ -299,8 +299,9 @@ export function isCategoryTypeListed(
  *
  * Declared as `Record<ListingType, true>` rather than a plain array on purpose:
  * adding a member to the `ListingType` union without adding it here is then a
- * COMPILE error, not a silent omission. `art` / `stickers` were missing from
- * the old hand-written array for exactly that reason, which meant
+ * COMPILE error, not a silent omission. `art-and-stickers` (then still two
+ * separate members) was missing from the old hand-written array for exactly
+ * that reason, which meant
  * `/api/products`' "strip disabled types" post-filter dropped every art and
  * sticker row from any call that didn't name a listingType explicitly
  * (homepage, search, related-items).
@@ -314,8 +315,7 @@ const ALL_LISTING_TYPES_MAP: Record<ListingType, true> = {
   classified: true,
   "digital-code": true,
   live: true,
-  art: true,
-  stickers: true,
+  "art-and-stickers": true,
 };
 
 export const ALL_LISTING_TYPES = Object.keys(

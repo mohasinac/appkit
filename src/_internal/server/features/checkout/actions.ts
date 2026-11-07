@@ -1338,14 +1338,42 @@ async function finalizeOrderPlacement(input: {
     orderId,
   );
 
-  // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
-  // order is already persisted so a claim failure is logged, not thrown).
-  if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
+  /*
+   * SB-UNI-N — fulfilment on payment, decided by CAPABILITY and by the
+   * seller's own opt-in. Fire-and-forget on the claim: the order is already
+   * persisted, so an exhausted pool is logged rather than thrown.
+   *
+   * 🛑 This used to read `listingType === "digital-code"`, which was wrong in a
+   * way a typecheck could never see. `digitalCode.codeDeliveryMethod` is
+   * seller-settable (`auto-claim` | `manual-email`), is in the seller form, is
+   * validated by the request schema, and two seeded listings already carry
+   * `manual-email` — but the type comparison auto-claimed a code regardless.
+   * A seller who deliberately chose to release codes by hand got instant issue
+   * anyway, and the setting looked implemented while doing nothing.
+   *
+   * `fulfilsOnPayment` / `awaitsManualRelease` answer the two questions this
+   * site actually has ("does this line complete on its own when the money
+   * lands?" / "is a human release owed?") out of
+   * `fulfilmentModeFor`, which reads the capability registry × the listing's
+   * opt-in. So enabling instant or deferred fulfilment on another listing type
+   * is a capability-row edit plus that type's flag — never an edit here.
+   *
+   * 🛑 `markAwaitingRelease` is AWAITED while the claim is not, and the
+   * asymmetry is deliberate: a claim that fails leaves the pool untouched and
+   * the line simply undelivered, whereas a `pending_release` that fails to
+   * write leaves a paid line indistinguishable from one whose pool was empty —
+   * the ambiguity that function exists to remove. One of those is a normal
+   * state the buyer should see; the other is an incident.
+   */
+  const fulfilmentProduct = group[0]?.product;
+  if (fulfilsOnPayment(fulfilmentProduct?.listingType, fulfilmentProduct)) {
     claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, orderId, uid, {
       userEmail: userEmail || undefined,
       userName,
       productTitle: firstItem.productTitle,
     }).catch((e) => serverLogger.error("claimDigitalCode", { error: normalizeError(e).message }));
+  } else if (awaitsManualRelease(fulfilmentProduct?.listingType, fulfilmentProduct)) {
+    await markAwaitingRelease(orderId, firstItem.productId);
   }
 
   for (const code of groupCouponCodes) {

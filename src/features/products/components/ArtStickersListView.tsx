@@ -8,7 +8,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
 import {
   ART_STICKERS_TYPE_FILTER_TABS,
-  ART_STICKERS_LISTING_TYPES,
+  ART_AND_STICKERS_LISTING_TYPES,
 } from "../constants/listing-tabs";
 import {
   listPublicProducts,
@@ -35,12 +35,12 @@ export async function ArtStickersListView({ searchParams = {}, pageRegionCards =
   // disagree about what the default view means (Root Cause #30).
   const result = await listPublicProducts(
     parsePublicProductParams(searchParams, {
-      listingTypes: ART_STICKERS_LISTING_TYPES,
+      listingTypes: ART_AND_STICKERS_LISTING_TYPES,
       pageSize: DEFAULT_PAGE_SIZE,
       sorts: DEFAULT_SORT,
       // Derived, so this page and ProductsIndexListing can never disagree
       // about the default view (Root Cause #30).
-      ...defaultAvailabilityForListingTypes(ART_STICKERS_LISTING_TYPES),
+      ...defaultAvailabilityForListingTypes(ART_AND_STICKERS_LISTING_TYPES),
     }),
   );
 
@@ -64,7 +64,7 @@ export async function ArtStickersListView({ searchParams = {}, pageRegionCards =
           // `undefined`, not `null` — React Query treats null as defined data,
           // so a failed query froze an empty grid. See ProductsIndexPageView.
           initialData={result ?? undefined}
-          listingTypes={ART_STICKERS_LISTING_TYPES}
+          listingTypes={ART_AND_STICKERS_LISTING_TYPES}
           typeTabs={ART_STICKERS_TYPE_FILTER_TABS}
           searchPlaceholder="Search art & stickers..."
         />

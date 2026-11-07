@@ -12,7 +12,7 @@ import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { CategoryStoresListing } from "./CategoryStoresListing";
 import {
   CATEGORY_PAGE_TABS,
-  ART_STICKERS_LISTING_TYPES,
+  ART_AND_STICKERS_LISTING_TYPES,
   type CategoryTabId,
 } from "../../products/constants/listing-tabs";
 import { ALL_LISTING_TYPES } from "../../../_internal/shared/listing-types/feature-flags";
@@ -62,8 +62,8 @@ const GENERIC_TAB_LISTING_TYPES: Record<string, readonly string[]> = {
   [pluginFor("classified").tabSlug]: ["classified"],
   [pluginFor("digital-code").tabSlug]: ["digital-code"],
   [pluginFor("live").tabSlug]: ["live"],
-  // The combined Art & Stickers tab spans both types under the `art` slug.
-  [pluginFor("art").tabSlug]: ART_STICKERS_LISTING_TYPES,
+  // The Art & Stickers tab, under the unchanged `art` slug (1.34).
+  [pluginFor("art-and-stickers").tabSlug]: ART_AND_STICKERS_LISTING_TYPES,
   /*
    * Spares render generically — there is nothing type-specific to show beyond
    * a product grid, unlike a collector drop (countdown, bid history) or a prize draw

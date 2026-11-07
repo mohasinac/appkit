@@ -57,8 +57,7 @@ export type ListingType =
   | "classified"
   | "digital-code"
   | "live"
-  | "art"
-  | "stickers"
+  | "art-and-stickers"
   | "spares";
 
 /**

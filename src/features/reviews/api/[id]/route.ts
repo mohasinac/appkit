@@ -35,7 +35,22 @@ import type { ReviewDocument } from "../../schemas/firestore";
  */
 import type { Plaintext } from "../../../../security/encrypted";
 import { normalizeError } from "../../../../errors/normalize";
-import { isAdminUser, isModeratorUser } from "../../../auth/role-predicates";
+/*
+ * ── Review moderation is a PERMISSION, not a role ─────────────────────────────
+ *
+ * `isOwner || isModeratorUser(user) || isAdminUser(user)` stood here until
+ * 2026-11-08. Folding `moderator` into `employee` (A9) made the middle term
+ * true for every employee, so editing or deleting ANY buyer's review — and
+ * changing its moderation `status`, which the owner branch below is explicitly
+ * forbidden from doing — widened to every employee account.
+ *
+ * Owner's decision: keep the fold, gate on an explicit permission. PATCH asks
+ * for `admin:reviews:write`, DELETE for `admin:reviews:delete`: the existing
+ * keys, already in the `content_moderator` / `review_manager` /
+ * `trust_and_safety` presets, so granting review moderation is one click and
+ * NOT a consequence of being an employee.
+ */
+import { canModerateServer } from "../../../../_internal/server/features/auth/permissions";
 
 const ERR_REVIEW_NOT_FOUND = "Review not found";
 
@@ -145,10 +160,18 @@ export const reviewItemPATCH = createRouteHandler({
       );
 
     const isOwner = review.userId === user!.uid;
-    const isModerator = isModeratorUser(user);
-    const isAdmin = isAdminUser(user);
+    /*
+     * 🛑 Resolved even when `isOwner` is true, unlike every other gate in this
+     * sweep — and that is deliberate, not a missed optimisation. The value is
+     * load-bearing TWICE: once to admit the caller, and once below to decide
+     * whether `status` may move. An author who ALSO holds the grant must be
+     * able to moderate their own review; short-circuiting on ownership would
+     * silently pin their `status` edits and return 200, which is exactly the
+     * invisible-regression shape this rework exists to remove.
+     */
+    const mayModerate = await canModerateServer(user?.uid, "reviews:moderate");
 
-    if (!isOwner && !isModerator && !isAdmin) {
+    if (!isOwner && !mayModerate) {
       return NextResponse.json(
         { success: false, error: "Forbidden" },
         { status: 403 },
@@ -161,10 +184,9 @@ export const reviewItemPATCH = createRouteHandler({
      * edited by its author stays approved and is NOT sent back for
      * re-moderation.
      */
-    const patch =
-      isOwner && !isModerator && !isAdmin
-        ? { ...(body as object), status: review.status }
-        : (body as object);
+    const patch = mayModerate
+      ? (body as object)
+      : { ...(body as object), status: review.status };
 
     /*
      * 🛑 `hasImages` is DERIVED and has to move with `images`, or the two
@@ -210,10 +232,12 @@ export const reviewItemDELETE = createRouteHandler({
       );
 
     const isOwner = review.userId === user!.uid;
-    const isModerator = isModeratorUser(user);
-    const isAdmin = isAdminUser(user);
+    // `reviews:remove` (`admin:reviews:delete`), not the PATCH key — deleting
+    // someone else's review is a separate grant from editing it.
+    const mayModerate =
+      isOwner || (await canModerateServer(user?.uid, "reviews:remove"));
 
-    if (!isOwner && !isModerator && !isAdmin) {
+    if (!mayModerate) {
       return NextResponse.json(
         { success: false, error: "Forbidden" },
         { status: 403 },

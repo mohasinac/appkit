@@ -1477,9 +1477,9 @@ function StepLiveItemSettings({
   );
 }
 
-// ── Step: Print Meta (art / stickers) ───────────────────────────────────────
-// Shared by both "art" and "stickers" — identical field set, only the intro
-// copy differs (set by the caller via `intro`).
+// ── Step: Print Meta (art & stickers) ───────────────────────────────────────
+// Used by "art-and-stickers" — the field set the merged printed-goods type
+// needs. The intro copy is supplied by the caller via `intro`.
 
 function StepPrintMetaSettings({
   values,
@@ -1649,25 +1649,14 @@ const TYPE_SPECIFIC_SECTIONS: Partial<Record<ProductListingMode, TypeSpecificSec
     ),
     schema: sectionSchemas.live,
   },
-  art: {
+  "art-and-stickers": {
     id: "printmeta",
     label: "Print Details",
     render: ({ values, onChange }) => (
       <StepPrintMetaSettings
         values={values}
         onChange={onChange}
-        intro="Art prints are sold as physical, printed-only reproductions — no original artwork or digital files."
-      />
-    ),
-  },
-  stickers: {
-    id: "printmeta",
-    label: "Print Details",
-    render: ({ values, onChange }) => (
-      <StepPrintMetaSettings
-        values={values}
-        onChange={onChange}
-        intro="Sticker listings are sold as physical, printed sheets or packs — no digital files."
+        intro="Art prints and sticker sheets are sold as physical, printed-only goods — no original artwork and no digital files."
       />
     ),
   },

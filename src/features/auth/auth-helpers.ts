@@ -180,6 +180,121 @@ export function canAny(
   );
 }
 
+/*
+ * ═════════════════════════════════════════════════════════════════════════════
+ * MODERATION — the sites that used to read `isModeratorUser()`
+ *
+ * ── Why this map exists ──────────────────────────────────────────────────────
+ *
+ * `moderator` is collapsed into `employee` (A9, owner 2026-11-07: they are the
+ * same thing). The fold is right, but on its own it made `isModeratorUser()`
+ * return true for EVERY employee, so roughly 20 moderator-gated actions —
+ * order payment overrides, review and product moderation, support tickets,
+ * draw-entry oversight — widened to every existing employee account as a side
+ * effect of a role rename. Nobody chose that.
+ *
+ * Owner, 2026-11-08, asked to choose: **keep the fold, gate those sites on an
+ * explicit moderation permission.** So access is a GRANT, not a consequence of
+ * a rename — the governing principle applied properly:
+ *
+ *   A mechanism never asks "what role is this?" — it asks "does this user have
+ *   the permission?". Roles are bundles of capabilities, and bundles are DATA.
+ *
+ * ── Why a MAP and not nine scattered `can(user, "admin:…")` calls ────────────
+ *
+ * This is the one place that says which permission gates which moderation
+ * site, so retargeting one is a data edit and the whole set is enumerable —
+ * which is what makes "an employee without the grant is denied each of these"
+ * an executable assertion rather than a claim. It is the same shape as the
+ * listing-type capability registry, for the same reason.
+ *
+ * ── Why these keys, and not one blanket `moderation:*` ───────────────────────
+ *
+ * Because the grants are different decisions and an operator hands them out
+ * separately. Resource moderation reuses the EXISTING resource keys
+ * (`admin:reviews:write`, `admin:products:delete`, …): minting a parallel
+ * `moderation:reviews` beside `admin:reviews:write` would be two permissions
+ * for one decision — the two-divergent-copies bug in permission form, and the
+ * admin UI already renders those keys.
+ *
+ * 🛑 The ONE new key is `admin:orders:payment-override`, and it is new because
+ * an order override is a money-path power that must not ride along with
+ * editing a review: it declares that money arrived, or cancels an order and
+ * enqueues a 7-day ban. See its own comment in permissions/constants.
+ *
+ * ── The default grant ────────────────────────────────────────────────────────
+ *
+ * **NOT GRANTED.** `ROLE_PERMISSION_BUNDLES.employee` is `[]`, so holding
+ * `employee` confers none of these. An admin grants them per person, or via a
+ * moderation preset (`content_moderator`, `review_manager`,
+ * `trust_and_safety`, `scam_moderator`, `payment_reviewer`). `admin`
+ * short-circuits `permissionsFor` to `isAdmin: true` and so holds all of them
+ * unconditionally — "admin sees everything, everywhere" is preserved without
+ * being restated anywhere.
+ * ═════════════════════════════════════════════════════════════════════════════
+ */
+
+/**
+ * Every moderation site, keyed by what the actor is trying to DO.
+ *
+ * Keys are action names rather than route paths on purpose: the same power is
+ * reached from an API route, a server action and a form shell, and all three
+ * must resolve to the same permission or the gate is half-converted.
+ */
+export const MODERATION_PERMISSIONS = {
+  /** Edit any review regardless of authorship, including its moderation status. */
+  "reviews:moderate": "admin:reviews:write",
+  /** Delete any review regardless of authorship. */
+  "reviews:remove": "admin:reviews:delete",
+  /** Edit any listing regardless of store ownership. */
+  "products:moderate": "admin:products:write",
+  /** Archive any listing regardless of store ownership. */
+  "products:remove": "admin:products:delete",
+  /** Read a support ticket you did not open. */
+  "support-tickets:view": "admin:support-tickets:read",
+  /** Reply to a support ticket as staff (and email the owner). */
+  "support-tickets:reply": "admin:support-tickets:write",
+  /**
+   * See EVERY entrant on a product or event draw, not just your own entries.
+   * `admin:moderation:read` rather than a bids/offers key: the draw-entry
+   * queues are reached from the moderation hub, which this same key gates.
+   */
+  "draw-entries:view": "admin:moderation:read",
+  /**
+   * Verify a manual payment, extend a payment window, or reject a proof as
+   * fraud. 🛑 The money path — its own key, in one narrow preset only.
+   */
+  "orders:payment-override": "admin:orders:payment-override",
+  /** Act on an order you neither bought nor sold — e.g. raise a dispute on it. */
+  "orders:act-on-any": "admin:orders:write",
+} as const satisfies Record<string, Permission>;
+
+/** The action names above, as a type. */
+export type ModerationAction = keyof typeof MODERATION_PERMISSIONS;
+
+/** Every moderation action, as a runtime value — for exhaustive assertions. */
+export const ALL_MODERATION_ACTIONS = Object.keys(
+  MODERATION_PERMISSIONS,
+) as ModerationAction[];
+
+/**
+ * May this user perform moderation `action`?
+ *
+ * ⚠ SYNCHRONOUS, so it resolves ONLY from the object handed to it. That is
+ * correct for a `UserDocument` or anything else carrying `permissions[]`, and
+ * WRONG for an API-route `user`: `createRouteHandler`'s session payload carries
+ * `uid`/`role`/`roles` and no `permissions` array, so a per-person grant is
+ * invisible to it and every employee would be denied. Server routes and
+ * actions must use `canModerateServer(uid, action)` instead, which reads the
+ * document first. The two share this one resolution rule.
+ */
+export function canModerate(
+  user: PermissionCarrier,
+  action: ModerationAction,
+): boolean {
+  return can(user, MODERATION_PERMISSIONS[action]);
+}
+
 /**
  * ── 🛑 DISPLAY ONLY ──────────────────────────────────────────────────────────
  *

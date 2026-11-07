@@ -56,8 +56,7 @@ export type ProductFeatureProductType =
   | "classified"
   | "digital-code"
   | "live"
-  | "art"
-  | "stickers"
+  | "art-and-stickers"
   | "all";
 
 /**

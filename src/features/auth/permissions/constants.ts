@@ -35,6 +35,30 @@ export type Permission =
   // Management — Orders & Returns
   | "admin:orders:read"
   | "admin:orders:write"
+  /**
+   * ── The order PAYMENT OVERRIDE — a money-path power with its own gate ──────
+   *
+   * Three actions in `_internal/server/features/orders/actions.ts` hang off
+   * this and nothing else: `adminVerifyPaymentAction` (declares a manual
+   * cash/UPI payment received, flips the order to `paid`/`processing`),
+   * `adminRequestProofReuploadAction` (clears the proof and extends the payment
+   * window) and `adminRejectPaymentAsFraudAction` (cancels the order, restores
+   * stock, and enqueues a 7-day hard-ban cascade on the buyer's account).
+   *
+   * 🛑 Deliberately NOT `admin:orders:write`, and that is the whole decision.
+   * `orders:write` names "edit an order" — fix an address, bump a status. None
+   * of the three above is an edit: one asserts money arrived, one moves a
+   * deadline, one bans a human being. Owner, 2026-11-08, choosing explicit
+   * moderation permissions over the `moderator`→`employee` fold: an order
+   * override is a money-path power and must not come bundled with editing a
+   * review. Same reasoning as `admin:points:write` below.
+   *
+   * 🛑 Granted by the `payment_reviewer` preset ONLY, and that preset is in no
+   * role bundle — so no account holds this because of a role, ever. An admin
+   * bypasses the array entirely, which is what keeps "admin sees and does
+   * everything" true without naming it here.
+   */
+  | "admin:orders:payment-override"
   | "admin:returns:read"
   | "admin:returns:write"
 
@@ -130,9 +154,33 @@ export type Permission =
    * which is not a member of this union and therefore could never be granted. */
   | "admin:contact:write"
 
-  // Moderation — the nav entries and the guide hub referenced these long before
-  // they existed here, so those items rendered for an employee who could never
-  // be given the permission that gates them.
+  /*
+   * ── Moderation — a GRANT, never a side effect of holding `employee` ────────
+   *
+   * `admin:moderation:read` gates the moderation hub, the reports queue, the
+   * item-request queue, the Trust & Safety guide (`constants/navigation.tsx`)
+   * and draw-entry oversight (seeing every entrant on a product/event draw
+   * rather than only your own).
+   *
+   * 🛑 It used to be the one non-empty entry in `ROLE_PERMISSION_BUNDLES`,
+   * handed to `employee` automatically. That was a consequence of collapsing
+   * `moderator` into `employee` (A9), not a decision anyone made: every
+   * existing employee account silently gained the moderation surfaces. Owner,
+   * 2026-11-08: keep the fold, but gate moderation on an explicit permission,
+   * so an employee can moderate only if GRANTED it.
+   *
+   * It is therefore granted by the moderation PRESETS below
+   * (`content_moderator`, `review_manager`, `trust_and_safety`,
+   * `scam_moderator`) and by per-person grants — never by a role.
+   *
+   * ⚠ Both keys were also ungrantable until 2026-11-08 for a second,
+   * independent reason: the admin employee-permission editor renders
+   * `PERMISSION_DOMAINS` × `getPermissionsForDomain()`, and that function
+   * enumerates only permissions that appear in some `PERMISSION_GROUPS`
+   * preset. A permission in no preset and no domain has no checkbox, which is
+   * precisely why bundling it onto the role was the only way to hand it out.
+   * Both gaps are closed below; neither may be reopened.
+   */
   | "admin:moderation:read"
   | "admin:roles:read"
 
@@ -299,33 +347,54 @@ export const DEFAULT_MAX_ROLES_PER_USER = 3;
  * the per-user `permissions[]` array. Editing this map is how a role gains or
  * loses a capability — no code change, no new branch anywhere.
  *
- * 🛑 Most bundles are deliberately EMPTY, and that is the current behaviour
- * stated explicitly rather than changed by accident:
+ * 🛑 EVERY bundle is EMPTY, and that is a decision, not an oversight:
  *
  *   - `admin` short-circuits to `isAdmin: true` and never consults a list, so
  *     an entry here would be dead weight. Admin sees everything, everywhere.
  *   - `user`, `seller` and `tester` hold no ADMIN-console permissions at all.
  *     Their abilities are ownership-scoped ("edit your own store", "bid on a
  *     listing"), enforced at the resource, not by an `admin:*` key.
- *   - `employee` is configured per person through `permissions[]` +
- *     `PERMISSION_GROUPS`. Its one bundled entry is below.
+ *   - `employee` is configured ENTIRELY per person through `permissions[]` +
+ *     `PERMISSION_GROUPS`. Holding the role grants nothing on its own.
  *
- * ⚠ The one non-empty bundle is `employee` getting `admin:moderation:read`,
- * and it is here because **`moderator` is collapsed into `employee`** (A9,
- * owner 2026-11-07: they are the same thing, moderation becomes an employee
- * permission). Expressing the fold as a bundle entry is what makes it data
- * rather than a surviving `role === "moderator"` branch.
+ * ── 🛑 THE DEFAULT GRANT FOR MODERATION IS: **NOT GRANTED** ─────────────────
+ *
+ * `employee` used to carry `admin:moderation:read` here, and that single entry
+ * was the whole problem. Collapsing `moderator` into `employee` (A9, owner
+ * 2026-11-07) made `isModeratorUser()` true for every employee, so ~20
+ * moderator-gated actions — order payment overrides, review and product
+ * moderation, support tickets, draw-entry oversight — widened to every
+ * existing employee account as a side effect of a role rename. Nobody decided
+ * that; it fell out of the fold.
+ *
+ * Owner, 2026-11-08, asked to choose: **keep the fold, and gate those sites on
+ * an explicit moderation permission.** So the fold stays (`moderator` is not
+ * coming back as a role — `rolesOf()` folds the name away on read), and the
+ * power becomes a GRANT:
+ *
+ *   employee WITHOUT the grant  → denied every moderation site.
+ *   employee WITH the grant     → allowed exactly what was granted.
+ *   admin                       → allowed unconditionally, never consults this.
+ *   user / seller / tester      → gain nothing; `permissions[]` is not even
+ *                                 honoured for seller/user (see
+ *                                 `ROLE_GRANTS_EXPLICIT_PERMISSIONS`).
+ *
+ * ⚠ Do not "fix" a moderation surface by adding a key back to the `employee`
+ * bundle. That reinstates exactly the widening the owner rejected, and it does
+ * it silently. Grant it to the person, or add it to a preset below.
  */
 export const ROLE_PERMISSION_BUNDLES: Record<string, Permission[]> = {
   admin: [],
-  employee: ["admin:moderation:read"],
+  employee: [],
   /*
    * Legacy alias. `rolesOf()` folds `moderator` to `employee`, so a normalised
    * role set never contains it and this entry is never read — it exists so the
    * map stays total against the `UserRole` union while the union still carries
-   * the deprecated member for un-backfilled documents.
+   * the deprecated member for un-backfilled documents. Empty for the same
+   * reason `employee` is: a stored `moderator` document must not out-grant a
+   * backfilled one.
    */
-  moderator: ["admin:moderation:read"],
+  moderator: [],
   seller: [],
   tester: [],
   user: [],
@@ -403,6 +472,16 @@ export type EmployeeGroup =
   | "support_agent"
   | "store_onboarding"
   | "trust_and_safety"
+  /**
+   * The ONLY preset that carries `admin:orders:payment-override`.
+   *
+   * Narrow on purpose — dashboard, read orders, override a payment, nothing
+   * else. It exists so the money-path power is grantable from the admin UI
+   * (`getPermissionsForDomain` only lists permissions some preset names) while
+   * staying out of every broader bundle: `trust_and_safety` and
+   * `customer_support` both touch orders and deliberately do NOT hold it.
+   */
+  | "payment_reviewer"
   | "collector_drop_monitor"
   | "scam_moderator"
   | "maintenance_employee"
@@ -422,6 +501,12 @@ export const PERMISSION_GROUPS: Record<
 > = {
   content_moderator: [
     "admin:dashboard:view",
+    /*
+     * The moderation hub itself. Named by the four moderation presets and by
+     * nothing else — it is no longer in any ROLE bundle, so "make this person
+     * a content moderator" is now the act that grants it.
+     */
+    "admin:moderation:read",
     "admin:reviews:read",
     "admin:reviews:write",
     "admin:reviews:delete",
@@ -432,6 +517,7 @@ export const PERMISSION_GROUPS: Record<
 
   review_manager: [
     "admin:dashboard:view",
+    "admin:moderation:read",
     "admin:reviews:read",
     "admin:reviews:write",
     "admin:reviews:delete",
@@ -623,8 +709,18 @@ export const PERMISSION_GROUPS: Record<
     "admin:notifications:write",
   ],
 
+  /*
+   * 🛑 `admin:orders:payment-override` is deliberately ABSENT here, even
+   * though this preset holds `admin:orders:read` and the fraud-rejection path
+   * is arguably trust-and-safety work. Verifying that money arrived is a
+   * finance decision, not a safety one, and the three override actions are one
+   * permission — granting the ban half would grant the "declare this payment
+   * received" half with it. Use `payment_reviewer` alongside this preset when
+   * one person genuinely does both.
+   */
   trust_and_safety: [
     "admin:dashboard:view",
+    "admin:moderation:read",
     "admin:users:read",
     "admin:users:write",
     "admin:user-bans:read",
@@ -664,6 +760,7 @@ export const PERMISSION_GROUPS: Record<
 
   scam_moderator: [
     "admin:dashboard:view",
+    "admin:moderation:read",
     "admin:scammers:read",
     "admin:scammers:write",
     "admin:scammers:verify",
@@ -671,6 +768,27 @@ export const PERMISSION_GROUPS: Record<
     "admin:users:read",
     "admin:media:read",
     "admin:media:write",
+  ],
+
+  /*
+   * ── The money-path override, in one narrow preset ─────────────────────────
+   *
+   * `admin:orders:payment-override` appears HERE AND NOWHERE ELSE: not in
+   * `ROLE_PERMISSION_BUNDLES` (so no role confers it), not in
+   * `trust_and_safety`, not in `customer_support`. Picking this preset, or
+   * ticking the single checkbox it makes visible, is the only way a non-admin
+   * ever gets to declare a manual payment received, extend a payment window,
+   * or reject a proof as fraud (which cancels the order and enqueues a 7-day
+   * hard ban).
+   *
+   * `admin:orders:read` rides with it because reviewing a proof without being
+   * able to open the order is not a usable grant — but note there is no
+   * `admin:orders:write`: this preset cannot edit orders, only decide payments.
+   */
+  payment_reviewer: [
+    "admin:dashboard:view",
+    "admin:orders:read",
+    "admin:orders:payment-override",
   ],
 
   maintenance_employee: [
@@ -993,6 +1111,16 @@ export const PERMISSION_DOMAINS: { label: string; prefix: string }[] = [
   },
   { label: "Events", prefix: "admin:events:|admin:event-entries:" },
   { label: "Support & Safety", prefix: "admin:support-tickets:|admin:scammers:" },
+  /*
+   * 🛑 Moderation had NO domain until 2026-11-08, so `admin:moderation:read`
+   * and `admin:roles:read` had no checkbox in the employee-permission editor
+   * and no row in the permissions catalogue — they were declarable in code and
+   * ungrantable in the UI. That is the reason the moderation key was bolted
+   * onto the `employee` role bundle instead, which is the widening this lane
+   * exists to undo. The domain must stay, or the grant becomes unreachable and
+   * someone will "fix" it by bundling it onto the role again.
+   */
+  { label: "Moderation", prefix: "admin:moderation:|admin:roles:" },
 ];
 
 /** True when `perm` starts with any of the `|`-separated prefixes in `prefix`. */

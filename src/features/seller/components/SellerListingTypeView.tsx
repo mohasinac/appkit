@@ -32,7 +32,7 @@
  * @tag layer:view
  * @tag pattern:factory
  * @tag access:client
- * @tag consumers:SellerArtView,SellerStickersView,SellerClassifiedView,SellerDigitalCodesView,SellerLiveView
+ * @tag consumers:SellerArtAndStickersView,SellerClassifiedView,SellerDigitalCodesView,SellerLiveView
  * @tag sideEffects:none
  */
 
@@ -144,36 +144,28 @@ const numberCell = (key: string, header: string): AdminTableColumn<SellerListing
  * store routes redirect into the multi-type `SellerProductsView`.
  */
 export type SellerListingTypeKey =
-  | "art"
-  | "stickers"
+  | "art-and-stickers"
   | "classified"
   | "digital-code"
   | "live"
   | "spares";
 
 export const SELLER_LISTING_TYPE_SPECS: Record<SellerListingTypeKey, SellerListingTypeSpec> = {
-  art: {
+  /*
+   * 🛑 ONE spec, not two. `art` and `stickers` had identical `extraFields`
+   * and `extraColumns` here and differed only in labels and which pair of
+   * `/store/...` routes they pointed at; 1.34 merged the types, so the
+   * routes collapse onto `/store/art` (the `/store/stickers` paths now
+   * redirect there).
+   */
+  "art-and-stickers": {
     editRoute: (id) => String(ROUTES.STORE.ART_EDIT(id)),
     newRoute: String(ROUTES.STORE.ART_NEW),
-    createLabel: "New Art Print",
-    bulkKey: "art",
-    deleteLabel: "Art Listing",
-    searchPlaceholder: "Search art prints...",
-    emptyLabel: "No art listings yet — list your first print",
-    extraFields: (item) => ({
-      size: toStringValue((item.printMeta as { size?: string } | undefined)?.size, ""),
-    }),
-    extraColumns: [textCell("size", "Size")],
-  },
-
-  stickers: {
-    editRoute: (id) => String(ROUTES.STORE.STICKERS_EDIT(id)),
-    newRoute: String(ROUTES.STORE.STICKERS_NEW),
-    createLabel: "New Sticker Listing",
-    bulkKey: "stickers",
-    deleteLabel: "Sticker Listing",
-    searchPlaceholder: "Search sticker listings...",
-    emptyLabel: "No sticker listings yet — list your first pack",
+    createLabel: "New Art or Sticker Listing",
+    bulkKey: "artAndStickers",
+    deleteLabel: "Art & Sticker Listing",
+    searchPlaceholder: "Search art prints and sticker sheets...",
+    emptyLabel: "No art or sticker listings yet — list your first print or sheet",
     extraFields: (item) => ({
       size: toStringValue((item.printMeta as { size?: string } | undefined)?.size, ""),
     }),

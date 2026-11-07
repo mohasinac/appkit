@@ -111,8 +111,7 @@ const LISTING_TYPE_TO_MANIFEST_TAG: Record<ListingType, string> = {
   classified: "classified",
   "digital-code": "digital-code",
   live: "live",
-  art: "art",
-  stickers: "stickers",
+  "art-and-stickers": "art-and-stickers",
 };
 
 export const SEED_MANIFEST: SeedManifest = {

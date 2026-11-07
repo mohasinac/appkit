@@ -28,8 +28,7 @@ import { bundleRule } from "./bundle.rule";
 import { classifiedRule } from "./classified.rule";
 import { digitalCodeRule } from "./digital-code.rule";
 import { liveRule } from "./live.rule";
-import { artRule } from "./art.rule";
-import { stickersRule } from "./stickers.rule";
+import { artAndStickersRule } from "./art-and-stickers.rule";
 import { sparesRule } from "./spares.rule";
 
 export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
@@ -40,8 +39,7 @@ export const CHECKOUT_RULES: Record<ListingType, ListingCheckoutRule> = {
   classified: classifiedRule,
   "digital-code": digitalCodeRule,
   live: liveRule,
-  art: artRule,
-  stickers: stickersRule,
+  "art-and-stickers": artAndStickersRule,
   spares: sparesRule,
 };
 

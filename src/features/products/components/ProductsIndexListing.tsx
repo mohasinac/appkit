@@ -102,7 +102,7 @@ export interface ProductsIndexListingProps {
   initialData?: any;
   /** Listing types this page's "All" tab spans. Defaults to the consolidated
    * generic set (standard/classified/digital-code/live). Pass a narrower set
-   * (e.g. `["art", "stickers"]`) to reuse this component for a different
+   * (e.g. `["art-and-stickers"]`) to reuse this component for a different
    * combined browse page. */
   listingTypes?: readonly string[];
   /** Options for the "Listing type" checkbox facet in the filter drawer. `id`

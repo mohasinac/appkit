@@ -1239,8 +1239,7 @@ export const LISTING_TYPE_HAS_COMPOSITION: Record<
   classified: true,
   live: true,
   // Depicts the model; is not the model.
-  art: false,
-  stickers: false,
+  "art-and-stickers": false,
   // A redemption code has no physical parts at all.
   "digital-code": false,
 };

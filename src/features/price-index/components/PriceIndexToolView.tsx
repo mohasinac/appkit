@@ -169,8 +169,7 @@ const LISTING_TYPE_LABEL: Record<string, string> = {
   classified: "Classified",
   "digital-code": "Digital code",
   live: "Live item",
-  art: "Art print",
-  stickers: "Sticker sheet",
+  "art-and-stickers": "Art & Stickers",
 };
 
 /*

@@ -1079,9 +1079,9 @@ export async function sellerUpdateProduct(
    *
    * 🛑 But it fires only on a CHANGE of type, and that is load-bearing. Every
    * per-type edit page spreads its own literal into the payload
-   * (`store/art/[id]/edit` sends `listingType: "art"`), so gating on the
-   * submitted value alone would lock a seller out of editing listings they
-   * already own the moment the capability was turned off — or an admin revoked
+   * (`store/art/[id]/edit` sends `listingType: "art-and-stickers"`), so gating
+   * on the submitted value alone would lock a seller out of editing listings
+   * they already own the moment the capability was turned off — or an admin revoked
    * it. The rule is "you may not create or convert INTO an advanced type",
    * never "you may not touch one".
    *

@@ -36,8 +36,7 @@ const listingTypeSchema = z.enum([
   "classified",
   "digital-code",
   "live",
-  "art",
-  "stickers",
+  "art-and-stickers",
 ]);
 
 export const createShipmentSchema = z.object({

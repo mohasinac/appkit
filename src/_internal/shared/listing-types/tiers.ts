@@ -58,8 +58,7 @@ export const LISTING_TYPE_TIER: Record<ListingType, ListingTypeTier> = {
   classified: "advanced",
   "digital-code": "advanced",
   live: "advanced",
-  art: "advanced",
-  stickers: "advanced",
+  "art-and-stickers": "advanced",
 };
 
 /**

@@ -218,7 +218,7 @@ export interface ProductLiveItemMeta {
 }
 
 /**
- * Print-specific metadata shared by the "art" and "stickers" listing types
+ * Print-specific metadata for the "art-and-stickers" listing type
  * (both are printed-only physical goods). Every field optional so partial
  * seller input still saves.
  */
@@ -717,7 +717,7 @@ export interface ProductDocument extends BaseDocument {
    * on the reproduction tier — it is the word buyers search.
    */
   authenticity?: ProductAuthenticity;
-  /** Print-specific metadata for "art" / "stickers" listings — printed-only physical goods. Optional on every listing type; only populated for art/stickers. */
+  /** Print-specific metadata for "art-and-stickers" listings — printed-only physical goods. Optional on every listing type; only populated for art-and-stickers. */
   printMeta?: ProductPrintMeta;
   promotionEndDate?: Date;
   pickupAddressId?: string;

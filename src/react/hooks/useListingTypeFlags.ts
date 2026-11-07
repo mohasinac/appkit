@@ -23,7 +23,8 @@ import {
  *
  * KEYED ON THE UNION, NOT A HAND-WRITTEN LIST (2026-08-21). Both types below
  * used to enumerate seven types by hand and had never been updated for `art`
- * and `stickers` — so `isEnabled("art")` didn't even typecheck, and the seller
+ * and `stickers` (then two separate members) — so `isEnabled("art")` didn't
+ * even typecheck, and the seller
  * TypeDropdown (its main consumer) could not offer either type. Deriving from
  * `ListingType` makes a missing member a compile error, matching the same
  * decision made for `ALL_LISTING_TYPES_MAP` in `feature-flags.ts`.

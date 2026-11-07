@@ -277,7 +277,7 @@ function withAliasesExpanded(
  * Extracted so the count-only path and the full list path apply the SAME
  * filter pipeline — alias expansion included. Hand-building a Firestore query
  * for a "just give me the total" call would skip `expandFilterAliases`, and a
- * same-field OR group like `listingType==art|stickers` would silently vanish
+ * same-field OR group like `listingType==standard|spares` would silently vanish
  * (Root Cause #58). Never reimplement this; call it.
  */
 function buildFilteredSieveQuery(
@@ -311,7 +311,7 @@ function buildFilteredSieveQuery(
     // `BaseRepository.sieveQuery` delegates to, so it is what ProductRepository
     // and most other repositories actually run — only `FirebaseSieveRepository`
     // used the enhanced adapter, and nothing extends that. With the stock
-    // adapter a same-field OR group (`listingType==art|stickers`, i.e. every
+    // adapter a same-field OR group (`listingType==standard|spares`, i.e. every
     // multi-select facet in the app) became a `whereOr` call the Admin SDK does
     // not implement; `throwExceptions: false` then swallowed it and the clause
     // vanished, returning the ENTIRE collection instead of the selected subset.

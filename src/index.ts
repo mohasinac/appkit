@@ -2078,8 +2078,8 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // productsClassifiedsSeedData - Seed data for classified product listings (SB-UNI-I).
 // productsDigitalCodesSeedData - Seed data for digital-code product listings (SB-UNI-J).
 // productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
-// productsArtSeedData - Seed data for art product listings (EMI/art-stickers session).
-// productsStickersSeedData - Seed data for stickers product listings (EMI/art-stickers session).
+// productsArtSeedData - Seed data for art-and-stickers product listings (prints).
+// productsStickersSeedData - Seed data for art-and-stickers product listings (sheets).
 /*
  * productsSparesSeedData — loose components off disassembled items.
  *
@@ -3305,9 +3305,8 @@ export { AdminClearanceView } from "./features/admin/components/AdminClearanceVi
 export { AdminClassifiedView } from "./features/admin/components/AdminClassifiedView";
 export { AdminDigitalCodesView } from "./features/admin/components/AdminDigitalCodesView";
 export { AdminLiveView } from "./features/admin/components/AdminLiveView";
-// EMI/art-stickers session — admin listing views for art / stickers.
-export { AdminArtView } from "./features/admin/components/AdminArtView";
-export { AdminStickersView } from "./features/admin/components/AdminStickersView";
+// 1.34 — ONE admin listing view for the merged art-and-stickers type.
+export { AdminArtAndStickersView } from "./features/admin/components/AdminArtAndStickersView";
 export { AdminSparesView } from "./features/admin/components/AdminSparesView";
 export type { AdminClearanceViewProps } from "./features/admin/components/AdminClearanceView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -6983,8 +6982,7 @@ export {
  isClassifiedListing,
  isDigitalCodeListing,
  isLiveListing,
- isArtListing,
- isStickersListing,
+ isArtAndStickersListing,
 } from "./features/products/index";
 // Final sale — ABSENT MEANS TRUE, so these are the only legal reads of the
 // `finalSale` field. See the module docstring for why `!p.finalSale` is wrong.
@@ -7292,10 +7290,20 @@ export {
   validateRoleSet,
   getMaxRolesPerUser,
   setMaxRolesPerUser,
+  /*
+   * Moderation as a GRANT, not a role (owner 2026-11-08). The map is the data
+   * that says which permission gates which moderation site; `canModerate` is
+   * the synchronous check for a carrier that already has `permissions[]`.
+   * Inside an API route use `canModerateServer` from `./server` instead.
+   */
+  MODERATION_PERMISSIONS,
+  ALL_MODERATION_ACTIONS,
+  canModerate,
 } from "./features/auth/auth-helpers";
 export type {
   ResolvedPermissions,
   PermissionCarrier,
+  ModerationAction,
 } from "./features/auth/auth-helpers";
 export {
   ROLE_PERMISSION_BUNDLES,
@@ -9233,7 +9241,7 @@ export {
  PRODUCT_TYPE_FILTER_TABS,
  ART_STICKERS_TYPE_FILTER_TABS,
  GENERIC_PRODUCT_LISTING_TYPES,
- ART_STICKERS_LISTING_TYPES,
+ ART_AND_STICKERS_LISTING_TYPES,
 } from "./features/products/constants/listing-tabs";
 // SEARCH_RESULT_TABS was removed 2026-08-21 — it had zero consumers (/search
 // renders no type tabs) and was one more hand-maintained listing-type array to
@@ -9868,10 +9876,9 @@ export { SellerBundlesView } from "./features/seller/components/SellerBundlesVie
 export type { SellerBundlesViewProps } from "./features/seller/components/SellerBundlesView";
 export { SellerClassifiedView } from "./features/seller/components/SellerClassifiedView";
 export type { SellerClassifiedViewProps } from "./features/seller/components/SellerClassifiedView";
-export { SellerArtView } from "./features/seller/components/SellerArtView";
-export type { SellerArtViewProps } from "./features/seller/components/SellerArtView";
-export { SellerStickersView } from "./features/seller/components/SellerStickersView";
-export type { SellerStickersViewProps } from "./features/seller/components/SellerStickersView";
+// 1.34 — ONE seller listing view for the merged art-and-stickers type.
+export { SellerArtAndStickersView } from "./features/seller/components/SellerArtAndStickersView";
+export type { SellerArtAndStickersViewProps } from "./features/seller/components/SellerArtAndStickersView";
 export { SellerSparesView } from "./features/seller/components/SellerSparesView";
 export type { SellerSparesViewProps } from "./features/seller/components/SellerSparesView";
 export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";

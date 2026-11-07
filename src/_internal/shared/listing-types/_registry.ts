@@ -15,8 +15,8 @@
  * hand-copied. Before this, at least nine independent "list every listing
  * type" arrays existed (tab constants, admin type-filter maps, the seller
  * TypeDropdown, useListingTypeFlags, SORT_OPTIONS_BY_LISTING_TYPE, …) and
- * they had silently drifted: `art` and `stickers` were missing from most of
- * them, `bundle` — which stopped being a listingType in SB-UNI-D — was still
+ * they had silently drifted: `art-and-stickers` (then two separate members)
+ * was missing from most of them, `bundle` — which stopped being a listingType in SB-UNI-D — was still
  * present in others, and the public /products chips offered only 4 of 9
  * types. `scripts/audit-listing-type-tab-coverage.mjs` now blocks any array
  * that doesn't cover the full union.
@@ -30,9 +30,8 @@ import * as clearance from "./clearance/config";
 import * as classified from "./classified/config";
 import * as digitalCode from "./digital-code/config";
 import * as live from "./live/config";
-// EMI/art-stickers session — printed-only physical-goods types.
-import * as art from "./art/config";
-import * as stickers from "./stickers/config";
+// Printed-only physical goods — one merged type (1.34).
+import * as artAndStickers from "./art-and-stickers/config";
 // Part Two 2026-10-19 — one component off a disassembled item, sold alone.
 import * as spares from "./spares/config";
 
@@ -116,7 +115,7 @@ export interface ListingTypePlugin {
    * Dedicated public browse page for this type.
    *
    * EVERY type has one today, including `standard` (→ `/products`) and
-   * `art`/`stickers` (→ the combined `/art`). This field is therefore NOT a
+   * `art-and-stickers` (→ `/art`). This field is therefore NOT a
    * "does it have its own page" discriminator — use `inGeneralCatalogue` for
    * that. (This comment used to claim `null` meant "browses on /products",
    * which no config has ever matched.)
@@ -155,7 +154,7 @@ export interface ListingTypePlugin {
    * picks quantities per member through `GroupMemberPicker`.
    *
    * 🛑 `findByGroupId` used to hard-code `["standard", "pre-order"]`, which
-   * made this field's answer invisible and wrong: a `stickers` or `art` member
+   * made this field's answer invisible and wrong: an `art-and-stickers` member
    * was silently dropped from the query, so `ShowGroupSection` saw one member
    * and returned null — the picker was unreachable with nothing erroring. That
    * is Root Cause #58's shape, a union member missing from the one allowlist
@@ -230,7 +229,7 @@ export function actionsForListingType(listingType: ListingType): ActionKind {
 
 // SB-UNI-D — bundle entry removed; bundles are a categoryType, not a listingType.
 // SB-UNI-F 2026-05-13 — classified / digital-code / live added.
-// EMI/art-stickers session — art / stickers added.
+// 1.34 — `art` + `stickers` MERGED into `art-and-stickers`.
 export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   standard: standard.config,
   "collector-drop": collectorDrop.config,
@@ -239,8 +238,7 @@ export const LISTING_TYPE_REGISTRY: Record<ListingType, ListingTypePlugin> = {
   classified: classified.config,
   "digital-code": digitalCode.config,
   live: live.config,
-  art: art.config,
-  stickers: stickers.config,
+  "art-and-stickers": artAndStickers.config,
   spares: spares.config,
 };
 
@@ -299,6 +297,10 @@ const LEGACY_SLUG_PREFIXES: Readonly<Record<string, ListingType>> = {
   "auction-": "collector-drop",
   "prizedraw-": "clearance",
   "randomlots-": "clearance",
+  // 1.34 — `stickers` merged into `art-and-stickers`, whose live prefix is
+  // `art-`. Without this, every stored `sticker-…` id would miss every live
+  // prefix and fall through to `standard`.
+  "sticker-": "art-and-stickers",
 };
 
 export function detectListingTypeFromSlug(slug: string): ListingType {

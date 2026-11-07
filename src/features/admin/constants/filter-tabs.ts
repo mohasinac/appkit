@@ -61,8 +61,7 @@ export const ADMIN_PRODUCT_LISTING_TYPE_TABS = [
   { id: "classified", label: "Classifieds" },
   { id: "digital-code", label: "Digital Codes" },
   { id: "live", label: "Live Items" },
-  { id: "art", label: "Art" },
-  { id: "stickers", label: "Stickers" },
+  { id: "art-and-stickers", label: "Art & Stickers" },
   { id: "spares", label: "Spares" },
 ] as const satisfies readonly AdminFilterTab[];
 

@@ -54,7 +54,7 @@ interface ListingFlagSnapshot {
  * browse route → every listing type that browses there.
  *
  * Built from the registry rather than hand-listed, so a tenth type joins it by
- * existing. `art` and `stickers` both resolve to `/art`, which is the entire
+ * existing. Several types can resolve to one route, which is the entire
  * reason the value is an array.
  */
 const TYPES_BY_BROWSE_ROUTE: ReadonlyMap<string, readonly ListingType[]> = (() => {
@@ -178,8 +178,9 @@ export function isClosedHref(
      * 🛑 `every`, not `some`, and `isListingSurfaceVisible`, not
      * `isListingTypeEnabled`.
      *
-     * `every`: `art` and `stickers` share `/art`, so a site selling art but
-     * not stickers must keep `/art` reachable. One closed claimant is not
+     * `every`: a route can have more than one claimant type, and a site that
+     * still sells one of them must keep that route reachable. One closed
+     * claimant is not
      * enough — treating it as enough silently deletes a working destination.
      *
      * `isListingSurfaceVisible`: it ANDs the admin flag with the measured

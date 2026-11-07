@@ -1,6 +1,6 @@
 /*
- * WHY: `listingType: "art"` shares ProductPrintMeta (size/material/finish/editionSize)
- *      with "stickers" — both printed-only physical goods. Previously left as an empty
+ * WHY: `listingType: "art-and-stickers"` carries ProductPrintMeta (size/material/finish/editionSize)
+ *      — printed-only physical goods. Previously left as an empty
  *      stub with the note "out of scope for the minimal Beyblade-focused demo catalog,"
  *      but unlike "live," art prints fit the Beyblade theme naturally as fan-art (see
  *      CLAUDE.md seed-data blandness sweep, 2026-08-20 session).
@@ -8,7 +8,7 @@
  *       material, finish, and edition size (including one open-edition, no editionSize).
  *
  * EXPORTS:
- *   productsArtSeedData — Array of 6 Partial<ProductDocument> with listingType:"art"
+ *   productsArtSeedData — Array of 6 Partial<ProductDocument> with listingType:"art-and-stickers"
  *
  * @tag domain:products,art
  * @tag layer:seed
@@ -59,7 +59,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "art" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "12x18 in", material: "Matte photo paper", finish: "Matte" },
@@ -101,7 +101,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "art" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "8x10 in", material: "Holographic cardstock", finish: "Holographic", editionSize: 100 },
@@ -140,7 +140,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(seedPhoto("art-image-x-lineup-canvas-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "art" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "16x20 in", material: "Canvas", finish: "Matte" },
@@ -185,7 +185,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     images: seedGallery(seedPhoto("art-image-metal-vintage-1-20260819", 900, 900)),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "art" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "11x17 in", material: "Matte photo paper", finish: "Matte" },
@@ -227,7 +227,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "art" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "12x18 in", material: "Glossy photo paper", finish: "Glossy", editionSize: 250 },
@@ -272,7 +272,7 @@ const _rawProductsArtSeedData: Partial<ProductDocument>[] = [
     ),
     status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
-    listingType: "art" as const,
+    listingType: "art-and-stickers" as const,
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
     printMeta: { size: "18x24 in", material: "Archival cotton rag", finish: "Matte", editionSize: 40 },

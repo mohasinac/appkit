@@ -179,7 +179,6 @@ const RESOURCE_ICON_MAP: Record<string, string> = {
   stores: "🏪",
   products: "📦",
   art: "🎨",
-  stickers: "🏷️",
   "live-items": "🔴",
   "digital-codes": "🔑",
   classified: "📋",

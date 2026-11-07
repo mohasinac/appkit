@@ -324,7 +324,7 @@ async function unavailableByType(
   return { byType, unknown };
 }
 
-/** The listing types one tab spans — `"art|stickers"` is a pipe OR-group. */
+/** The listing types one tab spans — `"standard|spares"` is a pipe OR-group. */
 function typesOf(tab: ListingTab): ListingType[] {
   return String(tab.listingType).split("|").filter(Boolean) as ListingType[];
 }
@@ -333,7 +333,7 @@ function typesOf(tab: ListingTab): ListingType[] {
  * Count every tab in `tabs` within `scope`, in one parallel batch.
  *
  * The listing-type buckets come from each tab's own `listingType` field — which
- * already carries `"art|stickers"` as a pipe OR-group — so this function never
+ * already carries pipe OR-groups like `"standard|spares"` — so this function never
  * enumerates the `ListingType` union itself and cannot drift from it.
  *
  * `stores` is not counted here: only the category page has that tab and it

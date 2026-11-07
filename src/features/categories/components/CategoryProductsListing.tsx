@@ -78,7 +78,7 @@ export interface CategoryProductsListingProps {
   /**
    * Listing types this tab spans. Defaults to `["standard"]` — the original,
    * only behaviour. Category/brand pages pass a single non-standard type (or
-   * the `["art","stickers"]` pair) so the classifieds / digital-codes / live /
+   * the `["art-and-stickers"]` set) so the classifieds / digital-codes / live /
    * art tabs render real content instead of a blank panel: those four tabs
    * existed in CATEGORY_PAGE_TABS but had no render branch at all.
    */

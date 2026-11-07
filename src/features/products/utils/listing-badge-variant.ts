@@ -35,8 +35,7 @@ export const LISTING_BADGE_VARIANT: Record<ListingType, ListingBadgeVariant> = {
   classified: "secondary",
   "digital-code": "success",
   live: "danger",
-  art: "primary",
-  stickers: "primary",
+  "art-and-stickers": "primary",
 };
 
 /**

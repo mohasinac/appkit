@@ -795,7 +795,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
    * (still serves at 200, so NOT in `hiddenSurfaceRoutes`) but set to
    * `"unlisted"` loses its sitemap entry without losing its edge-gate status.
    * Mirrors `hiddenSurfaceRoutes`' own routeOf/second-pass shape so a shared
-   * browse route (`art`+`stickers` -> `/art`) only withdraws once every type
+   * browse route (a route with more than one claimant type) only withdraws once every type
    * on it is unlisted, not the moment the first one is.
    */
   const routeOfType = (type: (typeof ALL_LISTING_TYPES)[number]): string =>
@@ -816,7 +816,7 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
    * measured as holding nothing — `/collector-drops`, `/art`, `/spares`, …
    *
    * 🛑 BROWSE ROUTES ONLY, matched on the exact path. Detail URLs are NOT
-   * dropped here and that is deliberate: art, stickers, spares and standard
+   * dropped here and that is deliberate: art-and-stickers, spares and standard
    * all detail at `/products/{slug}`, so a path test cannot tell them apart,
    * and a prefix rule would silently delist the entire standard catalogue the
    * day `spares` emptied. An empty type contributes no detail URLs anyway —

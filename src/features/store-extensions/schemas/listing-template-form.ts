@@ -65,8 +65,7 @@ const LISTING_TEMPLATE_TYPE_LABEL: Record<ListingTemplateType, string> = {
   classified: "Classified",
   "digital-code": "Digital code",
   live: "Live item",
-  art: "Art print",
-  stickers: "Sticker sheet",
+  "art-and-stickers": "Art & Stickers",
 };
 
 export const LISTING_TEMPLATE_TYPE_OPTIONS = LISTING_TEMPLATE_TYPES.map((value) => ({

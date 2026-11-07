@@ -51,11 +51,9 @@ export { AdminDigitalCodesView } from "./AdminDigitalCodesView";
 export type { AdminDigitalCodesViewProps } from "./AdminDigitalCodesView";
 export { AdminLiveView } from "./AdminLiveView";
 export type { AdminLiveViewProps } from "./AdminLiveView";
-// EMI/art-stickers session — admin listing views for art / stickers.
-export { AdminArtView } from "./AdminArtView";
-export type { AdminArtViewProps } from "./AdminArtView";
-export { AdminStickersView } from "./AdminStickersView";
-export type { AdminStickersViewProps } from "./AdminStickersView";
+// 1.34 — ONE admin listing view for the merged art-and-stickers type.
+export { AdminArtAndStickersView } from "./AdminArtAndStickersView";
+export type { AdminArtAndStickersViewProps } from "./AdminArtAndStickersView";
 export { AdminSparesView } from "./AdminSparesView";
 export type { AdminSparesViewProps } from "./AdminSparesView";
 export { AdminGroupedListingsView } from "./AdminGroupedListingsView";

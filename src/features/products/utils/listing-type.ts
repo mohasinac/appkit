@@ -37,7 +37,7 @@ export function parseSelectedListingTypes(raw: string | undefined | null): Listi
  * Toggle one type in a pipe-joined selection, returning the new URL value
  * (`""` when nothing is left selected). Keeps canonical iteration order so the
  * URL is stable regardless of the order the user ticked the boxes — otherwise
- * `collector drop|art` and `art|collector drop` would be two different React Query keys for
+ * `collector drop|art-and-stickers` and `art-and-stickers|collector drop` would be two different React Query keys for
  * the same result set.
  */
 export function toggleListingTypeSelection(
@@ -73,6 +73,10 @@ export function normalizeListingType(
   if ((raw as string) === "auction") return "collector-drop";
   if ((raw as string) === "prize-draw") return "clearance";
   if ((raw as string) === "random-lots") return "clearance";
+  // 1.34 — `art` and `stickers` MERGED. Both spellings are live in stored
+  // product documents, so both must keep resolving here.
+  if ((raw as string) === "art") return "art-and-stickers";
+  if ((raw as string) === "stickers") return "art-and-stickers";
   return raw;
 }
 
@@ -106,14 +110,11 @@ export const isLiveListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "live";
 
-// Art/stickers session — printed-only physical-goods listing types.
-export const isArtListing = (
+// Printed-only physical goods — ONE merged type (1.34). Reads through
+// `normalizeListingType`, so a stored `art` or `stickers` still answers true.
+export const isArtAndStickersListing = (
   input?: { listingType?: ListingType },
-): boolean => normalizeListingType(input) === "art";
-
-export const isStickersListing = (
-  input?: { listingType?: ListingType },
-): boolean => normalizeListingType(input) === "stickers";
+): boolean => normalizeListingType(input) === "art-and-stickers";
 
 // SB-UNI-D — isBundleListing removed. Bundles are now a categoryType
 // discriminator on CategoryDocument; consumers should query

@@ -52,12 +52,12 @@ export interface RevalidateHints {
  * own `listingTypeFromId` prefix ladder, and both had already drifted by the
  * time the union reached ten — exactly the tenth-enumeration failure Root Cause
  * #61 is about. Measured 2026-10-26, while invalidating after a catalogue purge
- * that deleted 7 `spares` and 2 `stickers`:
+ * that deleted 7 `spares` and 2 `art-and-stickers`:
  *
  *   - **`spares` was absent from both.** A `spare-…` id fell through to the
  *     "unknown type" branch, which marks every OTHER type's detail route and
  *     therefore never marks `/products/spare-…` — the one page that existed.
- *   - **`/art`, `/stickers` and `/spares` were never marked at all.** The browse
+ *   - **`/art` and `/spares` were never marked at all.** The browse
  *     path was derived by stripping the last segment off the detail route, and
  *     all three types detail at `/products/{slug}`, so the strip yielded
  *     `/products` and the `!== ROUTES.PUBLIC.PRODUCTS` test discarded it. Their
@@ -96,7 +96,7 @@ function productTargets(id: string | undefined, hints?: RevalidateHints): string
      * types are deliberately OUT of the general catalogue
      * (`inGeneralCatalogue: false`) and are reachable only at their own browse
      * route, so a bulk invalidation that marks `/products` leaves `/collector-drops`,
-     * `/pre-orders`, `/clearance`, `/art`, `/stickers` and `/spares` serving
+     * `/pre-orders`, `/clearance`, `/art` and `/spares` serving
      * rows that no longer exist.
      */
     for (const p of PLUGINS) if (p.browseRoute) out.push(String(p.browseRoute));
@@ -108,9 +108,9 @@ function productTargets(id: string | undefined, hints?: RevalidateHints): string
   if (plugin) {
     out.push(String(plugin.detailRoute(id)));
     // The type's own browse page. Read off the plugin, NOT derived by stripping
-    // the detail route's last segment: art/stickers/spares all detail at
-    // `/products/{slug}`, so stripping yields `/products` and loses `/art`,
-    // `/stickers` and `/spares` entirely.
+    // the detail route's last segment: art-and-stickers/spares both detail at
+    // `/products/{slug}`, so stripping yields `/products` and loses `/art`
+    // and `/spares` entirely.
     if (plugin.browseRoute) out.push(String(plugin.browseRoute));
   } else {
     /*

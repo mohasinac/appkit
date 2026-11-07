@@ -123,7 +123,10 @@ type ProductListingKind =
   | "prizedraw"
   | "prize-draw"
   | "auction"
-  | "random-lots";
+  | "random-lots"
+  // 1.34 — `art` + `stickers` merged into `art-and-stickers`.
+  | "art"
+  | "stickers";
 
 const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   standard: LISTING_TYPE_VALUES.STANDARD,
@@ -133,16 +136,21 @@ const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
   classified: LISTING_TYPE_VALUES.CLASSIFIED,
   "digital-code": LISTING_TYPE_VALUES.DIGITAL_CODE,
   live: LISTING_TYPE_VALUES.LIVE,
-  art: LISTING_TYPE_VALUES.ART,
-  stickers: LISTING_TYPE_VALUES.STICKERS,
+  "art-and-stickers": LISTING_TYPE_VALUES.ART_AND_STICKERS,
+  // 1.34 back-compat: the pre-merge spellings are live in stored documents and
+  // in bookmarked `?listingType=` URLs, and both must still reach the merged
+  // type rather than dropping the clause (Root Cause #58, below).
+  art: LISTING_TYPE_VALUES.ART_AND_STICKERS,
+  stickers: LISTING_TYPE_VALUES.ART_AND_STICKERS,
   /*
    * 🛑 Root Cause #58 lives here, and it is the single most expensive line to
    * omit in this whole change. The alias returns `""` for an unrecognised
    * token and `expandFilterAliases` then DROPS the empty clause — so a missing
    * entry does not error, it deletes the `listingType` filter from the query.
-   * `art` and `stickers` were added to the union, the registry and the
-   * capability map and not to this map, and every art/sticker browse page
-   * silently returned the entire catalogue until someone reported it.
+   * `art-and-stickers` (then two separate members) was added to the union,
+   * the registry and the capability map and not to this map, and every
+   * art/sticker browse page silently returned the entire catalogue until
+   * someone reported it.
    *
    * `Record<ProductListingKind, string>` makes it compile-checked against THAT
    * union — but `ProductListingKind` is itself hand-written above and is not

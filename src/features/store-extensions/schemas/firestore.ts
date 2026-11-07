@@ -271,8 +271,7 @@ export const LISTING_TEMPLATE_TYPES = [
   "classified",
   "digital-code",
   "live",
-  "art",
-  "stickers",
+  "art-and-stickers",
 ] as const;
 
 export type ListingTemplateType = (typeof LISTING_TEMPLATE_TYPES)[number];

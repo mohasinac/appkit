@@ -13,8 +13,8 @@ import { userRepository } from "../../../../features/auth/repository/user.reposi
 import type { Permission } from "../../../../features/auth/permissions/constants";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { isEffectiveAdminUser, isEmployeeUser } from "../../../../features/auth/role-predicates";
-import { permissionsFor } from "../../../../features/auth/auth-helpers";
-import type { ResolvedPermissions } from "../../../../features/auth/auth-helpers";
+import { permissionsFor, MODERATION_PERMISSIONS } from "../../../../features/auth/auth-helpers";
+import type { ResolvedPermissions, ModerationAction } from "../../../../features/auth/auth-helpers";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -79,6 +79,55 @@ export function checkAnyPermission(
   required: Permission[],
 ): boolean {
   return resolved.isAdmin || required.some((p) => resolved.permissions.includes(p));
+}
+
+/**
+ * ── The server-side answer to "may this user do X?" ──────────────────────────
+ *
+ * `can(user, perm)` in `features/auth/auth-helpers` is pure and reads the
+ * object it is handed. That is the wrong tool inside an API route: the session
+ * payload `createRouteHandler` builds carries `uid`, `role`, `roles` and
+ * `primaryRole` and **no `permissions` array** (see `RouteUser` — none of the
+ * fine-grained grants reach the session-cookie JWT claims). So a synchronous
+ * check there would silently ignore every per-person grant and deny a properly
+ * configured employee.
+ *
+ * This reads the document first and then applies the SAME rule —
+ * `getServerPermissions` → `permissionsFor` — so there is one resolution rule,
+ * not a server copy and a client copy that drift. `userRepository.findById` is
+ * cached per request in `BaseRepository`, so several of these in one handler
+ * cost one read.
+ *
+ * ⚠ Call it only AFTER the cheap ownership test has failed. Every gate this
+ * converts reads "the owner, or someone with the permission", and an owner must
+ * not pay a Firestore read to edit their own thing (Rule #6).
+ */
+export async function serverCan(
+  uid: string | null | undefined,
+  required: Permission,
+): Promise<boolean> {
+  if (!uid) return false;
+  return checkPermission(await getServerPermissions(uid), required);
+}
+
+/**
+ * `serverCan` for the moderation action names.
+ *
+ * 🛑 This is the function the ~20 former `isModeratorUser()` sites call. The
+ * action → permission mapping lives in `MODERATION_PERMISSIONS` beside
+ * `permissionsFor`, so the gate is data; this is only the async wrapper that
+ * fetches the document.
+ *
+ * Default grant, restated because it is the whole point: `employee` carries an
+ * EMPTY permission bundle, so an employee who has not been granted the key is
+ * DENIED here. `admin` short-circuits to `isAdmin: true` inside
+ * `permissionsFor` and is therefore always allowed, unconditionally.
+ */
+export async function canModerateServer(
+  uid: string | null | undefined,
+  action: ModerationAction,
+): Promise<boolean> {
+  return serverCan(uid, MODERATION_PERMISSIONS[action]);
 }
 
 // ── RSC layout factory ────────────────────────────────────────────────────────

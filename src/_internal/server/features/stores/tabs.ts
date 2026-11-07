@@ -81,9 +81,10 @@ const STORE_LISTING_HREF: Record<
   classifieds: (slug) => String(ROUTES.PUBLIC.STORE_CLASSIFIEDS(slug)),
   "digital-codes": (slug) => String(ROUTES.PUBLIC.STORE_DIGITAL_CODES(slug)),
   live: (slug) => String(ROUTES.PUBLIC.STORE_LIVE(slug)),
-  // Combined art + stickers, mirroring the public /art page. This used to
-  // point at STORE_PRODUCTS, which filters to `standard` — so the tab showed
-  // a real non-zero count and landed on a page with none of those items.
+  // Art & Stickers, mirroring the public /art page. This used to point at
+  // STORE_PRODUCTS, which filters to `standard` — so the tab showed a real
+  // non-zero count and landed on a page with none of those items.
+  // Keyed on the `art` tabSlug, which 1.34 deliberately left unchanged.
   art: (slug) => String(ROUTES.PUBLIC.STORE_ART(slug)),
   spares: (slug) => String(ROUTES.PUBLIC.STORE_SPARES(slug)),
 };
@@ -112,9 +113,6 @@ export async function resolveStoreTabs(
   const visibleStoreTabs = STORE_PAGE_TABS.filter((tab) => {
     if (tab.id === "bundles") {
       if (!isCategoryTypeEnabled("bundle", settings)) return false;
-    } else if (tab.id === pluginFor("art").tabSlug) {
-      // Combined tab — visible if either underlying listing type is enabled.
-      if (!(isListingTypeEnabled("art", settings) || isListingTypeEnabled("stickers", settings))) return false;
     } else if (tab.listingType) {
       if (!isListingTypeEnabled(tab.listingType as ListingType, settings)) return false;
     }

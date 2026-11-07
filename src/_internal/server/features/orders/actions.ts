@@ -13,7 +13,7 @@
  */
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { adminNotificationsRepository, orderRepository, storeRepository } from "../../../../repositories";
-import { requireRoleUser } from "../../../../providers/auth-firebase/helpers";
+import { requireRoleUser, requireAuthUser } from "../../../../providers/auth-firebase/helpers";
 import {
   createOrderSchema,
   updateOrderStatusSchema,
@@ -33,7 +33,29 @@ import { assertOrderCancellable, assertReturnWindowOpen } from "./service";
 import { cancelOrderWithRefund } from "./cancellation-refund";
 import { ValidationError } from "../../../shared/errors/index";
 import { OrderNotFoundError, OrderOwnershipError } from "../../../shared/features/orders/errors";
-import { isAdminUser, isModeratorUser } from "../../../../features/auth/role-predicates";
+/*
+ * ── Moderation is a PERMISSION here, not a role ──────────────────────────────
+ *
+ * These gates read `isAdminUser(user) || isModeratorUser(user)` until
+ * 2026-11-08. Collapsing `moderator` into `employee` (A9) made the second half
+ * true for EVERY employee, so the three payment-override actions below —
+ * declare a manual payment received, extend a payment window, cancel an order
+ * and enqueue a 7-day hard ban — widened to every employee account as a side
+ * effect of a role rename.
+ *
+ * Owner's decision: keep the fold, gate the sites on an explicit permission.
+ * So the question asked here is "does this user hold
+ * `admin:orders:payment-override`?" — admin holds it unconditionally
+ * (`permissionsFor` short-circuits), an employee holds it only if GRANTED, and
+ * no role bundle confers it.
+ *
+ * ⚠ `canModerateServer` and not the synchronous `can()`: the per-person grant
+ * lives in `permissions[]` on the user document and never reaches the session
+ * cookie, so the sync form would deny a correctly configured employee.
+ */
+import { isAdminUser } from "../../../../features/auth/role-predicates";
+import { canModerateServer } from "../auth/permissions";
+import { AuthorizationError } from "../../../../errors";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { restoreStockForOrder } from "../checkout/stock-restore";
 import { getAdminDb } from "../../../../providers/db-firebase";
@@ -293,9 +315,18 @@ export async function attachPaymentProofAction(
 
 export async function adminVerifyPaymentAction(orderId: string): Promise<ActionResult<void>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["admin", "moderator"]);
-    if (!isAdminUser(user) && !isModeratorUser(user)) {
-      throw new ValidationError("Only admin or moderator can verify payments");
+    /*
+     * Authenticate, then ask the capability question — no role literal at all.
+     * `requireRoleUser(["admin","moderator"])` used to stand here, which matched
+     * the SCALAR `role` claim on the session cookie: it refused a real employee
+     * outright and admitted anyone whose stale cookie still said "moderator".
+     * The permission check below reads the live document instead.
+     */
+    const user = await requireAuthUser();
+    if (!(await canModerateServer(user.uid, "orders:payment-override"))) {
+      throw new AuthorizationError(
+        "Verifying a payment requires the admin:orders:payment-override permission",
+      );
     }
     const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
@@ -332,9 +363,11 @@ export async function adminRequestProofReuploadAction(
   note: string,
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["admin", "moderator"]);
-    if (!isAdminUser(user) && !isModeratorUser(user)) {
-      throw new ValidationError("Only admin or moderator can request a proof re-upload");
+    const user = await requireAuthUser();
+    if (!(await canModerateServer(user.uid, "orders:payment-override"))) {
+      throw new AuthorizationError(
+        "Requesting a proof re-upload requires the admin:orders:payment-override permission",
+      );
     }
     if (!note.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId);
@@ -383,9 +416,11 @@ export async function adminRejectPaymentAsFraudAction(
   note: string,
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["admin", "moderator"]);
-    if (!isAdminUser(user) && !isModeratorUser(user)) {
-      throw new ValidationError("Only admin or moderator can reject a payment as fraudulent");
+    const user = await requireAuthUser();
+    if (!(await canModerateServer(user.uid, "orders:payment-override"))) {
+      throw new AuthorizationError(
+        "Rejecting a payment as fraudulent requires the admin:orders:payment-override permission",
+      );
     }
     if (!note.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId);
@@ -424,8 +459,9 @@ export async function adminRejectPaymentAsFraudAction(
  * might be wrong"). Only valid when `autoApproved === true` — a manually
  * reviewed order already went through human judgment and disputes on it go
  * through the existing return/refund flow instead. Callable by the buyer,
- * the seller (store owner), or admin/moderator. Does not itself reverse
- * payment/order status — surfaces to the admin queue for investigation.
+ * the seller (store owner), or staff holding `admin:orders:write`. Does not
+ * itself reverse payment/order status — surfaces to the admin queue for
+ * investigation.
  */
 export async function raiseOrderDisputeAction(
   orderId: string,
@@ -438,19 +474,40 @@ export async function raiseOrderDisputeAction(
   },
 ): Promise<ActionResult<void>> {
   return wrapAction(async () => {
-    const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
+    /*
+     * `requireAuthUser`, not `requireRoleUser([...])`. The tuple here listed
+     * user/buyer/seller/admin and matched the scalar `role` claim, so an
+     * employee granted `admin:orders:write` was refused before the real gate
+     * below ever ran — a half-converted gate in the worst direction. Who may
+     * act is decided by ownership-or-permission a few lines down, which is the
+     * one place that should know.
+     */
+    const user = await requireAuthUser();
     if (!isDisputeKind(input.kind)) throw new ValidationError("Pick what kind of problem this is.");
     if (!input.reasonId?.trim()) throw new ValidationError(REASON_REQUIRED_MSG);
     const order = await orderRepository.findById(orderId);
     if (!order) throw new OrderNotFoundError(orderId);
 
     const isBuyer = order.userId === user.uid;
+    /*
+     * ── Ownership first, permission second — and exactly ONCE ───────────────
+     *
+     * Was `!isAdminUser(user) && !isModeratorUser(user)` evaluated twice, with
+     * the moderator half now true for every employee. It is a permission
+     * question (`admin:orders:write` — act on an order you neither bought nor
+     * sold), and the answer needs a document read, so it is computed once and
+     * ONLY when ownership has already failed: a buyer disputing their own
+     * order must not pay a Firestore round-trip to be allowed (Rule #6).
+     */
+    const isStaff = isBuyer
+      ? false
+      : await canModerateServer(user.uid, "orders:act-on-any");
     let isSeller = false;
-    if (!isBuyer && !isAdminUser(user) && !isModeratorUser(user) && order.storeId) {
+    if (!isBuyer && !isStaff && order.storeId) {
       const store = await storeRepository.findById(order.storeId);
       isSeller = store?.ownerId === user.uid;
     }
-    if (!isBuyer && !isSeller && !isAdminUser(user) && !isModeratorUser(user)) {
+    if (!isBuyer && !isSeller && !isStaff) {
       throw new OrderOwnershipError(orderId);
     }
     /*

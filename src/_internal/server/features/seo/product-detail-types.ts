@@ -6,7 +6,8 @@
  * `generateStaticParams` (what to prerender) — and a third, the page itself,
  * enforces it by `permanentRedirect`ing a non-standard type away.
  *
- * 🛑 It used to be a literal `["standard", "art", "stickers"]` in `sitemap.ts`.
+ * 🛑 It used to be a literal `["standard", "art", "stickers"]` in `sitemap.ts`
+ * (back when art and stickers were two separate union members).
  * When `spares` was added as a tenth listing type pointing at the same route,
  * that literal was not updated, so the product became renderable at
  * `/products/{slug}` and was never submitted — measured 2026-10-24, 14 product
