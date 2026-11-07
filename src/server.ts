@@ -2852,6 +2852,35 @@ export { assertCheckoutValueOtp } from "./_internal/server/features/checkout/val
 export type { CheckoutValueOtpGateInput } from "./_internal/server/features/checkout/value-otp-gate";
 
 /*
+ * [SERVER-ONLY] Item 1.39 — the BLOCKING buyer policy agreement.
+ *
+ * 🛑 On the barrel, not a deep import, for exactly the reason the long note in
+ * `/api/payment/create-order` records: a second specifier for `@mohasinac/appkit`
+ * in one route's graph gives it a second copy of the provider registry, and the
+ * symptom is a flat 401 on every authenticated request rather than anything
+ * resembling an import problem.
+ *
+ * `assertBuyerPolicyConsent` is what refuses a consentless order (403
+ * BUYER_POLICY_CONSENT_REQUIRED / _STALE); `resolveCheckoutPolicyOffer` is what
+ * the UI reads so the clauses a buyer is shown and the clauses the gate hashes
+ * are one computation.
+ */
+export {
+  assertBuyerPolicyConsent,
+  resolveCheckoutPolicyOffer,
+  loadBuyerPolicyConsent,
+  attachOrdersToPolicyConsent,
+  hashPolicyClauses,
+  POLICY_CONSENT_REQUIRED_CODE,
+  POLICY_CONSENT_STALE_CODE,
+  POLICY_CONSENT_UNRESOLVED_CODE,
+} from "./_internal/server/payments/policy-consent";
+export type {
+  AssertBuyerPolicyConsentInput,
+  SubmittedPolicyConsent,
+} from "./_internal/server/payments/policy-consent";
+
+/*
  * [SERVER-ONLY] D56 — self-serve ad bookings.
  *
  * 🛑 Availability is a DOCUMENT COLLISION, never a query. The booking id

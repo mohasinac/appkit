@@ -204,6 +204,19 @@ import { resolveDisplayedUpiId } from "./upi-resolution";
 import { resolveSupplierIdentity } from "./supplier-identity";
 import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
 import { assertCheckoutValueOtp } from "./value-otp-gate";
+/*
+ * Item 1.39 — the blocking buyer policy agreement. Lives under
+ * `_internal/server/payments/` rather than beside the other checkout gates
+ * because BOTH order paths need it and one of them (the gateway path) takes
+ * consent in a different request from the one that places the order.
+ */
+import {
+  assertBuyerPolicyConsent,
+  attachOrdersToPolicyConsent,
+  loadBuyerPolicyConsent,
+  type SubmittedPolicyConsent,
+} from "../../payments/policy-consent";
+import type { OrderPolicyConsent } from "../../../shared/checkout/policy-consent";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
 
@@ -438,6 +451,16 @@ export interface CreateCheckoutOrderInput {
    */
   notes?: string;
   excludedProductIds?: string[];
+  /**
+   * Item 1.39 — what the buyer ticked, as echoed back by the client.
+   *
+   * 🛑 NOTHING in here is trusted. It is `{ accepted, version, hash }`, and the
+   * gate re-resolves the applicable policy from the cart's own listing types
+   * and the live settings before comparing. A client cannot assert a weaker
+   * policy than the cart requires: a mismatched hash is a refusal, not an
+   * override. See `assertBuyerPolicyConsent`.
+   */
+  policyConsent?: SubmittedPolicyConsent;
   /** When true this is an admin test order — OTP consent is pre-granted and the order is created paid/processing. */
   adminBypass?: boolean;
   /** UID of the admin who triggered the bypass. Set when adminBypass is true. */
@@ -1081,6 +1104,15 @@ interface OrderGroupContext {
   /** Site-wide UPI VPA fallback (`siteSettings.contact.upiVpa`) — used by `resolveDisplayedUpiId` when a seller has no UPI configured, or the store is admin-owned. */
   siteContactUpiVpa?: string;
   /**
+   * Item 1.39 — the buyer's policy agreement for this checkout.
+   *
+   * 🛑 REQUIRED, not optional, and that is the enforcement. `assertBuyerPolicyConsent`
+   * either returns a record or throws, so there is no code path that reaches
+   * order creation holding `undefined` — a consentless order is not
+   * representable here rather than merely discouraged.
+   */
+  policyConsent: OrderPolicyConsent;
+  /**
    * D46/D47 — the buyer ticked "pay with my points" on the cart.
    *
    * A boolean and nothing more (decision 24): opt in and as many points as the
@@ -1397,6 +1429,7 @@ async function createOrderForGroup(
     gstSettings,
     siteContactUpiVpa,
     storeAddons,
+    policyConsent,
     platformFeeByStore,
     selectedShippingQuote,
     useAllPoints,
@@ -2098,6 +2131,16 @@ async function createOrderForGroup(
     imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
     outOfStockPolicy,
     droppedItems: droppedItems.length > 0 ? droppedItems : undefined,
+    /*
+     * Item 1.39 — the consent record, stamped on EVERY order this checkout
+     * produced rather than on the first one.
+     *
+     * 🛑 A multi-seller cart splits into N orders and each is separately
+     * cancellable, refundable and disputable, so each needs the agreement that
+     * governs it. Writing it once and joining through a batch id would make
+     * "what did this buyer agree to for this order" a query that can fail.
+     */
+    policyConsent,
     ...extraOrderFields,
   });
 
@@ -2246,6 +2289,38 @@ export async function createCheckoutOrderAction(
     amount: cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0),
     threshold: siteSettings?.payment?.otpCheckoutThreshold,
     paymentMethod,
+    adminBypass,
+  });
+
+  /*
+   * ── ITEM 1.39 — THE BLOCKING BUYER POLICY AGREEMENT ──────────────────────
+   *
+   * Here, beside the other two checkout gates, and BEFORE any mutation: this
+   * is the last point at which refusing costs nothing. The COD/manual path
+   * creates orders directly, so "before the order" and "before the money" are
+   * the same instant; on the gateway path they are two different requests,
+   * which is why that path takes its consent at create-order time instead (see
+   * `verifyAndPlaceGatewayOrderAction`).
+   *
+   * 🛑 Throws on absence or mismatch. A consentless order is REJECTED, never
+   * placed-with-a-warning — the no-refund-after-reveal mechanic is only
+   * defensible if the agreement that enables it was actually taken.
+   *
+   * 🛑 `listingTypes` comes off the cart items, which are written SERVER-SIDE
+   * from the product at add-to-cart time (`POST /api/cart` calls
+   * `normalizeListingType(product)`), so this is not a client-supplied fact.
+   * A line that somehow carries none falls back to `standard`, which is the
+   * conservative direction: `standard` carries `supportsShipping`, so the
+   * no-refund-after-dispatch clause is still required.
+   */
+  const policyConsent = await assertBuyerPolicyConsent({
+    uid,
+    listingTypes: cartItems.map(
+      (item) => (item.listingType ?? "standard") as ListingType,
+    ),
+    settings: siteSettings?.checkoutPolicies,
+    submitted: input.policyConsent,
+    capturedOn: "checkout",
     adminBypass,
   });
 
@@ -2702,6 +2777,7 @@ export async function createCheckoutOrderAction(
     gstSettings: siteSettings?.gst,
     siteContactUpiVpa: siteSettings?.contact?.upiVpa,
     storeAddons: cart.storeAddons,
+    policyConsent,
     platformFeeByStore,
     selectedShippingQuote: input.selectedShippingQuote,
     productById: checkoutProductById,
@@ -2711,6 +2787,14 @@ export async function createCheckoutOrderAction(
   for (const { items: group, orderType } of orderGroups) {
     total += await createOrderForGroup(group, orderType, groupCtx);
   }
+
+  /*
+   * Item 1.39 — backlink the consent to the orders it covered. Never awaited
+   * for correctness: the authoritative copy is already on each order document,
+   * so this is the convenience index and a failure must not undo a successful
+   * placement. See `attachOrdersToPolicyConsent`, which swallows and logs.
+   */
+  await attachOrdersToPolicyConsent(policyConsent.consentId, orderIds);
 
   await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
 
@@ -3788,6 +3872,14 @@ async function createPhonePeGroupOrder(
      * the time, and the difference decides whether a seller gets paid twice.
      */
     splitByStore?: ReadonlyMap<string, SplitSettlementRecord>;
+    /**
+     * Item 1.39 — the consent taken at create-order time, before the capture.
+     *
+     * 🛑 REQUIRED, same as on `OrderGroupContext`: `loadBuyerPolicyConsent`
+     * either returns a record or throws, so an order with no consent is not
+     * representable on this path either.
+     */
+    policyConsent: OrderPolicyConsent;
   },
 ): Promise<number> {
   const {
@@ -3795,6 +3887,7 @@ async function createPhonePeGroupOrder(
     cartSubtotal,
     storeAddons,
     platformFeeByStore,
+    policyConsent,
     siteSettings,
     uid,
     userName,
@@ -4301,6 +4394,13 @@ async function createPhonePeGroupOrder(
     imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
     outOfStockPolicy,
     droppedItems: unavailablePaid.length > 0 ? unavailablePaid : undefined,
+    /*
+     * Item 1.39 — the consent taken at CREATE-ORDER time, before the capture.
+     * Loaded back by id from the gateway's own passthrough channel rather than
+     * re-taken here: there is no buyer in the room on the webhook path, and
+     * asking for consent after the money moved would be meaningless anyway.
+     */
+    policyConsent,
     ...extraOrderFields,
   } as never);
 
@@ -4542,6 +4642,29 @@ export async function verifyAndPlaceGatewayOrderAction(
     input.outOfStockPolicy ??
     (intent?.outOfStockPolicy as OutOfStockPolicy | undefined) ??
     OutOfStockPolicyValues.CANCEL_ORDER;
+
+  /*
+   * ── ITEM 1.39 — THE CONSENT, RESOLVED NOT RE-TAKEN ────────────────────────
+   *
+   * On this path the money is ALREADY CAPTURED, so there is nothing left to
+   * gate: asking for consent here would be asking a buyer whose card has been
+   * charged whether they agree. The enforcement therefore happens one request
+   * earlier, in `POST /api/payment/create-order`, which writes a
+   * `buyerPolicyConsents` record BEFORE calling the gateway and packs its id
+   * into the gateway's own passthrough channel.
+   *
+   * What this line does is read that record back and prove it belongs to this
+   * buyer. Its failure mode is deliberately 5xx rather than 4xx (see
+   * `POLICY_CONSENT_UNRESOLVED_CODE`): a missing record means our own
+   * pre-capture write is unreadable, not that the buyer did anything wrong, so
+   * the honest answer is "ask us again" — which makes the gateway's retry
+   * schedule the recovery path. The one outcome that is not permitted is
+   * placing an order with no consent record on it.
+   */
+  const policyConsent = await loadBuyerPolicyConsent({
+    consentId: intent?.policyConsentId,
+    uid,
+  });
 
   // Add-on fees are no longer resolved here. They are per store, and this
   // function has no single store — each group reads its own selection off
@@ -5209,6 +5332,7 @@ export async function verifyAndPlaceGatewayOrderAction(
       cartSubtotal,
       storeAddons: cart.storeAddons,
       platformFeeByStore,
+      policyConsent,
       siteSettings,
       uid,
       userName,
@@ -5257,6 +5381,14 @@ export async function verifyAndPlaceGatewayOrderAction(
       splitByStore,
     });
   }
+
+  /*
+   * Item 1.39 — backlink, same as the COD/manual path. On THIS path it carries
+   * extra diagnostic weight: a consent record with a captured payment behind it
+   * and no order ids is the 2026-10-21 shape (money taken, no order), so the
+   * absence of this link is itself a signal worth being able to query for.
+   */
+  await attachOrdersToPolicyConsent(policyConsent.consentId, orderIds);
 
   await flushCouponUsageAccumulator(couponUsageAccumulator, uid);
 

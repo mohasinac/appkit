@@ -37,6 +37,23 @@ export interface CheckoutIntentMetadata {
   addressId?: string;
   outOfStockPolicy?: string;
   notes?: string;
+  /**
+   * Item 1.39 — the `buyerPolicyConsents` document id for the agreement taken
+   * at create-order time, BEFORE this capture was requested.
+   *
+   * 🛑 An ID, never the agreement itself. This map is flattened into the
+   * gateway's merchant passthrough channel (`notes` / `metaInfo` /
+   * `order_tags`) with a 10-key, 255-char cap and SILENT truncation — the same
+   * constraint that keeps split amounts out of here. Verbatim clause text
+   * would be truncated without an error and the order would carry a half
+   * sentence as its consent record.
+   *
+   * 🛑 Untrusted on the way back. `loadBuyerPolicyConsent` re-checks that the
+   * record belongs to the uid the order is being placed for, because a crafted
+   * passthrough could otherwise attach someone else's agreement to this
+   * purchase.
+   */
+  policyConsentId?: string;
 }
 
 export interface PaymentCapture {

@@ -525,6 +525,12 @@ export const CHECKOUT_ENDPOINTS = {
   PREFLIGHT: "/api/checkout/preflight",
   PLACE_ORDER: "/api/checkout",
   PRICING_PREVIEW: "/api/checkout/pricing-preview",
+  /**
+   * Item 1.39 — the buyer-policy clause set + hash for the current cart. The
+   * client renders what this returns and echoes its `version`/`hash` back when
+   * placing the order; it never derives either for itself.
+   */
+  POLICY: "/api/checkout/policy",
 } as const;
 
 // ---------------------------------------------------------------------------

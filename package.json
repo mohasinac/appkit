@@ -267,6 +267,10 @@
       "types": "./dist/_internal/shared/checkout/line-members.d.ts",
       "import": "./dist/_internal/shared/checkout/line-members.js"
     },
+    "./checkout/policy-consent": {
+      "types": "./dist/_internal/shared/checkout/policy-consent.d.ts",
+      "import": "./dist/_internal/shared/checkout/policy-consent.js"
+    },
     "./fees/explain": {
       "types": "./dist/_internal/shared/fees/explain.d.ts",
       "import": "./dist/_internal/shared/fees/explain.js"

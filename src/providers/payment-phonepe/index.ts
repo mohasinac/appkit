@@ -83,7 +83,19 @@ function packMetaInfo(intent: PhonePeCheckoutIntent): MetaInfo {
     .udf2(intent.addressId ?? "")
     .udf3(intent.outOfStockPolicy ?? "")
     .udf4((intent.notes ?? "").slice(0, 256))
-    .udf5("")
+    /*
+     * Item 1.39 — the buyer-policy consent record id.
+     *
+     * 🛑 PhonePe's metaInfo is FIVE named slots, not an open map, so unlike
+     * Razorpay's generic `notes` flattening a new intent field is invisible
+     * here until it is named. udf5 was the one spare slot and this is what it
+     * is now for. The webhook path has no session, so without this the
+     * consent taken before the capture could not be found after it — and the
+     * placement would have to either refuse a paid order or write one with no
+     * consent record. Both are unacceptable; a 36-byte id in a spare slot is
+     * neither.
+     */
+    .udf5(intent.policyConsentId ?? "")
     .build();
 }
 
@@ -94,6 +106,7 @@ function unpackMetaInfo(meta: MetaInfo | undefined): PhonePeCheckoutIntent | und
     addressId: meta.udf2 || undefined,
     outOfStockPolicy: meta.udf3 || undefined,
     notes: meta.udf4 || undefined,
+    policyConsentId: meta.udf5 || undefined,
   };
 }
 
