@@ -512,16 +512,35 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
      * `audit-closed-surface-links` see them (that audit reads the flags; it
      * cannot read a live measurement).
      */
+    /*
+     * 🛑 `"unlisted"` is NOT the same as `false`, and the difference is exactly
+     * what the owner asked for on 2026-11-07: *"do not show their links or
+     * filters or any way to jump to them, but do not 404 their pages."*
+     *
+     *   false       → `isListingTypeEnabled` is false   → the edge 404s the surface
+     *   "unlisted"  → `isListingTypeEnabled` stays TRUE → detail pages keep serving
+     *                 `isListingTypeListed` is false    → gone from nav, footer,
+     *                                                     sitemap and filters
+     *
+     * So an unlisted type is reachable by direct link and by anyone holding an
+     * existing URL, but is not advertised anywhere. That is the right posture
+     * for Phase 1: the code SUPPORTS these types, they simply have no stock
+     * yet, and dead browse surfaces are what `audit-closed-surface-links`
+     * exists to prevent.
+     *
+     * `classified` and `live` stay hard-`false` — they are deferred types, not
+     * merely unstocked ones.
+     */
     listingTypes: {
       standard: true,
       "pre-order": true,
-      spares: false,
-      art: false,
-      stickers: false,
-      "collector-drop": false,
-      "clearance": false,
+      spares: "unlisted",
+      art: "unlisted",
+      stickers: "unlisted",
+      "collector-drop": "unlisted",
+      "clearance": "unlisted",
+      "digital-code": "unlisted",
       classified: false,
-      "digital-code": false,
       live: false,
     },
     categoryTypes: {
