@@ -76,6 +76,32 @@ export interface ListingTypeCapability {
    * two-level model as `canMakeOffer` + `allowOffers`.
    */
   supportsSurpriseReveal: boolean;
+
+  /**
+   * Fulfilment of this type MAY be deferred to an explicit human release
+   * instead of completing automatically when the order is paid.
+   *
+   * 🛑 A CAPABILITY, not a type check, and it is the second level of the
+   * `hasInstantFulfillment` pair rather than its opposite:
+   *
+   *   `hasInstantFulfillment`      — this type CAN complete without a human
+   *   `supportsDeferredFulfilment` — and it can also WAIT for one
+   *
+   * Both true for `digital-code`, because the owner's decision is that
+   * fulfilment is **seller-configurable** per listing: a code can auto-issue
+   * on payment or sit until a person releases it. The per-listing opt-in is
+   * `digitalCode.codeDeliveryMethod` (`"auto-claim" | "manual-email"`), the
+   * same two-level model as `canMakeOffer` + `allowOffers`. Resolve the two
+   * together with `fulfilmentModeFor()` in the order workflow registry —
+   * never by comparing a listing type to a string.
+   *
+   * False everywhere else today, and that is a statement about the MECHANISM
+   * being absent rather than about those types: a shipped type's "release" is
+   * the shipment, which the order lifecycle already models. Turning this on
+   * for another type is a row edit here plus a per-listing flag that type can
+   * carry — no code change.
+   */
+  supportsDeferredFulfilment: boolean;
 }
 
 export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapability> = {
@@ -99,6 +125,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: true,
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   standard: {
     canAddToCart: true,
@@ -110,6 +137,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: true,   // the ordinary negotiable listing
     acceptsPointsTender: false,  // flip to true the day the owner widens coins
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   "collector-drop": {
     canAddToCart: false,
@@ -121,6 +149,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: false,  // bidding IS the price mechanism
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   "pre-order": {
     canAddToCart: true,
@@ -132,6 +161,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: false,  // deposit against a future price, not a price to haggle
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   "clearance": {
     canAddToCart: true,
@@ -147,6 +177,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     // a table edit, not a code change.
     acceptsPointsTender: true,
     supportsSurpriseReveal: true,
+    supportsDeferredFulfilment: false,
   },
   // SB-UNI-F 2026-05-13 — Phase 2 union extension.
   classified: {
@@ -164,6 +195,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: true,   // haggling is the norm here — see the `negotiable` flag
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   "digital-code": {
     canAddToCart: true,
@@ -175,6 +207,10 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: false,  // fungible pool item, priced per code
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    // Both halves true: a code can auto-issue on payment OR wait for a
+    // seller to release it. `codeDeliveryMethod` on the listing decides
+    // which, so this is the only type that currently needs the pair.
+    supportsDeferredFulfilment: true,
   },
   live: {
     canAddToCart: true,         // but jurisdictionAllowed must include buyer's state
@@ -186,6 +222,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: false,  // jurisdiction-gated with a verified vendor accountable for the price
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   // Art/stickers session — printed-only physical goods, standard-like checkout.
   art: {
@@ -198,6 +235,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: true,   // printed goods, standard-like
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
   stickers: {
     canAddToCart: true,
@@ -209,6 +247,7 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     canMakeOffer: true,   // printed goods, standard-like
     acceptsPointsTender: false,
     supportsSurpriseReveal: false,
+    supportsDeferredFulfilment: false,
   },
 };
 
@@ -263,6 +302,17 @@ export function acceptsPointsTender(type: ListingType): boolean {
  */
 export function supportsSurpriseReveal(type: ListingType): boolean {
   return LISTING_TYPE_CAPABILITIES[type].supportsSurpriseReveal;
+}
+
+/**
+ * Whether fulfilment of this type may be deferred to a human release.
+ *
+ * Capability only — the per-listing `codeDeliveryMethod` says whether this
+ * seller actually chose to defer. `fulfilmentModeFor()` in the order workflow
+ * registry resolves both; call that, not this, at a fulfilment site.
+ */
+export function supportsDeferredFulfilment(type: ListingType): boolean {
+  return LISTING_TYPE_CAPABILITIES[type].supportsDeferredFulfilment;
 }
 
 /**

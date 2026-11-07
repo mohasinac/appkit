@@ -84,6 +84,13 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
          */
         ...(item.revealedAt ? { revealedAt: item.revealedAt } : {}),
         ...(item.allocationId ? { allocationId: item.allocationId } : {}),
+        /*
+         * Manual-release state. `releasedBy` is deliberately NOT forwarded —
+         * which staff member released a code is operational, not the buyer's
+         * business, and the audit log already holds it.
+         */
+        ...(item.fulfilmentState ? { fulfilmentState: item.fulfilmentState } : {}),
+        ...(item.releasedAt ? { releasedAt: item.releasedAt } : {}),
         ...(item.cancelledQuantity != null
           ? { cancelledQuantity: item.cancelledQuantity }
           : {}),

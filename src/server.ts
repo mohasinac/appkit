@@ -2108,6 +2108,16 @@ export {
   DIGITAL_CONTENT_PREFIX,
   type AddPoolEntryInput,
 } from "./_internal/server/features/digital-code/pool";
+/*
+ * Manual release (1.37) — the deferred-fulfilment path that sits ALONGSIDE
+ * auto-claim, selected by `fulfilmentModeFor()`. Server-only for the same
+ * structural reason as `pool` above: it reaches `getAdminDb`.
+ */
+export {
+  markAwaitingRelease,
+  releaseDigitalContentForOrder,
+  type ReleaseDigitalContentResult,
+} from "./_internal/server/features/digital-code/release";
 export {
   signDigitalContentUpload,
   finalizeDigitalContentUpload,

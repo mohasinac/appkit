@@ -33,7 +33,12 @@
  */
 
 import type { ListingType } from "../../../../features/products/types/index";
-import { supportsSurpriseReveal } from "../../listing-types/capabilities";
+import {
+  supportsSurpriseReveal,
+  supportsDeferredFulfilment,
+  hasInstantFulfillment,
+  supportsShipping,
+} from "../../listing-types/capabilities";
 
 /** Lifecycle position, mirroring `OrderStatus` without importing the union. */
 export type WorkflowStatus =
@@ -155,6 +160,107 @@ function concealableRule(): OrderWorkflowRule {
  */
 export function workflowRuleFor(type: ListingType): OrderWorkflowRule {
   return supportsSurpriseReveal(type) ? concealableRule() : standardRule();
+}
+
+// ---------------------------------------------------------------------------
+// Fulfilment mode — the `fulfilment` slot of the registry shape
+// ---------------------------------------------------------------------------
+
+/**
+ * How a paid line actually gets delivered.
+ *
+ *   `"ship"`            — a parcel moves; the shipment IS the fulfilment event
+ *   `"instant-digital"` — completes with no human action when payment lands
+ *   `"manual-digital"`  — waits for an explicit release by the seller/staff
+ *   `"none"`            — nothing to fulfil (local handover, chat-only types)
+ */
+export type FulfilmentMode = "ship" | "instant-digital" | "manual-digital" | "none";
+
+/**
+ * The per-listing half of the fulfilment decision.
+ *
+ * Structurally typed rather than importing `ProductDocument`, so this module
+ * stays dependency-light and the same call works from a product, a cart line
+ * or an order line that only carries the meta it needs.
+ */
+export interface FulfilmentOptIn {
+  digitalCode?: { codeDeliveryMethod?: "auto-claim" | "manual-email" } | null;
+}
+
+/**
+ * Resolve the fulfilment mode for a line. **Call this instead of comparing a
+ * listing type to a string at a fulfilment site.**
+ *
+ * ## 🛑 The defect this closes
+ *
+ * `digitalCode.codeDeliveryMethod` is seller-settable (`"auto-claim" |
+ * "manual-email"`), is in the seller form, is validated by the request schema,
+ * and **two seeded products already carry `"manual-email"`** — but it had no
+ * reader on any fulfilment path. Checkout decided with
+ * `listingType === "digital-code"` and auto-claimed a code regardless, so a
+ * seller who chose manual release got instant issue anyway. The setting looked
+ * implemented and did nothing.
+ *
+ * ## Two levels, as everywhere else
+ *
+ * `supportsDeferredFulfilment` (type CAN wait for a human) × the per-listing
+ * opt-in (this seller CHOSE to). Deferring without the capability is ignored
+ * rather than honoured — a type with no release action and no pending state
+ * would otherwise strand a paid order with nothing able to complete it. A flag
+ * that cannot be acted on must not change behaviour.
+ *
+ * Enabling manual release on another type is then a capability-row edit plus
+ * that type's own opt-in flag; this function does not change.
+ */
+export function fulfilmentModeFor(
+  type: ListingType | undefined,
+  listing?: FulfilmentOptIn | null,
+): FulfilmentMode {
+  const t = type ?? "standard";
+  if (supportsShipping(t)) return "ship";
+  if (
+    supportsDeferredFulfilment(t) &&
+    listing?.digitalCode?.codeDeliveryMethod === "manual-email"
+  ) {
+    return "manual-digital";
+  }
+  if (hasInstantFulfillment(t)) return "instant-digital";
+  return "none";
+}
+
+/**
+ * Does this line complete on its own the moment payment lands?
+ *
+ * The predicate a checkout/payment path should gate auto-fulfilment on. `false`
+ * for a manual-release line, which is the whole point — and it is expressed
+ * positively so the call site reads as a capability question rather than as
+ * "not one of these types".
+ */
+export function fulfilsOnPayment(
+  type: ListingType | undefined,
+  listing?: FulfilmentOptIn | null,
+): boolean {
+  return fulfilmentModeFor(type, listing) === "instant-digital";
+}
+
+/** Does this line need a release action from a human before it is delivered? */
+export function awaitsManualRelease(
+  type: ListingType | undefined,
+  listing?: FulfilmentOptIn | null,
+): boolean {
+  return fulfilmentModeFor(type, listing) === "manual-digital";
+}
+
+/**
+ * Must checkout collect a shipping address for this line?
+ *
+ * The `requiresShippingAddress` slot of the registry shape, derived from the
+ * `supportsShipping` capability rather than stored twice — two booleans that
+ * can disagree about whether an address is needed is a checkout that either
+ * blocks a digital purchase or ships a code to nowhere.
+ */
+export function requiresShippingAddress(type: ListingType | undefined): boolean {
+  return fulfilmentModeFor(type) === "ship";
 }
 
 /** Convenience: may the buyer cancel this line? */

@@ -408,6 +408,30 @@ export interface OrderDocumentItem {
    * absence as tampering.
    */
   allocationId?: string;
+  /**
+   * Where a NON-SHIPPED line is in its fulfilment, when fulfilment is not
+   * automatic.
+   *
+   * 🛑 Only ever set on a line whose resolved `fulfilmentModeFor()` is
+   * `"manual-digital"`. A shipped line's fulfilment state is the order's own
+   * `shipped`/`delivered` status plus its shipment record, and an
+   * instant-digital line is fulfilled before any UI could show a state — so
+   * writing this on either would be a second, weaker copy of a fact the
+   * lifecycle already holds.
+   *
+   *   `"pending_release"` — paid, nothing delivered, waiting on a human
+   *   `"released"`        — the seller released it; content is claimable
+   *
+   * The state exists because the alternative is invisible failure: before it,
+   * a `codeDeliveryMethod: "manual-email"` listing auto-claimed anyway, and a
+   * genuinely manual flow would have left a paid order looking identical to a
+   * fulfilled one.
+   */
+  fulfilmentState?: "pending_release" | "released";
+  /** When the seller/staff released a `pending_release` line. */
+  releasedAt?: Date;
+  /** Uid of whoever released it — a human act, so it is attributed. */
+  releasedBy?: string;
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
   cancelledQuantity?: number;
   cancelledAt?: Date;

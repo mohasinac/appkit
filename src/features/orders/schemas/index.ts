@@ -71,6 +71,11 @@ export const orderDocumentItemSchema = z.object({
    */
   revealedAt: z.date().optional(),
   allocationId: z.string().optional(),
+  /* Manual-release fulfilment — see the document interface. Same strip-on-parse
+   * hazard as the two above. */
+  fulfilmentState: z.enum(["pending_release", "released"]).optional(),
+  releasedAt: z.date().optional(),
+  releasedBy: z.string().optional(),
 });
 
 /**

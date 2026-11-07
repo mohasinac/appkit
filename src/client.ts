@@ -1210,6 +1210,7 @@ export {
   canMakeOffer,
   acceptsPointsTender,
   supportsSurpriseReveal,
+  supportsDeferredFulfilment,
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";

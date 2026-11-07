@@ -70,6 +70,14 @@ export interface OrderItem {
    * nothing about other buyers' allocations.
    */
   allocationId?: string;
+  /**
+   * Fulfilment state of a manual-release line — `"pending_release"` until a
+   * human releases it. Surfaced to the buyer so "paid, nothing yet" is a
+   * stated state rather than an order that looks broken.
+   */
+  fulfilmentState?: "pending_release" | "released";
+  /** When it was released. */
+  releasedAt?: Date;
   /** Set when the buyer cancels this specific line item post-order (partial cancellation). */
   cancelledQuantity?: number;
   /**

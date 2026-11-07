@@ -9633,6 +9633,7 @@ export {
   requiresVendorVerified,
   requiresJurisdictionCheck,
   hasInstantFulfillment,
+  supportsDeferredFulfilment,
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
@@ -9643,6 +9644,35 @@ export { RecordOwnerQuickActions } from "./features/admin/components/RecordOwner
 export type { RecordOwnerQuickActionsProps, RecordQuickActionResource } from "./features/admin/components/RecordOwnerQuickActions";
 export type { OwnerQuickActionsProps, OwnerQuickActionsResource } from "./features/admin/components/OwnerQuickActions";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
+
+/*
+ * Order workflow registry (1.37 / order workflows) — per-listing-type
+ * lifecycle rules as DATA. Pure TS, no firebase in its import chain, so it is
+ * safe in both bundles.
+ *
+ * 🛑 Exported so a HOST route can resolve fulfilment the same way checkout
+ * does. The alternative is each surface re-deriving "is this a manual-release
+ * line" from a listing type, which is the scattered-conditional defect the
+ * registry exists to remove.
+ */
+export {
+  fulfilmentModeFor,
+  fulfilsOnPayment,
+  awaitsManualRelease,
+  requiresShippingAddress,
+  workflowRuleFor,
+  canBuyerCancel,
+  canBuyerCancelOrder,
+} from "./_internal/shared/features/orders/workflow-registry";
+export type {
+  FulfilmentMode,
+  FulfilmentOptIn,
+  OrderWorkflowRule,
+  OrderWorkflowContext,
+  RevealState,
+  WorkflowStatus,
+} from "./_internal/shared/features/orders/workflow-registry";
+
 
 // Checkout rule registry â€" pure TS, safe in both client and server bundles.
 export {
