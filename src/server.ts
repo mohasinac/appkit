@@ -3012,6 +3012,16 @@ export type { CompositeSentenceId, ContentFlagSnapshot } from "./_internal/share
  * `_internal` boundary reasoning as `getPageRegion`/`setPageRegion` above.
  */
 export { getFieldVisibility, getSurfaceFieldConfig, setFieldVisibility } from "./_internal/server/features/forms/field-visibility";
+
+/**
+ * Widget instance table (lane W-WIDGET; schema approved 2026-11-08). Same
+ * shape as `getPageRegion`/`getFieldVisibility` above, but a COLLECTION QUERY
+ * on `regionId` rather than a document-per-id read — see that module's header
+ * for why `siteSettings` was the wrong home at a ~5,210-key ceiling.
+ *
+ * 🛑 Absent rows mean the registry's TEMPLATE DEFAULT, never "empty".
+ */
+export { getWidgetInstances, setWidgetInstances, deleteWidgetInstance } from "./_internal/server/features/widgets/widget-instances";
 export type { SurfaceFieldConfig } from "./_internal/server/features/forms/field-visibility";
 
 // Auto-hide: the measured "does this browse surface hold anything" document.

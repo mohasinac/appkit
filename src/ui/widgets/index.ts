@@ -12,6 +12,14 @@ export type {
 } from "./types";
 
 export { partitionRequiredRules, resolveWidgetTree } from "./resolve";
+export {
+  findInstanceByRef,
+  findRefCollisions,
+  instanceRefs,
+  mergeStoredWithDefaults,
+  mergedInstances,
+} from "./merge";
+export type { MergedWidgetInstance, WidgetInstanceOrigin } from "./merge";
 export type { ReachabilityRule, RequiredRulePartition } from "./resolve";
 
 export {

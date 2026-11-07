@@ -4,13 +4,18 @@ import {
   PILOT_WIDGET_DEFS,
   RELATED_DEFAULT_INSTANCES,
   asRelatedScrollerConfig,
+  mergedInstances,
   resolveScrollerTitle,
   resolveWidgetTree,
   type RelatedSource,
   type WidgetInstance,
 } from "../../../ui/widgets";
+import { getWidgetInstances } from "../../../_internal/server/features/widgets/widget-instances";
 import type { ProductItem } from "../types";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
+
+/** The region every listing-type detail view resolves for its related rail. See the note on sharing below. */
+const RELATED_REGION_ID = "products-slug:related";
 
 export interface RelatedItemsSectionProps {
   relatedItems: ProductItem[];
@@ -23,9 +28,13 @@ export interface RelatedItemsSectionProps {
   /**
    * Stored widget instances for the `products-slug:related` region.
    *
-   * Omitted → `RELATED_DEFAULT_INSTANCES`, the template default, which
-   * reproduces the four carousels this component used to hardcode. That is the
-   * sparse-by-absence guarantee the whole cost model rests on
+   * Omitted → this component reads them itself via `getWidgetInstances` and
+   * merges them onto `RELATED_DEFAULT_INSTANCES`. Supply it only to bypass
+   * that read (a caller that already has them, or a test).
+   *
+   * 🛑 Absent STORED rows still mean the template default, which reproduces
+   * the four carousels this component used to hardcode. That is the
+   * sparse-by-absence guarantee the cost model rests on
    * (docs/overhaul/widget-architecture.md §12.4): a page with nothing
    * configured renders byte-identically to before the widget system existed.
    */
@@ -102,7 +111,7 @@ export interface RelatedItemsSectionProps {
  * per view plus seven default instance lists — real work, and a change to how
  * `pdp-sections` already behaves. Not done unilaterally.
  */
-export function RelatedItemsSection({
+export async function RelatedItemsSection({
   relatedItems,
   relatedByBrand,
   relatedByTags,
@@ -112,6 +121,30 @@ export function RelatedItemsSection({
   storeLabel,
   instances,
 }: RelatedItemsSectionProps) {
+  /*
+   * 🛑 Read HERE rather than threaded down from each page, deliberately, and
+   * with direct precedent: `SectionVisibilityGate` calls `useFieldVisibility`
+   * itself per mount for exactly this reason — its own doc comment says "a
+   * page's sections aren't threaded through one shared options object the way
+   * a form's fields are".
+   *
+   * Three reasons it is right here specifically:
+   *  - SEVEN views render this component and all seven resolve the SAME
+   *    region. Threading would mean seven call sites that must agree forever,
+   *    and the first one that forgot would render a different rail from the
+   *    other six while returning 200 — invisible.
+   *  - `getWidgetInstances` is `React.cache`-wrapped on `regionId`, so seven
+   *    callers cost ONE read per request, not seven.
+   *  - It keeps the change inside this lane's territory. Threading would mean
+   *    editing six other views plus their pages.
+   *
+   * Degrades to `[]` on any read failure (`safeRead`), so a config outage
+   * falls back to the template default — i.e. to today's behaviour — never to
+   * a blank rail.
+   */
+  const stored = instances ?? (await getWidgetInstances(RELATED_REGION_ID));
+  const effective = mergedInstances(RELATED_DEFAULT_INSTANCES, stored);
+
   const itemsBySource: Record<RelatedSource, ProductItem[]> = {
     category: relatedItems,
     brand: relatedByBrand,
@@ -126,15 +159,12 @@ export function RelatedItemsSection({
     store: storeLabel,
   };
 
-  const resolved = resolveWidgetTree(
-    PILOT_WIDGET_DEFS,
-    PILOT_REGIONS,
-    instances ?? RELATED_DEFAULT_INSTANCES,
-    { surface: "product" },
-  );
+  const resolved = resolveWidgetTree(PILOT_WIDGET_DEFS, PILOT_REGIONS, effective, {
+    surface: "product",
+  });
 
   const rows = resolved.roots
-    .filter((node) => node.visible && node.instance.regionId === "products-slug:related")
+    .filter((node) => node.visible && node.instance.regionId === RELATED_REGION_ID)
     .map((node) => {
       const cfg = asRelatedScrollerConfig(node.instance.config);
       if (!cfg) return null;

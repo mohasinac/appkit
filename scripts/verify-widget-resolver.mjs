@@ -52,6 +52,7 @@ try {
       tsc,
       join(SRC, "types.ts"),
       join(SRC, "resolve.ts"),
+      join(SRC, "merge.ts"),
       join(SRC, "pilot-registry.ts"),
       "--outDir", out,
       "--module", "commonjs",
@@ -78,6 +79,8 @@ const {
   asRelatedScrollerConfig,
   resolveScrollerTitle,
 } = await import(pathToFileURL(join(out, "pilot-registry.js")).href);
+const { mergeStoredWithDefaults, mergedInstances, findInstanceByRef, findRefCollisions, instanceRefs } =
+  await import(pathToFileURL(join(out, "merge.js")).href);
 
 // ---------------------------------------------------------------------------
 // Fixtures — the four hardcoded RelatedItemsSection branches, as config
@@ -793,6 +796,119 @@ const ALL_FOUR = { category: 3, brand: 3, tags: 3, store: 3 };
     a.every((id) => /^w-related-[a-z]+$/.test(id)), JSON.stringify(a));
   eq("J20 every default targets the live related region",
     new Set(RELATED_DEFAULT_INSTANCES.map((i) => i.regionId)).size, 1);
+}
+
+// ---------------------------------------------------------------------------
+// K. PERSISTENCE — template defaults (+) stored overrides, and alias lookup
+// ---------------------------------------------------------------------------
+
+{
+  const merged = mergeStoredWithDefaults(RELATED_DEFAULT_INSTANCES, []);
+  eq("K1 no stored rows -> the four template defaults, unchanged", merged.length, 4);
+  ok("K2 all marked `default`", merged.every((m) => m.origin === "default"));
+  eq("K3 byte-identical config to the registry",
+    merged.map((m) => m.instance.config.source), ["category", "brand", "tags", "store"]);
+}
+
+{
+  /*
+   * THE COMMON CASE, and the one a whole-map replace would break: a stored row
+   * that says ONLY `{ id, state: "off" }`. Its `config` must survive from the
+   * default — `HomepageSectionsRepository` needed an explicit `update`
+   * override because "every config key a caller omitted was silently deleted"
+   * behind an HTTP 200.
+   */
+  const stored = [{ id: "w-related-store", type: "row.horizontalScroller", regionId: "products-slug:related", parentId: null, order: 3, state: "off" }];
+  const merged = mergeStoredWithDefaults(RELATED_DEFAULT_INSTANCES, stored);
+  const row = merged.find((m) => m.instance.id === "w-related-store");
+  eq("K4 a partial override does NOT wipe the default config",
+    row.instance.config, { source: "store", titleTemplate: "More from {label}", fallbackTitle: "More from this seller" });
+  eq("K5 but the overridden field wins", row.instance.state, "off");
+  eq("K6 and the row is marked `overridden`", row.origin, "overridden");
+  ok("K7 siblings stay `default`",
+    merged.filter((m) => m.instance.id !== "w-related-store").every((m) => m.origin === "default"));
+}
+
+{
+  // A partial CONFIG override merges one level, it does not replace the bag.
+  const stored = [{ id: "w-related-tags", type: "row.horizontalScroller", regionId: "products-slug:related", parentId: null, order: 2, config: { titleTemplate: "Picked for you" } }];
+  const row = mergeStoredWithDefaults(RELATED_DEFAULT_INSTANCES, stored)
+    .find((m) => m.instance.id === "w-related-tags");
+  eq("K8 overriding one config key keeps the others", row.instance.config, {
+    source: "tags", titleTemplate: "Picked for you", fallbackTitle: "You might also like",
+  });
+}
+
+{
+  // An ADDED widget the template does not know about.
+  const stored = [{ id: "w-extra", type: "row.horizontalScroller", regionId: "products-slug:related", parentId: null, order: 9, config: { source: "brand", titleTemplate: "Also by {label}", fallbackTitle: "Also by this brand" } }];
+  const merged = mergeStoredWithDefaults(RELATED_DEFAULT_INSTANCES, stored);
+  eq("K9 an added row is appended", merged.length, 5);
+  eq("K10 and marked `added`", merged.find((m) => m.instance.id === "w-extra").origin, "added");
+  eq("K11 merged output is ordered by `order`",
+    merged.map((m) => m.instance.order), [0, 1, 2, 3, 9]);
+}
+
+{
+  // `type` is never overridable — a type change is delete + create.
+  const stored = [{ id: "w-related-tags", type: "section.offerBoard", regionId: "products-slug:related", parentId: null, order: 2 }];
+  const row = mergeStoredWithDefaults(RELATED_DEFAULT_INSTANCES, stored)
+    .find((m) => m.instance.id === "w-related-tags");
+  eq("K12 a stored row cannot repoint a default at another definition",
+    row.instance.type, "row.horizontalScroller");
+}
+
+{
+  // End to end: stored override -> merge -> resolve -> the rail disappears.
+  const stored = [{ id: "w-related-brand", type: "row.horizontalScroller", regionId: "products-slug:related", parentId: null, order: 1, state: "off" }];
+  const rows = relatedRows(
+    mergedInstances(RELATED_DEFAULT_INSTANCES, stored),
+    { category: "C", brand: "B", tags: undefined, store: "S" },
+    ALL_FOUR,
+  );
+  eq("K13 a STORED off removes exactly that rail, end to end",
+    rows.map((r) => r.source), ["category", "tags", "store"]);
+  eq("K14 and the survivors keep their headings",
+    rows.map((r) => r.title), ["More in C", "You might also like", "More from S"]);
+}
+
+{
+  // Alias lookup — the nav-trap defence.
+  const withAlias = RELATED_DEFAULT_INSTANCES.map((i) =>
+    i.id === "w-related-store" ? { ...i, aliases: ["pdp-sections:related-store", "nav-related-store"] } : i,
+  );
+  eq("K15 lookup by minted id works",
+    findInstanceByRef(withAlias, "w-related-store").id, "w-related-store");
+  eq("K16 lookup by a LEGACY derived key resolves to the same instance",
+    findInstanceByRef(withAlias, "pdp-sections:related-store").id, "w-related-store");
+  eq("K17 a second legacy spelling also resolves (the nav-brands/nav-public-brands case)",
+    findInstanceByRef(withAlias, "nav-related-store").id, "w-related-store");
+  eq("K18 an unknown ref resolves to nothing, rather than to an arbitrary row",
+    findInstanceByRef(withAlias, "no-such-key"), undefined);
+  eq("K19 every ref an instance answers to is enumerable for a migration audit",
+    instanceRefs(withAlias.find((i) => i.id === "w-related-store")),
+    ["w-related-store", "pdp-sections:related-store", "nav-related-store"]);
+}
+
+{
+  // An exact id must NEVER be shadowed by someone else's alias.
+  const insts = [
+    { id: "w-a", type: "element.link", regionId: "r", parentId: null, order: 0, aliases: ["w-b"] },
+    { id: "w-b", type: "element.link", regionId: "r", parentId: null, order: 1 },
+  ];
+  eq("K20 an exact id wins over another row's alias", findInstanceByRef(insts, "w-b").id, "w-b");
+  eq("K21 the collision is detectable rather than silent", findRefCollisions(insts), ["w-b"]);
+  eq("K22 a clean table reports no collisions", findRefCollisions(RELATED_DEFAULT_INSTANCES), []);
+}
+
+{
+  // Defaults must never be mutated by a merge — the registry array is a
+  // process-lifetime singleton, so a mutation would leak across requests.
+  const before = JSON.stringify(RELATED_DEFAULT_INSTANCES);
+  mergeStoredWithDefaults(RELATED_DEFAULT_INSTANCES, [
+    { id: "w-related-store", type: "row.horizontalScroller", regionId: "products-slug:related", parentId: null, order: 3, state: "off", config: { titleTemplate: "X" } },
+  ]);
+  eq("K23 merging does not mutate the registry defaults", JSON.stringify(RELATED_DEFAULT_INSTANCES), before);
 }
 
 // ---------------------------------------------------------------------------
