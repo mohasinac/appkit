@@ -35,6 +35,7 @@ import { ValidationError } from "../../../../errors/validation-error";
 import { NotFoundError } from "../../../../errors/not-found-error";
 import { AuthorizationError } from "../../../../errors/authorization-error";
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
+import { isAdminUser } from "../../../../features/auth/role-predicates";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { formatMoney } from "../../../../utils/number.formatter";
@@ -92,7 +93,8 @@ export function balanceDueOn(order: OrderDocument): number | null {
  */
 export async function openBalanceCollection(
   orderId: string,
-  actor: { uid: string; role: string },
+  /** `roles` is the authority; `role` stays accepted for un-normalised callers. */
+  actor: { uid: string; role?: string; roles?: readonly string[] | null },
   now: Date = new Date(),
 ): Promise<OrderDocument> {
   const order = (await orderRepository.findById(orderId)) as OrderDocument | null;
@@ -104,7 +106,14 @@ export async function openBalanceCollection(
    * to `actor.uid` returns false for every legitimate seller, which is the
    * other half of Root Cause #98. Resolve the store first.
    */
-  if (actor.role !== "admin") {
+  /*
+   * `isAdminUser` reads the role SET (1.44). Was `actor.role !== "admin"`,
+   * which forced an admin who also holds `seller` down the
+   * "resolve-your-own-store" branch and then threw "You do not own this
+   * order" on any order outside that store — admin sees everything, so that
+   * was a wrong refusal.
+   */
+  if (!isAdminUser(actor)) {
     const store = await storeRepository.findByOwnerId(actor.uid);
     if (!store || order.storeId !== store.id) {
       throw new AuthorizationError("You do not own this order");

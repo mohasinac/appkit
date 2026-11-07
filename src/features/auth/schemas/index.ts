@@ -85,9 +85,21 @@ export const resetPasswordSchema = z.object({
 
 // --- Auth user schema ---------------------------------------------------------
 
+/**
+ * 🛑 Must stay in sync with the `UserRole` union in ../types.
+ *
+ * `tester` was MISSING here while being a full member of the union and of
+ * `ROLE_HIERARCHY` — so any payload validated through this schema rejected a
+ * legitimate tester's role. Added 2026-11-07 with the role-set work.
+ *
+ * `moderator` stays declared because stored documents still carry it;
+ * `rolesOf()` folds it to `employee` on read. Removing the member would make
+ * every un-backfilled document fail validation on its next write.
+ */
 export const userRoleSchema = z.enum([
   "user",
   "seller",
+  "tester",
   "moderator",
   "employee",
   "admin",
@@ -98,6 +110,11 @@ export const authUserSchema = z.object({
   email: z.string().email().optional(),
   displayName: z.string().optional(),
   photoURL: z.string().optional(),
+  /** Legacy scalar — derived from `roles`. Never an authorization input. */
   role: userRoleSchema.optional(),
+  /** THE authority. Cap enforced by `validateRoleSet`, which reads the config. */
+  roles: z.array(userRoleSchema).optional(),
+  /** Display only — see `primaryRoleOf`. */
+  primaryRole: userRoleSchema.optional(),
   isEmailVerified: z.boolean().optional(),
 });

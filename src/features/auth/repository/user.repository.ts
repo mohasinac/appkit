@@ -20,6 +20,12 @@ import {
   piiBlindIndex,
 } from "../../../security";
 import type { UserRole } from "../types";
+import { rolesOf } from "../role-predicates";
+import {
+  normalizeUserRoleFields,
+  primaryRoleOf,
+  validateRoleSet,
+} from "../auth-helpers";
 import {
   USER_COLLECTION,
   USER_FIELDS,
@@ -33,7 +39,25 @@ export class UserRepository extends BaseRepository<UserDocument> {
     slug: { canFilter: true, canSort: false },
     emailIndex: { canFilter: true, canSort: false },
     displayName: { canFilter: true, canSort: true },
+    /**
+     * Legacy scalar. Still filterable because every stored document carries it
+     * and the composite indexes behind `/api/admin/team`
+     * (permissionGroup, role, createdAt|displayName) are declared against it.
+     */
     role: { canFilter: true, canSort: true },
+    /**
+     * THE role authority — filter with `@=` (Firestore `array-contains`), e.g.
+     * `roles@=seller`. `canSort: false`: an array field has no sort order
+     * Firestore can express (same reasoning as `nameTokensIndex`).
+     *
+     * ⚠ A single-field array-contains index is created automatically by
+     * Firestore, so `roles@=X` alone needs no declaration. Combining it with a
+     * sort or a second clause DOES — add the composite to
+     * `appkit.config.js` → firestore.indexes before shipping such a query, or
+     * Sieve (`throwExceptions: false`) drops it SILENTLY and the filter matches
+     * every user.
+     */
+    roles: { canFilter: true, canSort: false },
     emailVerified: { canFilter: true, canSort: false },
     disabled: { canFilter: true, canSort: true },
     storeStatus: { canFilter: true, canSort: false },
@@ -72,6 +96,46 @@ export class UserRepository extends BaseRepository<UserDocument> {
    * them would hand a caller a UPI id it could not read — worse than refusing,
    * because the value looks present.
    */
+
+  /**
+   * ── THE role dual-read, at the REPOSITORY BOUNDARY (1.43) ────────────────
+   *
+   * Normalises `role` ⇄ `roles` ⇄ `primaryRole` on EVERY read path — findById,
+   * findBy, the Sieve list, findByRole, every ad-hoc query — because they all
+   * map through `mapDoc`, which is exactly what `BaseRepository.mapDoc`
+   * documents it is there for.
+   *
+   * 🛑 Why it is here and not in an adapter. The `altRegionName` rename put its
+   * dual-read in an adapter that only the LIST route used, while pages kept
+   * receiving the RAW document from `getCategoryBySlug`. Result: 200 OK,
+   * content silently blank, and no typecheck could have caught it. For a ROLE
+   * field the equivalent failure is not a blank block — it is a user silently
+   * losing or gaining access. So the normalisation lives at the one place
+   * every reader passes through.
+   *
+   * Three guarantees for callers:
+   *   1. `roles` is always a non-empty, alias-folded, de-duplicated array.
+   *   2. `primaryRole` is always a role the user actually holds (display only).
+   *   3. `role` is overwritten with the HIGHEST-RANKED held role — not with
+   *      `primaryRole`. Deliberate: any guard not yet converted to the set
+   *      compares the scalar against a hierarchy, so handing it the highest
+   *      rank under-grants nothing such a comparison would have allowed. Using
+   *      `primaryRole` here would reintroduce the exact lockout 1.43 removes
+   *      (admin whose primary reads "user" fails `role === "admin"`).
+   *
+   * Remove once `scripts/backfill-user-roles.mjs --apply --drop-old` has run
+   * and no stored document is missing `roles`.
+   */
+  // Structural snapshot type rather than importing Firestore's
+  // `DocumentSnapshot`: this file sits outside `providers/` and appkit must not
+  // grow another direct Firebase import. Shape-compatible, so the override
+  // still typechecks. Same approach as CategoriesRepository.mapDoc.
+  protected override mapDoc<D = UserDocument>(
+    snap: Parameters<BaseRepository<UserDocument>["mapDoc"]>[0],
+  ): D {
+    const doc = super.mapDoc<UserDocument>(snap);
+    return normalizeUserRoleFields(doc) as unknown as D;
+  }
 
   /**
    * Plaintext PII. **Opt-in and named** — for the account's own settings page
@@ -165,6 +229,17 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // check with no error anywhere (found via a live RBAC bug where an
     // admin account created this way couldn't access /admin).
     const withUid: Partial<UserPlain> = { uid: id, ...data };
+    /*
+     * Write `roles`/`primaryRole` at CREATION, so a brand-new account never
+     * depends on the read-time dual-read or on the backfill script. Guarded on
+     * a role actually being supplied: `normalizeUserRoleFields` defaults to
+     * `["user"]`, and silently granting a role to a partial write that said
+     * nothing about roles is the kind of implicit grant this work exists to
+     * remove.
+     */
+    if (withUid.role != null || withUid.roles != null) {
+      normalizeUserRoleFields(withUid);
+    }
     const encrypted = this.applyWriteHooks(withUid);
     return super.createWithId(id, encrypted as Partial<UserPlain>);
   }
@@ -191,6 +266,10 @@ export class UserRepository extends BaseRepository<UserDocument> {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+    // Same role normalisation as `createWithId` — see its comment.
+    if (userData.role != null || userData.roles != null) {
+      normalizeUserRoleFields(userData);
+    }
 
     const encrypted = this.applyWriteHooks(userData);
 
@@ -233,8 +312,31 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return this.findOneBy(USER_FIELDS.PHONE_INDEX, piiBlindIndex(phoneNumber));
   }
 
+  /**
+   * Every user HOLDING `role` — including those who hold it alongside others.
+   *
+   * 🛑 `array-contains` on `roles`, not `== role`. An equality query on the
+   * legacy scalar would return only accounts whose single highest-ranked role
+   * happens to be this one, so a `seller` who is also an `employee` would be
+   * missing from the seller list — silently, with a 200.
+   *
+   * Takes the role through `rolesOf` first so `findByRole("moderator")`
+   * resolves to the folded `employee` instead of matching nothing.
+   */
   async findByRole(role: UserRole): Promise<UserDocument[]> {
-    return this.findBy(USER_FIELDS.ROLE, role);
+    const [canonical] = rolesOf({ role });
+    try {
+      const snapshot = await this.getCollection()
+        .where(USER_FIELDS.ROLES, "array-contains", canonical)
+        .get();
+      return snapshot.docs.map((doc) => this.mapDoc<UserDocument>(doc));
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to find users holding role: ${canonical}`,
+        error,
+      );
+    }
   }
 
   async findVerified(limit?: number): Promise<UserDocument[]> {
@@ -317,8 +419,105 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return this.update(uid, { disabled: false });
   }
 
+  /**
+   * ── The role SET writers ─────────────────────────────────────────────────
+   *
+   * 🛑 All three funnel through `setRoles`, which is the only method that
+   * writes a role field. One writer means the three fields can never drift
+   * apart in storage the way they could if `addRole` patched `roles` while
+   * something else patched `role`.
+   *
+   * `primaryRole` is preserved when the user still holds it and re-derived
+   * when they do not — removing someone's primary role must not leave a
+   * display label pointing at access they no longer have.
+   */
+  async setRoles(
+    uid: string,
+    roles: readonly UserRole[],
+    opts?: { primaryRole?: UserRole },
+  ): Promise<UserDocument> {
+    const validated = validateRoleSet(roles);
+    if (!validated.ok) throw new DatabaseError(validated.error);
+
+    const current = await this.findById(uid);
+    const desiredPrimary = opts?.primaryRole ?? current?.primaryRole;
+    /*
+     * Typed explicitly, including `role`, so `normalizeUserRoleFields`' generic
+     * resolves to a shape that HAS the legacy scalar. Inferring it from a
+     * literal that omitted `role` made `normalized.role` a type error — and had
+     * it compiled, the scalar would simply never have been written, leaving
+     * stored documents whose `role` disagreed with their `roles`.
+     */
+    const draft: {
+      role?: UserRole;
+      roles: UserRole[];
+      primaryRole?: UserRole;
+    } = {
+      roles: validated.roles,
+      ...(desiredPrimary ? { primaryRole: desiredPrimary } : {}),
+    };
+    const normalized = normalizeUserRoleFields(draft);
+
+    return this.update(uid, {
+      roles: normalized.roles,
+      primaryRole: normalized.primaryRole,
+      // The legacy scalar is kept in storage, not just on read, so a consumer
+      // querying Firestore directly (the backfill script, an export, the
+      // emulator UI) sees the same answer the repository hands out.
+      role: normalized.role,
+    } as Partial<UserPlain>);
+  }
+
+  /**
+   * ADD a role — the owner's actual requirement: *"upgrading someone is
+   * ADDING a role, not replacing the one they have."* A no-op when already
+   * held; throws when it would exceed `getMaxRolesPerUser()`.
+   */
+  async addRole(uid: string, role: UserRole): Promise<UserDocument> {
+    const current = await this.findById(uid);
+    if (!current) throw new DatabaseError(`User not found: ${uid}`);
+    const held = rolesOf(current);
+    const [canonical] = rolesOf({ role });
+    if (held.includes(canonical)) return current;
+    return this.setRoles(uid, [...held, canonical]);
+  }
+
+  /** REMOVE a role. Refuses to leave an account with no role at all. */
+  async removeRole(uid: string, role: UserRole): Promise<UserDocument> {
+    const current = await this.findById(uid);
+    if (!current) throw new DatabaseError(`User not found: ${uid}`);
+    const [canonical] = rolesOf({ role });
+    const remaining = rolesOf(current).filter((r) => r !== canonical);
+    if (remaining.length === 0) {
+      throw new DatabaseError(
+        `Cannot remove the last role from ${uid} — a user must hold at least one.`,
+      );
+    }
+    return this.setRoles(uid, remaining);
+  }
+
+  /** Change which held role is DISPLAYED. Grants and revokes nothing. */
+  async setPrimaryRole(uid: string, role: UserRole): Promise<UserDocument> {
+    const current = await this.findById(uid);
+    if (!current) throw new DatabaseError(`User not found: ${uid}`);
+    const held = rolesOf(current);
+    const [canonical] = rolesOf({ role });
+    if (!held.includes(canonical)) {
+      throw new DatabaseError(
+        `Cannot display role ${canonical} for ${uid} — they do not hold it.`,
+      );
+    }
+    return this.setRoles(uid, held, { primaryRole: canonical });
+  }
+
+  /**
+   * @deprecated REPLACES the whole role set with one role. Kept because the
+   * admin role-change route and the `becomeSeller` flow still call it, but
+   * "upgrade" should be `addRole` — replacing is what loses a seller their
+   * buyer role. Audit each remaining caller before deleting this.
+   */
   async updateRole(uid: string, role: UserRole): Promise<UserDocument> {
-    return this.update(uid, { role });
+    return this.setRoles(uid, [role]);
   }
 
   async updateProfile(
@@ -372,10 +571,23 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return user !== null;
   }
 
+  /**
+   * How many users HOLD `role`. `array-contains`, matching `findByRole` —
+   * the count and the list must not disagree about what "a seller" is.
+   *
+   * ⚠ Counts no longer partition: a seller+employee is counted in both, so
+   * the role counts sum to more than the user total. That is correct under a
+   * role set; any dashboard presenting them as a pie chart is now wrong.
+   */
   async countByRole(role: UserRole): Promise<number> {
+    const [canonical] = rolesOf({ role });
     try {
       return await getFirestoreCount(
-        this.getCollection().where(USER_FIELDS.ROLE, "==", role),
+        this.getCollection().where(
+          USER_FIELDS.ROLES,
+          "array-contains",
+          canonical,
+        ),
       );
     } catch (error) {
       void normalizeError(error);

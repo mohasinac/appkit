@@ -31,7 +31,8 @@ import { normalizeError } from "../../errors/normalize";
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../contracts";
-import { isEffectiveAdminUser, isTesterUser, canTestAdminSurfaces } from "../../features/auth/role-predicates";
+import { isEffectiveAdminUser, isTesterUser, canTestAdminSurfaces, holdsAnyRole } from "../../features/auth/role-predicates";
+import type { UserRole } from "../../features/auth/types";
 import { mapToHttpError, HTTP_ERROR_CODES } from "../../errors/error-mapping";
 import { describeCauseChain } from "../../errors/describe-cause";
 import { buildErrorEnvelope, toApiIssues } from "../../errors/error-envelope";
@@ -55,7 +56,12 @@ export interface RouteUser {
   email?: string | null;
   displayName?: string;
   name?: string | null;
+  /** Legacy scalar — the highest-ranked held role. Never gate on it alone. */
   role?: string;
+  /** THE role authority from the token claims. Read it via `rolesOf`. */
+  roles?: string[];
+  /** Display label only. */
+  primaryRole?: string;
   [key: string]: FirestoreValue;
 }
 
@@ -140,7 +146,16 @@ async function verifySession(request: Request): Promise<RouteUser> {
     return {
       uid: payload.uid,
       email: payload.email,
+      /*
+       * 🛑 Both shapes, and `...payload.claims` can no longer overwrite them —
+       * the session provider strips the three role keys out of the claims bag
+       * precisely because this spread comes last. `roles` is the authority;
+       * `role` is the derived highest-ranked scalar for anything not yet
+       * converted.
+       */
       role: payload.role,
+      roles: payload.roles,
+      primaryRole: payload.primaryRole,
       emailVerified: payload.emailVerified,
       ...payload.claims,
     };
@@ -319,7 +334,20 @@ export function createRouteHandler<
           ? ["admin", "employee"]
           : [];
 
-      if (effectiveRoles.length > 0 && (!user || !effectiveRoles.includes(user.role ?? ""))) {
+      /*
+       * ── The gate reads the SET, not the scalar (1.43) ──────────────────
+       *
+       * Was `effectiveRoles.includes(user.role ?? "")`. With one scalar a
+       * seller who is also an employee passed whichever gate matched the
+       * single stored value and was refused by the other — a 403 on a route
+       * they are entitled to, with no error anywhere explaining it.
+       *
+       * `holdsAnyRole` intersects the user's full role set with the route's
+       * allowed set and also folds `moderator` → `employee`, so a stored
+       * moderator clears an `employee`-gated route without waiting on the
+       * backfill.
+       */
+      if (effectiveRoles.length > 0 && (!user || !holdsAnyRole(user as { role?: string; roles?: readonly string[] }, effectiveRoles as readonly UserRole[]))) {
         const testerEligible = await isTesterEligibleForAdminRoute(user, effectiveRoles);
         if (!testerEligible || !user) {
           return errorJson(403, HTTP_ERROR_CODES.FORBIDDEN, "Insufficient permissions", requestId);

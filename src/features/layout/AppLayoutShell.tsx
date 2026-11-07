@@ -18,7 +18,8 @@ import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 import { useListingTypeFlags } from "../../react/hooks/useListingTypeFlags";
-import { isBuyerUser } from "../auth/role-predicates";
+import { isBuyerUser, isSellerUser, holdsRole } from "../auth/role-predicates";
+import { primaryRoleOf } from "../auth/auth-helpers";
 import { NavbarWithSettings } from "./NavbarWithSettings";
 import SideActionDock from "./SideActionDock";
 import BottomActions from "./BottomActions";
@@ -571,15 +572,26 @@ function SidebarUserHeader({
             displayName={user.displayName}
             email={user.email}
           />
-          {user.role && !isBuyerUser(user) && (
-            <Row textWeight="bold"
-              className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 border-2 border-white text-white text-[9px] leading-none select-none ${ROLE_DOT_BG_CLASS[user.role] ?? "bg-[var(--appkit-color-text-muted)]"}`} align="center" justify="center" rounded="full"
-              title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-              aria-label={user.role}
-            >
-              {user.role.charAt(0).toUpperCase()}
-            </Row>
-          )}
+          {/*
+            * The avatar role dot — the one legitimate `primaryRoleOf` consumer
+            * in this file. It is a LABEL: it gates nothing, shows nothing extra,
+            * and a user with three roles still gets one letter. Hidden for a
+            * pure buyer, which under a role set means "holds `user` and nothing
+            * more" — a seller who is also a buyer keeps their seller dot.
+            */}
+          {(() => {
+            const displayRole = primaryRoleOf(user);
+            if (isBuyerUser(user) && displayRole === "user") return null;
+            return (
+              <Row textWeight="bold"
+                className={`absolute -bottom-0.5 -right-0.5 w-4 h-4 border-2 border-white text-white text-[9px] leading-none select-none ${ROLE_DOT_BG_CLASS[displayRole] ?? "bg-[var(--appkit-color-text-muted)]"}`} align="center" justify="center" rounded="full"
+                title={displayRole.charAt(0).toUpperCase() + displayRole.slice(1)}
+                aria-label={displayRole}
+              >
+                {displayRole.charAt(0).toUpperCase()}
+              </Row>
+            );
+          })()}
           {/*
             * The link is an OVERLAY rather than a wrapper around the avatar.
             * Wrapping would put the role badge — which is `absolute` against
@@ -712,8 +724,21 @@ function SidebarContent({
   const hasLegacyItems = sidebarItems.length > 0;
   const hasSections = !!(sidebarSections && sidebarSections.length > 0);
   const isAuthenticated = !!user;
-  const role = user?.role ?? "user";
-  const isAdminOrSeller = role === "admin" || role === "seller";
+  /*
+   * ── Chrome resolved from the role SET (1.44) ──────────────────────────────
+   *
+   * Was `const role = user?.role ?? "user"` followed by
+   * `role === "admin" || role === "seller"`. With one scalar, a seller who
+   * also holds `employee` lost the whole Dashboard nav group — the sidebar
+   * link to their own store vanished while the store itself worked, which is
+   * the quietest possible failure.
+   *
+   * `holdsRole` reads the set and folds `moderator` → `employee`; `isSellerUser`
+   * also admits `tester`, which the old scalar comparison did not — a tester
+   * owns a real auto-approved store and had no sidebar link to it.
+   */
+  const isAdminUser = holdsRole(user, "admin");
+  const isAdminOrSeller = isAdminUser || isSellerUser(user);
   const resolvedStoreHref = storeHref ?? sellerHref;
   /*
    * Defaults to ENABLED while site settings are loading, matching the hook's
@@ -899,7 +924,8 @@ function SidebarContent({
       {isAuthenticated && isAdminOrSeller && (adminHref || resolvedStoreHref) && (
         <CollapsibleNavGroup title={labels.dashboardSectionTitle} hasActive={!!activeDashboardLink}>
           <Ul spacing="2xs">
-            {adminHref && role === "admin" && (
+            {/* Admin link from the role SET — an admin+seller keeps it (1.44). */}
+            {adminHref && isAdminUser && (
               <Li>
                 <TextLink
                   href={adminHref}

@@ -58,7 +58,23 @@ export interface SessionUser {
    * before slugs existed have none, and `/profile/{uid}` still resolves.
    */
   slug?: string;
+  /**
+   * Legacy scalar — the HIGHEST-RANKED role this user holds, derived by
+   * `UserRepository.mapDoc`.
+   *
+   * 🛑 Do not gate on it. `roles` is the authority; a scalar cannot answer
+   * "is this seller also an employee" and answering it wrong is silent.
+   */
   role: string;
+  /**
+   * THE role authority — every role this account holds (up to
+   * `getMaxRolesPerUser()`, 3 today). Read it through `rolesOf(user)` so the
+   * `moderator` → `employee` fold applies and the legacy scalar is the
+   * fallback for a session hydrated before this field existed.
+   */
+  roles?: string[];
+  /** 🛑 DISPLAY ONLY — a badge or a default tab. Never an authorization input. */
+  primaryRole?: string;
   disabled?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -230,7 +246,15 @@ function buildSessionUser(
     displayName: serverData.displayName || authUser.displayName,
     photoURL: serverData.photoURL || authUser.photoURL,
     phoneNumber: serverData.phoneNumber || authUser.phoneNumber,
+    /*
+     * The role SET carried through client hydration (1.43). Forwarding only
+     * `role` here meant every client-side gate fell back to the scalar even
+     * when the server had sent the array — the dual-read reached the API
+     * response and was then dropped one layer short of the consumer.
+     */
     role: serverData.role || "user",
+    roles: serverData.roles,
+    primaryRole: serverData.primaryRole,
     disabled: serverData.disabled,
     createdAt: serverData.createdAt
       ? new Date(serverData.createdAt)
@@ -330,6 +354,8 @@ export function SessionProvider({
           photoURL: data.photoURL || null,
           phoneNumber: data.phoneNumber || null,
           role: data.role || "user",
+          roles: data.roles,
+          primaryRole: data.primaryRole,
           disabled: data.disabled,
           createdAt: data.createdAt ? new Date(data.createdAt) : undefined,
           updatedAt: data.updatedAt ? new Date(data.updatedAt) : undefined,
@@ -397,7 +423,20 @@ export function SessionProvider({
     try {
       const fresh = await fetchUserProfileFromServer();
       if (!fresh || fresh.uid !== user.uid) return;
+      /*
+       * 🛑 The role SET is compared, not just the scalar. An admin ADDING a
+       * role to someone (the owner's actual requirement — upgrading is adding,
+       * not replacing) leaves the highest-ranked scalar unchanged in most
+       * cases: granting `seller` to an `admin` does not move `role` at all. So
+       * the scalar comparison alone saw "nothing changed" and the open tab
+       * never picked up the new access — the same class of bug as the
+       * canTestAdmin one this block was written for.
+       */
+      const rolesChanged =
+        (fresh.roles ?? []).length !== (user.roles ?? []).length ||
+        (fresh.roles ?? []).some((r) => !(user.roles ?? []).includes(r));
       const rbacFieldsChanged =
+        rolesChanged ||
         fresh.role !== user.role ||
         fresh.isTester !== user.isTester ||
         fresh.canTestAdmin !== user.canTestAdmin ||

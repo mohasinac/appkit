@@ -10,6 +10,7 @@ import {
   ACCOUNT_ENDPOINTS,
   PROFILE_STATS_ENDPOINTS,
 } from "../../../constants/api-endpoints";
+import { isSellerUser, isAdminUser } from "../../auth/role-predicates";
 
 export { SellerReviewsData, ProductsApiResponse };
 
@@ -48,8 +49,24 @@ export function useSellerStorefront(
 
   const seller = sellerData?.user;
   const fetchErrorMsg: string | null = (fetchError as Error)?.message ?? null;
+  /*
+   * ── Is this profile a storefront at all? (1.44) ──────────────────────────
+   *
+   * 🛑 Was `seller.role !== "seller" && seller.role !== "admin"`, reading a
+   * single scalar off the PUBLIC profile payload. Two real failures:
+   *
+   *   1. A seller who also holds `employee` resolved to the higher-ranked
+   *      scalar, so `!== "seller"` was true and their live store page 404'd.
+   *   2. A `tester` owns a real auto-approved store (that is the whole point of
+   *      `isSellerUser` admitting testers) and was 404'd outright.
+   *
+   * `isSellerUser` reads the role SET and includes testers; admin is kept
+   * explicit because admin sees everything, everywhere. `USER_PUBLIC_FIELDS`
+   * now projects `roles`, so the set is actually present in this payload —
+   * without that projection this would have silently fallen back to the scalar.
+   */
   const notSellerError =
-    seller && seller.role !== "seller" && seller.role !== "admin"
+    seller && !isSellerUser(seller) && !isAdminUser(seller)
       ? "notFound"
       : null;
   const profileError = fetchErrorMsg ?? notSellerError;

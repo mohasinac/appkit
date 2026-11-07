@@ -17,7 +17,17 @@ export interface PublicUserProfile {
     position: { x: number; y: number };
     zoom: number;
   } | null;
+  /** Legacy scalar — the highest-ranked role. Never gate on it alone. */
   role: string;
+  /**
+   * THE role authority, projected by `USER_PUBLIC_FIELDS`.
+   *
+   * Optional because a cached API response from before this projection
+   * carries only `role`; `rolesOf()` falls back to it.
+   */
+  roles?: string[];
+  /** Display label only. */
+  primaryRole?: string;
   email?: string | null;
   phoneNumber?: string | null;
   createdAt?: Date | string;
@@ -90,7 +100,12 @@ export function usePublicProfile(userId: string, options?: PublicProfileOptions)
 
   const user = profileData?.user;
   const profileError: string | null = (fetchError as Error)?.message ?? null;
-  const isSeller = hasRole((user?.role ?? "user") as UserRole, "seller");
+  /*
+   * `hasRole` takes the whole profile now, so it reads the role SET and
+   * returns true for a seller who also holds another role. Previously it was
+   * handed the single scalar, which a seller+employee resolves away from.
+   */
+  const isSeller = hasRole(user ?? null, "seller");
 
   const { data: productsData, isLoading: productsLoading } =
     useQuery<ProductsApiResponse>({

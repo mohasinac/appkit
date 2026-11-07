@@ -21,6 +21,10 @@ import { getAdminDb } from "../../../../providers/db-firebase/admin";
 import { normalizeError } from "../../../../errors/normalize";
 import { serverLogger } from "../../../../monitoring";
 import { ValidationError } from "../../../../errors";
+import {
+  isAdminUser,
+  isEmployeeUser,
+} from "../../../../features/auth/role-predicates";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { firestoreTimestampToDate } from "../../../../utils/type.converter";
 import {
@@ -72,9 +76,27 @@ export const DIGITAL_CONTENT_PREFIX = "private/digital-content";
  */
 export function assertCanUploadContentKind(
   kind: ProductCodeContentKind,
-  role: string | undefined,
+  /**
+   * The acting user, OR a bare role string from a legacy caller.
+   *
+   * 🛑 Widened from `role: string | undefined` as part of 1.44. The old body
+   * was `role === "admin" || role === "moderator" || role === "employee"`,
+   * which asked three times what role the actor is instead of once what they
+   * are allowed to do — and read a single scalar, so staff who also hold
+   * `seller` were refused the upload they are entitled to.
+   */
+  actor: { role?: string | null; roles?: readonly string[] | null } | string | undefined,
 ): void {
-  const isStaff = role === "admin" || role === "moderator" || role === "employee";
+  const carrier =
+    typeof actor === "string" ? { role: actor } : (actor ?? undefined);
+  /*
+   * "Is this person staff" asked as a role-SET question, with the
+   * `moderator` → `employee` fold handled by `rolesOf` inside the predicates.
+   * Admin passes through `isAdminUser`; there is no fourth role name to add
+   * here when a new staff role appears — it joins `employee` as a capability
+   * role (A9), and this gate admits it automatically.
+   */
+  const isStaff = isAdminUser(carrier) || isEmployeeUser(carrier);
   if (kind === "file" && !isStaff) {
     throw new ValidationError(
       "Only an administrator can attach a downloadable file to a listing. Sellers can attach a code or a QR image.",

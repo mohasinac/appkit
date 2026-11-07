@@ -15,6 +15,16 @@ export type UserRole =
   | "user"
   | "seller"
   | "tester"
+  /**
+   * @deprecated COLLAPSED INTO `employee` (A9, owner 2026-11-07 — they are the
+   * same thing; moderation became an employee permission).
+   *
+   * 🛑 Never assign this to a new user. It stays in the union only because
+   * stored documents written before the fold still carry it, and removing a
+   * member would make every such document fail validation on its next write.
+   * `rolesOf()` folds it to `employee` on read, so a normalised role set never
+   * contains it; `scripts/backfill-user-roles.mjs` removes it from storage.
+   */
   | "moderator"
   | "employee"
   | "admin";
@@ -24,7 +34,18 @@ export interface AuthUser {
   email?: string;
   displayName?: string;
   photoURL?: string;
+  /**
+   * Legacy scalar — the HIGHEST-RANKED role held. 🛑 Not an authorization
+   * input on its own; see `roles`.
+   */
   role?: UserRole;
+  /**
+   * THE role authority — every role this account holds. Read through
+   * `rolesOf(user)` so the `moderator` fold and the scalar fallback apply.
+   */
+  roles?: UserRole[];
+  /** 🛑 DISPLAY ONLY. Never gates anything — see `primaryRoleOf`. */
+  primaryRole?: UserRole;
   isEmailVerified?: boolean;
 }
 

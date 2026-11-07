@@ -3,23 +3,115 @@ import type { UserRole } from "./types";
 /**
  * Canonical user-role predicates — mirror of the listing-type accessors in
  * `features/products/utils/listing-type.ts`. Read the canonical role
- * discriminator off any object that carries a string `role` field and return
- * a boolean. Undefined or null input falls back to `"user"` so legacy payloads
- * classify safely without a separate guard.
+ * discriminator off any object that carries a role and return a boolean.
  *
- * Input shape is `{ role?: string }` rather than `{ role?: UserRole }` so the
- * predicates compose with `RouteUser`, `UserDocument`, and the various
- * `AuthUser`-shaped objects without each callsite having to cast.
+ * Input shape is `{ role?: string; roles?: string[] }` rather than the typed
+ * union so the predicates compose with `RouteUser`, `UserDocument`, the JWT
+ * claims bag and the various `AuthUser`-shaped objects without each callsite
+ * having to cast.
+ *
+ * ── A user holds a SET of roles (1.43) ───────────────────────────────────────
+ *
+ * `roles: UserRole[]` is the authority; the legacy `role` scalar is a FALLBACK
+ * read only while the backfill is in flight. Every predicate below asks "does
+ * the set contain X", never "does the scalar equal X" — which is what makes a
+ * `seller` + `employee` account pass both gates instead of whichever check ran
+ * first. See `rolesOf` for the dual-read contract.
  */
 
-type RoleCarrier = { role?: string | null } | null | undefined;
+/**
+ * Anything that carries role information, in either shape.
+ *
+ * 🛑 `primaryRole` is deliberately absent from this type. It is a DISPLAY
+ * field (see `primaryRoleOf` in ./auth-helpers) and must never reach an
+ * authorization decision — accepting it here would invite exactly that.
+ */
+export type RoleCarrier =
+  | { role?: string | null; roles?: readonly string[] | null }
+  | null
+  | undefined;
 
-function normalizeRole(input: RoleCarrier): UserRole {
-  return (input?.role ?? "user") as UserRole;
+/** The one role every account has when nothing else is known. */
+export const FALLBACK_ROLE: UserRole = "user";
+
+/**
+ * 🛑 `moderator` is COLLAPSED INTO `employee` (owner, 2026-11-07: they are the
+ * same thing; moderation is an employee *permission*, not a role).
+ *
+ * Folding happens here, in the normalizer, rather than at 20 call sites — so a
+ * stored document that still says `role: "moderator"` behaves identically to
+ * one backfilled to `employee` the moment this ships, with no window where a
+ * moderator is locked out waiting on `scripts/backfill-user-roles.mjs`.
+ *
+ * This map is the ONLY place a legacy role name is translated. Add future
+ * collapses here; never branch on the old name downstream.
+ */
+const ROLE_ALIASES: Partial<Record<string, UserRole>> = {
+  moderator: "employee",
+};
+
+/** Translate one raw stored role string to its canonical current role. */
+function canonicalRole(raw: string): UserRole {
+  return ROLE_ALIASES[raw] ?? (raw as UserRole);
+}
+
+/**
+ * ── THE dual-read ────────────────────────────────────────────────────────────
+ *
+ * Resolve any role carrier to its canonical, de-duplicated, alias-folded role
+ * SET. Reads `roles[]` when present and non-empty, falls back to the legacy
+ * `role` scalar, and finally to `["user"]`.
+ *
+ * ⚠ Why the fallback exists and when it goes: `UserDocument.role` is the only
+ * field every existing account carries. `UserRepository.mapDoc` normalises
+ * BOTH directions on every read path (the `altRegionName` lesson — a dual-read
+ * placed in one adapter left every other read path on the raw document, 200 OK
+ * and silently blank), so by the time a document reaches application code it
+ * already has `roles`. The scalar fallback here covers the paths that never
+ * touch the repository at all: decoded JWT claims, API response bodies, and
+ * client-side `SessionUser` objects hydrated from an older session cookie.
+ *
+ * Remove the fallback only once `scripts/backfill-user-roles.mjs --apply` has
+ * run AND every live session cookie has rotated (5-day TTL).
+ */
+export function rolesOf(input: RoleCarrier): UserRole[] {
+  const raw =
+    Array.isArray(input?.roles) && input.roles.length > 0
+      ? input.roles
+      : input?.role
+        ? [input.role]
+        : [FALLBACK_ROLE];
+
+  const seen = new Set<UserRole>();
+  for (const entry of raw) {
+    if (typeof entry !== "string" || entry.length === 0) continue;
+    seen.add(canonicalRole(entry));
+  }
+  return seen.size > 0 ? [...seen] : [FALLBACK_ROLE];
+}
+
+/**
+ * Does this carrier hold `role` (after alias folding)?
+ *
+ * Exact set membership — NOT a hierarchy comparison. `hasRole` in
+ * ./auth-helpers is the hierarchy-aware one; this is the primitive every
+ * predicate below is built from.
+ */
+export function holdsRole(input: RoleCarrier, role: UserRole): boolean {
+  return rolesOf(input).includes(canonicalRole(role));
+}
+
+/** Does this carrier hold ANY of `roles`? The union test. */
+export function holdsAnyRole(
+  input: RoleCarrier,
+  roles: readonly UserRole[],
+): boolean {
+  const held = rolesOf(input);
+  return roles.some((r) => held.includes(canonicalRole(r)));
 }
 
 export const isAdminUser = (input: RoleCarrier): boolean =>
-  normalizeRole(input) === "admin";
+  holdsRole(input, "admin");
 
 /**
  * True for sellers AND testers.
@@ -29,23 +121,37 @@ export const isAdminUser = (input: RoleCarrier): boolean =>
  * of `seller` rather than a boolean is what removed the `isTester` flag; this
  * predicate is where that peerage is expressed.
  */
-export const isSellerUser = (input: RoleCarrier): boolean => {
-  const role = normalizeRole(input);
-  return role === "seller" || role === "tester";
-};
+export const isSellerUser = (input: RoleCarrier): boolean =>
+  holdsAnyRole(input, ["seller", "tester"]);
 
 /** Strictly the `seller` role — for the rare case that must EXCLUDE testers. */
 export const isStrictSellerUser = (input: RoleCarrier): boolean =>
-  normalizeRole(input) === "seller";
+  holdsRole(input, "seller");
 
+/**
+ * @deprecated `moderator` is collapsed into `employee` (A9, owner 2026-11-07),
+ * so this is now exactly `isEmployeeUser`. Kept as a named alias rather than
+ * deleted because ~20 call sites read `isAdminUser(u) || isModeratorUser(u)`
+ * and that sentence is still TRUE under the fold — a moderator is an employee.
+ * New code should call `isEmployeeUser`, or better, check the moderation
+ * permission (`admin:moderation:read`) via `permissionsFor`.
+ */
 export const isModeratorUser = (input: RoleCarrier): boolean =>
-  normalizeRole(input) === "moderator";
+  holdsRole(input, "employee");
 
 export const isEmployeeUser = (input: RoleCarrier): boolean =>
-  normalizeRole(input) === "employee";
+  holdsRole(input, "employee");
 
+/**
+ * Holds the plain `user` (buyer) role.
+ *
+ * ⚠ Under a role SET this is no longer the complement of "is staff" — a
+ * seller who is also a buyer holds BOTH, so `isBuyerUser` and `isSellerUser`
+ * are true at once. Callers that meant "has nothing but the buyer role" want
+ * `rolesOf(u).length === 1 && isBuyerUser(u)`, spelled out.
+ */
 export const isBuyerUser = (input: RoleCarrier): boolean =>
-  normalizeRole(input) === "user";
+  holdsRole(input, "user");
 
 /**
  * ── Tester identity: role first, legacy booleans second ──────────────────────
@@ -64,6 +170,7 @@ export const isBuyerUser = (input: RoleCarrier): boolean =>
 type TesterCarrier =
   | {
       role?: string | null;
+      roles?: readonly string[] | null;
       isTester?: boolean;
       canTestAdmin?: boolean;
       permissions?: readonly string[] | null;
@@ -73,7 +180,7 @@ type TesterCarrier =
 
 /** The `tester` role, or the legacy `isTester` flag. */
 export const isTesterUser = (input: TesterCarrier): boolean =>
-  normalizeRole(input) === "tester" || input?.isTester === true;
+  holdsRole(input, "tester") || input?.isTester === true;
 
 /**
  * May this tester reach `/admin/**`?

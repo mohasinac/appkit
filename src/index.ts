@@ -7264,7 +7264,44 @@ export {
   canTestAdminSurfaces,
   isStrictSellerUser,
   isAccountDisabled,
+  /*
+   * Role-SET primitives (1.43). `rolesOf` is the dual-read normalizer every
+   * predicate above is built from; `holdsRole`/`holdsAnyRole` are EXACT set
+   * membership (no hierarchy).
+   */
+  rolesOf,
+  holdsRole,
+  holdsAnyRole,
 } from "./features/auth/role-predicates";
+/*
+ * THE permission helper (1.44) — one module, exported here so nobody has a
+ * reason to write a second one. `permissionsFor` returns the union across
+ * every held role; `hasRole`/`hasAnyRole` are the hierarchy-aware gates;
+ * `can`/`canAny` are the capability questions a mechanism should ask;
+ * `primaryRoleOf` is DISPLAY ONLY and gates nothing.
+ */
+export {
+  hasRole,
+  hasAnyRole,
+  permissionsFor,
+  can,
+  canAny,
+  primaryRoleOf,
+  maxRoleLevel,
+  normalizeUserRoleFields,
+  validateRoleSet,
+  getMaxRolesPerUser,
+  setMaxRolesPerUser,
+} from "./features/auth/auth-helpers";
+export type {
+  ResolvedPermissions,
+  PermissionCarrier,
+} from "./features/auth/auth-helpers";
+export {
+  ROLE_PERMISSION_BUNDLES,
+  ROLE_GRANTS_EXPLICIT_PERMISSIONS,
+  DEFAULT_MAX_ROLES_PER_USER,
+} from "./features/auth/permissions/constants";
 // [SERVER-ONLY]-Safe in browser but intended for server routes.
 // sanitizeProductForPublic - Strip sellerId/sellerName/sellerEmail/ownerId before returning a product in a public response.
 export { sanitizeProductForPublic, sanitizeProductsForPublic } from "./features/products/utils/sanitize";

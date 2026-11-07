@@ -10,6 +10,7 @@
 import type { ISessionProvider, AuthPayload } from "../../contracts";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 import { normalizeError } from "../../errors/normalize";
+import { roleClaimsFor } from "./claims";
 
 /** Default session duration: 5 days (in milliseconds). */
 const DEFAULT_EXPIRES_IN_MS = 60 * 60 * 24 * 5 * 1000;
@@ -49,10 +50,32 @@ export const firebaseSessionProvider: ISessionProvider = {
         cookie,
         true,
       );
+      /*
+       * ── Surface the role SET off the token (1.43 / R1-F5) ───────────────
+       *
+       * `rolesOf` applies the dual-read: `roles[]` when the claim is present,
+       * the legacy `role` scalar otherwise. That fallback is what keeps every
+       * session cookie minted before this change working — they carry only
+       * `role`, and the cookie TTL is 5 days.
+       *
+       * The scalar handed back is re-derived from the set, so a consumer still
+       * reading `payload.role` sees the highest-ranked held role rather than
+       * whatever single value happened to be written last.
+       */
+      const roleClaims = roleClaimsFor({
+        role: decoded.role as string | undefined,
+        roles: Array.isArray(decoded.roles)
+          ? (decoded.roles as unknown[]).filter(
+              (r): r is string => typeof r === "string",
+            )
+          : null,
+        primaryRole: decoded.primaryRole as string | undefined,
+      });
+
       return {
         uid: decoded.uid,
         email: decoded.email ?? null,
-        role: (decoded.role as string | undefined) ?? "user",
+        ...roleClaims,
         emailVerified: decoded.email_verified ?? false,
         claims: Object.fromEntries(
           Object.entries(decoded).filter(
@@ -68,6 +91,17 @@ export const firebaseSessionProvider: ISessionProvider = {
                 "sub",
                 "auth_time",
                 "firebase",
+                /*
+                 * 🛑 The three role keys are EXCLUDED from the generic claims
+                 * bag, and that is load-bearing. `createRouteHandler` builds
+                 * its `RouteUser` as `{ uid, email, role, ..., ...claims }` —
+                 * claims spread LAST. Leaving `role` in the bag meant the raw
+                 * token value overwrote the derived one, so the whole
+                 * derivation above would have been silently discarded.
+                 */
+                "role",
+                "roles",
+                "primaryRole",
               ].includes(k),
           ),
         ),

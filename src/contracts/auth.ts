@@ -5,8 +5,23 @@ import type { JsonValue } from "../schemas/types";
 export interface AuthPayload {
   uid: string;
   email: string | null;
-  /** Application-level role string, e.g. "admin" | "seller" | "user" */
+  /**
+   * Legacy scalar — the HIGHEST-RANKED role this user holds.
+   *
+   * 🛑 Not the authority. A user holds a SET (`roles` below); deciding access
+   * from this field is what silently locked a multi-role admin out of
+   * `/admin` (reviewer R1-F5). Read `roles`.
+   */
   role: string;
+  /**
+   * THE role authority — every role this user holds, from the token claims.
+   *
+   * Optional because a session cookie minted before the role-set work carries
+   * only `role`; consumers must go through `rolesOf()`, which falls back.
+   */
+  roles?: string[];
+  /** Display label only. Never an authorization input. */
+  primaryRole?: string;
   emailVerified: boolean;
   /** Display name from the auth provider (Google "name" claim) */
   name?: string | null;

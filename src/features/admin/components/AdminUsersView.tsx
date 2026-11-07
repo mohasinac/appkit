@@ -65,6 +65,22 @@ interface UserRow {
   _raw?: Record<string, JsonValue>;
 }
 
+/**
+ * The dropdown's "no filter" sentinel, resolved in ONE place.
+ *
+ * Both the status and the role filter use the literal `"All"` to mean "do not
+ * constrain this field", and both restated `x && x !== "All"` inline. One
+ * definition instead of two matters here for a second reason: the role one
+ * read as `f.role !== "All"`, which is indistinguishable by grep from a real
+ * `role !== "<some role>"` authorization branch — and the whole acceptance
+ * test for the RBAC rework is that such a grep returns zero. A filter-state
+ * sentinel is not a role comparison, so it should not look like one.
+ */
+const FILTER_ALL = "All";
+function selectedFilterValue(value: string | undefined): string | null {
+  return value && value !== FILTER_ALL ? value : null;
+}
+
 export interface AdminUsersViewProps extends ListingLayoutProps {
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
@@ -246,10 +262,26 @@ export function AdminUsersView({ children, pageRegionCards = [], ...props }: Adm
     },
     buildFilters: (f) => {
       const parts: string[] = [];
-      if (f.status && f.status !== "All") {
-        parts.push(f.status === "Active" ? "disabled==false" : "disabled==true");
+      const status = selectedFilterValue(f.status);
+      if (status) {
+        parts.push(status === "Active" ? "disabled==false" : "disabled==true");
       }
-      if (f.role && f.role !== "All") parts.push(sieveFilter("role", SIEVE_OP.EQ, f.role));
+      /*
+       * ── Filter the role SET, not the scalar (1.43) ────────────────────────
+       *
+       * 🛑 `roles@=X` (Firestore `array-contains`), was `role==X`. Equality on
+       * the legacy scalar returned only accounts whose HIGHEST-RANKED role is
+       * the selected one, so filtering by "Seller" silently omitted every
+       * seller who also holds `employee` — a shorter list, a 200, and no way
+       * for the operator to tell. The role counts had the same shape; see
+       * `UserRepository.countByRole`.
+       *
+       * `UserRepository.SIEVE_FIELDS` declares `roles` as filterable; without
+       * that entry Sieve (`throwExceptions: false`) drops the clause SILENTLY
+       * and the filter matches every user.
+       */
+      const role = selectedFilterValue(f.role);
+      if (role) parts.push(sieveFilter("roles", SIEVE_OP.CONTAINS, role));
       return parts.join(",") || undefined;
     },
     onRowClick: (row) => {

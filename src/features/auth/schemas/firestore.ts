@@ -102,7 +102,47 @@ export interface UserDocument extends BaseDocument {
   displayName: string | null;
   photoURL: string | null;
   avatarMetadata?: AvatarMetadata | null;
+  /**
+   * ── LEGACY SCALAR — derived on read, never the authority (1.43) ───────────
+   *
+   * 🛑 Do NOT make an authorization decision from this field. `roles` below is
+   * the authority. A single scalar cannot answer "is this seller also an
+   * employee", and answering it wrong is silent: the user keeps one of their
+   * two accesses depending on which check ran first.
+   *
+   * `UserRepository.mapDoc` overwrites this on EVERY read path with the
+   * highest-ranked role in `roles` — deliberately the highest rather than
+   * `primaryRole`, so any guard not yet converted to the set under-grants
+   * nothing a hierarchy comparison would have allowed. Kept required (not
+   * optional) so no existing writer breaks during the transition; removed once
+   * `scripts/backfill-user-roles.mjs --apply --drop-old` has run and the grep
+   * for `.role` on a user document is zero.
+   */
   role: UserRole;
+  /**
+   * ── THE authority: every role this account holds ─────────────────────────
+   *
+   * Up to `getMaxRolesPerUser()` entries (3 today, a setting — never a
+   * literal). No forbidden combinations (owner decision). Permissions are the
+   * UNION across all of them, resolved by `permissionsFor(user)`.
+   *
+   * Optional only because documents written before this field existed have
+   * none; `UserRepository.mapDoc` backfills it from `role` on read, so
+   * application code can treat it as always present. Read it through
+   * `rolesOf(user)` rather than directly, so the alias fold
+   * (`moderator` → `employee`) applies.
+   */
+  roles?: UserRole[];
+  /**
+   * 🛑 DISPLAY ONLY — a badge, a profile line, a default landing tab.
+   *
+   * Never an authorization input. A `primaryRole` that gates anything is the
+   * single-role bug under a new name: an admin whose primary role reads
+   * "user" would be locked out of `/admin` while genuinely holding `admin`.
+   * Resolve it through `primaryRoleOf(user)`, which also guarantees it is a
+   * role the user still actually holds.
+   */
+  primaryRole?: UserRole;
   passwordHash?: string;
   emailVerified: boolean;
   disabled: boolean;
@@ -486,6 +526,18 @@ export const USER_PUBLIC_FIELDS = [
   "photoURL",
   "avatarMetadata",
   "role",
+  /*
+   * The full role SET on the public projection, alongside the legacy scalar.
+   *
+   * 🛑 Required, not optional polish: the public storefront decides whether a
+   * profile IS a seller from this payload (`useSellerStorefront`). Projecting
+   * only the scalar meant a seller who also holds `employee` had their store
+   * page 404 — the scalar resolves to the higher-ranked role, so
+   * `role === "seller"` was false for a legitimate seller. No new information
+   * is exposed: `role` was already public.
+   */
+  "roles",
+  "primaryRole",
   "createdAt",
   "storeSlug",
   "publicProfile",
@@ -553,7 +605,12 @@ export const USER_FIELDS = {
   NAME_TOKENS_INDEX: "nameTokensIndex",
   PHOTO_URL: "photoURL",
   AVATAR_METADATA: "avatarMetadata",
+  /** Legacy scalar — derived on read. Never query it to decide access. */
   ROLE: "role",
+  /** THE role authority. Query with `array-contains`, never `==`. */
+  ROLES: "roles",
+  /** Display label only — see `primaryRoleOf`. */
+  PRIMARY_ROLE: "primaryRole",
   PASSWORD_HASH: "passwordHash",
   EMAIL_VERIFIED: "emailVerified",
   DISABLED: "disabled",

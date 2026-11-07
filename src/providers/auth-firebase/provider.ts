@@ -14,6 +14,7 @@ import type {
 import type { JsonValue } from "../../schemas/types";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 import { normalizeError } from "../../errors/normalize";
+import { syncRoleClaims } from "./claims";
 
 /** Firebase error codes that represent a normal "not authenticated" state. */
 const EXPECTED_AUTH_CODES = new Set([
@@ -128,9 +129,8 @@ export const firebaseAuthProvider: IAuthProvider = {
       emailVerified: data.emailVerified ?? false,
     });
     if (data.role) {
-      await getAdminAuthLite().setCustomUserClaims(record.uid, {
-        role: data.role,
-      });
+      // MERGE, never replace — see `./claims` for the whole R1-F5 writeup.
+      await syncRoleClaims(record.uid, { role: data.role });
       // Re-fetch to get updated claims
       const updated = await getAdminAuthLite().getUser(record.uid);
       return toAuthUser(updated);
@@ -150,7 +150,12 @@ export const firebaseAuthProvider: IAuthProvider = {
       emailVerified: data.emailVerified,
     });
     if (data.role !== undefined) {
-      await getAdminAuthLite().setCustomUserClaims(uid, { role: data.role });
+      /*
+       * 🛑 This was the worst of the six: a plain `updateUser({ displayName })`
+       * that happened to also carry `role` wiped every other claim on the
+       * account. Merging writer now.
+       */
+      await syncRoleClaims(uid, { role: data.role });
     }
     const updated = await getAdminAuthLite().getUser(record.uid);
     return toAuthUser(updated);

@@ -24,6 +24,7 @@
  */
 
 import type { UserRole } from "../../../features/auth/types";
+import { rolesOf, holdsAnyRole } from "../../../features/auth/role-predicates";
 import type { ListingType } from "../../../features/products/types/index";
 import type { CategoryType } from "../../../features/categories/types/index";
 import type { IconKey } from "../../../ui/icons/icon-registry";
@@ -115,8 +116,27 @@ export interface ActionDef {
   kind: ActionKind;
   /** Optional target route — useful for Link-style actions. */
   target?: string;
-  /** Roles that may perform this action; absent = anyone authed. */
-  permissions?: readonly UserRole[];
+  /**
+   * Roles that may perform this action; absent = anyone authed.
+   *
+   * 🛑 RENAMED from `permissions` (1.44). The field was typed
+   * `readonly UserRole[]` and held role names throughout all 210 entries — so
+   * it was a role allow-list wearing the word "permission", which is exactly
+   * the drift that makes a codebase unreadable: a reader looking for the
+   * permission gate finds this and concludes roles and permissions are the
+   * same thing. They are not — a permission is a capability, a role is a
+   * bundle of them.
+   *
+   * ⚠ This stays a ROLE list rather than becoming a `Permission[]`, and that
+   * is a deliberately flagged gap, not an oversight. Every entry would need
+   * a permission chosen for it, several name capabilities no permission exists
+   * for yet (`place_bid`, `withdraw_offer` — buyer-side abilities with no
+   * `admin:*` key), and `canPerformAction` has ZERO real consumers today
+   * (only two re-exports). Converting 210 entries to invented permission keys
+   * with no caller to validate them would be scope invented, not scope
+   * delivered. Raised to the hub.
+   */
+  roles?: readonly UserRole[];
   /** Listing-type scope — surfaces this action only on these listingTypes. */
   listingTypeScope?: readonly ListingType[];
   /** Category-type scope — same but for category discriminators. */
@@ -150,18 +170,36 @@ export function action(
   return bucket[id] ?? null;
 }
 
-/** Permission gate — returns true when the role may perform the action.
- *  Admin always passes. No `permissions` field = anyone authed passes. */
+/**
+ * Gate — returns true when this user may perform the action.
+ *
+ * Admin always passes (admin sees and does everything). No `roles` field =
+ * anyone authenticated passes.
+ *
+ * 🛑 Reads the role SET (1.44). Was `role === "admin"` on a scalar plus
+ * `def.permissions.includes(role)`, so an action allowed to `["admin","seller"]`
+ * was refused to an admin+seller whose scalar resolved to the other value —
+ * and a `["admin","moderator"]` action was invisible to the `employee` that
+ * `moderator` folds into.
+ *
+ * Accepts a user carrier or a bare role string, so no caller has to change.
+ */
 export function canPerformAction(
   def: ActionDef,
-  role: UserRole | undefined,
+  user: { role?: string | null; roles?: readonly string[] | null } | UserRole | undefined,
 ): boolean {
-  if (role === "admin") return true;
-  if (!def.permissions || def.permissions.length === 0) {
-    return Boolean(role); // anyone authed
+  const carrier =
+    typeof user === "string" ? { role: user } : (user ?? undefined);
+  const held = carrier ? rolesOf(carrier) : [];
+  const isAuthed = Boolean(
+    typeof user === "string" ? user : user?.role || user?.roles?.length,
+  );
+  if (held.includes("admin")) return true;
+  if (!def.roles || def.roles.length === 0) {
+    return isAuthed; // anyone authed
   }
-  if (!role) return false;
-  return def.permissions.includes(role);
+  if (!isAuthed) return false;
+  return holdsAnyRole(carrier, def.roles);
 }
 
 /** Filter the registry to actions scoped to the given listingType. */
@@ -210,7 +248,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Reserves one placement for one month at the listed flat fee. The creative is reviewed by a person before it appears anywhere.",
       kind: "primary",
-      permissions: ["user"],
+      roles: ["user"],
       confirmation: {
         title: "Book this slot?",
         body: "This reserves the placement for the whole month at the listed price. Cancelling later does not release the month for someone else to buy.",
@@ -225,7 +263,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Stops the creative running. 🛑 Does NOT free the month — the slot stays yours for the period you booked; releasing it is a separate admin act with a refund behind it.",
       kind: "danger",
-      permissions: ["user"],
+      roles: ["user"],
       confirmation: {
         title: "Cancel this booking?",
         body: "Your ad stops running. The month is NOT released for another advertiser, and this does not issue a refund on its own.",
@@ -240,7 +278,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Clears the creative to render for its booked month. Approval is of THIS creative — an edit returns it to review.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Approve this creative?",
         body: "It will render on the public site for its booked month once the booking is paid.",
@@ -255,7 +293,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Sends it back with your note. A note is REQUIRED — without one the advertiser resubmits the same creative and you review it twice.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject this creative?",
         body: "The advertiser sees your note and can submit a new creative against the same booking. The slot stays theirs.",
@@ -285,7 +323,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new listing",
       description: "Create a listing of any type.",
       kind: "primary",
-      permissions: ["admin", "seller"],
+      roles: ["admin", "seller"],
     },
     edit: {
       iconKey: "edit",
@@ -294,7 +332,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit listing",
       description: "Edit this listing.",
       kind: "secondary",
-      permissions: ["admin", "seller"],
+      roles: ["admin", "seller"],
     },
     delete: {
       iconKey: "delete",
@@ -303,7 +341,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete listing",
       description: "Permanently delete this listing.",
       kind: "danger",
-      permissions: ["admin", "seller"],
+      roles: ["admin", "seller"],
       confirmation: {
         title: "Delete this listing?",
         body: "This cannot be undone. Orders that already reference it keep their own copy of the title, price and image, so past orders stay readable.",
@@ -331,7 +369,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Copy this listing into a new draft, without its bids, analytics or group membership.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "add-to-cart": {
       iconKey: "cart",
@@ -562,7 +600,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit bundle",
       description: "Edit this bundle.",
       kind: "secondary",
-      permissions: ["admin", "seller"],
+      roles: ["admin", "seller"],
       categoryTypeScope: ["bundle"],
     },
     delete: {
@@ -572,7 +610,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete bundle",
       description: "Permanently delete this bundle.",
       kind: "danger",
-      permissions: ["admin", "seller"],
+      roles: ["admin", "seller"],
       categoryTypeScope: ["bundle"],
       confirmation: {
         title: "Delete this bundle?",
@@ -597,7 +635,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Pin this bundle to the dashboard",
       description: "Adds this bundle as a recency card on your dashboard landing — findable and reopenable without the admin table.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
   },
   /*
@@ -625,7 +663,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new grouped listing",
       description: "Create a new grouped listing.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     edit: {
       iconKey: "edit",
@@ -634,7 +672,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit grouped listing",
       description: "Edit this grouped listing.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     delete: {
       iconKey: "delete",
@@ -643,7 +681,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete grouped listing",
       description: "Permanently delete this grouped listing.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this grouped listing?",
         body: "This cannot be undone. Member listings are not deleted — only the group that ties them together.",
@@ -684,7 +722,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Correct this part's recorded details. The correction is kept when the database is regenerated.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     delete: {
       iconKey: "delete",
@@ -693,7 +731,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete part",
       description: "Remove this part from the live database.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Remove this part from the live database?",
         body:
@@ -726,7 +764,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit FAQ",
       description: "Correct this question or its answer.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     delete: {
       iconKey: "delete",
@@ -735,7 +773,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete FAQ",
       description: "Remove this question from the help centre.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Remove this question from the help centre?",
         /*
@@ -769,7 +807,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Correct this Beyblade's recorded details. The correction is kept when the database is regenerated.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     delete: {
       iconKey: "delete",
@@ -778,7 +816,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete Beyblade",
       description: "Remove this Beyblade from the live database.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Remove this Beyblade from the live database?",
         body:
@@ -806,7 +844,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new category",
       description: "Create a new category.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
       categoryTypeScope: ["category"],
     },
     edit: {
@@ -816,7 +854,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit category",
       description: "Edit this category.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       categoryTypeScope: ["category"],
     },
     delete: {
@@ -826,7 +864,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete category",
       description: "Permanently delete this category.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this category?",
         body: "This cannot be undone. Listings filed under it are not deleted, but they will no longer appear on this category page.",
@@ -852,7 +890,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new brand",
       description: "Create a new brand.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
       categoryTypeScope: ["brand"],
     },
     edit: {
@@ -862,7 +900,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit brand",
       description: "Edit this brand.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       categoryTypeScope: ["brand"],
     },
     delete: {
@@ -872,7 +910,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete brand",
       description: "Permanently delete this brand.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this brand?",
         body: "This cannot be undone. Products keep their `brand` string, so they will be orphaned from every brand page until re-filed.",
@@ -898,7 +936,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new sub-listing",
       description: "Create a new sub-listing.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
       categoryTypeScope: ["sublisting"],
     },
     edit: {
@@ -908,7 +946,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit sub-listing",
       description: "Edit this sub-listing.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       categoryTypeScope: ["sublisting"],
     },
     delete: {
@@ -918,7 +956,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete sub-listing",
       description: "Permanently delete this sub-listing.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this sub-listing?",
         body: "This cannot be undone.",
@@ -978,7 +1016,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Fill the description field from the category's description template, with the listing's own details interpolated.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "replace-description": {
       iconKey: "edit",
@@ -997,7 +1035,7 @@ export const ACTIONS: ActionTree = {
        * with the action and is translatable.
        */
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Replace what you have written?",
         body: "The description you typed will be overwritten by the category template. This cannot be undone.",
@@ -1013,7 +1051,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Accept this offer",
       description: "Accept a buyer's offer on a classified listing.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "reject-offer": {
       iconKey: "reject",
@@ -1022,7 +1060,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject this offer",
       description: "Reject a buyer's offer on a classified listing.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Reject this offer?",
         body: "The buyer will be notified that their offer was declined.",
@@ -1037,7 +1075,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Counter this offer",
       description: "Send a counter-offer to the buyer.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     // ── Payout view ──────────────────────────────────────────────────────
     "view-payout": {
@@ -1047,7 +1085,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "View payout details",
       description: "View the details of a payout.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "export-payout": {
       iconKey: "export",
@@ -1056,7 +1094,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Export payout details",
       description: "Download payout details as a file.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "set-payout-reminder": {
       iconKey: "settings",
@@ -1065,7 +1103,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Toggle a follow-up reminder on this payout",
       description: "Flag this payout for a personal follow-up reminder.",
       kind: "ghost",
-      permissions: ["seller"],
+      roles: ["seller"],
     },
     // ── Review management ───────────────────────────────────────────────
     "reply-review": {
@@ -1075,7 +1113,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reply to this review",
       description: "Post or edit a public store reply to a buyer's review.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "contest-review": {
       iconKey: "report",
@@ -1084,7 +1122,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Contest this review",
       description: "Flag a review for admin investigation.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "buyer-feedback": {
       iconKey: "message",
@@ -1093,7 +1131,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Send feedback to buyer",
       description: "Send a private message to the buyer's notification inbox.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     // ── WhatsApp integration ────────────────────────────────────────────
     "whatsapp-connect": {
@@ -1103,7 +1141,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Save WhatsApp credentials and connect",
       description: "Save WhatsApp Business credentials and establish connection.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "whatsapp-catalog-sync": {
       iconKey: "retry",
@@ -1112,7 +1150,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Sync products to WhatsApp catalog",
       description: "Push published standard products to WhatsApp Business Catalog.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "whatsapp-catalog-import": {
       iconKey: "upload",
@@ -1121,7 +1159,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Import products from WhatsApp catalog",
       description: "Import products from WhatsApp Catalog as drafts.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     // ── Google Reviews integration ──────────────────────────────────────
     "google-reviews-sync": {
@@ -1131,7 +1169,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Sync Google Business reviews",
       description: "Pull latest reviews from Google Business profile.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "save-google-settings": {
       iconKey: "save",
@@ -1140,7 +1178,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Save Google Business settings",
       description: "Save Google Business profile configuration.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     // ── Refresh ─────────────────────────────────────────────────────────
     "refresh-offers": {
@@ -1150,7 +1188,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Refresh offers list",
       description: "Reload latest offers and statuses.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "edit-listing": {
       iconKey: "edit",
@@ -1159,7 +1197,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit listing",
       description: "Navigate to the edit form for this store listing.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "delete-listing": {
       iconKey: "delete",
@@ -1168,7 +1206,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete listing",
       description: "Permanently delete this store listing.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Delete listing?",
         body: "This listing will be permanently removed. This action cannot be undone.",
@@ -1182,7 +1220,7 @@ export const ACTIONS: ActionTree = {
       label: "Publish",
       description: "Make this listing visible to buyers.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "unpublish-listing": {
       iconKey: "hide",
@@ -1190,7 +1228,7 @@ export const ACTIONS: ActionTree = {
       label: "Unpublish",
       description: "Hide this listing from buyers.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "mark-shipped": {
       iconKey: "ship",
@@ -1198,7 +1236,7 @@ export const ACTIONS: ActionTree = {
       label: "Mark as shipped",
       description: "Update an order status to shipped and enter tracking info.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "dispatch-custom": {
       iconKey: "ship",
@@ -1207,7 +1245,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Record a parcel you posted yourself",
       description: "Record the carrier and tracking id for a parcel the seller posted themselves.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "dispatch-platform": {
       iconKey: "ship",
@@ -1217,7 +1255,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Book a pickup on the platform's own carrier account. The tracking id comes back from the courier.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       /*
        * 🛑 Confirmed because it SPENDS MONEY and cannot be undone from this
        * screen. A booking debits the platform's carrier wallet and schedules
@@ -1238,7 +1276,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark this EMI installment as paid",
       description: "Record collection of one EMI installment after verifying the buyer's manual transfer proof.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Mark this installment as paid?",
         body: "This confirms the buyer's payment was received and verified. The order becomes eligible to ship once every installment is marked paid.",
@@ -1252,7 +1290,7 @@ export const ACTIONS: ActionTree = {
       label: "Request payout",
       description: "Submit a payout request for available store earnings.",
       kind: "primary",
-      permissions: ["seller"],
+      roles: ["seller"],
     },
     "save-changes": {
       iconKey: "save",
@@ -1260,7 +1298,7 @@ export const ACTIONS: ActionTree = {
       label: "Save changes",
       description: "Submit the store listing or settings form.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "print-labels": {
       iconKey: "export",
@@ -1269,7 +1307,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Print inventory labels for selected products",
       description: "Open the print page for inventory labels for the selected products.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     /*
      * D13 — assemble a complete bey from component listings, and part one back
@@ -1287,7 +1325,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Build one or more of this listing from parts you already hold. Each component's stock is decremented; units already reserved by unpaid orders are never consumed.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "part-out-listing": {
       iconKey: "delete",
@@ -1297,7 +1335,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Break this listing down and add its parts back to inventory. The complete listing's stock is decremented.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Part this out?",
         /*
@@ -1317,7 +1355,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Set the same stock quantity on every selected listing. Units already reserved by unpaid orders stay reserved.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "set-location": {
       iconKey: "settings",
@@ -1326,7 +1364,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Set physical storage location for selected items",
       description: "Assign zone, shelf, and bin for the selected inventory items.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "print-packing-slips": {
       iconKey: "export",
@@ -1335,7 +1373,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Print packing slips for selected orders",
       description: "Open the print page for packing slip labels for the selected orders.",
       kind: "secondary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "open-print-center": {
       iconKey: "view",
@@ -1344,7 +1382,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Open the Print & Label Center",
       description: "Open the Print & Label Center for this store.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     // SB-UNI-W follow-up (plan §7) — leaves for the 11 unwired store-dashboard
     // form/row CTAs identified by the W-3 sweep.
@@ -1355,7 +1393,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new product template",
       description: "Submit the new-template form.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "update-template": {
       iconKey: "edit",
@@ -1364,7 +1402,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Save changes to template",
       description: "Submit the edit-template form.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "edit-template": {
       iconKey: "edit",
@@ -1373,7 +1411,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit template",
       description: "Open the edit-template drawer for this row.",
       kind: "ghost",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "delete-template": {
       iconKey: "delete",
@@ -1382,7 +1420,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete template",
       description: "Permanently remove this template.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Delete template?",
         body: "This template will be permanently removed. Existing products created from it are unaffected. This action cannot be undone.",
@@ -1397,7 +1435,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new bundle",
       description: "Submit the new-bundle form.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "create-feature": {
       iconKey: "create",
@@ -1406,7 +1444,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new product feature badge",
       description: "Submit the new-feature form.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "update-slug": {
       iconKey: "edit",
@@ -1415,7 +1453,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Update store slug",
       description: "Submit the slug-change form. Caution: existing links will redirect.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Update store slug?",
         body: "Existing links that reference the old slug will start redirecting. Make sure to update social bios and external listings.",
@@ -1430,7 +1468,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete sublisting category",
       description: "Permanently remove this sublisting category from the store.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Delete sublisting category?",
         body: "Products tagged with this category will lose the tag. This action cannot be undone.",
@@ -1450,7 +1488,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this analytics alert",
       description: "Permanently removes this alert rule. Past notifications are unaffected.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Delete this alert?",
         body: "You will stop being notified when this rule matches. Alerts already sent are unaffected. This cannot be undone.",
@@ -1473,7 +1511,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Open the new-template drawer",
       description: "Open the new-template creation drawer.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
   },
   BLOG: {
@@ -1491,7 +1529,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Copy this post into a new draft, without its views or featured flag.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "create-post": {
       iconKey: "create",
@@ -1500,7 +1538,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new blog post",
       description: "Navigate to the blog post editor.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "edit-post": {
       iconKey: "edit",
@@ -1509,7 +1547,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this blog post",
       description: "Open the editor for a blog post.",
       kind: "ghost",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "delete-post": {
       iconKey: "delete",
@@ -1518,7 +1556,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this blog post",
       description: "Permanently delete a blog post.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Delete this post?",
         body: "This blog post will be permanently removed. This action cannot be undone.",
@@ -1583,7 +1621,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Copy this event into a new draft, without its entries, winner or slot bookings.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     /*
      * This bucket had only register / cancel-registration / draw-raffle-winner
@@ -1598,7 +1636,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit event",
       description: "Edit this event.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     delete: {
       iconKey: "delete",
@@ -1607,7 +1645,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete event",
       description: "Permanently delete this event.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this event?",
         body: "This cannot be undone. Entries already recorded against it are removed with it, so a participant loses their place.",
@@ -1657,7 +1695,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Picks one winner at random from this event's approved entries, records them on the event, and notifies them.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Draw the raffle winner?",
         body: "One winner will be picked at random from the approved entries, announced on the event page, and notified. A raffle can only be drawn once — this action cannot be undone.",
@@ -1891,7 +1929,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Cancel selected bids",
       description: "Cancel the selected bids from this store's collector drops.",
       kind: "danger",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
       confirmation: {
         title: "Cancel these bids?",
         body: "The selected bids will be cancelled and bidders will be notified.",
@@ -1908,7 +1946,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Create a new procurement shipment",
       description: "Start tracking a new import shipment.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "mark-received": {
       iconKey: "confirm",
@@ -1917,7 +1955,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark this shipment as received",
       description: "Flags the shipment as physically received so processing can begin.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "unlink-item": {
       iconKey: "link",
@@ -1926,7 +1964,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Unlink this item from its product",
       description: "Clears the product link on this shipment item without touching the product itself.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "delete": {
       iconKey: "delete",
@@ -1935,7 +1973,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this shipment",
       description: "Permanently deletes the shipment and all its lots/items.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this shipment?",
         body: "This permanently removes the shipment and all its lots and items. This cannot be undone. Items still linked to a product must be unlinked first.",
@@ -1959,7 +1997,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this lot and its items",
       description: "Permanently deletes this lot and every item in it.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this lot?",
         body: "This permanently removes the lot and every item in it. The rest of the shipment is untouched. Items still linked to a product must be unlinked first.",
@@ -1976,7 +2014,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "List this catalogue item directly",
       description: "Seller-only — turns a catalogue item into a real listing under your own store immediately.",
       kind: "primary",
-      permissions: ["seller", "admin"],
+      roles: ["seller", "admin"],
     },
     "submit-for-approval": {
       iconKey: "send",
@@ -1993,7 +2031,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Unlink this catalogue item from its product",
       description: "Clears the product link on this catalogue item without touching the product itself.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "delete": {
       iconKey: "delete",
@@ -2016,7 +2054,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve this catalogue listing request",
       description: "Creates the product under the platform's consignment store and marks the item listed.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "reject": {
       iconKey: "reject",
@@ -2025,7 +2063,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject this catalogue listing request",
       description: "Declines the request and records a reason the owner can see.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Reject this listing request?",
         body: "The owner will see your rejection reason.",
@@ -2060,7 +2098,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Enable this integration",
       description: "Turn an integration on. Writes the authoritative settings field for it.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "invalidate-cache": {
       // `retry` — the icon registry has no `refresh`/`reload`/`sync` key, and
@@ -2073,7 +2111,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Mark every cached public page stale so the next visitor gets a freshly rendered one. Use after a bulk data change the Firestore triggers could not see — a seed load, a direct Firestore edit, or a catalogue purge.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       /*
        * 🛑 A confirmation on a NON-destructive action, because the cost is
        * real and invisible at the click.
@@ -2105,7 +2143,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Delete one cached read-cache entry (or every entry sharing a repository's key prefix) so the next read goes to Firestore instead of the in-memory cache.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "update-pricing": {
       iconKey: "save",
@@ -2115,7 +2153,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Change one platform rate from now on. Orders, invoices and payouts already recorded keep the rate they were charged at — a rate change never restates history.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
       /*
        * 🛑 A confirmation even though `kind` is "primary" rather than "danger".
        * The registry requires one for destructive actions; this one is here
@@ -2137,7 +2175,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Add a reason buyers can pick when reporting a problem. The reason's KIND decides which gate it is subject to; the wording is yours.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "retire-dispute-reason": {
       iconKey: "reject",
@@ -2147,7 +2185,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Take a reason out of the buyer's picker. Never a delete — past disputes name it, and the order snapshots its label so history survives either way.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Retire this reason?",
         /*
@@ -2169,7 +2207,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Put this dispute reason back in the picker",
       description: "Offer a retired reason to buyers again. The original author is kept.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "disable-integration": {
       iconKey: "reject",
@@ -2179,7 +2217,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Turn an integration off. The consequence differs per integration and is stated on the row.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Switch this integration off?",
         body: "",
@@ -2194,7 +2232,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Enable every integration",
       description: "Turn every integration on in a single write.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Enable every integration?",
         body: "Online payments, customer email, courier booking and the support surface will all be switched on. One write, one audit-log entry.",
@@ -2208,7 +2246,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Disable every integration",
       description: "Turn every integration off in a single write.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Disable every integration?",
         body: "This stops online payments, customer email and courier booking, and hides the buyer support surface. 🛑 Payments already in progress are abandoned — a buyer part-way through the gateway may be charged with no order placed. Staff email and open tickets stay workable. One write, one audit-log entry.",
@@ -2224,7 +2262,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve listing",
       description: "Mark a pending product listing as approved and visible to buyers.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "reject-product": {
       iconKey: "reject",
@@ -2233,7 +2271,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject listing",
       description: "Reject a product listing and notify the seller with a reason.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject this listing?",
         body: "The listing will be rejected and the seller will be notified. You can restore it later.",
@@ -2249,7 +2287,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Ban this user",
       description: "Soft-ban a user account — blocks login and all marketplace activity.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Ban this user?",
         body: "The user will be blocked from logging in and all marketplace activity. You can lift the ban later.",
@@ -2264,7 +2302,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Lift ban on this user",
       description: "Remove a soft-ban and restore normal account access.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     /**
      * Credit or debit a buyer's points by hand — `admin_adjustment`'s first
@@ -2289,7 +2327,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Credit or debit a buyer's points balance, with a reason recorded in the ledger and the admin audit log.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "bulk-suspend-users": {
       iconKey: "ban",
@@ -2298,7 +2336,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Suspend selected users",
       description: "Disable login for the selected accounts.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Suspend these users?",
         body: "Selected accounts will be disabled from logging in. You can restore them later.",
@@ -2313,7 +2351,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Restore selected users",
       description: "Re-enable login for the selected accounts.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "bulk-delete-users": {
       iconKey: "delete",
@@ -2322,7 +2360,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected users",
       description: "Disable the selected accounts.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these users?",
         body: "Selected accounts will be disabled. Their data (orders, reviews) is preserved — this does not permanently erase the account.",
@@ -2337,7 +2375,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark payment as received and verified",
       description: "Confirms manual cash/UPI payment was received. Moves order to Processing.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Verify payment?",
         body: "This marks the payment as received. The order will move to Processing. This action cannot be undone.",
@@ -2351,7 +2389,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Ask the buyer to re-upload a corrected payment proof",
       description: "Clears the current proof and gives the buyer 15 more minutes to resubmit — for honest mistakes (blurry screenshot, wrong amount), not fraud.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Request a proof re-upload?",
         body: "The buyer's current proof will be cleared and they'll get 15 more minutes to resubmit. Use this for honest mistakes, not suspected fraud.",
@@ -2365,7 +2403,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject this payment proof as fraudulent, cancel the order, and ban the account",
       description: "Cancels the order, restores stock, and triggers a temporary 7-day full-account ban. Use only for suspected deliberate fraud, not honest mistakes.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject as fraudulent?",
         body: "This cancels the order, returns the item to stock, and suspends the buyer's account for 7 days. This is severe — use only for suspected deliberate fraud, not an honest mistake.",
@@ -2393,7 +2431,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Confirms the pre-order balance was received. The order becomes shippable. Does NOT post a ledger entry — the sale was recognised in full at order creation.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Accept the balance payment?",
         body: "This records the remaining balance as received and clears the order to ship. Check the reference against your bank first.",
@@ -2408,7 +2446,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Sends the proof back with your note. The buyer can submit again — no cancellation, no stock change, no ban: the goods are already made and allocated to them.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject this balance proof?",
         body: "The buyer is told why and can send another. The order stays open and the item stays theirs.",
@@ -2422,7 +2460,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Grant verified-vendor status",
       description: "Grant verified-vendor badge to a seller account.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "unverify-vendor": {
       iconKey: "reject",
@@ -2431,7 +2469,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Revoke verified-vendor status",
       description: "Revoke the verified-vendor badge from a seller account.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Remove vendor verification?",
         body: "The verified badge will be removed from this seller's store.",
@@ -2447,7 +2485,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Verify this store",
       description: "Grant verified status to a store.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "suspend-store": {
       iconKey: "ban",
@@ -2456,7 +2494,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Suspend this store",
       description: "Suspend a store — hides all its listings from buyers.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Suspend this store?",
         body: "All listings from this store will be hidden. The seller will be notified.",
@@ -2488,7 +2526,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Approve a pending store — sets it active and makes its listings visible to buyers.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Approve this store?",
         body: "The store becomes active and its listings become visible to buyers. The seller will be notified.",
@@ -2502,7 +2540,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject this store application",
       description: "Reject a pending store application — the store stays hidden from buyers.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Reject this store application?",
         body: "The store will not be published and the seller will be notified. You can approve it later if they resolve the issue.",
@@ -2518,7 +2556,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve review",
       description: "Publish a pending product review.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "reject-review": {
       iconKey: "reject",
@@ -2527,7 +2565,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject review",
       description: "Reject a product review and prevent it from being shown.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject this review?",
         body: "The review will be hidden from the product page.",
@@ -2543,7 +2581,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve return request",
       description: "Approve a return request and initiate the refund flow.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       // Required by Rule #7 — approving starts a real refund, which is money
       // leaving the platform and is not undoable from this screen. Its absence
       // also CRASHED /admin/return-requests outright: the view reads
@@ -2563,7 +2601,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject return request",
       description: "Reject a return request with a reason.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject return request?",
         body: "The return request will be declined and the buyer will be notified.",
@@ -2579,7 +2617,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Run the weekly payout eligibility calculation",
       description: "Runs the same weekly sweep as the scheduled job on demand, generating pending payout records for eligible sellers.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "grant-payout": {
       iconKey: "approve",
@@ -2588,7 +2626,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve payout request",
       description: "Approve a seller payout request and trigger the transfer.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "hold-payout": {
       iconKey: "pause",
@@ -2597,7 +2635,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Put payout on hold",
       description: "Put a payout request on hold pending investigation.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Hold this payout?",
         body: "The payout will be paused. The seller will be notified.",
@@ -2613,7 +2651,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Trigger bundle stock rebuild",
       description: "Recalculate bundle availability from its constituent product stock.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Dev / system ───────────────────────────────────────────────────────
     "reset-seed-data": {
@@ -2623,7 +2661,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Clear and re-seed Firestore",
       description: "Delete all seeded documents and reload from seed fixtures. Dev environments only.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Reset all seed data?",
         body: "Every seeded document will be deleted and reloaded from fixtures. This cannot be undone. Only use this in a development environment.",
@@ -2638,7 +2676,7 @@ export const ACTIONS: ActionTree = {
       label: "Save changes",
       description: "Submit any admin editor form.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "export-csv": {
       iconKey: "export",
@@ -2647,7 +2685,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Export data as CSV",
       description: "Download the current view's data as a CSV file.",
       kind: "ghost",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Order management ──────────────────────────────────────────────────
     "mark-shipped": {
@@ -2657,7 +2695,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark order as shipped",
       description: "Update an order status to shipped.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "mark-delivered": {
       iconKey: "ship",
@@ -2666,7 +2704,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark order as delivered",
       description: "Update an order status to delivered.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "mark-installment-paid": {
       iconKey: "confirm",
@@ -2675,7 +2713,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark this EMI installment as paid",
       description: "Record collection of one EMI installment after verifying the buyer's manual transfer proof.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Mark this installment as paid?",
         body: "This confirms the buyer's payment was received and verified. The order becomes eligible to ship once every installment is marked paid.",
@@ -2690,7 +2728,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Cancel selected orders",
       description: "Cancel one or more pending orders.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Cancel these orders?",
         body: "The selected orders will be cancelled. Refunds are processed within 5–7 business days.",
@@ -2706,7 +2744,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark payout as paid",
       description: "Mark a payout as paid after transfer has been completed.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Session management ────────────────────────────────────────────────
     "revoke-session": {
@@ -2716,7 +2754,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Revoke selected sessions",
       description: "Force-end one or more active user sessions.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Revoke these sessions?",
         body: "The selected sessions will be terminated. Users will need to sign in again.",
@@ -2732,7 +2770,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark selected notifications as read",
       description: "Mark one or more notifications as read.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "delete-notification": {
       iconKey: "delete",
@@ -2741,7 +2779,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected notifications",
       description: "Permanently delete one or more notifications.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these notifications?",
         body: "The selected notifications will be permanently removed.",
@@ -2757,7 +2795,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark this tester feedback as reviewed",
       description: "Mark a tester feedback submission as reviewed by the dev team.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "export-tester-feedback": {
       iconKey: "export",
@@ -2766,7 +2804,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Download tester feedback as a Markdown report",
       description: "Download every tester checklist response as a Markdown file, grouped by feature area, for offline triage.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "export-event-entries": {
       iconKey: "export",
@@ -2775,7 +2813,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Download this event's entries as a Markdown report",
       description: "Download an event's entries as a Markdown file — a per-option vote tally for polls, or individual entries (submitter, status, points, responses) for every other event type.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "create-checklist-item": {
       iconKey: "create",
@@ -2784,7 +2822,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Add a new tester checklist item",
       description: "Create a new test case in the tester QA checklist catalog.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "edit-checklist-item": {
       iconKey: "edit",
@@ -2793,7 +2831,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this tester checklist item",
       description: "Edit an existing test case in the tester QA checklist catalog.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "delete-checklist-item": {
       iconKey: "delete",
@@ -2802,7 +2840,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this tester checklist item",
       description: "Permanently delete a test case from the tester QA checklist catalog.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this checklist item?",
         body: "This test case will be permanently removed from the tester QA checklist. Any tester answers already recorded for it are kept, but the item will no longer appear on the Tester Hub.",
@@ -2818,7 +2856,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Confirms this reported issue as a real bug, credits the reporting tester as the bug hunter, and disables the case for all other testers.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Confirm this bug?",
         body: "This credits the reporting tester as the bug hunter for this case and disables it so no other tester can answer it. This can't be undone from the UI.",
@@ -2834,7 +2872,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Once a confirmed bug is fixed, reopen it as a new version (v+1) for testers to retest — the old disabled case stays in the database with its bug-hunter credit intact.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Reopen this case for retest?",
         body: "This creates a new, active version of this test case for testers to answer again. The old case stays disabled in the database — its bug-hunter credit is not affected.",
@@ -2849,7 +2887,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Resend this notification",
       description: "Re-send a notification to the recipient.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Blog management ───────────────────────────────────────────────────
     "publish-blog": {
@@ -2859,7 +2897,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Publish selected blog posts",
       description: "Set selected blog posts to published status.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "draft-blog": {
       iconKey: "edit",
@@ -2868,7 +2906,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Move selected posts to draft",
       description: "Revert selected blog posts to draft status.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Brand & category management ───────────────────────────────────────
     "edit-brand": {
@@ -2878,7 +2916,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this brand",
       description: "Open the edit panel for a brand.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "edit-category": {
       iconKey: "edit",
@@ -2887,7 +2925,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this category",
       description: "Open the edit panel for a category.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Feature & clearance management ────────────────────────────────────
     "delete-feature": {
@@ -2897,7 +2935,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected features",
       description: "Permanently delete the selected product feature badges.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these features?",
         body: "The selected product feature badges will be permanently removed. Products tagged with them will lose the badge.",
@@ -2912,7 +2950,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected clearance",
       description: "Permanently delete the selected clearance listings.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these clearance?",
         body: "The selected clearance listings will be permanently removed. This action cannot be undone.",
@@ -2928,7 +2966,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Toggle featured status",
       description: "Toggle whether the selected products appear in featured sections.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "toggle-promoted": {
       iconKey: "analytics",
@@ -2937,7 +2975,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Toggle promoted status",
       description: "Toggle whether the selected products appear in promoted placements.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "toggle-on-sale": {
       iconKey: "analytics",
@@ -2946,7 +2984,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Toggle on-sale status",
       description: "Toggle the on-sale flag for the selected products.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Bundle management ─────────────────────────────────────────────────
     "activate-bundle": {
@@ -2956,7 +2994,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Activate selected bundles",
       description: "Set the selected bundles to active status.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "deactivate-bundle": {
       iconKey: "pause",
@@ -2965,7 +3003,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Deactivate selected bundles",
       description: "Set the selected bundles to inactive status.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "delete-bundle": {
       iconKey: "delete",
@@ -2974,7 +3012,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected bundles",
       description: "Permanently delete the selected bundles.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these bundles?",
         body: "The selected bundles will be permanently removed. This action cannot be undone.",
@@ -2990,7 +3028,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Manage this store",
       description: "Open the store management panel.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "manage-user": {
       iconKey: "settings",
@@ -2999,7 +3037,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Manage selected users",
       description: "Open the user management panel.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     /*
      * Homepage sections have no bucket of their own, so their leaves live here
@@ -3029,7 +3067,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this homepage section",
       description: "Open the homepage sections list, which owns this section's config.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "enable-section": {
       iconKey: "resume",
@@ -3038,7 +3076,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Enable this homepage section",
       description: "Render this section on its surface again.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "disable-section": {
       iconKey: "hide",
@@ -3048,7 +3086,7 @@ export const ACTIONS: ActionTree = {
       description:
         "Stop rendering this section without deleting it or its saved config.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "delete-section": {
       iconKey: "delete",
@@ -3057,7 +3095,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this homepage section",
       description: "Permanently remove this homepage section and its saved config.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this section?",
         /*
@@ -3078,7 +3116,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Show this navigation item",
       description: "Make a navigation item visible in the sidebar and menus.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "hide-nav-item": {
       iconKey: "hide",
@@ -3087,7 +3125,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Hide this navigation item",
       description: "Hide a navigation item without deleting it.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Contact management ────────────────────────────────────────────────
     "mark-contact-read": {
@@ -3097,7 +3135,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Mark selected messages as read",
       description: "Mark one or more contact messages as read.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "archive-contact": {
       iconKey: "archive",
@@ -3106,7 +3144,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Archive selected messages",
       description: "Move the selected contact messages to archive.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "delete-contact": {
       iconKey: "delete",
@@ -3115,7 +3153,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected messages",
       description: "Permanently delete the selected contact messages.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these messages?",
         body: "The selected messages will be permanently removed.",
@@ -3131,7 +3169,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Unsubscribe selected subscribers",
       description: "Remove the selected subscribers from the newsletter.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Unsubscribe these subscribers?",
         body: "The selected subscribers will be removed from the newsletter.",
@@ -3147,7 +3185,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit team member permissions",
       description: "Open the permissions editor for a team member.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "remove-team-member": {
       iconKey: "delete",
@@ -3156,7 +3194,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Remove selected team members",
       description: "Remove the selected team members.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Remove these team members?",
         body: "The selected team members will be removed from the team.",
@@ -3172,7 +3210,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected FAQs",
       description: "Permanently delete the selected FAQ entries.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these FAQs?",
         body: "The selected FAQ entries will be permanently removed.",
@@ -3187,7 +3225,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Archive selected FAQs",
       description: "Archive the selected FAQ entries.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Coupon management ─────────────────────────────────────────────────
     "delete-coupon": {
@@ -3197,7 +3235,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected coupons",
       description: "Permanently delete the selected coupons.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these coupons?",
         body: "The selected coupons will be permanently removed. Active coupon codes will stop working.",
@@ -3212,7 +3250,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit this coupon",
       description: "Open the edit panel for a coupon.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "duplicate-coupon": {
       iconKey: "duplicate",
@@ -3221,7 +3259,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Duplicate this coupon",
       description: "Create a copy of this coupon with a new code.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Navigation management ─────────────────────────────────────────────
     "edit-nav": {
@@ -3231,7 +3269,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Edit navigation item",
       description: "Edit a navigation menu item.",
       kind: "ghost",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "delete-nav": {
       iconKey: "delete",
@@ -3240,7 +3278,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected navigation items",
       description: "Permanently delete the selected navigation items.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these navigation items?",
         body: "The selected navigation items will be permanently removed from the menu.",
@@ -3256,7 +3294,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected sublisting categories",
       description: "Permanently delete the selected sublisting categories.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these categories?",
         body: "Products tagged with these categories will lose the tag.",
@@ -3272,7 +3310,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Verify this scammer report",
       description: "Mark a scammer report as verified after review.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "dismiss-scammer": {
       iconKey: "reject",
@@ -3281,7 +3319,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Dismiss this scammer report",
       description: "Dismiss a scammer report as unverified.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "delete-scammer": {
       iconKey: "delete",
@@ -3290,7 +3328,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete selected scammer reports",
       description: "Permanently delete the selected scammer reports.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete these reports?",
         body: "The selected scammer reports will be permanently removed.",
@@ -3306,7 +3344,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "View support ticket details",
       description: "Open the full support ticket details.",
       kind: "ghost",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "close-ticket": {
       iconKey: "cancel",
@@ -3315,7 +3353,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Close selected tickets",
       description: "Close the selected support tickets.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "escalate-ticket": {
       iconKey: "report",
@@ -3324,7 +3362,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Escalate this ticket",
       description: "Escalate a support ticket to a higher priority.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Event entry management ────────────────────────────────────────────
     "approve-entry": {
@@ -3334,7 +3372,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve selected event entries",
       description: "Approve the selected event entries.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "reject-entry": {
       iconKey: "reject",
@@ -3343,7 +3381,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject selected event entries",
       description: "Reject the selected event entries.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Reject these entries?",
         body: "The selected entries will be rejected and participants will be notified.",
@@ -3359,7 +3397,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Confirm this event entry",
       description: "Confirm a single event entry.",
       kind: "primary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "waitlist-entry": {
       iconKey: "pause",
@@ -3368,7 +3406,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Waitlist this event entry",
       description: "Move a single event entry to waitlist.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "cancel-entry": {
       iconKey: "cancel",
@@ -3377,7 +3415,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Cancel this event entry",
       description: "Cancel a single event entry.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Cancel this entry?",
         body: "This will remove the participant from the event. They can re-register if the event is still open.",
@@ -3393,7 +3431,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Feature this review",
       description: "Feature a review on the product page.",
       kind: "ghost",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "unfeature-review": {
       iconKey: "review",
@@ -3402,7 +3440,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Unfeature this review",
       description: "Remove a review from the featured section.",
       kind: "ghost",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Scammer management (row-level) ────────────────────────────────
     "review-scammer": {
@@ -3412,7 +3450,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Review this scammer report",
       description: "Open the scammer profile for detailed review.",
       kind: "ghost",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     // ── Bid management ────────────────────────────────────────────────────
     "cancel-bid": {
@@ -3422,7 +3460,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Cancel selected bids",
       description: "Cancel the selected bids.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Cancel these bids?",
         body: "The selected bids will be cancelled. Bidders will be notified.",
@@ -3440,7 +3478,7 @@ export const ACTIONS: ActionTree = {
       kind: "danger",
       // Admin only. The route is ROLES_ADMIN_ONLY, so listing "moderator" here
       // showed a moderator an action that could only ever return 403.
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Cancel this offer?",
         body: "The offer will be expired and removed from the buyer's cart, and they'll be notified. This cannot be undone — the buyer would need to make a new offer.",
@@ -3456,7 +3494,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Ban this address",
       description: "Ban an address from being used on the platform.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Ban this address?",
         body: "The address will be blocked from use at checkout across all accounts.",
@@ -3471,7 +3509,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve unban request",
       description: "Approve an address unban request and restore it to active.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "reject-unban": {
       iconKey: "reject",
@@ -3480,7 +3518,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject unban request",
       description: "Reject an address unban request — address stays banned.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     // ── Payment method ban management ──────────────────────────────────────
     "ban-payment-method": {
@@ -3490,7 +3528,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Ban this payment method",
       description: "Ban a payment identifier from being used on the platform.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Ban this payment method?",
         body: "The payment identifier will be blocked from checkout across all accounts.",
@@ -3505,7 +3543,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Approve payment method unban",
       description: "Approve a payment method unban request.",
       kind: "primary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
     "reject-payment-unban": {
       iconKey: "reject",
@@ -3514,7 +3552,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Reject payment method unban",
       description: "Reject a payment method unban request — stays banned.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
     },
   },
   CART: {
@@ -3729,7 +3767,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Clear uploaded previews",
       description: "Remove all preview images from the current session.",
       kind: "secondary",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
     },
     "discard-staged": {
       iconKey: "delete",
@@ -3738,7 +3776,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Discard all staged uploads",
       description: "Remove staged upload files from temporary storage.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Discard staged uploads?",
         body: "All uploaded files not yet saved to a record will be deleted from storage.",
@@ -3761,7 +3799,7 @@ export const ACTIONS: ActionTree = {
       ariaLabel: "Delete this media file",
       description: "Permanently delete a media file and the asset row that resolves it.",
       kind: "danger",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Delete this file?",
         body: "The file is removed from storage and stops resolving. Any product, blog post or section still embedding it will show a broken image — this cannot be undone.",
@@ -3853,7 +3891,7 @@ export const ACTIONS: ActionTree = {
       label: "Flag as Scammer",
       description: "Flag a lottery entry as fraudulent.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Flag this entry?",
         body: "Entry will be marked fraudulent. Their claimed slot stays booked until you manually reopen it.",
@@ -3867,7 +3905,7 @@ export const ACTIONS: ActionTree = {
       label: "Reopen Slot",
       description: "Free a flagged entry's slot so it can be claimed again.",
       kind: "secondary",
-      permissions: ["admin"],
+      roles: ["admin"],
       confirmation: {
         title: "Reopen this slot?",
         body: "The slot will be available for new pulls. The flagged entry's slot assignment is removed.",
@@ -3880,7 +3918,7 @@ export const ACTIONS: ActionTree = {
       label: "Cancel Lottery",
       description: "Close the draw window and reject pending pulls.",
       kind: "danger",
-      permissions: ["admin", "moderator"],
+      roles: ["admin", "moderator"],
       confirmation: {
         title: "Cancel lottery?",
         body: "Draw window closes immediately. Pending pulls rejected.",

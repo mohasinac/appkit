@@ -275,6 +275,91 @@ export type Permission =
   | "admin:points:write";
 
 // ============================================================================
+// ROLES AS DATA — the role → permission bundles, and the role-count cap
+// ============================================================================
+
+/**
+ * 🛑 THE cap on how many roles one user may hold — the DEFAULT, not the rule.
+ *
+ * Owner, 2026-11-07: *"they can have more than 3 in future, for now 3"*. So
+ * the literal `3` appears exactly here and nowhere else: not in the schema,
+ * not in the validator, not in the admin UI. Read it through
+ * `getMaxRolesPerUser()` in `features/auth/auth-helpers`, which prefers a
+ * configured override and falls back to this.
+ *
+ * Raising it must be a settings change, never a deploy — which is only true as
+ * long as nobody restates the number.
+ */
+export const DEFAULT_MAX_ROLES_PER_USER = 3;
+
+/**
+ * ── Roles are bundles of permissions, and the bundles are DATA ───────────────
+ *
+ * `permissionsFor(user)` unions the bundle of every role the user holds with
+ * the per-user `permissions[]` array. Editing this map is how a role gains or
+ * loses a capability — no code change, no new branch anywhere.
+ *
+ * 🛑 Most bundles are deliberately EMPTY, and that is the current behaviour
+ * stated explicitly rather than changed by accident:
+ *
+ *   - `admin` short-circuits to `isAdmin: true` and never consults a list, so
+ *     an entry here would be dead weight. Admin sees everything, everywhere.
+ *   - `user`, `seller` and `tester` hold no ADMIN-console permissions at all.
+ *     Their abilities are ownership-scoped ("edit your own store", "bid on a
+ *     listing"), enforced at the resource, not by an `admin:*` key.
+ *   - `employee` is configured per person through `permissions[]` +
+ *     `PERMISSION_GROUPS`. Its one bundled entry is below.
+ *
+ * ⚠ The one non-empty bundle is `employee` getting `admin:moderation:read`,
+ * and it is here because **`moderator` is collapsed into `employee`** (A9,
+ * owner 2026-11-07: they are the same thing, moderation becomes an employee
+ * permission). Expressing the fold as a bundle entry is what makes it data
+ * rather than a surviving `role === "moderator"` branch.
+ */
+export const ROLE_PERMISSION_BUNDLES: Record<string, Permission[]> = {
+  admin: [],
+  employee: ["admin:moderation:read"],
+  /*
+   * Legacy alias. `rolesOf()` folds `moderator` to `employee`, so a normalised
+   * role set never contains it and this entry is never read — it exists so the
+   * map stays total against the `UserRole` union while the union still carries
+   * the deprecated member for un-backfilled documents.
+   */
+  moderator: ["admin:moderation:read"],
+  seller: [],
+  tester: [],
+  user: [],
+};
+
+/**
+ * Which roles have their per-user `permissions[]` array HONOURED on top of
+ * their bundle.
+ *
+ * 🛑 This is a security boundary expressed as data, and it exists so
+ * `permissionsFor()` does not have to ask "what role is this?".
+ *
+ * Why it is not simply "always honour the array": `permissions[]` is written
+ * by the admin team UI for employees. A stray `admin:users:write` sitting on a
+ * SELLER document — a leftover from a demotion, a bad import, a bulk edit —
+ * would otherwise become live admin access the moment the resolver started
+ * unioning. The previous resolver returned `[]` for every non-employee role,
+ * so honouring the array unconditionally would have been a silent widening
+ * dressed up as a refactor.
+ *
+ * `tester` is included because `tester:admin-surfaces` is granted through this
+ * very array (see `canTestAdminSurfaces`) — that is the one non-employee role
+ * whose fine-grained grants are real.
+ */
+export const ROLE_GRANTS_EXPLICIT_PERMISSIONS: Record<string, boolean> = {
+  admin: true, // moot — admin short-circuits before the array is read
+  employee: true,
+  moderator: true, // legacy alias of employee; never present after folding
+  tester: true,
+  seller: false,
+  user: false,
+};
+
+// ============================================================================
 // BANNED ACTION TYPE
 // ============================================================================
 
