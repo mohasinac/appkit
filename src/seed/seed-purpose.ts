@@ -199,6 +199,30 @@ export const SEED_COLLECTION_PURPOSE: Record<string, SeedPurpose> = {
   siteSettings: "permanent",
 
   /*
+   * ── permanent: the CONFIG that replaces code (owner, 2026-11-08, A19) ────
+   *
+   * These eight carry the mechanism flags, rule sets, permission sets, widget
+   * registry and default arrangements that the rework moves OUT of code. They
+   * pass the test twice over: clearing one does not mean re-running a loader,
+   * it means the site has no listing types, no roles, or no layouts at all.
+   *
+   * 🛑 They are also the reason the wipe-and-reseed phase is safe. A purge
+   * clears `test` rows — the demo catalogue, orders, users. These rows are what
+   * the site is reseeded FROM, so they must survive it.
+   */
+  mechanisms: "permanent",
+  listingTypes: "permanent",
+  eventTypes: "permanent",
+  ruleSets: "permanent",
+  permissions: "permanent",
+  roles: "permanent",
+  widgetTemplates: "permanent",
+  layouts: "permanent",
+  orderFlows: "permanent",
+  variantGroups: "permanent",
+  shippingAndFees: "permanent",
+
+  /*
    * ── permanent, second tranche: the site's own CONTENT and COMPOSITION ────
    *
    * Added on the user's explicit list. The same test applies and they pass it:
