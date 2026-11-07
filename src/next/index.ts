@@ -63,12 +63,13 @@ export {
   resolvePortalPath,
   portalHref,
   canonicalHostFromSiteUrl,
+  resolveCanonicalSite,
   canonicalSiteHref,
   mainSiteOriginFromPortalHost,
   isNonPublicHost,
   isOffCanonicalHost,
 } from "./routing/portals";
-export type { PortalDefinition } from "./routing/portals";
+export type { PortalDefinition, ResolvedCanonicalSite } from "./routing/portals";
 
 // Response caching middleware
 export { withCache, invalidateCache } from "./cache-middleware";

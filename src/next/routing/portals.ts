@@ -270,6 +270,82 @@ export function canonicalHostFromSiteUrl(siteUrl: string): string | null {
   }
 }
 
+/** What `resolveCanonicalSite` concluded, and where the answer came from. */
+export interface ResolvedCanonicalSite {
+  /** Absolute origin to redirect to. */
+  siteUrl: string;
+  /** Its hostname, normalised — what `isOffCanonicalHost` compares against. */
+  host: string;
+  /**
+   * `"declared"` when the configured canonical host answered; `"inferred"`
+   * when a platform-provided fallback did. A caller may want to log the
+   * difference: running on an inferred host means the configured one is
+   * missing, which is a misconfiguration even though the guard still works.
+   */
+  source: "declared" | "inferred";
+}
+
+/** Parse a URL or a bare hostname (platform variables usually omit the scheme). */
+function parseSiteCandidate(raw: string): URL | null {
+  const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    return new URL(withScheme);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Resolve the canonical site — the host an off-canonical request is sent to.
+ *
+ * ── Why this takes candidates instead of reading the environment ────────────
+ *
+ * appkit is a domain-independent product: it must not know a particular
+ * platform's env var names, and it must NEVER carry a fallback domain literal.
+ * The caller supplies the candidates; this function owns which ones are
+ * acceptable.
+ *
+ * ── `declared` vs `inferred`, and why they are not one list ─────────────────
+ *
+ * `declared` is the project's configured canonical host and is taken at its
+ * word, including a localhost origin — that is the correct canonical host on a
+ * development machine, and a guard that refused it would be untestable
+ * locally, i.e. unverifiable.
+ *
+ * `inferred` candidates are platform guesses and are held to a stricter rule:
+ * 🛑 an inferred candidate resolving to a dev/preview host is REJECTED. On
+ * Vercel the natural fallback is the platform's own production-URL variable,
+ * and if a project's production domain assignment resolves to
+ * `<project>.vercel.app`, accepting it would make the real public host look
+ * off-canonical and 301 `www.<domain>` → `<project>.vercel.app`. That is
+ * strictly WORSE than no guard: it would hand the canonical signal for the
+ * whole site to a preview origin. Rejecting preview hosts is what makes
+ * offering a platform fallback safe at all.
+ *
+ * Returning null means MISCONFIGURED, not "use a default". The caller must say
+ * so loudly rather than degrade in silence — see `src/proxy.ts`, where a null
+ * here is logged as an error on the first request of each instance.
+ */
+export function resolveCanonicalSite(
+  declared: string | undefined | null,
+  inferred: readonly (string | undefined | null)[] = [],
+): ResolvedCanonicalSite | null {
+  if (declared) {
+    const url = parseSiteCandidate(declared);
+    const host = url ? normalizeHostname(url.hostname) : "";
+    if (url && host) return { siteUrl: url.origin, host, source: "declared" };
+  }
+  for (const raw of inferred) {
+    if (!raw) continue;
+    const url = parseSiteCandidate(raw);
+    if (!url) continue;
+    const host = normalizeHostname(url.hostname);
+    if (!host || isNonPublicHost(host)) continue;
+    return { siteUrl: url.origin, host, source: "inferred" };
+  }
+  return null;
+}
+
 /**
  * True when this request should be redirected to the canonical host.
  *

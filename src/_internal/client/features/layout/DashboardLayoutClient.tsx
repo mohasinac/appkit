@@ -22,7 +22,7 @@ import { normalizeError } from "../../../../errors/normalize";
  * the underlying *Sidebar components.
  */
 
-import { useCallback, useEffect, useState, startTransition, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useState, startTransition, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
@@ -44,6 +44,7 @@ import { Nav } from "../../../../ui/components/Semantic";
 import { useToast } from "../../../../ui/components/Toast";
 import { useSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
+import { portalHref } from "../../../../next/routing/portals";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -57,6 +58,31 @@ export interface DashboardLayoutClientProps {
    * When absent, all items are shown (backwards-compatible).
    */
   permissions?: string[] | null;
+  /**
+   * The portal route section this dashboard is being served under, when the
+   * request arrived on a portal HOST — `"/admin"` on `admin.<domain>`, and
+   * `null`/absent on the canonical host.
+   *
+   * 🛑 What it does: strips that one segment off every nav href, so a link
+   * renders `/products` instead of `/admin/products` and the address bar reads
+   * `admin.<domain>/products`. The subdomain's entire point is that the
+   * segment is implied by the host; without this, every internal link on a
+   * portal shows the prefix twice over.
+   *
+   * 🛑 Why it is a PROP and not read here: the href must be identical in the
+   * server HTML and the first client render, or every dashboard page hydrates
+   * with a mismatch. `window.location` does not exist during SSR, so the host
+   * has to arrive from the server — the portal layouts resolve it from the
+   * `host` header, which costs nothing because they already read the session
+   * and are per-request anyway.
+   *
+   * Only the ACTIVE section is stripped, so a cross-portal link
+   * (`/user/profile` in the admin sidebar) keeps its prefix — it genuinely
+   * leaves the section, and losing that prefix would point it at the wrong
+   * page. `src/proxy.ts` accepts BOTH forms on a portal host, which is what
+   * makes this safe to adopt one surface at a time.
+   */
+  portalSection?: string | null;
   /** Override active-link highlight. Defaults to usePathname(). */
   activeHref?: string;
   /**
@@ -259,13 +285,14 @@ const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
 
 export function DashboardLayoutClient({
   variant,
-  groups,
+  groups: rawGroups,
   permissions,
+  portalSection,
   activeHref: explicitActiveHref,
   // audit-dead-underscore-prop-ok: accepted for interface parity, not yet
   // wired — see the doc comment on `responsive` above; no caller passes it.
   responsive: _responsive,
-  crossNav,
+  crossNav: rawCrossNav,
   className,
   contentPadding,
   contentSurface,
@@ -275,11 +302,73 @@ export function DashboardLayoutClient({
   children,
 }: DashboardLayoutClientProps) {
   const pathname = usePathname();
-  const activeHref = explicitActiveHref ?? pathname ?? "";
+
+  /*
+   * ── Host-aware link rendering (item 1.28) ───────────────────────────────
+   *
+   * ONE transform, applied to the nav data on its way in, rather than an edit
+   * at every link site. `portalSection` is null on the canonical host, where
+   * `portalHref` is the identity function and every value below is the
+   * caller's own object untouched — so this is a no-op off a portal host and
+   * cannot change today's behaviour there.
+   *
+   * 🛑 Only `href` is rewritten. `id` is NOT, and must not be: it was derived
+   * from the FULL href at module scope in the host app's nav constants
+   * (`navItemId(portal, href)` → `nav-admin-admin-orders`) and is the live key
+   * for BOTH the admin nav-visibility toggles (`siteSettings.navConfig`) and
+   * the attention-count registry. Re-deriving an id from a stripped href would
+   * produce `nav-admin-orders`, which matches no toggle and no count source —
+   * the toggle would write a key nothing reads and every badge would silently
+   * vanish. That failure is invisible to a typecheck and to a 200, which is
+   * precisely why it is called out here rather than left to be rediscovered.
+   */
+  const groups = useMemo(
+    () =>
+      portalSection
+        ? rawGroups.map((group) => ({
+            ...group,
+            items: group.items.map((item) => ({
+              ...item,
+              href: portalHref(item.href, portalSection),
+            })),
+          }))
+        : rawGroups,
+    [rawGroups, portalSection],
+  );
+
+  const crossNav = useMemo(
+    () =>
+      portalSection && rawCrossNav
+        ? {
+            ...rawCrossNav,
+            profileHref: rawCrossNav.profileHref
+              ? portalHref(rawCrossNav.profileHref, portalSection)
+              : undefined,
+            storeHref: rawCrossNav.storeHref
+              ? portalHref(rawCrossNav.storeHref, portalSection)
+              : undefined,
+            adminHref: rawCrossNav.adminHref
+              ? portalHref(rawCrossNav.adminHref, portalSection)
+              : undefined,
+          }
+        : rawCrossNav,
+    [rawCrossNav, portalSection],
+  );
+
+  const activeHref = explicitActiveHref
+    ? portalHref(explicitActiveHref, portalSection ?? null)
+    : (pathname ?? "");
   const storageKey = `appkit:sidebar-open:${variant}`;
-  // Landing route ("/admin", "/store", "/user" — nothing nested) always
-  // starts collapsed; `variant` IS the landing path's own last segment.
-  const isLandingRoute = pathname === `/${variant}`;
+  /*
+   * Landing route ("/admin", "/store", "/user" — nothing nested) always starts
+   * collapsed; `variant` IS the landing path's own last segment.
+   *
+   * Compared through `portalHref` because on a portal host the landing path IS
+   * `/` — `admin.<domain>/` is the admin landing. Without this the dashboard
+   * home on every portal subdomain opened with the sidebar expanded, which is
+   * the opposite of the intended first impression.
+   */
+  const isLandingRoute = pathname === portalHref(`/${variant}`, portalSection ?? null);
   const { desktopOpen, mobileOpen, close, closeMobile, toggle } = useResponsiveDrawer(
     storageKey,
     isLandingRoute,
