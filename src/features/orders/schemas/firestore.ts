@@ -11,6 +11,8 @@ import type { StatusChangeEntry } from "../../../_internal/shared/history/index"
 import type { ReturnReason } from "../../../_internal/shared/features/orders/return-reasons";
 import type { DisputeKind } from "../../../_internal/shared/features/orders/dispute-reasons";
 import type { ReturnCustodyState } from "../../../_internal/shared/features/returns/custody";
+/* Item 1.39 — the per-order consent record. See `policyConsent` below. */
+import type { OrderPolicyConsent } from "../../../_internal/shared/checkout/policy-consent";
 import type {
   ActualShipmentCost,
   SelectedShippingQuote,
@@ -1303,6 +1305,23 @@ export interface OrderDocument extends BaseDocument {
     merchantOrderId?: string;
   };
   offerId?: string;
+
+  /**
+   * THE CONSENT RECORD for this order (item 1.39).
+   *
+   * 🛑 Not a boolean. It carries the policy `version`, the `hash`, the
+   * `acceptedAt` timestamp, the buyer id and the VERBATIM clause text the
+   * buyer was shown — because the question a dispute actually asks is "what
+   * did they agree to", and `termsAccepted: true` cannot answer it. An admin
+   * rewording a clause next month must not change what this order says was
+   * accepted, which is why the text is copied here rather than pointed at.
+   *
+   * Optional on the TYPE only, for orders placed before the gate existed.
+   * Every path that creates an order now populates it — `assertBuyerPolicyConsent`
+   * throws rather than returning undefined, so a new order cannot be written
+   * without one.
+   */
+  policyConsent?: OrderPolicyConsent;
 
   // â"€â"€ SB1-F (S19 2026-05-12) â€" prize-draw + bundle additive fields â"€â"€â"€â"€â"€â"€â"€â"€â"€
   /**

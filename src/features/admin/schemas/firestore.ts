@@ -143,6 +143,8 @@ export type NotificationRelatedType =
   (typeof NOTIFICATION_RELATED_TYPE_VALUES)[number];
 
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
+/* Item 1.39 — the blocking buyer agreement. See `checkoutPolicies` below. */
+import type { CheckoutPolicySettings } from "../../../_internal/shared/checkout/policy-consent";
 
 export type NotificationPriority = "low" | "normal" | "high";
 
@@ -1216,6 +1218,31 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Grievance officer disclosure — a PolicyPageView key since 2026-10-19. */
     grievance: string;
   };
+  /**
+   * The BLOCKING buyer agreement at checkout (item 1.39).
+   *
+   * 🛑 Distinct from `legalPages` above, and the difference is the whole point.
+   * `legalPages` is the published policy a buyer *could* read; this is the
+   * short list of consequences a buyer *must* tick through before an order is
+   * accepted — "no cancellation once you reveal", "no refund once it ships".
+   * Burying those in a linked page is what the blocking step exists to stop.
+   *
+   * Clause shape, defaults and resolution live in
+   * `_internal/shared/checkout/policy-consent.ts`. Each clause names the
+   * CAPABILITY it is a consequence of, never a listing type — so widening a
+   * mechanic to another type makes its clause appear with no code change.
+   *
+   * Absent, or present with an empty `clauses` array, falls back to
+   * `DEFAULT_CHECKOUT_POLICY_CLAUSES`. 🛑 Deliberately NOT "absent means no
+   * consent required": an install that has never configured policies must
+   * still block checkout behind the step, because the mechanic that needs the
+   * consent ships whether or not an admin has visited this screen.
+   *
+   * `version` is bumped by an admin when the wording changes materially. The
+   * hash stored on each order is what proves WHAT was accepted; the version is
+   * the readable handle for it in a dispute.
+   */
+  checkoutPolicies?: CheckoutPolicySettings;
   shipping: {
     estimatedDays: number;
     minOrderForFree: number;

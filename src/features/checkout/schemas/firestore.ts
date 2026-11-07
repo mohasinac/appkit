@@ -58,3 +58,39 @@ export type FailedPaymentDocument = {
 
 export const FAILED_CHECKOUTS_COLLECTION = "failedCheckouts" as const;
 export const FAILED_PAYMENTS_COLLECTION = "failedPayments" as const;
+
+/**
+ * The durable buyer-policy consent record (item 1.39).
+ *
+ * 🛑 This collection is the AUDIT TRAIL, and it exists separately from the
+ * copy stamped on each order for one reason: on the online-gateway path the
+ * consent is taken BEFORE the money moves (at `POST /api/payment/create-order`)
+ * and the order does not exist yet. A record that only lived on the order
+ * could therefore only ever be written AFTER capture — i.e. it could not be
+ * the thing that authorised the capture.
+ *
+ * Written once, never updated. An amended consent is a NEW record.
+ */
+export interface BuyerPolicyConsentDocument {
+  id: string;
+  /** The buyer who ticked the box. */
+  uid: string;
+  /** `siteSettings.checkoutPolicies.version` in force at the time. */
+  version: number;
+  /** `sha256` over the canonicalised clause list, hex. */
+  hash: string;
+  /** Verbatim text as shown. Never a pointer to current settings. */
+  clauses: { id: string; text: string }[];
+  /** Which path captured it — see `OrderPolicyConsent.capturedOn`. */
+  capturedOn: "checkout" | "gateway-create-order" | "admin-bypass";
+  acceptedAt: Date;
+  /**
+   * Set once the consent has been attached to at least one order. Purely
+   * diagnostic: a record with no order ids after a gateway create-order is a
+   * checkout the buyer abandoned, which is a normal and uninteresting state —
+   * but one with a captured payment and no order ids is the 2026-10-21 shape.
+   */
+  orderIds?: string[];
+}
+
+export const BUYER_POLICY_CONSENTS_COLLECTION = "buyerPolicyConsents" as const;
