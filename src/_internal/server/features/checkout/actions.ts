@@ -217,6 +217,23 @@ import {
   type SubmittedPolicyConsent,
 } from "../../payments/policy-consent";
 import type { OrderPolicyConsent } from "../../../shared/checkout/policy-consent";
+/*
+ * The fulfilment question, asked of the ORDER WORKFLOW REGISTRY rather than of
+ * a listing-type literal. See the call site in `finalizeOrderPlacement`: both
+ * predicates fold the capability row together with the listing's own
+ * `digitalCode.codeDeliveryMethod` opt-in, which is the half the old
+ * `listingType === "digital-code"` comparison could not see.
+ */
+import {
+  awaitsManualRelease,
+  fulfilsOnPayment,
+} from "../../../shared/features/orders/workflow-registry";
+/*
+ * The `pending_release` write. Server-side and transactional, so it lives
+ * beside the release action it hands the line over to rather than in the shared
+ * registry — the registry decides, this performs.
+ */
+import { markAwaitingRelease } from "../digital-code/release";
 
 const AUDIT_LOG_FAIL_MSG = "checkout: audit log failed (non-critical)";
 
