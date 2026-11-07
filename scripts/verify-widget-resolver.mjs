@@ -71,9 +71,13 @@ try {
 const { resolveWidgetTree, partitionRequiredRules } = await import(
   pathToFileURL(join(out, "resolve.js")).href
 );
-const { PILOT_REGIONS, PILOT_WIDGET_DEFS } = await import(
-  pathToFileURL(join(out, "pilot-registry.js")).href
-);
+const {
+  PILOT_REGIONS,
+  PILOT_WIDGET_DEFS,
+  RELATED_DEFAULT_INSTANCES,
+  asRelatedScrollerConfig,
+  resolveScrollerTitle,
+} = await import(pathToFileURL(join(out, "pilot-registry.js")).href);
 
 // ---------------------------------------------------------------------------
 // Fixtures — the four hardcoded RelatedItemsSection branches, as config
@@ -626,6 +630,169 @@ const RESOLVED_RULES = [
 {
   const ids = new Set(Array.from({ length: 500 }, mint));
   eq("G10 minted ids are unique within one tick", ids.size, 500);
+}
+
+// ---------------------------------------------------------------------------
+// J. THE LIVE SLICE — the four defaults must reproduce RelatedItemsSection's
+//    original headings EXACTLY. This is the value-validation that a 200 and a
+//    screenshot cannot give: the `altRegionName` regression blanked a real
+//    content block and still returned 200.
+// ---------------------------------------------------------------------------
+
+/** Re-implementation of the component's row mapping, so the assertions test the real decision path. */
+function relatedRows(instances, labels, counts) {
+  const r = resolveWidgetTree(PILOT_WIDGET_DEFS, PILOT_REGIONS, instances, { surface: "product" });
+  return r.roots
+    .filter((n) => n.visible && n.instance.regionId === "products-slug:related")
+    .map((n) => {
+      const cfg = asRelatedScrollerConfig(n.instance.config);
+      if (!cfg) return null;
+      if (!counts[cfg.source]) return null;
+      return { id: n.instance.id, source: cfg.source, title: resolveScrollerTitle(cfg, labels[cfg.source]) };
+    })
+    .filter(Boolean);
+}
+
+const ALL_FOUR = { category: 3, brand: 3, tags: 3, store: 3 };
+
+{
+  // Every label present — the three interpolating branches must interpolate.
+  const rows = relatedRows(
+    RELATED_DEFAULT_INSTANCES,
+    { category: "Burst Series", brand: "Takara Tomy", tags: undefined, store: "BeyHub" },
+    ALL_FOUR,
+  );
+  eq("J1 four default instances resolve to four rows", rows.length, 4);
+  eq("J2 in the original JSX order", rows.map((r) => r.source), ["category", "brand", "tags", "store"]);
+  eq("J3 headings match the hardcoded branches verbatim", rows.map((r) => r.title), [
+    "More in Burst Series",
+    "More by Takara Tomy",
+    "You might also like",
+    "More from BeyHub",
+  ]);
+}
+
+{
+  // No labels — the fallbacks the ternaries used to supply.
+  const rows = relatedRows(
+    RELATED_DEFAULT_INSTANCES,
+    { category: undefined, brand: undefined, tags: undefined, store: undefined },
+    ALL_FOUR,
+  );
+  eq("J4 absent labels fall back exactly as the ternaries did", rows.map((r) => r.title), [
+    "More in this category",
+    "More by this brand",
+    "You might also like",
+    "More from this seller",
+  ]);
+}
+
+{
+  // An empty source array renders nothing — the `.length > 0` guards.
+  const rows = relatedRows(
+    RELATED_DEFAULT_INSTANCES,
+    { category: "Burst Series", brand: "X", tags: undefined, store: "Y" },
+    { category: 3, brand: 0, tags: 0, store: 2 },
+  );
+  eq("J5 a source with no items contributes no row", rows.map((r) => r.source), ["category", "store"]);
+  eq("J6 and the surviving headings are unaffected", rows.map((r) => r.title),
+    ["More in Burst Series", "More from Y"]);
+}
+
+{
+  const rows = relatedRows(RELATED_DEFAULT_INSTANCES, {}, { category: 0, brand: 0, tags: 0, store: 0 });
+  eq("J7 all sources empty -> zero rows (component returns null, no empty frame)", rows.length, 0);
+}
+
+{
+  // The payoff: removing one carousel is now CONFIG, not a code edit.
+  const off = RELATED_DEFAULT_INSTANCES.map((i) =>
+    i.id === "w-related-store" ? { ...i, state: "off" } : i,
+  );
+  const rows = relatedRows(off, { category: "C", brand: "B", tags: undefined, store: "S" }, ALL_FOUR);
+  eq("J8 switching off 'sellers other items' removes exactly that row",
+    rows.map((r) => r.source), ["category", "brand", "tags"]);
+}
+
+{
+  // Reordering is config too.
+  const reordered = RELATED_DEFAULT_INSTANCES.map((i) => ({
+    ...i,
+    order: { "w-related-store": 0, "w-related-tags": 1, "w-related-brand": 2, "w-related-category": 3 }[i.id],
+  }));
+  const rows = relatedRows(reordered, { category: "C", brand: "B", tags: undefined, store: "S" }, ALL_FOUR);
+  eq("J9 reordering the carousels is a config change",
+    rows.map((r) => r.source), ["store", "tags", "brand", "category"]);
+}
+
+{
+  // Retitling is config, and it must not touch the identity.
+  const retitled = RELATED_DEFAULT_INSTANCES.map((i) =>
+    i.id === "w-related-tags"
+      ? { ...i, config: { ...i.config, titleTemplate: "Recommended for you", fallbackTitle: "Recommended for you" } }
+      : i,
+  );
+  const rows = relatedRows(retitled, {}, ALL_FOUR);
+  ok("J10 retitling a carousel is a config change", rows[2].title === "Recommended for you", rows[2].title);
+  eq("J11 and its id is unchanged by the retitle", rows[2].id, "w-related-tags");
+}
+
+{
+  // A fifth instance of the SAME type — "add another scroller" with no new code.
+  const plus = [
+    ...RELATED_DEFAULT_INSTANCES,
+    {
+      id: "w-related-extra",
+      type: "row.horizontalScroller",
+      regionId: "products-slug:related",
+      parentId: null,
+      order: 4,
+      config: { source: "brand", titleTemplate: "Also by {label}", fallbackTitle: "Also by this brand" },
+    },
+  ];
+  const rows = relatedRows(plus, { category: "C", brand: "B", tags: undefined, store: "S" }, ALL_FOUR);
+  eq("J12 a fifth scroller needs no code change", rows.length, 5);
+  eq("J13 and it reads the same closed source vocabulary", rows[4].title, "Also by B");
+}
+
+{
+  // A malformed stored row must not take the section down.
+  const bad = [
+    ...RELATED_DEFAULT_INSTANCES,
+    {
+      id: "w-related-bad",
+      type: "row.horizontalScroller",
+      regionId: "products-slug:related",
+      parentId: null,
+      order: 9,
+      config: { source: "not-a-real-source", titleTemplate: "x", fallbackTitle: "x" },
+    },
+  ];
+  const rows = relatedRows(bad, {}, ALL_FOUR);
+  eq("J14 an unknown `source` is skipped, not thrown", rows.length, 4);
+  eq("J15 and the four real rows still render", rows.map((r) => r.source),
+    ["category", "brand", "tags", "store"]);
+  eq("J16 asRelatedScrollerConfig rejects the bad row", asRelatedScrollerConfig({ source: "nope" }), undefined);
+}
+
+{
+  // `maxItems` is honoured as config (unused by the defaults, present from day one).
+  const capped = RELATED_DEFAULT_INSTANCES.map((i) =>
+    i.id === "w-related-category" ? { ...i, config: { ...i.config, maxItems: 2 } } : i,
+  );
+  eq("J17 maxItems survives the config narrowing",
+    asRelatedScrollerConfig(capped[0].config).maxItems, 2);
+}
+
+{
+  // Defaults must be stable identities, not minted per call.
+  const a = RELATED_DEFAULT_INSTANCES.map((i) => i.id);
+  const b = RELATED_DEFAULT_INSTANCES.map((i) => i.id);
+  eq("J18 default instance ids are stable across reads", a, b);
+  ok("J19 and are hand-written, not timestamp-minted",
+    a.every((id) => /^w-related-[a-z]+$/.test(id)), JSON.stringify(a));
+  eq("J20 every default targets the live related region",
+    new Set(RELATED_DEFAULT_INSTANCES.map((i) => i.regionId)).size, 1);
 }
 
 // ---------------------------------------------------------------------------

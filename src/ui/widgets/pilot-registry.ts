@@ -45,7 +45,7 @@
  * Root Cause #76 reason.
  */
 
-import type { WidgetDef, WidgetRegionDef } from "./types";
+import type { WidgetDef, WidgetInstance, WidgetRegionDef } from "./types";
 
 /** The one real region this pilot covers. `products-slug` is the live `pageId`. */
 export const PILOT_REGIONS: readonly WidgetRegionDef[] = [
@@ -54,6 +54,19 @@ export const PILOT_REGIONS: readonly WidgetRegionDef[] = [
     surface: "product",
     label: "Product detail — body",
     allowedTypes: ["row.horizontalScroller", "card.product", "section.offerBoard", "section.liveMediaProof"],
+  },
+  /**
+   * The LIVE region this slice actually drives — `RelatedItemsSection`'s four
+   * carousels. Separate from `:body` because they are different holes in the
+   * same template: `:body` is `AdminComposableRegion`'s admin-curated grid
+   * (mounted at `ProductDetailPageView.tsx:1409`), this one is the
+   * `renderRelated` slot a few lines above it.
+   */
+  {
+    id: "products-slug:related",
+    surface: "product",
+    label: "Product detail — related items",
+    allowedTypes: ["row.horizontalScroller"],
   },
 ];
 
@@ -67,13 +80,110 @@ export const PILOT_REGIONS: readonly WidgetRegionDef[] = [
 export const RELATED_SOURCES = ["category", "brand", "tags", "store"] as const;
 export type RelatedSource = (typeof RELATED_SOURCES)[number];
 
-/** `row.horizontalScroller`'s config bag. The four hardcoded JSX branches become four of these. */
+/**
+ * `row.horizontalScroller`'s config bag. The four hardcoded JSX branches
+ * become four of these.
+ *
+ * 🛑 `titleTemplate` + `fallbackTitle` rather than one `title`, because the
+ * four branches being replaced do NOT have fixed titles — three of them
+ * interpolate a label that may be absent:
+ *
+ *   title={categoryLabel ? `More in ${categoryLabel}` : "More in this category"}
+ *
+ * Collapsing that to a single `title` would silently change what three of the
+ * four carousels say the moment a product has no category/brand/store label.
+ * The value-validation bar for this slice is "the page renders the same
+ * headings it rendered before", so the config has to express the conditional,
+ * not approximate it.
+ */
 export interface RelatedScrollerConfig {
   source: RelatedSource;
-  /** Title. A CONFIG value, which is exactly why it must not participate in the instance identity. */
-  title: string;
+  /** `{label}` is substituted with the source's label when one is available. */
+  titleTemplate: string;
+  /** Used verbatim when the source has no label. */
+  fallbackTitle: string;
   maxItems?: number;
 }
+
+/** Narrow a stored `config` bag to this widget's shape, tolerating a malformed row. */
+export function asRelatedScrollerConfig(
+  config: Record<string, unknown> | undefined,
+): RelatedScrollerConfig | undefined {
+  const source = config?.source;
+  if (typeof source !== "string" || !(RELATED_SOURCES as readonly string[]).includes(source)) {
+    return undefined;
+  }
+  const titleTemplate = typeof config?.titleTemplate === "string" ? config.titleTemplate : "";
+  const fallbackTitle = typeof config?.fallbackTitle === "string" ? config.fallbackTitle : "";
+  const maxItems = typeof config?.maxItems === "number" ? config.maxItems : undefined;
+  return { source: source as RelatedSource, titleTemplate, fallbackTitle, maxItems };
+}
+
+/** Resolve a scroller's heading exactly as the hardcoded branches did. */
+export function resolveScrollerTitle(cfg: RelatedScrollerConfig, label: string | undefined): string {
+  if (label && cfg.titleTemplate.includes("{label}")) {
+    return cfg.titleTemplate.replace("{label}", label);
+  }
+  if (label && cfg.titleTemplate) return cfg.titleTemplate;
+  return cfg.fallbackTitle || cfg.titleTemplate;
+}
+
+/**
+ * The DEFAULT instance list for `products-slug:related` — the four hardcoded
+ * carousels in `RelatedItemsSection.tsx`, expressed as data.
+ *
+ * 🛑 This lives in CODE on purpose. It is the TEMPLATE DEFAULT, and §12.4's
+ * second cost control depends on it: a default row costs **zero** config rows
+ * until somebody changes it. Stored rows exist only for divergence, which is
+ * what keeps the ~5,210-key ceiling theoretical rather than a table someone
+ * has to populate.
+ *
+ * 🛑 Ids are hand-written and STABLE FOREVER, never minted per render. They are
+ * the identity an override targets, so a render-time `genCardId()` would make
+ * every override orphan itself on the next paint — the same class of failure
+ * as deriving a nav id from an href. Hand-written is right for a template
+ * default precisely because there is exactly one of it.
+ */
+export const RELATED_DEFAULT_INSTANCES: readonly WidgetInstance[] = [
+  {
+    id: "w-related-category",
+    type: "row.horizontalScroller",
+    regionId: "products-slug:related",
+    parentId: null,
+    order: 0,
+    config: { source: "category", titleTemplate: "More in {label}", fallbackTitle: "More in this category" },
+  },
+  {
+    id: "w-related-brand",
+    type: "row.horizontalScroller",
+    regionId: "products-slug:related",
+    parentId: null,
+    order: 1,
+    config: { source: "brand", titleTemplate: "More by {label}", fallbackTitle: "More by this brand" },
+  },
+  {
+    /*
+     * The owner's "recommendations". Its title never interpolated a label in
+     * the original, so template and fallback are identical — the shape still
+     * carries both so ONE config type covers all four.
+     */
+    id: "w-related-tags",
+    type: "row.horizontalScroller",
+    regionId: "products-slug:related",
+    parentId: null,
+    order: 2,
+    config: { source: "tags", titleTemplate: "You might also like", fallbackTitle: "You might also like" },
+  },
+  {
+    /** The owner's "sellers other items". */
+    id: "w-related-store",
+    type: "row.horizontalScroller",
+    regionId: "products-slug:related",
+    parentId: null,
+    order: 3,
+    config: { source: "store", titleTemplate: "More from {label}", fallbackTitle: "More from this seller" },
+  },
+];
 
 export const PILOT_WIDGET_DEFS: readonly WidgetDef[] = [
   /*
