@@ -1,4 +1,5 @@
 export * from "./firestore";
+export * from "./entry-votes";
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../validation/schemas";
 import { mediaFieldSchema } from "../../media/types/index";
