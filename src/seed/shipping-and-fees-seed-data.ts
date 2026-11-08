@@ -49,6 +49,25 @@ export interface SellerShippingProfile {
   customFreeAboveInr: number | null;
   /** Shown at checkout beside the custom option, so the buyer knows who ships. */
   customLabel: string | null;
+  /**
+   * FREE SHIPPING as a first-class option (owner, 2026-11-08: *"for shipping
+   * free shipping is also an option"*) — distinct from `customFreeAboveInr`,
+   * which is only a threshold on the seller's own rate.
+   *
+   * When on, a ₹0 option appears at checkout alongside the others. The seller
+   * still ships it and still pays the carrier; what is free is what the BUYER
+   * pays. So this is a pricing decision, not a fulfilment one, and the
+   * obligation rules apply to it unchanged: the seller owes the delivery they
+   * advertised.
+   *
+   * 🛑 Zero is exempt from the ₹50 round-up. Rounding ₹0 to ₹50 would turn a
+   * free-shipping promise into a ₹50 line at checkout.
+   */
+  freeShippingEnabled: boolean;
+  /** When set, free shipping applies only at or above this order value. */
+  freeShippingAboveInr: number | null;
+  /** Label for the free option, so the buyer knows who carries the cost. */
+  freeShippingLabel: string | null;
 }
 
 export const sellerShippingProfilesSeedData: SellerShippingProfile[] = [
@@ -59,6 +78,9 @@ export const sellerShippingProfilesSeedData: SellerShippingProfile[] = [
     customFeePerOrderInr: 200,
     customFreeAboveInr: 2500,
     customLabel: "BeyIndia courier (we pack and ship ourselves)",
+    freeShippingEnabled: true,
+    freeShippingAboveInr: 1500,
+    freeShippingLabel: "Free delivery on orders over ₹1,500",
   },
   {
     sellerKey: "store-ripzone",
@@ -67,6 +89,9 @@ export const sellerShippingProfilesSeedData: SellerShippingProfile[] = [
     customFeePerOrderInr: null,
     customFreeAboveInr: null,
     customLabel: null,
+    freeShippingEnabled: false,
+    freeShippingAboveInr: null,
+    freeShippingLabel: null,
   },
   {
     sellerKey: "store-farm-c",
@@ -75,6 +100,9 @@ export const sellerShippingProfilesSeedData: SellerShippingProfile[] = [
     customFeePerOrderInr: 60,
     customFreeAboveInr: null,
     customLabel: "Farm C local delivery",
+    freeShippingEnabled: true,
+    freeShippingAboveInr: null,
+    freeShippingLabel: "Free local delivery",
   },
 ];
 
@@ -339,6 +367,17 @@ for (const p of sellerShippingProfilesSeedData) {
   }
   if (p.customEnabled && p.customFeePerOrderInr == null) {
     throw new Error(`seller "${p.sellerKey}" enabled custom shipping without a per-order fee`);
+  }
+  /*
+   * Free shipping ABOVE a threshold is not a method on its own — below the
+   * threshold the buyer still needs something to pick. A seller offering only
+   * conditional free shipping would strand every small basket at checkout.
+   */
+  if (p.freeShippingEnabled && p.freeShippingAboveInr != null && !p.customEnabled && !p.platformQuotesAccepted) {
+    throw new Error(`seller "${p.sellerKey}" offers only conditional free shipping — small baskets would have no option`);
+  }
+  if (p.freeShippingEnabled && !p.freeShippingLabel) {
+    throw new Error(`seller "${p.sellerKey}" enabled free shipping without a label saying so`);
   }
 }
 
