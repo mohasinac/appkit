@@ -258,6 +258,44 @@ export interface ProductPrintMeta {
  */
 export type ProductAuthenticity = "original" | "reproduction" | "unverified";
 
+/**
+ * One component inside a composite listing, with how many of it the composite
+ * delivers.
+ *
+ * `listingId` and not a slug: a slug is editable content and this is a
+ * money-path reference. The existing `groupChildSlugs` is slug-keyed, and that
+ * is a defect it carries rather than a precedent to copy.
+ */
+export interface ProductComponent {
+  listingId: string;
+  /** Units of this component delivered per ONE unit of the composite. */
+  qty: number;
+}
+
+/**
+ * Whether a composite's stock is its own count or derived from its components.
+ *
+ * `independent` — the composite is a distinct physical object with its own
+ *   count. Selling it touches nothing else, and selling a component does not
+ *   touch it. TRUE of a sealed retail box — which is what the owner's "plus its
+ *   original packaging" names: the packaging is what makes the composite a
+ *   thing rather than a basket. The live BX-53 set is this. Measured
+ *   2026-11-08: the box 3 in stock against its components' 5/8/8/15/15/5,
+ *   moving independently, and the listing's own prose promises the buyer
+ *   exactly that ("Buying this box does not affect the stock of the individual
+ *   listings, and vice versa").
+ *
+ * `derived` — the composite is assembled from loose stock when ordered, so its
+ *   availability is bounded by its components and selling it consumes them.
+ *   TRUE of a seller-assembled kit with no box of its own, which is what the
+ *   `categoryType:"bundle"` mechanism already does via `getExpandedDecrements`.
+ *
+ * Generic by construction: a boxed furniture set is `independent`, a "pick any
+ * 3 chairs" offer is `derived`; a cased tool kit is `independent`, a made-up
+ * tool kit is `derived`. No category knowledge anywhere.
+ */
+export type ComponentStockPolicy = "independent" | "derived";
+
 export interface ProductDocument extends BaseDocument {
   title: string;
   description: string;
@@ -763,6 +801,46 @@ export interface ProductDocument extends BaseDocument {
   groupChildSlugs?: string[];
   groupTitle?: string;
   /*
+   * ── COMPOSITE: what this listing CONTAINS ────────────────────────────────
+   *
+   * Owner, 2026-11-08: *"a listing A is made of 3 listings B C and D, if you buy
+   * A you get all 3 plus its original packaging but you can still buy B C and D
+   * individually based on your need, the BX-53 deck set is a great example"*.
+   *
+   * 🛑 CONTAINMENT, which is NOT the same relation as `groupId`.
+   *
+   *   `groupId`      — "these listings are shown and picked together" (selection)
+   *   `components[]` — "buying this one DELIVERS those others' goods" (containment)
+   *
+   * The existing product group conflates the two through one `groupId`, which is
+   * exactly why `groupChildSlugs` carries no quantities and why the parent used
+   * to appear inside its own picker. A composite may be ANY listing type — it is
+   * described by data on the listing, never by a type, which is why there is no
+   * `"bundle"` listingType and must not be one again (it left the union in
+   * SB-UNI-D and became a category type).
+   *
+   * Carries a QUANTITY per component, which nothing else in the tree does:
+   * `bundleProductIds` is a flat id list and `BundleItemDetail` has only
+   * `drawCount`/`imageURL`/`title`, so the bundle path hardcodes one unit per
+   * member. "Two launchers in the box" was previously unrepresentable.
+   */
+  components?: ProductComponent[];
+  /**
+   * How this composite's stock relates to its components' stock. Owner decision
+   * D1, 2026-11-08 — the hybrid model, as DATA on the listing.
+   *
+   * 🛑 REQUIRED on a composite, with no default, and that is the whole point.
+   * A default here would silently pick one of two money-path behaviours: guess
+   * `independent` and a kit assembled from shared parts oversells; guess
+   * `derived` and selling one loose part silently reduces how many sealed boxes
+   * the seller appears to have. Same reasoning as the seed's "a missing key is
+   * an error, not an implied false". `assertCompositeShape` enforces it.
+   *
+   * See `_internal/shared/features/products/composite.ts` for the resolution,
+   * which is the ONLY place either value is interpreted.
+   */
+  componentStockPolicy?: ComponentStockPolicy;
+  /*
    * ── Self-assembled-selection rules, set on the GROUP PARENT ─────────────
    *
    * "Create your own bundle, with restrictions set by seller/admin". The shape,
@@ -1223,6 +1301,23 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "isGroupParent",
   "groupParentSlug",
   "groupChildSlugs",
+  /*
+   * Composite containment. 🛑 Named in BOTH lists deliberately:
+   *
+   *  · UPDATABLE — `productInputSchema` is derived from this constant and
+   *    `z.object()` SILENTLY STRIPS what it does not declare, so an omission
+   *    here means a seller saves a composite, sees a success toast and stores
+   *    nothing (Root Cause #101, and #61's drift between the two).
+   *  · PUBLIC — a buyer cannot be told what is in the box from a field the
+   *    projection withholds, and "you get all 3 plus its original packaging"
+   *    is the entire proposition of the listing.
+   *
+   * `componentStockPolicy` is published for the same reason: it is what makes
+   * "buying this box does not affect the individual listings" a fact the system
+   * guarantees rather than a sentence a seller typed into a description.
+   */
+  "components",
+  "componentStockPolicy",
   "groupTitle",
   /* The group's own rules. Public because the PICKER enforces them too — a
    * server-only rule reads as a broken button — and none of them is sensitive:
@@ -1368,6 +1463,23 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "isGroupParent",
   "groupParentSlug",
   "groupChildSlugs",
+  /*
+   * Composite containment. 🛑 Named in BOTH lists deliberately:
+   *
+   *  · UPDATABLE — `productInputSchema` is derived from this constant and
+   *    `z.object()` SILENTLY STRIPS what it does not declare, so an omission
+   *    here means a seller saves a composite, sees a success toast and stores
+   *    nothing (Root Cause #101, and #61's drift between the two).
+   *  · PUBLIC — a buyer cannot be told what is in the box from a field the
+   *    projection withholds, and "you get all 3 plus its original packaging"
+   *    is the entire proposition of the listing.
+   *
+   * `componentStockPolicy` is published for the same reason: it is what makes
+   * "buying this box does not affect the individual listings" a fact the system
+   * guarantees rather than a sentence a seller typed into a description.
+   */
+  "components",
+  "componentStockPolicy",
   "groupTitle",
   /* The group's own rules. Public because the PICKER enforces them too — a
    * server-only rule reads as a broken button — and none of them is sensitive:

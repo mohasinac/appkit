@@ -186,6 +186,23 @@ export const productItemSchema = z.object({
     .array(z.object({ quantity: z.number(), discountPercent: z.number() }))
     .optional(),
 
+  /*
+   * Composite containment — what this listing delivers. See
+   * `_internal/shared/features/products/composite.ts` for the model and
+   * `assertCompositeShape` for the validation the shape alone cannot express
+   * (a composite must declare its stock policy, and cannot contain itself).
+   *
+   * 🛑 `.nullable()` on both, because clearing them has to be expressible. A
+   * seller turning a composite back into an ordinary listing sends `null`;
+   * with `.optional()` alone that is indistinguishable from "field absent,
+   * leave it as it was", and the composite could never be undone.
+   */
+  components: z
+    .array(z.object({ listingId: z.string(), qty: z.number().int().positive() }))
+    .nullable()
+    .optional(),
+  componentStockPolicy: z.enum(["independent", "derived"]).nullable().optional(),
+
   // Collector Drop detail fields
   startingBid: z.number().optional(),
   bidCount: z.number().optional(),

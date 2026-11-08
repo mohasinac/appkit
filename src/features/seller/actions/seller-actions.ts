@@ -71,6 +71,7 @@ import type { UserPlain, SellerPayoutDetails } from "../../auth/schemas/firestor
 import type { StoreDocument } from "../../stores/schemas/firestore";
 import { StoreStatusValues } from "../../stores/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
+import { assertCompositeShape } from "../../../_internal/shared/features/products/composite";
 import type { OrderDocument } from "../../orders/schemas/firestore";
 import type { CouponDocument } from "../../promotions/schemas/firestore";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase/index";
@@ -1107,6 +1108,30 @@ export async function sellerUpdateProduct(
   }
   assertClearanceWonItemsImmutable(existing, input.prizeDrawItems);
   assertCollectorDropTermsMutable(existing, input);
+  /*
+   * 🛑 Validated against the MERGED shape, not the submitted patch.
+   *
+   * An update may send `components` alone and rely on a policy already stored,
+   * or send the policy alone against stored components. Checking the patch by
+   * itself would pass a listing into a state neither half describes — which is
+   * how `components` without a `componentStockPolicy` would get persisted, and
+   * that combination is a money-path hole (see the field's own docstring).
+   *
+   * `in` rather than `??` so an explicit `null` — a seller CLEARING the
+   * components — is honoured instead of falling back to the stored array and
+   * making the field impossible to empty.
+   */
+  assertCompositeShape(
+    {
+      components: ("components" in input
+        ? (input.components as unknown as ProductDocument["components"])
+        : existing.components) ?? null,
+      componentStockPolicy: ("componentStockPolicy" in input
+        ? (input.componentStockPolicy as unknown as ProductDocument["componentStockPolicy"])
+        : existing.componentStockPolicy) ?? null,
+    },
+    productId,
+  );
   const finalizedData = await finalizeProductMediaReferences(input);
   const updated = await productRepository.updateProduct(
     productId,
