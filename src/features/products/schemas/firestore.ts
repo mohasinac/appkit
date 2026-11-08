@@ -1102,6 +1102,17 @@ export const PRODUCT_PUBLIC_FIELDS = [
    * exactly the same terms as `price` itself.
    */
   "originalPrice",
+  /*
+   * Wholesale quantity breaks. Public on exactly the same terms as `price` and
+   * `originalPrice`: it is a price the seller is publicly offering, and a buyer
+   * who cannot see the break cannot decide to qualify for it.
+   *
+   * 🛑 A DISPLAY copy, never the basis of a charge. `unitPriceFor` resolves the
+   * tier from the LIVE product document server-side, for the same reason it
+   * prefers the live price over the cart snapshot — a projected or cached tier
+   * is a stale price.
+   */
+  "bulkDiscounts",
   "currency",
   "stockQuantity",
   "availableQuantity",

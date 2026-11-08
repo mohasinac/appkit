@@ -54,10 +54,68 @@ export interface PricedCartLine {
   groupMembers?: Array<{ unitPrice: number; quantity: number }>;
 }
 
+/** One quantity break: at `quantity` units or more, take `discountPercent` off. */
+export interface BulkDiscountTier {
+  quantity: number;
+  discountPercent: number;
+}
+
+/**
+ * Resolve the wholesale quantity break that applies at `quantity` units.
+ *
+ * ## 🛑 This field was STORED AND NEVER READ
+ *
+ * `bulkDiscounts` has been declared on `ProductDocument`, validated by the
+ * product zod schema (so the API accepted and persisted it) and carried in the
+ * public projection — with **zero readers anywhere in the tree**. A seller
+ * could save "10+ = 15% off", a buyer could order 10, and be charged full
+ * price. Measured 2026-11-08: three occurrences of the identifier, all three
+ * declarations.
+ *
+ * That is the worst of the three possible states — it looks configured and does
+ * nothing — which is why the owner's ruling was to wire it up rather than
+ * delete it.
+ *
+ * ## The rule
+ *
+ * The BEST applicable tier wins, selected by highest `discountPercent` and not
+ * by position or by highest threshold. Tiers are seller-entered data: nothing
+ * guarantees they arrive sorted, and nothing guarantees they are monotonic, so
+ * `[{10, 15}, {25, 5}]` is a shape a seller can save. Picking by threshold
+ * would charge a buyer of 25 units MORE than a buyer of 10. Picking the best
+ * discount the quantity qualifies for cannot do that.
+ *
+ * Malformed rows are skipped rather than clamped to a boundary: a negative or
+ * non-finite percent is a data error, and treating it as 0 silently applies no
+ * discount where the seller meant one, while treating it as 100 gives the goods
+ * away. Skipping leaves the next-best valid tier to apply.
+ *
+ * `>= 100` is excluded for the same reason — a free line is never what a volume
+ * break means, and it would make the gateway capture ₹0 on a real order.
+ *
+ * Returns 0 when nothing applies, so the caller multiplies by 1.
+ */
+export function resolveBulkDiscountPercent(
+  tiers: readonly BulkDiscountTier[] | null | undefined,
+  quantity: number,
+): number {
+  if (!tiers?.length) return 0;
+  if (!Number.isFinite(quantity) || quantity < 1) return 0;
+  let best = 0;
+  for (const tier of tiers) {
+    if (!Number.isFinite(tier?.quantity) || !Number.isFinite(tier?.discountPercent)) continue;
+    if (tier.quantity < 1) continue;
+    if (tier.discountPercent <= 0 || tier.discountPercent >= 100) continue;
+    if (quantity < tier.quantity) continue;
+    if (tier.discountPercent > best) best = tier.discountPercent;
+  }
+  return best;
+}
+
 /**
  * The single source of truth for "what do we charge for ONE COPY of this line".
  *
- * Four cases, in priority order:
+ * Five cases, in priority order:
  *
  *  1. **A locked price** — an accepted offer or a won collector drop. `lockedPrice` is
  *     the negotiated/won amount and it OVERRIDES the current listing price, which
@@ -75,6 +133,11 @@ export interface PricedCartLine {
  *     see the invariant on `CartLineMember`.
  *  4. **Everything else** — the live Firestore price, so a stale cart-cached
  *     price is never charged on a COD/UPI order.
+ *  5. **…less a wholesale quantity break**, when the live listing declares
+ *     `bulkDiscounts` and this line's quantity qualifies. Last on purpose:
+ *     cases 1–3 return before it, so a negotiated price, a bundle price and a
+ *     group's member sum can never have a tier stacked on top of them. See
+ *     `resolveBulkDiscountPercent`.
  *
  * `product` may be null for a locked line whose listing has since been archived;
  * the locked price is still owed, so that case must not dereference `product`.
@@ -108,7 +171,42 @@ export function unitPriceFor(item: PricedCartLine, product: ProductDocument | nu
   // summary/preview path) already guarded with `product?.price ?? item.price`,
   // and collapsing onto a non-null assertion would have regressed it into a
   // crash whenever a cart line outlives its listing.
-  return product?.price ?? item.price;
+  const base = product?.price ?? item.price;
+  /*
+   * ── Case 5: a WHOLESALE quantity break on an ordinary listing ─────────────
+   *
+   * 🛑 LAST, and deliberately unreachable from the three branches above:
+   *
+   *  · a LOCKED price outranks a volume tier. An accepted offer or a won
+   *    collector drop is a negotiated amount, and a quantity break silently
+   *    overriding it would move a price both parties already agreed. It
+   *    returns early above, so this is structural, not a convention.
+   *  · a BUNDLE already carries its own price, set below the sum of its
+   *    members. Stacking a tier on top discounts a discount.
+   *  · a GROUP line's price is the sum of member snapshots and already has
+   *    `groupDiscountPercent` applied in the repository's `deriveLinePrice`.
+   *    Applying a tier here would be the second application that makes the
+   *    cart total disagree with the invoice (Root Cause #75).
+   *
+   * Read off the LIVE product, never off the cart line: `PricedCartLine` has no
+   * tier field and must not gain one. The same reasoning as the live-price
+   * fallback directly above — a snapshot taken at add time is a price the
+   * seller may since have changed, and a stale tier is a stale price.
+   *
+   * 🛑 `item.quantity` is COPIES of this line, which is the right basis for an
+   * ordinary single-product line because copies ARE units there. It is not the
+   * right basis for a multi-member line, which is another reason this sits
+   * after those branches rather than in front of them.
+   *
+   * 🛑 NOT the platform fee. The ₹10-per-line fee also tapers with quantity
+   * (W-SHIP, band table in config), and the two must never be conflated: this
+   * is the SELLER discounting their goods, that is the PLATFORM pricing its
+   * own service. They move different money in different directions and appear
+   * as different lines on the invoice.
+   */
+  const bulkPercent = resolveBulkDiscountPercent(product?.bulkDiscounts, item.quantity);
+  if (bulkPercent > 0) return roundRupees(base * (1 - bulkPercent / 100));
+  return base;
 }
 
 /**
