@@ -631,6 +631,12 @@ export const EVENT_ENDPOINTS = {
   LIST: "/api/events",
   BY_ID: (id: string) => `/api/events/${id}`,
   ENTRIES: (id: string) => `/api/events/${id}/entries`,
+  /*
+   * Voting on a contest entry. The response carries COUNTS only — the voter
+   * list is admin-only and comes from a different handler, so a public caller
+   * cannot reach it by changing a query string.
+   */
+  ENTRY_VOTE: (id: string, entryId: string) => `/api/events/${id}/entries/${entryId}/vote`,
   LEADERBOARD: (id: string, limit?: number) =>
     `/api/events/${id}/leaderboard${limit !== undefined ? `?limit=${limit}` : ""}`,
   // SB9-E user spin assignment
