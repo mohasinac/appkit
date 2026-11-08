@@ -130,25 +130,47 @@ export const variantGroupsSeedData: VariantGroupDefinition[] = [
    * version of what the live site shows today.
    */
   {
+    /*
+     * 🛑 CORRECTED 2026-11-08 after the owner looked at the first mock: this is
+     * NOT a single-seller group, and splitting it from the eggs case was the
+     * mistake.
+     *
+     * *"Can we have them both for same? Like still see the options even from
+     * different sellers, and when an option is selected from that vendor the
+     * details show that vendor. In the case of the PHW Scorpio, if 1 and 2
+     * options are from vendor 1 and 3 and 4 are from vendor 2 and 3, the end
+     * user still sees that as a single listing on that item, but the option
+     * selection shows the details for the vendor who put it. And for the 1 and
+     * 2 options the conditions change — or not, maybe 2 identical as well."*
+     *
+     * So `unit` and `seller` are INDEPENDENT axes, and a unit group may span
+     * vendors exactly as the eggs group does. Options #1 and #2 below are the
+     * identical-condition pair the owner called out; #3 and #4 come from two
+     * other stores at their own prices.
+     */
     key: "vgroup-phw-scorpio-wd145b",
     label: "PHW Scorpio WD145B — Takara Tomy",
     catalogueProductKey: "catalogue-phw-scorpio-wd145b",
-    axes: ["unit", "condition"],
+    axes: ["unit", "condition", "seller"],
     rules: {
-      scope: "single-seller",
+      scope: "shared",
       priceDisplay: "from",
       availability: "any-member-in-stock",
       defaultSelection: "cheapest-available",
-      sellerVisibleOnEveryOption: false,
-      attachPolicy: "seller-self-serve",
+      // Required the moment a group spans vendors — the buyer must know who
+      // they are contracting with before they pick an option.
+      sellerVisibleOnEveryOption: true,
+      attachPolicy: "seller-proposes-admin-approves",
       canonical: "group",
       cartBehaviour: "line-per-member",
     },
     members: [
-      { listingKey: "listing-scorpio-01", sellerKey: "store-beyindia", axisValues: { unit: "#1", condition: "used-good" }, fixture: { sku: "G26V-92", priceInr: 799, stock: 1 } },
-      { listingKey: "listing-scorpio-02", sellerKey: "store-beyindia", axisValues: { unit: "#2", condition: "used-good" }, fixture: { sku: "J26A-48", priceInr: 799, stock: 1 } },
-      { listingKey: "listing-scorpio-03", sellerKey: "store-beyindia", axisValues: { unit: "#3", condition: "used-fair" }, fixture: { sku: "J26A-44", priceInr: 749, stock: 1 } },
-      { listingKey: "listing-scorpio-04", sellerKey: "store-beyindia", axisValues: { unit: "#4", condition: "used-good" }, fixture: { sku: "J26A-51", priceInr: 799, stock: 1 } },
+      { listingKey: "listing-scorpio-01", sellerKey: "store-beyindia", axisValues: { unit: "#1", condition: "used-good", seller: "BeyIndia" }, fixture: { sku: "G26V-92", priceInr: 799, stock: 1, condition: "used-good" } },
+      // #2 is deliberately identical in condition to #1 — same vendor, same
+      // grade, a different physical unit. The selector must still show both.
+      { listingKey: "listing-scorpio-02", sellerKey: "store-beyindia", axisValues: { unit: "#2", condition: "used-good", seller: "BeyIndia" }, fixture: { sku: "J26A-48", priceInr: 799, stock: 1, condition: "used-good" } },
+      { listingKey: "listing-scorpio-03", sellerKey: "store-ripzone", axisValues: { unit: "#3", condition: "used-fair", seller: "RipZone" }, fixture: { sku: "J26A-44", priceInr: 749, stock: 1, condition: "used-fair" } },
+      { listingKey: "listing-scorpio-04", sellerKey: "store-spinhouse", axisValues: { unit: "#4", condition: "new", seller: "SpinHouse" }, fixture: { sku: "J26A-51", priceInr: 1099, stock: 1, condition: "new" } },
     ],
   },
 

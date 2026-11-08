@@ -219,6 +219,34 @@ export const mechanismsSeedData: MechanismDefinition[] = [
     effect: "Coins may be spent against this listing, up to the redemption cap in the coin rule set.",
     moneyPath: true,
   },
+  {
+    /*
+     * Owner, 2026-11-08: *"the points are a mechanism of PAYMENT on listing
+     * types, so they can be enabled/disabled by the listing types."*
+     *
+     * Distinct from `coinsRedeem` on purpose, and the difference is the whole
+     * point: redeem is a DISCOUNT capped at a share of the order (20% today),
+     * while this makes coins a tender that can settle the line outright. A type
+     * that allows full settlement in coins and also earns them is a loop, so
+     * the guard below refuses that combination.
+     */
+    /*
+     * 🛑 NAME ALIGNED 2026-11-08: the capability `acceptsPointsTender` ALREADY
+     * EXISTS in `_internal/shared/listing-types/capabilities.ts` — false
+     * everywhere, with only 2 references in the tree, and CLAUDE.md lists it
+     * under "Declared-but-UNWIRED". Introducing `coinsAsPayment` beside it
+     * would have been a second name for one thing, which is the divergent-copy
+     * rule. This row is the seed-side definition of that same key; wiring it is
+     * the work, not renaming it.
+     */
+    id: "acceptsPointsTender",
+    label: "Payable entirely in points",
+    group: "loyalty",
+    effect:
+      "Coins appear as a payment METHOD at checkout and may settle the whole line, not just a capped share.",
+    requires: ["coinsRedeem"],
+    moneyPath: true,
+  },
 
   // ── content ────────────────────────────────────────────────────────────────
   {

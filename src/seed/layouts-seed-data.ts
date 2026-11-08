@@ -41,6 +41,23 @@ export interface WidgetPlacement {
   props?: Record<string, string | number | boolean>;
   /** Hidden but kept, so re-enabling restores its slot rather than appending. */
   enabled?: boolean;
+  /**
+   * Permission required for this placement to RESOLVE.
+   *
+   * 🛑 ADDED 2026-11-08 after computing the per-role inventory exposed a real
+   * defect: all three employee roles were getting the same five widgets from
+   * the shared `dashboard.employee` layout — fulfilment saw a Disputes and a
+   * Moderation tile while holding neither `order.support` nor
+   * `listing.moderate`. That is exactly the "absent, not disabled" rule being
+   * broken by the DEFAULT layout rather than by any code.
+   *
+   * With this field the shared layout is a superset and each role resolves its
+   * own subset, which is what lets one employee layout serve every employee
+   * role without a layout per role.
+   */
+  requiresPermission?: string;
+  /** Mechanism that must be ON for this placement to resolve. */
+  requiresMechanism?: string;
 }
 
 export interface LayoutDefinition {
@@ -106,17 +123,38 @@ export const layoutsSeedData: LayoutDefinition[] = [
     ],
   },
   {
+    /*
+     * ONE layout for every employee role, declared as a SUPERSET. Each role
+     * resolves the placements whose `requiresPermission` it holds — so support,
+     * fulfilment and moderation land on the same page and see different
+     * dashboards, with no layout per role and no role branch.
+     */
     key: "dashboard.employee",
     label: "Employee dashboard",
     surface: "dashboard",
     ownedBy: "platform",
     clonable: true,
     placements: [
+      // Unconditional — every employee has a role set and a queue position.
       { widget: "tile.navSlot", span: 4, props: { title: "Your roles" } },
       { widget: "tile.stat", span: 4, props: { title: "Queue" } },
       { widget: "tile.chart", span: 4, mode: "line", props: { title: "Handled today" } },
-      { widget: "tile.listPreview", span: 7, props: { title: "Disputes" } },
-      { widget: "tile.listPreview", span: 4, props: { title: "Moderation" } },
+
+      // support
+      { widget: "tile.listPreview", span: 7, props: { title: "Disputes" }, requiresPermission: "order.support" },
+      { widget: "tile.listPreview", span: 5, props: { title: "Refunds awaiting approval" }, requiresPermission: "order.refund" },
+      { widget: "tile.listPreview", span: 6, props: { title: "Recent customers" }, requiresPermission: "user.view" },
+
+      // fulfilment
+      { widget: "tile.listPreview", span: 7, props: { title: "Orders to pack" }, requiresPermission: "order.fulfil" },
+      { widget: "tile.cta", span: 3, props: { title: "Buy labels" }, requiresPermission: "order.fulfil" },
+
+      // moderation
+      { widget: "tile.listPreview", span: 7, props: { title: "Listings flagged" }, requiresPermission: "listing.moderate" },
+      { widget: "tile.listPreview", span: 5, props: { title: "Content reports" }, requiresPermission: "content.moderate" },
+
+      // oversight
+      { widget: "tile.listPreview", span: 12, props: { title: "Audit log" }, requiresPermission: "audit.view" },
     ],
   },
 
