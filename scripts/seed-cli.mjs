@@ -168,9 +168,26 @@ if (!admin.apps.length) {
     });
   }
 }
-const db = admin.firestore();
+/*
+ * 🛑 WHICH DATABASE THIS WRITES TO.
+ *
+ * Owner, 2026-11-08: seeding and local work must not touch live data — seeds
+ * go to a dev database while the live site keeps using `(default)`.
+ *
+ * `FIREBASE_SHOP_DATABASE_ID` is the same variable the app's provider reads, so
+ * the CLI and the running app can never disagree about where "the database" is.
+ *
+ * UNSET MEANS PRODUCTION, deliberately: the safe default for a deploy is the
+ * real database, and the dangerous direction — a developer silently wiping live
+ * data — is the one that requires an explicit variable. That is also why the
+ * resolved name is PRINTED on every run, loudly, before any command touches
+ * anything. `appkit-seed delete` against the wrong database is unrecoverable.
+ */
+const SHOP_DATABASE_ID = process.env.FIREBASE_SHOP_DATABASE_ID || "";
+const db = SHOP_DATABASE_ID ? admin.firestore(admin.app(), SHOP_DATABASE_ID) : admin.firestore();
 const auth = admin.auth();
 console.log(`✓ Connected to project: ${process.env.FIREBASE_ADMIN_PROJECT_ID || "(service-account)"}`);
+console.log(`✓ Database: ${SHOP_DATABASE_ID || "(default)  ← LIVE"}`);
 
 // ---------------------------------------------------------------------------
 // Pull seed data + helpers from @mohasinac/appkit

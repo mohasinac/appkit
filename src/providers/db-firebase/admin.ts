@@ -262,11 +262,35 @@ export function getAdminAuth(): Auth {
  */
 export type DatabaseTarget = "shop" | "wiki";
 
-/** `undefined` means the `(default)` database, which is the shop. */
+/**
+ * `undefined` means the `(default)` database.
+ *
+ * 🛑 THE SHOP TARGET IS ENV-DRIVEN, and that is the whole point of this table.
+ *
+ * Owner, 2026-11-08: seeding and local work must not touch the live data —
+ * *"make the seeds be in the new db … and use that for local and testing while
+ * the live site still works on the original db"*.
+ *
+ * So production sets nothing and gets `(default)`; a developer or the seed CLI
+ * sets `FIREBASE_SHOP_DATABASE_ID=dev-db` in `.env.local` and every read and
+ * write in the process follows, because this is the ONE place a Firestore
+ * handle is constructed. There is no per-call database argument to forget.
+ *
+ * 🛑 `.env.local` is gitignored, so an unset variable means PRODUCTION. That is
+ * deliberate — the safe default for a deploy is the real database, and the
+ * dangerous direction (a developer silently writing to live) is the one that
+ * requires no action. Check this value before any destructive seed command;
+ * `seed-cli` prints the resolved database for exactly that reason.
+ */
 const DATABASE_IDS: Record<DatabaseTarget, string | undefined> = {
-  shop: undefined,
+  shop: process.env.FIREBASE_SHOP_DATABASE_ID || undefined,
   wiki: process.env.FIREBASE_WIKI_DATABASE_ID || "wiki-db",
 };
+
+/** Which database this process is actually talking to, for logs and guards. */
+export function resolvedDatabaseId(target: DatabaseTarget = "shop"): string {
+  return DATABASE_IDS[target] ?? "(default)";
+}
 
 /*
  * The global cache keys are a typed literal union, so these are spelled out
