@@ -22,7 +22,7 @@ import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { RichText } from "../../../ui/rich-text/RichText";
-import { PreOrderDetailView } from "./PreOrderDetailView";
+import { ListingDetailShell } from "../../../ui/components/ListingDetailShell";
 import { ClearanceBottomActions } from "./ClearanceBottomActions";
 import { ProductTabsShell } from "./ProductTabsShell";
 import { ShareButton } from "./ShareButton";
@@ -276,7 +276,8 @@ export async function ClearanceDetailPageView({
           <ShareButton title={title} />
         </Row>
 
-        <PreOrderDetailView
+        <ListingDetailShell
+          layout="grid-2"
           renderGallery={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
               <ClearanceCollage items={items} hideWonState />
@@ -422,7 +423,7 @@ export async function ClearanceDetailPageView({
             />
             </SectionVisibilityGate>
           )}
-          renderBuyBar={() => (
+          renderAside={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
             <Div padding="5"
               id="prize-draw-buy-bar" border="subtle" surface="muted" rounded="xl"

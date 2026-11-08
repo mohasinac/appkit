@@ -20,7 +20,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Nav, Section } from "../../../ui/components/Semantic";
 import { RichText } from "../../../ui/rich-text/RichText";
 import { SpecTable } from "../../../ui/components/SpecTable";
-import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
+import { ListingDetailShell } from "../../../ui/components/ListingDetailShell";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { toCustomSectionTabs } from "../../products/components/CustomSectionTabContent";
@@ -177,7 +177,8 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
           <ShareButton title={title} />
         </Row>
 
-        <PreOrderDetailView
+        <ListingDetailShell
+          layout="grid-2"
           renderGallery={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
               <ProductGalleryClient images={images} productName={title} />
@@ -290,7 +291,7 @@ export async function DigitalCodeDetailPageView({ slug, initialProduct, renderPr
             />
             </SectionVisibilityGate>
           )}
-          renderBuyBar={() => (
+          renderAside={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="actions" initialVisible={pdpSectionVisibility.actions !== false}>
             <Div id="digital-code-buy-bar">
               {!hasPrimaryActionsSlotOverride && primaryActionsNode}

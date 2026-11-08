@@ -77,8 +77,6 @@ export { ProductDetailView } from "./ProductDetailView";
 export type { ProductDetailViewProps } from "./ProductDetailView";
 export { CollectorDropDetailView } from "./CollectorDropDetailView";
 export type { CollectorDropDetailViewProps } from "./CollectorDropDetailView";
-export { PreOrderDetailView } from "./PreOrderDetailView";
-export type { PreOrderDetailViewProps } from "./PreOrderDetailView";
 export { ProductInfo } from "./ProductInfo";
 export type { ProductInfoProps } from "./ProductInfo";
 export { ProductTabs } from "./ProductTabs";

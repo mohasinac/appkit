@@ -6876,8 +6876,6 @@ export { PRODUCT_UPDATABLE_FIELDS } from "./features/products/schemas/firestore"
 // PlaceBidForm - Component for place bid form.
 export { PlaceBidForm } from "./features/products/components/PlaceBidForm";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// PreOrderDetailView - Component for pre order detail view.
-export { PreOrderDetailView } from "./features/products/components/PreOrderDetailView";
 // [SERVER-RSC]-Public listing for clearance products (SB4-F).
 export type { ClearanceListingViewProps } from "./features/products/components/ClearanceListingView";
 // [CLIENT]-Client toolbar+grid for clearance (SB4-F).
@@ -7377,8 +7375,6 @@ export type { ListingType } from "./features/products/types/index";
 // PlaceBidFormProps - Type contract for place bid form props.
 export type { PlaceBidFormProps } from "./features/products/components/PlaceBidForm";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PreOrderDetailViewProps - Type contract for pre order detail view props.
-export type { PreOrderDetailViewProps } from "./features/products/components/PreOrderDetailView";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ProductAdminUpdateInput - Type contract for product admin update input.
 export type { ProductAdminUpdateInput } from "./features/products/schemas/firestore";
