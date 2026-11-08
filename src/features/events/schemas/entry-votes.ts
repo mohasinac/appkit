@@ -29,12 +29,17 @@
  * the cheapest way to never leak a field is to not store it. An admin screen
  * joins the user's own public projection at read time.
  *
- * ## 🛑 Ranking is NET: likes minus dislikes
+ * ## 🛑 Ranking is a CONFIG RULE, never a fixed formula
  *
- * Owner decision, 2026-11-08. Note the consequence, because it is not what the
- * published contest artwork says — that reads "THE MOST LIKED PHOTO WINS". If
- * the ranking subtracts dislikes, the public rules copy has to say so too, or
- * the winner cannot be explained from the rules as written.
+ * This file first shipped with `entryScore = likes - dislikes` hardcoded, which
+ * is the exact mistake the rework exists to remove: a rule baked into code that
+ * an admin then cannot change. There are several legitimate situations — a
+ * like-only popularity contest, a net-score vote, a straight turnout count, a
+ * jury pick — and the event, not the source, decides which applies.
+ *
+ * So the rule is a value on the event and `resolveEntryRanking` is the one
+ * place it is interpreted. Adding a fifth rule is a case here plus a config
+ * option; it is never a second copy of the arithmetic somewhere else.
  *
  * @tag domain:events
  * @tag layer:schema
@@ -113,13 +118,90 @@ export interface EntryVoteAudit extends EntryVoteSummary {
 }
 
 /**
- * The ranking key for a contest entry.
+ * How an event ranks its entries. Stored on the event, chosen by an admin.
  *
- * 🛑 Net, per the owner decision — NOT a like count. Exported as a function so
- * the scoreboard, the winner resolution and any report all compute it the same
- * way; a second copy of `likes - dislikes` somewhere is how two screens come
- * to disagree about who won.
+ * `manual` means a human picks the winner and the scoreboard is informational
+ * only — which is a real situation (a jury prize), not an absence of a rule.
  */
-export function entryScore(likes: number, dislikes: number): number {
-  return likes - dislikes;
+/*
+ * 🛑 OPEN, not a closed union. Owner, 2026-11-08: *"nothing in the code should
+ * be fixed … the types we have now are the DEFAULT TEMPLATES"*.
+ *
+ * The five spellings are the shipped defaults and exist here only so the common
+ * ones autocomplete. `(string & {})` keeps the union open, so a site that wants
+ * a ranking we never imagined adds a rule-set row and a resolver case rather
+ * than editing this file to ask permission.
+ *
+ * The rows live in `seed/rule-sets-seed-data.ts` under `entryRanking`, beside
+ * payment, shipping, tax, offers and coins — a contest ranking is a rule set
+ * like any other, not a special case.
+ */
+export type EntryRankingRule =
+  | "most-likes"
+  | "net-score"
+  | "most-votes"
+  | "earliest"
+  | "manual"
+  | (string & {});
+
+/** The default when an event does not say. Matches "most liked photo wins". */
+export const DEFAULT_ENTRY_RANKING: EntryRankingRule = "most-likes";
+
+export interface EntryRankingInput {
+  likes: number;
+  dislikes: number;
+  /** Used by `earliest`, and as the tie-break for every other rule. */
+  submittedAt: Date;
+}
+
+/**
+ * The ONE place a ranking rule is interpreted.
+ *
+ * Returns the sort key, descending — so the gallery, the scoreboard, the winner
+ * resolution and any export all order entries identically. Two screens
+ * disagreeing about who is winning is the failure this prevents.
+ *
+ * `manual` returns 0 for every entry on purpose: with no computed order, the
+ * caller must fall back to the tie-break (earliest first) rather than invent
+ * one, and the UI shows a human decision is pending.
+ */
+export function resolveEntryRanking(
+  rule: EntryRankingRule,
+  entry: EntryRankingInput,
+): number {
+  switch (rule) {
+    case "most-likes":
+      return entry.likes;
+    case "net-score":
+      return entry.likes - entry.dislikes;
+    case "most-votes":
+      return entry.likes + entry.dislikes;
+    case "earliest":
+      /*
+       * Negated so that, like every other rule, a HIGHER key sorts first —
+       * callers sort one way and need no per-rule direction flag.
+       */
+      return -entry.submittedAt.getTime();
+    case "manual":
+      return 0;
+    default:
+      /*
+       * An unknown rule means config names something this build does not
+       * implement — a newer rule set against an older deploy. Rank everything
+       * equally and let the tie-break order it, which degrades to "earliest
+       * first" rather than throwing on a public page. The admin screen is
+       * where an unimplemented rule should be surfaced, not the gallery.
+       */
+      return 0;
+  }
+}
+
+/**
+ * The published tie-break: the earlier entry wins.
+ *
+ * Stated here because it has to be announced BEFORE a contest closes. Deciding
+ * a tie afterwards, however fairly, looks like deciding it to suit someone.
+ */
+export function entryTieBreak(a: EntryRankingInput, b: EntryRankingInput): number {
+  return a.submittedAt.getTime() - b.submittedAt.getTime();
 }

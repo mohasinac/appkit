@@ -214,6 +214,74 @@ export const coinRuleSetsSeedData: CoinRuleSet[] = [
   { id: "coins-earn-only", label: "Earn only", earnPerRupee: 1, redeemPerRupee: 10, earnedAt: "dispatch", expiryMonths: 12, maxRedemptionShare: 0, canRedeem: false },
 ];
 
+
+/**
+ * How a contest ranks its entries — a RULE SET, not an enum in code.
+ *
+ * Owner, 2026-11-08: *"nothing in the code should be fixed"* and *"the types we
+ * have now are the default TEMPLATES"* — anyone who wants a different kind of
+ * contest writes their own row and is done.
+ *
+ * So these six are shipped defaults, not the permitted set. `rule` is the key a
+ * generic resolver interprets; `tieBreak` is published alongside it because a
+ * tie has to be decided BEFORE a contest closes — deciding it afterwards,
+ * however fairly, looks like deciding it to suit someone.
+ */
+export interface EntryRankingRuleSet {
+  id: string;
+  label: string;
+  /** Interpreted by `resolveEntryRanking`. A new key is a new case + a row. */
+  rule: "most-likes" | "net-score" | "most-votes" | "earliest" | "manual" | string;
+  tieBreak: "earliest-entry" | "latest-entry" | "manual" | string;
+  /** Whether a dislike button renders at all for entries ranked this way. */
+  allowsDislike: boolean;
+  /** What the public rules copy should say, so artwork and mechanic agree. */
+  publicWording: string;
+}
+
+export const entryRankingRuleSetsSeedData: EntryRankingRuleSet[] = [
+  {
+    id: "ranking-most-likes",
+    label: "Most liked wins",
+    rule: "most-likes",
+    tieBreak: "earliest-entry",
+    allowsDislike: false,
+    publicWording: "The photo with the most likes wins.",
+  },
+  {
+    id: "ranking-net-score",
+    label: "Net score (likes minus dislikes)",
+    rule: "net-score",
+    tieBreak: "earliest-entry",
+    allowsDislike: true,
+    publicWording: "Entries are ranked by likes minus dislikes.",
+  },
+  {
+    id: "ranking-most-votes",
+    label: "Most votes of either kind",
+    rule: "most-votes",
+    tieBreak: "earliest-entry",
+    allowsDislike: true,
+    publicWording: "The entry with the most votes wins.",
+  },
+  {
+    id: "ranking-earliest",
+    label: "First come, first served",
+    rule: "earliest",
+    tieBreak: "earliest-entry",
+    allowsDislike: false,
+    publicWording: "The earliest eligible entry wins.",
+  },
+  {
+    id: "ranking-jury",
+    label: "Jury pick",
+    rule: "manual",
+    tieBreak: "manual",
+    allowsDislike: false,
+    publicWording: "A judging panel selects the winner.",
+  },
+];
+
 /** Everything in one export, so the seeder writes one config document. */
 export const ruleSetsSeedData = {
   paymentProviders: paymentProvidersSeedData,
@@ -222,4 +290,5 @@ export const ruleSetsSeedData = {
   tax: taxRuleSetsSeedData,
   offers: offerRuleSetsSeedData,
   coins: coinRuleSetsSeedData,
+  entryRanking: entryRankingRuleSetsSeedData,
 };
