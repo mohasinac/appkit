@@ -28,8 +28,20 @@
 
 import { widgetTemplatesByKey } from "./widget-templates-seed-data";
 
-/** 12-column grid — the pack-by-span vocabulary that already exists. */
-export type Span = 3 | 4 | 6 | 7 | 12;
+/**
+ * 12-column grid — the pack-by-span vocabulary that already exists.
+ *
+ * 3 quarter · 4 third · 6 pair · 12 full, plus the **7 + 5** mixed row that
+ * `mocks/16-layouts.qm` draws as the 60/40 split (the homepage coupon strip and
+ * the dashboard focus rows both use it).
+ *
+ * 🛑 5 was missing from this union while 7 was present, which made every 60/40
+ * row a type error — 7 cannot complete a row without it. Caught by the appkit
+ * build, not by a typecheck of the seed alone, because `tsc` still EMITS on
+ * error: the build chain stopped at `tsc` and left a dist with no assets, no
+ * ESM extension fixes and no CSS. A half-built dist is worse than a stale one.
+ */
+export type Span = 3 | 4 | 5 | 6 | 7 | 12;
 
 export interface WidgetPlacement {
   /** Registry key from widget-templates-seed-data. */
