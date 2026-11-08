@@ -305,12 +305,26 @@ export type ClaimedCouponFromSchema = z.infer<typeof claimedCouponFirestoreSchem
 
 // --- Sub-schemas --------------------------------------------------------------
 
-export const couponTypeSchema = z.enum([
-  "percentage",
-  "fixed",
-  "free_shipping",
-  "buy_x_get_y",
-]);
+/**
+ * 🛑 The SECOND coupon-type schema, and the 2026-11-08 pass MISSED it.
+ *
+ * `couponTypeEnumSchema` near the top of this file was opened that day;
+ * this one — same four values, different name, 290 lines further down — stayed
+ * closed, so coupons were still half-fixed. A re-measure on 11-09 found it.
+ *
+ * The lesson is the reason the acceptance test is a GREP and not a memory:
+ * opening "the enum" is not the same as opening every enum, and two schemas
+ * for one concept is exactly how a half-finished change hides.
+ *
+ * Both now accept a validated slug; the four values remain
+ * `DEFAULT_COUPON_TYPE_TEMPLATES` above.
+ */
+export const couponTypeSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(40)
+  .regex(/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/, "Use a lowercase slug, e.g. first_order");
 
 export const couponScopeSchema = z.enum(["admin", "seller"]);
 
