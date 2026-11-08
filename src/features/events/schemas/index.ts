@@ -27,7 +27,27 @@ const eventCoverImageSchema = z
  * `normalizeEventType`, and rewritten by
  * `appkit/scripts/migrate-collector-drop-rename.mjs`.
  */
-export const eventTypeSchema = z.enum([
+/**
+ * 🛑 OPEN, not a closed enum. Owner, 2026-11-08: *"all event types are also
+ * configs … they should not be fixed, nothing in the code should be fixed"*
+ * and *"the types we have now are the DEFAULT TEMPLATES"*.
+ *
+ * The eight below are the shipped templates, kept as a named list so the
+ * common ones are discoverable and so a typo in one of THEM is still caught.
+ * Anything else is accepted as a slug and resolved against the event-type
+ * config (`seed/event-types-seed-data.ts`).
+ *
+ * The rejected shape was the previous one: a closed `z.enum` that 400s an
+ * unknown value. It made a new kind of event — a photo contest judged by votes,
+ * say — an enum edit, a schema change and a deploy, which is precisely the
+ * coupling the rework removes. The same change is owed to coupons, listings
+ * and reviews, which are all still closed today.
+ *
+ * The slug shape is still enforced, because an unvalidated string here becomes
+ * a URL segment and a Firestore query value: lowercase, digits and hyphens,
+ * 2-40 characters.
+ */
+export const DEFAULT_EVENT_TYPE_TEMPLATES = [
   "sale",
   "offer",
   "poll",
@@ -36,7 +56,14 @@ export const eventTypeSchema = z.enum([
   "giveaway",
   "bonus-spin",
   "random-draw",
-]);
+] as const;
+
+export const eventTypeSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(40)
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use a lowercase slug, e.g. photo-contest");
 
 export const eventStatusSchema = z.enum(["draft", "active", "paused", "ended", "cancelled"]);
 
