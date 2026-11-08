@@ -167,7 +167,6 @@ import {
   type StockBucketResult,
 } from "./bundle-expansion";
 import { expandCartLineToOrderRows } from "./expand-order-items";
-import { freezePartsOnItems } from "./freeze-parts";
 import {
   OrderStatusValues,
   PaymentStatusValues,
@@ -1768,7 +1767,14 @@ async function createOrderForGroup(
    * capped. It never throws — a parts list we could not read must not fail a
    * payment (see the module header).
    */
-  const orderItems = await freezePartsOnItems(baseOrderItems);
+  /*
+   * Part 14 (parts freezing) REMOVED 2026-11-08 — owner decision. The parts
+   * taxonomy (partGlossary · modelComposition) leaves the shop database
+   * entirely; the wiki owns it as JSON and will expose an API for it, the way
+   * it already does for tools. There is no composition to read here any more,
+   * so this is the pure expansion it always wanted to be.
+   */
+  const orderItems = baseOrderItems;
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
   /*
@@ -4789,7 +4795,8 @@ async function createPhonePeGroupOrder(
    * other: an accepted offer paid through PhonePe was recorded at the
    * seller's list price.
    */
-  const orderItems = await freezePartsOnItems(basePhonepeItems);
+    // Part 14 removed — see the note at the other call site.
+  const orderItems = basePhonepeItems;
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
   const imageUrls = [

@@ -24,7 +24,7 @@
  * @tag sideEffects:none
  */
 
-import { PART_SLOT_CATEGORY, type PartSlot } from "../parts/schemas/firestore";
+import { PART_SLOT_CATEGORY, type PartSlot } from "../products/schemas/part-slots";
 
 /**
  * The index types the price tool searches.

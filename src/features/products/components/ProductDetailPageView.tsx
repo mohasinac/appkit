@@ -28,8 +28,6 @@ const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:
 const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next/routing/route-map";
 import { productImageUrls } from "../schemas/firestore";
-import { PART_SLOT_LABEL } from "../../parts/schemas/firestore";
-import { getModelsUsingPart } from "../../../_internal/server/features/parts/data";
 import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
@@ -266,27 +264,8 @@ export async function ProductDetailPageView({
   const currency =
     (p.currency as string | undefined) || getDefaultCurrency();
 
-  /*
-   * The REVERSE link: a spare names a glossary entry, so the glossary entry's
-   * page should name it back. Fetched only when both conditions hold — most
-   * listings carry no `partGlossaryId` at all, and this must not become an
-   * extra read on every product page in the catalogue.
-   *
-   * `getModelsUsingPart` does its own `safeRead`-equivalent internally
-   * (catches and logs, returns `[]`), and this wraps it in `safeRead` again
-   * anyway — belt-and-braces costs nothing against a function that is already
-   * `cache()`-wrapped and this page is the only caller that would ever see a
-   * throw from a future change to it.
-   */
   const partGlossaryId =
     typeof p.partGlossaryId === "string" ? p.partGlossaryId : undefined;
-  const fitsModels = partGlossaryId
-    ? await safeRead(() => getModelsUsingPart(partGlossaryId), {
-        route: "/products/[slug]",
-        key: "products.fitsModels",
-        fallback: [],
-      })
-    : [];
   /*
    * `(slot, tail)` from the id's OWN composition, `${slot}--${tail}` —
    * mirrors `ModelCompositionPanel`'s private `tailOf`, duplicated rather than
@@ -302,9 +281,7 @@ export async function ProductDetailPageView({
     const tail = partGlossaryId.slice(i + 2);
     return String(ROUTES.PUBLIC.PART_DETAIL(slot, tail));
   })();
-  const partSlotLabel = partGlossaryId
-    ? PART_SLOT_LABEL[partGlossaryId.slice(0, partGlossaryId.indexOf("--")) as keyof typeof PART_SLOT_LABEL]
-    : undefined;
+  const partSlotLabel: string | undefined = undefined;
 
   // -- Derived values ---------------------------------------------------------
   const title = String(p.title ?? p.name ?? "");
@@ -1111,26 +1088,6 @@ export async function ProductDetailPageView({
                       <Link href={partHref} className="text-primary-600 hover:underline">
                         See what else fits →
                       </Link>
-                      {fitsModels.length > 0 && (
-                        <>
-                          {" "}Fits:{" "}
-                          {fitsModels.slice(0, 6).map((m, i) => (
-                            <Text key={m.id} as="span">
-                              {i > 0 ? ", " : ""}
-                              {m.categoryId ? (
-                                <Link
-                                  href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(m.categoryId))}
-                                  className="text-primary-600 hover:underline"
-                                >
-                                  {m.name}
-                                </Link>
-                              ) : (
-                                m.name
-                              )}
-                            </Text>
-                          ))}
-                        </>
-                      )}
                     </Text>
                   )}
                 </Div>

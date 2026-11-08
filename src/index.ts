@@ -9420,23 +9420,6 @@ export {
  * was not, so every grep found real hits while the collection stayed empty.
  */
 // E4/D12 — the collection constants and types.
-export {
-  PART_GLOSSARY_COLLECTION,
-  MODEL_COMPOSITION_COLLECTION,
-  PART_SLOT_VALUES,
-  PART_SLOT_LABEL,
-  ALL_PART_SLOTS,
-  LISTING_TYPE_HAS_COMPOSITION,
-  partSlotFromSegment,
-  partGlossaryId,
-} from "./features/parts/schemas/firestore";
-export type {
-  PartGlossaryDocument,
-  ModelCompositionDocument,
-  ModelSlot,
-  ModelSlotMerge,
-  PartSlot,
-} from "./features/parts/schemas/firestore";
 /*
  * 🛑 Exported from the MAIN barrel, not just `seed/index.ts`. `seed-cli.mjs`
  * destructures its seed data from the BARE `@mohasinac/appkit` package, which
@@ -9445,35 +9428,12 @@ export type {
  * with exit 0. That is Root Cause #90 exactly, and it is how `mediaAssets`
  * read "504 seed / 0 in db" while all 504 objects sat in the bucket.
  */
-export {
-  BEYS_COLLECTION,
-  BEY_PRODUCTS_COLLECTION,
-  beyId,
-} from "./features/beys/schemas/firestore";
-export type {
-  BeyDocument,
-  BeyProductDocument,
-  BeyCompositionEntry,
-  BeyRatings,
-  BeyDerivationCoverage,
-  BeyProductAssortmentEntry,
-} from "./features/beys/schemas/firestore";
-export { BeyDetailPageView } from "./features/beys/components/BeyDetailPageView";
-export type { BeyDetailPageViewProps, BeyListingRow } from "./features/beys/components/BeyDetailPageView";
 // D12 — the public part surfaces. The parts GALLERY UI (index/classification/
 // detail page views, search box, OG renderers) was removed — both consumers
 // (letitrip.in's /parts and beybladetools' /parts) dropped it in favour of
 // the existing wiki.letitrip.in parts wiki. `ModelCompositionPanel` and
 // `AssemblyDrawer` stay: core product-page / seller-dashboard features,
 // unrelated to the gallery.
-export { ModelCompositionPanel } from "./features/parts/components/ModelCompositionPanel";
-export { AssemblyDrawer } from "./features/parts/components/AssemblyDrawer";
-export type {
-  AssemblyDrawerProps,
-  AssemblyPartOption,
-  AssemblyRow,
-  AssemblyOutcome,
-} from "./features/parts/components/AssemblyDrawer";
 
 // Scam registry â€" schema types and constants
 export {

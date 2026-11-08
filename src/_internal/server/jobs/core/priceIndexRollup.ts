@@ -49,7 +49,7 @@ import {
   type PriceIndexByPath,
   type PriceIndexConditionBand,
 } from "../../../../features/categories/repository/price-index.repository";
-import { normaliseColourway } from "../../../../features/parts/utils/colourway-match";
+import { normaliseColourway } from "../../../../features/products/schemas/part-slots";
 import type { JobContext } from "../runtime/types";
 
 /** How far back a band looks. */

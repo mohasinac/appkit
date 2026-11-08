@@ -52,7 +52,6 @@ import { getAdminDb } from "../../../../providers/db-firebase";
 import { PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
 import { BLOG_POSTS_COLLECTION, BLOG_POST_FIELDS } from "../../../../features/blog/schemas/firestore";
 import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/categories/schemas/firestore";
-import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
@@ -199,7 +198,4 @@ export function blogPostSlugs(): Promise<string[]> {
  * because the route is dynamic. The id IS the slug here, so the shared
  * `slugsFrom` projection applies unchanged.
  */
-export function beyDetailSlugs(): Promise<string[]> {
-  return slugsFrom("bey", (db) => db.collection(BEYS_COLLECTION));
-}
 

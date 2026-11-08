@@ -103,3 +103,28 @@ export function missingPlaceholders(
 ): string[] {
   return usedPlaceholders(text).filter((name) => !(name in available));
 }
+
+/**
+ * Remove the source line that carries `{{slot}}`.
+ *
+ * Used when a slot has no value, so the body arrives without the line rather
+ * than with an empty one — `interpolate` resolves an unfilled slot to an empty
+ * string, and `<li><strong>System:</strong> {{system}}</li>` would otherwise
+ * render an empty bullet that reads as broken data.
+ *
+ * 🛑 Line-based, with a known consequence worth stating: a slot that appears
+ * both as a standalone row AND mid-sentence loses the whole sentence, not just
+ * the value. Losing a sentence is the better of the two, but a template author
+ * adding an inline slot should know the line goes with it.
+ *
+ * Moved here 2026-11-08 from `features/parts/utils/part-breakdown.ts` when the
+ * bey/part taxonomy left the shop. It was never parts-specific — it is a
+ * templating helper that happened to live beside its first caller.
+ */
+export function stripSlotLine(body: string, slot: string): string {
+  const needle = `{{${slot}}}`;
+  return body
+    .split("\n")
+    .filter((line) => !line.includes(needle))
+    .join("\n");
+}

@@ -50,24 +50,12 @@ export type { SearchViewer } from "./_internal/server/features/search/scoped-sou
 // `listPartsBySlot` (the parts-gallery-exclusive reads) were removed along
 // with the gallery UI — these four stay, used by product/category pages
 // and checkout.
-export {
-  getModelsUsingPart,
-  getCompositionById,
-  getPartsForComposition,
-  getCompositionsForCategory,
-} from "./_internal/server/features/parts/data";
 /*
  * The BEY reads. `getBeyBySlug` is a direct doc read (`id === slug`);
  * `getProductsContainingBey` is ONE `array-contains` over the denormalised
  * `assortmentBeyIds`, because Firestore cannot `array-contains` a field nested
  * inside objects in an array.
  */
-export {
-  getBeyBySlug,
-  getBeysForCategory,
-  getProductsContainingBey,
-} from "./_internal/server/features/beys/data";
-export { renderBeyOg } from "./_internal/server/features/beys/og";
 /*
  * D13's last item — "which models can I build from the parts I hold".
  * Exported because its only caller is a consumer route; the matcher it is built
@@ -76,30 +64,7 @@ export { renderBeyOg } from "./_internal/server/features/beys/og";
  */
 /* D5 — the city OG card. No money on it, by rule (Root Cause #93). */
 export { renderCityOg, type CityOgData } from "./_internal/server/features/products/og";
-export {
-  listBuildableModels,
-  BUILDABLE_HOLDINGS_LIMIT,
-  BUILDABLE_CANDIDATE_LIMIT,
-  type BuildableModel,
-  type BuildableResult,
-  type BuildableSlot,
-} from "./_internal/server/features/parts/buildable";
 // D13 — assembly and part-out. Both run in a real transaction that RE-READS.
-export {
-  assembleFromComponents,
-  partOutToComponents,
-  planAssembly,
-  assertAssemblyInput,
-  MAX_ASSEMBLY_COMPONENTS,
-} from "./_internal/server/features/parts/assembly";
-export type {
-  AssemblyComponent,
-  AssembleInput,
-  PartOutInput,
-  AssemblyResult,
-  AssemblyPlan,
-  StockWrite,
-} from "./_internal/server/features/parts/assembly";
 // Persists DEGRADED_READ rows via the installed reporter; returns typed fallback on error.
 export {
   safeRead,
@@ -2041,7 +2006,6 @@ export {
   brandDetailSlugs,
   franchiseDetailSlugs,
   blogPostSlugs,
-  beyDetailSlugs,
 } from "./_internal/server/features/seo";
 
 // -- Taxonomy hub link indexes --

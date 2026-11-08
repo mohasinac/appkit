@@ -48,7 +48,7 @@
  */
 
 import { ConflictError, ValidationError } from "../../../errors";
-import { LISTING_TYPE_HAS_COMPOSITION } from "../../parts/schemas/firestore";
+import { LISTING_TYPE_HAS_COMPOSITION } from "../schemas/part-slots";
 import type { ListingType } from "../types/index";
 
 /**

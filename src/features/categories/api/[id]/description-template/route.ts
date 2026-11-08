@@ -56,14 +56,7 @@ import type {
   CategorySpecification,
   CategoryTemplateVariant,
 } from "../../../schemas/category-content";
-import { usedPlaceholders } from "../../../../../_internal/shared/templating/placeholders";
-import { getCompositionsForCategory } from "../../../../../_internal/server/features/parts/data";
-import { getBeysForCategory } from "../../../../../_internal/server/features/beys/data";
-import {
-  PART_BREAKDOWN_SLOT,
-  formatPartBreakdown,
-  stripSlotLine,
-} from "../../../../parts/utils/part-breakdown";
+import { usedPlaceholders, stripSlotLine } from "../../../../../_internal/shared/templating/placeholders";
 
 /**
  * ── The TAXONOMY slots ────────────────────────────────────────────────────
@@ -364,12 +357,6 @@ export async function GET(
      */
     let body = template?.body ?? "";
     const slots: Record<string, string> = {};
-    if (template && placeholders.includes(PART_BREAKDOWN_SLOT)) {
-      const compositions = await getCompositionsForCategory(id);
-      const breakdown = formatPartBreakdown(compositions);
-      if (breakdown) slots[PART_BREAKDOWN_SLOT] = breakdown;
-      else body = stripSlotLine(body, PART_BREAKDOWN_SLOT);
-    }
 
     /*
      * ── The taxonomy slots ────────────────────────────────────────────────
@@ -396,18 +383,6 @@ export async function GET(
           .join(CATEGORY_PATH_SEPARATOR),
       };
 
-      if (BEY_SLOTS.some((s) => placeholders.includes(s))) {
-        const beys = await getBeysForCategory(id);
-        /*
-         * The first pairing only, matching `formatPartBreakdown`'s rule and
-         * for the same reason: 22 leaves pair with more than one bey (a
-         * remake shares a model's name), and concatenating two retail series
-         * would describe a release that does not exist.
-         */
-        const bey = beys[0];
-        taxonomy.series = (bey?.series ?? "").trim();
-        taxonomy.system = (bey?.system ?? "").trim();
-      }
 
       for (const slot of TAXONOMY_SLOTS) {
         if (!placeholders.includes(slot)) continue;

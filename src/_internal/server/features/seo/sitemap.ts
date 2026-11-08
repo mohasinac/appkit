@@ -10,7 +10,6 @@ import { CATEGORIES_COLLECTION, CATEGORY_FIELDS } from "../../../../features/cat
 import { isListingCategory } from "../../../../features/categories/constants/listing-categories";
 import { STORE_COLLECTION, STORE_FIELDS } from "../../../../features/stores/schemas/firestore";
 import { SCAMMER_COLLECTION } from "../../../../features/scams/schemas/firestore";
-import { BEYS_COLLECTION } from "../../../../features/beys/schemas/firestore";
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import { PRODUCT_DETAIL_LISTING_TYPES } from "./product-detail-types";
@@ -653,37 +652,6 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
   }
 }
 
-/**
- * `/beys/{slug}` — 1,988 model reference pages. Carries real measured data
- * (type, system, weight, spin, release code, WBO legality, which parts make
- * it up) and had **zero** sitemap URLs, while 4,658 empty category pages
- * were submitted. The index was precisely inverted.
- *
- * Submitted together with its prerendering (`static-params.ts`), not before
- * it: a page whose `<title>` still streams into `<body>` is not ready to be
- * advertised.
- */
-async function fetchBeyUrls(baseUrl: string): Promise<MetadataRoute.Sitemap> {
-  try {
-    const docs = await readAllDocs(
-      getAdminDb().collection(BEYS_COLLECTION).select(PRODUCT_UPDATED_AT, TEST_DATA_FIELD),
-      "bey",
-    );
-    return docs
-      .filter((doc) => !isTestDoc(doc.data()))
-      .map((doc) => ({
-      url: `${baseUrl}${ROUTES.PUBLIC.BEY_DETAIL(doc.id)}`,
-      lastModified:
-        (doc.data()[PRODUCT_UPDATED_AT] as { toDate?: () => Date } | undefined)?.toDate?.() ??
-        new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.4,
-    }));
-  } catch (err) {
-    void normalizeError(err);
-    return sitemapSectionFailed("bey", err);
-  }
-}
 
 export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
   const [
@@ -703,7 +671,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     liveUrls,
     storeUrls,
     scammerUrls,
-    beyUrls,
   ] = await Promise.all([
     fetchProductUrls(baseUrl),
     fetchCategoryUrls(baseUrl),
@@ -721,7 +688,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     fetchLiveUrls(baseUrl),
     fetchStoreUrls(baseUrl),
     fetchScammerUrls(baseUrl),
-    fetchBeyUrls(baseUrl),
   ]);
   const staticUrls = staticPages(baseUrl);
 
@@ -751,7 +717,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     event: eventUrls.length,
     store: storeUrls.length,
     scammer: scammerUrls.length,
-    bey: beyUrls.length,
   };
   /*
    * Drop every URL belonging to a CLOSED browse section.
@@ -885,7 +850,6 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     ...eventUrls,
     ...storeUrls,
     ...scammerUrls,
-    ...beyUrls,
   ].filter(keep);
 
   /*
