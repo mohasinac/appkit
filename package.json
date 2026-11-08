@@ -299,9 +299,9 @@
       "types": "./dist/_internal/server/features/events/likes.d.ts",
       "import": "./dist/_internal/server/features/events/likes.js"
     },
-    "./lottery/data": {
-      "types": "./dist/_internal/server/features/lottery/data.d.ts",
-      "import": "./dist/_internal/server/features/lottery/data.js"
+    "./giveaway/data": {
+      "types": "./dist/_internal/server/features/giveaway/data.d.ts",
+      "import": "./dist/_internal/server/features/giveaway/data.js"
     },
     "./actions/registry": {
       "types": "./dist/_internal/shared/actions/action-registry.d.ts",
@@ -351,17 +351,17 @@
       "types": "./dist/_internal/client/features/layout/RoleGuard.d.ts",
       "import": "./dist/_internal/client/features/layout/RoleGuard.js"
     },
-    "./views/lottery-admin-edit": {
-      "types": "./dist/_internal/client/features/lottery/LotteryAdminEditView.d.ts",
-      "import": "./dist/_internal/client/features/lottery/LotteryAdminEditView.js"
+    "./views/giveaway-admin-edit": {
+      "types": "./dist/_internal/client/features/giveaway/GiveawayAdminEditView.d.ts",
+      "import": "./dist/_internal/client/features/giveaway/GiveawayAdminEditView.js"
     },
-    "./views/lottery-admin-slot": {
-      "types": "./dist/_internal/client/features/lottery/LotteryAdminSlotView.d.ts",
-      "import": "./dist/_internal/client/features/lottery/LotteryAdminSlotView.js"
+    "./views/giveaway-admin-slot": {
+      "types": "./dist/_internal/client/features/giveaway/GiveawayAdminSlotView.d.ts",
+      "import": "./dist/_internal/client/features/giveaway/GiveawayAdminSlotView.js"
     },
-    "./views/lottery-pull-form": {
-      "types": "./dist/_internal/client/features/lottery/LotteryPullForm.d.ts",
-      "import": "./dist/_internal/client/features/lottery/LotteryPullForm.js"
+    "./views/giveaway-pull-form": {
+      "types": "./dist/_internal/client/features/giveaway/GiveawayPullForm.d.ts",
+      "import": "./dist/_internal/client/features/giveaway/GiveawayPullForm.js"
     },
     "./views/tour-provider": {
       "types": "./dist/_internal/client/features/tour/TourProvider.d.ts",
