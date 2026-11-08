@@ -113,6 +113,44 @@ export const PORTAL_DEFINITIONS: readonly PortalDefinition[] = [
   { label: "auth", section: "/auth", roles: [], home: "/auth/login" },
 ];
 
+/**
+ * Hosts that are their OWN DEPLOYMENT, not a portal of this app.
+ *
+ * 🛑 A PORTAL and a DEPLOYMENT are not the same thing, and conflating them is
+ * how a subdomain ends up serving the wrong site:
+ *
+ *   portal      `admin.<domain>`  → THIS app, rewritten to `/admin`
+ *   deployment  `events.<domain>` → a DIFFERENT app, with its own build
+ *
+ * A deployment host must never be rewritten to a section here, and must never
+ * be 301'd to the canonical host either. If one of these hostnames reaches
+ * this app at all, the DNS or the platform mapping is wrong — redirecting it
+ * to www would hide that by silently serving the shop instead, which is
+ * exactly the failure CLAUDE.md records for `audit.` and `tools.` serving the
+ * main homepage as duplicate content.
+ *
+ * Listed as DATA for the same reason the portals are: adding `live.` or
+ * `media.` later is a row, not a code change.
+ */
+export const DEPLOYMENT_LABELS: readonly string[] = [
+  "auth",
+  "wiki",
+  "tools",
+  "audit",
+  "events",
+  "blogs",
+  "live",
+  "media",
+  "help",
+  "chat",
+];
+
+/** Is this hostname a separate deployment rather than a portal of this app? */
+export function isDeploymentHost(hostname: string): boolean {
+  const firstLabel = normalizeHostname(hostname).split(".")[0] ?? "";
+  return DEPLOYMENT_LABELS.includes(firstLabel);
+}
+
 /** Every route section a portal serves. Derived; never hand-maintained. */
 export const PORTAL_SECTIONS: readonly string[] = PORTAL_DEFINITIONS.map((p) => p.section);
 
@@ -379,6 +417,12 @@ export function isOffCanonicalHost(hostname: string, canonicalHost: string | nul
   const host = normalizeHostname(hostname);
   if (host === canonicalHost) return false;
   if (portalForHost(host)) return false;
+  /*
+   * A deployment host is someone else's app. Redirecting it to the canonical
+   * shop would serve duplicate content under the wrong brand and mask a
+   * misrouted DNS record — see `DEPLOYMENT_LABELS`.
+   */
+  if (isDeploymentHost(host)) return false;
   if (isNonPublicHost(host)) return false;
   return true;
 }
