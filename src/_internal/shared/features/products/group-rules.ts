@@ -56,6 +56,29 @@ export interface GroupRules {
    * only ever REPORTS the figure.
    */
   groupDiscountPercent?: number;
+  /**
+   * The COMPOSITE PARENT's own product id, when these rules came off a product
+   * group's parent listing. Absent for a `groupedListing`, which has no parent.
+   *
+   * 🛑 NOT a seller-set rule — derived, and it exists to make one selection
+   * INVALID: a selection containing the parent itself.
+   *
+   * `/api/products/group/{id}` returns the parent among the members (it carries
+   * the same `groupId`), so a self-assembled selection could include the sealed
+   * box alongside loose copies of its own contents, as one cart line. Measured
+   * live 2026-11-08 on the BX-53 set: the endpoint answered 7 items with the
+   * ₹12,500 box among them, selectable.
+   *
+   * Filtering it out of the picker is not enough — the picker is a client, and
+   * the selection is posted. It belongs here because `checkGroupRules` is the
+   * one place all three readers (picker, cart-add, checkout re-validation)
+   * agree, which is the property this module was extracted to guarantee.
+   *
+   * A composite is bought as ITSELF, on its own listing, at its own price —
+   * that is what `components[]` and `componentStockPolicy` describe. It is
+   * never a line item in a selection assembled from its own contents.
+   */
+  compositeParentId?: string;
 }
 
 export const EMPTY_GROUP_RULES: GroupRules = {};
@@ -72,7 +95,12 @@ export type GroupRuleSource = "product-group" | "grouped-listing";
  * GroupedListingDocument` here would drag two feature schemas into a shared
  * module for no gain — and this module is imported by a client component.
  */
-export function readGroupRules(doc: Partial<GroupRules> | null | undefined): GroupRules {
+export function readGroupRules(
+  doc:
+    | (Partial<GroupRules> & { id?: string; isGroupParent?: boolean })
+    | null
+    | undefined,
+): GroupRules {
   if (!doc) return EMPTY_GROUP_RULES;
   const out: GroupRules = {};
   /*
@@ -92,6 +120,14 @@ export function readGroupRules(doc: Partial<GroupRules> | null | undefined): Gro
   if (typeof doc.groupDiscountPercent === "number") {
     out.groupDiscountPercent = doc.groupDiscountPercent;
   }
+  /*
+   * Derived, not read as a rule — see `compositeParentId`. Both conditions are
+   * required: a `groupedListing` document has an `id` too, and it has no parent
+   * member to exclude, so keying off the id alone would invent a rule for it.
+   */
+  if (doc.isGroupParent === true && typeof doc.id === "string" && doc.id) {
+    out.compositeParentId = doc.id;
+  }
   return out;
 }
 
@@ -100,7 +136,8 @@ export interface GroupRuleViolation {
     | "GROUP_TOO_FEW_MEMBERS"
     | "GROUP_TOO_MANY_MEMBERS"
     | "GROUP_MEMBER_QTY_EXCEEDED"
-    | "GROUP_REQUIRED_MEMBER_MISSING";
+    | "GROUP_REQUIRED_MEMBER_MISSING"
+    | "GROUP_PARENT_NOT_SELECTABLE";
   /** Buyer-facing, already specific. Never a raw field name. */
   message: string;
 }
@@ -131,6 +168,30 @@ export function checkGroupRules(
 ): GroupRuleViolation[] {
   const chosen = selection.filter((e) => e.quantity > 0);
   const out: GroupRuleViolation[] = [];
+
+  /*
+   * 🛑 Checked FIRST, and it is a refusal rather than a silent drop.
+   *
+   * Dropping the parent from the selection would charge the buyer for the rest
+   * of what they picked without saying the box they also chose was removed —
+   * the shape of a quietly-wrong total. Refusing names it.
+   *
+   * Counted before the min/max checks for the same reason: with the parent
+   * silently dropped, a selection of "box only" would fail
+   * `groupMinMembers` with a message about picking more items, which tells the
+   * buyer nothing about the actual problem.
+   */
+  if (rules.compositeParentId) {
+    const parentEntry = chosen.find((e) => e.productId === rules.compositeParentId);
+    if (parentEntry) {
+      out.push({
+        code: "GROUP_PARENT_NOT_SELECTABLE",
+        message: `"${
+          parentEntry.title ?? "The complete set"
+        }" is sold as its own listing, not as part of a mix — open it to buy the set, or pick the individual items you want.`,
+      });
+    }
+  }
 
   if (rules.groupMinMembers !== undefined && chosen.length < rules.groupMinMembers) {
     out.push({

@@ -134,12 +134,39 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
     <GroupMemberPicker
       groupId={groupId}
       groupSource="product-group"
-      members={members}
+      /*
+       * 🛑 THE PARENT IS NOT ONE OF THE PICKABLE ITEMS.
+       *
+       * `/api/products/group/{id}` returns the parent among the members — it
+       * carries the same `groupId` — and this component used to hand the whole
+       * array to the picker, which maps every row into a selectable stepper. So
+       * the BX-53 box appeared as an item inside its own contents, and a buyer
+       * could add the sealed box AND loose copies of what is in it as ONE cart
+       * line. Measured live 2026-11-08: the group endpoint answered 7 items, the
+       * box among them, labelled "Parent" and fully selectable.
+       *
+       * Filtered HERE and not in the endpoint, because the two consumers want
+       * different sets: the thumbnail row below deliberately keeps the parent
+       * (sorted first, badged "Set") so a child's page can navigate up to the
+       * box. Only the PICKER — the surface that writes a cart line — must
+       * exclude it.
+       *
+       * A composite is bought as itself, on its own listing, at its own price;
+       * that is what `componentStockPolicy` and `components[]` describe. It is
+       * never an item in a self-assembled selection.
+       */
+      members={members.filter((m) => !m.isGroupParent)}
       /*
        * A product group's rules live on the PARENT, and the parent is one of
        * the members this component already fetched — found by `isGroupParent`
        * rather than by position, because the endpoint makes no ordering
        * promise and the parent is not reliably first.
+       *
+       * 🛑 Read from the UNFILTERED `members` on purpose. The parent is no
+       * longer pickable (above) but it is still where the rules are stored, so
+       * filtering first would silently drop every group rule — min/max members,
+       * per-member cap, required members and the group discount — and the
+       * picker would permit exactly what the server refuses.
        *
        * 🛑 This is why the five rule fields are in `PRODUCT_PUBLIC_FIELDS`: they
        * reach `toPublicGroupMember` through that allow-list, and without it the
