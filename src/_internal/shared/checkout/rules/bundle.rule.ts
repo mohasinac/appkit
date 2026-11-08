@@ -1,17 +1,38 @@
 /**
- * Bundle CategoryCheckoutRule — bundles are always direct-checkout-only.
+ * Bundle CategoryCheckoutRule — `categoryType:"bundle"`.
  *
- * Bundles (categoryType:"bundle") never enter the cart. The buyer clicks
- * "Buy bundle" on the bundle PDP which calls directBundleCheckoutAction,
- * bypassing the cart pipeline entirely.  This rule conveys that intent to the
- * cart-add gate (cartEligible: false) and informs the checkout CART-UI which
- * replaces "Add to cart" with "Buy now".
+ * A bundle is the `derived`-stock composite: one price of its own, set below the
+ * sum of its members, assembled from their loose stock when ordered. The
+ * `independent` case — a separately boxed item with its own count — is a
+ * LISTING with `components[]`, not a bundle; see
+ * `_internal/shared/features/products/composite.ts`.
+ *
+ * ## 🛑 `cartEligible: false` does NOT mean bundles never reach the cart
+ *
+ * The previous docstring claimed "bundles never enter the cart" and that
+ * "addBundleToCart has been removed". Both were false when written and are
+ * false now: `addBundleToCartAction` is live in
+ * `_internal/server/features/bundles/actions.ts`, exported from `server.ts`, and
+ * called twice from the host (`src/actions/bundle.actions.ts`). It writes a real
+ * cart line with `lineKind: "bundle"`.
+ *
+ * What this flag actually does is keep a bundle out of the GENERIC
+ * `addItemToCart` capability gate, which a bundle cannot satisfy — its
+ * `listingType: "standard"` is a placeholder, not a fact. The bundle path
+ * deliberately bypasses that gate and re-asserts the lane check itself.
+ *
+ * Corrected rather than deleted because a comment that misdescribes a live
+ * money path is worse than no comment: the next reader reasonably concludes the
+ * cart cannot hold a bundle and writes code on that assumption.
  */
 import type { CategoryCheckoutRule } from "./types";
 
 export const bundleRule: CategoryCheckoutRule = {
   purchaseable: true,
-  cartEligible: false, // direct-checkout-only; addBundleToCart has been removed
+  // Keeps a bundle out of the GENERIC addItemToCart capability gate, which it
+  // cannot satisfy. `addBundleToCartAction` is the bundle's own entry point and
+  // is very much alive — see the header.
+  cartEligible: false,
   orderType: "standard", // bundle orders resolve to standard orderType
   requiresShippingAddress: true,
   /*
