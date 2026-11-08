@@ -18,6 +18,31 @@ export const reviewFirestoreSchema = z.object({
   productId: z.string(),
   productTitle: z.string(),
   listingType: z.string().optional(),
+  /*
+   * The KIND of review — the config dimension reviews did not have.
+   *
+   * Owner, 2026-11-08, naming reviews alongside events, listings and coupons:
+   * *"nothing in the code should be fixed … the types we have now are the
+   * default templates"*. Reviews had no type at all, so every review was
+   * implicitly a product review and a site wanting seller reviews, unboxing
+   * reviews or a verified-buyer-only kind had nowhere to put it.
+   *
+   * An open validated slug, resolved against the review-type config: which
+   * rules apply (media allowed, moderation required, who may write one) is a
+   * rule set on that row, not a branch in this file.
+   *
+   * 🛑 `status` below is deliberately NOT opened. It is the moderation STATE
+   * MACHINE — pending/approved/rejected is machinery, not a user choice, and an
+   * unknown state would mean a review that no queue can ever clear. Types are
+   * config; lifecycle states are code.
+   */
+  reviewType: z
+    .string()
+    .trim()
+    .min(2)
+    .max(40)
+    .regex(/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/, "Use a lowercase slug, e.g. seller-review")
+    .optional(),
   storeId: z.string().optional(),
   storeName: z.string().optional(),
   userId: z.string(),

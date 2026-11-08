@@ -64,9 +64,27 @@ export const printMetaSchema = z.object({
  * Registered in `audit-listing-type-tab-coverage`'s STAYS_DERIVED so nobody
  * re-expands it into a literal for readability.
  */
-const LISTING_TYPE_ENUM = z.enum(
-  ALL_LISTING_TYPES as [ListingType, ...ListingType[]],
-);
+/*
+ * 🛑 OPEN, not a closed enum. Owner, 2026-11-08: *"nothing in the code should
+ * be fixed … the types we have now are the DEFAULT TEMPLATES"*, and listings
+ * were named explicitly alongside events, coupons and reviews.
+ *
+ * `ALL_LISTING_TYPES` stays the shipped template list — it still drives the
+ * admin picker, the seed and every default — but a site that wants a listing
+ * kind we never imagined adds a config row rather than waiting for a release.
+ *
+ * The SHAPE is still enforced, because this value becomes a URL segment, a
+ * Firestore query value and an index key: lowercase, digits, hyphen/underscore
+ * separated, 2-40 characters.
+ */
+const SLUG_RE = /^[a-z0-9]+(?:[-_][a-z0-9]+)*$/;
+
+const LISTING_TYPE_ENUM = z
+  .string()
+  .trim()
+  .min(2)
+  .max(40)
+  .regex(SLUG_RE, "Use a lowercase slug, e.g. art-and-stickers");
 
 export const productItemSchema = z.object({
   id: z.string(),

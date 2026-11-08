@@ -9,12 +9,28 @@ import { auditTimestampsShape, firestoreDateSchema, rupeesSchema } from "../../.
 //   SCHEMAS.firestore.couponUsage
 //   SCHEMAS.firestore.claimedCoupons
 
-export const couponTypeEnumSchema = z.enum([
+/**
+ * 🛑 OPEN, not a closed enum — the same change made to events and listings on
+ * 2026-11-08. The four below are the shipped DEFAULT TEMPLATES, kept as a named
+ * list so they stay discoverable in pickers and seeds.
+ *
+ * A site wanting a discount kind we do not ship — tiered, bundle, first-order —
+ * adds a coupon-type config row and a handler, rather than editing this file to
+ * ask permission.
+ */
+export const DEFAULT_COUPON_TYPE_TEMPLATES = [
   "percentage",
   "fixed",
   "free_shipping",
   "buy_x_get_y",
-]);
+] as const;
+
+export const couponTypeEnumSchema = z
+  .string()
+  .trim()
+  .min(2)
+  .max(40)
+  .regex(/^[a-z0-9]+(?:[-_][a-z0-9]+)*$/, "Use a lowercase slug, e.g. first_order");
 
 export const discountConfigSchema = z.object({
   value: z.number(),

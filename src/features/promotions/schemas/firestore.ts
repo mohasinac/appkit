@@ -229,7 +229,14 @@ export const COUPON_FIELDS = {
   },
 } as const;
 
-export const COUPON_TYPE_LABELS: Record<CouponType, string> = {
+/**
+ * Labels for the SHIPPED coupon types.
+ *
+ * 🛑 Since `CouponType` opened (2026-11-08) this is no longer exhaustive — a
+ * site-defined type has no entry here and a bare lookup yields `undefined`,
+ * which renders as an empty chip. Read it through `couponTypeLabel()`.
+ */
+export const COUPON_TYPE_LABELS: Record<string, string> = {
   percentage: "Percentage Discount",
   fixed: "Fixed Amount Discount",
   free_shipping: "Free Shipping",
@@ -238,6 +245,21 @@ export const COUPON_TYPE_LABELS: Record<CouponType, string> = {
   // our word for it; "Points back" is what appears on their balance.
   points_earn: "Points Back",
 };
+
+/**
+ * The label for a coupon type, with a readable fallback.
+ *
+ * An unknown type is a site-defined one, not an error: it renders its own slug
+ * de-slugged ("first_order" -> "First order") rather than blank. A coupon that
+ * shows no type at all is worse than one showing a plain name, and it must
+ * never throw on a checkout page.
+ */
+export function couponTypeLabel(type: string): string {
+  const known = COUPON_TYPE_LABELS[type];
+  if (known) return known;
+  const words = type.replace(/[-_]+/g, " ").trim();
+  return words ? words.charAt(0).toUpperCase() + words.slice(1) : type;
+}
 
 export const DEFAULT_COUPON_DATA: Partial<CouponDocument> = {
   usage: { currentUsage: 0 },

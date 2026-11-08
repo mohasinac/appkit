@@ -22,7 +22,23 @@ export type CouponType =
    * `Record<CouponType, string>` — that is the point of declaring the union
    * first.
    */
-  | "points_earn";
+  | "points_earn"
+  /*
+   * 🛑 OPEN from 2026-11-08. Owner: *"same with the coupons … nothing in the
+   * code should be fixed"*. Everything above is a shipped DEFAULT TEMPLATE,
+   * not the permitted set — a site wanting a tiered or first-order coupon adds
+   * a config row and a handler rather than editing this union.
+   *
+   * The named members stay because they are what autocompletes, what seeds
+   * reference, and what `COUPON_TYPE_LABELS` covers. `(string & {})` keeps the
+   * union open WITHOUT collapsing it to `string`, so those members still
+   * suggest.
+   *
+   * Consequence to respect: `Record<CouponType, …>` maps can no longer be
+   * exhaustive, so every lookup needs a fallback. That is the correct trade —
+   * an unknown coupon type should render its raw slug, not crash a checkout.
+   */
+  | (string & {});
 export type CouponScope = "admin" | "seller";
 
 export interface CouponItem {
