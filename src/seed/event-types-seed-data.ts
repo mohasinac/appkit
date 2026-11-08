@@ -34,6 +34,7 @@ export const eventMechanismsSeedData: EventMechanismDefinition[] = [
   { id: "giveawayEntry", label: "Giveaway entry", effect: "Entries are collected and a winner is drawn at a declared time.", moneyPath: true },
   { id: "coinsEntry", label: "Entry with coins", effect: "Entries may be bought with loyalty coins instead of cash.", moneyPath: true },
   { id: "submission", label: "Submission", effect: "Participants upload something (a photo, a build, a result)." },
+  { id: "entryVoting", label: "Entry voting", effect: "Visitors vote on entries; counts are public and the voter list is admin-only." },
   { id: "liveStream", label: "Live stream", effect: "The event page embeds a stream while it is running." },
   { id: "bracket", label: "Bracket / results", effect: "Rounds, seedings and results render on the event page." },
   { id: "prizePool", label: "Prize pool", effect: "Declared prizes render; awarding them is a recorded decision.", moneyPath: true },
@@ -55,6 +56,18 @@ export interface EventTypeDefinition {
   templates: { card: string; detail: string };
   /** Required before publishing. */
   requiredFields: string[];
+  /**
+   * Which RULE SETS this type uses, by id, from `rule-sets-seed-data.ts`.
+   *
+   * This is the join that keeps a decision out of code: a contest that ranks by
+   * net score and one that ranks by likes are the same type with a different
+   * `entryRanking` row, not two code paths. Unset means the platform default.
+   */
+  ruleSets?: {
+    entryRanking?: string;
+    payment?: string;
+    coins?: string;
+  };
   tags: string[];
 }
 
@@ -135,9 +148,17 @@ export const eventTypesSeedData: EventTypeDefinition[] = [
     slug: "contest",
     enabled: true,
     order: 6,
-    on: ["submission", "prizePool", "capacityLimit", "ageGate"],
+    on: ["submission", "entryVoting", "prizePool", "capacityLimit", "ageGate"],
     templates: { card: "card.event", detail: "detail.event" },
     requiredFields: ["title", "closesAt", "rules", "prize"],
+    /*
+     * The published Diwali artwork reads "THE MOST LIKED PHOTO WINS", so the
+     * shipped default is `ranking-most-likes` — which also means no dislike
+     * button renders (`allowsDislike: false` on that row). An admin wanting a
+     * net-score contest changes this id; the artwork copy comes from the rule
+     * set's own `publicWording`, so the two cannot drift apart again.
+     */
+    ruleSets: { entryRanking: "ranking-most-likes" },
     tags: ["event", "contest", "ugc"],
   }),
   eventType({
