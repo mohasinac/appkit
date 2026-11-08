@@ -386,6 +386,14 @@
     "./views/digital-content-pool": {
       "types": "./dist/_internal/client/features/digital-code/DigitalContentPoolManager.d.ts",
       "import": "./dist/_internal/client/features/digital-code/DigitalContentPoolManager.js"
+    },
+    "./features/events/repository/entry-votes.repository": {
+      "types": "./dist/features/events/repository/entry-votes.repository.d.ts",
+      "import": "./dist/features/events/repository/entry-votes.repository.js"
+    },
+    "./features/events/schemas/entry-votes": {
+      "types": "./dist/features/events/schemas/entry-votes.d.ts",
+      "import": "./dist/features/events/schemas/entry-votes.js"
     }
   },
   "files": [
