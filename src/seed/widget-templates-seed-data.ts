@@ -40,8 +40,8 @@
  * `legacySectionType` values below still read `event-raffles` because they are
  * FOREIGN KEYS into `homepage-sections-seed-data.ts`, which this file must not
  * contradict. Renaming those is part of a wider sweep: **188 files outside
- * `seed/` still use raffle / lottery / auction vocabulary** (138 in appkit, 50
- * in the host app), including a whole `lotteryEntries` collection with manifest
+ * `seed/` still use raffle / giveaway / auction vocabulary** (138 in appkit, 50
+ * in the host app), including a whole `giveawayEntries` collection with manifest
  * and purge entries. That is an all-or-nothing migration touching live data —
  * it is flagged in the plan, not half-done here.
  *

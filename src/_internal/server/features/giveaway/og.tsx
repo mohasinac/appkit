@@ -1,13 +1,13 @@
 /**
- * Lottery OG image renderer.
+ * Giveaway OG image renderer.
  *
  * ## Why this did not exist
  *
- * `lottery/[id]` was the single entry in `verify-og-coverage`'s
+ * `giveaway/[id]` was the single entry in `verify-og-coverage`'s
  * `OG_KNOWN_GAPS` — the one public dynamic detail page shipping without an
  * `opengraph-image.tsx`, carried as a baseline since 2026-05-23 with the note
  * "OG image follows in a follow-up". Metadata already resolved
- * (`buildLotteryMetadata`), so a shared link rendered a title and whatever the
+ * (`buildGiveawayMetadata`), so a shared link rendered a title and whatever the
  * event's cover image happened to be, with none of the branded card every
  * other listing type gets.
  *
@@ -15,8 +15,8 @@
  *
  * An OG image is a public image URL with its contents burned into the pixels:
  * no sign-in gate reaches it and no paywall markup describes it, which is why
- * all eight money-bearing renderers were stripped (Root Cause #93). A lottery
- * is the sharpest case in the codebase — `toClientLotteryConfig` is an
+ * all eight money-bearing renderers were stripped (Root Cause #93). A giveaway
+ * is the sharpest case in the codebase — `toClientGiveawayConfig` is an
  * allow-list that exists specifically to keep `price` and `weight` off every
  * slot — so this renderer takes the CLIENT shape and reads only what that
  * allow-list already permits: the slot count, and how many are still free.
@@ -29,9 +29,9 @@
 import type { ReactElement } from "react";
 import { renderOgLayout } from "../seo/og-layout";
 import { resolveOgImageUrl } from "../seo/og";
-import type { LotteryEventClient } from "./data";
+import type { GiveawayEventClient } from "./data";
 
-export interface LotteryOgData {
+export interface GiveawayOgData {
   title: string;
   imageUrl?: string | null;
   slotsLabel?: string | null;
@@ -40,7 +40,7 @@ export interface LotteryOgData {
 
 /**
  * The event's own status, as a human badge. `active` is deliberately absent:
- * a live lottery is the default case, so a chip saying so costs a badge slot
+ * a live giveaway is the default case, so a chip saying so costs a badge slot
  * and tells the reader nothing they would not assume.
  */
 const STATUS_BADGE_TEXT: Record<string, string> = {
@@ -50,11 +50,11 @@ const STATUS_BADGE_TEXT: Record<string, string> = {
   cancelled: "Cancelled",
 };
 
-export function renderLotteryOg(
-  event: LotteryEventClient | null | undefined,
+export function renderGiveawayOg(
+  event: GiveawayEventClient | null | undefined,
   opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const cfg = event?.lotteryConfig;
+  const cfg = event?.giveawayConfig;
   const slots = cfg?.slots ?? [];
   /*
    * Counted from the slot array rather than read from `totalSlots`, which is
@@ -76,9 +76,9 @@ export function renderLotteryOg(
       ? (event.coverImage as { url: string }).url
       : (event?.coverImageUrl ?? null);
 
-  return renderLotteryOgImage(
+  return renderGiveawayOgImage(
     {
-      title: event?.title ?? "Lottery",
+      title: event?.title ?? "Giveaway",
       imageUrl: resolveOgImageUrl(coverUrl, opts.baseUrl),
       slotsLabel,
       statusLabel: event?.status ? (STATUS_BADGE_TEXT[event.status] ?? null) : null,
@@ -87,8 +87,8 @@ export function renderLotteryOg(
   );
 }
 
-export function renderLotteryOgImage(
-  data: LotteryOgData,
+export function renderGiveawayOgImage(
+  data: GiveawayOgData,
   siteName: string,
 ): ReactElement {
   const badges = [data.statusLabel].filter((s): s is string => Boolean(s));
@@ -96,7 +96,7 @@ export function renderLotteryOgImage(
     title: data.title,
     subtitle: data.slotsLabel ?? undefined,
     imageUrl: data.imageUrl,
-    siteName: `${siteName} · Lottery`,
+    siteName: `${siteName} · Giveaway`,
     badges: badges.length > 0 ? badges : undefined,
     // Violet, distinct from the prize-draw amber beside it in the nav — the two
     // are different products and a shared accent makes shared links ambiguous.

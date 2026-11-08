@@ -6,7 +6,7 @@ import type { MediaField } from "../../media/types";
 import type { JsonValue } from "../../../schemas/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { EventType, EventStatus, EntryReviewStatus, SaleConfig, OfferConfig, PollConfig, SurveyConfig, FeedbackConfig, RaffleType, SpinPrize } from "../types";
-import type { LotteryConfig } from "../../lottery/types";
+import type { GiveawayConfig } from "../../giveaway/types";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 export const EVENTS_COLLECTION = "events" as const;
@@ -282,8 +282,8 @@ export interface EventDocument extends BaseDocument {
    * CLAUDE.md "SSR Architecture" era docs / event-actions.ts `enterEvent`).
    */
   allowGuestParticipation?: boolean;
-  /** Full lottery config including server-only price/weight fields. */
-  lotteryConfig?: LotteryConfig;
+  /** Full giveaway config including server-only price/weight fields. */
+  giveawayConfig?: GiveawayConfig;
   stats: {
     totalEntries: number;
     approvedEntries: number;
@@ -422,7 +422,7 @@ export const EVENT_FIELDS = {
    * string literal while every other row used this map.
    *
    * Renamed 2026-10-31: `RAFFLE` -> `GIVEAWAY`, `SPIN_WHEEL` -> `BONUS_SPIN`,
-   * `LOTTERY` -> `RANDOM_DRAW`.
+   * `GIVEAWAY` -> `RANDOM_DRAW`.
    *
    * NB. there are two `EVENT_FIELDS` constants (this one and the one in
    * `constants/field-names.ts`) and they drifted independently. Same shape as

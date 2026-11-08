@@ -15,16 +15,16 @@ import {
   encryptPiiFields,
   maskPii,
   revealPii,
-  LOTTERY_ENTRY_PII_FIELDS,
+  GIVEAWAY_ENTRY_PII_FIELDS,
 } from "../../../security";
 import {
-  LOTTERY_ENTRIES_COLLECTION,
-  LOTTERY_ENTRY_FIELDS,
-  type LotteryEntryDocument,
-  type LotteryEntryPlain,
+  GIVEAWAY_ENTRIES_COLLECTION,
+  GIVEAWAY_ENTRY_FIELDS,
+  type GiveawayEntryDocument,
+  type GiveawayEntryPlain,
 } from "../schemas/firestore";
 
-class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
+class GiveawayEntryRepository extends BaseRepository<GiveawayEntryDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
     sourceType: { canFilter: true, canSort: false },
     eventId: { canFilter: true, canSort: false },
@@ -32,11 +32,11 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     userId: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: false },
     submittedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
-    userLotteryNumber: { canFilter: false, canSort: true },
+    userGiveawayNumber: { canFilter: false, canSort: true },
   };
 
   constructor() {
-    super(LOTTERY_ENTRIES_COLLECTION);
+    super(GIVEAWAY_ENTRIES_COLLECTION);
   }
 
   /*
@@ -48,7 +48,7 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
    * and plaintext requires one of the two named methods below.
    *
    * The compiler enforces it rather than a convention doing so —
-   * `LotteryEntryDocument`'s PII fields are `Encrypted<string>`, assignable to
+   * `GiveawayEntryDocument`'s PII fields are `Encrypted<string>`, assignable to
    * nothing that wants a plain `string`, so a reader that skips both accessors
    * is a compile error naming the file and line.
    */
@@ -57,12 +57,12 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
    * Plaintext PII. **Opt-in and named** — for the admin entries table and the
    * draw notification, where the real address is the point.
    */
-  revealEntry(doc: LotteryEntryDocument): LotteryEntryPlain {
-    return revealPii<LotteryEntryPlain>(doc, LOTTERY_ENTRY_PII_FIELDS);
+  revealEntry(doc: GiveawayEntryDocument): GiveawayEntryPlain {
+    return revealPii<GiveawayEntryPlain>(doc, GIVEAWAY_ENTRY_PII_FIELDS);
   }
 
   /** As `revealEntry`, for a list read. */
-  revealEntries(docs: readonly LotteryEntryDocument[]): LotteryEntryPlain[] {
+  revealEntries(docs: readonly GiveawayEntryDocument[]): GiveawayEntryPlain[] {
     return docs.map((d) => this.revealEntry(d));
   }
 
@@ -72,20 +72,20 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
    * straight to `maskName` would return "Anonymous" for every row, because
    * those helpers refuse ciphertext by design.
    */
-  maskedEntry(doc: LotteryEntryDocument): LotteryEntryPlain {
-    return maskPii<LotteryEntryPlain>(doc, LOTTERY_ENTRY_PII_FIELDS);
+  maskedEntry(doc: GiveawayEntryDocument): GiveawayEntryPlain {
+    return maskPii<GiveawayEntryPlain>(doc, GIVEAWAY_ENTRY_PII_FIELDS);
   }
 
   /** As `maskedEntry`, for a list read. */
-  maskedEntries(docs: readonly LotteryEntryDocument[]): LotteryEntryPlain[] {
+  maskedEntries(docs: readonly GiveawayEntryDocument[]): GiveawayEntryPlain[] {
     return docs.map((d) => this.maskedEntry(d));
   }
 
   /**
-   * Get the next sequential userLotteryNumber for a source atomically.
+   * Get the next sequential userGiveawayNumber for a source atomically.
    * Returns current count + 1.
    */
-  async nextUserLotteryNumber(
+  async nextUserGiveawayNumber(
     sourceId: string,
     field: "eventId" | "productId",
   ): Promise<number> {
@@ -97,7 +97,7 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     } catch (error) {
       void normalizeError(error);
       throw new DatabaseError(
-        `Failed to get next lottery number for ${field}=${sourceId}`,
+        `Failed to get next giveaway number for ${field}=${sourceId}`,
         error,
       );
     }
@@ -115,7 +115,7 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     try {
       const snapshot = await this.getCollection()
         .where(sourceField, "==", sourceId)
-        .where(LOTTERY_ENTRY_FIELDS.TRANSACTION_ID, "==", transactionId)
+        .where(GIVEAWAY_ENTRY_FIELDS.TRANSACTION_ID, "==", transactionId)
         .get();
       return snapshot.size;
     } catch (error) {
@@ -139,8 +139,8 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     try {
       const snapshot = await this.getCollection()
         .where(sourceField, "==", sourceId)
-        .where(LOTTERY_ENTRY_FIELDS.USER_ID, "==", userId)
-        .where(LOTTERY_ENTRY_FIELDS.STATUS, "!=", "cancelled")
+        .where(GIVEAWAY_ENTRY_FIELDS.USER_ID, "==", userId)
+        .where(GIVEAWAY_ENTRY_FIELDS.STATUS, "!=", "cancelled")
         .get();
       return snapshot.size;
     } catch (error) {
@@ -157,10 +157,10 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
     sourceId: string,
     sourceField: "eventId" | "productId",
     model: SieveModel,
-  ): Promise<FirebaseSieveResult<LotteryEntryDocument>> {
-    return this.sieveQuery<LotteryEntryDocument>(
+  ): Promise<FirebaseSieveResult<GiveawayEntryDocument>> {
+    return this.sieveQuery<GiveawayEntryDocument>(
       model,
-      LotteryEntryRepository.SIEVE_FIELDS,
+      GiveawayEntryRepository.SIEVE_FIELDS,
       {
         baseQuery: this.getCollection().where(sourceField, "==", sourceId),
       },
@@ -171,62 +171,62 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
   async listForUser(
     userId: string,
     model: SieveModel,
-  ): Promise<FirebaseSieveResult<LotteryEntryDocument>> {
-    return this.sieveQuery<LotteryEntryDocument>(
+  ): Promise<FirebaseSieveResult<GiveawayEntryDocument>> {
+    return this.sieveQuery<GiveawayEntryDocument>(
       model,
-      LotteryEntryRepository.SIEVE_FIELDS,
+      GiveawayEntryRepository.SIEVE_FIELDS,
       {
-        baseQuery: this.getCollection().where(LOTTERY_ENTRY_FIELDS.USER_ID, "==", userId),
+        baseQuery: this.getCollection().where(GIVEAWAY_ENTRY_FIELDS.USER_ID, "==", userId),
       },
     );
   }
 
-  /** Create a lottery entry with PII encryption. */
+  /** Create a giveaway entry with PII encryption. */
   /*
-   * 🛑 Takes PLAINTEXT (`LotteryEntryPlain`), returns CIPHERTEXT
-   * (`LotteryEntryDocument`), and the asymmetry is the point.
+   * 🛑 Takes PLAINTEXT (`GiveawayEntryPlain`), returns CIPHERTEXT
+   * (`GiveawayEntryDocument`), and the asymmetry is the point.
    *
    * The caller holds a real email and phone; this method encrypts them. Typing
-   * the parameter `Omit<LotteryEntryDocument, "id">` would have demanded the
+   * the parameter `Omit<GiveawayEntryDocument, "id">` would have demanded the
    * caller hand over `Encrypted<string>` it does not have, and the only way to
    * satisfy that is `asEncrypted(email)` — which labels plaintext as ciphertext
    * and is exactly the misuse `asEncrypted`'s own docstring forbids. The
    * encryption happens here; so does the type change.
    */
   async createEntry(
-    data: Omit<LotteryEntryPlain, "id">,
-  ): Promise<LotteryEntryDocument> {
+    data: Omit<GiveawayEntryPlain, "id">,
+  ): Promise<GiveawayEntryDocument> {
     try {
       const encrypted = encryptPiiFields(
         data as unknown as import("@mohasinac/appkit").FirestoreDocument,
-        [...LOTTERY_ENTRY_PII_FIELDS],
+        [...GIVEAWAY_ENTRY_PII_FIELDS],
       );
       const prepared = prepareForFirestore({ ...encrypted });
       const ref = await this.getCollection().add(prepared);
       const created = await ref.get();
 
-      serverLogger.info("Lottery entry created", {
+      serverLogger.info("Giveaway entry created", {
         entryId: ref.id,
         sourceType: data.sourceType,
         eventId: data.eventId,
         productId: data.productId,
         userId: data.userId,
-        userLotteryNumber: data.userLotteryNumber,
+        userGiveawayNumber: data.userGiveawayNumber,
       });
 
-      return this.mapDoc<LotteryEntryDocument>(created);
+      return this.mapDoc<GiveawayEntryDocument>(created);
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError("Failed to create lottery entry", error);
+      throw new DatabaseError("Failed to create giveaway entry", error);
     }
   }
 
-  /** Flag a lottery entry as fraudulent. */
+  /** Flag a giveaway entry as fraudulent. */
   async flagEntry(
     entryId: string,
     flagNote: string,
     flaggedBy: string,
-  ): Promise<LotteryEntryDocument> {
+  ): Promise<GiveawayEntryDocument> {
     try {
       await this.getCollection().doc(entryId).update(
         prepareForFirestore({
@@ -240,10 +240,10 @@ class LotteryEntryRepository extends BaseRepository<LotteryEntryDocument> {
       return this.findByIdOrFail(entryId);
     } catch (error) {
       void normalizeError(error);
-      throw new DatabaseError(`Failed to flag lottery entry ${entryId}`, error);
+      throw new DatabaseError(`Failed to flag giveaway entry ${entryId}`, error);
     }
   }
 }
 
-export { LotteryEntryRepository };
-export const lotteryEntryRepository = new LotteryEntryRepository();
+export { GiveawayEntryRepository };
+export const giveawayEntryRepository = new GiveawayEntryRepository();

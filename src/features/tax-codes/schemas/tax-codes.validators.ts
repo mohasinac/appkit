@@ -10,7 +10,7 @@
  * `z.object()` STRIPS unknown keys, which is how a PATCH returns 200 having
  * written nothing (Root Cause #40's shape, and the admin grouped-listings
  * route's documented bug). `.passthrough()` writes whatever arrives, which is
- * how a form overwrote booked lottery slots. `.strict()` 400s on a field the
+ * how a form overwrote booked giveaway slots. `.strict()` 400s on a field the
  * contract does not name — the caller is told, and nothing silently vanishes.
  *
  * ## The id is NOT accepted on update

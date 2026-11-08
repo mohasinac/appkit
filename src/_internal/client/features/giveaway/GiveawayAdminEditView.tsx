@@ -1,26 +1,26 @@
 "use client";
 
 /**
- * LotteryAdminEditView — the slot configuration for one lottery. Sectionised
+ * GiveawayAdminEditView — the slot configuration for one giveaway. Sectionised
  * 2026-08-30.
  *
  * ## Two schemas became one
  *
- * It declared `lotteryConfigFormSchema` on `<Form>` and parsed
- * `lotteryConfigWriteSchema` in the submit handler, so the form schema's
- * duplicate-slot and free-lottery rules had never executed. The form schema is
- * deleted; `lotteryConfigWriteSchema` carries the annotations now and is both
+ * It declared `giveawayConfigFormSchema` on `<Form>` and parsed
+ * `giveawayConfigWriteSchema` in the submit handler, so the form schema's
+ * duplicate-slot and free-giveaway rules had never executed. The form schema is
+ * deleted; `giveawayConfigWriteSchema` carries the annotations now and is both
  * what this form renders from and what the route parses.
  *
  * ## Title and description are gone, not moved
  *
- * They were editable here and reached nothing: `LotteryConfigClient` posts
- * `data.lotteryConfig` to `PUT .../lottery-config` and ignores the rest, and
+ * They were editable here and reached nothing: `GiveawayConfigClient` posts
+ * `data.giveawayConfig` to `PUT .../giveaway-config` and ignores the rest, and
  * that route accepts only the config. An event's title, dates, status and
  * media are edited in the ordinary event editor — this page is the slots. Two
  * inputs that saved silently into nowhere are worse than their absence, which
  * is the same call made on `rememberMe`. The title still appears, as the
- * heading, so it is obvious which lottery is open.
+ * heading, so it is obvious which giveaway is open.
  */
 
 import React from "react";
@@ -36,11 +36,11 @@ import { applyZodIssues } from "../../../../ui/forms/apply-zod-issues";
 import { StackedViewShell } from "../../../../ui/components/StackedViewShell";
 import { buildSectionsFromSchema, visibleValues } from "../../../../features/shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../../../features/shell/SectionForm";
-import { lotteryConfigWriteSchema } from "../../../../features/lottery/schemas/config-write";
-import type { LotteryConfigWriteInput } from "../../../../features/lottery/schemas/config-write";
+import { giveawayConfigWriteSchema } from "../../../../features/giveaway/schemas/config-write";
+import type { GiveawayConfigWriteInput } from "../../../../features/giveaway/schemas/config-write";
 
 /** One editable row of the slot table. */
-interface LotterySlotRow {
+interface GiveawaySlotRow {
   slotNumber: number;
   name: string;
   price: number;
@@ -56,16 +56,16 @@ interface Values {
   drawWindowDurationMinutes: number;
   maxPullsPerTransaction: number;
   maxPullsPerUser: number;
-  slots: LotterySlotRow[];
+  slots: GiveawaySlotRow[];
 }
 
 /**
  * What this form hands its caller.
  *
- * `lotteryConfig` is the WRITE input — deliberately not `LotteryConfig`. It
+ * `giveawayConfig` is the WRITE input — deliberately not `GiveawayConfig`. It
  * carries no `isBooked`, no `bookedBy*` and no `weight`, because an admin
- * editing a lottery is describing prizes, not attendance. The stored config
- * gains those in `mergeLotteryConfig`, server-side, from the slots that are
+ * editing a giveaway is describing prizes, not attendance. The stored config
+ * gains those in `mergeGiveawayConfig`, server-side, from the slots that are
  * already there.
  *
  * `totalSlots` is absent for the same reason: derived from `slots.length` by
@@ -73,11 +73,11 @@ interface Values {
  * is the mirror-drift trap (Root Cause #42), and the count is what the
  * fullness check reads.
  */
-interface LotteryEventFormData {
-  lotteryConfig: LotteryConfigWriteInput;
+interface GiveawayEventFormData {
+  giveawayConfig: GiveawayConfigWriteInput;
 }
 
-interface LotteryAdminEditViewProps {
+interface GiveawayAdminEditViewProps {
   eventId?: string;
   initialData?: {
     title: string;
@@ -88,18 +88,18 @@ interface LotteryAdminEditViewProps {
     drawWindowDurationMinutes: number;
     maxPullsPerTransaction: number;
     maxPullsPerUser: number;
-    slots: LotterySlotRow[];
+    slots: GiveawaySlotRow[];
   };
-  onSubmit: (data: LotteryEventFormData) => Promise<void>;
+  onSubmit: (data: GiveawayEventFormData) => Promise<void>;
 }
 
 const MAX_SLOTS = 200;
 
-export function LotteryAdminEditView({
+export function GiveawayAdminEditView({
   eventId,
   initialData,
   onSubmit,
-}: LotteryAdminEditViewProps) {
+}: GiveawayAdminEditViewProps) {
   const [isPending, startTransition] = React.useTransition();
 
   const [form, setForm] = React.useState<Values>({
@@ -116,7 +116,7 @@ export function LotteryAdminEditView({
 
   const sections = React.useMemo(
     () =>
-      buildSectionsFromSchema<Values>(lotteryConfigWriteSchema, {
+      buildSectionsFromSchema<Values>(giveawayConfigWriteSchema, {
         renderers: {
           slots: ({ values, onChange }) => (
             <SlotTable
@@ -130,9 +130,9 @@ export function LotteryAdminEditView({
     [],
   );
 
-  const nav = useSectionFormNav(sections, form, { scope: "admin:lottery-config" });
+  const nav = useSectionFormNav(sections, form, { scope: "admin:giveaway-config" });
   const { shellCtx, setFieldError, clearErrors } = useFormShellState(
-    lotteryConfigWriteSchema,
+    giveawayConfigWriteSchema,
     {
       sections: nav.sectionMeta,
       onGoToSection: nav.goToSection,
@@ -149,7 +149,7 @@ export function LotteryAdminEditView({
      * screen, still written on save. `visibleValues` cannot reach inside an
      * array, so this one masking stays explicit.
      */
-    const draft = visibleValues(lotteryConfigWriteSchema, form) as Partial<Values>;
+    const draft = visibleValues(giveawayConfigWriteSchema, form) as Partial<Values>;
     const candidate = {
       ...draft,
       slots: form.slots.map((s) => ({
@@ -160,14 +160,14 @@ export function LotteryAdminEditView({
       })),
     };
 
-    const parsed = lotteryConfigWriteSchema.safeParse(candidate);
+    const parsed = giveawayConfigWriteSchema.safeParse(candidate);
     if (!parsed.success) {
       applyZodIssues(parsed.error.issues, setFieldError);
       return;
     }
 
     startTransition(async () => {
-      await onSubmit({ lotteryConfig: parsed.data });
+      await onSubmit({ giveawayConfig: parsed.data });
     });
   };
 
@@ -176,22 +176,22 @@ export function LotteryAdminEditView({
       portal="admin"
       title={
         eventId
-          ? `Edit lottery${initialData?.title ? ` — ${initialData.title}` : ""}`
-          : "Create lottery"
+          ? `Edit giveaway${initialData?.title ? ` — ${initialData.title}` : ""}`
+          : "Create giveaway"
       }
       sections={[
-        <FormShellContext.Provider value={shellCtx} key="lottery-config-form">
+        <FormShellContext.Provider value={shellCtx} key="giveaway-config-form">
           <FormErrorSummary />
           <SectionForm<Values>
             sections={sections}
             values={form}
             onChange={patch}
             onSubmit={handleSubmit}
-            schema={lotteryConfigWriteSchema}
+            schema={giveawayConfigWriteSchema}
             openIds={nav.openIds}
             onOpenChange={nav.setOpenIds}
             isLoading={isPending}
-            submitLabel={eventId ? "Update lottery" : "Create lottery"}
+            submitLabel={eventId ? "Update giveaway" : "Create giveaway"}
           />
         </FormShellContext.Provider>,
       ]}
@@ -211,9 +211,9 @@ function SlotTable({
   showPrice,
   onSlotsChange,
 }: {
-  slots: LotterySlotRow[];
+  slots: GiveawaySlotRow[];
   showPrice: boolean;
-  onSlotsChange: (next: LotterySlotRow[]) => void;
+  onSlotsChange: (next: GiveawaySlotRow[]) => void;
 }) {
   /*
    * Read the form context directly. `SlotTable` is its own component, so the
@@ -244,7 +244,7 @@ function SlotTable({
    * 🛑 Remove the slot. Do NOT renumber the survivors.
    *
    * `slotNumber` is the stable identity a booking is attached to, and renumbering
-   * silently defeated the server's own protection. `mergeLotteryConfig` refuses a
+   * silently defeated the server's own protection. `mergeGiveawayConfig` refuses a
    * save that drops a BOOKED slot by checking `isBooked && !incoming.has(slotNumber)`
    * — but this function used to renumber the remaining slots to `i + 1`, so deleting
    * slot 1 of 25 sent back numbers 1..24. Every booked number (1–5) still *appeared*
@@ -282,7 +282,7 @@ function SlotTable({
 
   const rows = slots.map((s, i) => ({ ...s, _idx: i }));
 
-  const columns: DataTableColumn<LotterySlotRow & { _idx: number }>[] = [
+  const columns: DataTableColumn<GiveawaySlotRow & { _idx: number }>[] = [
     {
       key: "slotNumber",
       header: "#",
@@ -334,7 +334,7 @@ function SlotTable({
           {
             key: "price" as const,
             header: "Price (₹)",
-            render: (s: LotterySlotRow & { _idx: number }) => (
+            render: (s: GiveawaySlotRow & { _idx: number }) => (
               <Input
                 type="number"
                 className="w-24"

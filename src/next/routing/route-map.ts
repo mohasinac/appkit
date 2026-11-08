@@ -185,8 +185,8 @@ export const DEFAULT_ROUTE_MAP = {
     EVENT_LEADERBOARD: (id: string) => `/events/${id}/leaderboard`,
     EVENT_WINNER: (id: string) => `/events/${id}/winner`,
     EVENT_SPIN_RESULTS: (id: string) => `/events/${id}/spin-results`,
-    LOTTERIES: "/lottery",
-    LOTTERY_DETAIL: (id: string) => `/lottery/${id}`,
+    LOTTERIES: "/giveaway",
+    GIVEAWAY_DETAIL: (id: string) => `/giveaway/${id}`,
     /*
       * 🛑 There is deliberately NO public `SUBLISTING_CATEGORIES` index key.
       * `src/app/[locale]/sublisting-categories/` holds only `[slug]/`, so the
@@ -735,16 +735,16 @@ export const DEFAULT_ROUTE_MAP = {
     CLEARANCE: "/admin/clearance",
     CLEARANCE_EDIT: (id: string) => `/admin/clearance/${id}/edit`,
     CLEARANCE_ENTRIES: (id: string) => `/admin/clearance/${id}/entries`,
-    LOTTERIES: "/admin/lotteries",
+    LOTTERIES: "/admin/giveaways",
     /*
-     * Slot configuration only. A lottery EVENT (title, dates, status, media)
-     * is created through the ordinary event editor — `LotteryAdminEditView`
+     * Slot configuration only. A giveaway EVENT (title, dates, status, media)
+     * is created through the ordinary event editor — `GiveawayAdminEditView`
      * has no fields for any of those, so treating it as the whole create
-     * flow would produce a lottery with no dates, and the draw window is
+     * flow would produce a giveaway with no dates, and the draw window is
      * measured from them.
      */
-    LOTTERY_CONFIG: (id: string) => `/admin/lotteries/${id}/edit`,
-    LOTTERY_ENTRIES: (id: string) => `/admin/lotteries/${id}/entries`,
+    GIVEAWAY_CONFIG: (id: string) => `/admin/giveaways/${id}/edit`,
+    GIVEAWAY_ENTRIES: (id: string) => `/admin/giveaways/${id}/entries`,
     TEAM: "/admin/team",
     TEAM_NEW: "/admin/team/new",
     TEAM_EDIT: (id: string) => `/admin/team/${id}/edit`,

@@ -157,12 +157,12 @@ import { reportReviewFormSchema } from "../features/store-extensions/schemas/rep
 import { adminStoreUpdateSchema } from "../features/admin/schemas/admin-editor-forms";
 import { adminAddressCreateSchema } from "../features/addresses/schemas/address-form";
 import { adminOrderUpdateSchema, employeeInviteSchema, adminAdFormSchema } from "../features/admin/schemas/admin-ops-forms";
-import { adminUserUpdateSchema, whatsappSettingsSchema, lotteryPullSchema } from "../features/admin/schemas/admin-user-form";
+import { adminUserUpdateSchema, whatsappSettingsSchema, giveawayPullSchema } from "../features/admin/schemas/admin-user-form";
 import { siteSettingsFormSchema } from "../features/admin/schemas/site-settings-form";
 import { orderCancelSchema, paymentProofSchema } from "../features/orders/schemas/buyer-forms";
 import { scamReportFormSchema } from "../features/scams/schemas/report-form";
 import { sublistingCategoryFormSchema } from "../features/store-extensions/schemas/sublisting-category-form";
-import { lotteryConfigWriteSchema } from "../features/lottery/schemas/config-write";
+import { giveawayConfigWriteSchema } from "../features/giveaway/schemas/config-write";
 import { reportCreateSchema } from "../features/store-extensions/schemas/report-create-form";
 import { itemRequestCreateSchema } from "../features/store-extensions/schemas/item-request-create-form";
 import {
@@ -213,8 +213,8 @@ const forms = {
   paymentProof: paymentProofSchema,
   scamReport: scamReportFormSchema,
   sublistingCategory: sublistingCategoryFormSchema,
-  lotteryConfig: lotteryConfigWriteSchema,
-  lotteryPull: lotteryPullSchema,
+  giveawayConfig: giveawayConfigWriteSchema,
+  giveawayPull: giveawayPullSchema,
 } as const;
 
 // ---------------------------------------------------------------------------

@@ -275,11 +275,11 @@ export const ADMIN_ENDPOINTS = {
   EVENT_BY_ID: (id: string) => `/api/admin/events/${id}`,
   EVENT_STATUS: (id: string) => `/api/admin/events/${id}/status`,
   /**
-   * The ONLY sanctioned writer of `lotteryConfig`. The generic EVENT_BY_ID
+   * The ONLY sanctioned writer of `giveawayConfig`. The generic EVENT_BY_ID
    * PATCH rejects that field — it is `.passthrough()`, and letting a slot
    * array through it erased every already-pulled slot.
    */
-  EVENT_LOTTERY_CONFIG: (id: string) => `/api/admin/events/${id}/lottery-config`,
+  EVENT_GIVEAWAY_CONFIG: (id: string) => `/api/admin/events/${id}/giveaway-config`,
   EVENT_STATS: (id: string) => `/api/admin/events/${id}/stats`,
   EVENT_ENTRIES: (id: string) => `/api/admin/events/${id}/entries`,
   EVENT_ENTRIES_EXPORT: (id: string) => `/api/admin/events/${id}/entries/export`,
@@ -644,18 +644,18 @@ export const EVENT_ENDPOINTS = {
   LIKES: (id: string) => `/api/events/${id}/likes`,
   LIKERS: (id: string, offset: number) =>
     `/api/events/${id}/likes?offset=${offset}`,
-  // Lottery: user self-pull (draw happens immediately on submit)
-  LOTTERY_PULL: (id: string) => `/api/events/${id}/lottery-pull`,
-  LOTTERY_ENTRIES: (id: string) => `/api/events/${id}/lottery-entries`,
+  // Giveaway: user self-pull (draw happens immediately on submit)
+  GIVEAWAY_PULL: (id: string) => `/api/events/${id}/giveaway-pull`,
+  GIVEAWAY_ENTRIES: (id: string) => `/api/events/${id}/giveaway-entries`,
 } as const;
 
 // ---------------------------------------------------------------------------
-// Lottery
+// Giveaway
 // ---------------------------------------------------------------------------
 
-export const LOTTERY_ENDPOINTS = {
-  FLAG_ENTRY: (entryId: string) => `/api/lottery-entries/${entryId}/flag`,
-  REOPEN_SLOT: (entryId: string) => `/api/lottery-entries/${entryId}/reopen-slot`,
+export const GIVEAWAY_ENDPOINTS = {
+  FLAG_ENTRY: (entryId: string) => `/api/giveaway-entries/${entryId}/flag`,
+  REOPEN_SLOT: (entryId: string) => `/api/giveaway-entries/${entryId}/reopen-slot`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -748,9 +748,9 @@ export const PRODUCT_ENDPOINTS = {
   LIST: "/api/products",
   BY_SLUG: (slug: string) => `/api/products/${slug}`,
   BY_ID: (id: string) => `/api/products/${id}`,
-  // Lottery: user self-pull for prize-draw products in lottery mode
-  LOTTERY_PULL: (id: string) => `/api/products/${id}/lottery-pull`,
-  LOTTERY_ENTRIES: (id: string) => `/api/products/${id}/lottery-entries`,
+  // Giveaway: user self-pull for prize-draw products in giveaway mode
+  GIVEAWAY_PULL: (id: string) => `/api/products/${id}/giveaway-pull`,
+  GIVEAWAY_ENTRIES: (id: string) => `/api/products/${id}/giveaway-entries`,
   SEARCH: (query: string, pageSize = 20) =>
     `/api/products?q=${encodeURIComponent(query)}&pageSize=${pageSize}`,
   /** @param ids — comma-separated product ids, e.g. for a compare-tray fetch */
@@ -1024,7 +1024,7 @@ export const API_ENDPOINTS = {
   MESSAGES: MESSAGE_ENDPOINTS,
   ASSISTANT: ASSISTANT_ENDPOINTS,
   EVENTS: EVENT_ENDPOINTS,
-  LOTTERY: LOTTERY_ENDPOINTS,
+  GIVEAWAY: GIVEAWAY_ENDPOINTS,
   FAQS: FAQ_ENDPOINTS,
   HOMEPAGE: HOMEPAGE_ENDPOINTS,
   ANALYTICS: ANALYTICS_ENDPOINTS,

@@ -249,11 +249,11 @@ export {
 // with categoryType:"bundle". See features/categories/repository for the
 // listByType / findBySlugAndType helpers.
 
-// Lottery entries repository
+// Giveaway entries repository
 export {
-  LotteryEntryRepository,
-  lotteryEntryRepository,
-} from "../features/lottery/repository/lottery-entry.repository";
+  GiveawayEntryRepository,
+  giveawayEntryRepository,
+} from "../features/giveaway/repository/giveaway-entry.repository";
 
 // Media assets — short ID → storagePath mapping for SEO-friendly /media/{id} URLs
 export {

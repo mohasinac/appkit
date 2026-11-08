@@ -8887,7 +8887,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "bey": "Phantom Orion B:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -10861,7 +10861,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "bey": "Big Bang Pegasis F:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -10998,7 +10998,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "bey": "L-Drago Destroy F:S",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -15513,7 +15513,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "bey": "Fang Leone 130W²D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -20047,7 +20047,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "code": "UX-00",
         "bey": "WyvernHover 2-80GN",
         "distribution": [
-          "DMM Lottery exclusive"
+          "DMM Giveaway exclusive"
         ]
       },
       {
@@ -20055,7 +20055,7 @@ export const glossaryChunk4: Partial<PartGlossaryDocument>[] = [
         "code": "UX-00",
         "bey": "WyvernHover 2-80GN",
         "distribution": [
-          "DMM Lottery exclusive"
+          "DMM Giveaway exclusive"
         ]
       }
     ],

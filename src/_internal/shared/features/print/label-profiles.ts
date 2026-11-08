@@ -39,7 +39,7 @@ import {
 export const SAFE_MODULE_MM = 0.25;
 
 /**
- * The floor. Below this a symbol is a lottery: good scanners manage it under
+ * The floor. Below this a symbol is a giveaway: good scanners manage it under
  * good light at a good angle, and a receive station is none of those things.
  */
 export const MIN_SCANNABLE_MODULE_MM = 0.19;

@@ -40,8 +40,8 @@ const CLS_WON_STAMP = "rotate-[-12deg] rounded bg-error-solid px-[var(--appkit-s
  * The subset of a prize this collage actually renders.
  *
  * Declared structurally, and deliberately narrower than `PrizeDrawItem`, so a
- * lottery slot can be mapped onto it without inventing the fields it does not
- * have (`condition` is required on `PrizeDrawItem`; a lottery slot has no such
+ * giveaway slot can be mapped onto it without inventing the fields it does not
+ * have (`condition` is required on `PrizeDrawItem`; a giveaway slot has no such
  * concept, and faking one would be a shape lie). `PrizeDrawItem` already
  * satisfies this interface, so every existing caller is unaffected.
  */

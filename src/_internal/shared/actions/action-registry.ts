@@ -84,7 +84,7 @@ export type ActionResource =
   | "NAV"
   | "MEDIA"
   | "SUPPORT"
-  | "LOTTERY"
+  | "GIVEAWAY"
   | "TESTER";
 
 /** Confirmation modal config — when set, <Button action={...}> opens
@@ -1609,7 +1609,7 @@ export const ACTIONS: ActionTree = {
      * Clone, admin-only, backed by POST /api/admin/events/[id]/duplicate. A
      * recurring sale is the real use case: same copy, same prizes, new dates.
      *
-     * 🛑 The endpoint rebuilds every lottery slot from its prize definition and
+     * 🛑 The endpoint rebuilds every giveaway slot from its prize definition and
      * resets the booking half — a spread would attribute a real buyer’s
      * purchased slot to a brand-new event.
      */
@@ -3877,19 +3877,19 @@ export const ACTIONS: ActionTree = {
       kind: "primary",
     },
   },
-  LOTTERY: {
+  GIVEAWAY: {
     "pull": {
       iconKey: "retry",
-      id: "lottery.pull",
+      id: "giveaway.pull",
       label: "Submit Entry",
-      description: "Submit a lottery pull entry — slot assigned immediately.",
+      description: "Submit a giveaway pull entry — slot assigned immediately.",
       kind: "primary",
     },
     "flag-entry": {
       iconKey: "report",
-      id: "lottery.flag-entry",
+      id: "giveaway.flag-entry",
       label: "Flag as Scammer",
-      description: "Flag a lottery entry as fraudulent.",
+      description: "Flag a giveaway entry as fraudulent.",
       kind: "danger",
       roles: ["admin", "moderator"],
       confirmation: {
@@ -3901,7 +3901,7 @@ export const ACTIONS: ActionTree = {
     },
     "reopen-slot": {
       iconKey: "restore",
-      id: "lottery.reopen-slot",
+      id: "giveaway.reopen-slot",
       label: "Reopen Slot",
       description: "Free a flagged entry's slot so it can be claimed again.",
       kind: "secondary",
@@ -3914,13 +3914,13 @@ export const ACTIONS: ActionTree = {
     },
     "cancel": {
       iconKey: "cancel",
-      id: "lottery.cancel",
-      label: "Cancel Lottery",
+      id: "giveaway.cancel",
+      label: "Cancel Giveaway",
       description: "Close the draw window and reject pending pulls.",
       kind: "danger",
       roles: ["admin", "moderator"],
       confirmation: {
-        title: "Cancel lottery?",
+        title: "Cancel giveaway?",
         body: "Draw window closes immediately. Pending pulls rejected.",
         confirmLabel: "Cancel",
         confirmKind: "danger",

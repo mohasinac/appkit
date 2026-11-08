@@ -186,7 +186,7 @@ export type Permission =
    * ACT on the moderation queue — flag a suspicious draw entry, resolve a
    * queued report.
    *
-   * Added 2026-11-08 because `PATCH /api/lottery-entries/[id]/flag` was gated
+   * Added 2026-11-08 because `PATCH /api/giveaway-entries/[id]/flag` was gated
    * a role tuple naming the dead `moderator` with no permission at all (the
    * literal is not quoted — `audit-permission-role-mismatch.mjs` matches such
    * a line textually and a comment reciting it keeps the audit red), so the

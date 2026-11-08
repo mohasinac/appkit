@@ -4116,7 +4116,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "WyvernHover 2-80GN",
         "distribution": [
           "violet",
-          "DMM Lottery exclusive"
+          "DMM Giveaway exclusive"
         ]
       },
       {
@@ -4125,7 +4125,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "bey": "WyvernHover 2-80GN",
         "distribution": [
           "Metal Coat: Violet",
-          "DMM Lottery exclusive"
+          "DMM Giveaway exclusive"
         ]
       },
       {
@@ -26589,7 +26589,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "bey": "Trident Heavy Claw",
-        "colourway": "Rare Bey Lottery Ver.",
+        "colourway": "Rare Bey Giveaway Ver.",
         "distribution": [
           "blue painted"
         ]
@@ -26695,7 +26695,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "inBey": "Rising Ragnaruk Heavy Survive"
       },
       {
-        "colourway": "Rare Bey Lottery Ver.",
+        "colourway": "Rare Bey Giveaway Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
         "distribution": "blue painted",
@@ -34367,7 +34367,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "bey": "Trident Heavy Claw",
-        "colourway": "Rare Bey Lottery Ver."
+        "colourway": "Rare Bey Giveaway Ver."
       },
       {
         "vendor": "Takara Tomy",
@@ -34410,7 +34410,7 @@ export const glossaryChunk2: Partial<PartGlossaryDocument>[] = [
     ],
     "colourways": [
       {
-        "colourway": "Rare Bey Lottery Ver.",
+        "colourway": "Rare Bey Giveaway Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
         "inBey": "Trident Heavy Claw"

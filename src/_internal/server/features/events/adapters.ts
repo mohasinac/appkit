@@ -10,7 +10,7 @@
  * Two nested structures on `EventDocument` carry fields that decide outcomes
  * and must never leave the server:
  *
- *   - `lotteryConfig.slots[]` — per-slot `price` and `weight` (the weighting IS
+ *   - `giveawayConfig.slots[]` — per-slot `price` and `weight` (the weighting IS
  *     the odds), plus the internal `bookedByUserId`.
  *   - `spinPrizes[]`         — per-prize `weight` (again, the odds) and
  *     `couponId` (an internal coupon document id).
@@ -24,8 +24,8 @@
  * (Root Cause #75 — a rule reachable by copy-paste gets copied, and the copy
  * never learns about the branch added later).
  */
-import { toClientLotteryConfig } from "../lottery/adapters";
-import type { LotteryConfig, ClientLotteryConfig } from "../../../../features/lottery/types";
+import { toClientGiveawayConfig } from "../giveaway/adapters";
+import type { GiveawayConfig, ClientGiveawayConfig } from "../../../../features/giveaway/types";
 
 /** A spin prize as a public visitor may see it: what it is, not what it is worth. */
 export interface ClientSpinPrize {
@@ -50,9 +50,9 @@ export function toClientSpinPrize(prize: {
 /**
  * The three fields this projection touches; every other field passes through.
  *
- * 🛑 `lotteryConfig` accepts EITHER shape, and that is not laxness — it is the
- * reason this leak survived review. `EventItem.lotteryConfig` is declared as
- * `ClientLotteryConfig`, i.e. the already-projected type, while the repository
+ * 🛑 `giveawayConfig` accepts EITHER shape, and that is not laxness — it is the
+ * reason this leak survived review. `EventItem.giveawayConfig` is declared as
+ * `ClientGiveawayConfig`, i.e. the already-projected type, while the repository
  * hands back the STORED document with `price`, `weight` and `bookedByUserId`
  * still on every slot. The type asserted the projection had happened; nothing
  * had performed it. Accepting both means the adapter can be applied to a value
@@ -60,16 +60,16 @@ export function toClientSpinPrize(prize: {
  */
 export interface PublicEventInput {
   createdBy?: string;
-  lotteryConfig?: LotteryConfig | ClientLotteryConfig;
+  giveawayConfig?: GiveawayConfig | ClientGiveawayConfig;
   spinPrizes?: { id: string; label: string; isActive?: boolean }[];
 }
 
 /** What a caller gets back: `createdBy` gone, the two nested shapes narrowed. */
 export type PublicEvent<T extends PublicEventInput> = Omit<
   T,
-  "createdBy" | "lotteryConfig" | "spinPrizes"
+  "createdBy" | "giveawayConfig" | "spinPrizes"
 > & {
-  lotteryConfig?: ClientLotteryConfig;
+  giveawayConfig?: ClientGiveawayConfig;
   spinPrizes?: ClientSpinPrize[];
 };
 
@@ -83,13 +83,13 @@ export type PublicEvent<T extends PublicEventInput> = Omit<
 export function toPublicEvent<T extends PublicEventInput>(event: T): PublicEvent<T> {
   const {
     createdBy: _createdBy,
-    lotteryConfig,
+    giveawayConfig,
     spinPrizes,
     ...rest
   } = event;
 
   const out = rest as PublicEvent<T>;
-  if (lotteryConfig) out.lotteryConfig = toClientLotteryConfig(lotteryConfig);
+  if (giveawayConfig) out.giveawayConfig = toClientGiveawayConfig(giveawayConfig);
   if (Array.isArray(spinPrizes)) out.spinPrizes = spinPrizes.map(toClientSpinPrize);
   return out;
 }

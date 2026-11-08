@@ -17,7 +17,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  *
  * A clearance draw is a game of chance, which is on the prohibited-merchant lists
  * Indian payment gateways inherit from the card networks — the same lists that
- * carry lotteries and collector drops. Routing entry payments through a standard
+ * carry giveaways and collector drops. Routing entry payments through a standard
  * e-commerce MID is a terms breach, and the penalty is the merchant account
  * frozen with the settlement balance held, not a declined charge. One category
  * can cost every other category its ability to take money.
@@ -45,7 +45,7 @@ import type { CheckoutPaymentMethod } from "../../features/checkout/config";
  *
  * The owner's framing is what reopens it: a clearance is **a booster box**.
  * Every numbered slot is a named prize with an image
- * (`lotterySlotWriteSchema`), so every buyer receives a real item and nobody
+ * (`giveawaySlotWriteSchema`), so every buyer receives a real item and nobody
  * pays for nothing — consideration buying A GOOD, NOT A CHANCE. That is a
  * product sale and sits outside the gambling clause Cashfree's terms do name.
  * The `reveal` mode is the same mechanic with the slot chosen for you.

@@ -30,7 +30,7 @@ import type { DashboardCard } from "../../../_internal/shared/features/dashboard
  * `flash-sale` — none of which are `EventType` values, so each was fed straight
  * into `sieveFilter("type", EQ, id)` and matched zero rows forever — while
  * omitting five real types (`offer`, `feedback`, `raffle`, `spin_wheel`,
- * `lottery`). It carried a TODO deferring the fix on the grounds of "avoid
+ * `giveaway`). It carried a TODO deferring the fix on the grounds of "avoid
  * silently breaking saved-filter URLs"; that reasoning didn't hold, since a URL
  * naming a dead id was already returning nothing (Root Cause #33 + #61).
  */

@@ -98,7 +98,7 @@ export const EVENT_TYPE_META: Record<EventType, EventTypeMeta> = {
   "random-draw": {
     label: "Random Draw",
     emoji: "🎰",
-    // 🛑 Carried over UNCHANGED from `lottery`, and it is still identical to
+    // 🛑 Carried over UNCHANGED from `giveaway`, and it is still identical to
     // `poll` — the very defect this file's header records for offer/survey
     // and feedback/raffle, one pair it never fixed.
     //
@@ -126,7 +126,7 @@ export const EVENT_TYPE_META: Record<EventType, EventTypeMeta> = {
  * admitting we do not recognise it.
  *
  * 🛑 Resolves through `normalizeEventType`, so a document still holding
- * `raffle` / `spin_wheel` / `lottery` renders its real chip rather than the
+ * `raffle` / `spin_wheel` / `giveaway` renders its real chip rather than the
  * neutral fallback. Without that, every pre-migration event on the site would
  * silently drop to a grey "Raffle" pill — present, plausible, and wrong.
  */

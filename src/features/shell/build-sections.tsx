@@ -285,7 +285,7 @@ export function packRows(fields: ResolvedField[]): ResolvedField[][] {
  *
  * That is not hypothetical. Four of the twenty dead controls found in the W3c
  * sweep were exactly this: a cap typed on a percentage coupon persisted after
- * switching to free-shipping; a lottery slot price written under uniform
+ * switching to free-shipping; a giveaway slot price written under uniform
  * pricing; an AdSense slot shipped with a manually-authored ad. Each looked
  * right on screen and saved something else.
  *

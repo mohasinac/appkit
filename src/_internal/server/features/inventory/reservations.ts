@@ -69,7 +69,7 @@ export interface ReserveStockInput {
  *
  * 🛑 Refuses rather than over-reserving. A seller's stock is a real number of
  * real objects, so "reserve 5, only 3 left" is a **409** — the request is
- * well-formed and the world moved, which is the same distinction the lottery
+ * well-formed and the world moved, which is the same distinction the giveaway
  * config write makes for a slot somebody has already pulled.
  */
 export async function reserveStock(input: ReserveStockInput): Promise<string> {

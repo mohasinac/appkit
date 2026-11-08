@@ -337,14 +337,14 @@ export class CashfreeProvider extends IPaymentProvider {
   /*
    * 🛑 The reason this adapter exists. Cashfree's published terms
    * (Attachment A, "List of Negative, Risky and Restricted Categories of
-   * Business") name gaming/gambling — lottery tickets, sports bets, online
+   * Business") name gaming/gambling — giveaway tickets, sports bets, online
    * gambling enrolment — and do NOT name auctions, bidding, or auction
    * houses anywhere. Razorpay and PhonePe both name "Bidding/Auction houses"
    * explicitly, which is why neither declares these.
    *
    * `clearance` is included on the owner's framing, recorded here because
    * it is the part a reader will want to challenge: every numbered slot is a
-   * named prize with an image (`lotterySlotWriteSchema`), so every buyer
+   * named prize with an image (`giveawaySlotWriteSchema`), so every buyer
    * receives a real item and nobody pays for nothing. That is consideration
    * buying A GOOD, NOT A CHANCE — a blind box, which is a product sale and
    * sits outside the gambling clause. The `reveal` mode is the same mechanic

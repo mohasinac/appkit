@@ -10,15 +10,15 @@ import { Anchor } from "../../../../ui/components/Anchor";
 import { MediaImage } from "../../../../ui/components/MediaImage";
 import { useOptionalSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
-import { LotterySlotGrid } from "./LotterySlotGrid";
-import { LotteryPullForm } from "./LotteryPullForm";
+import { GiveawaySlotGrid } from "./GiveawaySlotGrid";
+import { GiveawayPullForm } from "./GiveawayPullForm";
 import { ClearanceCollage } from "../../../../features/products/components/ClearanceCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
-import type { ClientLotteryConfig } from "../../../../features/lottery/types";
+import type { ClientGiveawayConfig } from "../../../../features/giveaway/types";
 import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
-interface ClientLotteryEvent {
+interface ClientGiveawayEvent {
   id: string;
   title: string;
   description?: string;
@@ -27,26 +27,26 @@ interface ClientLotteryEvent {
   /**
    * Two spellings exist on EventDocument and only `coverImage.url` is ever
    * populated — by seed data or the admin editor. Reading `coverImageUrl`
-   * alone is why this page showed the 🎰 placeholder for every lottery.
+   * alone is why this page showed the 🎰 placeholder for every giveaway.
    */
   coverImageUrl?: string;
   coverImage?: { url?: string } | null;
-  lotteryConfig?: ClientLotteryConfig;
+  giveawayConfig?: ClientGiveawayConfig;
 }
 
-interface LotteryDetailViewProps {
-  event: ClientLotteryEvent;
+interface GiveawayDetailViewProps {
+  event: ClientGiveawayEvent;
   user?: { uid: string; displayName?: string | null } | null;
-  currentEntry?: { userLotteryNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
+  currentEntry?: { userGiveawayNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
 }
 
 /**
- * Full lottery detail page view.
+ * Full giveaway detail page view.
  * Shows cover + description + slot grid + pull form (if active + logged in).
  */
-export function LotteryDetailView({ event, user, currentEntry, pageRegionCards = [] }: LotteryDetailViewProps) {
+export function GiveawayDetailView({ event, user, currentEntry, pageRegionCards = [] }: GiveawayDetailViewProps) {
   /*
    * 🛑 Viewer identity is read on the CLIENT, not taken from the `user` prop.
    *
@@ -68,12 +68,12 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
   const isAuthResolving = session?.loading ?? false;
   const viewer = session?.user ?? user ?? null;
   const [pulledEntry, setPulledEntry] = useState<{
-    userLotteryNumber: number;
+    userGiveawayNumber: number;
     assignedPrizeSlotNumber: number;
     slotName: string;
-  } | null>(currentEntry?.assignedPrizeSlotNumber != null ? currentEntry as { userLotteryNumber: number; assignedPrizeSlotNumber: number; slotName: string } : null);
+  } | null>(currentEntry?.assignedPrizeSlotNumber != null ? currentEntry as { userGiveawayNumber: number; assignedPrizeSlotNumber: number; slotName: string } : null);
 
-  const config = event.lotteryConfig;
+  const config = event.giveawayConfig;
   const prizeItems = slotsToCollageItems(config?.slots ?? []);
   const isActive = event.status === "active";
   const isEnded = event.status === "ended" || event.status === "cancelled";
@@ -126,7 +126,7 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
             ) : null}
           </Stack>
 
-          <AdminComposableRegion pageId="lottery-id" initialCards={pageRegionCards} />
+          <AdminComposableRegion pageId="giveaway-id" initialCards={pageRegionCards} />
 
           {/* Prize previews — only the slots that actually have a photo. The
               numbered grid below stays the complete slot map. */}
@@ -145,7 +145,7 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
               <Heading level={2} size="xl" weight="semibold">
                 Slots
               </Heading>
-              <LotterySlotGrid slots={config.slots} totalSlots={config.totalSlots} />
+              <GiveawaySlotGrid slots={config.slots} totalSlots={config.totalSlots} />
             </Stack>
           ) : null}
 
@@ -167,7 +167,7 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
                     Want to Participate?
                   </Heading>
                   <Text color="muted">
-                    Log in to submit your lottery entry.
+                    Log in to submit your giveaway entry.
                   </Text>
                   <Anchor
                     href={String(ROUTES.AUTH.LOGIN)}
@@ -179,7 +179,7 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
               ) : pulledEntry ? (
                 <Stack gap="sm" surface="success-surface" padding="md" rounded="xl" className="border border-success/20">
                   <Heading level={2} size="lg" weight="bold" className="text-success">
-                    You&apos;re Lottery #{pulledEntry.userLotteryNumber}!
+                    You&apos;re Giveaway #{pulledEntry.userGiveawayNumber}!
                   </Heading>
                   <Text className="text-success" size="sm">
                     Assigned to Slot #{pulledEntry.assignedPrizeSlotNumber}
@@ -187,7 +187,7 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
                   </Text>
                 </Stack>
               ) : (
-                <LotteryPullForm
+                <GiveawayPullForm
                   sourceType="event"
                   eventId={event.id}
                   totalSlots={config.totalSlots}
@@ -201,7 +201,7 @@ export function LotteryDetailView({ event, user, currentEntry, pageRegionCards =
           {isEnded && !pulledEntry && (
             <Stack gap="sm" surface="muted" padding="md" rounded="xl">
               <Text color="muted" weight="semibold">
-                This lottery has ended.
+                This giveaway has ended.
               </Text>
             </Stack>
           )}

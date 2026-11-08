@@ -9,11 +9,11 @@ import { Div } from "../../../../ui/components/Div";
 import { Anchor } from "../../../../ui/components/Anchor";
 import { MediaImage } from "../../../../ui/components/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
-import { LotterySlotGrid } from "./LotterySlotGrid";
-import { LotteryPullForm } from "./LotteryPullForm";
+import { GiveawaySlotGrid } from "./GiveawaySlotGrid";
+import { GiveawayPullForm } from "./GiveawayPullForm";
 import { ClearanceCollage } from "../../../../features/products/components/ClearanceCollage";
 import { slotsToCollageItems } from "./slot-collage-items";
-import type { ClientLotteryConfig } from "../../../../features/lottery/types";
+import type { ClientGiveawayConfig } from "../../../../features/giveaway/types";
 import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
@@ -23,39 +23,39 @@ interface ClientProduct {
   description?: string;
   status: string;
   mainImage?: string;
-  prizeDrawMode?: "reveal" | "lottery";
-  lotteryConfig?: ClientLotteryConfig;
+  prizeDrawMode?: "reveal" | "giveaway";
+  giveawayConfig?: ClientGiveawayConfig;
 }
 
-interface ClearanceLotteryDetailViewProps {
+interface ClearanceGiveawayDetailViewProps {
   product: ClientProduct;
   user?: { uid: string; displayName?: string | null } | null;
-  currentEntry?: { userLotteryNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
+  currentEntry?: { userGiveawayNumber: number; assignedPrizeSlotNumber?: number; slotName?: string } | null;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
 }
 
 /**
- * Prize-draw product detail view for lottery mode.
- * Same flow as LotteryDetailView but sourced from a product.
+ * Prize-draw product detail view for giveaway mode.
+ * Same flow as GiveawayDetailView but sourced from a product.
  */
-export function ClearanceLotteryDetailView({
+export function ClearanceGiveawayDetailView({
   product,
   user,
   currentEntry,
   pageRegionCards = [],
-}: ClearanceLotteryDetailViewProps) {
+}: ClearanceGiveawayDetailViewProps) {
   const [pulledEntry, setPulledEntry] = useState<{
-    userLotteryNumber: number;
+    userGiveawayNumber: number;
     assignedPrizeSlotNumber: number;
     slotName: string;
   } | null>(
     currentEntry?.assignedPrizeSlotNumber != null
-      ? (currentEntry as { userLotteryNumber: number; assignedPrizeSlotNumber: number; slotName: string })
+      ? (currentEntry as { userGiveawayNumber: number; assignedPrizeSlotNumber: number; slotName: string })
       : null,
   );
 
-  const config = product.lotteryConfig;
+  const config = product.giveawayConfig;
   const prizeItems = slotsToCollageItems(config?.slots ?? []);
   const isActive = product.status === "published";
 
@@ -109,7 +109,7 @@ export function ClearanceLotteryDetailView({
           {config && config.slots.length > 0 ? (
             <Stack gap="sm">
               <Heading level={2} size="xl" weight="semibold">Slots</Heading>
-              <LotterySlotGrid slots={config.slots} totalSlots={config.totalSlots} />
+              <GiveawaySlotGrid slots={config.slots} totalSlots={config.totalSlots} />
             </Stack>
           ) : null}
 
@@ -126,7 +126,7 @@ export function ClearanceLotteryDetailView({
               ) : pulledEntry ? (
                 <Stack gap="sm" surface="success-surface" padding="md" rounded="xl" className="border border-success/20">
                   <Heading level={2} size="lg" weight="bold" className="text-success">
-                    You&apos;re Entry #{pulledEntry.userLotteryNumber}!
+                    You&apos;re Entry #{pulledEntry.userGiveawayNumber}!
                   </Heading>
                   <Text className="text-success" size="sm">
                     Assigned to Slot #{pulledEntry.assignedPrizeSlotNumber}
@@ -134,7 +134,7 @@ export function ClearanceLotteryDetailView({
                   </Text>
                 </Stack>
               ) : (
-                <LotteryPullForm
+                <GiveawayPullForm
                   sourceType="product"
                   productId={product.id}
                   totalSlots={config.totalSlots}

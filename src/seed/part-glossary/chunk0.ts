@@ -23179,7 +23179,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
         "bey": "Dark Deathscyther Triple Blow",
         "colourway": "Bloody Red Ver.",
         "distribution": [
-          "Lawson Lottery Big 4"
+          "Lawson Giveaway Big 4"
         ]
       },
       {
@@ -23188,7 +23188,7 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
         "bey": "Dark Deathscyther Triple Blow",
         "colourway": "Mirage Clear Ver.",
         "distribution": [
-          "Lawson Lottery Big 4"
+          "Lawson Giveaway Big 4"
         ]
       },
       {
@@ -23225,14 +23225,14 @@ export const glossaryChunk0: Partial<PartGlossaryDocument>[] = [
         "colourway": "Bloody Red Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
-        "distribution": "Lawson Lottery Big 4",
+        "distribution": "Lawson Giveaway Big 4",
         "inBey": "Dark Deathscyther Triple Blow"
       },
       {
         "colourway": "Mirage Clear Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
-        "distribution": "Lawson Lottery Big 4",
+        "distribution": "Lawson Giveaway Big 4",
         "inBey": "Dark Deathscyther Triple Blow"
       }
     ],

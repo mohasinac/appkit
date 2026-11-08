@@ -262,7 +262,7 @@ export function assertAssemblyInput(
  * - `ConflictError`   — a component does not have enough available. 409 and
  *   not 400: the request is well formed and the seller is not confused, the
  *   world changed under them, so the next action is to restock rather than to
- *   fix a field. Same distinction as removing a booked lottery slot.
+ *   fix a field. Same distinction as removing a booked giveaway slot.
  */
 export async function assembleFromComponents(
   input: AssembleInput,

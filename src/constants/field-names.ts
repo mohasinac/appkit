@@ -207,15 +207,15 @@ export const PRODUCT_FIELDS = {
   /**
    * 🛑 PRODUCT-level draw mode for the `clearance` listing type — a
    * DIFFERENT axis from the event-level `EventType`, which lost its
-   * `"lottery"` member on 2026-10-31 (it is `"random-draw"` now).
+   * `"giveaway"` member on 2026-10-31 (it is `"random-draw"` now).
    *
-   * `LOTTERY: "lottery"` here is persisted on `products` and stays. See
-   * CLAUDE.md § "Lottery Config Writes"; `lotteryConfig`,
-   * `lotteryConfigWriteSchema` and `mergeLotteryConfig` stay with it.
+   * `GIVEAWAY: "giveaway"` here is persisted on `products` and stays. See
+   * CLAUDE.md § "Giveaway Config Writes"; `giveawayConfig`,
+   * `giveawayConfigWriteSchema` and `mergeGiveawayConfig` stay with it.
    */
   PRIZE_DRAW_MODE_VALUES: {
     REVEAL: "reveal",
-    LOTTERY: "lottery",
+    GIVEAWAY: "giveaway",
   },
 
   IS_ACTIVE: "isActive",
@@ -527,7 +527,7 @@ export const EVENT_FIELDS = {
    * raw string literal while every other row used this map.
    *
    * Renamed 2026-10-31: `RAFFLE` -> `GIVEAWAY`, `SPIN_WHEEL` -> `BONUS_SPIN`,
-   * `LOTTERY` -> `RANDOM_DRAW`.
+   * `GIVEAWAY` -> `RANDOM_DRAW`.
    */
   TYPE_VALUES: {
     SALE: "sale",

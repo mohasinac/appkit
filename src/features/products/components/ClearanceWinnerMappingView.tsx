@@ -5,7 +5,7 @@
  *
  * Read-only item→order mapping for a classic reveal-mode prize draw. Shown
  * only to admin and the owning seller (never publicly) so they know which
- * physical item to ship for which order. Mirrors LotteryEntriesView's choice
+ * physical item to ship for which order. Mirrors GiveawayEntriesView's choice
  * of a small bounded DataTable (≤16 rows per draw) rather than a paginated
  * DataListingView.
  */

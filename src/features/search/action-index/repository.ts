@@ -77,7 +77,7 @@ export class ActionIndexRepository extends BaseRepository<ActionIndexDocument> {
    * Merged into the stored map rather than replacing it, because the admin
    * screen edits one row at a time and a whole-map write would drop every
    * other override made in a different browser tab — the lost-update shape
-   * that `mergeLotteryConfig` exists to prevent on the lottery side.
+   * that `mergeGiveawayConfig` exists to prevent on the giveaway side.
    */
   async setOverride(
     entryId: string,

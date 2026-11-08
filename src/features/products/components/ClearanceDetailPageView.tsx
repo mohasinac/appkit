@@ -59,7 +59,7 @@ export interface ClearanceDetailPageViewProps {
    * (`pageId="clearance-slug"`) — same mechanism as every other
    * listing-type detail page. Until 2026-11-04 this was the one PDP-shaped
    * page without it: the host page.tsx already fetched
-   * `getPageRegion("clearance-slug")` for the lottery-mode branch but
+   * `getPageRegion("clearance-slug")` for the giveaway-mode branch but
    * never passed it to this (classic-mode) branch at all.
    */
   pageRegionCards?: DashboardCard[];
@@ -397,7 +397,7 @@ export async function ClearanceDetailPageView({
                 The entry names the exclusions (void where prohibited, an
                 entry from a restricted state is refunded rather than drawn,
                 prizes are not exchangeable for cash) and states plainly that
-                this is not a government lottery — rather than asserting a
+                this is not a government giveaway — rather than asserting a
                 skill-versus-chance position we cannot defend in every state.
                 *
                 * In the sidebar, beside the entry CTA, for rule 1: the

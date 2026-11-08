@@ -14,7 +14,7 @@ import type { ProductStatus, ListingType, ProductImage } from "../types";
 
 export type { ProductImage };
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
-import type { LotteryConfig } from "../../lottery/types";
+import type { GiveawayConfig } from "../../giveaway/types";
 
 export interface ProductVideoField {
   url: string;
@@ -944,21 +944,21 @@ export interface ProductDocument extends BaseDocument {
   /**
    * Draw mode for clearance listings.
    * "reveal" = classic automatic-reveal flow (default, backward-compat).
-   * "lottery" = user self-pull with weighted random slot assignment.
+   * "giveaway" = user self-pull with weighted random slot assignment.
    */
-  prizeDrawMode?: "reveal" | "lottery";
+  prizeDrawMode?: "reveal" | "giveaway";
   /**
-   * Reveal trigger for "reveal" mode draws (irrelevant for "lottery" mode).
+   * Reveal trigger for "reveal" mode draws (irrelevant for "giveaway" mode).
    * "instant" — winner assigned the moment the order's payment is confirmed.
    * "scheduled" — winner assigned automatically at whichever comes first:
    * `prizeRevealWindowEnd` or full sellout (`prizeCurrentEntries === prizeMaxEntries`).
    */
   prizeRevealMode?: "instant" | "scheduled";
   /**
-   * Full lottery config. Only set when prizeDrawMode === "lottery".
+   * Full giveaway config. Only set when prizeDrawMode === "giveaway".
    * Includes server-only price/weight fields — stripped by adapter before any client response.
    */
-  lotteryConfig?: LotteryConfig;
+  giveawayConfig?: GiveawayConfig;
 
   // ── Per-product shipping overrides (S-SBUNI-RULES 2026-05-13) ───────────
   /**
@@ -1079,8 +1079,8 @@ export interface PrizeDrawItem {
   video?: { url: string; thumbnailUrl?: string };
   condition: string;
   estimatedValue?: number;
-  // FUTURE_FINANCIAL_DB: external_tx_id → lottery_transactions.external_tx_id
-  /** Per-slot price in decimal rupees for lottery mode. Lower price = higher weight = higher chance. */
+  // FUTURE_FINANCIAL_DB: external_tx_id → giveaway_transactions.external_tx_id
+  /** Per-slot price in decimal rupees for giveaway mode. Lower price = higher weight = higher chance. */
   prizeSlotPrice?: number;
   isWon: boolean;
   /** Order id this item was assigned to — set alongside isWon:true. Admin/seller-only mapping (never public) so the seller knows which physical item ships to which order. */

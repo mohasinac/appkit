@@ -116,7 +116,7 @@ function orderLinesOf(order: OrderDocument): RateableOrderItem[] {
    * cancelled or the array is rewritten — and `expandCartLineToOrderRows` fans
    * a grouped line into N rows, so rewrites happen. A rating would then attach
    * to a different product than the one it was written about. That is the
-   * merge-by-index hazard the lottery-slot fix is about, one feature over.
+   * merge-by-index hazard the giveaway-slot fix is about, one feature over.
    *
    * Keyed on `productId` plus an occurrence counter instead: stable under
    * reordering and under the removal of OTHER lines, and only ambiguous if two

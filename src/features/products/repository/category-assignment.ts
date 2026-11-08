@@ -334,7 +334,7 @@ export function assertAssignmentShape(
      * 409, not 400: the request is well formed and the seller is not confused —
      * OUR category tree has not been rebuilt, so we cannot tell whether that
      * node is a leaf. The correct next action is to rebuild the tree, not to
-     * fix a field. Same distinction as removing a booked lottery slot.
+     * fix a field. Same distinction as removing a booked giveaway slot.
      */
     throw new ConflictError(
       `"${notIndexed.name ?? notIndexed.id}" has not been indexed yet, so we cannot tell whether it is a ` +

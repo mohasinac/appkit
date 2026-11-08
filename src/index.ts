@@ -1347,8 +1347,8 @@ export { BID_PII_FIELDS } from "./security/pii-schemas";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EVENT_ENTRY_PII_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_PII_FIELDS } from "./security/pii-schemas";
-// LOTTERY_ENTRY_PII_FIELDS - PII fields for lottery entries.
-export { LOTTERY_ENTRY_PII_FIELDS } from "./security/pii-schemas";
+// GIVEAWAY_ENTRY_PII_FIELDS - PII fields for giveaway entries.
+export { GIVEAWAY_ENTRY_PII_FIELDS } from "./security/pii-schemas";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // OFFER_PII_FIELDS - Constant used across modules.
 export { OFFER_PII_FIELDS } from "./security/pii-schemas";
@@ -1988,7 +1988,7 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // bundles. Import from `@mohasinac/appkit/server` in server-only code.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventEntriesSeedData - Model for event entries seed data.
-// lotteryEntriesSeedData already exported above via LOTTERY_ENTRIES_COLLECTION block.
+// giveawayEntriesSeedData already exported above via GIVEAWAY_ENTRIES_COLLECTION block.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventsSeedData - Model for events seed data.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -5056,18 +5056,18 @@ export { EVENT_ADMIN_SORT_OPTIONS } from "./features/events/components/EventFilt
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENT_ENTRIES_COLLECTION - Constant used across modules.
 export { EVENT_ENTRIES_COLLECTION } from "./features/events/schemas/firestore";
-// LOTTERY_ENTRIES_COLLECTION - New lotteryEntries collection constant.
-export { LOTTERY_ENTRIES_COLLECTION } from "./features/lottery/schemas/firestore";
+// GIVEAWAY_ENTRIES_COLLECTION - New giveawayEntries collection constant.
+export { GIVEAWAY_ENTRIES_COLLECTION } from "./features/giveaway/schemas/firestore";
 export { supportTicketCreateSchema } from "./features/support/schemas/ticket-create-form";
 export type { SupportTicketCreateValues } from "./features/support/schemas/ticket-create-form";
-// The lotteryConfig WRITE contract + the booking-preserving merge. The only
-// sanctioned way to write lotteryConfig — see the schema module's header.
-export { lotteryConfigWriteSchema, lotterySlotWriteSchema, mergeLotteryConfig } from "./features/lottery/schemas/config-write";
-export type { LotteryConfigWriteInput, LotteryMergeResult } from "./features/lottery/schemas/config-write";
-// lotteryEntriesSeedData - Seed data for the lotteryEntries collection.
+// The giveawayConfig WRITE contract + the booking-preserving merge. The only
+// sanctioned way to write giveawayConfig — see the schema module's header.
+export { giveawayConfigWriteSchema, giveawaySlotWriteSchema, mergeGiveawayConfig } from "./features/giveaway/schemas/config-write";
+export type { GiveawayConfigWriteInput, GiveawayMergeResult } from "./features/giveaway/schemas/config-write";
+// giveawayEntriesSeedData - Seed data for the giveawayEntries collection.
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
-// LOTTERY_ENTRY_FIELDS - Canonical field name constants for lotteryEntries collection.
-export { LOTTERY_ENTRY_FIELDS } from "./features/lottery/schemas/firestore";
+// GIVEAWAY_ENTRY_FIELDS - Canonical field name constants for giveawayEntries collection.
+export { GIVEAWAY_ENTRY_FIELDS } from "./features/giveaway/schemas/firestore";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENT_ENTRY_FIELDS - Constant used across modules.
 export { EVENT_ENTRY_FIELDS } from "./features/events/schemas/firestore";
@@ -5133,20 +5133,20 @@ export type { EventGiveawayEntryFormProps } from "./features/events/components/E
 // EventOfferCard - Coupon code display + copy-to-clipboard for offer events.
 export { EventOfferCard } from "./features/events/components/EventOfferCard";
 export type { EventOfferCardProps } from "./features/events/components/EventOfferCard";
-// Lottery feature — client components
-export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
-export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
-export { LotteryListView } from "./_internal/client/features/lottery/LotteryListView";
-export { LotteryDetailView } from "./_internal/client/features/lottery/LotteryDetailView";
-export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryEntriesView";
-export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
-export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
-export { ClearanceLotteryDetailView } from "./_internal/client/features/lottery/ClearanceLotteryDetailView";
-// Lottery feature — types
-export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
-export { LotteryError, computeWeight, pickWeightedSlot, assignSlotWeights } from "./features/lottery/types";
-// Lottery feature — Firestore schema
-export type { LotteryEntryDocument } from "./features/lottery/schemas/firestore";
+// Giveaway feature — client components
+export { GiveawaySlotGrid } from "./_internal/client/features/giveaway/GiveawaySlotGrid";
+export { GiveawayPullForm } from "./_internal/client/features/giveaway/GiveawayPullForm";
+export { GiveawayListView } from "./_internal/client/features/giveaway/GiveawayListView";
+export { GiveawayDetailView } from "./_internal/client/features/giveaway/GiveawayDetailView";
+export { GiveawayEntriesView } from "./_internal/client/features/giveaway/GiveawayEntriesView";
+export { GiveawayAdminSlotView } from "./_internal/client/features/giveaway/GiveawayAdminSlotView";
+export { GiveawayAdminEditView } from "./_internal/client/features/giveaway/GiveawayAdminEditView";
+export { ClearanceGiveawayDetailView } from "./_internal/client/features/giveaway/ClearanceGiveawayDetailView";
+// Giveaway feature — types
+export type { GiveawayConfig, GiveawaySlot, ClientGiveawaySlot, ClientGiveawayConfig, GiveawayPricingMode, GiveawayEntryStatus } from "./features/giveaway/types";
+export { GiveawayError, computeWeight, pickWeightedSlot, assignSlotWeights } from "./features/giveaway/types";
+// Giveaway feature — Firestore schema
+export type { GiveawayEntryDocument } from "./features/giveaway/schemas/firestore";
 export type { SpinPrize } from "./features/events/types/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventsListView - Component for events list view.
@@ -5282,7 +5282,7 @@ export type { EventType } from "./features/events/types/index";
 export { ALL_EVENT_TYPES, ALL_EVENT_STATUSES } from "./features/events/types/index";
 // normalizeEventType - maps a stored or inbound event `type` onto the current
 // union, tolerating the three pre-2026-10-31 spellings (`raffle` ->
-// `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` -> `random-draw`).
+// `giveaway`, `spin_wheel` -> `bonus-spin`, `giveaway` -> `random-draw`).
 // Returns undefined for anything unrecognised, never a plausible default.
 // 🛑 Every READ-side comparison must go through this: documents written before
 // the rename migration still hold the old values, and a bare `===` silently
@@ -10081,7 +10081,7 @@ export { changeEmailSchema } from "./features/account/schemas/index";
 export {
   adminUserUpdateSchema,
   whatsappSettingsSchema,
-  lotteryPullSchema,
+  giveawayPullSchema,
 } from "./features/admin/schemas/admin-user-form";
 export { siteSettingsFormSchema } from "./features/admin/schemas/site-settings-form";
 

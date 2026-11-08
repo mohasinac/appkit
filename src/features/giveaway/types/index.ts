@@ -1,81 +1,81 @@
 /**
- * Lottery feature shared types
+ * Giveaway feature shared types
  *
- * Used by both event-type lottery and prize-draw-mode lottery.
+ * Used by both event-type giveaway and prize-draw-mode giveaway.
  * Weight + price fields are server-only — never sent to client consumers.
  */
 
-export interface LotterySlot {
+export interface GiveawaySlot {
   slotNumber: number; // 1..totalSlots
   name: string; // prize item name shown to users
-  /** Prize photo. Public — rendered in the prize collage on the lottery detail page. */
+  /** Prize photo. Public — rendered in the prize collage on the giveaway detail page. */
   image?: string;
-  // FUTURE_FINANCIAL_DB: external_tx_id → lottery_transactions.external_tx_id
+  // FUTURE_FINANCIAL_DB: external_tx_id → giveaway_transactions.external_tx_id
   price: number; // NEVER sent to client — determines weight (decimal rupees)
   weight: number; // computed server-side; NEVER sent to client
   isBooked: boolean;
-  bookedByUserLotteryNumber?: number;
+  bookedByUserGiveawayNumber?: number;
   bookedByUserId?: string;
   bookedByDisplayName?: string;
 }
 
 /** Slot shape safe to expose to clients — price and weight stripped by adapter. */
-export interface ClientLotterySlot {
+export interface ClientGiveawaySlot {
   slotNumber: number;
   name: string;
   image?: string;
   isBooked: boolean;
-  bookedByUserLotteryNumber?: number;
+  bookedByUserGiveawayNumber?: number;
   bookedByDisplayName?: string;
 }
 
-export type LotteryPricingMode = "uniform" | "variable";
+export type GiveawayPricingMode = "uniform" | "variable";
 // uniform: all slots cost the same (uniformPrice); all slots equal weight (no weighting)
 // variable: each slot has its own price; weight computed per slot (lower price = higher chance)
 
-export interface LotteryConfig {
-  slots: LotterySlot[];
+export interface GiveawayConfig {
+  slots: GiveawaySlot[];
   totalSlots: number; // 1..200
-  pricingMode: LotteryPricingMode;
+  pricingMode: GiveawayPricingMode;
   uniformPrice?: number; // set when pricingMode === "uniform"; all slots cost this (decimal rupees)
   drawWindowDurationMinutes: number;
   maxPullsPerTransaction: number; // max pulls one TX ID is valid for (default 1)
-  maxPullsPerUser: number; // max total pulls one user may make in this lottery (default 1)
+  maxPullsPerUser: number; // max total pulls one user may make in this giveaway (default 1)
 }
 
 /** Client-safe config shape — slots have price/weight stripped. */
-export interface ClientLotteryConfig {
-  slots: ClientLotterySlot[];
+export interface ClientGiveawayConfig {
+  slots: ClientGiveawaySlot[];
   totalSlots: number;
-  pricingMode: LotteryPricingMode;
+  pricingMode: GiveawayPricingMode;
   drawWindowDurationMinutes: number;
   maxPullsPerTransaction: number;
   maxPullsPerUser: number;
 }
 
-export type LotteryEntryStatus =
+export type GiveawayEntryStatus =
   | "pending"
   | "drawn"
   | "won"
   | "flagged"
   | "cancelled";
 
-/** Error codes thrown by lottery actions */
-export type LotteryErrorCode =
-  | "LOTTERY_FULL"
-  | "LOTTERY_WINDOW_CLOSED"
+/** Error codes thrown by giveaway actions */
+export type GiveawayErrorCode =
+  | "GIVEAWAY_FULL"
+  | "GIVEAWAY_WINDOW_CLOSED"
   | "USER_LIMIT_REACHED"
   | "TX_ALREADY_USED"
   | "SLOT_NOT_FOUND"
   | "ENTRY_NOT_FLAGGED";
 
-export class LotteryError extends Error {
+export class GiveawayError extends Error {
   constructor(
-    public readonly code: LotteryErrorCode,
+    public readonly code: GiveawayErrorCode,
     message: string,
   ) {
     super(message);
-    this.name = "LotteryError";
+    this.name = "GiveawayError";
   }
 }
 
@@ -109,11 +109,11 @@ function secureRandomInt(maxExclusive: number): number {
  * Pick a slot using weighted random selection. Uses the Web Crypto API, not
  * `Math.random()`, so the fairness claim shown to users (PrizeRevealModal's
  * "provably fair" copy) is actually true for this path too.
- * @throws {LotteryError} LOTTERY_FULL when unclaimed is empty.
+ * @throws {GiveawayError} GIVEAWAY_FULL when unclaimed is empty.
  */
-export function pickWeightedSlot(unclaimed: LotterySlot[]): LotterySlot {
+export function pickWeightedSlot(unclaimed: GiveawaySlot[]): GiveawaySlot {
   if (unclaimed.length === 0) {
-    throw new LotteryError("LOTTERY_FULL", "No unclaimed slots remain.");
+    throw new GiveawayError("GIVEAWAY_FULL", "No unclaimed slots remain.");
   }
   const total = unclaimed.reduce((s, sl) => s + sl.weight, 0);
   let r = secureRandomInt(total);
@@ -128,7 +128,7 @@ export function pickWeightedSlot(unclaimed: LotterySlot[]): LotterySlot {
  * Assign weights to slots based on pricing mode.
  * Returns a new array with weight populated on every slot.
  */
-export function assignSlotWeights(config: LotteryConfig): LotterySlot[] {
+export function assignSlotWeights(config: GiveawayConfig): GiveawaySlot[] {
   if (config.pricingMode === "uniform") {
     return config.slots.map((sl) => ({ ...sl, weight: 50 }));
   }

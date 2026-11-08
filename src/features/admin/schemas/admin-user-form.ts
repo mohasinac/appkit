@@ -13,19 +13,19 @@
  *      malformed id there fails at sync time, hours later, with no obvious
  *      cause.
  *
- *      `LotteryPullForm` is a buyer-facing entry: a transaction id, a payment
+ *      `GiveawayPullForm` is a buyer-facing entry: a transaction id, a payment
  *      time and an item number, all parsed with a bare `parseInt` and a `new
  *      Date(...)` that yields `Invalid Date` on anything unparseable.
  *
  * EXPORTS:
- *   adminUserUpdateSchema, whatsappSettingsSchema, lotteryPullSchema,
+ *   adminUserUpdateSchema, whatsappSettingsSchema, giveawayPullSchema,
  *   and their inferred value types
  *
- * @tag domain:admin,whatsapp,lottery
+ * @tag domain:admin,whatsapp,giveaway
  * @tag layer:schema
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:AdminUserEditorView,SellerWhatsAppSettingsView,LotteryPullForm
+ * @tag consumers:AdminUserEditorView,SellerWhatsAppSettingsView,GiveawayPullForm
  * @tag sideEffects:none
  */
 
@@ -198,7 +198,7 @@ export const whatsappConnectionSchema = whatsappSettingsSchema.omit({
 export type WhatsappConnectionValues = z.infer<typeof whatsappConnectionSchema>;
 
 /**
- * A buyer's lottery entry.
+ * A buyer's giveaway entry.
  *
  * `purchasedItemNumber` was `parseInt(itemNumber, 10)` — `NaN` for anything
  * non-numeric — and `paymentTime` was `new Date(...)`, which yields
@@ -206,7 +206,7 @@ export type WhatsappConnectionValues = z.infer<typeof whatsappConnectionSchema>;
  * checked here so the failure is an inline message rather than a crash or a
  * `NaN` written to the entry.
  */
-export const lotteryPullSchema = z.object({
+export const giveawayPullSchema = z.object({
   /*
    * Context, not input. Whether this pull belongs to an event or a product is
    * decided by the page that mounts the form, so rendering a picker for it
@@ -238,4 +238,4 @@ export const lotteryPullSchema = z.object({
   ),
 });
 
-export type LotteryPullValues = z.infer<typeof lotteryPullSchema>;
+export type GiveawayPullValues = z.infer<typeof giveawayPullSchema>;

@@ -1,6 +1,6 @@
 /*
  * WHY: Every time-bound tester fixture — collector drop end dates, coupon validity, event
- *      start/end, prize-draw reveal windows, offer expiry, lottery draw windows —
+ *      start/end, prize-draw reveal windows, offer expiry, giveaway draw windows —
  *      must open and close INSIDE one testing session. Hand-written offsets like
  *      `Date.now() + 2 * 60 * 60 * 1000` cannot do that: they bake in a duration
  *      nobody can shorten, so a case reading "watch the collector drop actually end" is

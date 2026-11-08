@@ -281,15 +281,15 @@ export { useBulkEvent } from "./features/events/hooks/useBulkEvent";
 export type { UseBulkEventOptions, UseBulkEventReturn, BulkEventStatus } from "./features/events/index";
 // RTDB_PATHS - realtime database path constants (e.g. RTDB_PATHS.BULK_EVENTS for useBulkEvent).
 export { RTDB_PATHS } from "./providers/db-firebase/rtdb-paths";
-// Lottery feature — client components (safe for client bundles — no server imports)
-export { LotterySlotGrid } from "./_internal/client/features/lottery/LotterySlotGrid";
-export { LotteryPullForm } from "./_internal/client/features/lottery/LotteryPullForm";
-export { LotteryListView } from "./_internal/client/features/lottery/LotteryListView";
-export { LotteryDetailView } from "./_internal/client/features/lottery/LotteryDetailView";
-export { LotteryEntriesView } from "./_internal/client/features/lottery/LotteryEntriesView";
-export { LotteryAdminSlotView } from "./_internal/client/features/lottery/LotteryAdminSlotView";
-export { LotteryAdminEditView } from "./_internal/client/features/lottery/LotteryAdminEditView";
-export { lotteryConfigWriteSchema, lotterySlotWriteSchema } from "./features/lottery/schemas/config-write";
+// Giveaway feature — client components (safe for client bundles — no server imports)
+export { GiveawaySlotGrid } from "./_internal/client/features/giveaway/GiveawaySlotGrid";
+export { GiveawayPullForm } from "./_internal/client/features/giveaway/GiveawayPullForm";
+export { GiveawayListView } from "./_internal/client/features/giveaway/GiveawayListView";
+export { GiveawayDetailView } from "./_internal/client/features/giveaway/GiveawayDetailView";
+export { GiveawayEntriesView } from "./_internal/client/features/giveaway/GiveawayEntriesView";
+export { GiveawayAdminSlotView } from "./_internal/client/features/giveaway/GiveawayAdminSlotView";
+export { GiveawayAdminEditView } from "./_internal/client/features/giveaway/GiveawayAdminEditView";
+export { giveawayConfigWriteSchema, giveawaySlotWriteSchema } from "./features/giveaway/schemas/config-write";
 // The SectionForm engine + its schema-derived section builder. Client-only:
 // consumer forms need these and the bare package resolves to the SERVER entry.
 export { SectionForm, useSectionFormNav } from "./features/shell/SectionForm";
@@ -306,9 +306,9 @@ export { QuickFormDrawer } from "./features/shell/QuickFormDrawer";
 export type { QuickFormDrawerProps, QuickFieldDef } from "./features/shell/QuickFormDrawer";
 export type { ItemRequestCreateValues } from "./features/store-extensions/schemas/item-request-create-form";
 export type { ReportCreateValues } from "./features/store-extensions/schemas/report-create-form";
-export type { LotteryConfigWriteInput } from "./features/lottery/schemas/config-write";
-export { ClearanceLotteryDetailView } from "./_internal/client/features/lottery/ClearanceLotteryDetailView";
-export type { LotteryConfig, LotterySlot, ClientLotterySlot, ClientLotteryConfig, LotteryPricingMode, LotteryEntryStatus } from "./features/lottery/types";
+export type { GiveawayConfigWriteInput } from "./features/giveaway/schemas/config-write";
+export { ClearanceGiveawayDetailView } from "./_internal/client/features/giveaway/ClearanceGiveawayDetailView";
+export type { GiveawayConfig, GiveawaySlot, ClientGiveawaySlot, ClientGiveawayConfig, GiveawayPricingMode, GiveawayEntryStatus } from "./features/giveaway/types";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.
 export { BottomSheet } from "./features/layout/BottomSheet";
@@ -1759,7 +1759,7 @@ export { changeEmailSchema } from "./features/account/schemas/index";
 export {
   adminUserUpdateSchema,
   whatsappSettingsSchema,
-  lotteryPullSchema,
+  giveawayPullSchema,
 } from "./features/admin/schemas/admin-user-form";
 export { siteSettingsFormSchema } from "./features/admin/schemas/site-settings-form";
 

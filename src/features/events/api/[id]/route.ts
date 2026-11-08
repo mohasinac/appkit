@@ -56,7 +56,7 @@ export async function GET(
 
     // 🛑 Do not hand-roll this projection here. `toPublicEvent` drops
     // `createdBy` AND allow-lists the two nested structures that decide
-    // outcomes — `lotteryConfig.slots[]` (price / weight / bookedByUserId) and
+    // outcomes — `giveawayConfig.slots[]` (price / weight / bookedByUserId) and
     // `spinPrizes[]` (weight / couponId). Both were published to anonymous
     // callers by the deny-list spread that used to live here.
     const publicEvent = toPublicEvent(event);

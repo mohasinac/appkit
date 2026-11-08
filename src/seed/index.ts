@@ -178,7 +178,7 @@ export { couponUsageSeedData } from "./coupon-usage-seed-data";
 export { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
 export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { eventLikesSeedData, SEEDED_LIKE_COUNTS } from "./event-likes-seed-data";
-export { lotteryEntriesSeedData } from "./lottery-entries-seed-data";
+export { giveawayEntriesSeedData } from "./giveaway-entries-seed-data";
 export { payoutsSeedData } from "./payouts-seed-data";
 export { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./shipments-seed-data";
 export { catalogueSeedData } from "./catalogue-seed-data";

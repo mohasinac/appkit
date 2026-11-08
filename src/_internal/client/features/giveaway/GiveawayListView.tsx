@@ -10,11 +10,11 @@ import { Anchor } from "../../../../ui/components/Anchor";
 import { Div } from "../../../../ui/components/Div";
 import { MediaImage } from "../../../../ui/components/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
-import type { ClientLotteryConfig } from "../../../../features/lottery/types";
+import type { ClientGiveawayConfig } from "../../../../features/giveaway/types";
 import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
-interface ClientLotteryEvent {
+interface ClientGiveawayEvent {
   id: string;
   title: string;
   description?: string;
@@ -27,15 +27,15 @@ interface ClientLotteryEvent {
    */
   coverImageUrl?: string;
   coverImage?: { url?: string } | null;
-  lotteryConfig?: ClientLotteryConfig;
+  giveawayConfig?: ClientGiveawayConfig;
 }
 
-interface LotteryListViewProps {
-  items: ClientLotteryEvent[];
+interface GiveawayListViewProps {
+  items: ClientGiveawayEvent[];
   adminMode?: boolean;
   /**
    * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
-   * by `/admin/lotteries` and the public `/lottery`, so every caller
+   * by `/admin/giveaways` and the public `/giveaway`, so every caller
    * computes its own route-template-derived id rather than this component
    * guessing one.
    */
@@ -45,10 +45,10 @@ interface LotteryListViewProps {
 }
 
 /**
- * Card grid of lotteries.
+ * Card grid of giveaways.
  * Admin sees all statuses; public sees active only.
  */
-export function LotteryListView({ items, adminMode = false, pageId, pageRegionCards = [] }: LotteryListViewProps) {
+export function GiveawayListView({ items, adminMode = false, pageId, pageRegionCards = [] }: GiveawayListViewProps) {
   const visible = adminMode
     ? items
     : items.filter((e) => e.status === "active");
@@ -59,10 +59,10 @@ export function LotteryListView({ items, adminMode = false, pageId, pageRegionCa
         <Section>
           <Stack className="text-center" gap="md" padding="xl">
             <Heading level={2} size="2xl" weight="bold">
-              No Active Lotteries
+              No Active Giveaways
             </Heading>
             <Text color="muted">
-              Check back soon for upcoming lottery events!
+              Check back soon for upcoming giveaway events!
             </Text>
             <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
           </Stack>
@@ -76,21 +76,21 @@ export function LotteryListView({ items, adminMode = false, pageId, pageRegionCa
       <Section>
         <Stack gap="lg">
           <Heading level={1} size="3xl" weight="bold">
-            {adminMode ? "All Lotteries" : "Active Lotteries"}
+            {adminMode ? "All Giveaways" : "Active Giveaways"}
           </Heading>
           <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
           <Grid cols={3} gap="md">
             {visible.map((event) => {
               const claimed =
-                event.lotteryConfig?.slots.filter((s) => s.isBooked).length ?? 0;
-              const total = event.lotteryConfig?.totalSlots ?? 0;
+                event.giveawayConfig?.slots.filter((s) => s.isBooked).length ?? 0;
+              const total = event.giveawayConfig?.totalSlots ?? 0;
               const slotsLeft = total - claimed;
 
               return (
               <Anchor
                 key={event.id}
                 /*
-                 * In adminMode this used to link to the PUBLIC lottery page,
+                 * In adminMode this used to link to the PUBLIC giveaway page,
                  * so an admin on the admin list had no route to slot
                  * configuration at all — which went unnoticed because the
                  * editor was orphaned and there was nowhere to link TO.
@@ -99,13 +99,13 @@ export function LotteryListView({ items, adminMode = false, pageId, pageRegionCa
                  */
                 href={
                   adminMode
-                    ? String(ROUTES.ADMIN.LOTTERY_CONFIG(event.id))
-                    : `/lottery/${event.id}`
+                    ? String(ROUTES.ADMIN.GIVEAWAY_CONFIG(event.id))
+                    : `/giveaway/${event.id}`
                 }
                 tone="brand"
                 rounded="2xl"
                 className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                aria-label={`${event.title} lottery`}
+                aria-label={`${event.title} giveaway`}
               >
                   <Card
                     variant="default"

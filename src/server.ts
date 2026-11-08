@@ -2213,24 +2213,24 @@ export { toClientLiveItem, type LiveItemClientShape } from "./_internal/server/f
 export { buildLiveItemMetadata, type LiveItemMetadataOptions } from "./_internal/server/features/live/metadata";
 export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type LiveItemOgData } from "./_internal/server/features/live/og";
 
-// ── Lottery feature — server data + adapters + actions ──────────────────────────
-export { getLotteryEventCached, listLotteryEvents, getLotteryEntriesForAdmin, getLotteryEntriesForUser } from "./_internal/server/features/lottery/data";
-export type { LotteryEventClient } from "./_internal/server/features/lottery/data";
-export { toClientLotterySlot, toClientLotteryConfig } from "./_internal/server/features/lottery/adapters";
+// ── Giveaway feature — server data + adapters + actions ──────────────────────────
+export { getGiveawayEventCached, listGiveawayEvents, getGiveawayEntriesForAdmin, getGiveawayEntriesForUser } from "./_internal/server/features/giveaway/data";
+export type { GiveawayEventClient } from "./_internal/server/features/giveaway/data";
+export { toClientGiveawaySlot, toClientGiveawayConfig } from "./_internal/server/features/giveaway/adapters";
 export { toPublicEvent, toClientSpinPrize } from "./_internal/server/features/events/adapters";
 export type { ClientSpinPrize } from "./_internal/server/features/events/adapters";
-export { buildLotteryMetadata } from "./_internal/server/features/lottery/metadata";
-export { renderLotteryOg, renderLotteryOgImage } from "./_internal/server/features/lottery/og";
-export type { LotteryOgData } from "./_internal/server/features/lottery/og";
+export { buildGiveawayMetadata } from "./_internal/server/features/giveaway/metadata";
+export { renderGiveawayOg, renderGiveawayOgImage } from "./_internal/server/features/giveaway/og";
+export type { GiveawayOgData } from "./_internal/server/features/giveaway/og";
 export {
-  submitLotteryPullAction,
-  flagLotteryEntryAction,
-  reopenLotterySlotAction,
-  createLotteryEventAction,
-  updateLotteryEventAction,
-  setProductLotteryModeAction,
-} from "./_internal/server/features/lottery/actions";
-export { lotteryEntryRepository } from "./features/lottery/repository/lottery-entry.repository";
+  submitGiveawayPullAction,
+  flagGiveawayEntryAction,
+  reopenGiveawaySlotAction,
+  createGiveawayEventAction,
+  updateGiveawayEventAction,
+  setProductGiveawayModeAction,
+} from "./_internal/server/features/giveaway/actions";
+export { giveawayEntryRepository } from "./features/giveaway/repository/giveaway-entry.repository";
 
 /*
  * Notification email templates + the shared actionUrl resolver.

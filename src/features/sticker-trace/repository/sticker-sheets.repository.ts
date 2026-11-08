@@ -119,7 +119,7 @@ export class StickerSheetsRepository extends BaseRepository<StickerSheetDocument
    *
    * Matched on `ordinal`, never on array index — removing a part shifts every
    * later index by one, so an index-wise write renames the wrong sticker. Same
-   * rule as § "Lottery Config Writes" merges by `slotNumber`.
+   * rule as § "Giveaway Config Writes" merges by `slotNumber`.
    *
    * An unknown ordinal is a no-op that throws rather than a silent miss: the
    * caller named a part that is not on this sheet, and answering 200 to that

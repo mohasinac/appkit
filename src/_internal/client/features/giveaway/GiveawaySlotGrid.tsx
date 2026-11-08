@@ -4,20 +4,20 @@ import React from "react";
 import { Stack, Row } from "../../../../ui/components/Layout";
 import { Text, Span } from "../../../../ui/components/Typography";
 import { Div } from "../../../../ui/components/Div";
-import type { ClientLotterySlot } from "../../../../features/lottery/types";
+import type { ClientGiveawaySlot } from "../../../../features/giveaway/types";
 
-interface LotterySlotGridProps {
-  slots: ClientLotterySlot[];
+interface GiveawaySlotGridProps {
+  slots: ClientGiveawaySlot[];
   totalSlots: number;
 }
 
 /**
- * Visual grid of lottery slots.
- * Booked slots show buyer display name + user lottery number in green.
+ * Visual grid of giveaway slots.
+ * Booked slots show buyer display name + user giveaway number in green.
  * Available slots show slot number + name in white.
  * Never shows price or weight.
  */
-export function LotterySlotGrid({ slots, totalSlots }: LotterySlotGridProps) {
+export function GiveawaySlotGrid({ slots, totalSlots }: GiveawaySlotGridProps) {
   const cols =
     totalSlots <= 10 ? 5 : totalSlots <= 25 ? 5 : totalSlots <= 50 ? 10 : totalSlots <= 100 ? 10 : 20;
 
@@ -36,14 +36,14 @@ export function LotterySlotGrid({ slots, totalSlots }: LotterySlotGridProps) {
       {/* Outer grid: column count is runtime-computed from totalSlots — gridTemplateColumns passed via style, not className */}
       <Div
         style={{ display: "grid", gap: "4px", gridTemplateColumns: `repeat(${Math.min(cols, totalSlots)}, minmax(0, 1fr))` }}
-        aria-label="Lottery slot grid"
+        aria-label="Giveaway slot grid"
       >
         {slots.map((slot) => (
           <Div
             key={slot.slotNumber}
             title={
               slot.isBooked
-                ? `Slot #${slot.slotNumber}: ${slot.name} — claimed by ${slot.bookedByDisplayName ?? "a participant"} (#${slot.bookedByUserLotteryNumber ?? "?"})`
+                ? `Slot #${slot.slotNumber}: ${slot.name} — claimed by ${slot.bookedByDisplayName ?? "a participant"} (#${slot.bookedByUserGiveawayNumber ?? "?"})`
                 : `Slot #${slot.slotNumber}: ${slot.name} — available`
             }
             aria-label={`Slot ${slot.slotNumber}: ${slot.isBooked ? "claimed" : "available"}`}

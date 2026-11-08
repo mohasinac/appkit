@@ -220,7 +220,7 @@ class EventRepository extends BaseRepository<EventDocument> {
        * overwriting someone else's event.
        *
        * Found by tester run-3 batch 98, page-wiring/reachability--admin →
-       * lottery-can-be-created-without-seeding. Root Cause #9's shape.
+       * giveaway-can-be-created-without-seeding. Root Cause #9's shape.
        */
       const ref = this.getCollection().doc(slug);
       await ref.create(this.applyWriteHooks(data));

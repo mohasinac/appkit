@@ -2686,7 +2686,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "bey": "Dark Deathscyther Triple Blow",
         "colourway": "Bloody Red Ver.",
         "distribution": [
-          "Lawson Lottery Big 4",
+          "Lawson Giveaway Big 4",
           "red and white"
         ]
       },
@@ -2696,7 +2696,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "bey": "Dark Deathscyther Triple Blow",
         "colourway": "Mirage Clear Ver.",
         "distribution": [
-          "Lawson Lottery Big 4",
+          "Lawson Giveaway Big 4",
           "clear"
         ]
       }
@@ -2730,14 +2730,14 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "colourway": "Bloody Red Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
-        "distribution": "Lawson Lottery Big 4 · red and white",
+        "distribution": "Lawson Giveaway Big 4 · red and white",
         "inBey": "Dark Deathscyther Triple Blow"
       },
       {
         "colourway": "Mirage Clear Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
-        "distribution": "Lawson Lottery Big 4 · clear",
+        "distribution": "Lawson Giveaway Big 4 · clear",
         "inBey": "Dark Deathscyther Triple Blow"
       }
     ],
@@ -15718,7 +15718,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "bey": "Fang Leone 130W²D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -35711,7 +35711,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "UX-00",
         "bey": "WyvernHover 2-80GN",
         "distribution": [
-          "DMM Lottery exclusive"
+          "DMM Giveaway exclusive"
         ]
       },
       {
@@ -35719,7 +35719,7 @@ export const glossaryChunk1: Partial<PartGlossaryDocument>[] = [
         "code": "UX-00",
         "bey": "WyvernHover 2-80GN",
         "distribution": [
-          "DMM Lottery exclusive"
+          "DMM Giveaway exclusive"
         ]
       },
       {

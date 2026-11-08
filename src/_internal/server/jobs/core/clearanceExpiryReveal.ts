@@ -39,7 +39,7 @@ export async function runClearanceExpiryReveal(ctx: JobContext): Promise<void> {
 
   for (const doc of snap.docs) {
     const product = doc.data() as { prizeDrawMode?: string };
-    if (product.prizeDrawMode === "lottery") continue; // out of scope — separate mechanic
+    if (product.prizeDrawMode === "giveaway") continue; // out of scope — separate mechanic
 
     const orders = await ctx.db
       .collection(ORDER_COLLECTION)

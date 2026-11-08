@@ -43,7 +43,7 @@ export async function handleClearanceSoldOut(
   const { productId, before, after } = input;
   if (!after) return;
   if (after.listingType !== "clearance") return;
-  if (after.prizeDrawMode === "lottery") return; // out of scope — separate mechanic
+  if (after.prizeDrawMode === "giveaway") return; // out of scope — separate mechanic
   if (after.prizeRevealMode !== "scheduled") return;
   if (after.prizeRevealStatus !== PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.OPEN) return;
 

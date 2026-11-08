@@ -25,7 +25,7 @@ export type EventFilterVariant = "admin" | "seller" | "public";
  *
  * 🛑 Splits on `_` AND `-`. It split on `_` alone until 2026-10-31, which was
  * fine while every multi-word value was snake_case — but `spin_wheel` became
- * `bonus-spin` and `lottery` became `random-draw`, and the old split produced
+ * `bonus-spin` and `giveaway` became `random-draw`, and the old split produced
  * `eventTypeBonus-spin`: a key no `messages/en.json` holds, so both new
  * facets would have rendered their own raw key as the label. Same split as
  * `humaniseEventType`, for the same reason.

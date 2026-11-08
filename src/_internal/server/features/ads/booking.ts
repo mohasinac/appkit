@@ -72,7 +72,7 @@ export interface BookAdSlotInput {
  * Take a slot. Returns the booking id.
  *
  * Throws **409** when the slot is taken (a well-formed request against a
- * world that moved — the same distinction the lottery config write makes for
+ * world that moved — the same distinction the giveaway config write makes for
  * a pulled slot) and **400** for a past period or an unknown placement.
  */
 export async function bookAdSlot(input: BookAdSlotInput): Promise<string> {

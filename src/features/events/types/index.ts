@@ -1,6 +1,6 @@
 import type { MediaField } from "../../media/types/index";
 import type { JsonValue } from "../../../schemas/types";
-import type { ClientLotteryConfig } from "../../lottery/types";
+import type { ClientGiveawayConfig } from "../../giveaway/types";
 
 // --- Enums / union types ------------------------------------------------------
 
@@ -18,7 +18,7 @@ export type EventType =
  * Pre-2026-10-31 spellings of the three chance-based types, kept as READ
  * aliases only. Nothing may write them.
  *
- * `raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` ->
+ * `raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`, `giveaway` ->
  * `random-draw`. Renamed for payment-aggregator merchant-screening optics;
  * `raffle` in particular is free-to-enter and never touches a payment
  * provider, so its rename is pure terminology.
@@ -32,7 +32,7 @@ export type EventType =
 const LEGACY_EVENT_TYPE_ALIASES: Record<string, EventType> = {
   raffle: "giveaway",
   spin_wheel: "bonus-spin",
-  lottery: "random-draw",
+  giveaway: "random-draw",
 };
 
 /**
@@ -287,13 +287,13 @@ export interface EventItem {
    * Slot config for a `random-draw` event — slots have price/weight stripped
    * for client consumption.
    *
-   * 🛑 The FIELD stays `lotteryConfig` even though the event type is now
+   * 🛑 The FIELD stays `giveawayConfig` even though the event type is now
    * `random-draw`: it is persisted, it is shared with the product-level
-   * `prizeDrawMode: "lottery"` axis, and `lotteryConfigWriteSchema` /
-   * `mergeLotteryConfig` are its only legal writers (CLAUDE.md § "Lottery
+   * `prizeDrawMode: "giveaway"` axis, and `giveawayConfigWriteSchema` /
+   * `mergeGiveawayConfig` are its only legal writers (CLAUDE.md § "Giveaway
    * Config Writes").
    */
-  lotteryConfig?: ClientLotteryConfig;
+  giveawayConfig?: ClientGiveawayConfig;
   stats: {
     totalEntries: number;
     approvedEntries: number;

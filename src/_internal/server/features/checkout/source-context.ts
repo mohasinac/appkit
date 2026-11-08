@@ -151,7 +151,7 @@ export async function buildOrderSourceContext(
         prizeDrawProductId: item.productId,
         pricePerEntry: product.pricePerEntry ?? product.price,
         entryCount: item.quantity,
-        // `prizeDrawMode` is reveal-vs-lottery, a different axis. The reveal
+        // `prizeDrawMode` is reveal-vs-giveaway, a different axis. The reveal
         // TIMING is what this records: a draw with a reveal window is
         // scheduled, one without reveals as soon as it sells out.
         revealMode: product.prizeRevealWindowEnd ? "scheduled" : "instant",

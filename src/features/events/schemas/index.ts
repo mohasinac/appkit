@@ -18,7 +18,7 @@ const eventCoverImageSchema = z
 /**
  * 🛑 WRITE enum — the current spellings only. The three chance-based types
  * were renamed 2026-10-31 (`raffle` -> `giveaway`, `spin_wheel` ->
- * `bonus-spin`, `lottery` -> `random-draw`).
+ * `bonus-spin`, `giveaway` -> `random-draw`).
  *
  * Deliberately does NOT accept the legacy spellings: a form or API caller
  * sending `raffle` today is using a stale client, and a 400 says so. Stored
@@ -99,18 +99,18 @@ export const spinPrizeSchema = z.object({
   isActive: z.boolean(),
 });
 
-/** Lottery slot schema — client-safe shape (no price/weight sent to clients). */
-export const lotterySlotClientSchema = z.object({
+/** Giveaway slot schema — client-safe shape (no price/weight sent to clients). */
+export const giveawaySlotClientSchema = z.object({
   slotNumber: z.number().int().min(1),
   name: z.string(),
   isBooked: z.boolean(),
-  bookedByUserLotteryNumber: z.number().optional(),
+  bookedByUserGiveawayNumber: z.number().optional(),
   bookedByDisplayName: z.string().optional(),
 });
 
-/** Client-safe lottery config schema — price/weight fields stripped server-side. */
-export const lotteryConfigClientSchema = z.object({
-  slots: z.array(lotterySlotClientSchema),
+/** Client-safe giveaway config schema — price/weight fields stripped server-side. */
+export const giveawayConfigClientSchema = z.object({
+  slots: z.array(giveawaySlotClientSchema),
   totalSlots: z.number().int().min(1).max(200),
   pricingMode: z.enum(["uniform", "variable"]),
   drawWindowDurationMinutes: z.number(),
@@ -175,8 +175,8 @@ export const eventItemSchema = z.object({
   spinMaxPerUser: z.number().optional(),
   spinWindowStart: z.string().optional(),
   spinWindowEnd: z.string().optional(),
-  // Lottery config (new) — client-safe shape (price/weight stripped by adapter)
-  lotteryConfig: lotteryConfigClientSchema.optional(),
+  // Giveaway config (new) — client-safe shape (price/weight stripped by adapter)
+  giveawayConfig: giveawayConfigClientSchema.optional(),
   stats: z.object({
     totalEntries: z.number(),
     approvedEntries: z.number(),

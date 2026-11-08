@@ -14,7 +14,7 @@ export const collectorDropRule: ListingCheckoutRule = {
    *
    * The reason is the acquirer's, not ours. Collector Drop and bidding businesses sit
    * on the prohibited-merchant lists Indian PGs inherit from the card networks,
-   * alongside lotteries and games of chance. Settling collector drop wins through a
+   * alongside giveaways and games of chance. Settling collector drop wins through a
    * standard e-commerce MID is a terms breach, and the penalty is not a
    * declined transaction — it is the whole merchant account frozen with the
    * settlement balance held. One category of order can cost every other

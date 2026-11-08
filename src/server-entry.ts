@@ -271,7 +271,7 @@ export {
 // and every rule that route needs has had to be exported here after the route
 // was found missing it. `collector-drop.rule.ts` / `clearance.rule.ts` have declared
 // `blockedPaymentMethods: ["online", ...]` since 2026-10-28 — Indian payment
-// aggregators prohibit settling collector drops/lotteries through a standard
+// aggregators prohibit settling collector drops/giveaways through a standard
 // e-commerce MID, and the penalty is the whole merchant account frozen — but
 // the enforcer was only ever wired into the COD/manual path
 // (`createCheckoutOrderAction`). The gateway path that actually creates a

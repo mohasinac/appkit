@@ -181,8 +181,8 @@ export const EVENT_ENTRY_PII_FIELDS = [
   "ipAddress",
 ] as const;
 
-/** PII fields in lottery entries */
-export const LOTTERY_ENTRY_PII_FIELDS = [
+/** PII fields in giveaway entries */
+export const GIVEAWAY_ENTRY_PII_FIELDS = [
   "userPhone",
   "userEmail",
   "userDisplayName",

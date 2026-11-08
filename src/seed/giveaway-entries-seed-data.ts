@@ -1,11 +1,11 @@
 /*
- * WHY: Seeds 5 lottery entries for the active Pokémon Number Draw event.
- * WHAT: 5 entries with userLotteryNumber 1-5, all status "drawn" (slot already assigned).
+ * WHY: Seeds 5 giveaway entries for the active Pokémon Number Draw event.
+ * WHAT: 5 entries with userGiveawayNumber 1-5, all status "drawn" (slot already assigned).
  *
  * EXPORTS:
- *   lotteryEntriesSeedData — Array of LotteryEntryDocument for seed runner
+ *   giveawayEntriesSeedData — Array of GiveawayEntryDocument for seed runner
  *
- * @tag domain:lottery
+ * @tag domain:giveaway
  * @tag layer:seed
  * @tag pattern:none
  * @tag access:server-only
@@ -14,23 +14,23 @@
  */
 
 /*
- * 🛑 `LotteryEntryPlain`, not `LotteryEntryDocument`.
+ * 🛑 `GiveawayEntryPlain`, not `GiveawayEntryDocument`.
  *
  * These fixtures hold REAL plaintext; `seed-cli` encrypts the PII fields on
- * write through the same `LOTTERY_ENTRY_PII_FIELDS` map the repository uses.
+ * write through the same `GIVEAWAY_ENTRY_PII_FIELDS` map the repository uses.
  * The document type now declares those fields `Encrypted<string>`, so typing
  * this array as the document would be a claim that these literals are
- * ciphertext — false, and previously hidden by an `as LotteryEntryDocument`
+ * ciphertext — false, and previously hidden by an `as GiveawayEntryDocument`
  * cast on every record. The casts are gone with it.
  */
-import type { LotteryEntryPlain } from "../features/lottery/schemas/firestore";
+import type { GiveawayEntryPlain } from "../features/giveaway/schemas/firestore";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
+export const giveawayEntriesSeedData: GiveawayEntryPlain[] = [
   {
-    id: "lottery-entry-pokemon-draw-1",
+    id: "giveaway-entry-pokemon-draw-1",
     sourceType: "event",
     eventId: "event-pokemon-number-draw-july-2026",
     userId: "user-ravi-k",
@@ -40,7 +40,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     transactionId: "TXN-SEED-001",
     paymentTime: daysAgo(2),
     purchasedItemNumber: 1,
-    userLotteryNumber: 1,
+    userGiveawayNumber: 1,
     assignedPrizeSlotNumber: 1,
     status: "drawn",
     isFlagged: false,
@@ -48,7 +48,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     drawnAt: daysAgo(2),
   },
   {
-    id: "lottery-entry-pokemon-draw-2",
+    id: "giveaway-entry-pokemon-draw-2",
     sourceType: "event",
     eventId: "event-pokemon-number-draw-july-2026",
     userId: "user-priya-s",
@@ -58,7 +58,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     transactionId: "TXN-SEED-002",
     paymentTime: daysAgo(2),
     purchasedItemNumber: 2,
-    userLotteryNumber: 2,
+    userGiveawayNumber: 2,
     assignedPrizeSlotNumber: 2,
     status: "drawn",
     isFlagged: false,
@@ -66,7 +66,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     drawnAt: daysAgo(2),
   },
   {
-    id: "lottery-entry-pokemon-draw-3",
+    id: "giveaway-entry-pokemon-draw-3",
     sourceType: "event",
     eventId: "event-pokemon-number-draw-july-2026",
     userId: "user-arjun-m",
@@ -76,7 +76,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     transactionId: "TXN-SEED-003",
     paymentTime: daysAgo(1),
     purchasedItemNumber: 3,
-    userLotteryNumber: 3,
+    userGiveawayNumber: 3,
     assignedPrizeSlotNumber: 3,
     status: "drawn",
     isFlagged: false,
@@ -84,7 +84,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     drawnAt: daysAgo(1),
   },
   {
-    id: "lottery-entry-pokemon-draw-4",
+    id: "giveaway-entry-pokemon-draw-4",
     sourceType: "event",
     eventId: "event-pokemon-number-draw-july-2026",
     userId: "user-sneha-p",
@@ -94,7 +94,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     transactionId: "TXN-SEED-004",
     paymentTime: daysAgo(1),
     purchasedItemNumber: 4,
-    userLotteryNumber: 4,
+    userGiveawayNumber: 4,
     assignedPrizeSlotNumber: 4,
     status: "drawn",
     isFlagged: false,
@@ -102,7 +102,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     drawnAt: daysAgo(1),
   },
   {
-    id: "lottery-entry-pokemon-draw-5",
+    id: "giveaway-entry-pokemon-draw-5",
     sourceType: "event",
     eventId: "event-pokemon-number-draw-july-2026",
     userId: "user-vikram-r",
@@ -112,7 +112,7 @@ export const lotteryEntriesSeedData: LotteryEntryPlain[] = [
     transactionId: "TXN-SEED-005",
     paymentTime: daysAgo(0),
     purchasedItemNumber: 5,
-    userLotteryNumber: 5,
+    userGiveawayNumber: 5,
     assignedPrizeSlotNumber: 5,
     status: "drawn",
     isFlagged: false,

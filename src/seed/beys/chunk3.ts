@@ -30623,7 +30623,7 @@ export const beyChunk3: Partial<BeyDocument>[] = [
     "jpName": "ワイバーンホバー",
     "romaji": "WaibānHobā Tsū Eitī Giya Nīdoru",
     "releaseJP": "October 24th, 2025",
-    "price": "770円 (for 1 lottery ticket)",
+    "price": "770円 (for 1 giveaway ticket)",
     "images": [
       {
         "file": "WyvernHover 2-80GN.png",

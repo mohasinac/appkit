@@ -22,7 +22,7 @@
  * the dangling FK of Root Cause #26). The keeper's 9 likes are untouched.
  *
  * 🛑 The three chance-based event types were RENAMED on 2026-10-31 —
- * `raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`, `lottery` ->
+ * `raffle` -> `giveaway`, `spin_wheel` -> `bonus-spin`, `giveaway` ->
  * `random-draw`. The historical accounts below deliberately keep the OLD
  * spellings: the rows they describe were written and deleted under those
  * names, and rewriting them would falsify the record.
@@ -32,7 +32,7 @@
  * `sale`, `poll`, `spin_wheel` and `raffle` have NO fixture again, so the
  * tester cases for those four types, and `saleConfig`/`EventSaleBanner` (whose
  * only fixture this ever had was one of the five), can again only report
- * "could not test". `survey`, `feedback` and `lottery` never had one.
+ * "could not test". `survey`, `feedback` and `giveaway` never had one.
  *
  * 🛑 Its id and slug still say `festive-cashback-10`, which is now narrower
  * than what the event covers. They are KEPT: the slug is the live public URL
@@ -43,7 +43,7 @@
  * ## 🛑 PRUNED TO MATCH LIVE, 2026-10-21
  *
  * This file used to seed 11 demo events covering all eight event types (poll,
- * survey, sale, raffle, spin_wheel, feedback, offer, lottery) plus 8 event
+ * survey, sale, raffle, spin_wheel, feedback, offer, giveaway) plus 8 event
  * entries. Live holds exactly ONE event, and the owner's decision is that
  * **live is canonical** — so the demo rows were deleted rather than left to be
  * re-created.
@@ -55,7 +55,7 @@
  * against production, `events 12 seed / 0 in db / 12 would create`.
  *
  * 🛑 CONSEQUENCE, recorded rather than discovered later: the tester checklist
- * cases that need a poll, a survey, a spin wheel, a raffle, a lottery, or a
+ * cases that need a poll, a survey, a spin wheel, a raffle, a giveaway, or a
  * `paused`/`cancelled`/`ended` status chip now have NO fixture. Those cases
  * can only report "could not test". That cost was raised before the deletion
  * and accepted. If they are wanted back, they belong in a scratch Firebase

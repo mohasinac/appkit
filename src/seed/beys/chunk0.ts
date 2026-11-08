@@ -9510,7 +9510,7 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     "jpName": "バイソンバロー",
     "romaji": "BaisonBarō Disuku Bōru",
     "releaseJP": "October 23rd, 2026",
-    "price": "770円 (for 1 lottery ticket)",
+    "price": "770円 (for 1 giveaway ticket)",
     "images": [
       {
         "file": "BisonValor DB (Angled View).png",
@@ -30165,7 +30165,7 @@ export const beyChunk0: Partial<BeyDocument>[] = [
     ],
     "jpName": "ディバインキメラTR145FB",
     "romaji": "Dibain Kimera TR145FB",
-    "releaseJP": "December 2010 (Lottery) · July 15th, 2011 (Freebie)",
+    "releaseJP": "December 2010 (Giveaway) · July 15th, 2011 (Freebie)",
     "owner": "Kakeru Tategami",
     "ownerNames": [
       "Kakeru Tategami"
@@ -30184,7 +30184,7 @@ export const beyChunk0: Partial<BeyDocument>[] = [
         "lead": true
       }
     ],
-    "seoDescription": "Divine Chimera TR145FB is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 2010 (Lottery) · July 15th, 2011 (Freebie) as N/A for Beyblade: Metal Fusion. It combines Chimera, Chimera, Divine, TR145. Used by Kakeru Tategami.",
+    "seoDescription": "Divine Chimera TR145FB is a Balance-Type Beyblade from the Hybrid Wheel System, spinning right-spin. Released December 2010 (Giveaway) · July 15th, 2011 (Freebie) as N/A for Beyblade: Metal Fusion. It combines Chimera, Chimera, Divine, TR145. Used by Kakeru Tategami.",
     "sourceUrl": "https://beyblade.fandom.com/wiki/Divine_Chimera_TR145FB",
     "source": "fandom-infobox",
     "categoryId": "category-divine-chimera-tr145fb"

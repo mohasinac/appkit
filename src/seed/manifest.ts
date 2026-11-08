@@ -47,6 +47,7 @@ import { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "
 import { catalogueSeedData } from "./catalogue-seed-data";
 import { blogPostsSeedData } from "./blog-posts-seed-data";
 import { eventsSeedData } from "./events-seed-data";
+import { giveawayEntriesSeedData } from "./giveaway-entries-seed-data";
 import { sessionsSeedData } from "./sessions-seed-data";
 import { addressesSeedData } from "./addresses-seed-data";
 import { storeAddressesSeedData } from "./store-addresses-seed-data";
@@ -204,7 +205,23 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   eventEntries: [],
-  lotteryEntries: [],
+  /*
+   * 🛑 KEY STAYS `lotteryEntries` — it is the Firestore COLLECTION NAME, and
+   * this manifest is what wipe-and-reseed purges. A key that did not match the
+   * real collection would leave the real documents untouched while reporting a
+   * clean purge. Boundary explained in `features/giveaway/schemas/firestore.ts`.
+   *
+   * It was ALSO `[]` while `giveaway-entries-seed-data.ts` held five entries —
+   * so the data existed, was exported, and was never seeded. Same defect class
+   * as `surfaceCounts`, `acceptsPointsTender` and `bulkDiscounts`: declared,
+   * committed, and doing nothing. Now wired.
+   */
+  lotteryEntries: pick(
+    asArr(giveawayEntriesSeedData).map((e) => ({
+      ...e,
+      name: e.userDisplayName ?? e.id,
+    })),
+  ),
   sessions: pick(
     asArr(sessionsSeedData).map((s) => ({
       ...s,

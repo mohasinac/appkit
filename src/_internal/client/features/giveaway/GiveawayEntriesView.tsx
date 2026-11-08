@@ -13,9 +13,9 @@ import { FieldTextarea } from "../../../../ui/forms/FieldTextarea";
 import { AdminComposableRegion } from "../../../../features/dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../shared/features/dashboard/recent-entry";
 
-interface LotteryEntryRow {
+interface GiveawayEntryRow {
   id: string;
-  userLotteryNumber: number;
+  userGiveawayNumber: number;
   userDisplayName?: string;
   userId: string;
   transactionId?: string;
@@ -26,17 +26,17 @@ interface LotteryEntryRow {
   submittedAt?: string | Date;
 }
 
-interface LotteryEntriesViewProps {
+interface GiveawayEntriesViewProps {
   sourceType: "event" | "product";
   sourceId: string;
-  entries: LotteryEntryRow[];
+  entries: GiveawayEntryRow[];
   isAdmin: boolean;
   isStoreOwner?: boolean;
   onFlagEntry?: (entryId: string, flagNote: string) => Promise<void>;
   onReopenSlot?: (slotNumber: number) => Promise<void>;
   /**
    * Stable, hand-chosen page-region id (Phase 12) — this one view is shared
-   * by three distinct routes (the admin lottery entries page, and the admin
+   * by three distinct routes (the admin giveaway entries page, and the admin
    * + store clearance entries pages), so every caller computes its own
    * route-template-derived id rather than this component guessing one.
    */
@@ -45,7 +45,7 @@ interface LotteryEntriesViewProps {
   pageRegionCards?: DashboardCard[];
 }
 
-export function LotteryEntriesView({
+export function GiveawayEntriesView({
   entries,
   isAdmin,
   isStoreOwner = false,
@@ -53,17 +53,17 @@ export function LotteryEntriesView({
   onReopenSlot,
   pageId,
   pageRegionCards = [],
-}: LotteryEntriesViewProps) {
+}: GiveawayEntriesViewProps) {
   const [flaggingId, setFlaggingId] = useState<string | null>(null);
   const [flagNote, setFlagNote] = useState("");
 
   const canViewSensitive = isAdmin || isStoreOwner;
 
-  const columns: DataTableColumn<LotteryEntryRow>[] = [
+  const columns: DataTableColumn<GiveawayEntryRow>[] = [
     {
-      key: "userLotteryNumber",
+      key: "userGiveawayNumber",
       header: "#",
-      render: (e) => <Text size="sm" weight="semibold" family="mono">#{e.userLotteryNumber}</Text>,
+      render: (e) => <Text size="sm" weight="semibold" family="mono">#{e.userGiveawayNumber}</Text>,
     },
     {
       key: "userDisplayName",
@@ -75,14 +75,14 @@ export function LotteryEntriesView({
           {
             key: "transactionId",
             header: "TX ID",
-            render: (e: LotteryEntryRow) => <Text size="xs" color="muted" family="mono">{e.transactionId ?? "—"}</Text>,
+            render: (e: GiveawayEntryRow) => <Text size="xs" color="muted" family="mono">{e.transactionId ?? "—"}</Text>,
           },
           {
             key: "userPhone",
             header: "Phone",
-            render: (e: LotteryEntryRow) => <Text size="xs" color="muted" family="mono">{e.userPhone ?? "—"}</Text>,
+            render: (e: GiveawayEntryRow) => <Text size="xs" color="muted" family="mono">{e.userPhone ?? "—"}</Text>,
           },
-        ] as DataTableColumn<LotteryEntryRow>[]
+        ] as DataTableColumn<GiveawayEntryRow>[]
       : []),
     {
       key: "assignedPrizeSlotNumber",
@@ -117,7 +117,7 @@ export function LotteryEntriesView({
     <Container>
       <Section>
         <Stack gap="lg">
-          <Heading level={1} size="2xl" weight="bold">Lottery Entries</Heading>
+          <Heading level={1} size="2xl" weight="bold">Giveaway Entries</Heading>
           <Text color="muted">{entries.length} {entries.length === 1 ? "entry" : "entries"} total</Text>
           <AdminComposableRegion pageId={pageId} initialCards={pageRegionCards} />
 

@@ -1,16 +1,16 @@
 "use client";
 
 /**
- * User-facing lottery pull form — claim a slot with a UPI reference.
+ * User-facing giveaway pull form — claim a slot with a UPI reference.
  *
- * Fields come from `lotteryPullSchema`. Two need a `renderers` entry because
+ * Fields come from `giveawayPullSchema`. Two need a `renderers` entry because
  * their labels depend on `totalSlots`, which a static annotation cannot know,
  * and one needs `datetime-local` rather than a plain date.
  *
  * ## The upper bound stays a runtime check, on purpose
  *
  * `purchasedItemNumber` is `.min(1)` in the schema and has no `.max()`: the
- * ceiling is `totalSlots`, a prop that varies per lottery. A schema shared with
+ * ceiling is `totalSlots`, a prop that varies per giveaway. A schema shared with
  * the route cannot carry it, so it is checked after the parse rather than
  * pretended into the annotation. Everything else the hand-written validation
  * used to duplicate — the reference length, the phone shape, the date — now
@@ -20,7 +20,7 @@
 import React, { useMemo, useState } from "react";
 
 import { useApiMutation } from "../../../../client/api/useApiMutation";
-import { lotteryPullSchema } from "../../../../features/admin/schemas/admin-user-form";
+import { giveawayPullSchema } from "../../../../features/admin/schemas/admin-user-form";
 import { buildSectionsFromSchema } from "../../../../features/shell/build-sections";
 import { SectionForm, useSectionFormNav } from "../../../../features/shell/SectionForm";
 import { apiClient } from "../../../../http";
@@ -31,21 +31,21 @@ import { applyZodIssues } from "../../../../ui/forms/apply-zod-issues";
 import { FormErrorSummary } from "../../../../ui/forms/FormErrorSummary";
 import { FormShellContext, useFormShellState } from "../../../../ui/forms/FormShell";
 
-interface LotteryPullFormProps {
+interface GiveawayPullFormProps {
   sourceType: "event" | "product";
   eventId?: string;
   productId?: string;
   totalSlots: number;
   maxPullsPerUser: number;
   onSuccess?: (result: {
-    userLotteryNumber: number;
+    userGiveawayNumber: number;
     assignedPrizeSlotNumber: number;
     slotName: string;
   }) => void;
 }
 
 interface PullResult {
-  userLotteryNumber: number;
+  userGiveawayNumber: number;
   assignedPrizeSlotNumber: number;
   slotName: string;
 }
@@ -59,14 +59,14 @@ interface Values {
   userPhone: string;
 }
 
-export function LotteryPullForm({
+export function GiveawayPullForm({
   sourceType,
   eventId,
   productId,
   totalSlots,
   maxPullsPerUser,
   onSuccess,
-}: LotteryPullFormProps) {
+}: GiveawayPullFormProps) {
   const [result, setResult] = useState<PullResult | null>(null);
   const [form, setForm] = useState<Values>({
     sourceType,
@@ -78,12 +78,12 @@ export function LotteryPullForm({
 
   const apiRoute =
     sourceType === "event"
-      ? `/api/events/${eventId ?? ""}/lottery-pull`
-      : `/api/products/${productId ?? ""}/lottery-pull`;
+      ? `/api/events/${eventId ?? ""}/giveaway-pull`
+      : `/api/products/${productId ?? ""}/giveaway-pull`;
 
   const sections = useMemo(
     () =>
-      buildSectionsFromSchema<Values>(lotteryPullSchema, {
+      buildSectionsFromSchema<Values>(giveawayPullSchema, {
         renderers: {
           paymentTime: ({ values, onChange, errors }) => (
             <FieldInput
@@ -115,8 +115,8 @@ export function LotteryPullForm({
     [totalSlots],
   );
 
-  const nav = useSectionFormNav(sections, form, { scope: "lottery:pull" });
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState(lotteryPullSchema, {
+  const nav = useSectionFormNav(sections, form, { scope: "giveaway:pull" });
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState(giveawayPullSchema, {
     sections: nav.sectionMeta,
     onGoToSection: nav.goToSection,
     fieldToSectionIndex: nav.fieldToSectionIndex,
@@ -133,7 +133,7 @@ export function LotteryPullForm({
         purchasedItemNumber: parseInt(form.purchasedItemNumber, 10),
         userPhone: form.userPhone,
       }),
-    successMessage: "Your lottery entry has been submitted!",
+    successMessage: "Your giveaway entry has been submitted!",
     onSuccess: (data) => {
       if (data.data) {
         setResult(data.data);
@@ -144,14 +144,14 @@ export function LotteryPullForm({
 
   const onSubmit = () => {
     clearErrors();
-    const parsed = lotteryPullSchema.safeParse(form);
+    const parsed = giveawayPullSchema.safeParse(form);
     if (!parsed.success) {
       applyZodIssues(parsed.error.issues, setFieldError);
       return;
     }
     // Data-dependent ceiling — see the header.
     if (parsed.data.purchasedItemNumber > totalSlots) {
-      setFieldError("purchasedItemNumber", `This lottery has ${totalSlots} slots.`);
+      setFieldError("purchasedItemNumber", `This giveaway has ${totalSlots} slots.`);
       return;
     }
     mutation.mutate();
@@ -179,7 +179,7 @@ export function LotteryPullForm({
             Entry Confirmed
           </Span>
           <Heading level={2} className="text-success" size="lg" weight="bold">
-            You&apos;re #{result.userLotteryNumber}!
+            You&apos;re #{result.userGiveawayNumber}!
           </Heading>
         </Row>
         <Text className="text-success" size="sm">
@@ -207,7 +207,7 @@ export function LotteryPullForm({
           values={form}
           onChange={(partial) => setForm((prev) => Object.assign({}, prev, partial))}
           onSubmit={onSubmit}
-          schema={lotteryPullSchema}
+          schema={giveawayPullSchema}
           openIds={nav.openIds}
           onOpenChange={nav.setOpenIds}
           isLoading={mutation.isPending}

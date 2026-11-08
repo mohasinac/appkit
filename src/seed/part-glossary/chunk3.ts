@@ -6291,7 +6291,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Fang Leone 130W²D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -6771,7 +6771,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Phantom Orion B:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -7648,7 +7648,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Big Bang Pegasis F:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -12174,7 +12174,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "L-Drago Destroy F:S",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -12674,7 +12674,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Fang Leone 130W²D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -13134,7 +13134,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Phantom Orion B:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -14020,7 +14020,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Big Bang Pegasis F:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -19168,7 +19168,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Big Bang Pegasis F:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -20597,7 +20597,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Fang Leone 130W²D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -21437,7 +21437,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "L-Drago Destroy F:S",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -22291,7 +22291,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "bey": "Phantom Orion B:D",
         "set": "Legend Beyblade Set",
         "distribution": [
-          "[[WBBA]] Lottery Prize"
+          "[[WBBA]] Giveaway Prize"
         ]
       },
       {
@@ -50946,7 +50946,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "value": "Burst: legal · Burst GT: legal · Burst Limited: legal · Burst Classic: legal"
       }
     ],
-    "seoDescription": "Trident is a Beyblade layer from the Burst System, weighing 9 g. Released September 19th, 2015 as B-15 for Beyblade Burst. It shipped with Trident Heavy Claw, Random Booster Vol. 1 Trident Heavy Claw, Random Layer Collection Vol. 2. One alternate colourway is recorded: Rare Bey Lottery Ver..",
+    "seoDescription": "Trident is a Beyblade layer from the Burst System, weighing 9 g. Released September 19th, 2015 as B-15 for Beyblade Burst. It shipped with Trident Heavy Claw, Random Booster Vol. 1 Trident Heavy Claw, Random Layer Collection Vol. 2. One alternate colourway is recorded: Rare Bey Giveaway Ver..",
     "shippedIn": [
       "Trident Heavy Claw",
       "Random Booster Vol. 1 Trident Heavy Claw",
@@ -50963,7 +50963,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
         "vendor": "Takara Tomy",
         "code": "B-00",
         "bey": "Trident Heavy Claw",
-        "colourway": "Rare Bey Lottery Ver."
+        "colourway": "Rare Bey Giveaway Ver."
       },
       {
         "vendor": "Takara Tomy",
@@ -50973,7 +50973,7 @@ export const glossaryChunk3: Partial<PartGlossaryDocument>[] = [
     ],
     "colourways": [
       {
-        "colourway": "Rare Bey Lottery Ver.",
+        "colourway": "Rare Bey Giveaway Ver.",
         "vendor": "Takara Tomy",
         "code": "B-00",
         "inBey": "Trident Heavy Claw"
