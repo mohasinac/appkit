@@ -1081,52 +1081,6 @@
       ]
     },
     {
-      "collectionGroup": "catalogueItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "listingStatus",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "catalogueItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "ownerId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "catalogueItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "ownerId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "visibility",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "categories",
       "queryScope": "COLLECTION",
       "fields": [
@@ -5294,20 +5248,6 @@
           "fieldPath": "storeId",
           "order": "ASCENDING"
         },
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "procurementShipments",
-      "queryScope": "COLLECTION",
-      "fields": [
         {
           "fieldPath": "status",
           "order": "ASCENDING"
@@ -10615,118 +10555,6 @@
       ]
     },
     {
-      "collectionGroup": "shipmentItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lotId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lotId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "linkedProductId",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "shipmentId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "linkedProductId",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentLots",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "shipmentStatus",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentLots",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "projectedProfitPaise",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "shipmentStatus",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentLots",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "projectedProfitPaise",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "shipmentStatus",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentLots",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "projectedRevenuePaise",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "shipmentStatus",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentLots",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "shipmentId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "stickerTraceRuns",
       "queryScope": "COLLECTION",
       "fields": [
@@ -11434,132 +11262,6 @@
         },
         {
           "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "isActive",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "order",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "isActive",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "phase",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "answer",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "answer",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "phase",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "groupKey",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "pageKey",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "phase",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "testerChecklistResponses",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "testerId",
           "order": "ASCENDING"
         },
         {
@@ -12442,20 +12144,6 @@
         },
         {
           "fieldPath": "boxCode",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "shipmentItems",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "shipmentId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
           "order": "ASCENDING"
         }
       ]

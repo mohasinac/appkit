@@ -13,12 +13,9 @@ import {
   shippingConfigsSeedData,
   analyticsCardsSeedData,
   analyticsAlertsSeedData,
-  storeCategoriesSeedData,
-  listingTemplatesSeedData,
   moderationQueueSeedData,
   reportsSeedData,
   itemRequestsSeedData,
-  storeGoogleConfigSeedData,
 } from "./store-extensions-seed-data";
 // SB-UNI-C — brandsSeedData merged into categoriesSeedData.
 import { categoriesSeedData } from "./categories-seed-data";
@@ -44,13 +41,11 @@ import { faqSeedData } from "./faq-seed-data";
 import { notificationsSeedData } from "./notifications-seed-data";
 import { payoutsSeedData } from "./payouts-seed-data";
 import { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./shipments-seed-data";
-import { catalogueSeedData } from "./catalogue-seed-data";
 import { blogPostsSeedData } from "./blog-posts-seed-data";
 import { eventsSeedData } from "./events-seed-data";
 import { giveawayEntriesSeedData } from "./giveaway-entries-seed-data";
 import { sessionsSeedData } from "./sessions-seed-data";
 import { addressesSeedData } from "./addresses-seed-data";
-import { storeAddressesSeedData } from "./store-addresses-seed-data";
 import { cartsSeedData } from "./cart-seed-data";
 import { wishlistsSeedData } from "./wishlists-seed-data";
 import { historySeedData } from "./history-seed-data";
@@ -62,7 +57,6 @@ import { supportTicketsSeedData } from "./support-tickets-seed-data";
 import { productFeaturesSeedData } from "./product-features-seed-data";
 import { taxCodesSeedData } from "./tax-codes-seed-data";
 import { offersSeedData } from "./offers-seed-data";
-import { couponUsageSeedData } from "./coupon-usage-seed-data";
 import { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
 
 export interface SeedManifestEntry {
@@ -78,12 +72,12 @@ export type SeedCollectionName =
   | "homepageSections" | "siteSettings" | "faqs" | "notifications" | "payouts"
   | "blogPosts" | "events" | "eventEntries" | "sessions" | "carts" | "wishlists"
   | "history" | "groupedListings" | "scammerProfiles"
-  | "supportTickets" | "productFeatures" | "taxCodes" | "offers" | "couponUsage" | "claimedCoupons"
+  | "supportTickets" | "productFeatures" | "taxCodes" | "offers" | "claimedCoupons"
   | "payoutMethods" | "shippingConfigs" | "analyticsCards" | "analyticsAlerts"
-  | "storeCategories" | "listingTemplates" | "moderationQueue" | "reports"
-  | "itemRequests" | "storeWhatsAppConfig" | "storeGoogleConfig" | "roleOverrides"
+  | "moderationQueue" | "reports"
+  | "itemRequests" | "storeWhatsAppConfig" | "roleOverrides"
   | "customRoles" | "adminNotifications" | "lotteryEntries" | "shipments"
-  | "shipmentLots" | "shipmentItems" | "catalogueItems" | "testerChecklistItems";
+ ;
 
 export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
 
@@ -189,9 +183,6 @@ export const SEED_MANIFEST: SeedManifest = {
   ),
   payouts: pick(asArr(payoutsSeedData)),
   shipments: pick(asArr(shipmentsSeedData), "shipmentNumber"),
-  shipmentLots: pick(asArr(shipmentLotsSeedData), "lotName"),
-  shipmentItems: pick(asArr(shipmentItemsSeedData), "title"),
-  catalogueItems: pick(asArr(catalogueSeedData), "title"),
   blogPosts: pick(
     asArr(blogPostsSeedData).map((p) => ({
       ...p,
@@ -236,12 +227,6 @@ export const SEED_MANIFEST: SeedManifest = {
         ...a,
         ownerType: "user" as const,
         ownerId: a.userId,
-        name: a.label ?? a.fullName ?? a.id,
-      })),
-      ...asArr(storeAddressesSeedData).map((a) => ({
-        ...a,
-        ownerType: "store" as const,
-        ownerId: a.storeSlug,
         name: a.label ?? a.fullName ?? a.id,
       })),
     ],
@@ -300,10 +285,6 @@ export const SEED_MANIFEST: SeedManifest = {
       name: o.productTitle ?? o.id,
     })),
   ),
-  couponUsage: asArr(couponUsageSeedData).map((u) => ({
-    id: `${u.userId}/${u.couponId}`,
-    name: String(u.couponCode ?? u.couponId),
-  })),
   claimedCoupons: pick(
     asArr(claimedCouponsSeedData).map((c) => ({
       ...c,
@@ -319,10 +300,6 @@ export const SEED_MANIFEST: SeedManifest = {
   analyticsAlerts: pick(
     asArr(analyticsAlertsSeedData).map((a) => ({ ...a, name: a.label ?? a.id })),
   ),
-  storeCategories: pick(asArr(storeCategoriesSeedData)),
-  listingTemplates: pick(
-    asArr(listingTemplatesSeedData).map((t) => ({ ...t, name: t.name ?? t.id })),
-  ),
   moderationQueue: pick(asArr(moderationQueueSeedData)),
   reports: pick(asArr(reportsSeedData)),
   itemRequests: pick(
@@ -337,7 +314,6 @@ export const SEED_MANIFEST: SeedManifest = {
    * token this design exists to avoid.
    */
   storeWhatsAppConfig: [],
-  storeGoogleConfig: pick(asArr(storeGoogleConfigSeedData)),
   // RBAC + admin notifications — no seed docs yet; manifest stays empty until populated.
   roleOverrides: [],
   customRoles: [],
@@ -352,5 +328,4 @@ export const SEED_MANIFEST: SeedManifest = {
    * `audit-schema-registry-completeness` honest about every bucket existing),
    * while stating plainly that nothing here fills it.
    */
-  testerChecklistItems: [],
 };

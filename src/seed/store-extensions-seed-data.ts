@@ -67,10 +67,8 @@ export const analyticsCardsSeedData: Partial<AnalyticsCardDocument>[] = [{ id: "
 export const analyticsAlertsSeedData: Partial<AnalyticsAlertDocument>[] = [];
 
 // ───── storeCategories (empty — production has none) ────────────────────────────────────────
-export const storeCategoriesSeedData: Partial<StoreCategoryDocument>[] = [];
 
 // ───── listingTemplates (empty — production has none) ───────────────────────────────────────
-export const listingTemplatesSeedData: Partial<ListingTemplateDocument>[] = [];
 
 // ───── moderationQueue (empty — production has none) ────────────────────────────────────────
 export const moderationQueueSeedData: Partial<ModerationQueueDocument>[] = [// Removed 2026-10-21: referenced event-favourite-blader-poll, one of the 11
@@ -84,4 +82,3 @@ export const reportsSeedData: Partial<ReportDocument>[] = [];
 export const itemRequestsSeedData: Partial<ItemRequestDocument>[] = [];
 
 // ───── storeGoogleConfig (empty — production has none) ──────────────────────────────────────
-export const storeGoogleConfigSeedData: Partial<StoreGoogleConfigDocument>[] = [];

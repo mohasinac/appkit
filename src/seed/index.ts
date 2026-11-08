@@ -143,7 +143,6 @@ export { usersSeedData } from "./users-seed-data";
 export { sessionsSeedData, SESSION_COLLECTION } from "./sessions-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";
 export { storesSeedData } from "./stores-seed-data";
-export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export type { SellerProfileSeedDocument } from "./seller-profiles-seed-data";
 export { sellerProfilesSeedData } from "./seller-profiles-seed-data";
 export { categoriesSeedData, categoriesP1SeedData } from "./categories-seed-data";
@@ -173,15 +172,12 @@ export { reviewsSeedData } from "./reviews-seed-data";
 export { cartsSeedData } from "./cart-seed-data";
 export { bidsSeedData } from "./bids-seed-data";
 export { couponsSeedData } from "./coupons-seed-data";
-export type { CouponUsageSeedRecord } from "./coupon-usage-seed-data";
-export { couponUsageSeedData } from "./coupon-usage-seed-data";
 export { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
 export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { eventLikesSeedData, SEEDED_LIKE_COUNTS } from "./event-likes-seed-data";
 export { giveawayEntriesSeedData } from "./giveaway-entries-seed-data";
 export { payoutsSeedData } from "./payouts-seed-data";
 export { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./shipments-seed-data";
-export { catalogueSeedData } from "./catalogue-seed-data";
 export { notificationsSeedData } from "./notifications-seed-data";
 export { blogPostsSeedData } from "./blog-posts-seed-data";
 export { faqSeedData } from "./faq-seed-data";
@@ -253,12 +249,9 @@ export {
   shippingConfigsSeedData,
   analyticsCardsSeedData,
   analyticsAlertsSeedData,
-  storeCategoriesSeedData,
-  listingTemplatesSeedData,
   moderationQueueSeedData,
   reportsSeedData,
   itemRequestsSeedData,
-  storeGoogleConfigSeedData,
 } from "./store-extensions-seed-data";
 
 // Seed manifest — lightweight per-collection name/id index
