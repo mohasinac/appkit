@@ -34,6 +34,7 @@ import type {
   EventCreateInput,
   EventUpdateInput,
   EventEntryDocument,
+  EventEntryMedia,
 } from "../schemas";
 import type { EventStatus } from "../types";
 import { normalizeEventType } from "../types";
@@ -94,6 +95,14 @@ export interface EnterEventInput {
   pollVotes?: string[];
   pollComment?: string;
   formResponses?: Record<string, JsonValue>;
+  /**
+   * CONTEST entries — validated at the route, where the three limits that only
+   * make sense together live (at least one image, at most four items, at most
+   * one video). Carried through here unchanged.
+   */
+  media?: EventEntryMedia[];
+  /** Optional ≤100-word paragraph explaining the entry. */
+  note?: string;
 }
 // --- Admin: Create Event --------------------------------------------------
 
@@ -757,6 +766,8 @@ export async function enterEvent(
     pollVotes: input.pollVotes,
     pollComment: input.pollComment,
     formResponses: input.formResponses,
+    media: input.media,
+    note: input.note,
     reviewStatus,
   });
 

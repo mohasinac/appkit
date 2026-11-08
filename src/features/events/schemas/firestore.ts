@@ -381,8 +381,48 @@ export type EventEntryDocument = {
    * currently-unused field; do not repurpose it for this hash.
    */
   guestIpHash?: string;
+  /**
+   * CONTEST entries — the media the participant submitted, in display order.
+   *
+   * Owner spec 2026-11-08 (Diwali photo contest): **at least one image, at most
+   * four items in total, of which at most one may be a video.** Those three
+   * limits are enforced together in `eventEntryMediaSchema`, not here — a type
+   * cannot express "at least one of these is an image".
+   *
+   * 🛑 Order is meaningful: the FIRST item is the entry's cover everywhere —
+   * the gallery card, the scoreboard row and the share image. Reordering is a
+   * user action, not a sort.
+   */
+  media?: EventEntryMedia[];
+  /**
+   * An optional paragraph explaining the entry, capped at 100 WORDS.
+   *
+   * Optional by owner decision: a good photo should not lose to a better
+   * caption. The cap is on words rather than characters because that is what
+   * the rule was written as, and a word count is what the form shows.
+   */
+  note?: string;
   submittedAt: Date;
 }
+
+/**
+ * One submitted item on a contest entry.
+ *
+ * 🛑 A `type` alias, not an `interface`. An interface has no implicit index
+ * signature, so `EventEntryCreateInput` carrying one stops being assignable to
+ * `FirestoreDocument` (`Record<string, JsonValue>`) and `encryptPiiFields`
+ * fails to compile. The alias keeps the document JSON-shaped, which it has to
+ * be anyway to round-trip through Firestore.
+ */
+export type EventEntryMedia = {
+  url: string;
+  type: "image" | "video";
+  /**
+   * Alt text. Required for images by the same rule the catalogue applies —
+   * accessibility is a floor, and an entry gallery is nothing but images.
+   */
+  alt?: string;
+};
 
 export const EVENT_INDEXED_FIELDS = [
   "searchTxt",
