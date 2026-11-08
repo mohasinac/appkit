@@ -31,6 +31,20 @@
  * editor offers no ✕ on them, and a template update merges new ones into every
  * existing clone.
  *
+ * ## 🛑 Vocabulary, and the migration this file does NOT do
+ *
+ * Owner, 2026-11-08: *"rename all to avoid words like gambling, raffles, auction
+ * houses etc."* Done for everything authored here — `row.giveawayRail`, the
+ * `giveaway` event type, the `giveawayEntry` mechanism.
+ *
+ * `legacySectionType` values below still read `event-raffles` because they are
+ * FOREIGN KEYS into `homepage-sections-seed-data.ts`, which this file must not
+ * contradict. Renaming those is part of a wider sweep: **188 files outside
+ * `seed/` still use raffle / lottery / auction vocabulary** (138 in appkit, 50
+ * in the host app), including a whole `lotteryEntries` collection with manifest
+ * and purge entries. That is an all-or-nothing migration touching live data —
+ * it is flagged in the plan, not half-done here.
+ *
  * Mocks: `mocks/01-widgets.qm` (*Catalogue*, *Composition*),
  *        `mocks/12-admin-settings.qm` (*Widget registry*).
  */
@@ -86,7 +100,7 @@ export const widgetTemplatesSeedData: WidgetTemplate[] = [
   { key: "row.blogRail", label: "Blog rail", kind: "row", dataLink: "blogs.recent", tags: ["rail", "content", "blog"], children: ["card.article"], placeableBy: ["admin", "seller"], legacySectionType: "blog-articles", defaultSpan: 12 },
   { key: "row.reviewRail", label: "Review rail", kind: "row", dataLink: "reviews.recent", tags: ["rail", "review"], children: ["card.review"], placeableBy: ["admin", "seller"], legacySectionType: "reviews", defaultSpan: 12 },
   { key: "row.eventCarousel", label: "Event carousel", kind: "row", dataLink: "events.upcoming", tags: ["rail", "event"], children: ["card.event"], placeableBy: ["admin"], legacySectionType: "events", defaultSpan: 12 },
-  { key: "row.raffleRail", label: "Raffle rail", kind: "row", dataLink: "events.raffles", tags: ["rail", "event", "raffle"], children: ["card.event"], placeableBy: ["admin"], legacySectionType: "event-raffles", defaultSpan: 12 },
+  { key: "row.giveawayRail", label: "Giveaway rail", kind: "row", dataLink: "events.giveaways", tags: ["rail", "event", "giveaway"], children: ["card.event"], placeableBy: ["admin"], legacySectionType: "event-raffles" /* the EXISTING homepage row key — renaming that collection is a separate migration, see below */, defaultSpan: 12 },
   { key: "row.socialFeed", label: "Social media rail", kind: "row", dataLink: "social.feed", tags: ["rail", "social", "ugc"], placeableBy: ["admin", "seller"], legacySectionType: "social-feed", defaultSpan: 12 },
   { key: "row.brandTiles", label: "Brand tiles", kind: "row", dataLink: "catalogue.brands", tags: ["rail", "brand"], placeableBy: ["admin"], legacySectionType: "brands", defaultSpan: 12 },
   { key: "row.storeTiles", label: "Featured stores", kind: "row", dataLink: "stores.featured", tags: ["rail", "store"], children: ["card.vendor"], placeableBy: ["admin"], legacySectionType: "stores", defaultSpan: 12 },
@@ -182,7 +196,7 @@ export const legacySectionTypeToWidgetKey: Readonly<Record<string, string | null
   clearance: "section.clearanceStrip",
   coupons: "section.couponStrip",
   events: "row.eventCarousel",
-  "event-raffles": "row.raffleRail",
+  "event-raffles": "row.giveawayRail",
   reviews: "row.reviewRail",
   "blog-articles": "row.blogRail",
   "social-feed": "row.socialFeed",
@@ -198,8 +212,8 @@ export const legacySectionTypeToWidgetKey: Readonly<Record<string, string | null
   "how-it-works": "section.processGuide",
   features: "section.features",
   stats: "section.stats",
-  // Prize draws were disabled in the homepage seed; the raffle rail covers them.
-  "prize-draws": "row.raffleRail",
+  // Prize draws were disabled in the homepage seed; the giveaway rail covers them.
+  "prize-draws": "row.giveawayRail",
 });
 
 /** Guards the join: an unmapped widget key is a typo waiting to render nothing. */

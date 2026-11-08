@@ -5,9 +5,15 @@
  * create new event types as well — just the name and the interaction changes."*
  *
  * So an event type is: key + label + slug + enabled + a value for every event
- * mechanism + which widgets render it. The INTERACTION (enter a raffle, buy a
+ * mechanism + which widgets render it. The INTERACTION (enter a giveaway, buy a
  * ticket, RSVP, watch a stream, submit an entry) is a mechanism flag, not a
  * component.
+ *
+ * 🛑 VOCABULARY (owner, 2026-11-08): *"rename all to avoid words like gambling,
+ * raffles, auction houses etc."* So: giveaway, not raffle; offers, not auction;
+ * prize draw only where a legal disclosure requires the term. The word choice is
+ * not cosmetic — app-store review, payment-provider risk teams and Indian
+ * gaming regulation all read these strings.
  *
  * Mocks: `mocks/19-events-blog.qm`.
  */
@@ -25,7 +31,7 @@ export const eventMechanismsSeedData: EventMechanismDefinition[] = [
   { id: "rsvp", label: "RSVP", effect: "A visitor registers attendance; capacity is counted." },
   { id: "ticketed", label: "Ticketed", effect: "Attendance requires a paid ticket; the ticket is an order line.", moneyPath: true },
   { id: "entryFee", label: "Entry fee", effect: "Participation costs money, separately from attendance.", moneyPath: true },
-  { id: "raffleEntry", label: "Raffle entry", effect: "Entries are collected and a winner is drawn at a declared time.", moneyPath: true },
+  { id: "giveawayEntry", label: "Giveaway entry", effect: "Entries are collected and a winner is drawn at a declared time.", moneyPath: true },
   { id: "coinsEntry", label: "Entry with coins", effect: "Entries may be bought with loyalty coins instead of cash.", moneyPath: true },
   { id: "submission", label: "Submission", effect: "Participants upload something (a photo, a build, a result)." },
   { id: "liveStream", label: "Live stream", effect: "The event page embeds a stream while it is running." },
@@ -80,15 +86,15 @@ export const eventTypesSeedData: EventTypeDefinition[] = [
     tags: ["event", "tournament"],
   }),
   eventType({
-    key: "raffle",
-    label: "Raffle",
-    slug: "raffle",
+    key: "giveaway",
+    label: "Giveaway",
+    slug: "giveaway",
     enabled: true,
     order: 2,
-    on: ["raffleEntry", "coinsEntry", "prizePool", "capacityLimit"],
+    on: ["giveawayEntry", "coinsEntry", "prizePool", "capacityLimit"],
     templates: { card: "card.event", detail: "detail.event" },
     requiredFields: ["title", "drawsAt", "prize", "entryPrice", "oddsDisclosure"],
-    tags: ["event", "raffle"],
+    tags: ["event", "giveaway"],
   }),
   eventType({
     key: "meetup",
@@ -150,8 +156,8 @@ export const eventTypesSeedData: EventTypeDefinition[] = [
 for (const t of eventTypesSeedData) {
   const missing = EVENT_MECHANISM_IDS.filter(id => !(id in t.mechanisms));
   if (missing.length) throw new Error(`event type "${t.key}" is missing mechanisms: ${missing.join(", ")}`);
-  if (t.mechanisms.raffleEntry && !t.requiredFields.includes("oddsDisclosure")) {
-    throw new Error(`event type "${t.key}" has raffle entries but no odds disclosure in requiredFields`);
+  if (t.mechanisms.giveawayEntry && !t.requiredFields.includes("oddsDisclosure")) {
+    throw new Error(`event type "${t.key}" has giveaway entries but no odds disclosure in requiredFields`);
   }
 }
 
