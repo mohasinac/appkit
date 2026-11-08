@@ -1681,6 +1681,41 @@ export {
   type ShippingReconciliation,
 } from "./_internal/shared/shipping/quote";
 /*
+ * THE SELLER'S SHIPPING OFFER AND THE SERVER'S AUTHORITY OVER ITS PRICE.
+ *
+ * Public because the CONSUMER owns three surfaces that must all read one rule:
+ * the seller's settings route (which must refuse an invalid offer at SAVE
+ * time), the checkout endpoint that tells the browser which options exist, and
+ * the picker that renders them. If the picker could offer an option the server
+ * would refuse, the buyer meets the refusal after pressing pay.
+ *
+ * 🛑 `validateSellerShippingOffer` is the save-time gate and
+ * `resolveShippingSelection` is the charge-time one. They are deliberately
+ * separate functions over one type: a consumer cannot satisfy the first and
+ * skip the second, because the second is what produces the AMOUNT.
+ */
+export {
+  CUSTOM_SHIPPING_OPTION_ID,
+  DEFAULT_SELLER_SHIPPING_OFFER,
+  buildShippingOptions,
+  impliedObligation,
+  mayBookPlatformLabel,
+  offerFromPolicy,
+  platformShippingOptionId,
+  resolveShippingSelection,
+  toSellerShippingOffer,
+  validateSellerShippingOffer,
+  type SellerShippingOffer,
+  type SellerShippingOfferWire,
+  type ShippingObligation,
+  type ShippingOfferRefusal,
+  type ShippingOfferValidation,
+  type ShippingOptionKind,
+  type ShippingOptionOffer,
+  type ShippingSelectionOutcome,
+} from "./_internal/shared/features/shipping/offer";
+
+/*
  * The cart page needs these to tell a multi-member line from an ordinary one: a
  * group/bundle line's `productId` is a group or category id, not a product id,
  * so anything that resolves it as a product must skip those lines. Reading

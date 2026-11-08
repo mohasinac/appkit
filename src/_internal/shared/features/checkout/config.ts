@@ -6,7 +6,20 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   platformFeePercent: 5,
   gstPercent: 18,
   minimumTransactionFee: 0,
+  /*
+   * 🛑 NOT the buyer-facing model any more. `platformFeeMax` was the ceiling on
+   * the old percentage commission, and `computeCheckoutFees` no longer reads
+   * either of them — the buyer pays `platformFeePerListingUnit × units`
+   * (owner, 2026-11-08). Both are kept here because `siteSettings.commissions`
+   * still stores them and `computePayoutDeduction` still charges the SELLER a
+   * percentage, which was never the same number.
+   */
   platformFeeMax: 10,
+  /**
+   * ₹10 per listing UNIT, plus `gstPercent` on the fee. Owner, 2026-11-08 —
+   * a single line with quantity 3 is ₹30, confirmed directly.
+   */
+  platformFeePerListingUnit: 10,
   codDepositPercent: 10,
   codHandlingFeeCap: 200,
   codHandlingFeePercent: 10,

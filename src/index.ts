@@ -7120,6 +7120,11 @@ export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
 // Shared fee calculator — platform/gateway/GST/COD handling/WhatsApp-addon fee math (pure, client-safe).
 export {
   computeCheckoutFees,
+  // The ₹-per-listing-UNIT rate the buyer-facing fee falls back to when
+  // `siteSettings.commissions` predates the field (owner, 2026-11-08).
+  // Exported so a consumer explaining the charge resolves the SAME number the
+  // charge was computed from rather than printing its own guess.
+  DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT,
   // The per-group split of the ONE capped commission. Exported for the capture
   // route's points tender: the tender is applied per order group against the
   // same base the order path uses, and that base includes this share. Without
@@ -10005,6 +10010,41 @@ export {
   type ActualShipmentCost,
   type ShippingReconciliation,
 } from "./_internal/shared/shipping/quote";
+/*
+ * THE SELLER'S SHIPPING OFFER AND THE SERVER'S AUTHORITY OVER ITS PRICE.
+ *
+ * Public because the CONSUMER owns three surfaces that must all read one rule:
+ * the seller's settings route (which must refuse an invalid offer at SAVE
+ * time), the checkout endpoint that tells the browser which options exist, and
+ * the picker that renders them. If the picker could offer an option the server
+ * would refuse, the buyer meets the refusal after pressing pay.
+ *
+ * 🛑 `validateSellerShippingOffer` is the save-time gate and
+ * `resolveShippingSelection` is the charge-time one. They are deliberately
+ * separate functions over one type: a consumer cannot satisfy the first and
+ * skip the second, because the second is what produces the AMOUNT.
+ */
+export {
+  CUSTOM_SHIPPING_OPTION_ID,
+  DEFAULT_SELLER_SHIPPING_OFFER,
+  buildShippingOptions,
+  impliedObligation,
+  mayBookPlatformLabel,
+  offerFromPolicy,
+  platformShippingOptionId,
+  resolveShippingSelection,
+  toSellerShippingOffer,
+  validateSellerShippingOffer,
+  type SellerShippingOffer,
+  type SellerShippingOfferWire,
+  type ShippingObligation,
+  type ShippingOfferRefusal,
+  type ShippingOfferValidation,
+  type ShippingOptionKind,
+  type ShippingOptionOffer,
+  type ShippingSelectionOutcome,
+} from "./_internal/shared/features/shipping/offer";
+
 export {
   newsletterSubscribeSchema,
   quickCreateTaxonomySchema,

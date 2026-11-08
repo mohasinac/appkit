@@ -58,10 +58,31 @@ export interface BuyerFacingFees {
    * withheld (see below), and so does `surchargeSellerSharePercent`, which is
    * excluded structurally by `BuyerEmiSettings` rather than by this list.
    */
-  /** Commission rate applied to the cart subtotal, before the cap. */
+  /**
+   * 🛑 NOT the buyer-facing model any more (2026-11-08). The platform fee is
+   * `platformFeePerListingUnit × units`; this is the SELLER-side payout
+   * commission and is projected only so a legacy settings document can still
+   * be recognised. `explainPlatformFee` no longer reads it.
+   */
   platformFeePercent?: number;
-  /** Rupee ceiling on the commission — the reason a ₹39,500 order pays ₹10. */
+  /**
+   * 🛑 DEAD FOR CHECKOUT. It was the ceiling on the percentage model, and a ₹10
+   * ceiling on `n × ₹10` would cap every order at ₹10 — see
+   * `FeeCommissionRates.platformFeeMax`.
+   */
   platformFeeMax?: number;
+  /**
+   * ₹ per listing UNIT — the buyer-facing platform fee. Owner, 2026-11-08.
+   *
+   * 🛑 `toBuyerFacingFees` cannot project this yet: the field does not exist on
+   * `SiteSettingsDocument["commissions"]`, and that schema belongs to another
+   * lane. Until it lands, `explainPlatformFee` resolves
+   * `DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT` — the SAME fallback
+   * `computeCheckoutFees` applies, so the explanation and the charge agree by
+   * construction rather than by coincidence. Declared here now so the
+   * projection is a one-line addition the day the schema field exists.
+   */
+  platformFeePerListingUnit?: number;
   /** GST rate levied on the commission actually charged (never on the uncapped figure). */
   gstPercent?: number;
   /** Rupee floor on `platformFee + gstOnFee` combined. */

@@ -76,6 +76,40 @@ export interface StoreShippingPolicyField {
     | { kind: "estimate" };
   /** Goods value at or above which shipping is free, whatever the mode. */
   freeAbove?: number;
+  /**
+   * The seller's TWO-AXIS shipping offer — owner, 2026-11-08.
+   *
+   * *"A seller agrees from their dashboard for the shipping option… if they are
+   * okay with our shipping providers' quotes then they must accept that as
+   * well. Both can be enabled."*
+   *
+   * 🛑 A SIBLING of `mode`, not a replacement, and deliberately on this same
+   * document rather than a new field. `mode` is single-valued and therefore
+   * structurally incapable of expressing "both enabled"; this is. But a second
+   * shipping-config FIELD would be a third shipping-config system, and this
+   * file's own `mode.ts` opens by recording what the last pair cost — *"there
+   * were two shipping-config systems and the authoritative one was the flat
+   * number, by accident."*
+   *
+   * So: one field, one reader (`toSellerShippingOffer`), and `mode` remains the
+   * fallback it derives from for every store that has not saved an explicit
+   * offer. `offerFromPolicy` is that mapping and it is lossless —
+   * `flat`→custom at that amount, `estimate`→platform quotes, `free`→custom at
+   * ₹0 — so a seller who set ₹100 on the old surface keeps charging ₹100.
+   *
+   * 🛑 `customFeePerOrder` is nullable and `null` is NOT zero. Zero is "I ship
+   * free"; `null` is an unfinished form, which
+   * `validateSellerShippingOffer` refuses to save and
+   * `buildShippingOptions` refuses to price.
+   */
+  offer?: {
+    platformQuotesAccepted: boolean;
+    customEnabled: boolean;
+    /** REQUIRED when `customEnabled`. Per ORDER, never per item. */
+    customFeePerOrder: number | null;
+    customFreeAbove: number | null;
+    customLabel: string | null;
+  };
 }
 
 // -- Split-settlement vendor registration -------------------------------------

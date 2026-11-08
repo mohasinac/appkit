@@ -19,71 +19,215 @@ import { roundRupees } from "../../../utils/number.formatter";
 import { resolveStateKey } from "./india-states";
 
 export interface FeeCommissionRates {
+  /**
+   * Commission rate on the SELLER's payout (`computePayoutDeduction`).
+   *
+   * 🛑 NO LONGER THE BUYER-FACING MODEL. `computeCheckoutFees` charges
+   * `platformFeePerListingUnit × unitCount` — see that function's header for
+   * the owner's spec. This field is a seller-side commercial term and the two
+   * were never the same number; they merely shared a rate by accident.
+   */
   platformFeePercent: number;
   gstPercent: number;
   /** Rupee floor (not paise) — matches the existing `minimumTransactionFee` doc convention. */ // audit-money-units-ok: clarifies this is NOT paise
   minimumTransactionFee?: number;
   /**
-   * Rupee ceiling on the buyer-facing platform commission. Optional so
-   * siteSettings documents saved before this field existed keep working —
-   * falls back to DEFAULT_PLATFORM_FEE_MAX (₹10).
+   * 🛑 DEAD FOR CHECKOUT, and deliberately left declared rather than deleted.
    *
-   * Applies to `computeCheckoutFees` (what the BUYER pays) only. The seller-side
-   * `computePayoutDeduction` is deliberately uncapped — that is a separate
-   * commercial decision, not the same number.
+   * It was the rupee ceiling on the old percentage commission. The owner's
+   * 2026-11-08 ruling replaced that model outright with a flat fee per listing
+   * line, and **a ₹10 ceiling applied to `n × ₹10` would cap every order at ₹10
+   * and silently destroy the new rule** — which is exactly why this carries a
+   * warning instead of quietly staying in the arithmetic.
+   *
+   * Still declared because `siteSettings.commissions.platformFeeMax` is a live
+   * stored field with an admin form behind it, and `explainPlatformFee` must be
+   * able to recognise a legacy document. Removing the field from the schema is
+   * a cross-lane change (the `siteSettings` schema is not this lane's) and is
+   * reported rather than made here.
    */ // audit-money-units-ok: rupee ceiling, not paise
   platformFeeMax?: number;
+  /**
+   * ₹ per listing UNIT charged to the buyer — the buyer-facing platform fee.
+   *
+   * Optional so a `siteSettings` document saved before this field existed keeps
+   * working: it falls back to `DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT`.
+   *
+   * 🛑 A stored `0` is honoured as zero and is NOT the same as absent. An admin
+   * switching the fee off is a real configuration; `??` (not `||`) is what keeps
+   * the two distinguishable.
+   */ // audit-money-units-ok: rupees per unit, not paise
+  platformFeePerListingUnit?: number;
   gatewayFeePercent?: number;
 }
 
-/** Buyer-facing platform commission ceiling, in decimal rupees. */
-const DEFAULT_PLATFORM_FEE_MAX = 10;
+/**
+ * The platform fee per listing UNIT, in decimal rupees. Owner, 2026-11-08:
+ * *"our website platform fees is 10rs per listing so an order with n items is
+ * nx10 rs, plus gst 18%"*.
+ *
+ * ## 🛑 PER UNIT, and this reading was CONFIRMED against the alternative
+ *
+ * "Per listing" is ambiguous between a listing LINE and a listing UNIT, and the
+ * two differ on every multi-quantity order. The owner was asked directly
+ * (2026-11-08) and answered that **one line with quantity 3 is ₹30, not ₹10**.
+ *
+ * ⚠ `mocks/18-shipping-fees.qm` draws the OTHER reading — *"Per LINE, not per
+ * unit: three of one item is one line"* — with a worked table beside it. The
+ * owner's answer is newer and explicit, so the code follows the owner and the
+ * mock is reported for correction by the session that owns it. Recorded here
+ * rather than silently resolved: a money formula with two sources of truth is
+ * how the divergences this codebase keeps paying for begin.
+ *
+ * 🛑 A FALLBACK, not the mechanism. The rate is `FeeCommissionRates`
+ * configuration precisely because ₹10 and 18% are **today's India values**, not
+ * universal truths — a different jurisdiction resolves a different fee and a
+ * different tax rate (A18: tax resolves by origin/destination country pair). A
+ * hardcoded `10` or `0.18` in the arithmetic is the vertical coupling the
+ * governing principle forbids.
+ *
+ * It is defaulted HERE rather than only in `CHECKOUT_DEFAULT_COMMISSIONS`
+ * because that object is used solely when the settings read FAILS
+ * (`siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS`). A live
+ * settings document that predates the field would otherwise resolve
+ * `undefined`, and the new rule would be dead in production while looking
+ * configured — the "seam nobody used" shape D44 is about.
+ */
+export const DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT = 10;
 
 export interface CheckoutFees {
-  /** Platform commission in decimal rupees, capped at `platformFeeMax`. */
+  /** Platform fee in decimal rupees: `perListingUnit × unitCount`. */
   platformFee: number;
-  /** GST on the (already capped) platform fee, in decimal rupees. */
+  /** GST on the platform fee, in decimal rupees. */
   gstOnFee: number;
   /** platformFee + gstOnFee, floored at minimumTransactionFee. */
   totalFee: number;
+  /**
+   * The unit count the fee was computed from, carried so the explainer and the
+   * order record describe the same `n` the charge was derived from rather than
+   * recounting it from a different collection.
+   */
+  unitCount: number;
+  /** The per-unit rate actually applied, after the config fallback. */
+  perListingUnit: number;
 }
 
 /**
  * What the buyer pays on top of the subtotal.
  *
- * The cap is applied to the commission BEFORE GST is computed, because GST is
- * levied on the commission actually charged — capping afterwards would bill tax
- * on money that was never collected.
+ * ## 🛑 ₹10 PER LISTING UNIT × n, PLUS GST — owner, 2026-11-08
+ *
+ * *"our website platform fees is 10rs per listing so an order with n items is
+ * nx10 rs, plus gst 18%"*, confirmed on the ambiguous half: **one line with
+ * quantity 3 is ₹30.**
+ *
+ * This REPLACED a percentage-of-subtotal model capped at ₹10. The two are not
+ * variations of each other: the old model charged **at most ₹10 for the whole
+ * checkout** however many items were in it, so a 3-unit cart paid ₹10 where the
+ * spec says ₹30 + ₹5.40 GST = ₹35.40. The cap is therefore not merely unused
+ * here, it is actively incompatible — see `platformFeeMax`.
+ *
+ * ## ⚠ PER UNIT, NOT PER LINE — `mocks/18-shipping-fees.qm` draws the other one
+ *
+ * The mock states *"Per LINE, not per unit: three of one item is one line"* and
+ * tabulates it. The owner's direct answer is newer and explicit and wins; the
+ * contradiction is reported rather than quietly picked. See
+ * `DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT`.
+ *
+ * ## 🛑 What a "unit" is: the BUYER-VISIBLE quantity
+ *
+ * `unitCount` is `sum(item.quantity)` over cart lines — never
+ * `expandCartLineToOrderRows`'s output. That expansion fans ONE composed
+ * listing into a row per member so each can carry its own HSN and be cancelled
+ * independently; counting those rows would charge ₹30 for a single three-part
+ * bey the buyer bought once, which is neither reading of the owner's rule.
+ *
+ * ## 🛑 `unitCount` IS REQUIRED, not optional with a fallback
+ *
+ * Every one of the six call sites must supply it, and `tsc` is what guarantees
+ * that. An optional parameter defaulting to the old percentage model would be
+ * the D44 shape exactly: a seam declared, never passed, and silently wrong at
+ * every money path for as long as nobody checked.
+ *
+ * ## Where GST rounds
+ *
+ * Once, on the whole fee base, through the same `roundRupees` every other money
+ * term uses — never per unit. Rounding 18% of ₹10 three times accumulates a
+ * different number than rounding 18% of ₹30 once, and the invoice has to agree
+ * with the capture to the paisa.
  */
-export function computeCheckoutFees(subtotal: number, commissions: FeeCommissionRates): CheckoutFees {
-  const uncapped = roundRupees(subtotal * (commissions.platformFeePercent / 100));
-  const cap = commissions.platformFeeMax ?? DEFAULT_PLATFORM_FEE_MAX;
-  const platformFee = Math.min(uncapped, cap);
+export function computeCheckoutFees(
+  subtotal: number,
+  commissions: FeeCommissionRates,
+  unitCount: number,
+): CheckoutFees {
+  const perListingUnit =
+    commissions.platformFeePerListingUnit ?? DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT;
+  /*
+   * Clamped and integer-floored defensively. `unitCount` is summed from
+   * server-resolved cart quantities in every caller, so it cannot be negative
+   * or fractional today — but it is the multiplier on a charge, and a NaN here
+   * would produce a NaN total the gateway would reject only after the buyer
+   * pressed pay.
+   */
+  const units = Number.isFinite(unitCount) ? Math.max(0, Math.floor(unitCount)) : 0;
+  const platformFee = roundRupees(units * Math.max(0, perListingUnit));
   const gstOnFee = roundRupees(platformFee * (commissions.gstPercent / 100));
   const totalFee = Math.max(platformFee + gstOnFee, commissions.minimumTransactionFee ?? 0);
-  return { platformFee, gstOnFee, totalFee };
+  return { platformFee, gstOnFee, totalFee, unitCount: units, perListingUnit };
 }
 
 /**
- * Split one checkout's platform commission across the orders it produces.
+ * Split one checkout's platform fee across the orders it produces.
  *
- * The buyer is charged a single capped commission for the transaction, but the
- * cart splits into one order per store, and each `OrderDocument` records its own
- * `platformFee` (invoices, reconciliation). Apportioning pro-rata by group
- * subtotal keeps those per-order figures meaningful; giving the last group the
- * rounding remainder guarantees they sum to exactly what was charged, so the
+ * The buyer is charged one fee for the transaction, but the cart splits into one
+ * order per store and each `OrderDocument` records its own `platformFee`
+ * (invoices, reconciliation). Giving the last group the rounding remainder
+ * guarantees the per-order figures sum to exactly what was charged, so the
  * orders can never quietly total a rupee more or less than the buyer paid.
  *
+ * ## 🛑 APPORTIONED BY UNIT COUNT WHEN UNIT COUNTS ARE SUPPLIED
+ *
+ * The fee is `₹10 × units`, so the share that belongs to a store is the share
+ * of the UNITS it holds — not the share of the money. Pro-rata by subtotal
+ * gives a demonstrably wrong per-order figure under this model: a cart with one
+ * ₹5,000 unit at store A and one ₹100 unit at store B is charged ₹20, and by
+ * subtotal that apportions ₹19.61 / ₹0.39 when each order is in fact a
+ * one-unit ₹10 order. The total charged is identical either way, so this is an
+ * invoice-correctness defect rather than an overcharge — the same shape as
+ * `isIntraStateSupply`'s CGST/SGST-vs-IGST split, and it matters for the same
+ * reason: a GST return is built from the per-order rows, not the cart total.
+ *
+ * Subtotal apportionment survives as the fallback for callers that cannot
+ * supply counts, so no existing behaviour changes silently.
+ *
  * @param groupSubtotals `[storeId, subtotal]` pairs, in stable order.
+ * @param groupUnitCounts Units per store. Omit to apportion by subtotal.
  */
 export function allocateCheckoutFees(
   groupSubtotals: readonly (readonly [string, number])[],
   fees: CheckoutFees,
+  groupUnitCounts?: ReadonlyMap<string, number>,
 ): Map<string, { platformFee: number; gstOnFee: number }> {
   const allocation = new Map<string, { platformFee: number; gstOnFee: number }>();
   if (groupSubtotals.length === 0) return allocation;
 
-  const total = groupSubtotals.reduce((sum, [, subtotal]) => sum + subtotal, 0);
+  /*
+   * The weight each group's share is computed from. Unit counts when the caller
+   * knows them and they sum to something positive — a zero-unit cart cannot be
+   * apportioned by units any more than an all-zero cart can be apportioned by
+   * money, and in both cases the whole (necessarily zero-ish) fee goes to the
+   * last group rather than dividing by zero.
+   */
+  const unitWeights = groupUnitCounts
+    ? groupSubtotals.map(([storeId]) => groupUnitCounts.get(storeId) ?? 0)
+    : null;
+  const unitWeightTotal = unitWeights ? unitWeights.reduce((s, w) => s + w, 0) : 0;
+  const useUnits = unitWeights !== null && unitWeightTotal > 0;
+
+  const total = useUnits
+    ? unitWeightTotal
+    : groupSubtotals.reduce((sum, [, subtotal]) => sum + subtotal, 0);
 
   /*
    * ── D41: THE `minimumTransactionFee` FLOOR IS APPLIED HERE, ONCE ──────────
@@ -121,7 +265,8 @@ export function allocateCheckoutFees(
     // An all-zero cart can't be apportioned by share — fall back to giving the
     // whole (necessarily zero-ish) fee to the last group rather than dividing
     // by zero.
-    const share = total > 0 ? subtotal / total : 0;
+    const weight = useUnits ? (unitWeights?.[index] ?? 0) : subtotal;
+    const share = total > 0 ? weight / total : 0;
     const platformFee = isLast ? roundRupees(platformRemaining) : roundRupees(flooredPlatformFee * share);
     const gstOnFee = isLast ? roundRupees(gstRemaining) : roundRupees(fees.gstOnFee * share);
     platformRemaining = roundRupees(platformRemaining - platformFee);

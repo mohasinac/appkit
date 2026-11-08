@@ -13,9 +13,17 @@ import { roundRupees } from "../../../../utils/number.formatter";
 import { ApiError, ValidationError, NotFoundError, ERROR_MESSAGES } from "../../../../errors";
 import { ORDER_FIELDS } from "../../../../constants/field-names";
 import { serverLogger } from "../../../../monitoring";
+/*
+ * 🛑 `roundShippingUp` is NO LONGER IMPORTED HERE, and its absence is the fix.
+ * It was applied to a client-supplied `chargedRate` and the result was charged
+ * — see `CreateCheckoutOrderInput.selectedShippingQuote`. The ₹50 step now
+ * applies only where a carrier rate ENTERS the system (`toQuoteOptions`) and
+ * inside `buildShippingOptions`, never to anything a browser sent.
+ */
 import {
-  roundShippingUp,
+  toQuoteOptions,
   type SelectedShippingQuote,
+  type ShippingQuoteOption,
 } from "../../../shared/shipping/quote";
 import {
   unitOfWork,
@@ -73,6 +81,27 @@ import {
   toStoreShippingPolicy,
   type StoreShippingPolicy,
 } from "../../../shared/features/shipping/mode";
+/*
+ * The seller's offer, the buyer's pick, and the SERVER's price for it — the
+ * money-authority fix of 2026-11-08. `offer.ts`'s header carries the measured
+ * defect (a forged `chargedRate` of 1 moved a ₹149 order's total from ₹172.69
+ * to ₹222.69) and the reason the fix is re-resolution rather than prohibition:
+ * the buyer legitimately CHOOSES between the seller's own rate and a carrier
+ * quote, so what must be rejected is the client's AMOUNT, never its CHOICE.
+ */
+import {
+  CUSTOM_SHIPPING_OPTION_ID,
+  DEFAULT_SELLER_SHIPPING_OFFER,
+  buildShippingOptions,
+  impliedObligation,
+  offerFromPolicy,
+  platformShippingOptionId,
+  resolveShippingSelection,
+  toSellerShippingOffer,
+  type SellerShippingOffer,
+  type ShippingObligation,
+  type ShippingOptionOffer,
+} from "../../../shared/features/shipping/offer";
 /*
  * D44's first consumer of `shippingUnavailable`. A store whose shipping cannot
  * be priced is a configuration fault with a money consequence — we ship free —
@@ -196,7 +225,7 @@ import {
   computeGroupCouponDiscount,
 } from "../../../shared/checkout/coupon-discount";
 import { revalidateGroupLines } from "./group-rule-revalidation";
-import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
+import { cartIsDigitalOnly, cartRequiresShipping } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "../../../../schemas/types";
 import { processRefundAction } from "../refunds/actions";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
@@ -441,23 +470,54 @@ export interface CreateCheckoutOrderInput {
    */
   emiTenureMonths?: number;
   /**
-   * The courier the buyer picked at checkout, with the ₹50-rounded rate they
-   * were shown.
+   * WHICH shipping option the buyer picked. Only `courierId` is read.
    *
-   * 🛑 OPTIONAL, and its absence is meaningful: a cart whose carrier quote
-   * failed, a digital-only cart, or any caller written before the picker
-   * existed falls back to `resolveShippingCost` exactly as before. Absence is
-   * what makes reconciliation skip the order as "no-quote" rather than
-   * measuring a seller's spend against a figure nobody was charged.
+   * 🛑 EVERY AMOUNT ON THIS OBJECT IS IGNORED (2026-11-08). The docstring that
+   * stood here said *"`chargedRate` is TRUSTED from the client, and that is a
+   * deliberate, bounded decision"*, and named re-quoting the carrier at order
+   * time as "the gap worth closing … tracked separately". It was not bounded:
+   * measured live on a ₹149 item, an honest request charged ₹172.69 and a
+   * forged `{ chargedRate: 1 }` charged ₹222.69, because `roundShippingUp`
+   * bounds a forgery only to the nearest ₹50 in whichever direction the forger
+   * chose. The gap is now closed — `carrierOptionsForDestination` re-quotes
+   * server-side and `resolveShippingSelection` prices the choice.
    *
-   * 🛑 `chargedRate` is TRUSTED from the client, and that is a deliberate,
-   * bounded decision rather than an oversight. It is re-derived server-side
-   * through `roundShippingUp` before it is billed, so a tampered value can
-   * only ever be a different carrier rate rounded the same way — the gap
-   * worth closing is re-quoting the carrier at order time, which costs an
-   * outbound call on the payment path and is tracked separately.
+   * The shape is unchanged so no client breaks, and `requestedShippingOptionId`
+   * is the one function that narrows it to its identity. Think of it as an
+   * option id wearing a legacy wire format.
+   *
+   * 🛑 OPTIONAL, and its absence is still meaningful: a cart whose carrier quote
+   * failed, a digital-only cart, or any caller written before the picker existed
+   * falls back to `resolveShippingCost` exactly as before — which is also a
+   * server number, resolved from the seller's stored policy. Absence is what
+   * makes reconciliation skip the order as "no-quote" rather than measuring a
+   * seller's spend against a figure nobody was charged.
+   *
+   * 🛑 A `courierId` of `"custom"` selects the SELLER'S OWN rate. That is how a
+   * client expresses the second half of the owner's spec without a new field;
+   * `platformShippingOptionId` namespaces carrier ids so a carrier literally
+   * named `custom` cannot land a buyer on the wrong side of the obligation.
    */
   selectedShippingQuote?: SelectedShippingQuote;
+  /**
+   * The buyer's shipping choice PER SELLER — `storeId` → `optionId`.
+   *
+   * `"custom"` selects the seller's own rate; `"platform:<courierId>"` selects
+   * a carrier quote. Both ids come from `CheckoutPricingPreviewStore.
+   * shippingOptions`, which the server built, so a client echoes back an id it
+   * was offered rather than inventing one.
+   *
+   * 🛑 An id this seller does not offer REFUSES the order. It is not defaulted
+   * to the cheapest available: the buyer agreed to a named method at a named
+   * price, and substituting another is the same wrong as trusting their number,
+   * pointed the other way.
+   *
+   * 🛑 Absent for a store means "no choice made", which falls back to that
+   * seller's stored single-mode policy via `resolveShippingCost` — still a
+   * server number. That is what keeps a pre-picker client, a digital-only cart
+   * and a cart whose carrier quote failed all working unchanged.
+   */
+  selectedShippingOptions?: Record<string, string>;
   /*
    * 🛑 `pointsToRedeem` was REMOVED from this interface, 2026-10-21 (D46).
    *
@@ -571,6 +631,20 @@ export async function resolveShippingCost(
   /** C5b — the resolved policy, so a caller can quote with the cart in hand. */
   shippingPolicy: StoreShippingPolicy;
   /**
+   * What this seller WILL SHIP BY — the two-axis offer (owner, 2026-11-08).
+   *
+   * Returned from the store read this function already performs, for the same
+   * reason `storeTaxIdentity` and `storeProtections` are: a second `findById`
+   * per order group would spend a Firestore read against Rule #6's ~3
+   * round-trip budget to learn one object.
+   *
+   * 🛑 THIS is the authority the buyer's posted option is validated against.
+   * `shippingFee` above is the fee for the seller's stored single-mode policy
+   * and remains the answer when the buyer selected nothing; it is NOT the
+   * answer when they did. See `resolveShippingSelection`.
+   */
+  shippingOffer: SellerShippingOffer;
+  /**
    * The seller's own tax registration, from the store read this function
    * already performs.
    *
@@ -654,6 +728,9 @@ export async function resolveShippingCost(
       storeEmiEnabled: false,
       storeState: undefined,
       shippingPolicy: DEFAULT_STORE_SHIPPING_POLICY,
+      // No store, so no offer. The default is custom at ₹0 — the same thing
+      // `DEFAULT_STORE_SHIPPING_POLICY` says, and for the same reason.
+      shippingOffer: { ...DEFAULT_SELLER_SHIPPING_OFFER },
       shippingUnavailable: false,
       storeProtections: { shipping: false, sale: false },
       // No store, so no seller to absorb a redemption.
@@ -781,6 +858,21 @@ export async function resolveShippingCost(
     storeEmiEnabled,
     storeState,
     shippingPolicy: policy,
+    /*
+     * 🛑 Resolved from the STORED `shippingPricing` document, falling back to
+     * the offer the legacy single mode implies — never from anything the
+     * client sent. `toSellerShippingOffer` reads the explicit `offer` when the
+     * seller has saved one and derives it from `mode` otherwise, so there is
+     * one stored field and one reader rather than a second config system
+     * (`mode.ts`'s header records what happened last time there were two).
+     *
+     * `store?.shippingPricing` is passed rather than `policy`, because the
+     * explicit offer is a sibling of `mode` on that document and `policy` has
+     * already discarded it.
+     */
+    shippingOffer: store?.shippingPricing
+      ? toSellerShippingOffer(store.shippingPricing)
+      : offerFromPolicy(policy),
     shippingUnavailable: quote.kind === "unavailable",
     storeProtections: {
       shipping: store?.supportsShippingProtection === true,
@@ -820,6 +912,101 @@ export async function resolveShippingCost(
      */
     settlementVendors: store?.settlementVendors,
   };
+}
+
+/**
+ * The carrier options for a destination, obtained SERVER-SIDE at order time.
+ *
+ * ## 🛑 This outbound call is the whole point
+ *
+ * `CreateCheckoutOrderInput.selectedShippingQuote` used to carry the rates, and
+ * its own docstring conceded the gap: *"the gap worth closing is re-quoting the
+ * carrier at order time, which costs an outbound call on the payment path and
+ * is tracked separately."* It is closed here. One call, only for a seller who
+ * actually accepts carrier quotes, and only when the buyer picked one — a cart
+ * whose seller ships their own way performs no call at all.
+ *
+ * ## 🛑 Returns `[]` on EVERY failure, and `[]` means "no platform option"
+ *
+ * Not "free", and not "trust whatever the client said". An empty list makes
+ * `resolveShippingSelection` refuse a platform pick with
+ * `no-method-available`, which is the owner's own rule for this case: *"the
+ * platform option is ABSENT at checkout rather than guessed."* The alternatives
+ * are both money defects — guessing a rate charges the buyer a number no
+ * carrier quoted, and falling back to the client's figure is the defect this
+ * whole change exists to remove.
+ *
+ * Today the registered provider is `ManualShippingProvider`, whose
+ * `checkServiceability` returns `{ isServiceable: true, couriers: [] }` — so
+ * this legitimately yields zero options on every call until a real carrier
+ * account is wired, and a forged platform pick is therefore REFUSED rather than
+ * mispriced. Measured, not assumed: `providers.config.ts` defaults
+ * `siteSettings.shipping.provider` to `"manual"`.
+ */
+async function carrierOptionsForDestination(
+  pincode: string | undefined,
+  weightKg: number,
+): Promise<ShippingQuoteOption[]> {
+  if (!pincode) return [];
+  const shipping = getProviders().shipping;
+  if (!shipping) {
+    serverLogger.error("checkout carrier re-quote: no shipping provider registered", {
+      pincode,
+    });
+    return [];
+  }
+  try {
+    const result = await shipping.checkServiceability(pincode, weightKg);
+    if (!result.isServiceable) return [];
+    return toQuoteOptions(result.couriers);
+  } catch (err: unknown) {
+    /*
+     * A carrier outage must not 500 a checkout. It removes the platform option
+     * — which is a refusal the buyer can act on ("choose the seller's own
+     * shipping, or retry") — rather than taking the order at a price nobody
+     * quoted.
+     */
+    serverLogger.error("checkout carrier re-quote failed", {
+      pincode,
+      err: err instanceof Error ? err.message : String(err),
+    });
+    return [];
+  }
+}
+
+/**
+ * The carrier's own minimum weight slab, used when the cart cannot say what the
+ * parcel weighs.
+ *
+ * Same figure and same reasoning as `POST /api/shipping/quote`: the cart does
+ * not reliably carry per-item weights, 0.5 kg is the carrier's own floor, and a
+ * heavier parcel quotes low — which the reconciliation rule already handles by
+ * making the seller absorb the difference. Shared as a constant so the quote
+ * the buyer was shown and the quote the order is priced from cannot differ by
+ * their default weight.
+ */
+export const CHECKOUT_DEFAULT_PARCEL_WEIGHT_KG = 0.5;
+
+/**
+ * Which option id the buyer's posted pick corresponds to.
+ *
+ * 🛑 Reads the IDENTITY out of `selectedShippingQuote` and discards every
+ * amount on it. That object is a legacy wire shape carrying
+ * `rawRate`/`chargedRate`, and those two numbers are precisely what must not
+ * reach the total — so this function exists to make the narrowing mechanical
+ * rather than a thing each call site has to remember.
+ *
+ * A pick whose `courierId` is the literal custom id maps to the custom option;
+ * `platformShippingOptionId` namespaces carrier ids for exactly that reason, so
+ * a carrier returning `"custom"` cannot land a buyer on the wrong side of the
+ * fulfilment obligation.
+ */
+function requestedShippingOptionId(
+  quote: Pick<SelectedShippingQuote, "courierId"> | undefined,
+): string | undefined {
+  if (!quote?.courierId) return undefined;
+  if (quote.courierId === CUSTOM_SHIPPING_OPTION_ID) return CUSTOM_SHIPPING_OPTION_ID;
+  return platformShippingOptionId(quote.courierId);
 }
 
 /**
@@ -1067,17 +1254,37 @@ function dispatchOrderConfirmationEmails(
 interface OrderGroupContext {
   paymentMethod: CheckoutPaymentMethod;
   /**
-   * The buyer's courier pick, when the checkout took a live carrier quote.
+   * LEGACY cart-wide courier pick. Applied to the FIRST group only.
    *
-   * 🛑 Cart-wide, applied to EVERY group, and that is a known simplification
-   * with a stated boundary: the picker quotes one destination, and a cart
-   * split across sellers ships as several parcels that would each have their
-   * own rate. Charging one quote per group would overcharge a multi-seller
-   * cart N times; charging it once, on the first group, is what this does.
-   * The honest fix is a per-seller quote, which needs per-seller pickup
-   * pincodes the stores do not all carry yet.
+   * 🛑 Only its `courierId` is read — every amount on it is ignored. See
+   * `CreateCheckoutOrderInput.selectedShippingQuote` for the measured defect
+   * that made that necessary.
+   *
+   * 🛑 Superseded by `selectedShippingOptions` below, and kept because a tab
+   * opened before that field existed still posts this one. First group only, as
+   * it always was: the old picker quoted ONE destination for the whole cart, so
+   * applying it to every group would charge a multi-seller cart the same parcel
+   * rate N times.
    */
   selectedShippingQuote?: SelectedShippingQuote;
+  /**
+   * The buyer's shipping choice PER SELLER — `storeId` → `optionId`.
+   *
+   * 🛑 Per store because shipping IS per store: the cart splits on `storeId`,
+   * each seller offers their own methods, and `mocks/18-shipping-fees.qm` draws
+   * exactly this — two seller groups in one cart, two shipping lines in the
+   * order summary ("Shipping — BeyIndia courier ₹200" and "Shipping — RipZone
+   * standard ₹59"). A cart-wide pick cannot express "ship A's parcel yourself
+   * and send B's by Delhivery", which is the common case the owner's spec
+   * creates the moment both axes can be enabled.
+   *
+   * 🛑 IDENTIFIERS ONLY. There is deliberately no amount in this shape, so
+   * there is nothing for a client to tamper with — the server prices each
+   * chosen option from the seller's stored offer plus its own carrier quote.
+   * That is the structural half of the fix; the narrowing in
+   * `requestedShippingOptionId` is the legacy half.
+   */
+  selectedShippingOptions?: Record<string, string>;
   /** Already normalised by `resolveEmiChoice` at the action boundary. */
   emiOptIn: boolean;
   emiTenureMonths?: number;
@@ -1485,6 +1692,7 @@ async function createOrderForGroup(
     policyConsent,
     platformFeeByStore,
     selectedShippingQuote,
+    selectedShippingOptions,
     useAllPoints,
     pointsBudget,
   } = ctx;
@@ -1574,28 +1782,148 @@ async function createOrderForGroup(
     (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
-  const { shippingFee: resolvedShippingFee, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints, sharedPurchaseRates } =
+  const { shippingFee: resolvedShippingFee, shippingOffer, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints, sharedPurchaseRates } =
     await resolveShippingCost(firstItem.storeId, { goodsValue: groupGoodsValue });
 
   /*
-   * 🛑 The buyer's quote WINS over the seller's configured rate, and it is
-   * re-rounded here rather than trusted as sent.
+   * ════════════════════════════════════════════════════════════════════════
+   * 🛑 SERVER AUTHORITY OVER THE SHIPPING FEE — owner's spec, 2026-11-08
+   * ════════════════════════════════════════════════════════════════════════
    *
-   * `roundShippingUp` is idempotent, so re-applying it to an honest value is a
-   * no-op; applied to a tampered one it forces the result back onto a ₹50 step.
-   * That bounds what a forged `chargedRate` can be to "some carrier rate,
-   * correctly rounded" rather than an arbitrary number.
+   * ## What was here, and what it cost
    *
-   * Applied to the FIRST group only — see the field's note on OrderGroupContext.
-   * A cart spanning sellers must not be charged the same parcel rate twice.
+   *   shippingFee = roundShippingUp(selectedShippingQuote.chargedRate)
+   *
+   * `resolveShippingCost` was called, its answer destructured, and then
+   * DISCARDED whenever the client posted a quote. Measured live on a ₹149 item:
+   * an honest request charged **₹172.69**; a forged `{ chargedRate: 1 }`
+   * charged **₹222.69**. A client-supplied number reached the charged total.
+   *
+   * The comment that stood here argued the trust was bounded because
+   * `roundShippingUp` re-rounds the value. It does — onto a ₹50 step. ₹1
+   * becomes ₹50 and ₹10,000 stays ₹10,000, so the "bound" was the attacker's
+   * choice of multiple of fifty, in either direction. Undercutting was
+   * unexploitable only because no seeded store had `shippingPricing` set, so
+   * every resolved fee was ₹0 — a data accident due to expire the moment a
+   * vendor saved a real rate.
+   *
+   * ## 🛑 Why the fix is NOT "reject any client shipping value"
+   *
+   * The owner's spec gives the buyer a real choice between the seller's own
+   * rate and a live carrier quote, *"if they find the other cheap they can
+   * choose whatever they wish"*. So the client MUST be able to say which option
+   * it picked. What it must never say is what that option costs.
+   *
+   * Hence: the posted object contributes its `courierId` ONLY
+   * (`requestedShippingOptionId` discards `rawRate` and `chargedRate`), the
+   * option is re-priced from the seller's STORED offer plus a carrier quote
+   * this server obtained itself, and an option the seller does not offer is a
+   * REFUSAL rather than a fallback — charging the buyer for a method they did
+   * not choose is the same wrong pointing the other way.
+   *
+   * ## 🛑 `shippingRequired` is a CAPABILITY read
+   *
+   * `cartRequiresShipping` asks the registry for `supportsShipping` on each
+   * line. A digital-code group therefore acquires no fee and no fulfilment
+   * obligation — not because this code knows what a digital code is, but
+   * because no line in it supports shipping. No `listingType ===` anywhere.
+   *
+   * ## 🛑 Still FIRST GROUP ONLY
+   *
+   * Unchanged from before and for the unchanged reason: the picker quotes one
+   * destination, and a cart split across sellers must not be charged the same
+   * parcel rate once per seller. See the field's note on `OrderGroupContext`.
    */
   const isFirstGroup = ctx.orderIds.length === 0;
+  const groupRequiresShipping = cartRequiresShipping(
+    group.map(({ product }) => ({ listingType: product.listingType })),
+  );
+  /*
+   * 🛑 THE PER-STORE PICK WINS, and the legacy cart-wide one is the fallback.
+   *
+   * `selectedShippingOptions[storeId]` is the shape the owner's spec needs —
+   * each seller offers their own methods, so each group has its own answer, and
+   * `mocks/18-shipping-fees.qm` shows two shipping lines in one order summary.
+   * The legacy `selectedShippingQuote` stays usable for a tab opened before
+   * that field existed, and stays FIRST-GROUP-ONLY for the reason it always
+   * was: it quoted one destination for the whole cart, so honouring it on every
+   * group would charge a multi-seller cart the same parcel rate N times.
+   */
+  const requestedOptionId =
+    selectedShippingOptions?.[firstItem.storeId] ??
+    (isFirstGroup ? requestedShippingOptionId(selectedShippingQuote) : undefined);
+  /*
+   * The outbound call is skipped unless it can change the answer: the seller
+   * must accept carrier quotes AND the buyer must have picked one. An ordinary
+   * checkout against a self-shipping seller performs no carrier call at all,
+   * which is what keeps this inside Rule #6's round-trip budget.
+   */
+  const needsCarrierQuote =
+    groupRequiresShipping &&
+    shippingOffer.platformQuotesAccepted &&
+    requestedOptionId !== undefined &&
+    requestedOptionId !== CUSTOM_SHIPPING_OPTION_ID;
+  const carrierOptions = needsCarrierQuote
+    ? await carrierOptionsForDestination(
+        deliverySnapshot?.deliveryPincode,
+        CHECKOUT_DEFAULT_PARCEL_WEIGHT_KG,
+      )
+    : [];
+
+  const selection = resolveShippingSelection({
+    shippingRequired: groupRequiresShipping,
+    offer: shippingOffer,
+    goodsValue: groupGoodsValue,
+    carrierOptions,
+    requestedOptionId,
+  });
+
+  /*
+   * 🛑 REFUSES rather than falling back, and the refusal happens BEFORE any
+   * money moves on this path (`createCheckoutOrderAction` is the COD/manual
+   * entry point; the gateway path runs the same resolution inside
+   * `verifyAndPlaceGatewayOrderAction`). `groupEmiGate` directly below sets the
+   * precedent and states the reason: *"silently producing a full-price order
+   * from an EMI request is money the buyer did not agree to."* Silently
+   * producing a differently-shipped order from a shipping request is the same
+   * class of wrong.
+   */
+  if (selection.kind === "refused") {
+    throw new ValidationError(selection.message);
+  }
+
   const shippingFee =
-    selectedShippingQuote && isFirstGroup
-      ? roundShippingUp(selectedShippingQuote.chargedRate)
-      : selectedShippingQuote
+    selection.kind === "resolved"
+      ? selection.option.amount
+      : selection.kind === "not-required"
         ? 0
-        : resolvedShippingFee;
+        : /*
+           * `unselected` — this seller got no pick, so their stored single-mode
+           * policy answers, exactly as it did before the picker existed. Still
+           * a SERVER number: `resolveShippingCost` computed it from
+           * `shippingPricing`, and nothing the client sent is in it.
+           *
+           * 🛑 The one case that charges ₹0 instead: a LATER group under the
+           * LEGACY cart-wide quote, with no per-store pick anywhere. That quote
+           * priced one parcel to one destination, so billing it again here
+           * would charge the buyer twice for one courier — the behaviour this
+           * branch has always had, preserved deliberately rather than
+           * inherited. A per-store pick never reaches it.
+           */
+          isFirstGroup || !selectedShippingQuote || selectedShippingOptions
+          ? resolvedShippingFee
+          : 0;
+
+  /**
+   * What the buyer committed to, frozen so part C of the spec is evidenced.
+   *
+   * 🛑 Written only on the group that actually CARRIES the fee. A later group
+   * in a multi-seller cart is charged ₹0 shipping, and recording a
+   * self-fulfilment obligation there would bind a seller to a price they were
+   * never paid.
+   */
+  const shippingObligation: ShippingObligation | undefined =
+    selection.kind === "resolved" ? selection.obligation : undefined;
 
   /*
    * Who issues this invoice — the seller if they have their own GSTIN, the
@@ -2045,11 +2373,45 @@ async function createOrderForGroup(
      * carries the shipping fee — a later group in a multi-seller cart is
      * charged ₹0 shipping, so recording a quote there would invite a credit
      * against money that group never collected.
+     *
+     * 🛑 REBUILT FROM THE SERVER'S RESOLUTION, not from the posted object.
+     * `rawRate` is the carrier's own figure as WE re-quoted it; it used to be
+     * whatever the client sent, which meant `reconcileShipping` later compared
+     * a seller's real spend against a buyer-supplied number. Only a platform
+     * option has a carrier rate at all — the seller's own price is not a
+     * carrier quote and must not masquerade as one, so a custom pick records
+     * the obligation below and no `selectedShippingQuote`.
      */
     selectedShippingQuote:
-      selectedShippingQuote && isFirstGroup
-        ? { ...selectedShippingQuote, chargedRate: shippingFee }
+      selection.kind === "resolved" && selection.option.kind === "platform"
+        ? {
+            courierId: selection.option.courierId ?? selection.option.optionId,
+            courierName: selection.option.courierName ?? selection.option.label,
+            rawRate:
+              carrierOptions.find((c) => c.courierId === selection.option.courierId)?.rawRate ??
+              selection.option.amount,
+            chargedRate: shippingFee,
+            estimatedDays: selection.option.estimatedDays ?? 0,
+            // Stamped server-side. A buyer-supplied timestamp is unverifiable,
+            // and this field exists so a stale quote is recognisable later.
+            quotedAt: new Date(),
+          }
         : undefined,
+    /*
+     * ── PART C: THE FULFILMENT OBLIGATION, RECORDED ───────────────────────
+     *
+     * Owner: *"if they have selected that, then it is up to the seller to
+     * fulfil as is, they cannot use the platform to ship for the other, as we
+     * have already taken money from the customer."*
+     *
+     * 🛑 Written at checkout because the rule is BROKEN at pack time, possibly
+     * days later. A rule nobody can evidence after the fact is not a rule —
+     * `mayBookPlatformLabel` reads this one field, and `reconcileShipping`
+     * already computes both money directions (excess back to the buyer,
+     * shortfall absorbed by the seller) from `chargedAmount` versus the real
+     * spend. This flag is what says which of them the seller agreed to.
+     */
+    shippingObligation,
     offerId: firstItem.offerId ?? undefined,
     // Distinguishes a Buy Now purchase from a settled collector drop win. Both are
     // orderType "collector-drop"; only this one gets the 24h admin-review window.
@@ -2794,14 +3156,32 @@ export async function createCheckoutOrderAction(
 
   const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
 
-  // One commission on one transaction, capped, then apportioned across the
-  // orders this cart splits into — see allocateCheckoutFees.
+  /*
+   * ₹10 per listing UNIT × n, plus GST, apportioned BY UNIT COUNT across the
+   * orders this cart splits into — owner, 2026-11-08, who confirmed directly
+   * that one line with quantity 3 is ₹30. See `computeCheckoutFees` for the
+   * conflict with `mocks/18-shipping-fees.qm` (which draws per-LINE) and
+   * `allocateCheckoutFees` for why the apportionment weight had to change with
+   * the model.
+   *
+   * 🛑 `item.quantity`, the BUYER-VISIBLE count — never
+   * `expandCartLineToOrderRows`'s output, which fans a composed listing out
+   * into a row per member and would charge ₹30 for one three-part bey bought
+   * once.
+   */
+  const unitsOf = (g: { item: CartItemDocument }[]) =>
+    g.reduce((n, { item }) => n + (item.quantity ?? 0), 0);
+  const unitCountByStore = new Map(
+    orderGroups.map(({ items: g }) => [g[0].item.storeId, unitsOf(g)] as const),
+  );
+  const cartUnitCount = orderGroups.reduce((n, { items: g }) => n + unitsOf(g), 0);
   const platformFeeByStore = allocateCheckoutFees(
     orderGroups.map(({ items: g }) => [
       g[0].item.storeId,
       g.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0),
     ] as const),
-    computeCheckoutFees(cartSubtotal, commissions),
+    computeCheckoutFees(cartSubtotal, commissions, cartUnitCount),
+    unitCountByStore,
   );
 
   /*
@@ -2852,6 +3232,7 @@ export async function createCheckoutOrderAction(
     policyConsent,
     platformFeeByStore,
     selectedShippingQuote: input.selectedShippingQuote,
+    selectedShippingOptions: input.selectedShippingOptions,
     productById: checkoutProductById,
     useAllPoints,
     pointsBudget,
@@ -2992,6 +3373,28 @@ export interface CheckoutPricingPreviewStore {
   storeName: string;
   subtotal: number;
   shippingFee: number;
+  /**
+   * THE SHIPPING OPTIONS THIS SELLER OFFERS, priced server-side.
+   *
+   * 🛑 The picker must render THIS and nothing else. The checkout UI currently
+   * calls `POST /api/shipping/quote` and shows raw carrier options, which is a
+   * second source of truth for what is purchasable: a seller who has not
+   * accepted carrier quotes would be shown couriers the order path then refuses
+   * with `option-not-offered` — i.e. the buyer would meet the refusal AFTER
+   * pressing pay. Offering exactly what `resolveShippingSelection` will accept
+   * is what makes the picker and the charge agree by construction rather than
+   * by both happening to call the same carrier.
+   *
+   * 🛑 `amount` on each option is the SERVER's price. The browser renders it
+   * and posts back only `optionId`; it never sends an amount, and an amount it
+   * did send would be ignored (see `CreateCheckoutOrderInput`).
+   *
+   * Empty when no line in this seller's group supports shipping — a
+   * digital-code group offers no options and acquires no fee, resolved through
+   * `cartRequiresShipping` off the capability registry rather than by asking
+   * what type anything is.
+   */
+  shippingOptions: ShippingOptionOffer[];
   codHandlingFee: number;
   whatsappNotifyFee: number;
   giftWrapFee: number;
@@ -3077,10 +3480,21 @@ export interface CheckoutPricingPreview {
   emiDeferred: number;
   gstAmount: number;
   couponDiscount: number;
-  /** Buyer-facing platform commission, capped, charged once for this checkout. */
+  /** Buyer-facing platform fee — `₹perListingUnit × platformFeeUnitCount`. */
   platformFee: number;
-  /** GST on the (capped) platform commission. */
+  /** GST on the platform fee. */
   gstOnFee: number;
+  /**
+   * The `n` the platform fee was computed from — UNITS, i.e. `sum(quantity)`.
+   *
+   * 🛑 Returned rather than left to the client to recount.
+   * `explainPlatformFee` prints "₹10 × 3 items = ₹30" beside the charge, and a
+   * browser counting its own cart rows would be a second implementation of the
+   * multiplier, free to disagree with the one that produced the money (Root
+   * Cause #75) — and free to disagree in the LINE-vs-UNIT direction
+   * specifically, which is the one the mock and the owner already disagree on.
+   */
+  platformFeeUnitCount: number;
   /**
    * S5a — handling plus extra shipping legs, across every store in the cart.
    *
@@ -3144,6 +3558,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   couponDiscount: 0,
   platformFee: 0,
   gstOnFee: 0,
+  platformFeeUnitCount: 0,
   sharedPurchaseFee: 0,
   total: 0,
   pointsApplied: 0,
@@ -3270,8 +3685,44 @@ export async function previewCheckoutPricing(
      * and then the order path (equally unpassed) charged it. Preview and charge
      * agreed, and both were wrong in the same direction.
      */
-    const { shippingFee: groupShippingFee, storeState, storeProtections, storeEmiEnabled, acceptsPoints, sharedPurchaseRates: previewSharedRates } =
+    const { shippingFee: groupShippingFee, shippingOffer: groupShippingOffer, storeState, storeProtections, storeEmiEnabled, acceptsPoints, sharedPurchaseRates: previewSharedRates } =
       await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+
+    /*
+     * ── WHAT THE BUYER MAY CHOOSE, priced by the server ──────────────────
+     *
+     * Built from the seller's STORED offer plus a carrier quote this server
+     * obtained, so the picker offers exactly what `resolveShippingSelection`
+     * will accept at order time. See the field's note on
+     * `CheckoutPricingPreviewStore` for why offering anything else means the
+     * buyer meets a refusal after pressing pay.
+     *
+     * 🛑 `cartRequiresShipping` is a CAPABILITY read (`supportsShipping` off
+     * the registry). A digital-code group offers nothing and is charged
+     * nothing — no listing-type comparison anywhere in the decision.
+     *
+     * 🛑 The carrier call is skipped unless the seller accepts carrier quotes.
+     * The preview runs on every control the buyer touches, so an unconditional
+     * outbound call here would be a rate-limited third-party request per
+     * keystroke. A self-shipping seller's options are pure arithmetic.
+     */
+    const groupRequiresShipping = cartRequiresShipping(
+      group.map(({ product }) => ({ listingType: product?.listingType })),
+    );
+    const previewCarrierOptions =
+      groupRequiresShipping && groupShippingOffer.platformQuotesAccepted
+        ? await carrierOptionsForDestination(
+            resolvedAddress?.postalCode,
+            CHECKOUT_DEFAULT_PARCEL_WEIGHT_KG,
+          )
+        : [];
+    const groupShippingOptions = groupRequiresShipping
+      ? buildShippingOptions({
+          offer: groupShippingOffer,
+          goodsValue: groupTotal,
+          carrierOptions: previewCarrierOptions,
+        })
+      : [];
 
     // Add-ons are per store, read off the cart document — the same entry
     // createOrderForGroup will read when the order is actually placed.
@@ -3479,6 +3930,13 @@ export async function previewCheckoutPricing(
       hasFinalSaleItem: groupHasFinalSale,
       acceptsPoints,
       sharedPurchaseFee: groupSharedPurchaseFee,
+      /*
+       * What the buyer may pick, priced server-side. Carried per STORE because
+       * shipping is charged per store and the cart splits on `storeId` — a
+       * cart-wide option list would offer one seller's custom rate for another
+       * seller's parcel.
+       */
+      shippingOptions: groupShippingOptions,
       // Filled by the tender pass below — it needs each store's share of the
       // one capped commission, which is only allocatable once every group is
       // known.
@@ -3503,15 +3961,25 @@ export async function previewCheckoutPricing(
   const gstAmount = sum((s) => s.gstAmount);
   const couponDiscount = sum((s) => s.couponDiscount);
 
-  // One capped commission for the whole checkout, on every payment method —
-  // deliberately not per store, so it is not added to the per-store rows above.
-  // The whole object is kept (not just the two fields) because the points
-  // tender below re-allocates it per store through `allocateCheckoutFees`,
-  // which takes a `CheckoutFees` — and `totalFee` carries the
-  // `minimumTransactionFee` floor, which is exactly the field D41 found had no
-  // consumer anywhere. Destructuring it away here would be how it loses its
-  // second one.
-  const checkoutFees = computeCheckoutFees(cartSubtotal, commissions);
+  // One fee for the whole checkout, on every payment method — deliberately not
+  // per store, so it is not added to the per-store rows above. The whole object
+  // is kept (not just the two fields) because the points tender below
+  // re-allocates it per store through `allocateCheckoutFees`, which takes a
+  // `CheckoutFees` — and `totalFee` carries the `minimumTransactionFee` floor,
+  // which is exactly the field D41 found had no consumer anywhere.
+  // Destructuring it away here would be how it loses its second one.
+  //
+  // 🛑 `cartUnitCount` is summed from the SAME `orderGroups` the per-store
+  // rows above were built from, so the fee the buyer is SHOWN and the fee the
+  // order path CHARGES are derived from one `n` rather than two counts that
+  // happen to agree.
+  const previewUnitsOf = (g: { item: CartItemDocument }[]) =>
+    g.reduce((n, { item }) => n + (item.quantity ?? 0), 0);
+  const previewUnitCountByStore = new Map(
+    orderGroups.map(({ items: g }) => [g[0].item.storeId, previewUnitsOf(g)] as const),
+  );
+  const cartUnitCount = orderGroups.reduce((n, { items: g }) => n + previewUnitsOf(g), 0);
+  const checkoutFees = computeCheckoutFees(cartSubtotal, commissions, cartUnitCount);
   const { platformFee, gstOnFee } = checkoutFees;
 
   /*
@@ -3580,6 +4048,7 @@ export async function previewCheckoutPricing(
     const feeByStore = allocateCheckoutFees(
       stores.map((s) => [s.storeId, s.subtotal] as const),
       checkoutFees,
+      previewUnitCountByStore,
     );
     const { perGroup } = allocatePointsAcrossGroups(
       stores.map((s) => {
@@ -3618,6 +4087,7 @@ export async function previewCheckoutPricing(
     couponDiscount,
     platformFee,
     gstOnFee,
+    platformFeeUnitCount: checkoutFees.unitCount,
     total,
     pointsApplied,
     // Equal to `total` when no points apply, so every existing reader of
@@ -4029,7 +4499,34 @@ async function createPhonePeGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   // D44: `groupTotal` is computed just above — pass it so a free-above
   // threshold can fire and an unpriceable store is recorded.
-  const { shippingFee, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates, storeEmiEnabled } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+  const { shippingFee, shippingOffer, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates, storeEmiEnabled } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+
+  /*
+   * ── PART C ON THE ONLINE PATH, as far as it can honestly go ──────────────
+   *
+   * ⚠ GAP, STATED RATHER THAN PAPERED OVER: this path does NOT yet honour
+   * the buyer's per-store shipping option. It prices shipping from the seller's
+   * stored policy, and so does the capture route
+   * (`POST /api/payment/create-order`) and the post-capture guard — all three
+   * agree, so there is no client-trust hole here and never was; what is missing
+   * is the buyer CHOICE half of the owner's spec. Wiring it means changing the
+   * capture, the guard and this writer in one commit, because a guard expecting
+   * a differently-priced shipping term throws on an order already paid for.
+   *
+   * What CAN be recorded honestly is the obligation a seller's offer implies
+   * when it leaves no choice: a seller who offers only their own shipping is
+   * self-fulfilling whatever the buyer did or did not pick.
+   * `impliedObligation` answers `null` the moment there is a real choice, so
+   * nothing here invents a contract. Without it every online order would carry
+   * no obligation at all, and `mayBookPlatformLabel` fails OPEN on absence —
+   * i.e. the one gate part C depends on would be inert for the entire online
+   * path.
+   */
+  const gatewayGroupRequiresShipping = cartRequiresShipping(
+    group.map(({ product }) => ({ listingType: product?.listingType })),
+  );
+  const gatewayShippingObligation =
+    impliedObligation(shippingOffer, shippingFee, gatewayGroupRequiresShipping) ?? undefined;
 
   /*
    * The instalment schedule for THIS seller group, through the same helper the
@@ -4430,6 +4927,12 @@ async function createPhonePeGroupOrder(
     // leaving the refund path to re-derive it from live percentages (D32).
     platformFeeGst: platformFeeGst > 0 ? platformFeeGst : undefined,
     shippingFee: shippingFee > 0 ? shippingFee : undefined,
+    /*
+     * The obligation this seller's offer IMPLIES, when it implies one. See the
+     * block above `gatewayShippingObligation` for the gap this partially covers
+     * and why it is partial rather than invented.
+     */
+    shippingObligation: gatewayShippingObligation,
     whatsappNotifyAddon: whatsappNotifyFee > 0 ? true : undefined,
     whatsappNotifyFee: whatsappNotifyFee > 0 ? whatsappNotifyFee : undefined,
     giftWrapAddon: giftWrapFee > 0 ? true : undefined,
@@ -5027,7 +5530,24 @@ export async function verifyAndPlaceGatewayOrderAction(
     // per group — see the same note in `previewCheckoutPricing`. `totalFee`
     // carries the `minimumTransactionFee` floor, and destructuring it away is
     // how it lost every consumer once already (D41).
-    const expectedFees = computeCheckoutFees(cartSubtotalRs, commissionRates);
+    /*
+     * 🛑 `sum(item.quantity)` over the same available set the capture route
+     * priced (`POST /api/payment/create-order` sums its own `activeItems`).
+     * This guard runs AFTER the money has moved, so a count that disagreed with
+     * the capture's would make it expect a different fee and throw on a paid
+     * order — the exact post-capture-throw shape the comment above is about,
+     * which is why the multiplier has to be derived from the same collection
+     * rather than recounted from a different one.
+     */
+    const expectedUnitCount = productChecks.reduce(
+      (n, { item }) => n + (item.quantity ?? 0),
+      0,
+    );
+    const expectedFees = computeCheckoutFees(
+      cartSubtotalRs,
+      commissionRates,
+      expectedUnitCount,
+    );
     const { platformFee: expectedPlatformFee, gstOnFee: expectedGstOnFee } = expectedFees;
     // Same per-seller-group shipping sum /api/payment/create-order charged
     // upfront (and the same resolveShippingCost createPhonePeGroupOrder
@@ -5193,7 +5713,23 @@ export async function verifyAndPlaceGatewayOrderAction(
               g.items.reduce((gs, { item, product }) => gs + lineTotalFor(item, product), 0),
             ] as const,
         );
-        const guardFeeByGroup = allocateCheckoutFees(guardSubtotals, expectedFees);
+        // By UNIT COUNT, matching the capture route and both order paths — the
+        // apportionment weight had to change with the fee model, and a guard
+        // weighting it differently would expect a different per-group share.
+        const guardUnitCounts = new Map(
+          expectedShippingGroups.map(
+            (g) =>
+              [
+                g.items[0].item.storeId,
+                g.items.reduce((n, { item }) => n + (item.quantity ?? 0), 0),
+              ] as const,
+          ),
+        );
+        const guardFeeByGroup = allocateCheckoutFees(
+          guardSubtotals,
+          expectedFees,
+          guardUnitCounts,
+        );
         const guardCouponByGroup = computeCartCouponDiscount(
           cart.appliedCoupons ?? [],
           expectedShippingGroups.map((g) => ({
@@ -5359,13 +5895,24 @@ export async function verifyAndPlaceGatewayOrderAction(
 
   const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
 
-  // Same single capped commission + pro-rata split as the COD/UPI path.
+  // Same ₹-per-listing-unit fee + by-unit-count split as the COD/UPI path.
+  const gatewayUnitsOf = (g: { item: CartItemDocument }[]) =>
+    g.reduce((n, { item }) => n + (item.quantity ?? 0), 0);
+  const gatewayUnitCountByStore = new Map(
+    orderGroups.map(({ items: g }) => [g[0].item.storeId, gatewayUnitsOf(g)] as const),
+  );
+  const gatewayCartUnitCount = orderGroups.reduce((n, { items: g }) => n + gatewayUnitsOf(g), 0);
   const platformFeeByStore = allocateCheckoutFees(
     orderGroups.map(({ items: g }) => [
       g[0].item.storeId,
       g.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0),
     ] as const),
-    computeCheckoutFees(cartSubtotal, siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS),
+    computeCheckoutFees(
+      cartSubtotal,
+      siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
+      gatewayCartUnitCount,
+    ),
+    gatewayUnitCountByStore,
   );
 
   /*

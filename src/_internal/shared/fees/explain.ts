@@ -34,6 +34,7 @@
 import type { BuyerEmiSettings, BuyerFacingFees } from "../features/site-settings/fees";
 import type { BuyerEmiQuote } from "../features/emi/schedule";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT } from "./calculator";
 
 /** One rendered explanation: a short claim plus the steps behind it. */
 export interface FeeDerivation {
@@ -49,29 +50,41 @@ function pct(value: number): string {
 }
 
 /**
- * The platform commission.
+ * The platform fee — ₹10 per listing unit, times n.
  *
- * The cap is the interesting half and the reason this needed explaining at
- * all: on a ₹39,500 order the uncapped commission is large and the charge is
- * ₹10, so the number on screen bears no visible relation to the subtotal.
+ * 🛑 REWRITTEN 2026-11-08 with the model it explains. It described a percentage
+ * of the subtotal capped at ₹10, and `computeCheckoutFees` no longer charges
+ * that: the fee is now `perListingUnit × unitCount`. Leaving the prose behind
+ * would have been the precise defect this module's own header warns about — "a
+ * second, prose implementation of the same rule, free to drift" — except worse,
+ * because the drifted version would have been shown to the person paying.
+ *
+ * The derivation is now checkable in one line: count the items, multiply by the
+ * stated rate. That is the whole reason the per-unit model is easier to show
+ * honestly than the capped percentage ever was.
  */
 export function explainPlatformFee(
-  subtotal: number,
+  unitCount: number,
   charged: number,
   fees: BuyerFacingFees | null,
   currency = "INR",
 ): FeeDerivation | null {
-  if (!fees || fees.platformFeePercent === undefined) return null;
+  if (!fees) return null;
   const money = (v: number) => formatCurrency(v, currency);
+  /*
+   * The same fallback `computeCheckoutFees` applies, for the same reason: a
+   * live `siteSettings` document predating the field would otherwise make this
+   * return null and the buyer would be back to an unexplained number.
+   */
+  const perUnit = fees.platformFeePerListingUnit ?? DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT;
+  const units = Math.max(0, Math.floor(unitCount));
+  const base = perUnit * units;
 
-  const uncapped = (subtotal * fees.platformFeePercent) / 100;
   const steps: string[] = [
-    `${pct(fees.platformFeePercent)} of ${money(subtotal)} = ${money(uncapped)}`,
+    units === 1
+      ? `${money(perUnit)} for 1 item = ${money(base)}`
+      : `${money(perUnit)} × ${units} items = ${money(base)}`,
   ];
-
-  if (fees.platformFeeMax !== undefined && uncapped > fees.platformFeeMax) {
-    steps.push(`Capped at ${money(fees.platformFeeMax)} — you pay the cap, not the percentage`);
-  }
 
   /*
    * The floor is defined on `platformFee + gstOnFee` COMBINED and is applied
@@ -79,19 +92,16 @@ export function explainPlatformFee(
    * its own. So it is mentioned here and never on the GST line — see the D41
    * note in `calculator.ts`.
    */
-  if (fees.minimumTransactionFee !== undefined && charged > Math.min(uncapped, fees.platformFeeMax ?? uncapped)) {
+  if (fees.minimumTransactionFee !== undefined && charged > base) {
     steps.push(
-      `Raised to meet the ${money(fees.minimumTransactionFee)} minimum transaction fee, which covers the commission and its GST together`,
+      `Raised to meet the ${money(fees.minimumTransactionFee)} minimum transaction fee, which covers the fee and its GST together`,
     );
   }
 
   steps.push(`You pay ${money(charged)}`);
 
   return {
-    summary:
-      fees.platformFeeMax !== undefined && uncapped > fees.platformFeeMax
-        ? `Our commission is ${pct(fees.platformFeePercent)}, capped at ${money(fees.platformFeeMax)} per order.`
-        : `Our commission is ${pct(fees.platformFeePercent)} of the order.`,
+    summary: `Our platform fee is ${money(perUnit)} per item — three of the same bey is three items.`,
     steps,
   };
 }

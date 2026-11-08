@@ -18,6 +18,8 @@ import type {
   SelectedShippingQuote,
   ShippingReconciliation,
 } from "../../../_internal/shared/shipping/quote";
+/* The buyer's chosen shipping method and the seller's resulting obligation. */
+import type { ShippingObligation } from "../../../_internal/shared/features/shipping/offer";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
 // ── Acquisition provenance ────────────────────────────────────────────────
@@ -1211,6 +1213,34 @@ export interface OrderDocument extends BaseDocument {
    * was taken", never as zero.
    */
   selectedShippingQuote?: SelectedShippingQuote;
+  /**
+   * WHICH SHIPPING METHOD THE BUYER BOUGHT, and therefore what the seller owes.
+   *
+   * Owner, 2026-11-08: *"if they have selected that, then it is up to the
+   * seller to fulfil as is, they cannot use the platform to ship for the other,
+   * as we have already taken money from the customer. If however they need to
+   * override it, they can refund the excess if any, and in case if they needed
+   * to pay more for their custom shipping than what the buyer paid they have to
+   * swallow that money as a loss."*
+   *
+   * 🛑 Distinct from `selectedShippingQuote` above, which exists only when a
+   * CARRIER quoted the parcel. This exists whenever shipping was charged at
+   * all, including when the buyer bought the seller's own ₹200 rate — and that
+   * case is precisely the one with a fulfilment obligation attached, so it
+   * cannot be recorded in a field whose shape presumes a courier.
+   *
+   * 🛑 Written at checkout, never recomputed, because the decision is made at
+   * checkout and the rule is broken at pack time — days later, by a different
+   * person, on a different screen. `mayBookPlatformLabel(order)` is the gate
+   * that reads it. Absence means the order predates this field and fails open;
+   * see that function's note for why, and for the identical hazard
+   * `isReimbursableShipment` carries.
+   *
+   * 🛑 Absent on a group that was charged ₹0 shipping (a later group in a
+   * multi-seller cart, or a cart with no shippable line) — an obligation
+   * without a payment behind it would bind a seller to a price nobody paid.
+   */
+  shippingObligation?: ShippingObligation;
   /**
    * What the seller actually spent on postage, recorded at dispatch.
    *
