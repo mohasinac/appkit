@@ -54,6 +54,18 @@ export function isPayoutsTabId(value: string | null | undefined): value is Payou
 
 /** Shipping defaults, plus the reusable named presets built on top of them. */
 export const SHIPPING_TABS = [
+  /*
+   * 🛑 FIRST, and deliberately ahead of "Rates & zones". This is the tab that
+   * writes `StoreDocument.shippingPricing` — the field the CHECKOUT reads to
+   * decide what a buyer is charged. "Rates & zones" writes
+   * `sellerProfiles.shippingConfig`, the legacy flat number `mode.ts` calls an
+   * accident, which the money path consults only as a fallback for a store
+   * that has never saved a real policy.
+   *
+   * Ordering is the only signal a seller gets about which of the two actually
+   * governs their money, so the governing one is where their eye lands.
+   */
+  { id: "options", label: "Shipping options", description: "Which methods you offer, and what your own shipping costs." },
   { id: "rates", label: "Rates & zones", description: "What you charge to ship, and where you ship to." },
   { id: "configs", label: "Named configs", description: "Named shipping rules you can reuse per listing." },
 ] as const satisfies readonly StoreDashboardTab[];

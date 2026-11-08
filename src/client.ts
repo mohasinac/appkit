@@ -874,6 +874,10 @@ export { SellerDashboardView as StoreDashboardView, SellerDashboardView, useSell
 export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboardViewProps } from "./features/seller/components/SellerDashboardView";
 export { SellerPayoutSettingsView } from "./features/seller/components/SellerPayoutSettingsView";
 export { SellerShippingView } from "./features/seller/components/SellerShippingView";
+// The seller's two-axis shipping OFFER (owner, 2026-11-08) — the surface that
+// writes `StoreDocument.shippingPricing`, which is the field checkout READS.
+export { SellerShippingOfferView } from "./features/seller/components/SellerShippingOfferView";
+export type { SellerShippingOfferViewProps } from "./features/seller/components/SellerShippingOfferView";
 export { SellerReviewsView } from "./features/seller/components/SellerReviewsView";
 export { SellerPayoutRequestView } from "./features/seller/components/SellerPayoutRequestView";
 export { SellerAnalyticsStats } from "./features/seller/components/analytics/SellerAnalyticsStats";

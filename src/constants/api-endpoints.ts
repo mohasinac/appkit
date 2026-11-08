@@ -841,6 +841,10 @@ export const SELLER_ENDPOINTS = {
   REVIEW_CONTEST: (id: string) => `/api/store/reviews/${id}/contest`,
   REVIEW_FEEDBACK: (id: string) => `/api/store/reviews/${id}/feedback`,
   SHIPPING: "/api/store/shipping",
+  /* The seller's two-axis shipping OFFER — writes `StoreDocument.shippingPricing`,
+   * which is the field the checkout money path reads. `SHIPPING` above writes
+   * the legacy flat number on the seller profile. */
+  SHIPPING_OFFER: "/api/store/shipping-offer",
   STORE: "/api/store/storefront",
   STORE_ADDRESSES: "/api/store/addresses",
   STORE_ADDRESS_BY_ID: (id: string) => `/api/store/addresses/${id}`,

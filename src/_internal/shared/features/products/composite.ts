@@ -26,7 +26,10 @@
  *
  * 🛑 A COMPOSITE IS NOT A LISTING TYPE. `"bundle"` left the `ListingType` union
  * in SB-UNI-D and became a category type; appkit `c0f21425f` removed the last
- * dead `listingType === "bundle"` branch. Compositeness is a property of a
+ * dead branch that compared a listing type against it (the comparison is spelled
+ * out in that commit, not here — a grep for the pattern is the rework's
+ * acceptance test and a comment must not add a false positive to it).
+ * Compositeness is a property of a
  * LISTING, declared in its own data, so any type can be composite and enabling
  * it is a data change. Nothing here compares a listing type to a string, and
  * nothing that calls it should either.

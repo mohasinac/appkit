@@ -8050,6 +8050,10 @@ export { SellerRevenueChart } from "./features/seller/components/analytics/Selle
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerShippingView - Component for seller shipping view.
 export { SellerShippingView } from "./features/seller/components/SellerShippingView";
+// The seller's two-axis shipping OFFER (owner, 2026-11-08) — the surface that
+// writes `StoreDocument.shippingPricing`, which is the field checkout READS.
+export { SellerShippingOfferView } from "./features/seller/components/SellerShippingOfferView";
+export type { SellerShippingOfferViewProps } from "./features/seller/components/SellerShippingOfferView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerStoreSetupView - Component for seller store setup view.
 export { SellerStoreSetupView } from "./features/seller/components/SellerStoreSetupView";
