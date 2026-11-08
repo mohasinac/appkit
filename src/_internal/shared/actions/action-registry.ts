@@ -1690,15 +1690,15 @@ export const ACTIONS: ActionTree = {
     "draw-raffle-winner": {
       iconKey: "verify",
       id: "event.draw-raffle-winner",
-      label: "Draw raffle winner",
+      label: "Draw giveaway winner",
       ariaLabel: "Pick a random winner from the approved entries",
       description:
         "Picks one winner at random from this event's approved entries, records them on the event, and notifies them.",
       kind: "danger",
       roles: ["admin"],
       confirmation: {
-        title: "Draw the raffle winner?",
-        body: "One winner will be picked at random from the approved entries, announced on the event page, and notified. A raffle can only be drawn once — this action cannot be undone.",
+        title: "Draw the giveaway winner?",
+        body: "One winner will be picked at random from the approved entries, announced on the event page, and notified. A giveaway can only be drawn once — this action cannot be undone.",
         confirmLabel: "Yes, draw the winner",
         confirmKind: "danger",
       },

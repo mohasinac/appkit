@@ -128,7 +128,7 @@ export const EVENT_TYPE_META: Record<EventType, EventTypeMeta> = {
  * 🛑 Resolves through `normalizeEventType`, so a document still holding
  * `raffle` / `spin_wheel` / `giveaway` renders its real chip rather than the
  * neutral fallback. Without that, every pre-migration event on the site would
- * silently drop to a grey "Raffle" pill — present, plausible, and wrong.
+ * silently drop to a grey "Giveaway" pill — present, plausible, and wrong.
  */
 export function eventTypeMeta(type: string | undefined): EventTypeMeta {
   const canonical = normalizeEventType(type);

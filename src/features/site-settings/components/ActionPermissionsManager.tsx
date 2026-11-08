@@ -75,7 +75,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   // 🛑 These keys are the VALUES of CATEGORY_LABELS above, not action ids —
   // they must be renamed in lockstep or the group falls through to the grey
   // "Account" colour with no error (Root Cause #33). "Prize Draw" and
-  // "Raffle" were left here when the labels became "Clearance"/"Giveaway".
+  // "Giveaway" were left here when the labels became "Clearance"/"Giveaway".
   "Clearance": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Giveaway": "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning",
   "Moderation": "bg-error-surface text-error dark:bg-error-surface dark:text-error",

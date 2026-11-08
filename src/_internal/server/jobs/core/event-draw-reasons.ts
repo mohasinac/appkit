@@ -33,7 +33,7 @@
  *    `if (data.reason && !data.<successField>)`, so a core branch that returned
  *    early *without* a `reason` fell through to `successResponse`.
  *    `triggerEventRaffle`'s feature-flag branch did exactly that and answered
- *    `200 "Raffle triggered"` with no winner. Every non-success branch in either
+ *    `200 "Giveaway triggered"` with no winner. Every non-success branch in either
  *    core must set a reason from this map.
  *
  * There is deliberately NO fallback entry here: `reasonToHttp` is exhaustive
@@ -121,12 +121,12 @@ const MAPPING: Record<EventDrawReason, EventDrawHttpMapping> = {
   [EVENT_DRAW_REASON.NOT_A_RAFFLE]: {
     status: 422,
     code: EVENT_DRAW_ERROR_CODES.RAFFLE_NOT_A_RAFFLE,
-    message: "This event does not have a raffle",
+    message: "This event does not have a giveaway",
   },
   [EVENT_DRAW_REASON.ALREADY_TRIGGERED]: {
     status: 409,
     code: EVENT_DRAW_ERROR_CODES.RAFFLE_ALREADY_DRAWN,
-    message: "A winner has already been drawn for this raffle",
+    message: "A winner has already been drawn for this giveaway",
   },
   [EVENT_DRAW_REASON.NO_ELIGIBLE_ENTRIES]: {
     status: 409,

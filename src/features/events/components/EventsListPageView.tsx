@@ -97,7 +97,7 @@ export async function EventsListPageView({ searchParams = {}, pageRegionCards = 
             className="mb-8"
             pill="Events & Offers"
             title="Events"
-            description="Sales, spin wheels, raffles and polls — everything running right now, and what is opening next."
+            description="Sales, spin wheels, giveaways and polls — everything running right now, and what is opening next."
             meta={publicResult?.total ? `${publicResult.total} running` : undefined}
           />
           <AdSlot id="listing-sidebar-top" className="mb-6" />

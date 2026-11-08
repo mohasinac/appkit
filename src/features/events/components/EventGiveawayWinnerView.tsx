@@ -54,12 +54,12 @@ const CLS_LABEL = "text-[length:var(--appkit-text-xs)] uppercase tracking-wide t
 const CLS_WINNER_NAME = "mt-1 text-[length:var(--appkit-text-2xl)] font-bold text-warning dark:text-warning";
 
 const DEFAULT_LABELS: Required<NonNullable<EventGiveawayWinnerViewProps["labels"]>> = {
-  heading: "Raffle Winner",
+  heading: "Giveaway Winner",
   winnerLabel: "Winner",
   prizeLabel: "Prize",
   poolLabel: "Entries in pool",
   fairnessLabel: "Verifiable randomness",
-  notDrawnYet: "The raffle has not been drawn yet.",
+  notDrawnYet: "The giveaway has not been drawn yet.",
   anonymous: "Anonymous participant",
 };
 

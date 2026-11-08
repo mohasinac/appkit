@@ -106,7 +106,7 @@ export const listingProcessor = defineFunction({
 
 export const triggerEventRaffle = defineFunction({
   name: "triggerEventRaffle",
-  description: "Admin-triggered raffle winner draw with crypto.randomInt.",
+  description: "Admin-triggered giveaway winner draw with crypto.randomInt.",
   trigger: { kind: "https" },
   handler: triggerEventRaffleHandler,
   options: {

@@ -43,7 +43,7 @@ const EVENT_TYPE_BONUS_SPIN = EVENT_FIELDS.TYPE_VALUES.BONUS_SPIN;
  * So this did not return zero rows and it did not disappear. It ran
  * `status == active` sorted `-startsAt` and rendered **the six most
  * recently-started active events of ANY type** — sales, polls, feedback forms —
- * under a heading reading "Live Raffles & Spin Wheels". Every card was a real,
+ * under a heading reading "Live Giveaways & Spin Wheels". Every card was a real,
  * live event, which is exactly why it never looked broken.
  *
  * ## Why `type`, and why one query
@@ -76,7 +76,7 @@ const EVENT_TYPE_BONUS_SPIN = EVENT_FIELDS.TYPE_VALUES.BONUS_SPIN;
 export async function EventGiveawaysSection({
   config,
 }: EventGiveawaysSectionProps) {
-  const title = config.title ?? "Live Raffles & Spin Wheels";
+  const title = config.title ?? "Live Giveaways & Spin Wheels";
   const subtitle =
     config.subtitle ?? "Participate in community events and win prizes";
   // `maxItems` was declared in the config, set by the seed, and ignored here in

@@ -225,6 +225,25 @@ export interface EventDocument extends BaseDocument {
   pollConfig?: PollConfig;
   surveyConfig?: SurveyConfig;
   feedbackConfig?: FeedbackConfig;
+  /*
+   * 🛑 BOUNDARY OF THE GIVEAWAY RENAME — stored FIELD names, left as-is.
+   *
+   * Every user-visible "raffle" string became "giveaway" on 2026-11-08. These
+   * did not, and the reason is specific: they are field names on live event
+   * documents AND there are query builders on them a few hundred lines below
+   * (`withRaffle`, `raffleNotYetDrawn`). Renaming a field means every existing
+   * document reads `undefined`, and renaming a QUERIED field additionally means
+   * new Firestore composite indexes — so this is a migration, not an edit.
+   *
+   * The migration, when it is scheduled (plan §A19q): add the new field, write
+   * both, backfill, switch reads, add the new indexes, drop the old field. Note
+   * that `appkit-seed load` uses `set({merge:true})` and therefore CANNOT remove
+   * a field from a live document — the drop step needs its own deliberate pass,
+   * which is the same trap the deprecated coupon field below already documents.
+   *
+   * Until then: the vocabulary is correct everywhere a user, reviewer or
+   * regulator can see it, and wrong only where Firestore can see it.
+   */
   hasRaffle?: boolean;
   raffleType?: RaffleType;
   raffleTopN?: number;

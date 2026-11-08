@@ -29,7 +29,7 @@ export function buildEventEntryDetailFields(entry: EventEntryItem): EntryFieldRo
     { label: "Email", value: entry.userEmail ?? "—" },
     { label: "Review status", value: entry.reviewStatus },
     { label: "Points", value: entry.points != null ? String(entry.points) : "—" },
-    { label: "Raffle eligible", value: entry.raffleEligible ? "Yes" : "No" },
+    { label: "Giveaway eligible", value: entry.raffleEligible ? "Yes" : "No" },
     { label: "Poll votes", value: entry.pollVotes?.join(", ") || "—" },
     { label: "Reviewed by", value: entry.reviewedBy ?? "—" },
     { label: "Review note", value: entry.reviewNote ?? "—" },

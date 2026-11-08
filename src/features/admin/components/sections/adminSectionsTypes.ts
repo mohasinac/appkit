@@ -766,7 +766,7 @@ export const DEFAULT_CLEARANCE_BUILDER: ClearanceBuilderState = {
 };
 
 export const DEFAULT_EVENT_RAFFLES_BUILDER: EventRafflesBuilderState = {
-  title: "Live Raffles & Spin Wheels",
+  title: "Live Giveaways & Spin Wheels",
   subtitle: "Participate in community events and win prizes",
   maxItems: 4,
   raffleType: "all",

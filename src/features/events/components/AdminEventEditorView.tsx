@@ -1093,7 +1093,7 @@ export function AdminEventEditorView({
                 <Grid cols={2} gap="sm">
                   <Select label="Draw mechanism"
                   error={errors.raffleType} value={values.type === "bonus-spin" ? "spin_wheel" : values.raffleType} options={RAFFLE_TYPE_OPTIONS} onChange={(e) => onChange({ raffleType: e.target.value as RaffleType })} disabled={values.type === "bonus-spin"} />
-                  <Input label="Top N (for top-N raffle types)"
+                  <Input label="Top N (for top-N giveaway types)"
                   error={errors.raffleTopN} type="number" value={values.raffleTopN} onChange={(e) => onChange({ raffleTopN: e.target.value })} placeholder="10" />
                 </Grid>
                 <Input label="Prize description"
@@ -1131,7 +1131,7 @@ export function AdminEventEditorView({
                   <Stack gap="xs" rounded="lg" padding="sm" className={CLS_RAFFLE_PANEL}>
                     <Row justify="between" gap="sm">
                       <Text size="sm" weight="medium" className={CLS_RAFFLE_HEADING}>
-                        {raffleWinnerName ? `Winner: ${raffleWinnerName}` : "Raffle not yet triggered"}
+                        {raffleWinnerName ? `Winner: ${raffleWinnerName}` : "Giveaway not yet triggered"}
                       </Text>
                       {/*
                         * `action=` is what gates this behind a confirmation

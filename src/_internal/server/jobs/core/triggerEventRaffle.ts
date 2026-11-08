@@ -32,7 +32,7 @@
  * 2026-10-19 — see the header of `assignSpinPrize.ts`. Its branch here was the
  * second-worst shaped of the nine: it returned early with **no `reason`**, and
  * the route decides success by `if (data.reason && !data.raffleWinnerUserId)`,
- * so a disabled feature answered `200 "Raffle triggered"` with no winner.
+ * so a disabled feature answered `200 "Giveaway triggered"` with no winner.
  */
 
 import crypto from "node:crypto";
@@ -255,7 +255,7 @@ export async function runTriggerEventRaffle(
          * winner the other prizes, and must not cost them the win at all.
          * Warned rather than thrown for exactly that reason.
          */
-        ctx.logger.warn("Raffle prize couponId does not resolve to a coupon", {
+        ctx.logger.warn("Giveaway prize couponId does not resolve to a coupon", {
           eventId,
           couponId: snap.id,
         });
@@ -331,7 +331,7 @@ export async function runTriggerEventRaffle(
     };
   }
 
-  ctx.logger.info("Event raffle triggered", {
+  ctx.logger.info("Event giveaway triggered", {
     eventId,
     raffleType,
     poolSize: pool.length,
@@ -351,7 +351,7 @@ export async function runTriggerEventRaffle(
         userId: drawn.userId,
         type: "prize_won",
         priority: "high",
-        title: "You won the raffle!",
+        title: "You won the giveaway!",
         message: rafflePrizeCouponCode
           ? `You've been drawn as the winner. Your prize coupon code is ${rafflePrizeCouponCode}.`
           : "You've been drawn as the winner — open the event to see your prize.",
@@ -360,7 +360,7 @@ export async function runTriggerEventRaffle(
       });
     } catch (err) {
       void normalizeError(err);
-      ctx.logger.warn("Raffle winner notification failed", {
+      ctx.logger.warn("Giveaway winner notification failed", {
         eventId,
         err: err instanceof Error ? err.message : String(err),
       });

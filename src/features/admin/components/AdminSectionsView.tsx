@@ -2115,7 +2115,7 @@ function SectionEditorPanel({
           label="Section title"
           value={eventRafflesBuilder.title}
           onChange={(e) => setEventRafflesBuilder((prev) => ({ ...prev, title: e.target.value }))}
-          placeholder="Live Raffles & Spin Wheels"
+          placeholder="Live Giveaways & Spin Wheels"
         />
         <Input
           label="Subtitle"

@@ -108,7 +108,7 @@ export function EventGiveawayEntryForm({
             disabled={busy}
           />
           <Button type="submit" variant="primary" disabled={busy}>
-            {busy ? "Submitting…" : "Enter raffle"}
+            {busy ? "Submitting…" : "Enter giveaway"}
           </Button>
         </Form>
       )}
