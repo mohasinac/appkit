@@ -1198,11 +1198,16 @@ export {
 // [SERVER-ONLY] Shared fee calculator — platform/gateway/GST/COD handling/WhatsApp-addon fee math.
 export {
   computeCheckoutFees,
-  // The ₹-per-listing-UNIT rate the buyer-facing fee falls back to when
-  // `siteSettings.commissions` predates the field (owner, 2026-11-08).
-  // Exported so a consumer explaining the charge resolves the SAME number the
-  // charge was computed from rather than printing its own guess.
+  // The platform-fee volume taper and its hard floor, plus the one rate
+  // resolver — exported so a consumer explaining or previewing the charge
+  // resolves the SAME numbers the charge was computed from rather than
+  // re-implementing the band lookup (owner, 2026-11-08).
+  DEFAULT_PLATFORM_FEE_UNIT_BANDS,
+  DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR,
   DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT,
+  resolvePlatformFeeUnitRate,
+  type PlatformFeeUnitBand,
+  type PlatformFeeLine,
   allocateCheckoutFees,
   computePayoutDeduction,
   computeCodHandlingFee,

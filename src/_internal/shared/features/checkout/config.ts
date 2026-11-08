@@ -1,3 +1,8 @@
+import {
+  DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR,
+  DEFAULT_PLATFORM_FEE_UNIT_BANDS,
+} from "../../fees/calculator";
+
 export const CHECKOUT_DEFAULT_COMMISSIONS = {
   // Platform-commission rates. Previously absent here because no checkout path
   // computed a buyer-facing platform fee — the moment one did, a siteSettings
@@ -15,11 +20,20 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
    * percentage, which was never the same number.
    */
   platformFeeMax: 10,
-  /**
-   * ₹10 per listing UNIT, plus `gstPercent` on the fee. Owner, 2026-11-08 —
-   * a single line with quantity 3 is ₹30, confirmed directly.
+  /*
+   * The buyer-facing platform fee: a TAPERED per-unit rate with a hard floor,
+   * plus `gstPercent` on the fee. Owner, 2026-11-08 — a single line with
+   * quantity 3 is ₹30, and *"if you buy more the fees reduces as you go up,
+   * but never less than 5 rs"*. A composite listing is ONE unit (the BX-53
+   * ruling), so the count is `item.quantity`, never its component count.
+   *
+   * 🛑 Mirrors `DEFAULT_PLATFORM_FEE_UNIT_BANDS` / `_PER_UNIT_FLOOR` rather
+   * than restating them: this object is only reached when the settings read
+   * FAILS, and a fallback that disagreed with the live default would make an
+   * outage silently re-price every cart.
    */
-  platformFeePerListingUnit: 10,
+  platformFeeUnitBands: DEFAULT_PLATFORM_FEE_UNIT_BANDS,
+  platformFeePerUnitFloor: DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR,
   codDepositPercent: 10,
   codHandlingFeeCap: 200,
   codHandlingFeePercent: 10,

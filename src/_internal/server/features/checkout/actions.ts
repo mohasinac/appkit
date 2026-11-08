@@ -3157,31 +3157,34 @@ export async function createCheckoutOrderAction(
   const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
 
   /*
-   * ₹10 per listing UNIT × n, plus GST, apportioned BY UNIT COUNT across the
-   * orders this cart splits into — owner, 2026-11-08, who confirmed directly
-   * that one line with quantity 3 is ₹30. See `computeCheckoutFees` for the
-   * conflict with `mocks/18-shipping-fees.qm` (which draws per-LINE) and
-   * `allocateCheckoutFees` for why the apportionment weight had to change with
-   * the model.
-   *
-   * 🛑 `item.quantity`, the BUYER-VISIBLE count — never
-   * `expandCartLineToOrderRows`'s output, which fans a composed listing out
-   * into a row per member and would charge ₹30 for one three-part bey bought
-   * once.
+   * The buyer-facing platform fee: a TAPERED per-unit rate, summed per cart
+   * line, then GST. See `DEFAULT_PLATFORM_FEE_UNIT_BANDS` for the owner's three
+   * rulings and for the delta against `mocks/18-shipping-fees.qm`, which still
+   * draws a flat ₹10 per LINE.
    */
-  const unitsOf = (g: { item: CartItemDocument }[]) =>
-    g.reduce((n, { item }) => n + (item.quantity ?? 0), 0);
-  const unitCountByStore = new Map(
-    orderGroups.map(({ items: g }) => [g[0].item.storeId, unitsOf(g)] as const),
+  /*
+   * 🛑 `item.quantity` PER LINE, as an array — never a flattened total and
+   * never `expandCartLineToOrderRows`'s output.
+   *
+   * Per line because the taper bands per line: 8 units as two lines of 4 bills
+   * at ₹10 each (₹80); as one line of 8 it bills at ₹8 (₹64). Never the
+   * expansion because a BX-53 deck set is ONE listing purchased — ₹10, not ₹60
+   * — however many components the box holds (owner, 2026-11-08).
+   */
+  const lineUnitsOf = (g: { item: CartItemDocument }[]) =>
+    g.map(({ item }) => item.quantity ?? 0);
+  const lineUnitsByStore = new Map(
+    orderGroups.map(({ items: g }) => [g[0].item.storeId, lineUnitsOf(g)] as const),
   );
-  const cartUnitCount = orderGroups.reduce((n, { items: g }) => n + unitsOf(g), 0);
+  const cartLineUnits = orderGroups.flatMap(({ items: g }) => lineUnitsOf(g));
   const platformFeeByStore = allocateCheckoutFees(
     orderGroups.map(({ items: g }) => [
       g[0].item.storeId,
       g.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0),
     ] as const),
-    computeCheckoutFees(cartSubtotal, commissions, cartUnitCount),
-    unitCountByStore,
+    computeCheckoutFees(cartSubtotal, commissions, cartLineUnits),
+    lineUnitsByStore,
+    commissions,
   );
 
   /*
@@ -3480,21 +3483,26 @@ export interface CheckoutPricingPreview {
   emiDeferred: number;
   gstAmount: number;
   couponDiscount: number;
-  /** Buyer-facing platform fee — `₹perListingUnit × platformFeeUnitCount`. */
+  /** Buyer-facing platform fee — `Σ over lines ( taperedRate(units) × units )`. */
   platformFee: number;
   /** GST on the platform fee. */
   gstOnFee: number;
   /**
-   * The `n` the platform fee was computed from — UNITS, i.e. `sum(quantity)`.
-   *
-   * 🛑 Returned rather than left to the client to recount.
-   * `explainPlatformFee` prints "₹10 × 3 items = ₹30" beside the charge, and a
-   * browser counting its own cart rows would be a second implementation of the
-   * multiplier, free to disagree with the one that produced the money (Root
-   * Cause #75) — and free to disagree in the LINE-vs-UNIT direction
-   * specifically, which is the one the mock and the owner already disagree on.
+   * Total units the fee was computed from — `Σ item.quantity`, where a
+   * composite listing counts ONCE however many components it contains.
    */
   platformFeeUnitCount: number;
+  /**
+   * The per-line derivation of the fee, so the Order Summary can explain a
+   * TAPERED charge the buyer can actually check.
+   *
+   * 🛑 Returned rather than left to the client to re-derive. With a volume
+   * taper the fee is no longer "count × one rate", so a browser recomputing it
+   * would have to re-implement the band lookup — a second implementation of a
+   * money rule (Root Cause #75) in the least trustworthy place, and free to
+   * disagree in exactly the per-line-vs-per-order direction the bands turn on.
+   */
+  platformFeeLines: { units: number; ratePerUnit: number; amount: number }[];
   /**
    * S5a — handling plus extra shipping legs, across every store in the cart.
    *
@@ -3559,6 +3567,7 @@ const EMPTY_PRICING_PREVIEW: CheckoutPricingPreview = {
   platformFee: 0,
   gstOnFee: 0,
   platformFeeUnitCount: 0,
+  platformFeeLines: [],
   sharedPurchaseFee: 0,
   total: 0,
   pointsApplied: 0,
@@ -3969,17 +3978,18 @@ export async function previewCheckoutPricing(
   // which is exactly the field D41 found had no consumer anywhere.
   // Destructuring it away here would be how it loses its second one.
   //
-  // 🛑 `cartUnitCount` is summed from the SAME `orderGroups` the per-store
+  // 🛑 `cartLineUnits` is built from the SAME `orderGroups` the per-store
   // rows above were built from, so the fee the buyer is SHOWN and the fee the
-  // order path CHARGES are derived from one `n` rather than two counts that
-  // happen to agree.
-  const previewUnitsOf = (g: { item: CartItemDocument }[]) =>
-    g.reduce((n, { item }) => n + (item.quantity ?? 0), 0);
-  const previewUnitCountByStore = new Map(
-    orderGroups.map(({ items: g }) => [g[0].item.storeId, previewUnitsOf(g)] as const),
+  // order path CHARGES are derived from one line set rather than two that
+  // happen to agree — and under a per-line taper the SHAPE of that set changes
+  // the answer, not just its sum.
+  const previewLineUnitsOf = (g: { item: CartItemDocument }[]) =>
+    g.map(({ item }) => item.quantity ?? 0);
+  const previewLineUnitsByStore = new Map(
+    orderGroups.map(({ items: g }) => [g[0].item.storeId, previewLineUnitsOf(g)] as const),
   );
-  const cartUnitCount = orderGroups.reduce((n, { items: g }) => n + previewUnitsOf(g), 0);
-  const checkoutFees = computeCheckoutFees(cartSubtotal, commissions, cartUnitCount);
+  const cartLineUnits = orderGroups.flatMap(({ items: g }) => previewLineUnitsOf(g));
+  const checkoutFees = computeCheckoutFees(cartSubtotal, commissions, cartLineUnits);
   const { platformFee, gstOnFee } = checkoutFees;
 
   /*
@@ -4048,7 +4058,8 @@ export async function previewCheckoutPricing(
     const feeByStore = allocateCheckoutFees(
       stores.map((s) => [s.storeId, s.subtotal] as const),
       checkoutFees,
-      previewUnitCountByStore,
+      previewLineUnitsByStore,
+      commissions,
     );
     const { perGroup } = allocatePointsAcrossGroups(
       stores.map((s) => {
@@ -4088,6 +4099,7 @@ export async function previewCheckoutPricing(
     platformFee,
     gstOnFee,
     platformFeeUnitCount: checkoutFees.unitCount,
+    platformFeeLines: checkoutFees.lines,
     total,
     pointsApplied,
     // Equal to `total` when no points apply, so every existing reader of
@@ -5539,14 +5551,11 @@ export async function verifyAndPlaceGatewayOrderAction(
      * which is why the multiplier has to be derived from the same collection
      * rather than recounted from a different one.
      */
-    const expectedUnitCount = productChecks.reduce(
-      (n, { item }) => n + (item.quantity ?? 0),
-      0,
-    );
+    const expectedLineUnits = productChecks.map(({ item }) => item.quantity ?? 0);
     const expectedFees = computeCheckoutFees(
       cartSubtotalRs,
       commissionRates,
-      expectedUnitCount,
+      expectedLineUnits,
     );
     const { platformFee: expectedPlatformFee, gstOnFee: expectedGstOnFee } = expectedFees;
     // Same per-seller-group shipping sum /api/payment/create-order charged
@@ -5716,19 +5725,16 @@ export async function verifyAndPlaceGatewayOrderAction(
         // By UNIT COUNT, matching the capture route and both order paths — the
         // apportionment weight had to change with the fee model, and a guard
         // weighting it differently would expect a different per-group share.
-        const guardUnitCounts = new Map(
+        const guardLineUnits = new Map(
           expectedShippingGroups.map(
-            (g) =>
-              [
-                g.items[0].item.storeId,
-                g.items.reduce((n, { item }) => n + (item.quantity ?? 0), 0),
-              ] as const,
+            (g) => [g.items[0].item.storeId, g.items.map(({ item }) => item.quantity ?? 0)] as const,
           ),
         );
         const guardFeeByGroup = allocateCheckoutFees(
           guardSubtotals,
           expectedFees,
-          guardUnitCounts,
+          guardLineUnits,
+          commissionRates,
         );
         const guardCouponByGroup = computeCartCouponDiscount(
           cart.appliedCoupons ?? [],
@@ -5895,24 +5901,22 @@ export async function verifyAndPlaceGatewayOrderAction(
 
   const couponUsageAccumulator = new Map<string, CouponAccumEntry>();
 
-  // Same ₹-per-listing-unit fee + by-unit-count split as the COD/UPI path.
-  const gatewayUnitsOf = (g: { item: CartItemDocument }[]) =>
-    g.reduce((n, { item }) => n + (item.quantity ?? 0), 0);
-  const gatewayUnitCountByStore = new Map(
-    orderGroups.map(({ items: g }) => [g[0].item.storeId, gatewayUnitsOf(g)] as const),
+  // Same tapered per-unit fee + exact per-store split as the COD/UPI path.
+  const gatewayCommissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+  const gatewayLineUnitsOf = (g: { item: CartItemDocument }[]) =>
+    g.map(({ item }) => item.quantity ?? 0);
+  const gatewayLineUnitsByStore = new Map(
+    orderGroups.map(({ items: g }) => [g[0].item.storeId, gatewayLineUnitsOf(g)] as const),
   );
-  const gatewayCartUnitCount = orderGroups.reduce((n, { items: g }) => n + gatewayUnitsOf(g), 0);
+  const gatewayCartLineUnits = orderGroups.flatMap(({ items: g }) => gatewayLineUnitsOf(g));
   const platformFeeByStore = allocateCheckoutFees(
     orderGroups.map(({ items: g }) => [
       g[0].item.storeId,
       g.reduce((sum, { item, product }) => sum + lineTotalFor(item, product), 0),
     ] as const),
-    computeCheckoutFees(
-      cartSubtotal,
-      siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS,
-      gatewayCartUnitCount,
-    ),
-    gatewayUnitCountByStore,
+    computeCheckoutFees(cartSubtotal, gatewayCommissions, gatewayCartLineUnits),
+    gatewayLineUnitsByStore,
+    gatewayCommissions,
   );
 
   /*

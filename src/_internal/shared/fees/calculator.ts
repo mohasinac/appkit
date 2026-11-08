@@ -48,186 +48,340 @@ export interface FeeCommissionRates {
    */ // audit-money-units-ok: rupee ceiling, not paise
   platformFeeMax?: number;
   /**
-   * ₹ per listing UNIT charged to the buyer — the buyer-facing platform fee.
+   * The VOLUME TAPER for the buyer-facing platform fee — owner, 2026-11-08:
+   * *"scaling too, if you buy more the fees reduces as you go up, but never
+   * less than 5 rs"*.
    *
-   * Optional so a `siteSettings` document saved before this field existed keeps
-   * working: it falls back to `DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT`.
+   * 🛑 A TABLE, not a formula, and that is the decision rather than an
+   * implementation detail. A seller and a buyer both have to *understand* the
+   * fee; a continuous decay curve is unexplainable on an invoice, while "1–4 at
+   * ₹10, 5–9 at ₹8" is a sentence. It is also the governing principle applied
+   * to pricing — bundles are DATA, not code — so changing the curve is a
+   * settings edit and never a deploy.
    *
-   * 🛑 A stored `0` is honoured as zero and is NOT the same as absent. An admin
-   * switching the fee off is a real configuration; `??` (not `||`) is what keeps
-   * the two distinguishable.
+   * Each band is "`minUnits` or more → this rate". Order does not matter;
+   * `resolvePlatformFeeUnitRate` sorts and picks the highest `minUnits` the
+   * line reaches.
+   *
+   * Falls back to `DEFAULT_PLATFORM_FEE_UNIT_BANDS` when absent.
+   */ // audit-money-units-ok: rupees per unit, not paise
+  platformFeeUnitBands?: readonly { minUnits: number; ratePerUnit: number }[];
+  /**
+   * The HARD FLOOR on the tapered per-unit rate. Never below this, whatever the
+   * table says.
+   *
+   * 🛑 Enforced STRUCTURALLY in `resolvePlatformFeeUnitRate`, not merely by
+   * the bottom band happening to equal it. A floor that holds only because
+   * someone typed the right number in the last row is not a floor — it is a
+   * coincidence that survives until the next person edits the table. The owner
+   * said *"never less than 5 rs"*; a badly-edited table must still obey that.
+   *
+   * Falls back to `DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR`.
+   */ // audit-money-units-ok: rupee floor per unit, not paise
+  platformFeePerUnitFloor?: number;
+  /**
+   * LEGACY single flat rate per unit, with no taper.
+   *
+   * Honoured as a one-band table when `platformFeeUnitBands` is absent, so a
+   * settings document written between the flat-rate ruling and the taper
+   * ruling (both 2026-11-08) keeps charging exactly what it charged.
+   *
+   * 🛑 A stored `0` is honoured as zero and is NOT the same as absent. An
+   * admin switching the fee off is a real configuration; `??` (not `||`) keeps
+   * the two distinguishable — and a configured `0` deliberately bypasses the
+   * floor, because "no platform fee" is a different statement from "a cheap
+   * one".
    */ // audit-money-units-ok: rupees per unit, not paise
   platformFeePerListingUnit?: number;
   gatewayFeePercent?: number;
 }
 
+/** One row of the volume taper: `minUnits` or more on a line → this rate. */
+export interface PlatformFeeUnitBand {
+  /** Smallest line quantity this rate applies to. */
+  minUnits: number;
+  /** ₹ charged per unit at that quantity. */ // audit-money-units-ok: rupees per unit, not paise
+  ratePerUnit: number;
+}
+
 /**
- * The platform fee per listing UNIT, in decimal rupees. Owner, 2026-11-08:
- * *"our website platform fees is 10rs per listing so an order with n items is
- * nx10 rs, plus gst 18%"*.
+ * The platform fee taper. Owner, 2026-11-08:
  *
- * ## 🛑 PER UNIT, and this reading was CONFIRMED against the alternative
+ *   *"our website platform fees is 10rs per listing so an order with n items
+ *   is nx10 rs, plus gst 18%"*
+ *   *"scaling too, if you buy more the fees reduces as you go up, but never
+ *   less than 5 rs — the reduction you can decide"*
+ *   *"for the bx-53 case we bought 1 listing so yes 1 item count only not its
+ *   components"*
  *
- * "Per listing" is ambiguous between a listing LINE and a listing UNIT, and the
- * two differ on every multi-quantity order. The owner was asked directly
- * (2026-11-08) and answered that **one line with quantity 3 is ₹30, not ₹10**.
+ * ## 🛑 PER UNIT, with a BANDED taper, and a composite is ONE unit
  *
- * ⚠ `mocks/18-shipping-fees.qm` draws the OTHER reading — *"Per LINE, not per
- * unit: three of one item is one line"* — with a worked table beside it. The
- * owner's answer is newer and explicit, so the code follows the owner and the
- * mock is reported for correction by the session that owns it. Recorded here
- * rather than silently resolved: a money formula with two sources of truth is
- * how the divergences this codebase keeps paying for begin.
+ * Three rulings, three distinct things, and they are easy to confuse:
  *
- * 🛑 A FALLBACK, not the mechanism. The rate is `FeeCommissionRates`
- * configuration precisely because ₹10 and 18% are **today's India values**, not
- * universal truths — a different jurisdiction resolves a different fee and a
- * different tax rate (A18: tax resolves by origin/destination country pair). A
- * hardcoded `10` or `0.18` in the arithmetic is the vertical coupling the
- * governing principle forbids.
+ *   · **Quantity multiplies.** One line at quantity 3 is 3 units → ₹30.
+ *   · **Components do not.** A BX-53 deck set is ONE listing purchased, so it
+ *     is **₹10, not ₹60**, however many parts are in the box. The count is
+ *     `item.quantity`, never `expandCartLineToOrderRows`'s output — that
+ *     expansion exists so each member can carry its own HSN and be cancelled
+ *     independently, and counting its rows would bill a buyer six times for one
+ *     purchase.
+ *   · **Volume tapers, per LINE.** 10 of one item bills cheaper per unit than
+ *     4 of it.
  *
- * It is defaulted HERE rather than only in `CHECKOUT_DEFAULT_COMMISSIONS`
- * because that object is used solely when the settings read FAILS
+ * ## ⚠ Three sources of truth existed for this; two are now stale
+ *
+ * `mocks/18-shipping-fees.qm` draws *"₹10 per LINE, not per unit"* with a
+ * worked table and no taper. It is wrong in BOTH directions now and is
+ * reported for correction by the session that owns it — not edited here. An
+ * earlier revision of this file implemented a flat per-unit ₹10; the taper
+ * supersedes it. Recorded rather than silently replaced, because a money
+ * formula with three readings is exactly how the divergences this codebase
+ * keeps paying for begin.
+ *
+ * ## 🛑 A FALLBACK, not the mechanism
+ *
+ * The table, the floor and the GST rate are all `FeeCommissionRates`
+ * configuration, because ₹10/₹5, these band edges and 18% are **today's India
+ * values**, not universal truths — tax already resolves by origin/destination
+ * country pair (plan A18). A hardcoded rate or `0.18` in the arithmetic is the
+ * vertical coupling the governing principle forbids.
+ *
+ * Defaulted HERE rather than only in `CHECKOUT_DEFAULT_COMMISSIONS`, because
+ * that object is used solely when the settings read FAILS
  * (`siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS`). A live
- * settings document that predates the field would otherwise resolve
- * `undefined`, and the new rule would be dead in production while looking
- * configured — the "seam nobody used" shape D44 is about.
+ * settings document predating the field would otherwise resolve `undefined`
+ * and the rule would be dead in production while looking configured — the
+ * "seam nobody used" shape D44 is about.
  */
+export const DEFAULT_PLATFORM_FEE_UNIT_BANDS: readonly PlatformFeeUnitBand[] = [
+  { minUnits: 1, ratePerUnit: 10 },
+  { minUnits: 5, ratePerUnit: 8 },
+  { minUnits: 10, ratePerUnit: 6.5 },
+  { minUnits: 25, ratePerUnit: 5 },
+];
+
+/**
+ * The hard floor on the per-unit rate — owner: *"never less than 5 rs"*.
+ *
+ * 🛑 Applied by `resolvePlatformFeeUnitRate` to whatever the table returns,
+ * so it holds even if the table is edited badly. The bottom band happens to
+ * equal it today; that agreement is a convenience, not the mechanism.
+ */
+export const DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR = 5;
+
+/** Kept for readers of the pre-taper flat rate; it is the top band's value. */
 export const DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT = 10;
 
+/**
+ * The per-unit rate for ONE cart line of `units`.
+ *
+ * ## 🛑 PER LINE, not per order total
+ *
+ * 4 of item A plus 4 of item B is 8 units but TWO lines of 4, so both bill at
+ * the ₹10 band. Banding on the order total would let an unrelated bulk line
+ * cheapen everything beside it, which is not what *"if you buy more"* means —
+ * the discount is for buying more of a thing, not for having a big basket.
+ * (Hub ruling, 2026-11-08, flagged to the owner for overrule.)
+ *
+ * ## 🛑 The floor is STRUCTURAL
+ *
+ * `Math.max(floor, …)` is applied after the table lookup, so a table edited to
+ * say ₹2 still charges ₹5. The one deliberate exception is a configured flat
+ * rate of exactly `0` — "no platform fee" is a different statement from "a
+ * cheap one", and an admin switching the fee off must not be overruled into
+ * charging ₹5.
+ *
+ * An empty or unusable table resolves to the floor rather than to zero: a
+ * misconfiguration should cost us the taper, never the whole fee.
+ */
+export function resolvePlatformFeeUnitRate(
+  units: number,
+  /*
+   * 🛑 The WHOLE rates object, not a `Pick` of the three fields this reads.
+   * All three are optional, so a `Pick` of them is a WEAK TYPE — and `tsc`
+   * rejects `siteSettings.commissions` against it outright ("no properties in
+   * common") until that schema gains the fields, which is another lane's
+   * change. Taking the same shape `computeCheckoutFees` takes also guarantees
+   * the two resolve the rate from one object rather than from two views of it.
+   */
+  commissions: FeeCommissionRates,
+): number {
+  const floor = Math.max(
+    0,
+    commissions.platformFeePerUnitFloor ?? DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR,
+  );
+
+  /*
+   * A configured flat rate with no table is the pre-taper ruling, honoured
+   * verbatim — including `0`, which is the one value allowed below the floor
+   * because it means "off" rather than "cheap".
+   */
+  if (!commissions.platformFeeUnitBands && commissions.platformFeePerListingUnit !== undefined) {
+    const flat = commissions.platformFeePerListingUnit;
+    if (!Number.isFinite(flat) || flat <= 0) return Math.max(0, flat === 0 ? 0 : floor);
+    return Math.max(floor, flat);
+  }
+
+  const bands = (commissions.platformFeeUnitBands ?? DEFAULT_PLATFORM_FEE_UNIT_BANDS)
+    .filter((b) => Number.isFinite(b.minUnits) && Number.isFinite(b.ratePerUnit))
+    .slice()
+    .sort((a, b) => a.minUnits - b.minUnits);
+  if (bands.length === 0) return floor;
+
+  const n = Number.isFinite(units) ? Math.max(0, Math.floor(units)) : 0;
+  /*
+   * The highest band the line REACHES. Falls back to the first band for a line
+   * below every threshold — a quantity of 1 against a table starting at 5 is a
+   * gap in the table, and charging the dearest configured rate is the
+   * conservative reading of a table that forgot to cover it.
+   */
+  let rate = bands[0].ratePerUnit;
+  for (const band of bands) {
+    if (n >= band.minUnits) rate = band.ratePerUnit;
+  }
+  return Math.max(floor, rate);
+}
+
+/** One cart line's contribution to the platform fee, kept for the explainer. */
+export interface PlatformFeeLine {
+  /** `item.quantity` — a composite counts ONCE however many parts it has. */
+  units: number;
+  /** The tapered rate this line's quantity earned. */
+  ratePerUnit: number;
+  /** `units × ratePerUnit`. */
+  amount: number;
+}
+
 export interface CheckoutFees {
-  /** Platform fee in decimal rupees: `perListingUnit × unitCount`. */
+  /** Platform fee in decimal rupees: `Σ over lines ( rate(units) × units )`. */
   platformFee: number;
   /** GST on the platform fee, in decimal rupees. */
   gstOnFee: number;
   /** platformFee + gstOnFee, floored at minimumTransactionFee. */
   totalFee: number;
   /**
-   * The unit count the fee was computed from, carried so the explainer and the
+   * Total units the fee was computed from, carried so the explainer and the
    * order record describe the same `n` the charge was derived from rather than
    * recounting it from a different collection.
    */
   unitCount: number;
-  /** The per-unit rate actually applied, after the config fallback. */
-  perListingUnit: number;
+  /**
+   * The per-line derivation, so `explainPlatformFee` can show a tapered fee
+   * the buyer can check.
+   *
+   * 🛑 Returned rather than recomputed by the renderer. With a taper the fee
+   * is no longer "count × one rate" — a browser re-deriving it would have to
+   * re-implement the band lookup, which is a second implementation of a money
+   * rule (Root Cause #75) living in the least trustworthy place.
+   */
+  lines: PlatformFeeLine[];
 }
 
 /**
  * What the buyer pays on top of the subtotal.
  *
- * ## 🛑 ₹10 PER LISTING UNIT × n, PLUS GST — owner, 2026-11-08
+ * ## 🛑 `fee = Σ over cart lines ( rateFor(quantity) × quantity )`, then GST
  *
- * *"our website platform fees is 10rs per listing so an order with n items is
- * nx10 rs, plus gst 18%"*, confirmed on the ambiguous half: **one line with
- * quantity 3 is ₹30.**
+ * Owner, 2026-11-08, across three rulings — see
+ * `DEFAULT_PLATFORM_FEE_UNIT_BANDS` for the verbatim text and for why a
+ * composite listing is ONE unit.
  *
  * This REPLACED a percentage-of-subtotal model capped at ₹10. The two are not
  * variations of each other: the old model charged **at most ₹10 for the whole
- * checkout** however many items were in it, so a 3-unit cart paid ₹10 where the
- * spec says ₹30 + ₹5.40 GST = ₹35.40. The cap is therefore not merely unused
- * here, it is actively incompatible — see `platformFeeMax`.
+ * checkout** however many items were in it. The cap is therefore not merely
+ * unused here, it is actively incompatible — see `platformFeeMax`.
  *
- * ## ⚠ PER UNIT, NOT PER LINE — `mocks/18-shipping-fees.qm` draws the other one
+ * ## 🛑 `lineUnitCounts` IS REQUIRED, and it is an ARRAY for a reason
  *
- * The mock states *"Per LINE, not per unit: three of one item is one line"* and
- * tabulates it. The owner's direct answer is newer and explicit and wins; the
- * contradiction is reported rather than quietly picked. See
- * `DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT`.
- *
- * ## 🛑 What a "unit" is: the BUYER-VISIBLE quantity
- *
- * `unitCount` is `sum(item.quantity)` over cart lines — never
- * `expandCartLineToOrderRows`'s output. That expansion fans ONE composed
- * listing into a row per member so each can carry its own HSN and be cancelled
- * independently; counting those rows would charge ₹30 for a single three-part
- * bey the buyer bought once, which is neither reading of the owner's rule.
- *
- * ## 🛑 `unitCount` IS REQUIRED, not optional with a fallback
- *
- * Every one of the six call sites must supply it, and `tsc` is what guarantees
- * that. An optional parameter defaulting to the old percentage model would be
- * the D44 shape exactly: a seam declared, never passed, and silently wrong at
- * every money path for as long as nobody checked.
+ * The taper bands PER LINE, so a scalar total cannot express the input: 8 units
+ * as two lines of 4 bills at ₹10 (₹80), and as one line of 8 bills at ₹8 (₹64).
+ * Taking `readonly number[]` makes that distinction unrepresentable-wrong at
+ * every call site, and `tsc` forces all six of them to supply it — an optional
+ * parameter defaulting to the old model would be the D44 shape exactly: a seam
+ * declared, never passed, silently wrong at every money path until someone
+ * checked.
  *
  * ## Where GST rounds
  *
  * Once, on the whole fee base, through the same `roundRupees` every other money
- * term uses — never per unit. Rounding 18% of ₹10 three times accumulates a
+ * term uses — never per line. Rounding 18% of ₹10 three times accumulates a
  * different number than rounding 18% of ₹30 once, and the invoice has to agree
- * with the capture to the paisa.
+ * with the capture to the paisa. Each LINE's own amount is rounded too, because
+ * a band rate of ₹6.50 makes an odd quantity produce a half-paisa otherwise.
  */
 export function computeCheckoutFees(
   subtotal: number,
   commissions: FeeCommissionRates,
-  unitCount: number,
+  lineUnitCounts: readonly number[],
 ): CheckoutFees {
-  const perListingUnit =
-    commissions.platformFeePerListingUnit ?? DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT;
-  /*
-   * Clamped and integer-floored defensively. `unitCount` is summed from
-   * server-resolved cart quantities in every caller, so it cannot be negative
-   * or fractional today — but it is the multiplier on a charge, and a NaN here
-   * would produce a NaN total the gateway would reject only after the buyer
-   * pressed pay.
-   */
-  const units = Number.isFinite(unitCount) ? Math.max(0, Math.floor(unitCount)) : 0;
-  const platformFee = roundRupees(units * Math.max(0, perListingUnit));
+  const lines: PlatformFeeLine[] = (lineUnitCounts ?? []).map((raw) => {
+    /*
+     * Clamped and integer-floored defensively. Quantities come from
+     * server-resolved cart items in every caller, so they cannot be negative or
+     * fractional today — but each is a multiplier on a charge, and a NaN here
+     * would produce a NaN total the gateway would reject only after the buyer
+     * pressed pay.
+     */
+    const units = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0;
+    const ratePerUnit = resolvePlatformFeeUnitRate(units, commissions);
+    return { units, ratePerUnit, amount: roundRupees(units * ratePerUnit) };
+  });
+
+  const unitCount = lines.reduce((n, l) => n + l.units, 0);
+  const platformFee = roundRupees(lines.reduce((sum, l) => sum + l.amount, 0));
   const gstOnFee = roundRupees(platformFee * (commissions.gstPercent / 100));
-  const totalFee = Math.max(platformFee + gstOnFee, commissions.minimumTransactionFee ?? 0);
-  return { platformFee, gstOnFee, totalFee, unitCount: units, perListingUnit };
+  /*
+   * 🛑 `roundRupees` around the sum, which the pre-taper version did NOT do.
+   * `72 + 12.96` evaluates to `84.96000000000001` in IEEE-754, and `totalFee`
+   * is not a display figure — D41 established it as the amount the capture
+   * route charges. An eleven-decimal float there is a paisa dispute between the
+   * gateway and the order record waiting for a cart big enough to surface it;
+   * the old flat ₹10 fee never produced one, the taper's ₹6.50 band does.
+   */
+  const totalFee = roundRupees(
+    Math.max(platformFee + gstOnFee, commissions.minimumTransactionFee ?? 0),
+  );
+  return { platformFee, gstOnFee, totalFee, unitCount, lines };
 }
 
 /**
  * Split one checkout's platform fee across the orders it produces.
  *
- * The buyer is charged one fee for the transaction, but the cart splits into one
- * order per store and each `OrderDocument` records its own `platformFee`
- * (invoices, reconciliation). Giving the last group the rounding remainder
- * guarantees the per-order figures sum to exactly what was charged, so the
- * orders can never quietly total a rupee more or less than the buyer paid.
+ * The buyer is charged one fee for the transaction, but the cart splits into
+ * one order per store and each `OrderDocument` records its own `platformFee`
+ * (invoices, reconciliation). The per-order figures must sum to EXACTLY what
+ * was charged, or the buyer's statement and our own records disagree.
  *
- * ## 🛑 APPORTIONED BY UNIT COUNT WHEN UNIT COUNTS ARE SUPPLIED
+ * ## 🛑 EXACT PER STORE WHEN LINE QUANTITIES ARE SUPPLIED — not pro-rata
  *
- * The fee is `₹10 × units`, so the share that belongs to a store is the share
- * of the UNITS it holds — not the share of the money. Pro-rata by subtotal
- * gives a demonstrably wrong per-order figure under this model: a cart with one
- * ₹5,000 unit at store A and one ₹100 unit at store B is charged ₹20, and by
- * subtotal that apportions ₹19.61 / ₹0.39 when each order is in fact a
- * one-unit ₹10 order. The total charged is identical either way, so this is an
- * invoice-correctness defect rather than an overcharge — the same shape as
- * `isIntraStateSupply`'s CGST/SGST-vs-IGST split, and it matters for the same
- * reason: a GST return is built from the per-order rows, not the cart total.
+ * Under the volume taper the fee is `Σ rate(units) × units` per LINE, so a
+ * store's share is a sum it OWNS, not a slice of someone else's number. It is
+ * computed from the same `resolvePlatformFeeUnitRate` the cart-level figure
+ * used, and the last group absorbs any rounding or `minimumTransactionFee`
+ * remainder so the shares still total the charge to the paisa.
  *
- * Subtotal apportionment survives as the fallback for callers that cannot
- * supply counts, so no existing behaviour changes silently.
+ * Pro-rata by subtotal — the original behaviour — is demonstrably wrong here
+ * and survives only as the fallback for callers that cannot supply quantities.
+ * A cart with one ₹5,000 unit at store A and one ₹100 unit at store B is
+ * charged ₹20, and by subtotal that apportions ₹19.61 / ₹0.39 when each order
+ * is in fact a one-unit ₹10 order. The total charged is identical either way,
+ * so this is an invoice-correctness defect rather than an overcharge — the same
+ * shape as `isIntraStateSupply`'s CGST/SGST-vs-IGST split, and it matters for
+ * the same reason: a GST return is built from the per-order rows, not the cart
+ * total.
  *
  * @param groupSubtotals `[storeId, subtotal]` pairs, in stable order.
- * @param groupUnitCounts Units per store. Omit to apportion by subtotal.
+ * @param groupLineUnitCounts Per-store LINE quantities. Omit for pro-rata.
+ * @param commissions Needed to re-resolve the taper per store. Omit for pro-rata.
  */
 export function allocateCheckoutFees(
   groupSubtotals: readonly (readonly [string, number])[],
   fees: CheckoutFees,
-  groupUnitCounts?: ReadonlyMap<string, number>,
+  groupLineUnitCounts?: ReadonlyMap<string, readonly number[]>,
+  commissions?: FeeCommissionRates,
 ): Map<string, { platformFee: number; gstOnFee: number }> {
   const allocation = new Map<string, { platformFee: number; gstOnFee: number }>();
   if (groupSubtotals.length === 0) return allocation;
-
-  /*
-   * The weight each group's share is computed from. Unit counts when the caller
-   * knows them and they sum to something positive — a zero-unit cart cannot be
-   * apportioned by units any more than an all-zero cart can be apportioned by
-   * money, and in both cases the whole (necessarily zero-ish) fee goes to the
-   * last group rather than dividing by zero.
-   */
-  const unitWeights = groupUnitCounts
-    ? groupSubtotals.map(([storeId]) => groupUnitCounts.get(storeId) ?? 0)
-    : null;
-  const unitWeightTotal = unitWeights ? unitWeights.reduce((s, w) => s + w, 0) : 0;
-  const useUnits = unitWeights !== null && unitWeightTotal > 0;
-
-  const total = useUnits
-    ? unitWeightTotal
-    : groupSubtotals.reduce((sum, [, subtotal]) => sum + subtotal, 0);
 
   /*
    * ── D41: THE `minimumTransactionFee` FLOOR IS APPLIED HERE, ONCE ──────────
@@ -257,17 +411,58 @@ export function allocateCheckoutFees(
   const feeShortfall = Math.max(0, roundRupees(fees.totalFee - (fees.platformFee + fees.gstOnFee)));
   const flooredPlatformFee = roundRupees(fees.platformFee + feeShortfall);
 
+  /*
+   * EXACT shares when the caller supplied quantities. Each store's own tapered
+   * sum, re-resolved through the one rate function — never a second formula.
+   */
+  const exactShares =
+    groupLineUnitCounts && commissions
+      ? groupSubtotals.map(([storeId]) =>
+          roundRupees(
+            (groupLineUnitCounts.get(storeId) ?? []).reduce((sum, raw) => {
+              const units = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 0;
+              return sum + units * resolvePlatformFeeUnitRate(units, commissions);
+            }, 0),
+          ),
+        )
+      : null;
+  const exactTotal = exactShares ? roundRupees(exactShares.reduce((a, b) => a + b, 0)) : 0;
+  /*
+   * 🛑 The exact path is used ONLY when it reconciles with the cart-level
+   * figure. If the two disagree — a caller passing a different line set than it
+   * priced — falling back to pro-rata keeps the invariant "shares sum to the
+   * charge" intact, which is the property that actually protects the buyer. A
+   * silent disagreement between two derivations of one charge is the D37 shape;
+   * preferring the reconciling one is how it stays visible instead of billed.
+   */
+  const useExact = exactShares !== null && exactTotal === fees.platformFee;
+
+  const proRataTotal = groupSubtotals.reduce((sum, [, subtotal]) => sum + subtotal, 0);
+
   let platformRemaining = flooredPlatformFee;
   let gstRemaining = fees.gstOnFee;
 
   groupSubtotals.forEach(([storeId, subtotal], index) => {
     const isLast = index === groupSubtotals.length - 1;
-    // An all-zero cart can't be apportioned by share — fall back to giving the
-    // whole (necessarily zero-ish) fee to the last group rather than dividing
-    // by zero.
-    const weight = useUnits ? (unitWeights?.[index] ?? 0) : subtotal;
-    const share = total > 0 ? weight / total : 0;
-    const platformFee = isLast ? roundRupees(platformRemaining) : roundRupees(flooredPlatformFee * share);
+    /*
+     * The last group takes whatever is left, so the shares sum to exactly what
+     * was charged — including the `minimumTransactionFee` shortfall, which
+     * belongs to no particular store. An all-zero cart can't be apportioned by
+     * share either, so it falls through the same way rather than dividing by
+     * zero.
+     */
+    const share = useExact
+      ? flooredPlatformFee > 0
+        ? (exactShares?.[index] ?? 0) / fees.platformFee
+        : 0
+      : proRataTotal > 0
+        ? subtotal / proRataTotal
+        : 0;
+    const platformFee = isLast
+      ? roundRupees(platformRemaining)
+      : useExact && feeShortfall === 0
+        ? (exactShares?.[index] ?? 0)
+        : roundRupees(flooredPlatformFee * share);
     const gstOnFee = isLast ? roundRupees(gstRemaining) : roundRupees(fees.gstOnFee * share);
     platformRemaining = roundRupees(platformRemaining - platformFee);
     gstRemaining = roundRupees(gstRemaining - gstOnFee);

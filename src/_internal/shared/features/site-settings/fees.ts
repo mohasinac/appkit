@@ -72,17 +72,22 @@ export interface BuyerFacingFees {
    */
   platformFeeMax?: number;
   /**
-   * ₹ per listing UNIT — the buyer-facing platform fee. Owner, 2026-11-08.
+   * The platform-fee VOLUME TAPER and its hard floor — owner, 2026-11-08.
    *
-   * 🛑 `toBuyerFacingFees` cannot project this yet: the field does not exist on
+   * Buyer-facing by the same test as the rates above: the buyer pays it, so
+   * the buyer may check it. `explainPlatformFee` prints the band a line
+   * actually earned.
+   *
+   * 🛑 `toBuyerFacingFees` cannot project these yet: neither field exists on
    * `SiteSettingsDocument["commissions"]`, and that schema belongs to another
-   * lane. Until it lands, `explainPlatformFee` resolves
-   * `DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT` — the SAME fallback
-   * `computeCheckoutFees` applies, so the explanation and the charge agree by
-   * construction rather than by coincidence. Declared here now so the
-   * projection is a one-line addition the day the schema field exists.
+   * lane. Until it lands, the explainer is handed the per-line derivation the
+   * SERVER computed (`CheckoutPricingPreview.platformFeeLines`) rather than
+   * re-deriving it, so the explanation and the charge agree by construction
+   * rather than by coincidence. Declared here now so the projection is a
+   * two-line addition the day the schema fields exist.
    */
-  platformFeePerListingUnit?: number;
+  platformFeeUnitBands?: readonly { minUnits: number; ratePerUnit: number }[];
+  platformFeePerUnitFloor?: number;
   /** GST rate levied on the commission actually charged (never on the uncapped figure). */
   gstPercent?: number;
   /** Rupee floor on `platformFee + gstOnFee` combined. */

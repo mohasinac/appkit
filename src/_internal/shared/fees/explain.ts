@@ -34,7 +34,7 @@
 import type { BuyerEmiSettings, BuyerFacingFees } from "../features/site-settings/fees";
 import type { BuyerEmiQuote } from "../features/emi/schedule";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT } from "./calculator";
+import type { PlatformFeeLine } from "./calculator";
 
 /** One rendered explanation: a short claim plus the steps behind it. */
 export interface FeeDerivation {
@@ -50,41 +50,48 @@ function pct(value: number): string {
 }
 
 /**
- * The platform fee — ₹10 per listing unit, times n.
+ * The platform fee — a TAPERED per-unit rate, summed per cart line.
  *
- * 🛑 REWRITTEN 2026-11-08 with the model it explains. It described a percentage
- * of the subtotal capped at ₹10, and `computeCheckoutFees` no longer charges
- * that: the fee is now `perListingUnit × unitCount`. Leaving the prose behind
- * would have been the precise defect this module's own header warns about — "a
- * second, prose implementation of the same rule, free to drift" — except worse,
- * because the drifted version would have been shown to the person paying.
+ * 🛑 REWRITTEN TWICE on 2026-11-08, with the model it explains. It first
+ * described a percentage of the subtotal capped at ₹10, then a flat ₹10 per
+ * unit; the charge is now `Σ over lines ( taperedRate(units) × units )`.
+ * Leaving either version behind would have been the precise defect this
+ * module's own header warns about — "a second, prose implementation of the same
+ * rule, free to drift" — except worse, because the drifted version is shown to
+ * the person paying.
  *
- * The derivation is now checkable in one line: count the items, multiply by the
- * stated rate. That is the whole reason the per-unit model is easier to show
- * honestly than the capped percentage ever was.
+ * 🛑 TAKES THE SERVER'S PER-LINE DERIVATION, and does not recompute it.
+ * Under a flat rate a renderer could honestly re-derive "count × rate"; under a
+ * taper it would have to re-implement the band lookup, in a browser, where a
+ * disagreement with the charge is invisible until someone adds up the invoice.
+ * So `lines` comes from `CheckoutFees.lines` — the same array the money was
+ * summed from — and this function only formats it.
+ *
+ * The derivation stays checkable in one reading: each line shows its quantity,
+ * the rate that quantity earned, and the product.
  */
 export function explainPlatformFee(
-  unitCount: number,
+  lines: readonly PlatformFeeLine[],
   charged: number,
   fees: BuyerFacingFees | null,
   currency = "INR",
 ): FeeDerivation | null {
   if (!fees) return null;
   const money = (v: number) => formatCurrency(v, currency);
-  /*
-   * The same fallback `computeCheckoutFees` applies, for the same reason: a
-   * live `siteSettings` document predating the field would otherwise make this
-   * return null and the buyer would be back to an unexplained number.
-   */
-  const perUnit = fees.platformFeePerListingUnit ?? DEFAULT_PLATFORM_FEE_PER_LISTING_UNIT;
-  const units = Math.max(0, Math.floor(unitCount));
-  const base = perUnit * units;
+  const billable = lines.filter((l) => l.units > 0);
+  if (billable.length === 0) return null;
 
-  const steps: string[] = [
-    units === 1
-      ? `${money(perUnit)} for 1 item = ${money(base)}`
-      : `${money(perUnit)} × ${units} items = ${money(base)}`,
-  ];
+  const base = billable.reduce((sum, l) => sum + l.amount, 0);
+  const rates = new Set(billable.map((l) => l.ratePerUnit));
+  const topRate = Math.max(...billable.map((l) => l.ratePerUnit));
+  const tapered = rates.size > 1 || billable.some((l) => l.ratePerUnit < topRate);
+
+  const steps: string[] = billable.map((l) =>
+    l.units === 1
+      ? `${money(l.ratePerUnit)} for 1 item = ${money(l.amount)}`
+      : `${money(l.ratePerUnit)} × ${l.units} = ${money(l.amount)}`,
+  );
+  if (billable.length > 1) steps.push(`Items together = ${money(base)}`);
 
   /*
    * The floor is defined on `platformFee + gstOnFee` COMBINED and is applied
@@ -100,8 +107,11 @@ export function explainPlatformFee(
 
   steps.push(`You pay ${money(charged)}`);
 
+  const cheapest = Math.min(...billable.map((l) => l.ratePerUnit));
   return {
-    summary: `Our platform fee is ${money(perUnit)} per item — three of the same bey is three items.`,
+    summary: tapered
+      ? `Our platform fee is per item, and it drops the more of one item you buy — down to ${money(cheapest)} each on this order.`
+      : `Our platform fee is ${money(topRate)} per item, and it drops the more of one item you buy.`,
     steps,
   };
 }
