@@ -958,7 +958,20 @@ async function countExisting(colName) {
     const snap = await db.collection(COLLECTION_MAP[colName]).doc("global").get();
     return snap.exists ? 1 : 0;
   }
-  if (colName === "users") {
+  /*
+   * 🛑 UID-KEYED COLLECTIONS. The document id is `uid`, not `id`.
+   *
+   * `sellerProfiles` was missing from this branch and fell through to the
+   * generic `d.id` lookup, which matches nothing because the seed rows carry
+   * no `id` — so `status` reported "2 seed, 0 in db" immediately after a load
+   * that had just written both rows successfully.
+   *
+   * That is the worst kind of reporting bug: it does not fail, it under-counts,
+   * and it makes every seed verification afterwards untrustworthy. Anyone
+   * reading it would have re-run the load, seen the same 0, and gone looking
+   * for a write problem that does not exist.
+   */
+  if (colName === "users" || colName === "sellerProfiles") {
     const refs = seed.filter((d) => d.uid).map((d) => db.collection(COLLECTION_MAP[colName]).doc(d.uid));
     if (refs.length === 0) return 0;
     const snaps = await db.getAll(...refs);
