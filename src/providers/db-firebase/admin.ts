@@ -92,9 +92,16 @@ declare global {
   var __mohasinac_firebase_admin_app__: App | null | undefined;
    
   var __mohasinac_firebase_admin_auth__: Auth | null | undefined;
-   
+
   var __mohasinac_firebase_admin_db__: Firestore | null | undefined;
-   
+  /*
+   * The named wiki/tools database. Declared here because the cache helpers are
+   * typed against `keyof typeof globalThis`, so a new database target cannot be
+   * added without declaring it — which is the behaviour we want.
+   */
+
+  var __mohasinac_firebase_admin_db_wiki__: Firestore | null | undefined;
+
   var __mohasinac_firebase_admin_storage__: Storage | null | undefined;
    
   var __mohasinac_firebase_admin_rtdb__: Database | null | undefined;
@@ -234,11 +241,55 @@ export function getAdminAuth(): Auth {
 
 // --- Firestore ----------------------------------------------------------------
 
-export function getAdminDb(): Firestore {
-  const cached = get<Firestore>("__mohasinac_firebase_admin_db__");
+/**
+ * A named Firestore database in the same project.
+ *
+ * Owner decision 2026-11-08: the wiki is *"purely read"* and does not belong on
+ * the shop database, so it gets its own. Tools shares it — *"they can be on 1"*.
+ *
+ * 🛑 A Firestore TRANSACTION CANNOT SPAN DATABASES. That is why the split stops
+ * here and why the earlier proposal to also move users/orders/shipments onto
+ * their own database was dropped: `core/unit-of-work.ts` coordinates ONE
+ * transaction across 15 repositories — orders, products, cart, coupons, payout,
+ * addresses and more — so splitting them would make order creation,
+ * stock holds, coupon redemption and the ledger write stop being atomic.
+ *
+ * The wiki data has no such coupling: the shop READS specs and never writes
+ * them, and nothing in the unit of work touches those collections.
+ *
+ * For durability of orders/users the answer is PITR + scheduled exports, not a
+ * second database — a second database is a split, not a copy.
+ */
+export type DatabaseTarget = "shop" | "wiki";
+
+/** `undefined` means the `(default)` database, which is the shop. */
+const DATABASE_IDS: Record<DatabaseTarget, string | undefined> = {
+  shop: undefined,
+  wiki: process.env.FIREBASE_WIKI_DATABASE_ID || "wiki-db",
+};
+
+/*
+ * The global cache keys are a typed literal union, so these are spelled out
+ * rather than built with a template — a computed key would not type-check and,
+ * more usefully, a new target now has to be declared in one visible place.
+ */
+const DATABASE_CACHE_KEYS = {
+  shop: "__mohasinac_firebase_admin_db__",
+  wiki: "__mohasinac_firebase_admin_db_wiki__",
+} as const;
+
+export function getAdminDb(target: DatabaseTarget = "shop"): Firestore {
+  const cacheKey = DATABASE_CACHE_KEYS[target];
+  const cached = get<Firestore>(cacheKey);
   if (cached) return cached;
   const { getFirestore } = loadFirestore();
-  const db = getFirestore(getAdminApp());
+  const databaseId = DATABASE_IDS[target];
+  /*
+   * The one-argument form is NOT the same as passing `undefined` explicitly in
+   * every firebase-admin version, so the default path keeps its original call
+   * shape exactly. Only a named target takes the two-argument overload.
+   */
+  const db = databaseId ? getFirestore(getAdminApp(), databaseId) : getFirestore(getAdminApp());
   try {
     // settings() can only be called once per Firestore instance — guard for
     // HMR reloads and duplicate module instances.
@@ -250,8 +301,13 @@ export function getAdminDb(): Firestore {
     // fully usable either way, so there is nothing degraded to report.
     void normalizeError(_err);
   }
-  set("__mohasinac_firebase_admin_db__", db);
+  set(cacheKey, db);
   return db;
+}
+
+/** The read-only wiki/tools database. Never used by the money path. */
+export function getWikiDb(): Firestore {
+  return getAdminDb("wiki");
 }
 
 // --- Cloud Storage ------------------------------------------------------------
