@@ -111,6 +111,29 @@ export const PORTAL_DEFINITIONS: readonly PortalDefinition[] = [
    * this module exists to end.
    */
   { label: "auth", section: "/auth", roles: [], home: "/auth/login" },
+  /*
+   * ── help: a PORTAL, not a deployment (owner, 2026-11-09) ──────────────
+   *
+   * The plan had `help.<domain>` down as its own app alongside blogs and
+   * events. The owner's answer was "do like dashboards" — i.e. a host rewrite
+   * onto the main app, the same treatment `admin.`/`seller.`/`user.` get, and
+   * NOT a deployment.
+   *
+   * It is the right call for this surface: `/help` is six content pages with
+   * ZERO API routes (measured 2026-11-09). Everything the subdomain split buys
+   * — an independently deployable owner of its own data, exposing CRUD over
+   * HTTP — is worth nothing when there is no data and no CRUD. It would be a
+   * whole deployment, Vercel project, env set and CORS gate to serve six static
+   * pages the shop already renders.
+   *
+   * Consequently `help` is REMOVED from DEPLOYMENT_LABELS below. A label must
+   * be in exactly one of the two lists: in both, the deployment check wins and
+   * the rewrite silently never fires.
+   *
+   * `roles: []` like `auth` — the help centre is public, and a visitor with no
+   * account is precisely who needs it.
+   */
+  { label: "help", section: "/help", roles: [] },
 ];
 
 /**
@@ -141,8 +164,20 @@ export const DEPLOYMENT_LABELS: readonly string[] = [
   "blogs",
   "live",
   "media",
-  "help",
-  "chat",
+  /*
+   * 🛑 `help` WAS HERE and has moved to PORTAL_DEFINITIONS above — the
+   * owner chose a host rewrite over a deployment for it (2026-11-09). A label
+   * in BOTH lists is the bug this note exists to prevent: `isDeploymentHost`
+   * is consulted first, so the portal rewrite would silently never fire and
+   * `help.<domain>` would fall through to the homepage — exactly the duplicate
+   * content CLAUDE.md records for `audit.` and `tools.`.
+   *
+   * ⚠ `chat` IS ALSO ABSENT, and for a different reason: there is nothing to
+   * serve. `/chat` has ZERO pages in the shop (measured 2026-11-09), so making
+   * it a portal would rewrite `chat.<domain>` onto a 404, and making it a
+   * deployment would point a hostname at an app that does not exist. It joins
+   * one list or the other when it has a surface — not before.
+   */
 ];
 
 /** Is this hostname a separate deployment rather than a portal of this app? */
