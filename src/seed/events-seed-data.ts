@@ -179,8 +179,25 @@ const _raweventsSeedData: EventDocument[] = [
      */
     entryApproval: "moderated",
     showOnCarousel: false,
-    isTestData: true,
-    testDataExpiresAt: SEASON_END,
+    /*
+     * 🛑 NOT `isTestData`. It was set here on first write, reasoning from the
+     * standing "seed demo data, CLEARLY MARKED, with a delete path" decision —
+     * and that was the wrong rule for this row.
+     *
+     * This is a REAL contest the owner asked to run in production, not a
+     * fixture. And `isTestData` is not a label: its documented job is to keep
+     * rows OUT of public surfaces (appkit's sitemap builder filters on it for
+     * exactly that reason, and it is the only field distinguishing this row
+     * from the offer beside it).
+     *
+     * Symptom while it was set: the events index showed **"2 RUNNING" above a
+     * grid containing ONE card**. The count and the list disagreed, which is
+     * the same shape as the sitemap's "16 fetched / 0 kept" — a filter applied
+     * to one query and not the other.
+     *
+     * If a genuinely disposable contest fixture is ever needed, mark THAT one.
+     * Do not mark a live contest to make it feel reversible.
+     */
     /*
      * Zeroed, not omitted. `totalEntries`/`approvedEntries` are read
      * unconditionally by the entries surfaces, and a document MISSING an

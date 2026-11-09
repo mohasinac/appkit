@@ -289,9 +289,18 @@ async function summarizeRtdb(rtdb) {
   return { hasData: true, topLevelKeys };
 }
 
-async function previewDeletionPlan({ db, rtdb, auth, storage, projectId }) {
+async function previewDeletionPlan({ db, rtdb, auth, storage, projectId, databaseId }) {
   logStep("Dry-run mode enabled: no destructive operations will run.");
   logStep(`Target project: ${projectId}`);
+  /*
+   * 🛑 The dry run MUST name the same database the real run will hit.
+   * A preview that silently previews a different target than `--yes` deletes
+   * is worse than no preview: it manufactures confidence. Both lines are
+   * derived from the same resolved `databaseId`.
+   */
+  logStep(
+    `Target database: ${databaseId ?? "(default)"}${databaseId ? "" : "  ← THIS IS PRODUCTION"}`,
+  );
 
   const firestoreSummary = await summarizeFirestore(db);
   const authSummary = await summarizeAuth(auth);
@@ -418,13 +427,42 @@ async function main() {
   });
 
   try {
-    const db = admin.firestore(app);
+    /*
+     * 🛑 WHICH DATABASE. This was `admin.firestore(app)` with no id, which
+     * ALWAYS resolves to `(default)` — i.e. PRODUCTION — and silently ignored
+     * `FIREBASE_SHOP_DATABASE_ID` entirely.
+     *
+     * That is a loaded gun on a script whose whole job is deleting every
+     * document: a developer with `FIREBASE_SHOP_DATABASE_ID=dev-db` in
+     * `.env.local` (which is the documented local setup) would reasonably
+     * expect `--yes` to clear dev-db, and it would wipe production instead,
+     * completely and with no restore path.
+     *
+     * Resolution order, most explicit first:
+     *   1. `--database <id>`   said out loud on the command line
+     *   2. FIREBASE_SHOP_DATABASE_ID   the same var the app and seed-cli read,
+     *                                  so this script can no longer disagree
+     *                                  with them about which database it is on
+     *   3. `(default)`         only when neither is set
+     *
+     * 🛑 The resolved name is PRINTED before anything is deleted, and the
+     * dry-run prints it too. "Which database did that just hit?" must be
+     * answerable from the output, not inferred from the environment.
+     */
+    const databaseId =
+      parseArg("--database") ||
+      process.env.FIREBASE_SHOP_DATABASE_ID ||
+      null;
+    const db = databaseId ? admin.firestore(app, databaseId) : admin.firestore(app);
+    logStep(
+      `Firestore target: ${databaseId ?? "(default)"}${databaseId ? "" : "  ← THIS IS PRODUCTION"}`,
+    );
     const rtdb = admin.database(app);
     const auth = admin.auth(app);
     const storage = admin.storage(app);
 
     if (isDryRun) {
-      await previewDeletionPlan({ db, rtdb, auth, storage, projectId });
+      await previewDeletionPlan({ db, rtdb, auth, storage, projectId, databaseId });
       return;
     }
 
