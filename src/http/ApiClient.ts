@@ -1,4 +1,5 @@
 import type { JsonValue } from "../schemas/types";
+import { serviceOriginFor } from "./service-origins";
 
 /**
  * ApiClient — @mohasinac/http
@@ -80,7 +81,25 @@ export class ApiClient {
     endpoint: string,
     params?: Record<string, string | number | boolean>,
   ): string {
+    /*
+     * 🛑 A registered SERVICE ORIGIN wins over this client's own base.
+     *
+     * `/api/blog/*` and `/api/events/*` are served by their own deployments
+     * now. A consumer that wants its data from the owning subdomain registers
+     * the prefix once at boot and every call site is routed without edit —
+     * which is the point of the seam (owner, 2026-11-09): the consumer keeps
+     * its presentation and changes only where the DATA comes from.
+     *
+     * Order matters. The service map is consulted FIRST because it is the more
+     * specific statement: `baseURL` says "where this client points by
+     * default", the map says "who owns this path", and a path with a declared
+     * owner is owned regardless of which client asked.
+     *
+     * An unregistered prefix returns `undefined` and nothing below changes —
+     * an install that has not adopted the seam behaves exactly as before.
+     */
     const origin =
+      serviceOriginFor(endpoint) ||
       this.baseURL ||
       (typeof window !== "undefined"
         ? window.location.origin
