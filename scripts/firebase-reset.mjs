@@ -399,12 +399,61 @@ async function main() {
     process.exit(1);
   }
 
-  if (!existsSync(serviceAccountPath)) {
-    throw new Error(`Missing service account file: ${serviceAccountPath}`);
+  /*
+   * 🛑 TWO credential sources, and the key FILE is no longer mandatory.
+   *
+   * This script used to hard-require `firebase-admin-key.json` at the repo
+   * root while `seed-cli` — the tool everyone actually runs — authenticates
+   * from `FIREBASE_ADMIN_*` in `.env.local`. So the two halves of the same
+   * workflow needed two different credential setups, and the reset simply
+   * could not run on a machine that was otherwise fully configured.
+   *
+   * Order: the key file wins when present (it also carries `project_id`,
+   * which is why it is still preferred), then the env vars.
+   *
+   * ⚠ The file requirement was arguably deliberate friction on a script that
+   * deletes every document. Removing it makes an accidental run easier, so the
+   * other guards matter more now, not less: `--yes` is still required, the
+   * resolved DATABASE is printed before anything is deleted, and `(default)`
+   * is labelled as production in both the dry run and the real run.
+   */
+  const parsePrivateKey = (raw) => {
+    if (!raw) return raw;
+    return raw.includes(String.fromCharCode(92, 110))
+      ? raw.split(String.fromCharCode(92, 110)).join(String.fromCharCode(10))
+      : raw;
+  };
+
+  let serviceAccount = null;
+  let credential;
+  if (existsSync(serviceAccountPath)) {
+    serviceAccount = require(serviceAccountPath);
+    credential = admin.credential.cert(serviceAccount);
+    logStep(`Credentials: ${serviceAccountPath}`);
+  } else if (
+    process.env.FIREBASE_ADMIN_PROJECT_ID &&
+    process.env.FIREBASE_ADMIN_CLIENT_EMAIL &&
+    process.env.FIREBASE_ADMIN_PRIVATE_KEY
+  ) {
+    credential = admin.credential.cert({
+      projectId: process.env.FIREBASE_ADMIN_PROJECT_ID.trim(),
+      clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL.trim(),
+      privateKey: parsePrivateKey(process.env.FIREBASE_ADMIN_PRIVATE_KEY),
+    });
+    logStep("Credentials: FIREBASE_ADMIN_* from the environment (.env.local)");
+  } else {
+    throw new Error(
+      `No credentials. Provide ${serviceAccountPath}, or set ` +
+        "FIREBASE_ADMIN_PROJECT_ID / FIREBASE_ADMIN_CLIENT_EMAIL / " +
+        "FIREBASE_ADMIN_PRIVATE_KEY (the same vars seed-cli reads).",
+    );
   }
 
-  const serviceAccount = require(serviceAccountPath);
-  const projectId = projectArg || serviceAccount.project_id || null;
+  const projectId =
+    projectArg ||
+    serviceAccount?.project_id ||
+    process.env.FIREBASE_ADMIN_PROJECT_ID?.trim() ||
+    null;
 
   if (!projectId) {
     throw new Error(
@@ -415,7 +464,7 @@ async function main() {
   logStep(`Using Firebase project: ${projectId}`);
 
   const app = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential,
     projectId,
     databaseURL:
       process.env.FIREBASE_DATABASE_URL ||
