@@ -464,7 +464,88 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     }
   }
 
-  async createEntry(input: EventEntryCreateInput): Promise<EventEntryDocument> {
+  /**
+   * A per-participant entry slot id: `<eventId>:<userId>:<slot>`.
+   *
+   * 🛑 `:` and not `/` — a `/` in a Firestore document id silently creates a
+   * SUBCOLLECTION path instead of a document, so `doc("a/b")` is a different
+   * object from `doc("a:b")` and would never collide with anything. Both
+   * components are slugs or Firebase uids today (`[A-Za-z0-9_-]`), but the
+   * caller below refuses to use a slot id at all if either one contains a `/`
+   * rather than quietly writing to a path nobody enforces uniqueness on.
+   */
+  private static slotId(eventId: string, userId: string, slot: number): string {
+    return `${eventId}:${userId}:${slot}`;
+  }
+
+  /** Is this the Firestore `ALREADY_EXISTS` refusal from `DocumentReference.create()`? */
+  private static isAlreadyExists(error: unknown): boolean {
+    // gRPC status 6 = ALREADY_EXISTS. The numeric code is the contract; the
+    // string is checked too because the REST transport reports it that way.
+    const code = (error as { code?: number | string } | null)?.code;
+    if (code === 6 || code === "6" || code === "already-exists") return true;
+    const message = error instanceof Error ? error.message : String(error);
+    return /ALREADY_EXISTS/i.test(message);
+  }
+
+  /**
+   * Write one event entry.
+   *
+   * ## `opts.entrySlotLimit` — the RACE-SAFE path
+   *
+   * Without it (guests, and any caller that does not enforce a per-user limit)
+   * this is `collection.add()` with an auto-id, exactly as before.
+   *
+   * With it, and with `input.userId` present, the entry is written to a
+   * DETERMINISTIC id — `<eventId>:<userId>:<slot>` for `slot` in
+   * `0 … entrySlotLimit-1` — using `DocumentReference.create()`, which FAILS
+   * with `ALREADY_EXISTS` if the document is already there. The first slot that
+   * accepts the write wins; when every slot is taken this returns `null` and the
+   * caller refuses the submission.
+   *
+   * 🛑 `create()`, never `set()`. `set()` on a taken slot would OVERWRITE a
+   * participant's existing entry — a second submission would silently replace
+   * the first, including its `reviewStatus` and any points an admin had already
+   * awarded. The whole point is that the second submission is REFUSED, not
+   * merged.
+   *
+   * ## Why document-id uniqueness and not a transaction
+   *
+   * A transaction around count+create would also be correct, and would handle
+   * the legacy caveat below. It was not chosen because:
+   *
+   *  - Uniqueness here is enforced by Firestore's own primary key, which is the
+   *    strongest guarantee available and costs one write. A transaction costs a
+   *    query read plus contention retries on exactly the requests that are
+   *    already contending.
+   *  - A transaction only serialises against OTHER transactions. Every existing
+   *    non-transactional write path in `enterEvent` (the poll, survey and
+   *    giveaway `countUserEntries` pre-checks) would still be able to slip a
+   *    duplicate past it. A taken document id refuses every writer, whatever
+   *    path it came from.
+   *  - `entrySlotLimit` is 1 by default (`resolveEntryLimit`), so the common
+   *    case is a single `create()` with no extra read at all.
+   *
+   * ## ⚠ Entries already written with random ids
+   *
+   * Nothing is migrated and nothing changes for them. A pre-2026-11-10 entry has
+   * an auto-id, so it occupies NO slot — which is why the caller keeps its
+   * `countUserEntries` pre-check: that check is the only thing that sees legacy
+   * documents, and it is what preserves today's behaviour for a participant who
+   * already entered. Slot allocation starts at the counted total (see
+   * `startSlot`), so N legacy entries consume the first N slot indices and the
+   * total per participant still cannot exceed the limit.
+   *
+   * ⚠ Residual, stated rather than implied: if entries are DELETED, the slots
+   * below the new count stay occupied while the count drops, so a participant
+   * can end up refused with fewer than `entrySlotLimit` live entries. Refusing
+   * too often is the safe direction, and it only arises on an event whose
+   * entries are being deleted individually.
+   */
+  async createEntry(
+    input: EventEntryCreateInput,
+    opts?: { entrySlotLimit?: number; startSlot?: number },
+  ): Promise<EventEntryDocument | null> {
     try {
       const now = new Date();
       const encrypted = encryptPiiFields(input as FirestoreDocument, [
@@ -474,6 +555,46 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
         ...encrypted,
         submittedAt: now,
       });
+
+      const limit = opts?.entrySlotLimit;
+      const userId = input.userId;
+      const slottable =
+        typeof limit === "number" &&
+        limit > 0 &&
+        typeof userId === "string" &&
+        userId.length > 0 &&
+        !userId.includes("/") &&
+        !input.eventId.includes("/");
+
+      if (slottable) {
+        const start = Math.max(0, Math.min(opts?.startSlot ?? 0, limit - 1));
+        for (let slot = start; slot < limit; slot += 1) {
+          const id = EventEntryRepository.slotId(input.eventId, userId, slot);
+          const ref = this.getCollection().doc(id);
+          try {
+            await ref.create(data);
+            const created = await ref.get();
+            serverLogger.info("Event entry created", {
+              entryId: id,
+              eventId: input.eventId,
+              userId,
+              slot,
+            });
+            return { id, ...created.data() } as EventEntryDocument;
+          } catch (slotError) {
+            if (!EventEntryRepository.isAlreadyExists(slotError)) throw slotError;
+            // Slot taken — either by an earlier entry or by a concurrent
+            // submission that won the race. Try the next one.
+          }
+        }
+        serverLogger.info("Event entry refused: all per-user slots taken", {
+          eventId: input.eventId,
+          userId,
+          entrySlotLimit: limit,
+          startSlot: start,
+        });
+        return null;
+      }
 
       const ref = await this.getCollection().add(data);
       const created = await ref.get();

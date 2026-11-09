@@ -28,6 +28,22 @@ import { RAFFLE_MAX_ENTRIES_PER_USER } from "../../../_internal/shared/features/
 
 const ERR_EVENT_NOT_FOUND = "Event not found";
 
+/**
+ * The per-participant entry-limit refusal, in ONE place.
+ *
+ * It is raised from two points that must not be able to word it differently:
+ * the `countUserEntries` pre-check, and the slot-exhaustion branch that catches
+ * the race the pre-check cannot (see `enterEvent`). A participant who loses a
+ * race must read exactly what a participant who submitted twice in sequence
+ * reads — a second, subtly different sentence is how an identical refusal comes
+ * to look like two different failures.
+ */
+function entryLimitReachedMessage(limit: number): string {
+  return limit === 1
+    ? "You have already entered this event."
+    : `You have reached the limit of ${limit} entries for this event.`;
+}
+
 import { coerceMediaField, getMediaUrl, type MediaField } from "../../../utils";
 import {
   finalizeStagedMediaField,
@@ -816,21 +832,35 @@ export async function enterEvent(
    * that needs a hard per-person limit should require sign-in, which is what
    * the contest does.
    *
-   * ⚠ NOT race-safe against two simultaneous submissions from one account.
-   * Making it so needs a transaction around count+create, or a deterministic
-   * entry id like `${eventId}:${uid}`. Stated rather than implied: the window
-   * is small and the consequence is a duplicate entry, not a lost one.
+   * ✅ RACE-SAFE since 2026-11-10 — and this comment used to say it was not.
+   *
+   * The count below is a PRE-CHECK, not the enforcement. Two simultaneous
+   * submissions from one account can still both read a count under the limit;
+   * what stops the second one is that the write itself goes to a DETERMINISTIC
+   * document id (`<eventId>:<uid>:<slot>`) via `DocumentReference.create()`,
+   * which fails with `ALREADY_EXISTS` rather than minting a second document.
+   * See `createEntry`'s doc comment for why document-id uniqueness was chosen
+   * over a transaction, and for what happens to entries already written with
+   * random ids.
+   *
+   * 🛑 The pre-check is still required and must not be deleted as redundant.
+   * It is the ONLY thing that sees pre-2026-11-10 entries, which carry auto-ids
+   * and therefore occupy no slot. It is also what produces the message a
+   * returning participant sees, before any write is attempted.
+   *
+   * `already` is passed on as `startSlot` so N legacy entries consume the first
+   * N slot indices instead of leaving them free for a concurrent writer to take.
    */
+  let entrySlotLimit: number | undefined;
+  let entryStartSlot = 0;
   if (user?.uid) {
     const limit = resolveEntryLimit(event.entryLimit);
     const already = await eventEntryRepository.countUserEntries(resolvedEventId, user.uid);
     if (already >= limit) {
-      throw new ValidationError(
-        limit === 1
-          ? "You have already entered this event."
-          : `You have reached the limit of ${limit} entries for this event.`,
-      );
+      throw new ValidationError(entryLimitReachedMessage(limit));
     }
+    entrySlotLimit = limit;
+    entryStartSlot = already;
   }
 
   const approvalMode = resolveEntryApproval(event, undefined, legacyAutoApprove);
@@ -838,19 +868,43 @@ export async function enterEvent(
 
   const reviewStatus = autoApprove ? "approved" : "pending";
 
-  const entry = await eventEntryRepository.createEntry({
-    eventId: resolvedEventId,
-    userId: user?.uid,
-    userDisplayName: user?.displayName,
-    userEmail: user?.email,
-    guestIpHash,
-    pollVotes: input.pollVotes,
-    pollComment: input.pollComment,
-    formResponses: input.formResponses,
-    media: input.media,
-    note: input.note,
-    reviewStatus,
-  });
+  /*
+   * 🛑 GUEST ENTRIES ARE UNCHANGED. `entrySlotLimit` is only set in the
+   * `user?.uid` branch above, and `createEntry` falls through to its original
+   * `collection.add()` auto-id path without it. A guest has no stable identity
+   * to build a deterministic id from — see the note on `guestIpHash` above for
+   * why an IP is not one — and guest dedupe stays where it already was,
+   * `hasGuestEntered`.
+   */
+  const entry = await eventEntryRepository.createEntry(
+    {
+      eventId: resolvedEventId,
+      userId: user?.uid,
+      userDisplayName: user?.displayName,
+      userEmail: user?.email,
+      guestIpHash,
+      pollVotes: input.pollVotes,
+      pollComment: input.pollComment,
+      formResponses: input.formResponses,
+      media: input.media,
+      note: input.note,
+      reviewStatus,
+    },
+    entrySlotLimit !== undefined
+      ? { entrySlotLimit, startSlot: entryStartSlot }
+      : undefined,
+  );
+
+  /*
+   * `null` means every per-participant slot was already taken — i.e. a
+   * concurrent submission from the same account won the race between the
+   * pre-check and this write. Same refusal and same wording as the pre-check,
+   * so the loser of the race gets the message a sequential second submission
+   * would have got, and NOTHING is incremented below.
+   */
+  if (!entry) {
+    throw new ValidationError(entryLimitReachedMessage(entrySlotLimit ?? 1));
+  }
 
   await eventRepository.incrementTotalEntries(resolvedEventId);
   if (autoApprove) {
