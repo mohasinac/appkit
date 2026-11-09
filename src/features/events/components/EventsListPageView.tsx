@@ -26,15 +26,52 @@ function buildEventFilters(params: SearchParamsRecord): string {
     if (values.length === 1) parts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, values[0]));
     // BUG FIX: pipe is invalid for ==; expand to multiple AND clauses
     else if (values.length > 1) parts.push(sieveMultiEq(EVENT_FIELDS.STATUS, values));
-  } else {
-    parts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, EVENT_FIELDS.STATUS_VALUES.ACTIVE));
   }
+  /*
+   * 🛑 NO DEFAULT STATUS FILTER — this used to force `status == active` when
+   * no `status` param was present, and that is what made the header count and
+   * the grid disagree.
+   *
+   * `EventsIndexListing` builds its own filter from the same URL and applies
+   * NO status filter by default (its `showExpired` toggle widens the set
+   * rather than narrowing it). So the server returned one set and the client
+   * queried another, from a single page. The visible symptom was a header
+   * reading "2 RUNNING" above a grid containing ONE card.
+   *
+   * Both halves now derive from the same absent-means-everything rule. If a
+   * default is ever wanted again it has to be added in BOTH places, in the
+   * same change — or the two drift apart again and the count starts lying.
+   */
 
   const type = firstParam(params, "type");
   if (type) {
     const values = type.split("|").filter(Boolean);
     if (values.length === 1) parts.push(sieveFilter(EVENT_FIELDS.TYPE, SIEVE_OP.EQ, values[0]));
     else if (values.length > 1) parts.push(sieveMultiEq(EVENT_FIELDS.TYPE, values));
+  }
+
+  /*
+   * ── LIVE / FINISHED, applied SERVER-SIDE TOO ───────────────────────
+   *
+   * 🛑 This MUST mirror `EventsIndexListing`'s client-side `tab` handling.
+   * The result of this query is passed to that component as `initialData`, so
+   * if the two disagree the page renders one set and then may or may not
+   * replace it with another.
+   *
+   * Measured 2026-11-09: with the tab handled only on the client, selecting
+   * "Finished" highlighted the tab and still showed a contest ending in
+   * February 2027 — the server had already supplied it and the client's
+   * narrower query never won.
+   */
+  const tab = firstParam(params, "tab");
+  if (tab === "live" || tab === "finished") {
+    parts.push(
+      sieveFilter(
+        EVENT_FIELDS.ENDS_AT,
+        tab === "live" ? SIEVE_OP.GTE : SIEVE_OP.LT,
+        new Date().toISOString(),
+      ),
+    );
   }
 
   const dateFrom = firstParam(params, "dateFrom");
