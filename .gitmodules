@@ -10,3 +10,7 @@
 	path = events
 	url = https://github.com/mohasinac/events.git
 	branch = main
+[submodule "media"]
+	path = media
+	url = https://github.com/mohasinac/media.git
+	branch = main
