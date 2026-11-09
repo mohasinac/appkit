@@ -4,3 +4,6 @@
 [submodule "blogs"]
 	path = blogs
 	url = https://github.com/mohasinac/blogs.git
+[submodule "events"]
+	path = events
+	url = https://github.com/mohasinac/events.git
