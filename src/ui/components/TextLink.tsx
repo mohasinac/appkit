@@ -3,6 +3,7 @@ import type { JsonValue } from "../../schemas/types";
 import Link from "next/link";
 import { SHADOW_MAP } from "./surface-tokens";
 import type { ShadowKey } from "./surface-tokens";
+import { resolveSectionHref } from "../../next/routing/section-routes";
 import { twMerge } from "tailwind-merge";
 
 const VARIANTS = {
@@ -227,12 +228,34 @@ export function TextLink({
     shadow ? SHADOW_MAP[shadow] : "",
     className,
   );
-  const shouldBeExternal = external ?? isExternalUrl(href);
+  /*
+   * 🛑 EVERY link through this component is resolved against the host's
+   * section map before anything else looks at it.
+   *
+   * appkit builds links from `ROUTES`, which is the SHOP's map. On a host that
+   * owns a section that path is wrong, and it fails silently as a 404 nobody
+   * clicks during review — which is exactly how
+   * `events.<domain>/events/<slug>` shipped.
+   *
+   * Doing it HERE rather than in each component is the whole point: 152
+   * components across appkit build links from `ROUTES` using 189 distinct
+   * builders, and threading a prop into each is 152 chances to miss one. This
+   * is one place, and a component gets it right by using `TextLink` at all.
+   *
+   * No registration = unchanged, so the shop is unaffected.
+   *
+   * ⚠ `resolveSectionHref` may return an ABSOLUTE url (when another host owns
+   * the section), so it runs BEFORE the external-link detection below —
+   * otherwise a cross-host link would be treated as internal and rendered
+   * without the target/rel an external link needs.
+   */
+  const resolvedHref = resolveSectionHref(href);
+  const shouldBeExternal = external ?? isExternalUrl(resolvedHref);
 
   if (shouldBeExternal) {
     return (
       <a
-        href={href}
+        href={resolvedHref}
         className={cls}
         target="_blank"
         rel="noopener noreferrer"
@@ -244,7 +267,7 @@ export function TextLink({
   }
 
   return (
-    <Link href={href} className={cls} {...(props as Record<string, JsonValue>)}>
+    <Link href={resolvedHref} className={cls} {...(props as Record<string, JsonValue>)}>
       {children}
     </Link>
   );

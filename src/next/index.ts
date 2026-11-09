@@ -163,3 +163,16 @@ export type {
   ActionIndexControl,
   ActionIndexOverride,
 } from "../features/search/action-index/types";
+
+/*
+ * The page-link seam. A host that OWNS a section registers it here and every
+ * link built from the shop's ROUTES resolves correctly — see
+ * routing/section-routes.ts for why this is central rather than per-component.
+ */
+export {
+  configureSectionRoutes,
+  getSectionRoutes,
+  resolveSectionHref,
+  _resetSectionRoutes,
+} from "./routing/section-routes";
+export type { SectionRouteMap } from "./routing/section-routes";

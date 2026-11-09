@@ -170,7 +170,17 @@ export function EventsIndexListing({ initialData, facetCounts, buildHref }: Even
     q: table.get(TABLE_KEYS.QUERY) || undefined,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     pageSize: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),
-    sort: table.get(TABLE_KEYS.SORT) || sortBy(EVENT_FIELDS.STARTS_AT, "ASC"),
+    /*
+     * A tab OVERRIDES the chosen sort — see the note beside the `phase`
+     * filter above. Firestore rejects a query whose first orderBy is not the
+     * inequality field, and the rejection degrades to an empty list.
+     */
+    sort:
+      phase === "live"
+        ? sortBy(EVENT_FIELDS.ENDS_AT, "ASC")
+        : phase === "finished"
+          ? sortBy(EVENT_FIELDS.ENDS_AT, "DESC")
+          : table.get(TABLE_KEYS.SORT) || sortBy(EVENT_FIELDS.STARTS_AT, "ASC"),
     filters: filterParts.length > 0 ? sieveAnd(...filterParts) : undefined,
   };
 

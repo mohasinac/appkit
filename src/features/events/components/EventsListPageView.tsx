@@ -95,9 +95,29 @@ export async function EventsListPageView({ searchParams = {}, pageRegionCards = 
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
   const filters = buildEventFilters(searchParams);
+  /*
+   * 🛑 AN INEQUALITY FILTER MUST LEAD THE SORT. Firestore refuses a query
+   * whose first `orderBy` is not the inequality field, and the refusal is a
+   * FAILED_PRECONDITION at runtime — which `safeRead` degrades to an empty
+   * list. The page then renders "No events found" with no error anywhere.
+   *
+   * Measured 2026-11-09: the Live tab showed "No events found" while the All
+   * tab showed the contest, which runs to February 2027. The filter was
+   * correct; the SORT made the query invalid.
+   *
+   * So a tab overrides the sort. It is also the better order on its own terms:
+   * Live = ending soonest first, Finished = most recently ended first.
+   */
+  const tabForSort = firstParam(searchParams, "tab");
+  const sortForTab =
+    tabForSort === "live"
+      ? sortBy(EVENT_FIELDS.ENDS_AT, "ASC")
+      : tabForSort === "finished"
+        ? sortBy(EVENT_FIELDS.ENDS_AT, "DESC")
+        : undefined;
 
   const [result, facetCounts] = await Promise.all([
-    safeRead(() => eventRepository.list({ filters, sorts: sort, page, pageSize }), {
+    safeRead(() => eventRepository.list({ filters, sorts: sortForTab ?? sort, page, pageSize }), {
       route: "/events",
       key: "events.list",
       fallback: null,
