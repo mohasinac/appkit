@@ -102,6 +102,81 @@ import { SEEDED_LIKE_COUNTS } from "./event-likes-seed-data";
 const NOW = new Date();
 
 const _raweventsSeedData: EventDocument[] = [
+  /*
+   * ── PHOTO CONTEST — the fixture for the entry-voting mechanism ─────────
+   *
+   * Owner spec 2026-11-08, implemented 2026-11-09. This row is the reason the
+   * whole `entryVoting` chain exists, and until it was added the chain had NO
+   * fixture at all: the vote endpoint was verified only by its 401, the five
+   * `entryRanking` rule sets had nothing to rank, and the entries gallery had
+   * nothing to render.
+   *
+   * 🛑 `type: "contest"` IS A SEED SLUG, NOT A CODE CONSTANT, and that is the
+   * whole point of the 2026-11-08 change. `EVENT_FIELDS.TYPE_VALUES` has no
+   * CONTEST member and must not gain one — event `type` is an open validated
+   * slug precisely so a new kind of event is a ROW, not an enum edit and a
+   * deploy. The matching definition lives in `event-types-seed-data.ts`, which
+   * declares the mechanisms this type switches on
+   * (`submission`, `entryVoting`, `prizePool`, `capacityLimit`, `ageGate`) and
+   * binds `ruleSets.entryRanking: "ranking-most-likes"`.
+   *
+   * So the RANKING is config too: swapping most-likes for net-score (which
+   * renders dislikes) or for jury is editing one seed field, not a resolver.
+   * `resolveEntryRanking` has a `default:` branch returning 0, so a newer rule
+   * key against an older deploy degrades instead of taking the page down.
+   *
+   * 🛑 `isTestData: true` + `testDataExpiresAt`. The owner's standing decision
+   * on demo data is "seed it, CLEARLY MARKED, with a delete path proven by
+   * experiment". Both flags are what make this row findable and removable
+   * later — a demo row that cannot be distinguished from a real one is how a
+   * fixture becomes permanent furniture.
+   *
+   * ⚠ NO ENTRIES ARE SEEDED ALONGSIDE THIS IN PRODUCTION (owner, 2026-11-09:
+   * demo entries in dev-db, none in prod). `manifest.ts` keeps
+   * `eventEntries: []`, so a production load creates the contest and nothing
+   * inside it. The gallery is empty until real people enter, which is the
+   * honest state for a live site.
+   */
+  {
+    id: "event-photo-contest-diwali",
+    slug: "diwali-photo-contest",
+    type: "contest" as EventDocument["type"],
+    title: "Diwali Photo Contest: Show Us Your Setup",
+    description:
+      `<p><strong>Photograph your Beyblade setup and the community picks the winner.</strong></p>` +
+      `<h2>How to enter</h2>` +
+      `<ol>` +
+      `<li>Take a photo of your collection, your stadium, or a battle in progress.</li>` +
+      `<li>Submit it below — one entry per account, up to four images.</li>` +
+      `<li>Entries are reviewed before they appear in the gallery.</li>` +
+      `</ol>` +
+      `<h2>How the winner is decided</h2>` +
+      `<p>Entries are ranked by <strong>likes</strong>. Anyone signed in can vote, one vote per entry, and you can change your mind — voting again on the same entry takes your vote back.</p>` +
+      `<p><strong>Vote counts are public; who voted is not.</strong> Ties are broken by whichever entry was submitted first, so an early entry is never beaten by a later one on an equal score.</p>`,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: SEASON_START,
+    endsAt: SEASON_END,
+    isPinned: false,
+    coverImage: {
+      type: "image",
+      url: editorialImage("event-cover-diwali-lamps"),
+      alt: "Lit clay diya lamps glowing in a row at night",
+    },
+    tags: ["contest", "photo", "ugc", "diwali", "community"],
+    showOnCarousel: false,
+    isTestData: true,
+    testDataExpiresAt: SEASON_END,
+    /*
+     * Zeroed, not omitted. `totalEntries`/`approvedEntries` are read
+     * unconditionally by the entries surfaces, and a document MISSING an
+     * `orderBy` field drops out of its own index entirely (Root Cause #100) —
+     * a contest that does not appear in the contest list.
+     */
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: NOW,
+    updatedAt: NOW,
+  },
   // ── UPCOMING — Offer: 10% festive cashback, code published early ─────────
   /*
    * 🛑 `type: "offer"` + `offerConfig.displayCode` is what renders the
