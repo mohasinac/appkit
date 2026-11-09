@@ -83,12 +83,14 @@ function buildEventFilters(params: SearchParamsRecord): string {
 }
 
 export interface EventsListPageViewProps {
+  /** Forwarded to the listing and on to every card. See `EventCard.buildHref`. */
+  buildHref?: (slugOrId: string) => string;
   searchParams?: SearchParamsRecord;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
 }
 
-export async function EventsListPageView({ searchParams = {}, pageRegionCards = [] }: EventsListPageViewProps) {
+export async function EventsListPageView({ searchParams = {}, pageRegionCards = [], buildHref }: EventsListPageViewProps) {
   const sort = firstParam(searchParams, "sort") || sortBy(EVENT_FIELDS.STARTS_AT, "ASC");
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
@@ -138,7 +140,7 @@ export async function EventsListPageView({ searchParams = {}, pageRegionCards = 
             meta={publicResult?.total ? `${publicResult.total} running` : undefined}
           />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} />
+          <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} buildHref={buildHref} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
           <Div className="mt-8">
             <AdminComposableRegion pageId="events" initialCards={pageRegionCards} />

@@ -29,6 +29,11 @@ const __O = {
 
 
 interface EventCardProps {
+  /**
+   * Build the detail URL for one event. Omit for the shop's `/events/<slug>`.
+   * A host that serves events at its own root passes `(s) => `/${s}``.
+   */
+  buildHref?: (slugOrId: string) => string;
   event: EventItem;
   labels?: {
     participate?: string;
@@ -54,6 +59,7 @@ interface EventCardProps {
 }
 
 export function EventCard({
+  buildHref,
   event,
   labels = {},
   onParticipate,
@@ -70,7 +76,24 @@ export function EventCard({
   const msLeft = endsAt.getTime() - now.getTime();
   const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
 
-  const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
+  /*
+   * 🛑 The SHOP's path by default, overridable by the host that owns events.
+   *
+   * `ROUTES.PUBLIC.EVENT_DETAIL` yields `/events/<slug>`, which is correct on
+   * www. On `events.<domain>` the hostname already carries that meaning and a
+   * detail page lives at `/<slug>` — so the inherited path 404s there.
+   *
+   * Measured 2026-11-09: the contest card on events.letitrip.in linked to
+   * `/events/diwali-photo-contest` and that URL returned 404, making the event
+   * unreachable from its own card.
+   *
+   * A prop rather than changing ROUTES: www still serves `/events/*` and still
+   * 301s to here, so the shop's map is right for its owner. Same reasoning as
+   * the sitemap prefix strip and the canonical override.
+   */
+  const detailHref = buildHref
+    ? buildHref(event.slug ?? event.id)
+    : String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
 
   const card = (
     <Stack as="article" border="default"

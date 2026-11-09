@@ -32,6 +32,8 @@ const PAGE_SIZE = 24;
 const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, TABLE_KEYS.SHOW_EXPIRED];
 
 export interface EventsIndexListingProps {
+  /** Forwarded to every `EventCard`. See its `buildHref`. */
+  buildHref?: (slugOrId: string) => string;
   /**
    * Event counts keyed by type AND status value, resolved server-side. Drives
    * both the facet count badges and hiding facets that would return nothing.
@@ -40,7 +42,7 @@ export interface EventsIndexListingProps {
   initialData?: any;
 }
 
-export function EventsIndexListing({ initialData, facetCounts }: EventsIndexListingProps) {
+export function EventsIndexListing({ initialData, facetCounts, buildHref }: EventsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: sortBy(EVENT_FIELDS.STARTS_AT, "ASC") } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -282,13 +284,13 @@ export function EventsIndexListing({ initialData, facetCounts }: EventsIndexList
         ) : view === "list" ? (
           <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
             {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} buildHref={buildHref} />
             ))}
           </Stack>
         ) : (
           <Grid cols="cards" gap="lg">
             {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+              <EventCard key={event.id} event={event} buildHref={buildHref} />
             ))}
           </Grid>
         )}

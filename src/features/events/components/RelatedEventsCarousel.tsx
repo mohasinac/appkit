@@ -19,12 +19,14 @@ export interface RelatedEventItem {
 }
 
 interface RelatedEventsCarouselProps {
+  /** See `EventCard.buildHref`. Omit for the shop's `/events/<slug>`. */
+  buildHref?: (slugOrId: string) => string;
   items: RelatedEventItem[];
   title?: string;
 }
 
 export function RelatedEventsCarousel({
-  items,
+  buildHref, items,
   title = "Related Events",
 }: RelatedEventsCarouselProps) {
   if (items.length === 0) return null;
@@ -39,7 +41,7 @@ export function RelatedEventsCarousel({
       perView={CAROUSEL_PER_VIEW.standard}
       keyExtractor={(item: RelatedEventItem) => item.id}
       renderItem={(item: RelatedEventItem) => (
-        <Link href={String(ROUTES.PUBLIC.EVENT_DETAIL(item.slug || item.id))} className="block h-full">
+        <Link href={buildHref ? buildHref(item.slug || item.id) : String(ROUTES.PUBLIC.EVENT_DETAIL(item.slug || item.id))} className="block h-full">
           <Stack className="h-full" surface="default" rounded="xl" border="default" overflow="hidden">
             <Div surface="muted" overflow="hidden" className="relative aspect-[4/3] w-full flex-shrink-0">
               {(item.coverImage?.url || item.coverImageUrl) && (

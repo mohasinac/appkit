@@ -15,12 +15,24 @@ import { AdminComposableRegion } from "../../dashboard/components/AdminComposabl
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
 export interface BlogIndexPageViewProps {
+  /**
+   * Build the detail URL for one item. Omit for the SHOP's path.
+   *
+   * 🛑 A host that OWNS this section serves it at its own root, so the
+   * shop's `/section/<slug>` form 404s there. Measured 2026-11-09 on
+   * events.letitrip.in: every card linked to `/events/<slug>` and every one
+   * returned 404, leaving the event unreachable from its own card.
+   *
+   * A prop rather than changing ROUTES — www still serves those paths and
+   * still 301s to the subdomain, so the shop's map is right for its owner.
+   */
+  buildHref?: (slugOrId: string) => string;
   searchParams?: SearchParamsRecord;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
 }
 
-export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [] }: BlogIndexPageViewProps) {
+export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [], buildHref }: BlogIndexPageViewProps) {
   const sort = firstParam(searchParams, "sort") || BLOG_DEFAULT_PUBLIC_SORT;
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
@@ -80,7 +92,7 @@ export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [
           />
           <AdminComposableRegion pageId="blog" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <BlogIndexListing initialData={initialData} />
+          <BlogIndexListing initialData={initialData} buildHref={buildHref} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

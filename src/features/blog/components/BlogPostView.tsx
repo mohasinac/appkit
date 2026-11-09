@@ -40,6 +40,11 @@ const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
 const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surface dark:text-warning px-[var(--appkit-space-2)] py-[var(--appkit-space-0-5)] rounded-full";
 
 export interface BlogPostViewProps {
+  /**
+   * The blog INDEX url, for the tag chips. Omit for the shop's `/blog`.
+   * A host serving the blog at its own root passes `() => "/"`.
+   */
+  buildListHref?: () => string;
   slug: string;
   initialData?: BlogPostDetailResponse;
   labels?: {
@@ -130,6 +135,7 @@ function renderBlogPostRelated(related: BlogPost[], title: string, renderRelated
 export function BlogPostView({
   slug,
   initialData,
+  buildListHref,
   labels = {},
   renderImage,
   renderContent,
@@ -277,7 +283,7 @@ export function BlogPostView({
                   {post.tags.map((tag) => (
                     <Link
                       key={tag}
-                      href={`${String(ROUTES.BLOG.LIST)}?tags=${encodeURIComponent(tag)}`}
+                      href={`${buildListHref ? buildListHref() : String(ROUTES.BLOG.LIST)}?tags=${encodeURIComponent(tag)}`}
                       className="inline-block px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full bg-[var(--appkit-color-surface-elevated)] hover:bg-primary/10 text-[var(--appkit-color-text-muted)] hover:text-primary text-[length:var(--appkit-text-xs)] font-medium transition-colors"
                     >
                       #{tag}

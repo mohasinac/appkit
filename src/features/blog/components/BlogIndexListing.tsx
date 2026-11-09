@@ -29,8 +29,14 @@ const __O = {
 
 type BlogPost = Parameters<typeof BlogCard>[0]["post"];
 
-function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "grid" | "list" }) {
-  const { isLoading, posts, view } = props;
+function renderBlogGrid(props: {
+  isLoading: boolean;
+  posts: BlogPost[];
+  view: "grid" | "list";
+  /** See `BlogIndexListingProps.buildHref`. Threaded through, not re-derived. */
+  buildHref?: (slug: string) => string;
+}) {
+  const { isLoading, posts, view, buildHref } = props;
   if (isLoading) {
     return (
       <Grid cols="cards" gap="lg">
@@ -54,13 +60,13 @@ function renderBlogGrid(props: { isLoading: boolean; posts: BlogPost[]; view: "g
   if (view === "list") {
     return (
       <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
-        {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
+        {posts.map((post) => <BlogCard key={post.id} post={post} href={buildHref ? buildHref(post.slug) : String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
       </Stack>
     );
   }
   return (
     <Grid cols="cards" gap="lg">
-      {posts.map((post) => <BlogCard key={post.id} post={post} href={String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
+      {posts.map((post) => <BlogCard key={post.id} post={post} href={buildHref ? buildHref(post.slug) : String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
     </Grid>
   );
 }
@@ -83,10 +89,22 @@ const DEFAULT_SORT = sortBy(BLOG_FIELDS.PUBLISHED_AT);
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 
 export interface BlogIndexListingProps {
+  /**
+   * Build the detail URL for one item. Omit for the SHOP's path.
+   *
+   * 🛑 A host that OWNS this section serves it at its own root, so the
+   * shop's `/section/<slug>` form 404s there. Measured 2026-11-09 on
+   * events.letitrip.in: every card linked to `/events/<slug>` and every one
+   * returned 404, leaving the event unreachable from its own card.
+   *
+   * A prop rather than changing ROUTES — www still serves those paths and
+   * still 301s to the subdomain, so the shop's map is right for its owner.
+   */
+  buildHref?: (slugOrId: string) => string;
   initialData?: any;
 }
 
-export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
+export function BlogIndexListing({ initialData, buildHref }: BlogIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -237,7 +255,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
 
         <Div className="lg:col-span-8 xl:col-span-9">
           {/* ── Blog grid ────────────────────────────────────────────────── */}
-          <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view })}</Div>
+          <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view, buildHref })}</Div>
         </Div>
       </Div>
 
