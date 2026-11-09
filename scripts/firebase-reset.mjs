@@ -498,10 +498,24 @@ async function main() {
      * dry-run prints it too. "Which database did that just hit?" must be
      * answerable from the output, not inferred from the environment.
      */
+    const databaseArg = parseArg("--database");
+    /*
+     * 🛑 `--database default` is how you ASK FOR PRODUCTION, explicitly.
+     *
+     * Without it there is no way to reach `(default)` on a machine whose
+     * `.env.local` sets FIREBASE_SHOP_DATABASE_ID=dev-db — which is the
+     * documented local setup, so that is every machine. The env fallback is a
+     * good safe default; it must not become a cage that makes the production
+     * path reachable only by unsetting a variable inline, because that is the
+     * kind of incantation people get wrong in a shell at 2am.
+     *
+     * Spelling it `default` rather than an empty string keeps it visible in
+     * shell history and in a screenshot of the command.
+     */
     const databaseId =
-      parseArg("--database") ||
-      process.env.FIREBASE_SHOP_DATABASE_ID ||
-      null;
+      databaseArg === "default"
+        ? null
+        : databaseArg || process.env.FIREBASE_SHOP_DATABASE_ID || null;
     const db = databaseId ? admin.firestore(app, databaseId) : admin.firestore(app);
     logStep(
       `Firestore target: ${databaseId ?? "(default)"}${databaseId ? "" : "  ← THIS IS PRODUCTION"}`,
