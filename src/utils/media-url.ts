@@ -72,7 +72,7 @@ export const SEED_TILE_PREFIX = "/images/seed-tiles/";
  * back to a deterministic pick — so the failure mode is "less variety", never a
  * broken image.
  */
-const SEED_TILE_COLOURS: readonly string[] = [
+export const SEED_TILE_COLOURS: readonly string[] = [
   "1e293b",
   "334155",
   "3f3f46",
@@ -160,6 +160,67 @@ export function placeholderTileFor(absUrl: string): string | undefined {
   // tile and the grid keeps its variety.
   const fallback = SEED_TILE_COLOURS[tileHash(parsed.pathname) % SEED_TILE_COLOURS.length];
   return `${SEED_TILE_PREFIX}${fallback}.svg`;
+}
+
+/**
+ * A placeholder tile as a `data:` URI — the SAME artwork as
+ * `public/images/seed-tiles/<hex>.svg`, generated in memory.
+ *
+ * ## 🛑 Why a data URI and not the shipped file
+ *
+ * Because the shipped file is not reachable from every host, and a placeholder
+ * that 404s is worse than no placeholder at all. Measured 2026-11-10:
+ *
+ *   GET /images/seed-tiles/1e293b.svg
+ *     www.letitrip.in     404      events.letitrip.in  404
+ *     blogs.letitrip.in   404      media.letitrip.in   404
+ *
+ * The six tiles live in the SHOP's `public/` only; `appkit/events`,
+ * `appkit/blogs` and `appkit/media` ship no `public/images/seed-tiles/` and no
+ * `public/media-placeholder.svg` at all. CLAUDE.md already records
+ * `/images/seed-tiles/*.svg` as a shop-owned asset the extracted apps cannot
+ * reach. A data URI has no host, so it cannot be the wrong one.
+ *
+ * It is also the only form that costs NOTHING: no request, no CDN cache key, no
+ * function invocation. That matters precisely when it is used — a bucket whose
+ * objects are missing means EVERY image on the page needs a stand-in at once,
+ * which is the shape (not the size) of the traffic that suspended this project
+ * with HTTP 402 on 2026-10-09.
+ *
+ * ## ⚠ Render-time only — never persist this
+ *
+ * `isStoredMediaRef` rejects `data:` on purpose. This is a value a component
+ * renders when a load has already failed, not a value any document may hold.
+ * The seed helpers' persistable stand-in is still `seedPhoto()` →
+ * `/images/seed-tiles/<hex>.svg`.
+ *
+ * Deterministic on `seed` (the failed URL), so the same broken image gets the
+ * same tile on every render and a grid of them keeps the variety the six files
+ * were chosen for. Colours come from `SEED_TILE_COLOURS` rather than a fourth
+ * copy of the palette.
+ */
+export function inlineMediaTile(seed: string): string {
+  const bg = SEED_TILE_COLOURS[tileHash(seed) % SEED_TILE_COLOURS.length];
+  /*
+   * Literal hex, like the asset it mirrors: an SVG consumed as an image has no
+   * stylesheet and no `var(--appkit-color-*)` in scope, so a token here would
+   * resolve to nothing. `_placeholder.ts` and `seed-tiles/*.svg` carry the same
+   * note for the same reason.
+   */
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" ' +
+    'preserveAspectRatio="xMidYMid slice" role="img" aria-hidden="true">' +
+    `<rect width="1200" height="900" fill="#${bg}"/>` +
+    '<g fill="none" stroke="#f8fafc" stroke-opacity=".10" stroke-width="2">' +
+    '<circle cx="600" cy="450" r="150"/>' +
+    '<circle cx="600" cy="450" r="230"/>' +
+    '<circle cx="600" cy="450" r="310"/>' +
+    "</g>" +
+    '<circle cx="600" cy="450" r="64" fill="#f8fafc" fill-opacity=".08"/>' +
+    "</svg>";
+  // encodeURIComponent and not base64: `#` and `<` must be escaped for a data
+  // URI, the result is smaller than base64, and it stays readable in devtools.
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 /**

@@ -5,7 +5,7 @@ import { Div } from "./Div";
 import { Row } from "./Layout";
 import { Span } from "./Typography";
 import { ROUNDED_MAP, SHADOW_MAP, type RoundedKey, type ShadowKey } from "./surface-tokens";
-import { MEDIA_PROXY_PREFIX, resolveMediaUrl } from "../../utils/media-url";
+import { MEDIA_PROXY_PREFIX, inlineMediaTile, resolveMediaUrl } from "../../utils/media-url";
 
 // --- Size presets -------------------------------------------------------------
 
@@ -96,6 +96,60 @@ const RETRY_BACKOFF_MS = [600, 1200, 2400];
  */
 function isRetryableSrc(resolvedSrc: string): boolean {
   return resolvedSrc.startsWith(MEDIA_PROXY_PREFIX);
+}
+
+/*
+ * ── 🛑 THE RETRY STORM, AND WHY ITS PREMISE CAN BE FALSE ──────────────────
+ *
+ * The retry above is justified on one claim: the post-upload race "is genuine
+ * and transient — retrying actually succeeds". When that holds, paying up to 4
+ * cold invocations for one image is a fair trade.
+ *
+ * It does not hold when the Storage OBJECT is gone. Measured 2026-11-10 after
+ * the production Firebase Storage wipe:
+ *
+ *   GET /media/event-cover-diwali-lamps                        404  15 bytes
+ *   GET /media/media/editorial/event-cover-diwali-lamps.webp   404  15 bytes
+ *   GET /media/category-advance-eterner-image                  404  15 bytes
+ *
+ * The second one is the decisive measurement: a multi-segment slug bypasses the
+ * `mediaAssets` lookup entirely and addresses Storage directly, so its 404
+ * proves the BYTES are missing, not merely the Firestore row. (And a 404 rather
+ * than the media route's 200-SVG catch branch proves the bucket was reachable —
+ * a credentials failure would have thrown into that catch instead.)
+ *
+ * The seed catalogue holds **563 distinct `/media/<slug>` references**. Every
+ * one of them now fails permanently, so the retry turned a cost control into a
+ * cost multiplier on the whole catalogue at once — 4 guaranteed-cold CDN keys
+ * per image, per mounted instance, forever, which is the exact shape that
+ * suspended this project with HTTP 402 on 2026-10-09.
+ *
+ * This memo caps it: a resolved URL that exhausts its retries is remembered for
+ * the life of the page, so the SECOND component to reference it skips the
+ * retries and the request entirely. A grid of 60 cards sharing 6 broken slugs
+ * costs 6 × 4 attempts instead of 60 × 4.
+ *
+ * ⚠ Deliberately PER PAGE LOAD, not persisted. A navigation or reload clears
+ * it, so a genuinely transient failure still heals — the memo trades one
+ * page-lifetime of a placeholder for a bounded invocation count, and never
+ * hides a recovery for longer than that.
+ */
+const failedSrcs = new Set<string>();
+
+/**
+ * Cap, so a long-lived SPA session cannot grow this without bound.
+ *
+ * On overflow the memo is CLEARED rather than evicting one entry: the cost it
+ * protects against is proportional to how many distinct broken URLs a page
+ * holds, and a page holding more than this many has a problem the memo was
+ * never going to fix. Clearing keeps the structure honest instead of making it
+ * an LRU nobody asked for.
+ */
+const FAILED_SRC_CAP = 512;
+
+function rememberFailedSrc(resolvedSrc: string): void {
+  if (failedSrcs.size >= FAILED_SRC_CAP) failedSrcs.clear();
+  failedSrcs.add(resolvedSrc);
 }
 
 // --- MediaImageProps ----------------------------------------------------------
@@ -305,23 +359,69 @@ export function MediaImage({
     className ?? "",
   ].filter(Boolean).join(" ");
 
+  // A URL that already exhausted its retries on this page. Checked at RENDER
+  // time, before any request is made, so a repeat reference costs nothing.
+  const knownFailed = Boolean(resolvedSrc) && failedSrcs.has(resolvedSrc!);
+
   const handleError = () => {
-    if (resolvedSrc && isRetryableSrc(resolvedSrc) && retryCount < MAX_LOAD_RETRIES) {
+    if (
+      resolvedSrc &&
+      isRetryableSrc(resolvedSrc) &&
+      retryCount < MAX_LOAD_RETRIES &&
+      !failedSrcs.has(resolvedSrc)
+    ) {
       retryTimeoutRef.current = setTimeout(() => {
         setRetryCount((count) => count + 1);
       }, RETRY_BACKOFF_MS[retryCount]);
       return;
     }
+    if (resolvedSrc) rememberFailedSrc(resolvedSrc);
     setHasError(true);
     onError?.();
   };
 
-  if (!resolvedSrc || hasError) {
+  if (!resolvedSrc || hasError || knownFailed) {
+    /*
+     * 🛑 TWO DIFFERENT FAILURES, TWO DIFFERENT TILES — and conflating them is
+     * what made a wiped Storage bucket look like an empty page.
+     *
+     * `!resolvedSrc` means the RECORD HAS NO IMAGE. An emoji in a subtle box is
+     * the right answer: nothing is broken, there is simply nothing to show, and
+     * the surrounding card already says what the thing is.
+     *
+     * `hasError`/`knownFailed` means an image WAS set and could not be loaded.
+     * That is a missing asset, and until 2026-11-10 it rendered the identical
+     * emoji box — so a bucket with 563 missing objects presented as a site that
+     * had never had any imagery, with nothing on screen distinguishing "no
+     * photo" from "the photo is gone".
+     *
+     * The tile is `inlineMediaTile()`: the same artwork as
+     * `public/images/seed-tiles/<hex>.svg`, as a `data:` URI. Deliberately NOT
+     * the shipped file — measured 2026-11-10, `/images/seed-tiles/1e293b.svg`
+     * is 404 on all four hosts, because those six files live in the shop's
+     * `public/` only. A placeholder that 404s is worse than none.
+     *
+     * The emoji stays ON TOP of the tile rather than being replaced, so the
+     * small-box case the `onError` prop's doc comment warns about (an emoji
+     * rendering as an illegible dot under ~40px) now degrades to a legible
+     * coloured tile instead of to nothing.
+     */
+    const tile = resolvedSrc ? inlineMediaTile(resolvedSrc) : undefined;
     return (
       <Row
         className={`relative w-full ${boxClass} overflow-hidden text-zinc-400 text-[length:var(--appkit-text-4xl)]${wrapperExtra ? ` ${wrapperExtra}` : ""}`} align="center" justify="center" surface="subtle"
         role="img"
         aria-label={alt}
+        style={
+          tile
+            ? {
+                ...style,
+                backgroundImage: `url("${tile}")`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : style
+        }
       >
         <Span aria-hidden="true">{icon}</Span>
       </Row>

@@ -59,6 +59,63 @@ export function editorialImage(slotKey: string): string {
 }
 
 /*
+ * ── 🛑 EVERY SLOT THIS RETURNS IS CURRENTLY A 404, AND THAT IS NOT FIXED HERE ─
+ *
+ * The production Firebase Storage wipe removed the bytes behind every editorial
+ * slot. Measured 2026-11-10 against the live media host:
+ *
+ *   /media/event-cover-diwali-lamps                        404  text/plain  15B
+ *   /media/event-cover-diwali-fireworks                    404  text/plain  15B
+ *   /media/category-advance-eterner-image                  404  text/plain  15B
+ *   /media/media/editorial/event-cover-diwali-lamps.webp   404  text/plain  15B
+ *
+ * The LAST line is the one that settles what is wrong. A multi-segment slug
+ * skips the `mediaAssets` lookup and addresses Storage directly, so its 404
+ * says the OBJECT is gone — not that this file's slot key failed to resolve to
+ * a row. And a 404 rather than the media route's 200-SVG catch branch says the
+ * bucket was reachable: a credentials failure would have thrown into that catch
+ * instead. 59 editorial rows; 563 distinct `/media/` references across the seed.
+ *
+ * ## Why this function was NOT changed to emit a placeholder
+ *
+ * It was the obvious move and it is wrong three times over:
+ *
+ *  1. **This value is PERSISTED.** It is written into `coverImage.url` on a real
+ *     document. A placeholder here is not a graceful degradation, it is a
+ *     permanent edit to the data that survives until someone reseeds — and
+ *     `appkit-seed load` uses `set({merge:true})`, which CANNOT remove a field,
+ *     so undoing it is a migration rather than an edit.
+ *  2. **It destroys the recovery path.** The slot key IS the instruction to
+ *     `scripts/push-editorial-images.mjs` about which image this row wants. Once
+ *     the row says `/images/seed-tiles/334155.svg`, nothing records that it was
+ *     ever meant to be the Diwali lamps.
+ *  3. **It would not even render.** Measured the same day,
+ *     `/images/seed-tiles/1e293b.svg` is **404 on all four hosts** — the six
+ *     tiles ship in the SHOP's `public/` only, and `appkit/events`,
+ *     `appkit/blogs` and `appkit/media` carry none of them. Swapping one dead
+ *     link for another is not a fix.
+ *
+ * ## Where the degradation actually happens
+ *
+ * At RENDER time, in `MediaImage` (`appkit/src/ui/components/MediaImage.tsx`) —
+ * the only layer that can observe the 404 rather than guess at it. A failed
+ * `/media/<slug>` now paints `inlineMediaTile()`, the seed-tile artwork as a
+ * `data:` URI, which has no host and therefore cannot be the wrong one. It also
+ * stops re-requesting a URL that has already failed, because the 3× `?retry=N`
+ * backoff mints guaranteed-cold CDN keys and a wiped bucket makes that a 4×
+ * invocation multiplier across the entire catalogue at once.
+ *
+ * ## The REAL fix, when the bytes can be restored
+ *
+ *   node scripts/fetch-editorial-images.mjs
+ *   node scripts/push-editorial-images.mjs           # fails loudly on a slot with no row
+ *   npx appkit-seed load --collections mediaAssets
+ *
+ * 🛑 Against PRODUCTION, `appkit-seed load` with no `--collections` writes
+ * 6,000+ documents. Scope it.
+ */
+
+/*
  * ── 🛑 CHANGING AN IMAGE MEANS CHANGING ITS KEY ───────────────────────────
  *
  * `/api/media/[...slug]` answers `Cache-Control: public, max-age=2592000,
