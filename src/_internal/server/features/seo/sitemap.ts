@@ -89,8 +89,85 @@ function sitemapSectionFailed(label: string, err: unknown): [] {
   return [];
 }
 
+/**
+ * Every section this builder can emit. The names are the same keys the
+ * per-section count digest logs and `scripts/deploy.mjs` asserts against, so
+ * there is one vocabulary for "which part of the sitemap".
+ */
+export const SITEMAP_SECTIONS = [
+  "static",
+  "category",
+  "brand",
+  "franchise",
+  "bundle",
+  "group",
+  "blog",
+  "product",
+  "collectorDrop",
+  "preOrder",
+  "clearance",
+  "classified",
+  "digitalCode",
+  "live",
+  "event",
+  "store",
+  "scammer",
+] as const;
+
+export type SitemapSection = (typeof SITEMAP_SECTIONS)[number];
+
 export interface SitemapOptions {
   baseUrl: string;
+  /**
+   * Emit ONLY these sections. Omit for all of them, which is what the main
+   * shop wants.
+   *
+   * ## 🛑 Why this exists, and why it is not a nice-to-have
+   *
+   * The blog and events surfaces now live on their own deployments
+   * (`blogs.`/`events.`). Each needs a sitemap carrying **its own** URLs on
+   * **its own** host, and the shop needs to stop advertising them — because the
+   * moment the shop 301s `/blog/*` to the subdomain, every `/blog` URL left in
+   * the shop's sitemap becomes a redirecting entry.
+   *
+   * That is not a hypothetical. This file's own note at the `disabledRoutes`
+   * filter records the measured version: on 2026-10-27 the production sitemap
+   * advertised **17 `/blog` URLs and one `/reviews` URL** that already 404'd at
+   * the edge — 18 crawl errors on pages we had explicitly asked Google to
+   * fetch. And `seo.server.ts` in the consumer records the worse outcome, when
+   * half the URL surface followed one host and half another: *every URL in the
+   * sitemap 307-redirected and Google dropped the site.*
+   *
+   * So a host must be able to say "my sitemap is these sections and nothing
+   * else", and the two halves must be derived from one list rather than two
+   * hand-maintained ones. Hence an allowlist here instead of a second sitemap
+   * builder in each extracted app.
+   *
+   * 🛑 A section NOT selected is not fetched at all — the point is to avoid the
+   * Firestore reads too, not merely to filter the result. A subdomain querying
+   * the entire product catalogue to throw it away would make every sitemap
+   * request pay for sixteen collections it never emits.
+   *
+   * 🛑 `static` is a section like any other, so an allowlist that omits it
+   * emits no static pages. That is deliberate: the shop's static pages
+   * (`/about`, `/contact`, the browse routes) belong to the shop, and a
+   * subdomain advertising them under its own host would be inventing URLs that
+   * do not exist there.
+   */
+  sections?: readonly SitemapSection[];
+  /**
+   * Emit everything EXCEPT these. Mutually exclusive with `sections` in
+   * practice; if both are given, `sections` is applied first and this narrows
+   * it further.
+   *
+   * This is the shop's half of the split — `excludeSections: ["blog", "event"]`
+   * — and it is spelled as an exclusion rather than a 15-name allowlist so that
+   * a NEW section added to this file is carried by the shop automatically. An
+   * allowlist there would silently drop the next surface somebody adds, which
+   * is the same "measured as empty → looks intentional" failure the digest
+   * below exists to catch.
+   */
+  excludeSections?: readonly SitemapSection[];
 }
 
 /**
@@ -653,7 +730,27 @@ async function fetchScammerUrls(baseUrl: string): Promise<MetadataRoute.Sitemap>
 }
 
 
-export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
+export async function buildSitemap({
+  baseUrl,
+  sections: only,
+  excludeSections,
+}: SitemapOptions): Promise<MetadataRoute.Sitemap> {
+  /*
+   * Which sections this host emits. See `SitemapOptions.sections` for why a
+   * host must be able to answer this at all.
+   *
+   * 🛑 `wants()` gates the FETCH, not the output. An unselected section issues
+   * no Firestore query — a subdomain must not pay for sixteen collections it
+   * throws away on every sitemap request.
+   */
+  const excluded = new Set(excludeSections ?? []);
+  const allowed = only ? new Set(only) : null;
+  const wants = (s: SitemapSection) =>
+    !excluded.has(s) && (allowed === null || allowed.has(s));
+  /** `[]` for a section this host does not emit, without running its query. */
+  const ifWanted = <T>(s: SitemapSection, run: () => Promise<T[]>): Promise<T[]> =>
+    wants(s) ? run() : Promise.resolve([]);
+
   const [
     productUrls,
     categoryUrls,
@@ -672,24 +769,24 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     storeUrls,
     scammerUrls,
   ] = await Promise.all([
-    fetchProductUrls(baseUrl),
-    fetchCategoryUrls(baseUrl),
-    fetchBrandUrls(baseUrl),
-    fetchFranchiseUrls(baseUrl),
-    fetchBundleUrls(baseUrl),
-    fetchGroupedListingUrls(baseUrl),
-    fetchEventUrls(baseUrl),
-    fetchBlogPostUrls(baseUrl),
-    fetchCollectorDropUrls(baseUrl),
-    fetchPreOrderUrls(baseUrl),
-    fetchClearanceUrls(baseUrl),
-    fetchClassifiedUrls(baseUrl),
-    fetchDigitalCodeUrls(baseUrl),
-    fetchLiveUrls(baseUrl),
-    fetchStoreUrls(baseUrl),
-    fetchScammerUrls(baseUrl),
+    ifWanted("product", () => fetchProductUrls(baseUrl)),
+    ifWanted("category", () => fetchCategoryUrls(baseUrl)),
+    ifWanted("brand", () => fetchBrandUrls(baseUrl)),
+    ifWanted("franchise", () => fetchFranchiseUrls(baseUrl)),
+    ifWanted("bundle", () => fetchBundleUrls(baseUrl)),
+    ifWanted("group", () => fetchGroupedListingUrls(baseUrl)),
+    ifWanted("event", () => fetchEventUrls(baseUrl)),
+    ifWanted("blog", () => fetchBlogPostUrls(baseUrl)),
+    ifWanted("collectorDrop", () => fetchCollectorDropUrls(baseUrl)),
+    ifWanted("preOrder", () => fetchPreOrderUrls(baseUrl)),
+    ifWanted("clearance", () => fetchClearanceUrls(baseUrl)),
+    ifWanted("classified", () => fetchClassifiedUrls(baseUrl)),
+    ifWanted("digitalCode", () => fetchDigitalCodeUrls(baseUrl)),
+    ifWanted("live", () => fetchLiveUrls(baseUrl)),
+    ifWanted("store", () => fetchStoreUrls(baseUrl)),
+    ifWanted("scammer", () => fetchScammerUrls(baseUrl)),
   ]);
-  const staticUrls = staticPages(baseUrl);
+  const staticUrls = wants("static") ? staticPages(baseUrl) : [];
 
   // Per-section count digest. A section that drops to zero is otherwise
   // indistinguishable from a site that genuinely has none of that thing — which
@@ -872,6 +969,27 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
     const page = sectionPage[name];
     if (page && closed.has(page as (typeof ALL_BROWSE_PAGES)[number])) sections[name] = 0;
   }
+  /*
+   * 🛑 A section this host does not EMIT is dropped from the digest entirely,
+   * not reported as zero.
+   *
+   * The comment above this block is the reason, and it was written about the
+   * `closed` case: *"a warning that fires every build for a reason everyone
+   * knows about is how the next real zero gets ignored. 'Closed on purpose'
+   * and 'broken' must not look the same in the log."* Section scoping is the
+   * same hazard one axis over — without this, the blogs deployment would warn
+   * about fifteen empty sections on every single sitemap request, and the shop
+   * would warn about `blog` and `event` forever. Two permanent false alarms is
+   * how the alarm stops being read.
+   *
+   * Deleting the key rather than zeroing it also keeps the digest honest for
+   * `scripts/deploy.mjs`, which asserts these counts against the deployed
+   * sitemap: a section that is absent from the response should be absent here
+   * too, not present-and-zero.
+   */
+  for (const name of Object.keys(sections)) {
+    if (!wants(name as SitemapSection)) delete sections[name];
+  }
   const empty = Object.entries(sections)
     .filter(([name, n]) => n === 0 && !closed.has(sectionPage[name] as never))
     .map(([name]) => name);
@@ -880,6 +998,18 @@ export async function buildSitemap({ baseUrl }: SitemapOptions): Promise<Metadat
   if (closed.size > 0) {
     serverLogger.info("sitemap: browse section(s) closed, URLs withheld", {
       closed: [...closed],
+    });
+  }
+  /*
+   * Logged so a host's scope is visible in production, not just in its source.
+   * "Why is /blog missing from the sitemap" is otherwise answerable only by
+   * reading the caller.
+   */
+  if (only || excludeSections?.length) {
+    serverLogger.info("sitemap: section scope applied", {
+      ...(only ? { only: [...only] } : {}),
+      ...(excludeSections?.length ? { excluded: [...excludeSections] } : {}),
+      emitting: Object.keys(sections),
     });
   }
   if (empty.length > 0) {
