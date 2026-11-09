@@ -178,6 +178,22 @@ const _raweventsSeedData: EventDocument[] = [
      * not a deploy — which is the whole point of moving it onto the row.
      */
     entryApproval: "moderated",
+    /*
+     * Owner spec 2026-11-09: **up to 3 photos and 1 video, 4 items total**,
+     * and **one entry per person** for now.
+     *
+     * Spelled out on the row rather than left to the platform defaults even
+     * though they happen to match, for the same reason `entryApproval` is:
+     * this is the contest those numbers were written FOR, so they belong where
+     * someone changing the contest will look. A future event wanting ten
+     * photos edits its own row and nothing else.
+     *
+     * 🛑 `maxTotal` is not `maxImages + maxVideos`. It is a separate ceiling
+     * — 3 + 1 = 4 here, but an event allowing 5 images and 2 videos might still
+     * want a 5-item cap, and deriving it would remove that choice.
+     */
+    entryMedia: { maxImages: 3, maxVideos: 1, maxTotal: 4, requireImage: true },
+    entryLimit: 1,
     showOnCarousel: false,
     /*
      * 🛑 NOT `isTestData`. It was set here on first write, reasoning from the

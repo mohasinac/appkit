@@ -1,4 +1,8 @@
-import { resolveEntryApproval } from "../schemas/firestore";
+import {
+  resolveEntryApproval,
+  checkEntryMedia,
+  resolveEntryLimit,
+} from "../schemas/firestore";
 /**
  * Event Domain Actions (appkit/features/events)
  *
@@ -786,6 +790,49 @@ export async function enterEvent(
    * override the owner asked for works completely; the type-level default is
    * the next step and slots into the middle argument with no other change.
    */
+  /*
+   * ── THE EVENT'S OWN ENTRY RULES, enforced on the SERVER ──────────────
+   *
+   * 🛑 Both checks live here rather than only in the route's zod schema,
+   * because zod cannot see the EVENT. The schema can bound request size with
+   * a fixed ceiling; only this point knows that THIS contest allows 3 photos
+   * and 1 video and one entry per person.
+   *
+   * 🛑 And a client-side form that hides the submit button is not
+   * enforcement — the POST is still reachable. This is the write path, so it
+   * is where the limits have to hold.
+   */
+  const mediaProblem = checkEntryMedia(input.media, event.entryMedia);
+  if (mediaProblem) throw new ValidationError(mediaProblem);
+
+  /*
+   * One entry per participant by default (owner, 2026-11-09: "for now block
+   * single entry only"), overridable per event via `entryLimit`.
+   *
+   * ⚠ Checked for signed-in users only. A guest entry has no stable identity
+   * to count against — `guestIpHash` exists but an IP is shared by households
+   * and whole offices, so counting on it would block real people. Guest
+   * participation is gated separately by `allowGuestParticipation`; an event
+   * that needs a hard per-person limit should require sign-in, which is what
+   * the contest does.
+   *
+   * ⚠ NOT race-safe against two simultaneous submissions from one account.
+   * Making it so needs a transaction around count+create, or a deterministic
+   * entry id like `${eventId}:${uid}`. Stated rather than implied: the window
+   * is small and the consequence is a duplicate entry, not a lost one.
+   */
+  if (user?.uid) {
+    const limit = resolveEntryLimit(event.entryLimit);
+    const already = await eventEntryRepository.countUserEntries(resolvedEventId, user.uid);
+    if (already >= limit) {
+      throw new ValidationError(
+        limit === 1
+          ? "You have already entered this event."
+          : `You have reached the limit of ${limit} entries for this event.`,
+      );
+    }
+  }
+
   const approvalMode = resolveEntryApproval(event, undefined, legacyAutoApprove);
   const autoApprove = approvalMode === "auto";
 

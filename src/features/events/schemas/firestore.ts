@@ -168,6 +168,36 @@ export interface EventDocument extends BaseDocument {
    * no existing event changes behaviour. See `resolveEntryApproval`.
    */
   entryApproval?: EntryApprovalMode;
+  /**
+   * How much media ONE entry may carry. Owner spec 2026-11-09: **up to 3
+   * photos and 1 video, 4 items total.**
+   *
+   * 🛑 ON THE EVENT ROW, not in code, for the same reason `entryApproval` is:
+   * *"for now block single entry only but later allow config changes for all
+   * on the events"*. A second contest wanting 10 photos is a seed edit.
+   *
+   * The caps were already enforced — but as literals inside the submission
+   * route's zod schema (`.min(1).max(4)` plus two `.refine`s). That works for
+   * exactly one contest and cannot vary per event, which is the shape this
+   * project keeps having to undo.
+   *
+   * ⚠ zod cannot express these statically once they are per-event, so the
+   * schema keeps an ABSOLUTE ceiling (a sanity bound on request size) and the
+   * handler enforces THIS event's numbers after loading it. Both run; the
+   * schema is the cheap gate, the handler is the real one.
+   */
+  entryMedia?: EventEntryMediaLimits;
+  /**
+   * How many entries ONE participant may submit to this event.
+   *
+   * Owner, 2026-11-09: *"for now block single entry only"* — so the default
+   * is 1, and an event that wants more sets its own number.
+   *
+   * 🛑 Enforced on the SERVER, not by hiding the form. A client that has
+   * already submitted can still POST again; the check belongs where the write
+   * happens.
+   */
+  entryLimit?: number;
   isTestData?: boolean;
   /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
@@ -654,4 +684,82 @@ export function resolveEntryApproval(
   const chosen = event.entryApproval ?? typeDefault;
   if (chosen !== undefined) return chosen === "auto" ? "auto" : "moderated";
   return legacyAutoApprove ? "auto" : "moderated";
+}
+
+
+/**
+ * Per-entry media caps. All optional — an unset field falls back to the
+ * platform default in `resolveEntryMediaLimits`.
+ */
+export interface EventEntryMediaLimits {
+  /** Max images in one entry. Platform default: 3. */
+  maxImages?: number;
+  /** Max videos in one entry. Platform default: 1. */
+  maxVideos?: number;
+  /** Max items overall. Platform default: 4. */
+  maxTotal?: number;
+  /** Require at least one image. Platform default: true. */
+  requireImage?: boolean;
+}
+
+/**
+ * The platform defaults, stated once. Owner spec 2026-11-09 for the Diwali
+ * photo/video contest: 3 photos + 1 video, 4 total.
+ *
+ * 🛑 `maxTotal` is NOT `maxImages + maxVideos`. It is a separate cap on
+ * purpose: 3 + 1 = 4 today, but an event allowing 5 images and 2 videos may
+ * still want a 5-item ceiling. Deriving it would silently remove that choice.
+ */
+export const DEFAULT_ENTRY_MEDIA_LIMITS: Required<EventEntryMediaLimits> = {
+  maxImages: 3,
+  maxVideos: 1,
+  maxTotal: 4,
+  requireImage: true,
+};
+
+/** This event's caps, with every unset field filled from the platform default. */
+export function resolveEntryMediaLimits(
+  limits?: EventEntryMediaLimits,
+): Required<EventEntryMediaLimits> {
+  return {
+    maxImages: limits?.maxImages ?? DEFAULT_ENTRY_MEDIA_LIMITS.maxImages,
+    maxVideos: limits?.maxVideos ?? DEFAULT_ENTRY_MEDIA_LIMITS.maxVideos,
+    maxTotal: limits?.maxTotal ?? DEFAULT_ENTRY_MEDIA_LIMITS.maxTotal,
+    requireImage: limits?.requireImage ?? DEFAULT_ENTRY_MEDIA_LIMITS.requireImage,
+  };
+}
+
+/**
+ * Check one submission's media against an event's caps.
+ *
+ * Returns a human-readable reason, or `null` when it passes. A string rather
+ * than a boolean because the caller surfaces it to the participant — "At most
+ * 3 photos" is actionable; "invalid" is not.
+ */
+export function checkEntryMedia(
+  media: ReadonlyArray<{ type: string }> | undefined,
+  limits?: EventEntryMediaLimits,
+): string | null {
+  const l = resolveEntryMediaLimits(limits);
+  const items = media ?? [];
+  if (!items.length) {
+    return l.requireImage ? "Add at least one photo" : null;
+  }
+  if (items.length > l.maxTotal) return `At most ${l.maxTotal} items in total`;
+  const images = items.filter((m) => m.type === "image").length;
+  const videos = items.filter((m) => m.type === "video").length;
+  if (images > l.maxImages) return `At most ${l.maxImages} photos`;
+  if (videos > l.maxVideos) return `At most ${l.maxVideos} video${l.maxVideos === 1 ? "" : "s"}`;
+  if (l.requireImage && images < 1) return "At least one photo is required";
+  return null;
+}
+
+/** How many entries one participant may submit. Platform default: 1. */
+export const DEFAULT_ENTRY_LIMIT = 1;
+
+/** This event's per-participant entry limit. */
+export function resolveEntryLimit(entryLimit?: number): number {
+  return typeof entryLimit === "number" && entryLimit > 0
+    ? entryLimit
+    : DEFAULT_ENTRY_LIMIT;
 }

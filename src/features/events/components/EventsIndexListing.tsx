@@ -4,6 +4,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useEvents } from "../hooks/useEvents";
 import { Div } from "../../../ui/components/Div";
 import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Button } from "../../../ui/components/Button";
 import { ListingFilterDrawer } from "../../../ui/components/ListingFilterDrawer";
 import { ListingToolbar, applyToggleVisibility } from "../../../ui/components/ListingToolbar";
 import { useFieldVisibility } from "../../shell/useFieldVisibility";
@@ -142,6 +143,27 @@ export function EventsIndexListing({ initialData, facetCounts }: EventsIndexList
   if (dateFrom) filterParts.push(sieveFilter(EVENT_FIELDS.STARTS_AT, SIEVE_OP.GTE, dateFrom));
   if (dateTo) filterParts.push(sieveFilter(EVENT_FIELDS.ENDS_AT, SIEVE_OP.LTE, dateTo));
 
+  /*
+   * LIVE / FINISHED tabs, split BY DATE WINDOW rather than by `status`
+   * (owner, 2026-11-09): an event is finished when its `endsAt` has passed.
+   *
+   * Why not `status`: the two can disagree. An event whose `endsAt` passed
+   * while nobody moved it off `active` would sit under "Live" forever, and a
+   * tab that lies about what is running is worse than no tab. The clock
+   * cannot forget to be updated.
+   *
+   * The "Show expired" toggle stays and the two do NOT fight: it widens the
+   * STATUS set, this narrows the DATE window. Selecting Finished with "Show
+   * expired" off still works, because a finished event may still be `active`.
+   */
+  const phase = table.get(TABLE_KEYS.TAB);
+  if (phase === "live" || phase === "finished") {
+    const nowIso = new Date().toISOString();
+    filterParts.push(
+      sieveFilter(EVENT_FIELDS.ENDS_AT, phase === "live" ? SIEVE_OP.GTE : SIEVE_OP.LT, nowIso),
+    );
+  }
+
   const params = {
     q: table.get(TABLE_KEYS.QUERY) || undefined,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
@@ -159,6 +181,47 @@ export function EventsIndexListing({ initialData, facetCounts }: EventsIndexList
 
   return (
     <Div className="min-h-screen">
+      {/*
+        Live / Finished tabs. ABOVE the toolbar on purpose: the tab chooses
+        WHICH SET you are looking at; the toolbar filters and sorts within it.
+        A set-level control sitting inside a row of field-level ones reads as
+        just another filter.
+
+        State lives in the URL (`TABLE_KEYS.TAB`) like every other control
+        here, so a tab is shareable, survives a refresh, and `resetAll` clears
+        it along with everything else instead of leaving one control stuck.
+      */}
+      <Row gap="xs" className="px-[var(--appkit-space-4)] pt-[var(--appkit-space-3)]">
+        {[
+          { key: "", label: "All" },
+          { key: "live", label: "Live" },
+          { key: "finished", label: "Finished" },
+        ].map((t) => {
+          const active = (table.get(TABLE_KEYS.TAB) || "") === t.key;
+          return (
+            <Button
+              key={t.key || "all"}
+              variant={active ? "primary" : "ghost"}
+              size="sm"
+              aria-pressed={active}
+              onClick={() => {
+                /*
+                 * Reset to page 1. Without this, switching from a set with 5
+                 * pages to one with 1 leaves `page=4` in the URL and the grid
+                 * renders empty — which reads as "no finished events" rather
+                 * than "you are past the end".
+                 */
+                table.set(TABLE_KEYS.PAGE, "");
+                table.set(TABLE_KEYS.TAB, t.key);
+              }}
+            >
+              {t.label}
+            </Button>
+          );
+        })}
+      </Row>
+
+
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={activeFilterCount}
