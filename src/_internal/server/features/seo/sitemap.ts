@@ -168,6 +168,38 @@ export interface SitemapOptions {
    * below exists to catch.
    */
   excludeSections?: readonly SitemapSection[];
+  /**
+   * Skip the SHOP's surface-visibility policy — for a host that OWNS the
+   * sections it is emitting.
+   *
+   * ## 🛑 Why this is necessary and not a loophole
+   *
+   * `keep()` below withholds any URL under a closed browse section, an
+   * unlisted listing-type route, or a `closedSurfacePrefix` derived from
+   * `siteSettings.disabledRoutes`. That is exactly right for the shop: a
+   * surface it has switched off must not be advertised.
+   *
+   * It is exactly WRONG for an extracted subdomain, and the reason is almost
+   * funny: the shop disables `/blog` **because the blog moved to
+   * `blogs.<domain>`**. The subdomain then reads the same settings document,
+   * sees `/blog` disabled, and withholds its own content.
+   *
+   * Measured on 2026-11-09, from the blogs build log:
+   *
+   *   sitemap: built  {"sections":{"blog":16},"total":0}
+   *
+   * Sixteen posts fetched, every one filtered out, and a valid empty
+   * `<urlset>` served with HTTP 200. The pages themselves rendered perfectly
+   * throughout — only the sitemap was gone.
+   *
+   * 🛑 It does NOT skip the section scope. `sections`/`excludeSections` still
+   * apply, so this cannot be used to make one host emit another's URLs. It
+   * only stops the SHOP's visibility flags from governing a host the shop does
+   * not serve.
+   *
+   * 🛑 Leave it UNSET on the shop. There, those flags are the whole point.
+   */
+  ownsSections?: boolean;
 }
 
 /**
@@ -734,6 +766,7 @@ export async function buildSitemap({
   baseUrl,
   sections: only,
   excludeSections,
+  ownsSections = false,
 }: SitemapOptions): Promise<MetadataRoute.Sitemap> {
   /*
    * Which sections this host emits. See `SitemapOptions.sections` for why a
@@ -917,6 +950,11 @@ export async function buildSitemap({
   const closedPrefixes = closedSurfacePrefixes(settings);
 
   const keep = (entry: MetadataRoute.Sitemap[number]) => {
+    /*
+     * A host that OWNS its sections is not governed by the shop's visibility
+     * flags — see `ownsSections`. The section scope above still applies.
+     */
+    if (ownsSections) return true;
     const path = entry.url.startsWith("http")
       ? new URL(entry.url).pathname
       : entry.url;
