@@ -163,6 +163,21 @@ const _raweventsSeedData: EventDocument[] = [
       alt: "Lit clay diya lamps glowing in a row at night",
     },
     tags: ["contest", "photo", "ugc", "diwali", "community"],
+    /*
+     * 🛑 MODERATED, set EXPLICITLY on this row (owner, 2026-11-09:
+     * auto-approve or moderator approval is configured on the event itself).
+     *
+     * It is spelled out rather than left to the default for two reasons.
+     * First, this is USER-SUBMITTED PHOTOGRAPHY on a public gallery — the one
+     * content type where "it defaulted to the safe thing" is not good enough
+     * to rely on. Second, `contest` was absent from the hardcoded type switch
+     * this field replaced, so it was moderated by ACCIDENT; an explicit value
+     * turns that accident into a decision.
+     *
+     * Flip to `"auto"` to publish entries immediately. That is a seed edit,
+     * not a deploy — which is the whole point of moving it onto the row.
+     */
+    entryApproval: "moderated",
     showOnCarousel: false,
     isTestData: true,
     testDataExpiresAt: SEASON_END,

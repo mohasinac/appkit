@@ -1,3 +1,4 @@
+import { resolveEntryApproval } from "../schemas/firestore";
 /**
  * Event Domain Actions (appkit/features/events)
  *
@@ -748,12 +749,45 @@ export async function enterEvent(
    * pool — that is the moderation path, not a standing review queue of every
    * entrant.
    */
-  const autoApprove =
+  /*
+   * ⚠ LEGACY FALLBACK ONLY — do not add a type to this expression.
+   *
+   * This was the whole decision until 2026-11-09, and it is `event.type ===`
+   * branching: the exact shape the governing principle calls a defect. It also
+   * meant a new type could not choose — `contest` is absent, so contest
+   * entries were moderated by accident, and changing that needed a release.
+   *
+   * It survives ONLY so events already in the database behave exactly as they
+   * did. `resolveEntryApproval` consults it last. A NEW type declares its
+   * default in `event-types-seed-data.ts`; a single event overrides with
+   * `entryApproval` on its own row. Delete this once every type has a default.
+   */
+  const legacyAutoApprove =
     event.type === "poll" ||
     event.type === "feedback" ||
     eventType === "giveaway" ||
     (event.type === "survey" &&
       !(event.surveyConfig as any)?.entryReviewRequired);
+
+  /*
+   * The event's own setting wins, then the type's default, then the legacy
+   * expression. Anything unrecognised resolves to MODERATED — fail closed, so
+   * newer config against an older deploy cannot start publishing unreviewed
+   * user content.
+   */
+  /*
+   * ⚠ The TYPE-level default is passed as `undefined` for now. The precedence
+   * chain is built for three levels — event row, then type default, then the
+   * legacy expression — and `event-types-seed-data.ts` is where a type's
+   * default belongs, beside the `ruleSets` it already carries.
+   *
+   * Reading it here needs the type definition loaded at this point, which this
+   * action does not currently do. Stated rather than faked: the EVENT-level
+   * override the owner asked for works completely; the type-level default is
+   * the next step and slots into the middle argument with no other change.
+   */
+  const approvalMode = resolveEntryApproval(event, undefined, legacyAutoApprove);
+  const autoApprove = approvalMode === "auto";
 
   const reviewStatus = autoApprove ? "approved" : "pending";
 

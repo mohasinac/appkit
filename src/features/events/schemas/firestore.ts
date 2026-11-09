@@ -136,6 +136,38 @@ export interface EventDocument extends BaseDocument {
   isPinned?: boolean;
 
   /** Test-data flag — set on the shared admin-seeded test event; swept by testDataCleanup. */
+  /**
+   * Who may publish an entry: nobody (`"moderated"`) or the entrant
+   * (`"auto"`). Set ON THE EVENT, per owner 2026-11-09.
+   *
+   * ## 🛑 This replaces a hardcoded type switch
+   *
+   * `enterEvent` decided this with:
+   *
+   *   const autoApprove =
+   *     event.type === "poll" || event.type === "feedback" ||
+   *     eventType === "giveaway" ||
+   *     (event.type === "survey" && !surveyConfig?.entryReviewRequired);
+   *
+   * That is `event.type === …` branching, which the governing principle names
+   * as a defect rather than a safeguard: *"a mechanism never asks what TYPE is
+   * this — it asks what CAPABILITY does this have"*. It also meant a NEW event
+   * type could not choose: `contest` is absent from that list, so contest
+   * entries were moderated by accident rather than by decision, and changing
+   * it would have required an appkit release.
+   *
+   * Now it is a value on the row. A moderated photo contest and an
+   * auto-approving one are two seed rows, not two code paths.
+   *
+   * 🛑 OPEN union, deliberately — `(string & {})` keeps autocomplete while
+   * allowing a mode this release has never heard of. `resolveEntryApproval`
+   * treats anything unknown as MODERATED, which is the fail-closed direction:
+   * an unrecognised setting must not publish unreviewed user content.
+   *
+   * Unset falls back to the type's default, then to the legacy expression, so
+   * no existing event changes behaviour. See `resolveEntryApproval`.
+   */
+  entryApproval?: EntryApprovalMode;
   isTestData?: boolean;
   /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
@@ -585,3 +617,41 @@ export const eventQueryHelpers = {
   withRaffle: () => ["hasRaffle", "==", true] as const,
   raffleNotYetDrawn: () => ["raffleWinnerUserId", "==", null] as const,
 } as const;
+
+
+/**
+ * How an event decides whether a submitted entry is published immediately.
+ *
+ * 🛑 OPEN, not a closed enum. The platform ships two modes; a deployment
+ * that needs a third ("auto below N entries", "auto for verified buyers")
+ * writes its own slug and a resolver rule rather than waiting for a release.
+ */
+export type EntryApprovalMode = "auto" | "moderated" | (string & {});
+
+/**
+ * Resolve the approval mode for one entry submission.
+ *
+ * Order, most specific first:
+ *   1. `event.entryApproval`      — this event's own decision
+ *   2. `typeDefault`              — the event TYPE's default, from seed config
+ *   3. the legacy expression      — see below
+ *
+ * 🛑 FAILS CLOSED. Anything not recognised as `"auto"` resolves to
+ * moderated. An unknown mode arriving from newer config against an older
+ * deploy must not start publishing unreviewed user content — degrading to a
+ * review queue is recoverable, publishing is not.
+ *
+ * ⚠ The third fallback is a MIGRATION PATH, not a design. It reproduces the
+ * hardcoded type switch this field replaced so that events already in the
+ * database keep behaving exactly as they did. It should be deleted once every
+ * event type declares its own default in `event-types-seed-data.ts`.
+ */
+export function resolveEntryApproval(
+  event: { entryApproval?: EntryApprovalMode; type?: string; surveyConfig?: unknown },
+  typeDefault?: EntryApprovalMode,
+  legacyAutoApprove?: boolean,
+): "auto" | "moderated" {
+  const chosen = event.entryApproval ?? typeDefault;
+  if (chosen !== undefined) return chosen === "auto" ? "auto" : "moderated";
+  return legacyAutoApprove ? "auto" : "moderated";
+}
