@@ -1667,6 +1667,8 @@ export function AdminSiteSettingsView({
   // the operator.
   const [notificationsForm, setNotificationsForm] = React.useState<SiteSettingsNotificationsFormValues>({
     msgEmailEnabled: false, msgWhatsappEnabled: false, msgCeilingEmail: 80, msgCeilingWhatsapp: 200,
+    // 0 = no limit. See the schema's note: an empty field must not gag the site.
+    perOrderCapEmail: 0, perOrderCapWhatsapp: 0,
     notifEmailEnabled: false, notifEmailMinPriority: "normal", resendApiKey: "",
     notifFromEmail: "", notifFromName: "", notifEmailTypes: [],
     digestEnabled: false, digestRecipients: "",
@@ -2046,6 +2048,8 @@ export function AdminSiteSettingsView({
       msgWhatsappEnabled: s.messaging?.whatsappEnabled ?? false,
       msgCeilingEmail: s.messaging?.dailyCeiling?.email ?? 80,
       msgCeilingWhatsapp: s.messaging?.dailyCeiling?.whatsapp ?? 200,
+      perOrderCapEmail: s.notificationPerOrderCap?.email ?? 0,
+      perOrderCapWhatsapp: s.notificationPerOrderCap?.whatsapp ?? 0,
     });
 
     originalMaskedRef.current = {
@@ -2266,6 +2270,16 @@ export function AdminSiteSettingsView({
           // uncapped if somebody adds a provider later.
           sms: 50,
         },
+      },
+      /*
+       * 🛑 A DIFFERENT AXIS from `messaging.dailyCeiling` above, not a
+       * duplicate of it. That one is per-channel-per-day and global; this one
+       * bounds a single order. Both are needed: the ceiling stops the month's
+       * bill running away, this stops one order consuming the day.
+       */
+      notificationPerOrderCap: {
+        email: notificationsForm.perOrderCapEmail,
+        whatsapp: notificationsForm.perOrderCapWhatsapp,
       },
       integrations: {
         googleAnalyticsId: integrationsForm.gaMeasurementId,

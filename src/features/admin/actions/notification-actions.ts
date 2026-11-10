@@ -23,6 +23,7 @@ import {
   resolveNotificationRule,
   ruleAllowsChannel,
   capDecision,
+  type NotificationRule,
 } from "../../../_internal/shared/features/notifications/registry";
 import {
   guardSend,
@@ -148,6 +149,43 @@ const WHATSAPP_ORDER_TEMPLATE_TYPES = new Set([
   "order_cancelled",
   "refund_initiated",
 ]);
+
+/**
+ * The per-order cap, for the WhatsApp arm.
+ *
+ * Extracted because the WhatsApp gate is a single boolean expression and a
+ * transaction cannot be inlined into one legibly — but it must still sit
+ * INSIDE that expression, after the cheap checks, so a counter increment never
+ * runs for a send that some earlier condition was going to reject anyway.
+ *
+ * 🛑 Returns `true` (allow) for anything that is not order-scoped. A welcome
+ * message has no order to be capped against, and defaulting to "blocked" would
+ * silence every non-order notification the moment a cap was set.
+ */
+async function whatsappOrderCapAllows(
+  rule: NotificationRule,
+  notifInput: { relatedType?: string; relatedId?: string },
+  settings: { notificationPerOrderCap?: { whatsapp?: number } },
+): Promise<boolean> {
+  if (notifInput.relatedType !== "order" || !notifInput.relatedId) return true;
+  const perOrder = capDecision(rule, "perOrder", false);
+  const result = await orderMessageCountRepository.countAndCheck(
+    notifInput.relatedId,
+    "whatsapp",
+    settings.notificationPerOrderCap?.whatsapp ?? 0,
+    // Exempt tiers still increment — see `countAndCheck`.
+    perOrder.recordOnly,
+  );
+  if (!result.allowed) {
+    serverLogger.info("sendNotification: per-order WhatsApp cap reached", {
+      orderId: notifInput.relatedId,
+      count: result.count,
+      cap: result.cap,
+      type: rule.type,
+    });
+  }
+  return result.allowed;
+}
 
 function resolveWhatsAppTemplateName(type: string, creds: SiteSettingsCredentials): string {
   if (!WHATSAPP_ORDER_TEMPLATE_TYPES.has(type)) return "";
@@ -620,7 +658,15 @@ export async function sendNotification(
     resolvedPhone &&
     meetsMinPriority(priority, channels.whatsapp.minPriority) &&
     (!channels.whatsapp.types?.length || channels.whatsapp.types.includes(type)) &&
-    (!ORDER_GATED_TYPES.has(type) || (await storeWhatsAppSubscribed(input.storeId)))
+    // The registry's say on this channel, and on the store gate. Both resolve
+    // from the same sources they always did, so this is behaviour-neutral
+    // until an admin overrides a rule.
+    ruleAllowsChannel(rule, "whatsapp") &&
+    (!rule.requiresStoreSubscription || (await storeWhatsAppSubscribed(input.storeId))) &&
+    // 🛑 `await`ed inline, so the cap is only consulted once every cheaper
+    // check has already passed — a counter increment is a Firestore
+    // transaction and must not run for a send that was never going to happen.
+    (await whatsappOrderCapAllows(rule, notifInput, settings))
   ) {
     /*
      * ENV FIRST, site settings second.

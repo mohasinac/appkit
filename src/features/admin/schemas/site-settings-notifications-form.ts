@@ -96,6 +96,32 @@ export const siteSettingsNotificationsFormSchema = z.object({
     help: "A sanity bound. Meta bills per conversation, not per message. Some notification types never email regardless of these settings — losing a collector drop, being outbid, marketing, review activity and ticket updates are shown in the notification bell only. That is deliberate: those were the highest-volume sends and the ones most likely to exhaust the day's allowance. A support reply can still be emailed one-off from the ticket screen.",
   }),
 
+  /*
+   * ── PER-ORDER CAPS ──────────────────────────────────────────────────────
+   *
+   * 🛑 Distinct from the daily ceilings above, and they do different jobs.
+   * The ceiling is per-channel-per-day and GLOBAL: it bounds total spend and
+   * says nothing about distribution. These bound ONE ORDER, which is what
+   * "re-send on every order write" needs — otherwise a single busy order can
+   * consume the whole day's allowance and starve every other buyer.
+   *
+   * ⚠ `0` means NO LIMIT, not "block everything". Clearing the field must not
+   * silence every order notification on the site; an empty input is far
+   * likelier than a deliberate gag.
+   *
+   * ⚠ Messages marked `important` or `critical` in the matrix are EXEMPT from
+   * these caps but still counted — a cap that could swallow a cancellation or
+   * a payment failure is worse than no cap.
+   */
+  perOrderCapEmail: annotate(z.number().min(0), {
+    section: "budget", order: 5, label: "Per-order email cap",
+    help: "How many emails ONE order may send. 0 = no limit. Routine updates are blocked at this number; important and critical ones are exempt but still counted.",
+  }),
+  perOrderCapWhatsapp: annotate(z.number().min(0), {
+    section: "budget", order: 6, label: "Per-order WhatsApp cap",
+    help: "How many WhatsApp messages ONE order may send. 0 = no limit. This is the bound that makes 're-send on every order write' affordable — each message is billed, so an unbounded order is an unbounded cost.",
+  }),
+
   notifEmailEnabled: annotate(z.boolean(), {
     section: "email", sectionLabel: "Email channel",
     order: 1, row: "full", kind: "toggle", label: "Email notifications",
