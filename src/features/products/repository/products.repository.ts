@@ -532,12 +532,12 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      */
     const assignments = readAssignments(input);
     /*
-     * The brand selector's option value is the brand ROW's id (`brand-beyblade`),
+     * The brand selector's option value is the brand ROW's id (`brand-<slug>`),
      * but `ProductDocument.brand` is matched by DISPLAY NAME —
      * `BrandDetailPageView` filters `sieveFilter("brand", EQ, brand.name)`, and
-     * CLAUDE.md's § "Brand matching is by DISPLAY NAME" says so explicitly. So a
-     * seller-created listing stored `brand: "brand-beyblade"` while every seeded
-     * one stored `brand: "Beyblade"`, and the brand page matched neither the new
+     * the consumer's own brand-matching rule says so explicitly. So a
+     * seller-created listing stored the `brand-<slug>` id while every seeded one
+     * stored the display name, and the brand page matched neither the new
      * row nor counted it. Resolving the id back to its name fixes that; a value
      * that is ALREADY a display name does not resolve as a document id and is
      * left exactly as it was.
@@ -955,8 +955,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      *
      * `ProductDocument` has no such field, and the plan's suggestion —
      * `out.features = d.inTheBox` — predates the vocabulary merge: `features`
-     * now holds feature IDS, so writing "Beyblade top, Manual (where
-     * supplied)" into it would put prose where `array-contains` expects
+     * now holds feature IDS, so writing a prose packing list ("<item>, Manual
+     * (where supplied)") into it would put prose where `array-contains` expects
      * `feature-nib`, breaking every facet on that product and tokenising
      * "where" and "supplied" into its search index.
      *

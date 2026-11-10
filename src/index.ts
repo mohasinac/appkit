@@ -2070,7 +2070,7 @@ export type { UserWishlistItem as WishlistItem } from "./features/wishlist/repos
 // shipmentsSeedData / shipmentLotsSeedData / shipmentItemsSeedData - procurement shipments seed data.
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsStandardSeedData - Seed data for standard (buy-now) product listings.
-// productsBeybladeXSeedData - Real, wiki-verified Beyblade X listings under store-letitrip-official (4 tops, 1 stadium, 1 Product Group of 7).
+// productsBeybladeXSeedData - Real, wiki-verified vertical listings under the official seed store (4 units, 1 accessory, 1 Product Group of 7).
 // 1,173-node taxonomy has a catalogue in it (967 of 968 leaves were empty).
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsCollectorDropsSeedData - Seed data for collector drop product listings.
@@ -9441,8 +9441,8 @@ export {
  */
 // D12 — the public part surfaces. The parts GALLERY UI (index/classification/
 // detail page views, search box, OG renderers) was removed — both consumers
-// (letitrip.in's /parts and beybladetools' /parts) dropped it in favour of
-// the existing wiki.letitrip.in parts wiki. `ModelCompositionPanel` and
+// (the shop's /parts and the companion tools app's /parts) dropped it in
+// favour of the existing wiki host's parts wiki. `ModelCompositionPanel` and
 // `AssemblyDrawer` stay: core product-page / seller-dashboard features,
 // unrelated to the gallery.
 
