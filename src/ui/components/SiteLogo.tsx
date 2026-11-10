@@ -68,18 +68,24 @@ export interface SiteLogoProps {
    * Optional smaller label after the wordmark naming WHICH DEPLOYMENT this is
    * — e.g. `"events"` renders `wordmark` `.tld` `events`.
    *
-   * Owner, 2026-11-11: *"we can add it as letitrip <subdomain> in smaller so
-   * that the user knows which domain they are in"*. Every subdomain renders
-   * the same wordmark, so without this the five hosts are visually identical
-   * and a user who followed a link cannot tell `events.` from `blogs.`.
+   * Owner, 2026-11-11: the wordmark should carry the subdomain in smaller
+   * text so a visitor can see which host they are on. Every deployment
+   * renders the same wordmark, so without this the hosts are visually
+   * identical and a user who followed a link cannot tell one from another.
+   *
+   * 🛑 Deliberately NOT illustrated with a real brand or host. A doc comment
+   * compiles into the published `.d.ts` that every consumer installs — 4.85.0
+   * shipped the client's product line that way, inside a comment explaining
+   * the de-branding.
    *
    * 🛑 Drawn in the SAME fill at reduced opacity and a much smaller size, so
    * it reads as a QUALIFIER rather than part of the brand. It is deliberately
    * not a second pill: the `.tld` pill already occupies that visual slot, and
    * two pills in a row read as two badges of equal weight.
    *
-   * ⚠ It joins the accessible name too (`"letitrip.in events"`), because a
-   * screen-reader user needs the which-host answer as much as a sighted one.
+   * ⚠ It joins the accessible name too (`"<wordmark>.<tld> <suffix>"`),
+   * because a screen-reader user needs the which-host answer as much as a
+   * sighted one.
    */
   suffix?: string;
   /**
