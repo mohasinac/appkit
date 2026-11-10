@@ -7,7 +7,7 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
  * `pdfkit` must not enter appkit's module graph. */
 import { allocateSeriesNumber } from "../../features/invoicing/allocate";
 import type { JobContext } from "../runtime/types";
-import { ORDER_MESSAGES } from "../handlers/messages";
+import { ORDER_MESSAGES, ORDER_MESSAGES_SELLER } from "../handlers/messages";
 
 type OrderStatus =
   | "pending"
@@ -29,6 +29,14 @@ interface StatusConfig {
   title: string;
   message: (order: { productTitle: string; trackingNumber?: string }) => string;
   priority: "low" | "normal" | "high";
+  /**
+   * 🛑 The SELLER's wording for the same transition. Required, not optional —
+   * the whole point is that a seller never silently inherits the buyer's
+   * second-person copy, and an optional field would let the next status added
+   * here regress to exactly that by omission.
+   */
+  sellerTitle: string;
+  sellerMessage: (order: { productTitle: string; trackingNumber?: string }) => string;
 }
 
 const STATUS_CONFIG: Partial<Record<OrderStatus, StatusConfig>> = {
@@ -37,24 +45,32 @@ const STATUS_CONFIG: Partial<Record<OrderStatus, StatusConfig>> = {
     title: ORDER_MESSAGES.CONFIRMED_TITLE,
     message: (o) => ORDER_MESSAGES.CONFIRMED_MESSAGE(o.productTitle),
     priority: "normal",
+    sellerTitle: ORDER_MESSAGES_SELLER.CONFIRMED_TITLE,
+    sellerMessage: (o) => ORDER_MESSAGES_SELLER.CONFIRMED_MESSAGE(o.productTitle),
   },
   shipped: {
     type: "order_shipped",
     title: ORDER_MESSAGES.SHIPPED_TITLE,
     message: (o) => ORDER_MESSAGES.SHIPPED_MESSAGE(o.productTitle, o.trackingNumber),
     priority: "high",
+    sellerTitle: ORDER_MESSAGES_SELLER.SHIPPED_TITLE,
+    sellerMessage: (o) => ORDER_MESSAGES_SELLER.SHIPPED_MESSAGE(o.productTitle, o.trackingNumber),
   },
   delivered: {
     type: "order_delivered",
     title: ORDER_MESSAGES.DELIVERED_TITLE,
     message: (o) => ORDER_MESSAGES.DELIVERED_MESSAGE(o.productTitle),
     priority: "normal",
+    sellerTitle: ORDER_MESSAGES_SELLER.DELIVERED_TITLE,
+    sellerMessage: (o) => ORDER_MESSAGES_SELLER.DELIVERED_MESSAGE(o.productTitle),
   },
   cancelled: {
     type: "order_cancelled",
     title: ORDER_MESSAGES.CANCELLED_TITLE,
     message: (o) => `Your order for "${o.productTitle}" has been cancelled.`,
     priority: "normal",
+    sellerTitle: ORDER_MESSAGES_SELLER.CANCELLED_TITLE,
+    sellerMessage: (o) => ORDER_MESSAGES_SELLER.CANCELLED_MESSAGE(o.productTitle),
   },
 };
 
@@ -175,11 +191,18 @@ export async function handleOrderStatusChange(
      * message with no in-app row, no email and no notification type — and
      * nothing at all on a status change.
      *
-     * 🛑 Safe to switch on: the seller arm is gated on that store's own
-     * `whatsappNotifySubscribed` flag (owner, 2026-11-10 — *"the seller [in
-     * their] own dashboard has to enable it, then only they can see it"*), so
-     * a seller who has not opted in receives nothing and nobody's experience
-     * changes until they choose it.
+     * 🛑 The seller's WhatsApp arm — and ONLY that arm — is gated on their
+     * store's `whatsappNotifySubscribed` flag (owner, 2026-11-10 — *"the
+     * seller [in their] own dashboard has to enable it, then only they can see
+     * it"*), enforced inside `sendNotification` where it is channel-scoped. An
+     * unsubscribed seller still gets the in-app row and the email, which is
+     * what `storeWhatsAppSubscribed`'s docstring has always promised; an
+     * earlier revision gated the whole arm here and silenced those too.
+     *
+     * 🛑 `sellerCopy` is not optional polish. `config.title`/`messageText` are
+     * written to a BUYER in the second person — *"Your order has shipped"* —
+     * so without it the seller is told about their own sale as if they had
+     * bought it. `audience: "seller"` only redirects the link.
      */
     await dispatchNotification({
       userId: after.userId,
@@ -191,6 +214,13 @@ export async function handleOrderStatusChange(
       relatedType: "order",
       userEmail,
       storeId: after.storeId,
+      sellerCopy: {
+        title: config.sellerTitle,
+        message: config.sellerMessage({
+          productTitle: after.productTitle,
+          trackingNumber: after.trackingNumber,
+        }),
+      },
     });
 
     // The RTDB mirror that used to live here has been removed. `sendNotification`

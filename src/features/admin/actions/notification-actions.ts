@@ -784,10 +784,40 @@ export async function sendNotification(
  * ⚠ Failures are per-audience and non-fatal. A seller whose phone is missing
  * must not stop the buyer's message; the whole point of one event reaching two
  * people is that neither depends on the other.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 `sellerCopy` — THE SELLER NEEDS DIFFERENT WORDS, NOT JUST A DIFFERENT LINK
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * `audience: "seller"` already redirects the action URL to
+ * `/store/orders/{id}/view`. That fixed the LINK and left the TEXT, so a
+ * seller was told *"Your order for X has shipped"* — their own sale, narrated
+ * to them as if they had bought it. The plan calls this out directly: a seller
+ * receiving the buyer's sentence "is actively confusing; they need what THEY
+ * must do next."
+ *
+ * So the title/message are overridable per audience. Omitted, the buyer's copy
+ * is reused — which is the old behaviour, so this is additive and no existing
+ * caller changes meaning by upgrading.
+ *
+ * ⚠ Deliberately NOT a second full `SendNotificationInput`. Everything else
+ * about the event — type, priority, relatedId, storeId — is a property of the
+ * EVENT and must not be allowed to diverge per recipient, or the two arms stop
+ * being one notification and the caps/registry rules no longer line up.
  */
 export async function dispatchNotification(
-  input: SendNotificationInput & { storeId?: string },
+  input: SendNotificationInput & {
+    storeId?: string;
+    /** Seller-facing wording. Falls back to the buyer's copy when absent. */
+    sellerCopy?: { title?: string; message?: string };
+  },
 ): Promise<{ buyer?: SendNotificationResult; seller?: SendNotificationResult }> {
+  /*
+   * Split off here so `sellerCopy` can never reach `sendNotification`, which
+   * would persist it as an unexpected field on the notification document.
+   */
+  const { sellerCopy, ...event } = input;
+
   const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
     route: "notifications/dispatch",
     key: "dispatchNotification.settings",
@@ -801,7 +831,7 @@ export async function dispatchNotification(
    * seller.
    */
   const audiences = resolveNotificationAudiences(
-    input.type,
+    event.type,
     (t: string) => TYPE_AUDIENCE[t as NotificationType],
     settings?.notificationRules ?? {},
   );
@@ -809,44 +839,65 @@ export async function dispatchNotification(
   const out: { buyer?: SendNotificationResult; seller?: SendNotificationResult } = {};
 
   if (audiences.includes("buyer")) {
-    out.buyer = await sendNotification({ ...input, audience: "buyer" });
+    out.buyer = await sendNotification({ ...event, audience: "buyer" });
   }
 
-  if (audiences.includes("seller") && input.storeId) {
+  if (audiences.includes("seller") && event.storeId) {
     try {
-      const store = await storeRepository.findBySlug(input.storeId);
+      const store = await storeRepository.findBySlug(event.storeId);
       /*
-       * 🛑 THE SELLER'S OWN OPT-IN GATES THIS. Owner, 2026-11-10: *"the seller
-       * [in their] own dashboard has to enable it, then only they can see
-       * it."*
+       * 🛑 THE OPT-IN GATE IS DELIBERATELY *NOT* HERE — it belongs to the
+       * CHANNEL, not to the whole arm.
        *
-       * So shipping this is safe by construction — a seller who has not
-       * enabled notifications receives nothing, and turning the code on
-       * changes nobody's experience until they choose it themselves. That is
-       * also why the gate is the STORE's flag and not an admin setting: it is
-       * the seller's inbox being spent.
+       * Owner, 2026-11-10: *"the seller [in their] own dashboard has to enable
+       * it, then only they can see it."* That is about WhatsApp — the paid
+       * add-on whose sends cost the platform a template fee. It is already
+       * enforced one layer down, where it is channel-scoped:
+       * `sendNotification`'s WhatsApp arm requires
+       * `storeWhatsAppSubscribed(input.storeId)` for every
+       * `requiresStoreSubscription` rule, and `storeId` rides along in
+       * `...input`.
        *
-       * ⚠ Fails CLOSED. An unreadable store, a missing owner, or an unset
-       * flag all mean no send. Defaulting to "notify" on a failed read would
-       * opt every seller in via an outage.
+       * ⚠ An earlier version of this function ALSO checked
+       * `whatsappNotifySubscribed === true` right here, which looked like
+       * belt-and-braces and was actually a defect: it suppressed the seller's
+       * **in-app row and email** too. A seller who simply had not bought a
+       * WhatsApp subscription would have stopped being told they had a sale at
+       * all — silently, and only on the code path meant to improve their
+       * notifications. `storeWhatsAppSubscribed`'s own docstring states the
+       * intended split ("the buyer still receives the in-app notification and
+       * the email, which are ungated"); this restores it for the seller.
+       *
+       * ⚠ Fails CLOSED on the only thing that is still this function's
+       * business: an unreadable store or a missing `ownerId` means no send,
+       * because there is no one to send to. It cannot fail open, since an
+       * outage yields `null` and `null?.ownerId` is falsy.
        */
-      if (store?.ownerId && store.whatsappNotifySubscribed === true) {
+      if (store?.ownerId) {
         /*
          * 🛑 `audience: "seller"` is what makes the action URL resolve to
          * `/store/orders/{id}/view` instead of the buyer's tracking page.
          * Without it the seller gets a link into a portal they cannot act in.
          */
         out.seller = await sendNotification({
-          ...input,
+          ...event,
           userId: store.ownerId,
           audience: "seller",
+          /*
+           * ⚠ `??`, not `||`. An override that is deliberately an empty string
+           * should still not silently become the buyer's sentence — but more
+           * to the point, `||` would also swallow a legitimately falsy value
+           * and make the fallback depend on truthiness rather than presence.
+           */
+          title: sellerCopy?.title ?? event.title,
+          message: sellerCopy?.message ?? event.message,
         });
       }
     } catch (err) {
       void normalizeError(err);
       serverLogger.error("dispatchNotification: seller arm failed (non-fatal)", {
-        storeId: input.storeId,
-        type: input.type,
+        storeId: event.storeId,
+        type: event.type,
         err,
       });
     }

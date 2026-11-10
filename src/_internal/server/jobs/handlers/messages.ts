@@ -77,6 +77,48 @@ export const ORDER_MESSAGES = {
     `Your order for "${productTitle}" has been delivered. Enjoy!`,
 };
 
+/*
+ * ── SELLER-FACING COPY FOR THE SAME TRANSITIONS ───────────────────────────────
+ *
+ * 🛑 Every string in `ORDER_MESSAGES` is written in the SECOND PERSON to a
+ * BUYER — *"Your order has shipped"*. Once `dispatchNotification` started
+ * fanning an order event out to the seller as well, the seller began receiving
+ * those same sentences about their own sale, as though they had bought it.
+ * `audience: "seller"` fixed the action URL and could not fix the words.
+ *
+ * So the seller gets their own set, and the difference is not cosmetic: a
+ * seller does not need to be told their order shipped — THEY shipped it. What
+ * they need is the state and whatever they must now do, which is why these are
+ * phrased as facts about an order rather than news.
+ *
+ * ⚠ Still a hardcoded map, like `STATUS_CONFIG` beside it. Both are slated to
+ * become registry rows (plan §A2 — *"retire the five maps"*), and keeping the
+ * seller copy in exactly the same shape as the buyer copy is what makes that a
+ * single mechanical move rather than two. Do NOT give this one a different
+ * structure.
+ */
+export const ORDER_MESSAGES_SELLER = {
+  CONFIRMED_TITLE: "Order confirmed — prepare it",
+  CONFIRMED_MESSAGE: (productTitle: string): string =>
+    `An order for "${productTitle}" is confirmed and awaiting dispatch.`,
+  SHIPPED_TITLE: "Order marked shipped",
+  SHIPPED_MESSAGE: (productTitle: string, trackingNumber?: string): string =>
+    `"${productTitle}" is marked shipped${
+      trackingNumber ? ` with tracking ${trackingNumber}` : " — no tracking number recorded yet"
+    }.`,
+  DELIVERED_TITLE: "Order delivered",
+  DELIVERED_MESSAGE: (productTitle: string): string =>
+    `"${productTitle}" was delivered to the buyer. Payout follows the usual settlement cycle.`,
+  CANCELLED_TITLE: "Order cancelled",
+  CANCELLED_MESSAGE: (productTitle: string): string =>
+    `The order for "${productTitle}" was cancelled. Stock has been returned.`,
+  PLACED_TITLE: "New order received",
+  PLACED_MESSAGE: (productTitle: string, buyerName: string, paid: boolean): string =>
+    `${paid ? "A paid order" : "An order"} for "${productTitle}" from ${
+      buyerName || "a buyer"
+    } is waiting for you.`,
+};
+
 export const EMAIL_SUBJECTS = {
   ORDER_CONFIRMED: (productTitle: string): string => `Order confirmed — ${productTitle}`,
   ORDER_SHIPPED: (productTitle: string): string => `Your order has shipped — ${productTitle}`,

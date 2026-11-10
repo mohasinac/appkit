@@ -210,7 +210,19 @@ export function resolveNotificationRule(
 
   return {
     type,
-    audiences: override.audiences ?? (audience ? [audience] : UNKNOWN_NOTIFICATION_RULE.audiences),
+    /*
+     * 🛑 Same precedence as `resolveNotificationAudiences`, and it MUST stay
+     * the same. This field is what the admin matrix renders and what
+     * `ruleReachesAudience` answers from; if it disagreed with the function
+     * the dispatcher actually calls, the screen would show order types as
+     * buyer-only while sellers were being messaged — two sources of truth for
+     * one question, which is the divergent-copy problem in its most
+     * misleading form.
+     */
+    audiences:
+      override.audiences ??
+      DEFAULT_MULTI_AUDIENCE_TYPES[type] ??
+      (audience ? [audience] : UNKNOWN_NOTIFICATION_RULE.audiences),
     channels: override.channels ?? channels,
     tier: override.tier ?? defaults.tierOf?.(type) ?? UNKNOWN_NOTIFICATION_RULE.tier,
     ...(override.prefsKey ?? defaults.prefsKeyOf(type)
@@ -222,6 +234,57 @@ export function resolveNotificationRule(
 }
 
 /**
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 TYPES THAT REACH MORE THAN ONE AUDIENCE BY DEFAULT
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * `TYPE_AUDIENCE` is `Record<NotificationType, NotificationAudience>` —
+ * **singular**. It answers *"which portal does this type's action URL point
+ * at?"*, which is a one-answer question, and every order type answers
+ * `"buyer"`. It was never a statement about who should RECEIVE the event.
+ *
+ * ⚠ That distinction was missed once already, and it cost a whole slice.
+ * `onOrderStatusChange` was switched to `dispatchNotification` with a comment
+ * reading *"one event, every audience the registry says should receive it"* —
+ * and because the registry derived a single `"buyer"` for every order type,
+ * **the seller arm never fired at all.** The fan-out, the seller action URL
+ * and the seller template were all built, shipped, and unreachable: the
+ * declared-but-unwired defect class, arrived at through a map whose name made
+ * it look like the right source.
+ *
+ * So multi-audience defaults live here, consulted BEFORE the singular map.
+ *
+ * 🛑 This is a code-level DEFAULT TEMPLATE, deliberately — not a seed row.
+ * Config overrides it per type (that is what the admin matrix edits), but the
+ * default must survive a failed settings read: `dispatchNotification` falls
+ * back to `{}` overrides on an outage, and with the default in config alone
+ * every seller would silently stop being told they had a sale for the duration
+ * of it. Machinery in code, choice in config — and "a seller hears about their
+ * own sales" is machinery.
+ *
+ * Each entry is justified, because "notify everyone" is the easy wrong answer:
+ *   · `order_placed`    — a new sale they must act on
+ *   · `order_confirmed` — payment cleared; dispatch now
+ *   · `order_shipped`   — usually their own action, but not when an admin or a
+ *                         split shipment moves it; config can drop this one
+ *   · `order_delivered` — starts the settlement and return windows
+ *   · `order_cancelled` — stock is back and the money reversed
+ *
+ * ⚠ Expanding this list expands who gets messaged. The WhatsApp channel stays
+ * gated on the store's paid subscription (`requiresStoreSubscription`), so an
+ * entry here adds an in-app row and an email, never a billed send.
+ */
+export const DEFAULT_MULTI_AUDIENCE_TYPES: Readonly<
+  Record<string, readonly NotificationAudience[]>
+> = {
+  order_placed: ["buyer", "seller"],
+  order_confirmed: ["buyer", "seller"],
+  order_shipped: ["buyer", "seller"],
+  order_delivered: ["buyer", "seller"],
+  order_cancelled: ["buyer", "seller"],
+};
+
+/**
  * Just the audiences for a type — who should receive it.
  *
  * Separate from `resolveNotificationRule` because the fan-out caller needs
@@ -229,6 +292,10 @@ export function resolveNotificationRule(
  * `emailEligible`/`prefsKeyOf` answers it does not have and does not use.
  * Passing placeholder functions to satisfy a signature is how a lie gets
  * written into code that later looks authoritative.
+ *
+ * Precedence: explicit config override → multi-audience default → the
+ * singular `audienceOf` map → the unknown-type fallback. Config first, so an
+ * admin can always narrow a default they disagree with.
  */
 export function resolveNotificationAudiences(
   type: string,
@@ -237,6 +304,8 @@ export function resolveNotificationAudiences(
 ): readonly NotificationAudience[] {
   const override = overrides[type]?.audiences;
   if (override) return override;
+  const multi = DEFAULT_MULTI_AUDIENCE_TYPES[type];
+  if (multi) return multi;
   const derived = audienceOf(type);
   return derived ? [derived] : UNKNOWN_NOTIFICATION_RULE.audiences;
 }
