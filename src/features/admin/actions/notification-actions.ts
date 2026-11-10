@@ -19,6 +19,15 @@ import {
   type NotificationAudience,
 } from "../../../_internal/shared/features/notifications/action-url";
 import { isEmailEligible } from "../../../_internal/shared/features/notifications/email-eligibility";
+import {
+  resolveNotificationRule,
+  ruleAllowsChannel,
+  capDecision,
+} from "../../../_internal/shared/features/notifications/registry";
+import {
+  guardSend,
+  logSuppressedSend,
+} from "../../../_internal/server/notifications/send-guard";
 import { renderNotificationEmail } from "../../email/notification-templates";
 
 /**
@@ -433,6 +442,37 @@ export async function sendNotification(
     return { notification, email: "skipped", whatsapp: "skipped" };
   }
 
+  /*
+   * ── THE REGISTRY, resolved once per send ────────────────────────────────
+   *
+   * One rule answers what five hardcoded maps answer separately today, and
+   * admin config can override any field of it. The DEFAULTS are derived from
+   * those same maps, so this is behaviour-neutral until someone actually sets
+   * an override — which is the point: no transcription, no silent drift, and
+   * every field configurable from the moment it lands.
+   *
+   * ⚠ `tierOf` has no default source because nothing today expresses a tier;
+   * unset resolves to `routine`, matching current behaviour where every send
+   * is equally droppable.
+   */
+  const rule = resolveNotificationRule(
+    type,
+    {
+      audienceOf: (t: string) => TYPE_AUDIENCE[t as NotificationType],
+      emailEligible: (t: string) => isEmailEligible(t as NotificationType),
+      /*
+       * WhatsApp has no per-type eligibility map of its own — the channel's
+       * own `types` allow-list is applied separately below, and the order
+       * templates are the de-facto set. Defaulting to `true` keeps that
+       * arrangement unchanged; the allow-list still narrows it.
+       */
+      whatsappEligible: () => true,
+      prefsKeyOf: (t: string) => typeToPrefsKey[t as NotificationType],
+      storeGated: (t: string) => ORDER_GATED_TYPES.has(t),
+    },
+    settings.notificationRules ?? {},
+  );
+
   // Email channel — admin enabled AND user hasn't opted out
   let emailStatus: SendNotificationResult["email"] = "skipped";
   if (
@@ -440,7 +480,10 @@ export async function sendNotification(
     userChannelPrefs.email !== false &&
     resolvedEmail &&
     meetsMinPriority(priority, channels.email.minPriority) &&
-    (!channels.email.types?.length || channels.email.types.includes(type))
+    (!channels.email.types?.length || channels.email.types.includes(type)) &&
+    // The registry's say. Identical to `isEmailEligible(type)` until an admin
+    // overrides it, which is exactly what makes this safe to add here.
+    ruleAllowsChannel(rule, "email")
   ) {
     const apiKey = creds.resendApiKey?.trim() ?? "";
     /*
@@ -451,7 +494,52 @@ export async function sendNotification(
      */
     const fromEmail = settings.emailSettings?.fromEmail ?? getBrandNoreplyEmail();
     const fromName = settings.emailSettings?.fromName ?? getBrandName();
-    if (apiKey && !apiKey.includes("PLACEHOLDER") && (await isChannelHealthy("email"))) {
+    /*
+     * 🛑 THE BUDGET GUARD, WHICH THIS BRANCH NEVER CALLED.
+     *
+     * Every other send path goes through `guardSend`; this one built a Resend
+     * provider and sent directly. So notification email bypassed BOTH the
+     * admin kill switch (`messaging.emailEnabled`) and the daily ceiling —
+     * turning the kill switch off stopped contact mail and digests while
+     * notification mail kept flowing, which is the opposite of what an
+     * operator pulling that lever expects.
+     *
+     * Worse, `scripts/audit-unguarded-send.mjs` allowlists this file with the
+     * comment "Both call guardSend themselves". That was true of the other
+     * branch and false of this one, so the audit asserted a safety property
+     * it did not check.
+     *
+     * ⚠ NOT `transactional`. These are notifications; the kill switch is
+     * meant to apply. The genuinely transactional sends (the checkout OTP)
+     * set it themselves at their own call site.
+     *
+     * The tier decides whether the ceiling may actually block — see
+     * `capDecision`. Today every type resolves to `routine`, so behaviour is
+     * unchanged until an admin marks something `critical`.
+     */
+    const emailGuard = {
+      channel: "email" as const,
+      feature: type,
+      audience: "user" as const,
+    };
+    const emailDecision = await guardSend(emailGuard);
+    const emailCap = capDecision(rule, "daily", !emailDecision.allow);
+    if (emailCap.blocked) logSuppressedSend(emailGuard, emailDecision);
+
+    /*
+     * ⚠ `!emailCap.blocked` extends the existing condition rather than
+     * returning early. An early return here would have to report the WhatsApp
+     * status, which is not decided until further down — so bailing out would
+     * either read an undeclared variable or silently claim "skipped" for an
+     * arm that had not run yet. Falling through leaves `emailStatus` at its
+     * initial "skipped" and lets the WhatsApp arm make its own decision.
+     */
+    if (
+      !emailCap.blocked &&
+      apiKey &&
+      !apiKey.includes("PLACEHOLDER") &&
+      (await isChannelHealthy("email"))
+    ) {
       try {
         const emailProvider = createResendProvider({ apiKey, fromEmail, fromName });
         await withChannelRetry("email", () =>

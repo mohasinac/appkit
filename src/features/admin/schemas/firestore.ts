@@ -1523,6 +1523,36 @@ export interface SiteSettingsDocument extends BaseDocument {
    */
   notificationChannels?: NotificationChannelConfig;
   /**
+   * Per-notification-type overrides — **the matrix**, as config.
+   *
+   * Keyed by type slug; every field of an entry is optional, so an admin who
+   * sets only a `tier` does not blank that type's audiences. Anything absent
+   * falls through to the derived default, which comes from the existing
+   * hardcoded maps (see `_internal/shared/features/notifications/registry.ts`).
+   *
+   * 🛑 An OPEN record, not `Record<NotificationType, …>`. A notification type
+   * the code has never heard of must be describable here — that is what makes
+   * adding one a config change rather than a deploy, the same move already
+   * made for event `type`.
+   *
+   * ⚠ Resolution is `defaults → overrides`, so this file only ever needs the
+   * deltas an operator actually set. An empty object means "behave exactly as
+   * the code always has", which is why introducing it changed nothing.
+   */
+  notificationRules?: Record<
+    string,
+    {
+      // Inlined rather than imported: this schema module is the dependency
+      // ROOT for the notification types, and importing the audience union
+      // back from `_internal/.../action-url` would close a cycle.
+      audiences?: ("buyer" | "seller" | "admin")[];
+      channels?: ("email" | "whatsapp" | "sms")[];
+      tier?: "routine" | "important" | "critical";
+      prefsKey?: string;
+      requiresStoreSubscription?: boolean;
+    }
+  >;
+  /**
    * The rate-change log behind `/admin/pricing`. Append-only, newest FIRST,
    * capped at `RATE_CHANGE_LOG_MAX`.
    *
