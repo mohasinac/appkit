@@ -47,6 +47,7 @@ import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { EntityTypeahead } from "../../search/components/EntityTypeahead";
 import { productImageUrls } from "../schemas/firestore";
 import type { ProductImage } from "../schemas/firestore";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 /** Subset of ProductDocument the overlay needs. Kept loose so it can be fed
  * sanitized public payloads directly. */
@@ -226,7 +227,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose, customFie
     <Stack gap="md" className={COLUMN_CARD_CLASS}>
       <Row justify="between" align="start" gap="sm">
         <Link
-          href={href}
+          href={resolveSectionHref(href)}
           target="_blank"
           rel={REL_NOOPENER}
           className="text-[length:var(--appkit-text-sm)] font-semibold text-[var(--appkit-color-text)] hover:underline line-clamp-2"
@@ -248,7 +249,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose, customFie
       </Row>
 
       <FieldRow label={labels.field.image}>
-        <Link href={href} target="_blank" rel={REL_NOOPENER}>
+        <Link href={resolveSectionHref(href)} target="_blank" rel={REL_NOOPENER}>
           <Div className={`relative aspect-square ${__O.hidden}`} rounded="lg" surface="subtle">
             {img ? (
               <MediaImage src={img} alt={item.title ?? item.id} size="card" />
@@ -296,7 +297,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose, customFie
       ))}
 
       <Button asChild variant="primary" size="sm" className="mt-auto">
-        <Link href={href} target="_blank" rel={REL_NOOPENER} onClick={onClose}>
+        <Link href={resolveSectionHref(href)} target="_blank" rel={REL_NOOPENER} onClick={onClose}>
           {labels.view}
         </Link>
       </Button>

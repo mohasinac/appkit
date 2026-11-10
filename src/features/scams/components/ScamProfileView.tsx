@@ -48,6 +48,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { getBrandName } from "../../../core/brand-resolver";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 function formatDate(d: Date | string | undefined): string {
   if (!d) return "";
@@ -246,14 +247,14 @@ function ScammerCommentsSection({
         </Heading>
         {isAuthenticated ? (
           <Link
-            href={String(ROUTES.PUBLIC.SCAM_REPORT)}
+            href={resolveSectionHref(String(ROUTES.PUBLIC.SCAM_REPORT))}
             className="text-[length:var(--appkit-text-xs)] text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             Leave a comment
           </Link>
         ) : (
           <Link
-            href={commentLoginHref}
+            href={resolveSectionHref(commentLoginHref)}
             className="text-[length:var(--appkit-text-xs)] text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             Sign in to comment
@@ -317,7 +318,7 @@ function ScammerActionsColumn({
           <Stack gap="sm">
             {isAuthenticated ? (
               <Link
-                href={reportHref}
+                href={resolveSectionHref(reportHref)}
                 className={CLS_OUTLINE_BTN}
               >
                 <AlertOctagon className="h-4 w-4 text-[color:var(--appkit-color-danger,theme(colors.red.500))]" />
@@ -325,7 +326,7 @@ function ScammerActionsColumn({
               </Link>
             ) : (
               <Link
-                href={`${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(reportHref)}`}
+                href={resolveSectionHref(`${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(reportHref)}`)}
                 className={CLS_OUTLINE_BTN}
               >
                 <AlertOctagon className="h-4 w-4 text-[color:var(--appkit-color-danger,theme(colors.red.500))]" />
@@ -335,7 +336,7 @@ function ScammerActionsColumn({
 
             {isAuthenticated ? (
               <Link
-                href={`/scams/${scammer.id}/contest`}
+                href={resolveSectionHref(`/scams/${scammer.id}/contest`)}
                 className={CLS_OUTLINE_BTN}
               >
                 <Flag className="h-4 w-4 text-[color:var(--appkit-color-warning,theme(colors.amber.500))]" />
@@ -343,7 +344,7 @@ function ScammerActionsColumn({
               </Link>
             ) : (
               <Link
-                href={contestLoginHref}
+                href={resolveSectionHref(contestLoginHref)}
                 className="appkit-button appkit-button--ghost appkit-button--md flex w-full items-center gap-[var(--appkit-space-2)]"
               >
                 <Flag className="h-4 w-4" />
@@ -534,7 +535,7 @@ export function ScamProfileView({
                   <Heading level={2} size="base" weight="semibold">Related Profiles</Heading>
                   <Stack gap="sm">
                     {relatedScammers.map((rel) => (
-                      <Link key={rel.id} href={String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id))} className="block">
+                      <Link key={rel.id} href={resolveSectionHref(String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id)))} className="block">
                         <Card variant="outlined" padding="sm" className="hover:opacity-80 transition-opacity">
                           <Row gap="sm" align="center" justify="between">
                             <Stack gap="none">
@@ -565,7 +566,7 @@ export function ScamProfileView({
                   </Text>
                   <Stack gap="sm">
                     {similarScamReports.map((rel) => (
-                      <Link key={rel.id} href={String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id))} className="block">
+                      <Link key={rel.id} href={resolveSectionHref(String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id)))} className="block">
                         <Card variant="outlined" padding="sm" className="hover:opacity-80 transition-opacity">
                           <Row gap="sm" align="center" justify="between">
                             <Stack gap="none">

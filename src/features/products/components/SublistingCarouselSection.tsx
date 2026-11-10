@@ -15,6 +15,7 @@ import { SUBLISTING_CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints"
 import type { ListingType } from "../types";
 import { productImageUrls } from "../schemas/firestore";
 import type { ProductImage } from "../schemas/firestore";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -69,7 +70,7 @@ function ListingThumb({
 
   return (
     <Link
-      href={href}
+      href={resolveSectionHref(href)}
       aria-label={listing.title}
       className="flex flex-col items-center gap-[var(--appkit-space-1-5)] flex-shrink-0 w-16 group"
     >
@@ -153,7 +154,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
         </Row>
         {category && (
           <Link
-            href={String(ROUTES.PUBLIC.SUBLISTING_CATEGORY(category.slug))}
+            href={resolveSectionHref(String(ROUTES.PUBLIC.SUBLISTING_CATEGORY(category.slug)))}
             onClick={(e) => e.stopPropagation()}
             className="text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-primary)] hover:underline ml-3 flex-shrink-0"
           >

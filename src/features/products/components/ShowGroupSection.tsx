@@ -18,6 +18,7 @@ import { normalizeListingType } from "../utils/listing-type";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { ListingType } from "../types";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -76,7 +77,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
 
   return (
     <Link
-      href={href}
+      href={resolveSectionHref(href)}
       aria-label={member.title}
       className="flex flex-col items-center gap-[var(--appkit-space-1-5)] flex-shrink-0 w-16 group"
     >

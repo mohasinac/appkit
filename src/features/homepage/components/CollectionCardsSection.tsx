@@ -11,6 +11,7 @@ import type {
 } from "../schemas/firestore";
 import type { CategoryItem } from "../../categories/types";
 import type { StoreListItem } from "../../stores/types";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface CollectionCardsSectionProps {
   config: CollectionCardsSectionConfig;
@@ -154,7 +155,7 @@ export async function CollectionCardsSection({
                   {rows.map((row) => (
                     <Link
                       key={row.slug}
-                      href={hrefFor(row.slug)}
+                      href={resolveSectionHref(hrefFor(row.slug))}
                       className="group rounded-xl border border-[var(--appkit-color-border)] transition-all hover:border-primary-300 hover:shadow-sm dark:hover:border-primary-600"
                     >
                       {/*
@@ -196,7 +197,7 @@ export async function CollectionCardsSection({
 
           {cta ? (
             <Link
-              href={cta.href}
+              href={resolveSectionHref(cta.href)}
               className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline"
             >
               {cta.label} →

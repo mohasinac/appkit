@@ -5,6 +5,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { resolveMediaUrl } from "../../../utils/media-url";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __P = {
   p4: "p-[var(--appkit-space-4)]",
@@ -102,7 +103,7 @@ export function PromoGrid({
             return (
               <Link
                 key={banner.id}
-                href={banner.ctaUrl}
+                href={resolveSectionHref(banner.ctaUrl)}
                 className={`group relative block overflow-hidden bg-zinc-900 ${i === 0 ? "sm:row-span-2 min-h-[clamp(220px,32vh,480px)]" : "min-h-[clamp(130px,16vh,240px)]"}`}
               >
                 {resolvedSrc ? (

@@ -18,6 +18,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { OrderDocument } from "../schemas";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface OrderSiblingPaymentsProps {
   siblings: OrderDocument[];
@@ -47,7 +48,7 @@ export function OrderSiblingPayments({
           return (
             <Row key={o.id} justify="between" align="center" gap="sm">
               <Link
-                href={href}
+                href={resolveSectionHref(href)}
                 className="text-[length:var(--appkit-text-sm)] font-medium text-[color:var(--appkit-color-primary)] hover:underline"
               >
                 {o.id}

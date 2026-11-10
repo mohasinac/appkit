@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { productImageUrls } from "../../products/schemas/firestore";
 import { getPublicUserProfile, getProfileStoreProducts, getReviewsAuthoredBy, getReviewsReceivedBy } from "../../auth/actions/profile-actions";
 import { storeRepository } from "../../stores/repository/store.repository";
@@ -216,9 +215,9 @@ export async function PublicProfileView({
           </>
         )}
         <Row justify="center" padding="t-xs">
-          <Link href={String(ROUTES.HOME)} className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)]">
+          <TextLink variant="bare" href={String(ROUTES.HOME)} className="text-[length:var(--appkit-text-sm)] text-[var(--appkit-color-text-faint)] hover:text-[var(--appkit-color-text-muted)]">
             ← {t("backHome")}
-          </Link>
+          </TextLink>
         </Row>
       </Stack>
     </Div>
@@ -270,10 +269,10 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
           </Stack>
           {isSeller && storeSlug && (
             <Div className="sm:ml-auto">
-              <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium text-white transition-colors">
+              <TextLink variant="bare" href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="inline-flex items-center gap-[var(--appkit-space-1-5)] rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-[var(--appkit-space-4)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-medium text-white transition-colors">
                 <ExternalLink className="w-3.5 h-3.5" />
                 {t("visitStore")}
-              </Link>
+              </TextLink>
             </Div>
           )}
         </Stack>
@@ -319,7 +318,7 @@ function renderStoreDescriptionSection(isSeller: boolean, storeSlug: string | nu
       <Div rounded="2xl" className={`${__P.p6}`} border="default" surface="subtle">
         <Heading level={3} className="mb-2">{storeName}</Heading>
         <Text variant="secondary" className="leading-relaxed" size="sm">{storeDescription}</Text>
-        <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline">{t("visitStore")} →</Link>
+        <TextLink variant="bare" href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline">{t("visitStore")} →</TextLink>
       </Div>
     </Section>
   );
@@ -341,7 +340,7 @@ function renderProfileListingsSection(t: ProfileT, products: ProfileProduct[], s
       )}
       {products.length > 8 && storeSlug && (
         <Div className="mt-4 text-center">
-          <Link href={String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug))} className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline">{t("viewAllListings", { count: products.length })}</Link>
+          <TextLink variant="bare" href={String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug))} className="text-[length:var(--appkit-text-sm)] font-medium text-primary hover:underline">{t("viewAllListings", { count: products.length })}</TextLink>
         </Div>
       )}
     </Section>

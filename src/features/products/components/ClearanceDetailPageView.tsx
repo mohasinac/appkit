@@ -39,6 +39,7 @@ import { computeRelatedItems } from "../../../_internal/server/features/products
 import { GroupedListingsCarousel } from "../../grouped/components/GroupedListingsCarousel";
 import { getGroupsWithItemsForProduct } from "../../../_internal/server/features/grouped/data";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface ClearanceDetailPageViewProps {
   id: string;
@@ -132,7 +133,7 @@ export async function ClearanceDetailPageView({
                 The clearance you are looking for may have been removed.
               </Text>
               <Link
-                href={String(ROUTES.PUBLIC.CLEARANCE)}
+                href={resolveSectionHref(String(ROUTES.PUBLIC.CLEARANCE))}
                 className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
                 Browse Clearance
@@ -258,12 +259,12 @@ export async function ClearanceDetailPageView({
             aria-label="Breadcrumb"
             className="flex items-center gap-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] text-[var(--appkit-color-text-muted)] flex-wrap"
           >
-            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+            <Link href={resolveSectionHref(String(ROUTES.HOME))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               Home
             </Link>
             <Span aria-hidden>/</Span>
             <Link
-              href={String(ROUTES.PUBLIC.CLEARANCE)}
+              href={resolveSectionHref(String(ROUTES.PUBLIC.CLEARANCE))}
               className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
             >
               Clearance
@@ -382,7 +383,7 @@ export async function ClearanceDetailPageView({
                     </Div>
                     {storeHref && (
                       <Link
-                        href={storeHref}
+                        href={resolveSectionHref(storeHref)}
                         className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
                       >
                         Visit Store →

@@ -71,6 +71,7 @@ import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface CollectorDropDetailPageViewProps {
   id: string;
@@ -179,9 +180,9 @@ function renderCollectorDropInfoPanel(props: CollectorDropInfoPanelProps) {
       <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} finalSale={finalSale} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", finalSale: "Final Sale", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", emiAvailable: "EMI Available", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
       {(categoryName || category || brand) && (
         <Row gap="sm" wrap>
-          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{categoryName || category}</Link>}
+          {category && <Link href={resolveSectionHref(String(ROUTES.PUBLIC.CATEGORY_DETAIL(category)))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{categoryName || category}</Link>}
           {!category && categoryName && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{categoryName}</Span>}
-          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{brand}</Link>}
+          {brand && brandSlug && <Link href={resolveSectionHref(String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug)))} className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400">{brand}</Link>}
           {brand && !brandSlug && <Span layout="inline-flex" size="xs" weight="medium" border="subtle" rounded="full" padding="pill-sm-tall" surface="muted" color="muted">{brand}</Span>}
         </Row>
       )}
@@ -202,7 +203,7 @@ function renderCollectorDropInfoPanel(props: CollectorDropInfoPanelProps) {
               <Text className="text-[10px] tracking-wide mb-0.5" color="faint" transform="uppercase">Listed by</Text>
               <Text size="sm" weight="semibold" color="primary">{safeSeller}</Text>
             </Div>
-            {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
+            {storeHref && <Link href={resolveSectionHref(storeHref)} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
           </Row>
         </Div>
       )}
@@ -526,7 +527,7 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
               <Text color="muted">
                 This collector drop may have ended or the link is incorrect.
               </Text>
-              <Link href={String(ROUTES.PUBLIC.COLLECTOR_DROPS)} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
+              <Link href={resolveSectionHref(String(ROUTES.PUBLIC.COLLECTOR_DROPS))} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
                 Browse Collector Drops
               </Link>
             </Stack>
@@ -697,13 +698,13 @@ export async function CollectorDropDetailPageView({ id, initialCollectorDrop, on
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" layout="flex-wrap" gap="2xs" textSize="xs" color="muted">
-            <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
+            <Link href={resolveSectionHref(String(ROUTES.HOME))} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
-            <Link href={String(ROUTES.PUBLIC.COLLECTOR_DROPS)} className={CLS_BREADCRUMB_LINK}>Collector Drops</Link>
+            <Link href={resolveSectionHref(String(ROUTES.PUBLIC.COLLECTOR_DROPS))} className={CLS_BREADCRUMB_LINK}>Collector Drops</Link>
             {category && (
               <>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
+                <Link href={resolveSectionHref(String(ROUTES.PUBLIC.CATEGORY_DETAIL(category)))} className={CLS_BREADCRUMB_LINK}>
                   {categoryName || category}
                 </Link>
               </>

@@ -13,6 +13,7 @@ import { Iframe } from "../../../ui/components/Iframe";
 import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../../ui/components/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 // --- Constants ---------------------------------------------------------------
 
@@ -65,7 +66,7 @@ function Chip({
   }
 
   return (
-    <Link href={button.href} className={className}>
+    <Link href={resolveSectionHref(button.href)} className={className}>
       {button.label}
     </Link>
   );

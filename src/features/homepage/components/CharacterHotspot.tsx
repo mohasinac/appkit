@@ -12,6 +12,7 @@ import { Section } from "../../../ui/components/Semantic";
 import { ROUTES } from "../../../next/routing/route-map";
 import { resolveMediaUrl } from "../../../utils/media-url";
 import type { CharacterHotspotConfig, HotspotPin as HotspotPinData } from "../types";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -324,7 +325,7 @@ function HotspotHeaderOverlay({
           )}
         </Div>
         <Link
-          href={shopAllHref}
+          href={resolveSectionHref(shopAllHref)}
           className="hidden sm:inline-flex items-center gap-[var(--appkit-space-2)] px-[var(--appkit-space-5)] py-[var(--appkit-space-2)] text-[length:var(--appkit-text-sm)] font-black uppercase tracking-widest transition-transform hover:-translate-y-0.5"
           style={{
             fontFamily: FONT_BANGERS,
@@ -481,7 +482,7 @@ function HotspotPin({
               {hotspot.description}
             </Text>
             <Link
-              href={hotspot.href}
+              href={resolveSectionHref(hotspot.href)}
               onClick={onClose}
               className="flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-2-5)] text-[length:var(--appkit-text-sm)] font-black uppercase transition-opacity hover:opacity-85"
               style={{
@@ -548,7 +549,7 @@ function MobileHotspotSheet({
           </Text>
           <Row gap="3" >
             <Link
-              href={active.href}
+              href={resolveSectionHref(active.href)}
               onClick={onClose}
               className="flex-1 flex items-center justify-between px-[var(--appkit-space-4)] py-[var(--appkit-space-3)] font-black uppercase"
               style={{
@@ -593,7 +594,7 @@ function UniverseBrowseRow({
       {universeLinks.map(({ label, href, color, icon }) => (
         <Link
           key={label}
-          href={href}
+          href={resolveSectionHref(href)}
           className="group flex items-center gap-[var(--appkit-space-2-5)] px-[var(--appkit-space-3)] py-[var(--appkit-space-2-5)] rounded-sm transition-all hover:-translate-y-0.5"
           style={{
             background: "rgba(255,255,255,0.04)",

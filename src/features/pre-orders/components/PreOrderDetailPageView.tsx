@@ -55,6 +55,7 @@ import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import { PurchaseReviewAffordance } from "../../reviews/components/PurchaseReviewAffordance";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
@@ -205,7 +206,7 @@ function PreOrderInfoSection({
         <Row gap="sm" wrap>
           {category && (
             <Link
-              href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
+              href={resolveSectionHref(String(ROUTES.PUBLIC.CATEGORY_DETAIL(category)))}
               className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400"
             >
               {categoryName || category}
@@ -218,7 +219,7 @@ function PreOrderInfoSection({
           )}
           {brand && brandSlug && (
             <Link
-              href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
+              href={resolveSectionHref(String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug)))}
               className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400"
             >
               {brand}
@@ -273,7 +274,7 @@ function PreOrderInfoSection({
             </Div>
             {storeHref && (
               <Link
-                href={storeHref}
+                href={resolveSectionHref(storeHref)}
                 className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
               >
                 Visit Store →
@@ -422,7 +423,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               <Text color="muted">
                 The pre-order item you are looking for may have been removed.
               </Text>
-              <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
+              <Link href={resolveSectionHref(String(ROUTES.PUBLIC.PRE_ORDERS))} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
                 Browse Pre-Orders
               </Link>
             </Stack>
@@ -576,13 +577,13 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
         {/* Breadcrumb + share */}
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" layout="flex-wrap" gap="2xs" textSize="xs" color="muted">
-            <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
+            <Link href={resolveSectionHref(String(ROUTES.HOME))} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
-            <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className={CLS_BREADCRUMB_LINK}>Pre-Orders</Link>
+            <Link href={resolveSectionHref(String(ROUTES.PUBLIC.PRE_ORDERS))} className={CLS_BREADCRUMB_LINK}>Pre-Orders</Link>
             {category && (
               <>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
+                <Link href={resolveSectionHref(String(ROUTES.PUBLIC.CATEGORY_DETAIL(category)))} className={CLS_BREADCRUMB_LINK}>
                   {categoryName || category}
                 </Link>
               </>

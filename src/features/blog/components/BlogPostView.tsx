@@ -20,6 +20,7 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __P = {
   p8: "p-[var(--appkit-space-8)]",
@@ -41,8 +42,19 @@ const CLS_FEATURED_BADGE = "bg-warning-surface text-warning dark:bg-warning-surf
 
 export interface BlogPostViewProps {
   /**
-   * The blog INDEX url, for the tag chips. Omit for the shop's `/blog`.
-   * A host serving the blog at its own root passes `() => "/"`.
+   * The blog INDEX url, for the tag chips.
+   *
+   * ⚠ OMIT THIS unless you need an override. A host that serves the blog at
+   * its own root no longer has to pass anything: the default is resolved
+   * through the section-route registry, so registering `"/blog": ""` already
+   * produces `/`. Supplying it is the explicit escape hatch, and it is then
+   * used verbatim.
+   *
+   * 🛑 A prop whose TYPE is a function may only be passed by a CLIENT parent.
+   * A server component forwarding one writes an error row into the RSC flight
+   * payload, which server-renders a healthy 200 and then kills the browser at
+   * hydration (React #441). Prefer leaving this unset over threading a
+   * callback down from a server page.
    */
   buildListHref?: () => string;
   slug: string;
@@ -283,7 +295,14 @@ export function BlogPostView({
                   {post.tags.map((tag) => (
                     <Link
                       key={tag}
-                      href={`${buildListHref ? buildListHref() : String(ROUTES.BLOG.LIST)}?tags=${encodeURIComponent(tag)}`}
+                      /*
+                       * 🛑 The registry resolves appkit's OWN default only.
+                       * A `buildListHref` the host supplied is the host's
+                       * decision and is used verbatim — re-resolving a
+                       * caller-supplied path would rewrite a correct href
+                       * against a map the caller already accounted for.
+                       */
+                      href={`${buildListHref ? buildListHref() : resolveSectionHref(String(ROUTES.BLOG.LIST))}?tags=${encodeURIComponent(tag)}`}
                       className="inline-block px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] rounded-full bg-[var(--appkit-color-surface-elevated)] hover:bg-primary/10 text-[var(--appkit-color-text-muted)] hover:text-primary text-[length:var(--appkit-text-xs)] font-medium transition-colors"
                     >
                       #{tag}

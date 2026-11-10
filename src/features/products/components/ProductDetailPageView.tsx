@@ -82,6 +82,7 @@ import {
 } from "../../../_internal/shared/features/offers/config";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -248,7 +249,7 @@ export async function ProductDetailPageView({
                 link is incorrect.
               </Text>
               <Link
-                href={String(ROUTES.PUBLIC.PRODUCTS)}
+                href={resolveSectionHref(String(ROUTES.PUBLIC.PRODUCTS))}
                 className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline"
               >
                 Browse Products
@@ -835,7 +836,7 @@ export async function ProductDetailPageView({
                   {categorySlugs.map((slug, i) => (
                     <Link
                       key={slug}
-                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug))}
+                      href={resolveSectionHref(String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug)))}
                       className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400"
                     >
                       {categoryNames[i] ?? slug}
@@ -848,7 +849,7 @@ export async function ProductDetailPageView({
                   )}
                   {brand && brandSlug && (
                     <Link
-                      href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
+                      href={resolveSectionHref(String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug)))}
                       className="inline-flex items-center rounded-full border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-[var(--appkit-space-2-5)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-xs)] font-medium text-[var(--appkit-color-text-muted)] transition-colors hover:border-primary-300 hover:bg-primary-surface hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:text-primary-400"
                     >
                       {brand}
@@ -870,7 +871,7 @@ export async function ProductDetailPageView({
                   {bundleMemberships.map((b) => (
                     <Link
                       key={b.id}
-                      href={String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id))}
+                      href={resolveSectionHref(String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id)))}
                       className={CLS_BUNDLE_PILL}
                     >
                       <Span aria-hidden="true">📦</Span>
@@ -982,7 +983,7 @@ export async function ProductDetailPageView({
                       )}
                       {sellerHref && (
                         <Link
-                          href={sellerHref}
+                          href={resolveSectionHref(sellerHref)}
                           className="rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
                         >
                           Visit Store →
@@ -1085,7 +1086,7 @@ export async function ProductDetailPageView({
                   {partHref && (
                     <Text className="mt-1" color="muted" size="xs">
                       {partSlotLabel ?? "Part"}.{" "}
-                      <Link href={partHref} className="text-primary-600 hover:underline">
+                      <Link href={resolveSectionHref(partHref)} className="text-primary-600 hover:underline">
                         See what else fits →
                       </Link>
                     </Text>
@@ -1317,7 +1318,7 @@ export async function ProductDetailPageView({
                             </Text>
                           </Div>
                           <Link
-                            href={String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id))}
+                            href={resolveSectionHref(String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id)))}
                             className={CLS_BUNDLE_CTA}
                           >
                             View Bundle →

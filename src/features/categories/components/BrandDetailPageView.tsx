@@ -43,6 +43,7 @@ import type { CategoryDocument } from "../schemas/firestore";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -282,14 +283,14 @@ export async function BrandDetailPageView({ slug, initialBrand, pageRegionCards 
                 {/* Breadcrumb */}
                 <Nav layout="flex" gap="2xs" textSize="sm" className="mb-4" aria-label="Breadcrumb">
                   <Link
-                    href={String(ROUTES.HOME)}
+                    href={resolveSectionHref(String(ROUTES.HOME))}
                     className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"}
                   >
                     Home
                   </Link>
                   <Span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</Span>
                   <Link
-                    href={String(ROUTES.PUBLIC.BRANDS)}
+                    href={resolveSectionHref(String(ROUTES.PUBLIC.BRANDS))}
                     className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-[var(--appkit-color-text-muted)] hover:text-primary-600 dark:hover:text-primary-400 transition-colors"}
                   >
                     Brands

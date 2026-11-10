@@ -17,6 +17,7 @@ import { Row, Stack } from "../../../ui/components/Layout";
 import { ROUTES } from "../../../next/routing/route-map";
 import { AttachedCouponsSection } from "../../promotions/components/AttachedCouponsSection";
 import type { AttachedCoupon } from "../../promotions/constants/attached-coupons";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface HomepageCouponsSectionProps {
   /** Already resolved and already validity-filtered — see `getHomepageCoupons`. */
@@ -74,7 +75,7 @@ export function HomepageCouponsSection({
       */}
       <Row justify="start">
         <Link
-          href={String(ROUTES.PUBLIC.PROMOTIONS)}
+          href={resolveSectionHref(String(ROUTES.PUBLIC.PROMOTIONS))}
           className="text-primary font-semibold hover:underline"
         >
           {viewMoreLabel}

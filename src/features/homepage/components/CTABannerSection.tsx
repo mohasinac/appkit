@@ -9,6 +9,7 @@ import { Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../../ui/components/MediaImage";
 import { ROUTES } from "../../../next/routing/route-map";
 import { SECTION_TITLE, SECTION_COPY } from "../constants/section-copy";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export type CTABannerHeight = "sm" | "md" | "lg" | "xl";
 
@@ -130,14 +131,14 @@ export function CTABannerSection({
         )}
         <Row className="mt-8" align="center" justify="start" gap="md" wrap>
           <Link
-            href={primaryHref}
+            href={resolveSectionHref(primaryHref)}
             className="inline-flex items-center rounded-full bg-white px-[var(--appkit-space-8)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-semibold text-primary-700 shadow-sm transition-all hover:bg-surface-hover hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
           >
             {primaryLabel}
           </Link>
           {secondaryHref && (
             <Link
-              href={secondaryHref}
+              href={resolveSectionHref(secondaryHref)}
               className="inline-flex items-center rounded-full border-2 border-white/80 px-[var(--appkit-space-8)] py-[var(--appkit-space-3)] text-[length:var(--appkit-text-sm)] font-semibold text-white transition-all hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
             >
               {secondaryLabel}

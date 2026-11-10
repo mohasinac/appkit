@@ -29,6 +29,7 @@ import { MarketplaceBundleCard } from "../../products/components/MarketplaceBund
 import { BundleBuyNowCta } from "../../categories/components/BundleBuyNowCta";
 import { useHandMode } from "../../../_internal/client/hand-mode";
 import type { CategoryDocument } from "../../categories/schemas";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface FeaturedBundlesSectionProps {
   title?: string;
@@ -81,7 +82,7 @@ export function FeaturedBundlesSection({
           {/* Solid fill, matching SectionCarousel — see BrandsSection's note.
               Was a plain teal text link, one of five out of eleven. */}
           <Link
-            href={String(ROUTES.PUBLIC.BUNDLES)}
+            href={resolveSectionHref(String(ROUTES.PUBLIC.BUNDLES))}
             className="inline-flex items-center gap-[0.375rem] rounded-[var(--appkit-radius-md)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-semibold transition-colors bg-primary text-white hover:bg-primary-600"
           >
             {viewMoreLabel}

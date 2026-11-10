@@ -16,6 +16,7 @@ import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
 import { CAROUSEL_PER_VIEW } from "../constants/carousel-per-view";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface ShopByCategorySectionProps {
   title?: string;
@@ -79,7 +80,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
 
   return (
     <Link
-      href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
+      href={resolveSectionHref(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))}
       className={`${POSTER_CLASS.root} ${POSTER_CLASS.compact} w-full`}
     >
       {resolvedCover ? (
@@ -255,7 +256,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
         {/* CTA button */}
         {cta && !isLoading && (
           <Div className="mt-6 text-left">
-            <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
+            <Link href={resolveSectionHref(cta.href)} className={CTA_CLASSES[cta.variant]}>
               {cta.label}
             </Link>
           </Div>
@@ -270,7 +271,7 @@ const { data: allCategories = [], isLoading } = useTopCategories(limit, { initia
               section CTAs (of eleven) that lacked the fill the other six had.
             */}
             <Link
-              href={viewMoreHref}
+              href={resolveSectionHref(viewMoreHref)}
               className="inline-flex items-center gap-[0.375rem] rounded-[var(--appkit-radius-md)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-semibold transition-colors bg-primary text-white hover:bg-primary-600"
             >
               {viewMoreLabel}

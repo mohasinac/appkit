@@ -43,6 +43,7 @@ import { productImageUrls } from "../../products/schemas/firestore";
 import type { ProductDocument } from "../../products/schemas/firestore";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface ClassifiedDetailPageViewProps {
   slug: string;
@@ -93,7 +94,7 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                 Classified Listing Not Found
               </Heading>
               <Text color="muted">The classified listing you are looking for may have been removed.</Text>
-              <Link href={String(ROUTES.PUBLIC.CLASSIFIED)} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
+              <Link href={resolveSectionHref(String(ROUTES.PUBLIC.CLASSIFIED))} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
                 Browse Classifieds
               </Link>
             </Stack>
@@ -216,13 +217,13 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
       <Container size="xl" padding="y-lg">
         <Row className="mb-4" align="center" justify="between" gap="sm" wrap>
           <Nav aria-label="Breadcrumb" layout="flex-wrap" gap="2xs" textSize="xs" color="muted">
-            <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
+            <Link href={resolveSectionHref(String(ROUTES.HOME))} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
-            <Link href={String(ROUTES.PUBLIC.CLASSIFIED)} className={CLS_BREADCRUMB_LINK}>Classifieds</Link>
+            <Link href={resolveSectionHref(String(ROUTES.PUBLIC.CLASSIFIED))} className={CLS_BREADCRUMB_LINK}>Classifieds</Link>
             {category && (
               <>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
+                <Link href={resolveSectionHref(String(ROUTES.PUBLIC.CATEGORY_DETAIL(category)))} className={CLS_BREADCRUMB_LINK}>
                   {categoryName || category}
                 </Link>
               </>
@@ -310,7 +311,7 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
                     </Div>
                     {storeHref && (
                       <Link
-                        href={storeHref}
+                        href={resolveSectionHref(storeHref)}
                         className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
                       >
                         Visit Store →

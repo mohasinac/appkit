@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ProductCard } from "./ProductGrid";
 import { Div } from "../../../ui/components/Div";
 import type { ProductItem } from "../types";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface InteractiveProductCardProps {
   product: ProductItem;
@@ -74,7 +75,7 @@ export function InteractiveProductCard({
    * relative wrapper, is the only placement that escapes both.
    */
   const card = (
-    <Link href={href} className="block">
+    <Link href={resolveSectionHref(href)} className="block">
       <ProductCard
         product={product}
         className={className}

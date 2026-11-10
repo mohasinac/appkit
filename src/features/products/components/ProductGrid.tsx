@@ -30,6 +30,7 @@ import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuick
 import { useFieldVisibility } from "../../shell/useFieldVisibility";
 import { useEditMode } from "../../../edit-mode";
 import { sortByFieldOrder } from "../../shell/field-ui-meta";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -515,7 +516,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
   const wrapped =
     href && !selectionMode ? (
-      <Link href={href} className="block h-full">
+      <Link href={resolveSectionHref(href)} className="block h-full">
         {cardBody}
       </Link>
     ) : (

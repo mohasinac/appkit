@@ -15,6 +15,7 @@ import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
 import type { SectionCTA } from "../schemas/firestore";
 import { useHandMode } from "../../../_internal/client/hand-mode";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -92,7 +93,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
        * `/brands/{slug}` is the one the sitemap advertises and the one the
        * brand page declares canonical.
        */
-      href={ROUTES.PUBLIC.BRAND_DETAIL(brand.slug)}
+      href={resolveSectionHref(ROUTES.PUBLIC.BRAND_DETAIL(brand.slug))}
       className="flex h-32 w-36 flex-col items-center justify-center gap-[var(--appkit-space-2)] rounded-xl border p-[var(--appkit-space-3)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
     >
       {iconSrc || coverImage ? (
@@ -175,7 +176,7 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
           */}
           {!cta && viewMoreHref && (
             <Link
-              href={viewMoreHref}
+              href={resolveSectionHref(viewMoreHref)}
               className="inline-flex items-center gap-[0.375rem] rounded-[var(--appkit-radius-md)] px-[var(--appkit-space-3)] py-[var(--appkit-space-1)] text-[length:var(--appkit-text-sm)] font-semibold transition-colors bg-primary text-white hover:bg-primary-600"
             >
               {viewMoreLabel}
@@ -215,7 +216,7 @@ const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: i
         {/* CTA button */}
         {cta && !isLoading && (
           <Div className="mt-6 text-left">
-            <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
+            <Link href={resolveSectionHref(cta.href)} className={CTA_CLASSES[cta.variant]}>
               {cta.label}
             </Link>
           </Div>

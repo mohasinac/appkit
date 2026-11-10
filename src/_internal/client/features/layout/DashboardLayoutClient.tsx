@@ -45,6 +45,7 @@ import { useToast } from "../../../../ui/components/Toast";
 import { useSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
 import { portalHref } from "../../../../next/routing/portals";
+import { resolveSectionHref } from "../../../../next/routing/section-routes";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -417,17 +418,17 @@ export function DashboardLayoutClient({
   const renderCrossNavFooter = () => (
     <Nav aria-label="Cross-dashboard links" padding="y-xs">
       {crossNav?.storeHref && (
-        <Link href={crossNav.storeHref} onClick={closeMobile} className={crossNavLinkClass}>
+        <Link href={resolveSectionHref(crossNav.storeHref)} onClick={closeMobile} className={crossNavLinkClass}>
           Go to my Store
         </Link>
       )}
       {crossNav?.adminHref && (
-        <Link href={crossNav.adminHref} onClick={closeMobile} className={crossNavLinkClass}>
+        <Link href={resolveSectionHref(crossNav.adminHref)} onClick={closeMobile} className={crossNavLinkClass}>
           Back to Admin
         </Link>
       )}
       {crossNav?.profileHref && (
-        <Link href={crossNav.profileHref} onClick={closeMobile} className={crossNavLinkClass}>
+        <Link href={resolveSectionHref(crossNav.profileHref)} onClick={closeMobile} className={crossNavLinkClass}>
           My Profile
         </Link>
       )}
