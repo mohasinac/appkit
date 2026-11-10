@@ -6,6 +6,7 @@ import { Section } from "../../../ui/components/Semantic";
 import { Stack } from "../../../ui/components/Layout";
 import { Button } from "../../../ui/components/Button";
 import { ROUTES } from "../../../next/routing/route-map";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __P = {
   p6: "p-[var(--appkit-space-6)]",
@@ -58,7 +59,7 @@ export function EventSaleBanner({
           </Div>
         ) : null}
         <Div>
-          <Link href={href}>
+          <Link href={resolveSectionHref(href)}>
             <Button variant="secondary">Shop the sale</Button>
           </Link>
         </Div>

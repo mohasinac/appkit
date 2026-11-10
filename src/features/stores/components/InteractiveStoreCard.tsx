@@ -12,6 +12,7 @@ import { MediaImage } from "../../../ui/components/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { SellerTierBadge } from "./SellerTierBadge";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -98,7 +99,7 @@ export function InteractiveStoreCard({
         />
       )}
 
-      <Link href={href} className="flex flex-col flex-1 min-h-0">
+      <Link href={resolveSectionHref(href)} className="flex flex-col flex-1 min-h-0">
         {/* ── Banner — ONLY when the store actually has one ─────────────
             🛑 No placeholder. This used to render the `aspect-video` box
             unconditionally with a 20%-opacity 🏪 glyph inside it when

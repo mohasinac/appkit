@@ -36,6 +36,7 @@ import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
 import { SCAM_TYPES, SCAM_TYPE_LABELS } from "../constants/scam-types";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const SORT_OPTIONS = [
   { value: sortBy("createdAt", "DESC"), label: "Newest Reports" },
@@ -57,7 +58,7 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
   const aliases = scammer.displayNames.slice(1);
 
   return (
-    <Link href={href} className="group block">
+    <Link href={resolveSectionHref(href)} className="group block">
       <Card variant="outlined" hover padding="md">
         <Stack gap="sm">
           <Row justify="between" gap="sm" align="start">
@@ -159,7 +160,7 @@ export async function ScamRegistryView({ searchParams = {}, pageRegionCards = []
           <Alert variant="warning" compact>
             All profiles on this page have been verified by our moderation team. If you recognise a
             scammer not listed here,{" "}
-            <Link href={reportHref} className="font-medium underline hover:no-underline">
+            <Link href={resolveSectionHref(reportHref)} className="font-medium underline hover:no-underline">
               report them
             </Link>
             .

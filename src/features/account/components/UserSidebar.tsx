@@ -20,6 +20,7 @@ import { findActiveNavGroup, findActiveNavItem } from "../../../_internal/client
 import { getSidebarRailClasses, getSidebarOverlayClasses } from "../../../_internal/client/features/layout/sidebarPositionClasses";
 import { useHandMode } from "../../../_internal/client/hand-mode";
 import { useClickOutside } from "../../../react/hooks/useClickOutside";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __O = {
   hidden: "overflow-hidden",
@@ -70,7 +71,7 @@ function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boo
  }`;
   return (
     <>
-      <Link href={item.href} onClick={handleClick} className={linkClass}>
+      <Link href={resolveSectionHref(item.href)} onClick={handleClick} className={linkClass}>
         {item.icon && <Span size="base" className="shrink-0 opacity-70">{item.icon}</Span>}
         <Span className="truncate">{item.label}</Span>
       </Link>

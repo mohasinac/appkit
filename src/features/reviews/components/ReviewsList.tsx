@@ -15,6 +15,7 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 // --- ReviewCard ---------------------------------------------------------------
 
@@ -56,7 +57,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
       shadow="hover-md" className={`group h-full border border-neutral-200 transition ${className}`} rounded="xl" surface="default"
     >
       {/* Clicking the main body navigates to the review detail */}
-      <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
+      <Link href={resolveSectionHref(reviewHref)} className="flex flex-col flex-1 min-h-0">
         <Row align="start" gap="3">
           {review.userAvatar ? (
             <Div className="relative h-9 w-9 flex-shrink-0" rounded="full" overflow="hidden">

@@ -14,6 +14,7 @@ import { ReviewCard } from "./ReviewsList";
 import { OwnerQuickActions } from "../../admin/components/OwnerQuickActions";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface ReviewDetailPageViewProps {
   id: string;
@@ -101,11 +102,11 @@ export async function ReviewDetailPageView({ id, pageRegionCards = [] }: ReviewD
           () => (
             <Div paddingY="y-xs-tall" className="border-b border-neutral-100 bg-neutral-50" padding="x-md">
               <Nav layout="flex" gap="2xs" textSize="xs" color="faint" className="mx-auto max-w-3xl" aria-label="Breadcrumb">
-                <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
+                <Link href={resolveSectionHref(String(ROUTES.HOME))} className="hover:text-primary transition-colors">
                   Home
                 </Link>
                 <Span>/</Span>
-                <Link href={String(ROUTES.PUBLIC.REVIEWS)} className="hover:text-primary transition-colors">
+                <Link href={resolveSectionHref(String(ROUTES.PUBLIC.REVIEWS))} className="hover:text-primary transition-colors">
                   Reviews
                 </Link>
                 <Span>/</Span>

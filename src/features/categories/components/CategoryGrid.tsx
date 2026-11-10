@@ -10,6 +10,7 @@ import { ImageMosaic, MOSAIC_MIN } from "../../../ui/components/ImageMosaic";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
 import type { CategoryItem } from "../types";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
@@ -146,7 +147,7 @@ export function CategoryCard({
 
   if (href) {
     return (
-      <Link href={href} className={cardClass}>
+      <Link href={resolveSectionHref(href)} className={cardClass}>
         {inner}
       </Link>
     );

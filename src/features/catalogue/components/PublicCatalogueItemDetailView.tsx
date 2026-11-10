@@ -17,6 +17,7 @@ import { ROUTES } from "../../../next/routing/route-map";
 import type { CatalogueItemDocument } from "../schemas/firestore";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { resolveSectionHref } from "../../../next/routing/section-routes";
 
 export interface PublicCatalogueItemDetailViewProps {
   ownerSlug: string;
@@ -66,7 +67,7 @@ export function PublicCatalogueItemDetailView({ ownerSlug, itemId, pageRegionCar
                 Item Not Found
               </Heading>
               <Text color="muted">This catalogue item may have been made private or removed.</Text>
-              <Link href={`${ROUTES.PUBLIC.PROFILE(ownerSlug)}/catalogue`} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
+              <Link href={resolveSectionHref(`${ROUTES.PUBLIC.PROFILE(ownerSlug)}/catalogue`)} className="text-[length:var(--appkit-text-sm)] font-medium text-primary-600 hover:underline">
                 Back to catalogue
               </Link>
             </Stack>
@@ -85,7 +86,7 @@ export function PublicCatalogueItemDetailView({ ownerSlug, itemId, pageRegionCar
         <Row className="mb-4" align="center" gap="xs" textSize="xs" color="muted">
           <Link href="/" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Home</Link>
           <Span aria-hidden>/</Span>
-          <Link href={`${ROUTES.PUBLIC.PROFILE(ownerSlug)}/catalogue`} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+          <Link href={resolveSectionHref(`${ROUTES.PUBLIC.PROFILE(ownerSlug)}/catalogue`)} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
             {owner.displayName ?? "Catalogue"}
           </Link>
           <Span aria-hidden>/</Span>
