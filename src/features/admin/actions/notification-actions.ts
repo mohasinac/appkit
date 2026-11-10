@@ -21,6 +21,7 @@ import {
 import { isEmailEligible } from "../../../_internal/shared/features/notifications/email-eligibility";
 import {
   resolveNotificationRule,
+  resolveNotificationAudiences,
   ruleAllowsChannel,
   capDecision,
   type NotificationRule,
@@ -737,4 +738,85 @@ export async function sendNotification(
   });
 
   return { notification, email: emailStatus, whatsapp: whatsappStatus };
+}
+
+/**
+ * Send one event to EVERY audience the registry says should receive it.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 WHY THIS WRAPS `sendNotification` RATHER THAN CHANGING IT
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * `sendNotification` has exactly one recipient, `input.userId`, and ~40 call
+ * sites depend on that. Its `audience` field has never chosen a recipient —
+ * it only picks which portal the action URL points at — and **no call site
+ * passes `"seller"`**. So a seller has never received a notification through
+ * this path at all: `onOrderCreate.notifyStoreOwner` sends them a raw
+ * free-form WhatsApp message with no in-app row, no email, and no type.
+ *
+ * Fanning out inside the primitive would change behaviour for all 40 callers
+ * at once. Wrapping leaves them untouched and makes the new behaviour opt-in
+ * per call site — the same shape that worked for `deliverCheckoutValueOtp`.
+ *
+ * ⚠ The SELLER is resolved here, from `storeId` — callers pass the store, not
+ * a user id, because a store's owner can change and a notification should
+ * follow the store.
+ *
+ * ⚠ Failures are per-audience and non-fatal. A seller whose phone is missing
+ * must not stop the buyer's message; the whole point of one event reaching two
+ * people is that neither depends on the other.
+ */
+export async function dispatchNotification(
+  input: SendNotificationInput & { storeId?: string },
+): Promise<{ buyer?: SendNotificationResult; seller?: SendNotificationResult }> {
+  const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+    route: "notifications/dispatch",
+    key: "dispatchNotification.settings",
+    fallback: null,
+  });
+
+  /*
+   * Only the audiences — see `resolveNotificationAudiences`. The channel and
+   * cap decisions belong to `sendNotification`, which makes them per
+   * recipient; deciding them here would apply the buyer's answer to the
+   * seller.
+   */
+  const audiences = resolveNotificationAudiences(
+    input.type,
+    (t: string) => TYPE_AUDIENCE[t as NotificationType],
+    settings?.notificationRules ?? {},
+  );
+
+  const out: { buyer?: SendNotificationResult; seller?: SendNotificationResult } = {};
+
+  if (audiences.includes("buyer")) {
+    out.buyer = await sendNotification({ ...input, audience: "buyer" });
+  }
+
+  if (audiences.includes("seller") && input.storeId) {
+    try {
+      const store = await storeRepository.findBySlug(input.storeId);
+      if (store?.ownerId) {
+        /*
+         * 🛑 `audience: "seller"` is what makes the action URL resolve to
+         * `/store/orders/{id}/view` instead of the buyer's tracking page.
+         * Without it the seller gets a link into a portal they cannot act in.
+         */
+        out.seller = await sendNotification({
+          ...input,
+          userId: store.ownerId,
+          audience: "seller",
+        });
+      }
+    } catch (err) {
+      void normalizeError(err);
+      serverLogger.error("dispatchNotification: seller arm failed (non-fatal)", {
+        storeId: input.storeId,
+        type: input.type,
+        err,
+      });
+    }
+  }
+
+  return out;
 }

@@ -185,6 +185,26 @@ export function resolveNotificationRule(
   };
 }
 
+/**
+ * Just the audiences for a type — who should receive it.
+ *
+ * Separate from `resolveNotificationRule` because the fan-out caller needs
+ * only this, and building a full rule there would mean supplying
+ * `emailEligible`/`prefsKeyOf` answers it does not have and does not use.
+ * Passing placeholder functions to satisfy a signature is how a lie gets
+ * written into code that later looks authoritative.
+ */
+export function resolveNotificationAudiences(
+  type: string,
+  audienceOf: (type: string) => NotificationAudience | undefined,
+  overrides: NotificationRuleOverrides = {},
+): readonly NotificationAudience[] {
+  const override = overrides[type]?.audiences;
+  if (override) return override;
+  const derived = audienceOf(type);
+  return derived ? [derived] : UNKNOWN_NOTIFICATION_RULE.audiences;
+}
+
 /** Does this rule permit `channel`? In-app is always permitted and never listed. */
 export function ruleAllowsChannel(rule: NotificationRule, channel: MessageChannel): boolean {
   return rule.channels.includes(channel);
