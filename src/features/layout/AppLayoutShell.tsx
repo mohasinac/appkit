@@ -106,6 +106,8 @@ export interface AppLayoutShellProps {
   brandName: string;
   /** TLD badge for the wordmark, forwarded to TitleBarLayout (A5). */
   brandTld?: string;
+  /** Smaller label naming WHICH DEPLOYMENT this is, e.g. `"events"`. See `SiteLogoProps.suffix`. */
+  brandSuffix?: string;
   brandShortName?: string;
   /** Admin-uploaded site logo URL. Falls back to the SVG wordmark when empty. */
   siteLogoUrl?: string;
@@ -1039,6 +1041,7 @@ export function AppLayoutShell({
   user,
   brandName,
   brandTld,
+  brandSuffix,
   brandShortName,
   siteLogoUrl,
   logoHref,
@@ -1317,6 +1320,7 @@ export function AppLayoutShell({
             showSearch={hasSearchSlot}
             brandName={brandName}
             brandTld={brandTld}
+            brandSuffix={brandSuffix}
             brandShortName={brandShortName}
             siteLogoUrl={siteLogoUrl}
             logoHref={logoHref}
@@ -1358,6 +1362,24 @@ export function AppLayoutShell({
           <SidebarLayout
             isOpen={sidebarOpen}
             ariaLabel="Secondary navigation"
+            /*
+             * 🛑 MOBILE ONLY — owner, 2026-11-11: *"i said no side drawer on
+             * the main site why do we still use it?"*. The standing decision
+             * is desktop sidebar removed everywhere (public pages included),
+             * mobile keeps a drawer for the long tail.
+             *
+             * Nothing is stranded on desktop: browse lives in `MainNavbar`,
+             * profile/cart/wishlist/notifications are `hidden lg:flex` icons
+             * in the title bar, the theme toggle is in the title bar, and
+             * support links are in the footer. Measured before confining it —
+             * hiding a drawer that was the ONLY route to a destination would
+             * trade a layout complaint for a dead end.
+             *
+             * ⚠ This is the PUBLIC secondary drawer. Dashboard navigation is
+             * a different surface (`useDashboardNav`) and keeps its desktop
+             * affordance.
+             */
+            mobileOnly
             header={
               user ? (
                 <SidebarUserHeader

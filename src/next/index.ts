@@ -57,6 +57,8 @@ export {
   PORTAL_SECTIONS,
   portalForHost,
   portalSectionForHost,
+  portalForPath,
+  portalLabelForPath,
   portalHostFor,
   portalSectionForRoles,
   isPortalSectionPath,

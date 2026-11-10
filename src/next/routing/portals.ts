@@ -242,6 +242,46 @@ export function portalSectionForHost(hostname: string): string | null {
   return portalForHost(hostname)?.section ?? null;
 }
 
+/**
+ * Which portal does this PATH belong to — `"/store/products"` → the `seller`
+ * definition. Null for a public path.
+ *
+ * ## 🛑 Why by path and not by hostname
+ *
+ * Chrome needs this to label which dashboard the viewer is in (owner,
+ * 2026-11-11: *"add a smaller subdomain label … do for all subdomains
+ * including the dashboard ones"*). The portals are **host rewrites on the main
+ * app**, not deployments, so the obvious route is `portalForHost` — but
+ * reading the hostname server-side means `headers()`, and one dynamic call in
+ * a root locale layout opts **every page of the site** into dynamic rendering.
+ * That is a site-wide performance regression traded for a label.
+ *
+ * The path carries the same answer for free: the proxy rewrites
+ * `admin.<domain>/` to `/admin`, so by the time any layout renders, the
+ * section is in the pathname. A client component reads it with
+ * `usePathname()`, which is populated identically on the server render, so
+ * there is no hydration mismatch either.
+ *
+ * ⚠ It therefore also matches `www.<domain>/admin` — someone on the main host
+ * at an admin path. That is correct for this use: the label answers "which
+ * dashboard am I in", and they are in the admin dashboard.
+ *
+ * 🛑 Matches on `section`, never on `label`. `seller`'s section is `/store`,
+ * so a label-based string match would miss every seller page and silently
+ * label none of them.
+ */
+export function portalForPath(path: string): PortalDefinition | null {
+  if (!path) return null;
+  return (
+    PORTAL_DEFINITIONS.find((p) => isUnderSection(path, p.section)) ?? null
+  );
+}
+
+/** The portal LABEL for a path — `"/store/x"` → `"seller"`. Null when public. */
+export function portalLabelForPath(path: string): string | null {
+  return portalForPath(path)?.label ?? null;
+}
+
 /** `admin` + `letitrip.in` -> `admin.letitrip.in`. For building outbound links. */
 export function portalHostFor(label: string, baseDomain: string): string {
   return `${label}.${normalizeHostname(baseDomain)}`;

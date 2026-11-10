@@ -65,6 +65,24 @@ export interface SiteLogoProps {
    */
   tld?: string;
   /**
+   * Optional smaller label after the wordmark naming WHICH DEPLOYMENT this is
+   * — e.g. `"events"` renders `wordmark` `.tld` `events`.
+   *
+   * Owner, 2026-11-11: *"we can add it as letitrip <subdomain> in smaller so
+   * that the user knows which domain they are in"*. Every subdomain renders
+   * the same wordmark, so without this the five hosts are visually identical
+   * and a user who followed a link cannot tell `events.` from `blogs.`.
+   *
+   * 🛑 Drawn in the SAME fill at reduced opacity and a much smaller size, so
+   * it reads as a QUALIFIER rather than part of the brand. It is deliberately
+   * not a second pill: the `.tld` pill already occupies that visual slot, and
+   * two pills in a row read as two badges of equal weight.
+   *
+   * ⚠ It joins the accessible name too (`"letitrip.in events"`), because a
+   * screen-reader user needs the which-host answer as much as a sighted one.
+   */
+  suffix?: string;
+  /**
    * Optional admin-uploaded image URL. When present, renders an `<MediaImage>`
    * instead of the SVG wordmark (so the watermark proxy applies). Falls back
    * to the SVG when empty/undefined.
@@ -145,6 +163,20 @@ const BADGE = {
   textY: 21,
 } as const;
 
+/**
+ * The deployment label — see `SiteLogoProps.suffix`.
+ *
+ * `fontSize` is under half the wordmark's so "smaller" is unambiguous at every
+ * `size` preset, and `opacity` drops it back further without introducing a
+ * second colour (which would have to be themed for light AND dark).
+ */
+const SUFFIX = {
+  fontSize: 19,
+  tracking: 0.2,
+  gap: 9,
+  opacity: 0.62,
+} as const;
+
 function resolveFill(tone: SiteLogoTone, gradientId: string): string {
   switch (tone) {
     case "mono":
@@ -173,6 +205,7 @@ export function SiteLogo({
   title,
   wordmark,
   tld,
+  suffix,
   src,
 }: SiteLogoProps) {
   /*
@@ -182,7 +215,14 @@ export function SiteLogo({
    * and invisible, which is the hardest kind of missing logo to diagnose.
    */
   const text = wordmark?.trim() || title?.trim() || "Site";
-  const accessibleTitle = title ?? (tld ? `${text}.${tld}` : text);
+  /*
+   * `||` for the same reason as `text` above — a whitespace-only suffix must
+   * behave as absent, not draw an empty label and pad the viewBox around it.
+   */
+  const suffixText = suffix?.trim() || "";
+  const accessibleTitle =
+    title ??
+    [tld ? `${text}.${tld}` : text, suffixText].filter(Boolean).join(" ");
   const uid = useId();
   const gradientId = `${GRADIENT_ID_PREFIX}-${uid.replace(/:/g, "")}`;
   const heightCls = SIZE_HEIGHTS[size];
@@ -210,7 +250,20 @@ export function SiteLogo({
     ? estimateTextWidth(badgeLabel, BADGE.fontSize, BADGE.tracking) + BADGE.padX * 2
     : 0;
   const badgeX = textWidth + BADGE.gap;
-  const viewWidth = Math.ceil(tld ? badgeX + badgeWidth : textWidth);
+  /*
+   * 🛑 The suffix extends the measured box, exactly like the pill above. The
+   * header comment on `NARROW_GLYPHS` records what a constant viewBox did to
+   * long wordmarks (`"Acme Identity"` → `"Acme Iden"`); a suffix drawn past
+   * `viewWidth` would be clipped the same silent way.
+   */
+  const brandWidth = tld ? badgeX + badgeWidth : textWidth;
+  const suffixWidth = suffixText
+    ? estimateTextWidth(suffixText, SUFFIX.fontSize, SUFFIX.tracking)
+    : 0;
+  const suffixX = brandWidth + SUFFIX.gap;
+  const viewWidth = Math.ceil(
+    suffixText ? suffixX + suffixWidth : brandWidth,
+  );
 
   return (
     <svg
@@ -290,6 +343,27 @@ export function SiteLogo({
             {badgeLabel}
           </text>
         </>
+      )}
+      {/*
+        The deployment label — which host am I on.
+
+        Baseline-aligned with the wordmark rather than vertically centred: the
+        two read as one line of text that way, which is the point ("letitrip
+        events"), whereas centring makes it look like a detached badge.
+      */}
+      {suffixText && (
+        <text
+          x={suffixX}
+          y={WORDMARK.baseline}
+          fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+          fontWeight="600"
+          fontSize={SUFFIX.fontSize}
+          letterSpacing={SUFFIX.tracking}
+          fill={fill}
+          opacity={SUFFIX.opacity}
+        >
+          {suffixText}
+        </text>
       )}
     </svg>
   );

@@ -52,6 +52,14 @@ export interface TitleBarLayoutProps {
    * consumer of appkit got one marketplace's TLD drawn into its header.
    */
   brandTld?: string;
+  /**
+   * Smaller label after the wordmark naming WHICH DEPLOYMENT this is — e.g.
+   * `"events"`. See `SiteLogoProps.suffix`.
+   *
+   * Every subdomain draws the same wordmark, so without this the hosts are
+   * visually identical and a user cannot tell `events.` from `blogs.`.
+   */
+  brandSuffix?: string;
   /** Admin-uploaded site logo URL. Falls back to the SVG wordmark when empty. */
   siteLogoUrl?: string;
   logoHref: string;
@@ -171,6 +179,7 @@ export function TitleBarLayout({
   showSearch = true,
   brandName,
   brandTld,
+  brandSuffix,
   brandShortName,
   siteLogoUrl,
   logoHref,
@@ -226,6 +235,21 @@ export function TitleBarLayout({
     />
   ) : null;
 
+  /*
+   * ── THE HAMBURGER DOES DOUBLE DUTY, SO IT CANNOT BE HIDDEN WHOLESALE ──────
+   *
+   * On a dashboard it toggles DASHBOARD navigation; everywhere else it opens
+   * the public secondary drawer. Those are different surfaces with opposite
+   * answers to "should this exist on desktop?": the drawer is mobile-only
+   * (owner, 2026-11-11 — *"i said no side drawer on the main site"*), while a
+   * dashboard's own nav is a desktop affordance.
+   *
+   * 🛑 So the breakpoint class is chosen from WHICH surface this press drives,
+   * read from the same condition as `onClick`. Hiding the button
+   * unconditionally would remove dashboard navigation on desktop — a far worse
+   * regression than the one being fixed.
+   */
+  const drivesDashboardNav = hasDashboardNav && !!onToggleDashboardNav;
   const hamburgerBtn = !hideSidebarToggle ? (
     <IconButton
       size="touch"
@@ -233,8 +257,8 @@ export function TitleBarLayout({
       aria-label={sidebarOpen ? "Close menu" : hasDashboardNav ? "Open dashboard navigation" : "Open menu"}
       aria-expanded={sidebarOpen}
       aria-controls="secondary-sidebar"
-      onClick={hasDashboardNav && onToggleDashboardNav ? onToggleDashboardNav : onToggleSidebar}
-      className={iconBtn}
+      onClick={drivesDashboardNav ? onToggleDashboardNav : onToggleSidebar}
+      className={`${iconBtn}${drivesDashboardNav ? "" : " lg:hidden"}`}
       icon={<Icon name={sidebarOpen ? "close" : "menu"} size="lg" />}
     />
   ) : null;
@@ -422,7 +446,22 @@ export function TitleBarLayout({
               aria-label={brandName}
               className="flex items-center gap-[var(--appkit-space-2)] transition-opacity hover:opacity-80"
             >
-              <SiteLogo title={brandName} wordmark={brandName} tld={brandTld} size="md" />
+              {/*
+                🛑 `title` is composed to INCLUDE the suffix. `SiteLogo` builds
+                its own accessible name only when `title` is absent, and this
+                call site passes one — so without composing it here a screen
+                reader would announce the bare wordmark and lose the
+                which-host answer the suffix exists to give.
+              */}
+              <SiteLogo
+                title={[brandTld ? `${brandName}.${brandTld}` : brandName, brandSuffix?.trim()]
+                  .filter(Boolean)
+                  .join(" ")}
+                wordmark={brandName}
+                tld={brandTld}
+                suffix={brandSuffix}
+                size="md"
+              />
             </Link>
           </Row>
 
