@@ -674,17 +674,28 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     // The platform's own WhatsApp number, digits-only with country code
     // (+91 8919665811). Same number as contact.whatsappNumber above.
     whatsappAdminNotifyNumbers: "918919665811",
-    // Default Meta message-template names. These MUST be created and approved
-    // in Meta Business Manager under exactly these names — business-initiated
-    // sends outside the 24h customer-service window are rejected without an
-    // approved template. Names match the notification types they serve, see
-    // WHATSAPP_TEMPLATE_BY_TYPE in features/admin/actions/notification-actions.ts.
-    whatsappTemplateOrderPlaced: "order_placed",
-    whatsappTemplateOrderConfirmed: "order_confirmed",
-    whatsappTemplateOrderShipped: "order_shipped",
-    whatsappTemplateOrderDelivered: "order_delivered",
-    whatsappTemplateOrderCancelled: "order_cancelled",
-    whatsappTemplateRefundInitiated: "refund_initiated",
+    /*
+     * Default Meta message-template names. These MUST exist and be APPROVED on
+     * the WhatsApp Business Account under exactly these names — a
+     * business-initiated send outside the 24h customer-service window is
+     * rejected without one. `scripts/wa-templates.mjs create` creates this
+     * exact set.
+     *
+     * 🛑 This seeded SIX per-status names (`order_placed`, `order_confirmed`,
+     * …) which are **deleted from the WABA** — it was shipping config pointing
+     * at templates Meta no longer knows, so every send resolved a name that
+     * could only be rejected.
+     *
+     * Two now: one UTILITY template for the whole order lifecycle, and one
+     * AUTHENTICATION template for the checkout OTP. The category matters more
+     * than the wording — Meta's policy check reads it, so a utility template
+     * carrying a one-time code is refused however it is phrased.
+     *
+     * ⚠ `whatsappTemplateCheckoutOtp` is also the switch that makes WhatsApp
+     * the default OTP channel; blank keeps the default on email.
+     */
+    whatsappTemplateOrderUpdate: "tx_order_update",
+    whatsappTemplateCheckoutOtp: "tx_checkout_otp",
     whatsappTemplateLanguage: "en",
     metaAppId: "meta_app_PLACEHOLDER",
     metaAppSecret: "meta_secret_PLACEHOLDER",

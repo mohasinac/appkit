@@ -60,12 +60,17 @@ export const siteSettingsWhatsappFormSchema = z.object({
     "Comma-separated, digits-only, include country code. These receive a WhatsApp message when any order is placed."),
   waTemplateLanguage: waField(4, "Template language code",
     "BCP-47 code the templates below were approved in, e.g. en or en_US. Approved Meta message templates for the buyer-facing WhatsApp order-updates addon (Fees tab) — Meta rejects business-initiated free-text WhatsApp messages outside a 24h customer-service window, so a real template name here is required for that notification type to actually deliver. Leave blank to skip WhatsApp for that type (in-app + email still fire)."),
-  waTemplateOrderPlaced: waField(5, "Order placed template name", "e.g. order_placed_update."),
-  waTemplateOrderConfirmed: waField(6, "Order confirmed template name", "e.g. order_confirmed_update."),
-  waTemplateOrderShipped: waField(7, "Order shipped template name", "e.g. order_shipped_update."),
-  waTemplateOrderDelivered: waField(8, "Order delivered template name", "e.g. order_delivered_update."),
-  waTemplateOrderCancelled: waField(9, "Order cancelled template name", "e.g. order_cancelled_update."),
-  waTemplateRefundInitiated: waField(10, "Refund initiated template name", "e.g. refund_initiated_update."),
+  /*
+   * 🛑 ONE field, where there were six. The six per-status templates are
+   * deleted from the WABA, so those inputs collected names Meta no longer
+   * knows — config that looked filled in and could only ever be rejected.
+   *
+   * One UTILITY template now carries the whole lifecycle: contents, order
+   * status, payment status and per-shipment tracking. Refunds ride its payment
+   * slot, which is why no separate money template exists to configure.
+   */
+  waTemplateOrderUpdate: waField(5, "Order update template name",
+    "The single UTILITY template covering the whole order lifecycle — contents, status, payment and shipments. e.g. tx_order_update. Created by `node scripts/wa-templates.mjs create`. Blank means WhatsApp is skipped for order notifications; in-app and email still fire."),
   /*
    * 🛑 Not one of the six above, and not interchangeable with them. The six
    * are UTILITY templates for order lifecycle events; this one must be

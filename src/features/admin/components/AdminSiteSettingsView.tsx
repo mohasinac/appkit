@@ -1484,9 +1484,7 @@ export function AdminSiteSettingsView({
   // calls collapsed into one combined object.
   const [whatsappForm, setWhatsappForm] = React.useState<SiteSettingsWhatsappFormValues>({
     waPhoneNumberId: "", waCloudApiToken: "", waAdminNotifyNumbers: "",
-    waTemplateLanguage: "en", waTemplateOrderPlaced: "", waTemplateOrderConfirmed: "",
-    waTemplateOrderShipped: "", waTemplateOrderDelivered: "",
-    waTemplateOrderCancelled: "", waTemplateRefundInitiated: "",
+    waTemplateLanguage: "en", waTemplateOrderUpdate: "",
     waTemplateCheckoutOtp: "",
   });
   const {
@@ -2019,12 +2017,7 @@ export function AdminSiteSettingsView({
       waCloudApiToken: s.credentialsMasked?.whatsappCloudApiToken ?? "",
       waAdminNotifyNumbers: s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "",
       waTemplateLanguage: s.credentialsMasked?.whatsappTemplateLanguage ?? "en",
-      waTemplateOrderPlaced: s.credentialsMasked?.whatsappTemplateOrderPlaced ?? "",
-      waTemplateOrderConfirmed: s.credentialsMasked?.whatsappTemplateOrderConfirmed ?? "",
-      waTemplateOrderShipped: s.credentialsMasked?.whatsappTemplateOrderShipped ?? "",
-      waTemplateOrderDelivered: s.credentialsMasked?.whatsappTemplateOrderDelivered ?? "",
-      waTemplateOrderCancelled: s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "",
-      waTemplateRefundInitiated: s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "",
+      waTemplateOrderUpdate: s.credentialsMasked?.whatsappTemplateOrderUpdate ?? "",
       waTemplateCheckoutOtp: s.credentialsMasked?.whatsappTemplateCheckoutOtp ?? "",
     });
 
@@ -2237,12 +2230,7 @@ export function AdminSiteSettingsView({
         whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", whatsappForm.waCloudApiToken ?? ""),
         whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", whatsappForm.waAdminNotifyNumbers ?? ""),
         whatsappTemplateLanguage: maskedOrReal("whatsappTemplateLanguage", whatsappForm.waTemplateLanguage ?? ""),
-        whatsappTemplateOrderPlaced: maskedOrReal("whatsappTemplateOrderPlaced", whatsappForm.waTemplateOrderPlaced ?? ""),
-        whatsappTemplateOrderConfirmed: maskedOrReal("whatsappTemplateOrderConfirmed", whatsappForm.waTemplateOrderConfirmed ?? ""),
-        whatsappTemplateOrderShipped: maskedOrReal("whatsappTemplateOrderShipped", whatsappForm.waTemplateOrderShipped ?? ""),
-        whatsappTemplateOrderDelivered: maskedOrReal("whatsappTemplateOrderDelivered", whatsappForm.waTemplateOrderDelivered ?? ""),
-        whatsappTemplateOrderCancelled: maskedOrReal("whatsappTemplateOrderCancelled", whatsappForm.waTemplateOrderCancelled ?? ""),
-        whatsappTemplateRefundInitiated: maskedOrReal("whatsappTemplateRefundInitiated", whatsappForm.waTemplateRefundInitiated ?? ""),
+        whatsappTemplateOrderUpdate: maskedOrReal("whatsappTemplateOrderUpdate", whatsappForm.waTemplateOrderUpdate ?? ""),
         whatsappTemplateCheckoutOtp: maskedOrReal("whatsappTemplateCheckoutOtp", whatsappForm.waTemplateCheckoutOtp ?? ""),
         resendApiKey: maskedOrReal("resendApiKey", notificationsForm.resendApiKey ?? ""),
       },

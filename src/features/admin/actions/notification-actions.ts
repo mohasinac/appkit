@@ -114,18 +114,34 @@ const ORDER_GATED_TYPES = new Set([
  * The six that ARE approved are the order lifecycle, which is also the set
  * gated behind the buyer's ₹10 addon above — the two lists agree on purpose.
  */
-const WHATSAPP_TEMPLATE_FIELD: Partial<Record<string, keyof SiteSettingsCredentials>> = {
-  order_placed: "whatsappTemplateOrderPlaced",
-  order_confirmed: "whatsappTemplateOrderConfirmed",
-  order_shipped: "whatsappTemplateOrderShipped",
-  order_delivered: "whatsappTemplateOrderDelivered",
-  order_cancelled: "whatsappTemplateOrderCancelled",
-  refund_initiated: "whatsappTemplateRefundInitiated",
-};
+/**
+ * Which notification types ride the one order template.
+ *
+ * 🛑 A MAP, not a `switch`, and the difference is the point. An unknown type
+ * resolves to `undefined` → no template name → the WhatsApp arm silently does
+ * not fire, while in-app and email still do. A `switch` with no `default`
+ * throws instead, which would let a newer config against an older deploy take
+ * a notification path down.
+ *
+ * ⚠ This used to map six types onto six separate credential fields. Those six
+ * templates are **deleted from the WABA** and the fields are gone: one
+ * template now carries contents, order status, payment status and shipments,
+ * so every order-lifecycle type points at the same name. Refunds included —
+ * a refund is a payment-status value inside the order update, which is why
+ * there is no money template.
+ */
+const WHATSAPP_ORDER_TEMPLATE_TYPES = new Set([
+  "order_placed",
+  "order_confirmed",
+  "order_shipped",
+  "order_delivered",
+  "order_cancelled",
+  "refund_initiated",
+]);
 
 function resolveWhatsAppTemplateName(type: string, creds: SiteSettingsCredentials): string {
-  const field = WHATSAPP_TEMPLATE_FIELD[type];
-  return (field ? creds[field] : undefined)?.trim() ?? "";
+  if (!WHATSAPP_ORDER_TEMPLATE_TYPES.has(type)) return "";
+  return creds.whatsappTemplateOrderUpdate?.trim() ?? "";
 }
 
 export async function markNotificationRead(id: string): Promise<void> {

@@ -322,20 +322,30 @@ export interface SiteSettingsCredentials {
   /** Comma-separated digits-only phone numbers that receive order announcements */
   whatsappAdminNotifyNumbers?: string;
   /**
-   * Approved Meta message-template names, one flat string field per
-   * order-lifecycle notification type — every `SiteSettingsCredentials`
-   * field is stored as an individually-encrypted string (see
-   * `getDecryptedCredentials`/`getCredentialsMasked`, which iterate + mask
-   * every field as a string), so this can't be a `Record<string,string>`
-   * map. Business-initiated WhatsApp sends outside the 24h customer-service
-   * window require a pre-approved template.
+   * The ONE approved Meta template covering the whole order lifecycle —
+   * contents, order status, payment status and per-shipment tracking.
+   *
+   * 🛑 This replaced SIX per-status fields (`…OrderPlaced`, `…OrderConfirmed`,
+   * `…OrderShipped`, `…OrderDelivered`, `…OrderCancelled`,
+   * `…RefundInitiated`), and those six templates are **deleted from the WABA**
+   * — so the fields were dead config pointing at names Meta no longer knows.
+   *
+   * Owner, 2026-11-10: one template, re-sent on each order write, so the
+   * buyer's latest message is the complete current picture rather than a
+   * thread they must reassemble from six partial ones. Refunds and payment
+   * state ride its payment slot, which is why there is no separate money
+   * template.
+   *
+   * Still a flat string rather than a `Record<string,string>`: every
+   * `SiteSettingsCredentials` field is individually encrypted, and
+   * `getDecryptedCredentials`/`getCredentialsMasked` iterate and mask each one
+   * **as a string**.
+   *
+   * ⚠ Business-initiated sends outside the 24h customer-service window require
+   * a pre-approved template; unset means the WhatsApp arm simply does not fire
+   * (in-app and email still do).
    */
-  whatsappTemplateOrderPlaced?: string;
-  whatsappTemplateOrderConfirmed?: string;
-  whatsappTemplateOrderShipped?: string;
-  whatsappTemplateOrderDelivered?: string;
-  whatsappTemplateOrderCancelled?: string;
-  whatsappTemplateRefundInitiated?: string;
+  whatsappTemplateOrderUpdate?: string;
   /**
    * Name of the **AUTHENTICATION**-category template used for the checkout
    * OTP. Separate from the six above, and not interchangeable with them:
@@ -381,12 +391,7 @@ export interface SiteSettingsCredentialsMasked {
   whatsappPhoneNumberId?: string;
   whatsappCloudApiToken?: string;
   whatsappAdminNotifyNumbers?: string;
-  whatsappTemplateOrderPlaced?: string;
-  whatsappTemplateOrderConfirmed?: string;
-  whatsappTemplateOrderShipped?: string;
-  whatsappTemplateOrderDelivered?: string;
-  whatsappTemplateOrderCancelled?: string;
-  whatsappTemplateRefundInitiated?: string;
+  whatsappTemplateOrderUpdate?: string;
   whatsappTemplateCheckoutOtp?: string;
   whatsappTemplateLanguage?: string;
 }
