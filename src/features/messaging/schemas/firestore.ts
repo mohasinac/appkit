@@ -57,6 +57,40 @@ export interface AuthMailCooldownDocument extends BaseDocument {
 
 export const AUTH_MAIL_COOLDOWN_COLLECTION = "authMailCooldowns" as const;
 
+/**
+ * How many messages one ORDER has consumed, per channel.
+ *
+ * 🛑 Exists because the daily ceiling cannot express this. That counter is
+ * keyed `{channel}_{date}` — per-channel, per-day, GLOBAL — so it bounds total
+ * spend and nothing else. The owner's rule is "re-send on every order write",
+ * and without a per-order bound a single busy order can consume the entire
+ * day's allowance and starve every other buyer.
+ *
+ * Same composite-id shape as `MessageBudgetDocument`: one `.doc()` lookup, no
+ * query, no index, no fan-out.
+ *
+ * ⚠ `count` includes sends that were EXEMPT from the cap. An exemption that
+ * also skipped the counter would make a runaway loop on a `critical` type
+ * invisible — which is the failure mode of every "this one is important"
+ * escape hatch. Exempt sends are counted and not blocked; see `capDecision`.
+ */
+export interface OrderMessageCountDocument extends BaseDocument {
+  /** Document ID is `{orderId}_{channel}`; `id` comes from BaseDocument. */
+  orderId: string;
+  channel: MessageChannel;
+  /** Messages reserved for this order on this channel, exempt ones included. */
+  count: number;
+}
+
+export const ORDER_MESSAGE_COUNT_COLLECTION = "orderMessageCounts" as const;
+
+export const ORDER_MESSAGE_COUNT_FIELDS = {
+  ORDER_ID: "orderId",
+  CHANNEL: "channel",
+  COUNT: "count",
+  UPDATED_AT: "updatedAt",
+} as const;
+
 export const AUTH_MAIL_PURPOSE_VALUES = [
   "password_reset",
   "verify_email",

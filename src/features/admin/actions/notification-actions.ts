@@ -28,6 +28,7 @@ import {
   guardSend,
   logSuppressedSend,
 } from "../../../_internal/server/notifications/send-guard";
+import { orderMessageCountRepository } from "../../messaging/repository/message-budget.repository";
 import { renderNotificationEmail } from "../../email/notification-templates";
 
 /**
@@ -527,6 +528,38 @@ export async function sendNotification(
     if (emailCap.blocked) logSuppressedSend(emailGuard, emailDecision);
 
     /*
+     * ── THE PER-ORDER CAP ───────────────────────────────────────────────────
+     *
+     * Only for order-scoped notifications — `relatedType === "order"` is what
+     * makes an order id available to key on. Everything else is unaffected,
+     * which is correct: a welcome mail has no order to be capped against.
+     *
+     * 🛑 Counted even when exempt. `capDecision` returns `recordOnly` for the
+     * `important`/`critical` tiers, and that is passed straight through as
+     * `countOnly` so the counter still moves. An exemption that also skipped
+     * the counter would hide a runaway loop behind its own importance.
+     */
+    let orderCapBlocked = false;
+    if (!emailCap.blocked && notifInput.relatedType === "order" && notifInput.relatedId) {
+      const perOrder = capDecision(rule, "perOrder", false);
+      const result = await orderMessageCountRepository.countAndCheck(
+        notifInput.relatedId,
+        "email",
+        settings.notificationPerOrderCap?.email ?? 0,
+        perOrder.recordOnly,
+      );
+      orderCapBlocked = !result.allowed;
+      if (orderCapBlocked) {
+        serverLogger.info("sendNotification: per-order email cap reached", {
+          orderId: notifInput.relatedId,
+          count: result.count,
+          cap: result.cap,
+          type,
+        });
+      }
+    }
+
+    /*
      * ⚠ `!emailCap.blocked` extends the existing condition rather than
      * returning early. An early return here would have to report the WhatsApp
      * status, which is not decided until further down — so bailing out would
@@ -536,6 +569,7 @@ export async function sendNotification(
      */
     if (
       !emailCap.blocked &&
+      !orderCapBlocked &&
       apiKey &&
       !apiKey.includes("PLACEHOLDER") &&
       (await isChannelHealthy("email"))

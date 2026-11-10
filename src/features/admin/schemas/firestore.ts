@@ -1539,6 +1539,23 @@ export interface SiteSettingsDocument extends BaseDocument {
    * deltas an operator actually set. An empty object means "behave exactly as
    * the code always has", which is why introducing it changed nothing.
    */
+  /**
+   * How many messages ONE ORDER may send per channel.
+   *
+   * 🛑 `0` or unset means NO LIMIT, not "block everything". An operator who
+   * clears the field must not silence every order notification on the site —
+   * an empty input is far likelier than a deliberate gag.
+   *
+   * This exists because the daily ceiling cannot express it: that counter is
+   * per-channel-per-day and global, so it bounds total spend while saying
+   * nothing about distribution. With "re-send on every order write" as the
+   * rule, one busy order could otherwise consume the whole day's allowance.
+   *
+   * ⚠ `important` and `critical` types are EXEMPT from this cap but still
+   * counted — see `NOTIFICATION_TIER_POLICY`. A cap that could swallow a
+   * cancellation or a payment failure is worse than no cap.
+   */
+  notificationPerOrderCap?: { email?: number; whatsapp?: number };
   notificationRules?: Record<
     string,
     {

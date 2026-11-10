@@ -4,9 +4,12 @@ import {
   AUTH_MAIL_COOLDOWN_MS,
   MESSAGE_BUDGET_COLLECTION,
   MESSAGE_BUDGET_FIELDS,
+  ORDER_MESSAGE_COUNT_COLLECTION,
+  ORDER_MESSAGE_COUNT_FIELDS,
   type AuthMailCooldownDocument,
   type AuthMailPurpose,
   type MessageBudgetDocument,
+  type OrderMessageCountDocument,
 } from "../schemas/firestore";
 import type { MessageChannel } from "../../../_internal/shared/features/messaging/config";
 
@@ -171,5 +174,82 @@ export class AuthMailCooldownRepository extends BaseRepository<AuthMailCooldownD
   }
 }
 
+/**
+ * Per-ORDER message counter.
+ *
+ * 🛑 The daily ceiling cannot do this job. It is keyed `{channel}_{date}` —
+ * per-channel, per-day, global — so it bounds total spend and says nothing
+ * about distribution. The owner's rule is "re-send on every order write", and
+ * without a per-order bound one busy order can eat the whole day's allowance
+ * and starve every other buyer.
+ *
+ * Modelled on `AuthMailCooldownRepository` rather than on `reserveSend`: both
+ * of those are per-SUBJECT limiters, which is the shape this needs.
+ */
+export class OrderMessageCountRepository extends BaseRepository<OrderMessageCountDocument> {
+  constructor() {
+    super(ORDER_MESSAGE_COUNT_COLLECTION);
+  }
+
+  /**
+   * Count one message against an order, and say whether it may proceed.
+   *
+   * 🛑 `countOnly` is the exempt path, and it is the reason this returns
+   * rather than throws. An `important` or `critical` message is NOT blocked by
+   * the cap, but it IS counted — an exemption that also skipped the counter
+   * would make a runaway loop on a critical type invisible, which is how every
+   * "this one matters" escape hatch eventually fails.
+   *
+   * So: `countOnly: true` always returns `allowed: true` and still increments.
+   *
+   * Transactional, like `checkAndSet`: two order writes landing together must
+   * not both pass a cap of one.
+   *
+   * ⚠ `cap <= 0` means NO LIMIT, not "block everything". An operator clearing
+   * the field must not silence every order notification on the site; a cap of
+   * zero is far more likely to be an empty input than a deliberate gag.
+   */
+  async countAndCheck(
+    orderId: string,
+    channel: MessageChannel,
+    cap: number,
+    countOnly: boolean,
+    now: Date = new Date(),
+  ): Promise<{ allowed: boolean; count: number; cap: number }> {
+    const docRef = this.db.collection(this.collection).doc(`${orderId}_${channel}`);
+
+    return this.db.runTransaction(async (tx) => {
+      const snap = await tx.get(docRef);
+      const current: number =
+        snap.exists ? ((snap.data()?.[ORDER_MESSAGE_COUNT_FIELDS.COUNT] as number) ?? 0) : 0;
+
+      const unlimited = cap <= 0;
+      const blocked = !unlimited && !countOnly && current >= cap;
+
+      /*
+       * The increment happens even when blocked is false-but-exempt, and NOT
+       * when blocked — a blocked send never happened, so counting it would
+       * inflate the number an admin reads when deciding whether the cap is
+       * set sensibly.
+       */
+      if (blocked) return { allowed: false, count: current, cap };
+
+      const next = current + 1;
+      tx.set(
+        docRef,
+        {
+          [ORDER_MESSAGE_COUNT_FIELDS.ORDER_ID]: orderId,
+          [ORDER_MESSAGE_COUNT_FIELDS.CHANNEL]: channel,
+          [ORDER_MESSAGE_COUNT_FIELDS.COUNT]: next,
+          [ORDER_MESSAGE_COUNT_FIELDS.UPDATED_AT]: now,
+        },
+        { merge: true },
+      );
+      return { allowed: true, count: next, cap };
+    });
+  }
+}
+
 export const messageBudgetRepository = new MessageBudgetRepository();
 export const authMailCooldownRepository = new AuthMailCooldownRepository();
+export const orderMessageCountRepository = new OrderMessageCountRepository();
