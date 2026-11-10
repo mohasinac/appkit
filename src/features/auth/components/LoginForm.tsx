@@ -99,8 +99,31 @@ export function LoginForm({
           </Alert>
         )}
 
+        {/*
+          * 🛑 `method="post"` IS A CREDENTIAL SAFEGUARD, NOT A FORMALITY.
+          *
+          * Submission is handled in JS and `onSubmit` calls `preventDefault`,
+          * so the method never matters — ONCE HYDRATED. Before hydration, or
+          * if the client bundle fails, pressing Enter in the password field
+          * still submits the form natively, and a `<form>` with no method
+          * defaults to **GET**. That puts the password in the query string:
+          *
+          *     /login?email=someone%40example.com&password=hunter2
+          *
+          * which lands in the URL bar, browser history, the Referer header,
+          * CDN and server access logs, and any analytics that records paths.
+          * Observed once in production on this very form.
+          *
+          * With `method="post"` the same un-hydrated submit sends the fields
+          * in the request BODY instead. The POST has no handler and will fail
+          * — which is correct and visible — but the password never enters a
+          * URL. A failure the user can see beats a silent credential leak.
+          *
+          * This is defence in depth: the JS path is still the real one.
+          */}
         <Form schema={loginSchema}
           noValidate
+          method="post"
           onSubmit={(e) => e.preventDefault()} spacing="md">
           {({ setFieldError, clearErrors }) => (
             <>

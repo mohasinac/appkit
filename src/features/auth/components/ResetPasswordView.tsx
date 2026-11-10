@@ -100,7 +100,14 @@ export function ResetPasswordView({
             {renderLoginLink && <Div className="mt-2">{renderLoginLink()}</Div>}
           </Alert>
         ) : (
-          <Form schema={resetClientSchema} noValidate onSubmit={(e) => e.preventDefault()} spacing="md">
+          {/*
+            * 🛑 `method="post"` — see the long note in LoginForm. Submission
+            * is handled in JS, but an un-hydrated native submit on a form with
+            * no method defaults to GET and puts these fields in the query
+            * string, where they reach the URL bar, history, Referer and every
+            * access log. POST moves them into the request body.
+            */}
+          <Form schema={resetClientSchema} noValidate method="post" onSubmit={(e) => e.preventDefault()} spacing="md">
             {({ setFieldError, clearErrors }) => (
               <>
                 <FormErrorSummary />
