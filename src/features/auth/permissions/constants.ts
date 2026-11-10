@@ -451,7 +451,7 @@ export const ROLE_GRANTS_EXPLICIT_PERMISSIONS: Record<string, boolean> = {
  * A user may have multiple simultaneous soft bans of different types.
  * Hard ban (disabled: true) overrides all of these.
  */
-export type BannedAction =
+export type KnownBannedAction =
   | "write_reviews" // cannot submit product reviews
   | "write_blog_comments" // cannot comment on blog posts (future)
   | "join_events" // cannot register for events/tournaments
@@ -459,7 +459,40 @@ export type BannedAction =
   | "create_listings" // seller cannot create new listings
   | "send_messages" // cannot send direct messages
   | "create_support_tickets" // cannot open new support tickets
-  | "report_scammers"; // cannot submit scam reports
+  | "report_scammers" // cannot submit scam reports
+  /*
+   * ── PARAMETERISED RESTRICTIONS (use `UserSoftBan.target`) ─────────────────
+   *
+   * Owner, 2026-11-10: *"we can also disable certain payment methods for users
+   * as well buyer side based on their history of flagged issues over actual
+   * bans."* That is the graduated tier BELOW a ban, which is exactly what this
+   * array already models — expiry, `bannedBy` audit trail, and the
+   * lift-without-deleting convention all come for free.
+   *
+   * 🛑 These two need a PARAMETER, which no member of a flat union can carry.
+   * `"use_cod"`, `"use_razorpay"`, … would mean one union member per method
+   * and make adding a payment method a deploy — the precise defect §B exists
+   * to remove. So the method goes in `target` and these stay generic.
+   *
+   * ⚠ ONE deny-list, two consumers, deliberately: *"this buyer may not use
+   * COD"* and *"this buyer may not receive WhatsApp updates"* are the same
+   * shape, and the plan calls for them to share a mechanism.
+   */
+  | "use_payment_method" // target = the method slug ("cod", "online", …)
+  | "use_integration"; // target = the integration slug ("whatsapp", …)
+
+/**
+ * 🛑 OPEN, not closed. `KnownBannedAction` above is the set of DEFAULT
+ * templates this build ships and autocompletes; `string & {}` keeps any other
+ * slug assignable so a new restriction is a config row rather than a release.
+ * Same shape event `type` took on 2026-11-08, and the project rule is explicit
+ * that a closed union here would be the defect and not the safeguard.
+ *
+ * ⚠ Nothing switches exhaustively on this type (measured — the only consumers
+ * are `UserSoftBan.action` and `isSoftBanned`'s equality test), so widening it
+ * cannot silently drop a branch.
+ */
+export type BannedAction = KnownBannedAction | (string & {});
 
 // ============================================================================
 // EMPLOYEE GROUP TYPE

@@ -371,6 +371,18 @@ export interface UserDocument extends BaseDocument {
 
 export interface UserSoftBan {
   action: BannedAction;
+  /**
+   * What the restriction applies TO, for actions that need a parameter —
+   * `{ action: "use_payment_method", target: "cod" }`.
+   *
+   * 🛑 Absent means the restriction is unparameterised and applies wholesale.
+   * So a stored `{ action: "use_payment_method" }` with NO target denies every
+   * method, which is deliberately the safe direction for a malformed row: a
+   * risk control that silently applies to nothing is worse than one that is
+   * too broad and gets noticed. Readers must therefore treat a missing target
+   * as "all", never as "none" — `isRestrictedTarget` does.
+   */
+  target?: string;
   reason: string;
   /** UID of the employee/admin who applied the ban. */
   bannedBy: string;

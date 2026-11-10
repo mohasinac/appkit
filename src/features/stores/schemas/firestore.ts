@@ -244,6 +244,31 @@ export interface StoreDocument extends BaseDocument {
    */
   whatsappNotifySubscribed?: boolean;
   /**
+   * ── THE STORE'S PAYMENT-METHOD DEFAULTS ───────────────────────────────────
+   *
+   * Which methods this seller accepts, keyed by method slug — `{ cod: false,
+   * online: true }`. Owner, 2026-11-10: payments become *"a config change
+   * rather than code changes"*, with three levels (platform · store ·
+   * listing) and the store setting the defaults its listings start from.
+   *
+   * 🛑 A MAP, not named booleans. `codEnabled` / `onlineEnabled` fields would
+   * make every new method a schema change plus a migration plus a form field —
+   * i.e. a deploy, which is the thing this replaces. A slug key means adding
+   * `upi_autopay` is a row.
+   *
+   * 🛑 `undefined` for a method is NOT `false`. It means *"no opinion — ask
+   * the platform default"*, and `resolvePaymentMethod` relies on that
+   * distinction: `listing ?? store ?? platformDefault` with `??`, so an
+   * explicit `false` here beats the platform's floor while an absent key falls
+   * through to it. Collapsing the two would silently re-enable whatever a
+   * seller had turned off, or silently disable everything for every store that
+   * has never touched this screen.
+   *
+   * ⚠ A store can never EXCEED the platform: `platform.disabled` is a hard
+   * ceiling checked before this map is consulted.
+   */
+  paymentMethods?: Record<string, boolean>;
+  /**
    * Paid at SHIPPING rather than at delivery.
    *
    * 🛑 **A risk transfer, not a courtesy or a badge.** Paying before delivery

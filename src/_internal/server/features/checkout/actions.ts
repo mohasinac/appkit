@@ -186,6 +186,9 @@ import type { CheckoutIntentMetadata } from "../../../../contracts/payment";
 import { resolveKeys } from "../../../../core/integration-keys";
 import { paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, CHECKOUT_DEFAULT_EMI_SETTINGS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
+import { safeRead } from "../../../../errors/safe-read";
+import { methodRefusalMessage } from "../../payments/method-gate";
+import { PAYMENT_METHOD_LABEL } from "../../../shared/checkout/rules/payment-gate";
 import { type EmiSettings } from "../../../shared/features/emi/schedule";
 import { emiTenderFor, resolveEmiChoice } from "../../../shared/features/emi/choice";
 import {
@@ -654,6 +657,21 @@ export async function resolveShippingCost(
   storeOwnerId: string | undefined;
   storeEmiEnabled: boolean;
   storeState: string | undefined;
+  /**
+   * §B — this store's payment-method defaults, keyed by method slug.
+   *
+   * Returned from the store document this function already reads, for the
+   * same reason `storeTaxIdentity` and `settlementVendors` are: a separate
+   * `storeRepository.findById` to learn one map would spend a Firestore read
+   * per order group against Rule #6's round-trip budget.
+   *
+   * 🛑 `undefined` means NO OPINION, never "nothing allowed".
+   * `resolvePaymentMethod` chains `listing ?? store ?? platformDefault` with
+   * `??` so an absent map falls through to the platform floor — a store that
+   * has never opened the payments screen must keep accepting what the
+   * platform accepts.
+   */
+  storePaymentMethods: Record<string, boolean> | undefined;
   /** C5b — the resolved policy, so a caller can quote with the cart in hand. */
   shippingPolicy: StoreShippingPolicy;
   /**
@@ -753,6 +771,8 @@ export async function resolveShippingCost(
       storeOwnerId: undefined,
       storeEmiEnabled: false,
       storeState: undefined,
+      // No store, so no seller opinion -- the platform default applies.
+      storePaymentMethods: undefined,
       shippingPolicy: DEFAULT_STORE_SHIPPING_POLICY,
       // No store, so no offer. The default is custom at ₹0 — the same thing
       // `DEFAULT_STORE_SHIPPING_POLICY` says, and for the same reason.
@@ -883,6 +903,7 @@ export async function resolveShippingCost(
     storeOwnerId: storeOwnerId ?? undefined,
     storeEmiEnabled,
     storeState,
+    storePaymentMethods: store?.paymentMethods,
     shippingPolicy: policy,
     /*
      * 🛑 Resolved from the STORED `shippingPricing` document, falling back to
@@ -1359,6 +1380,16 @@ interface OrderGroupContext {
   buyerState?: string;
   /** P-8 GST — undefined/disabled means no GST is computed on this checkout. */
   gstSettings?: SiteSettingsDocument["gst"];
+  /**
+   * §B — the platform's payment block, so the store/listing method gate below
+   * is self-sufficient rather than depending on a cart-wide check having
+   * already run.
+   *
+   * A SLICE, not the whole settings singleton, following `gstSettings` beside
+   * it: this context is already very large, and handing a group writer every
+   * setting invites it to read things that are not its business.
+   */
+  paymentSettings?: SiteSettingsDocument["payment"];
   /** Site-wide UPI VPA fallback (`siteSettings.contact.upiVpa`) — used by `resolveDisplayedUpiId` when a seller has no UPI configured, or the store is admin-owned. */
   siteContactUpiVpa?: string;
   /**
@@ -1815,8 +1846,53 @@ async function createOrderForGroup(
     (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
-  const { shippingFee: resolvedShippingFee, shippingOffer, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints, sharedPurchaseRates } =
+  const { shippingFee: resolvedShippingFee, shippingOffer, storeOwnerId, storeEmiEnabled, storeState, storeProtections, storeTaxIdentity, acceptsPoints, sharedPurchaseRates, storePaymentMethods } =
     await resolveShippingCost(firstItem.storeId, { goodsValue: groupGoodsValue });
+
+  /*
+   * ── §B: THE STORE AND LISTING LEVELS OF THE METHOD PRECEDENCE ────────────
+   *
+   * The platform ceiling and the buyer deny already ran cart-wide in
+   * `createCheckoutOrderAction`, before any stock was touched. These two
+   * levels could not run there: both need the store document and the
+   * resolved listings, which exist per SELLER GROUP.
+   *
+   * 🛑 Per group is the CORRECT granularity, not a convenience. A two-seller
+   * cart can legitimately have one store that takes cash on delivery and one
+   * that does not; a single cart-wide answer would either refuse the whole
+   * cart because of one seller's setting or admit it for both.
+   *
+   * 🛑 EVERY listing in the group is checked and the STRICTEST answer wins.
+   * One prepaid-only item makes its whole group prepaid-only, because the
+   * group is paid as one order — so the method has to satisfy every line in
+   * it. Reading only the first item's opinion would let a prepaid-only
+   * listing be paid by cash on delivery simply by adding a cheap
+   * COD-eligible item beside it in the cart.
+   *
+   * ⚠ COMPOSES with `assertPaymentMethodAllowed`, which ran earlier and
+   * answers a DIFFERENT question: that gate enforces per-listing-TYPE rules
+   * (`getListingRule(type).blockedPaymentMethods`) and the acquirer's
+   * prohibited-category list — facts about the TYPE and the GATEWAY. This one
+   * enforces what the platform, this store and this listing have CHOSEN. Two
+   * questions, two gates, deliberately; folding them together would mean one
+   * of the two reasons gets reported for the other's refusal, and a buyer
+   * told the wrong reason picks the wrong remedy.
+   *
+   * ⚠ `storePaymentMethods` comes off the store document `resolveShippingCost`
+   * already read, so this costs no extra Firestore round trip (Rule #6).
+   */
+  if (!adminBypass) {
+    const methodLabel =
+      PAYMENT_METHOD_LABEL[paymentMethod as CheckoutPaymentMethod] ?? paymentMethod;
+    for (const { product } of group) {
+      const refusal = methodRefusalMessage(paymentMethod, methodLabel, {
+        settings: { payment: ctx.paymentSettings },
+        store: { paymentMethods: storePaymentMethods },
+        listing: product,
+      });
+      if (refusal) throw new ValidationError(refusal);
+    }
+  }
 
   /*
    * ════════════════════════════════════════════════════════════════════════
@@ -2652,26 +2728,53 @@ export async function createCheckoutOrderAction(
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
   const emiSettings = siteSettings?.emi ?? CHECKOUT_DEFAULT_EMI_SETTINGS;
 
-  // W1-43 — enforce COD toggle.
-  if (
-    !adminBypass &&
-    paymentMethod === "cod" &&
-    siteSettings?.payment?.codEnabled === false
-  ) {
-    throw new ValidationError(
-      "Cash on Delivery is not currently accepted. Please choose another payment method.",
+  /*
+   * ── §B: THE PLATFORM LEVEL OF THE METHOD PRECEDENCE ──────────────────────
+   *
+   * Replaces two hand-written per-method `if` blocks (`cod` against
+   * `codEnabled`, `cash` against `upiManualEnabled`). They are gone rather
+   * than kept alongside, because what they checked is a strict subset of what
+   * `resolveMethodForContext` checks and two gates on one question is how they
+   * drift.
+   *
+   * ⚠ `platformMethodRule` BRIDGES those same legacy toggles, so an admin who
+   * had turned COD off on the existing screen stays in force — this is
+   * additive, not a re-interpretation of stored config.
+   *
+   * 🛑 The STORE and LISTING levels cannot be resolved here: they need the
+   * cart, which is loaded below. They are enforced per seller group further
+   * down, where the store and its listings are already in hand. This block is
+   * the platform ceiling and the buyer deny only — both of which are
+   * cart-independent, and both of which should refuse before any stock is
+   * touched.
+   *
+   * ⚠ `adminBypass` skips it, as it did before: an operator placing an order
+   * on a buyer's behalf is the documented escape hatch, and it is already
+   * gated on an admin permission at the action's edge.
+   */
+  if (!adminBypass) {
+    /*
+     * ⚠ A failed read yields `null`, which resolves to "not restricted" — a
+     * risk control failing OPEN. Accepted here, narrowly, because the window
+     * is nil: the next statement reads the cart from the same Firestore, so a
+     * genuine outage fails this checkout a line later regardless. The
+     * alternative (refusing every method when one read fails) would turn a
+     * blip into a total checkout outage, which the plan rejects explicitly.
+     * 🛑 This reasoning holds only while the value is LOCAL. If the deny-list
+     * ever moves to auth behind an HTTP hop, revisit it — a remote read can
+     * fail while Firestore is healthy, and then this really is fail-open.
+     */
+    const buyerDoc = await safeRead(() => userRepository.findById(uid), {
+      route: "checkout/method-gate",
+      key: `methodGate.buyer:${uid}`,
+      fallback: null,
+    });
+    const refusal = methodRefusalMessage(
+      paymentMethod,
+      PAYMENT_METHOD_LABEL[paymentMethod as CheckoutPaymentMethod] ?? paymentMethod,
+      { settings: siteSettings, buyer: buyerDoc },
     );
-  }
-
-  // P-1 — enforce UPI/cash manual payment toggle.
-  if (
-    !adminBypass &&
-    paymentMethod === "cash" &&
-    siteSettings?.payment?.upiManualEnabled === false
-  ) {
-    throw new ValidationError(
-      "Manual UPI / cash payment is not currently accepted. Please choose another payment method.",
-    );
+    if (refusal) throw new ValidationError(refusal);
   }
 
   const cart = await unitOfWork.carts.getOrCreate(uid);
@@ -3263,6 +3366,7 @@ export async function createCheckoutOrderAction(
     droppedItems: unavailable,
     buyerState: resolvedAddress?.state,
     gstSettings: siteSettings?.gst,
+    paymentSettings: siteSettings?.payment,
     siteContactUpiVpa: siteSettings?.contact?.upiVpa,
     storeAddons: cart.storeAddons,
     policyConsent,
@@ -4545,6 +4649,7 @@ async function createPhonePeGroupOrder(
   // D44: `groupTotal` is computed just above — pass it so a free-above
   // threshold can fire and an unpriceable store is recorded.
   const { shippingFee, shippingOffer, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates, storeEmiEnabled } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+
 
   /*
    * ── PART C ON THE ONLINE PATH, as far as it can honestly go ──────────────

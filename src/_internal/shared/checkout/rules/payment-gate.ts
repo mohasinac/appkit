@@ -169,8 +169,21 @@ export function blockedMethodsForCart(
   return blocked;
 }
 
-/** Human wording for the generated message. */
-const PAYMENT_METHOD_LABEL: Partial<Record<CheckoutPaymentMethod, string>> = {
+/**
+ * Human wording for the generated message.
+ *
+ * ⚠ EXPORTED since 2026-11-11 so `_internal/server/payments/method-gate.ts`
+ * can word its refusals from the same source. A second label map was the
+ * obvious alternative and would have drifted the first time one was edited —
+ * the divergent-copy problem the project forbids outright.
+ *
+ * 🛑 Every reader must fall back to the raw slug (`LABEL[m] ?? m`). The keys
+ * are a `Partial` of a CLOSED type while `paymentMethod` is an open slug, so a
+ * method added by config has no entry here by definition. A missing label must
+ * degrade to showing the slug, never to `undefined` in a sentence shown to a
+ * buyer.
+ */
+export const PAYMENT_METHOD_LABEL: Partial<Record<CheckoutPaymentMethod, string>> = {
   cod: "cash on delivery",
   cash: "cash on pickup",
   emi: "EMI",

@@ -667,6 +667,29 @@ export interface ProductDocument extends BaseDocument {
   isOnSale?: boolean;
   isSold?: boolean;
   /**
+   * ── THIS LISTING'S PAYMENT-METHOD OVERRIDES ───────────────────────────────
+   *
+   * Keyed by method slug, same shape as `StoreDocument.paymentMethods`. This
+   * is how a seller makes one listing behave unlike their usual — a
+   * high-value item marked prepaid-only while the rest of the store takes COD.
+   *
+   * 🛑 Store and listing are the SAME priority (owner, 2026-11-09). The
+   * listing wins between the two only because it is more SPECIFIC, not because
+   * it ranks higher — and neither may exceed `platform.disabled`, which is a
+   * ceiling and not a default.
+   *
+   * 🛑 `undefined` ≠ `false`. Absent means *"inherit the store"*;
+   * `resolvePaymentMethod` uses `listing ?? store ?? platformDefault` with
+   * `??` precisely so an explicit `false` on either level is respected instead
+   * of falling through to the platform floor. See the store field's note.
+   *
+   * ⚠ Per-LISTING, never per-listing-TYPE. A type-level rule cannot express
+   * "this one item is prepaid-only", which is the case sellers actually need;
+   * the capability registry holds what a TYPE can do, this holds what one
+   * listing chooses to do within that.
+   */
+  paymentMethods?: Record<string, boolean>;
+  /**
    * This listing is PRINTED OR BUILT WHEN ORDERED, so stock does not gate it.
    *
    * A per-LISTING flag, deliberately not implied by `listingType`. A seller can

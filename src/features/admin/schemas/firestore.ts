@@ -814,6 +814,37 @@ export interface SiteSettingsDocument extends BaseDocument {
      * rather than a bug — `undefined` is what means "no cap".
      */
     codMaxOrderValue?: number;
+    /**
+     * ── THE PLATFORM LEVEL OF THE PAYMENT-METHOD PRECEDENCE ───────────────
+     *
+     * One row per method slug, carrying the platform's TWO separate opinions:
+     *
+     *   `disabled` — a hard CEILING. No store, listing or anything else can
+     *                turn the method back on. An admin kill switch.
+     *   `default`  — a soft FLOOR, used only when no store or listing has an
+     *                opinion.
+     *
+     * 🛑 THESE MUST STAY TWO FIELDS. Collapsing them into one boolean is
+     * exactly what makes a kill switch overridable — a store writing `true`
+     * would defeat an admin who had disabled the method site-wide.
+     * `resolvePaymentMethod` checks `platformDisabled` before the `??` chain
+     * for that reason and `method-resolution.ts` records it as the trap inside
+     * the precedence.
+     *
+     * 🛑 A MAP keyed by an open slug, so enabling a method the code has never
+     * heard of is a row rather than a release. The named booleans beside this
+     * (`codEnabled`, `phonepeEnabled`, `razorpayEnabled`, `cashfreeEnabled`,
+     * `upiManualEnabled`) are the LEGACY shape and are still honoured — see
+     * `platformMethodRule` in `_internal/server/payments/method-gate.ts`,
+     * which bridges them so this is additive and no existing admin screen or
+     * stored document changes meaning.
+     *
+     * ⚠ An absent entry is NOT "disabled". It means the platform has no
+     * recorded opinion, and the bridge then supplies the legacy answer or a
+     * permissive default — because an unconfigured install must not refuse
+     * every payment method on every order.
+     */
+    paymentMethodRules?: Record<string, { disabled?: boolean; default?: boolean }>;
     /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. Optional — falls back to no OTP gate when unset. */
     otpCheckoutThreshold?: number;
     /**
