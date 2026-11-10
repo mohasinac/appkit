@@ -16,6 +16,8 @@
  * ]);
  */
 
+import { hasConsentFor, subscribeToConsent } from "../../ui/consent/consent-store";
+
 // ---------------------------------------------------------------------------
 // Slot ID catalog
 // ---------------------------------------------------------------------------
@@ -154,11 +156,47 @@ export function clearAdRegistry(): void {
  * Signal that the user has granted consent for personalised / tracking ads.
  * Consent-gated slots (`requiresConsent: true`) will start rendering.
  *
- * @example
- * onAcceptAll={() => setAdConsentGranted(true)}
+ * ⚠ You usually do not need to call this. `bindAdConsentToCookieConsent()`
+ * below keeps this flag in step with the cookie banner's `marketing`
+ * category automatically. This remains exported for a deployment whose ad
+ * consent comes from somewhere else entirely (a native app bridge, a CMP).
  */
 export function setAdConsentGranted(granted: boolean): void {
   _consentGranted = granted;
+}
+
+/**
+ * Keep the ad consent flag in step with the cookie banner's `marketing`
+ * category, for as long as the returned function is not called.
+ *
+ * 🛑 This gate existed with NOTHING to open it. `requiresConsent: true` was
+ * declared on eleven slots and `setAdConsentGranted` had zero callers in the
+ * library — the recurring defect in this codebase, where something looks
+ * configured and does nothing. The consequence ran in both directions at
+ * once: the slots never rendered for anybody, AND if something had called it,
+ * nothing connected it to what the visitor actually chose.
+ *
+ * 🛑 Imports from `ui/consent`, not the reverse. The consent store is the
+ * lower layer — it knows about cookies and nothing about ads — so a feature
+ * reading it is the correct direction. Wiring this the other way (the banner
+ * calling `setAdConsentGranted`) would make the generic consent mechanism
+ * depend on one feature that happens to consume it, and the next consumer of
+ * consent would need the same edit.
+ *
+ * Call once from a client bootstrap. Returns an unsubscribe so hot reload and
+ * tests do not stack listeners.
+ */
+export function bindAdConsentToCookieConsent(): () => void {
+  /*
+   * Seed from the current cookie before subscribing: a visitor who consented
+   * on a previous visit has made no CHANGE for the subscription to deliver, so
+   * without this read their ad slots stay dark until they re-answer a banner
+   * they will never be shown again.
+   */
+  _consentGranted = hasConsentFor("marketing");
+  return subscribeToConsent((state) => {
+    _consentGranted = hasConsentFor("marketing", state);
+  });
 }
 
 /** Returns the current consent state. */

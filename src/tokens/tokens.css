@@ -851,6 +851,12 @@
   --appkit-z-bottom-nav:     40;
   --appkit-z-title-bar:      42;
   --appkit-z-sidebar:        50;
+  /* Cookie-consent banner. Above the bottom navbar (40) and title bar (42) —
+     it is anchored to the bottom edge and would otherwise be covered by the
+     mobile tab bar, i.e. unanswerable on a phone. Below `modal` (60) on
+     purpose: it is non-blocking and dismissible, so a dialog the visitor
+     deliberately opened must still win. */
+  --appkit-z-consent:        55;
   --appkit-z-modal:          60;
   /* Transient option menus (Dropdown, Select) — must render above an open
      Modal/Drawer/SideModal/SideDrawer (60) since they're commonly triggered
