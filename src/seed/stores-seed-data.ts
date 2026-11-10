@@ -122,7 +122,6 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     },
     isPublic: true,
     isVacationMode: false,
-    emiEnabled: true,
     // No seeded store set either flag before 2026-08-24, so the verification
     // badge and every featured-store surface rendered from empty data — and the
     // public /stores "Featured" toggle (which only started filtering at all in
@@ -219,7 +218,6 @@ const _rawstoresSeedData: Partial<StoreDocument>[] = [
     },
     isPublic: true,
     isVacationMode: false,
-    emiEnabled: true,
     isVerified: true,
     stats: { totalProducts: 0, itemsSold: 0, totalReviews: 6, averageRating: 4.8 },
     capabilities: ["host_collector_drops", "host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],

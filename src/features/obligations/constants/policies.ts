@@ -249,25 +249,13 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
       "This pre-order's published release date passed and the seller did not dispatch it.",
   },
 
-  /**
-   * A rejected payment proof the buyer never replaced.
-   *
-   * 🛑 THIS IS THE D27 FIX. An order in `reupload_requested` was caught by
-   * ZERO sweeps — excluded by all three because it has a proof, has an
-   * outcome, and has a deadline — so it held stock forever with no terminal
-   * state. One policy row replaces the reasoning that failed.
+  /*
+   * 🛑 `proof-reupload` removed with manual payment (stages 3a-3d). It was the
+   * D27 fix — an order left in `reupload_requested` was caught by zero sweeps
+   * and held stock forever. That state cannot occur now: `paymentReviewedAt`
+   * and `paymentReviewOutcome` are off `OrderDocument` and there is no proof to
+   * reject, so the policy had no anchor and no precondition left to read.
    */
-  "proof-reupload": {
-    anchor: (o) => o.paymentReviewedAt,
-    duration: { value: 24, unit: "hours", calendar: "calendar" },
-    warnAt: [{ value: 4, unit: "hours", calendar: "calendar" }],
-    precondition: (o) =>
-      o.paymentReviewOutcome === "reupload_requested" && notTerminal(o) && !isPaid(o),
-    onDue: "act",
-    settingPath: "platformLimits.proofReuploadWindowHours",
-    publishedCopyKey: "obligations.proofReupload",
-    describe: "The buyer did not re-upload a payment proof after one was rejected.",
-  },
 
   /*
    * ── IN TRANSIT ───────────────────────────────────────────────────────────

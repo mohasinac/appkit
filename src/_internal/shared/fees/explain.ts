@@ -31,8 +31,7 @@
  * `BuyerEmiSettings`, which excludes the split structurally — so the omission
  * is enforced by `tsc`, not by this paragraph.
  */
-import type { BuyerEmiSettings, BuyerFacingFees } from "../features/site-settings/fees";
-import type { BuyerEmiQuote } from "../features/emi/schedule";
+import type { BuyerFacingFees } from "../features/site-settings/fees";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { PlatformFeeLine } from "./calculator";
 
@@ -140,42 +139,11 @@ export function explainGstOnPlatformFee(
   };
 }
 
-/**
- * The EMI surcharge — the cost of credit, stated as a cost of credit.
- *
- * 🛑 Takes a `BuyerEmiQuote`, which is `computeBuyerEmiQuote`'s return type and
- * carries no surcharge split. `computeEmiSchedule`'s richer result is
- * assignable to it, so the type does not stop a server caller passing the
- * wrong one — but nothing here reads a field that only exists on the wider
- * shape, so no split can be printed either.
+/*
+ * 🛑 `explainEmiSurcharge` removed with EMI stage 5 — it was typed against
+ * `BuyerEmiQuote`/`BuyerEmiSettings`, both of which are gone with
+ * `features/emi/schedule`.
  */
-export function explainEmiSurcharge(
-  sellerSubtotal: number,
-  tenureMonths: number,
-  quote: BuyerEmiQuote,
-  emi: BuyerEmiSettings | null,
-  currency = "INR",
-): FeeDerivation | null {
-  if (!emi) return null;
-  const money = (v: number) => formatCurrency(v, currency);
-  const principal = sellerSubtotal - quote.tokenAmount;
-  const perMonth = quote.installments[0]?.amount ?? 0;
-
-  return {
-    summary: `Spreading ${money(sellerSubtotal)} over ${tenureMonths} months costs ${money(
-      quote.surchargeAmount,
-    )} — that is the total cost of credit.`,
-    steps: [
-      `Token paid today: ${pct(emi.tokenPercent)} of ${money(sellerSubtotal)} = ${money(quote.tokenAmount)}`,
-      `Financed amount: ${money(sellerSubtotal)} − ${money(quote.tokenAmount)} = ${money(principal)}`,
-      `Surcharge: ${pct(emi.surchargePercentPerMonth)} of ${money(principal)} per month × ${tenureMonths} months = ${money(quote.surchargeAmount)}`,
-      `Repaid over ${tenureMonths} instalments of about ${money(perMonth)}, due on day ${emi.billingDay} of each month`,
-      `Total you will pay: ${money(quote.tokenAmount)} + ${money(quote.remainingBalance)} = ${money(
-        quote.tokenAmount + quote.remainingBalance,
-      )}`,
-    ],
-  };
-}
 
 /** COD handling — a cap that bites on most carts, same shape as the commission. */
 export function explainCodHandlingFee(

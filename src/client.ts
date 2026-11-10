@@ -1541,7 +1541,6 @@ export { useSiteSettings } from "./core/hooks/useSiteSettings";
 /* The derivation strings for the fee breakdown — pure, no I/O. */
 export {
   explainCodHandlingFee,
-  explainEmiSurcharge,
   explainGstOnPlatformFee,
   explainPlatformFee,
 } from "./_internal/shared/fees/explain";
@@ -1550,7 +1549,6 @@ export type { FeeDerivation, FeeDerivations } from "./_internal/shared/fees/expl
 // against these so internal economics can't be widened back in by accident.
 export type {
   BuyerFacingFees,
-  BuyerEmiSettings,
 } from "./_internal/shared/features/site-settings/fees";
 // The public site-settings shape. Type `useSiteSettings<PublicSiteSettings>()`
 // against this so a client reading a field the endpoint no longer returns is a

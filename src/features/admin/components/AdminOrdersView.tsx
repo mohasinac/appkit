@@ -23,7 +23,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import { ADMIN_ORDER_STATUS_TABS, ADMIN_ORDER_PAYMENT_REVIEW_TABS } from "../constants/filter-tabs";
-import { isManualPaymentMethod, isPaymentReviewQueueMode } from "../../orders/constants/payment-window";
+import { isPaymentReviewQueueMode } from "../../orders/constants/payment-window";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 import {
   toRecordArray,
@@ -179,13 +179,16 @@ function firstOrderItem(item: ListingItemRecord): { image?: string; title?: stri
  * server-side queue uses (`listPaymentReviewQueue`) — kept in sync by reading
  * the same two fields rather than a denormalised flag (Root Cause #42).
  */
-function paymentReviewLabel(item: ListingItemRecord): string | undefined {
-  if (!isManualPaymentMethod(toStringValue(item.paymentMethod, ""))) return undefined;
-  if (toStringValue(item.paymentStatus, "") === "paid") return "Payment verified";
-  const outcome = toStringValue(item.paymentReviewOutcome, "");
-  if (outcome === "rejected_fraud") return "Payment rejected";
-  if (outcome === "reupload_requested") return "Re-upload requested";
-  return item.paymentProofUrl ? "Awaiting verification" : "Awaiting payment";
+function paymentReviewLabel(_item: ListingItemRecord): string | undefined {
+  /*
+   * 🛑 Always `undefined` now — the proof-review queue was manual-payment only
+   * and manual payment is retired (stages 3a-3d). `paymentProofUrl` and
+   * `paymentReviewOutcome` are off `OrderDocument`, so there is nothing left to
+   * label. Kept as a named no-op rather than deleted at the call site so the
+   * column's absence reads as a decision; delete both together when the admin
+   * list is next revised.
+   */
+  return undefined;
 }
 
 interface OrderRow {

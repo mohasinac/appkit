@@ -48,8 +48,8 @@ function legacyFallback(order: OrderDocument): OrderPaymentRecord | null {
         : "manual";
   return {
     method,
-    transactionId: order.paymentTransactionId ?? order.paymentId,
-    proofUrl: order.paymentProofUrl,
+    transactionId: order.paymentId,
+    /* `proofUrl` removed with manual payment — no buyer-uploaded proof exists. */
     /*
      * 🛑 D46/D47 — `amountDue`, falling back to `totalPrice`. This figure is
      * what a MANUAL payer is told to transfer and what an admin verifies the

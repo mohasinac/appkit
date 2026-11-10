@@ -215,8 +215,7 @@ async function performAction(
      * facts, and the second one already has a case attached.
      */
     case "seller-accept":
-    case "seller-dispatch":
-    case "proof-reupload": {
+    case "seller-dispatch": {
       const { refund } = await cancelOrderWithRefund(order, {
         reason: policy.describe,
         /*
@@ -306,7 +305,8 @@ async function performAction(
       }
 
       const result = await processRefundAction({
-        orderId: order.id,
+        orderId: order.id,
+
         amount: capacity.remaining,
         reasonCode: order.returnReasonCode ?? "not_as_described",
         reasonNote: `Auto-resolved in the buyer's favour — ${policy.describe}`,

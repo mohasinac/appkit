@@ -4,7 +4,6 @@ import { OrderAddonBadges, type OrderAddonBadgesOrder } from "../../orders/compo
 import { OrderProvenanceCard } from "../../orders/components/OrderProvenanceCard";
 import { groupOrderItemsByLine } from "../../orders/utils/bundle-grouping";
 import type { OrderSourceContext } from "../../orders/schemas/firestore";
-import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { useApiMutation, type FirestoreDocument } from "@mohasinac/appkit/client";
 import React, { useState } from "react";
 import { normalizeError } from "../../../errors/normalize";
@@ -235,20 +234,13 @@ export function AdminOrderEditorView({
   const [isAcceptingBalance, setIsAcceptingBalance] = useState(false);
   const [isRejectingBalance, setIsRejectingBalance] = useState(false);
 
-  // This used to inline `paymentMethod === "cash" || === "upi_manual"`, which
-  // omitted `emi` — so the whole proof panel never rendered for an EMI order and
-  // an admin had no way to verify one, even though the list row said "Awaiting
-  // verification". Use the shared predicate, which is the single source of truth
-  // for the manual-payment set.
-  const isManualPayment = isManualPaymentMethod(paymentMethod ?? "");
+  /*
+   * `isManualPayment` / `isRejected` / `isReuploadRequested` /
+   * `needsVerification` were removed with the proof-review panel below — every
+   * one of them existed only to gate it, and `isManualPaymentMethod` went with
+   * the manual-payment teardown.
+   */
   const isVerified = paymentStatus === "paid";
-  const isRejected = paymentReviewOutcome === "rejected_fraud";
-  const isReuploadRequested = paymentReviewOutcome === "reupload_requested";
-  // Only an undecided, unpaid manual order is actionable. Gating on
-  // `paymentStatus === "pending"` alone re-offered live Verify/Reject buttons on
-  // an order that had already been rejected or sent back for re-upload.
-  const needsVerification =
-    isManualPayment && !isVerified && !isRejected && Boolean(paymentProofUrl);
 
   React.useEffect(() => {
     if (open) {
@@ -496,117 +488,18 @@ export function AdminOrderEditorView({
            */
         />
 
-        {isManualPayment && (
-          <Stack gap="xs">
-            <Label size="sm" weight="medium" color="primary">Payment Proof</Label>
-            {isRejected && (
-              <Text size="xs" className="text-error" weight="medium">
-                Payment rejected as fraud — no further action available here.
-              </Text>
-            )}
-            {isReuploadRequested && !isVerified && (
-              <Text size="xs" className="text-warning" weight="medium">
-                Re-upload requested — waiting for the buyer to submit a new proof.
-              </Text>
-            )}
-            {paymentProofUrl ? (
-              <Stack gap="xs">
-                <Div border="default" rounded="lg" overflow="hidden">
-                  <MediaImage
-                    src={paymentProofUrl}
-                    alt="Payment screenshot"
-                    size="card"
-                  />
-                </Div>
-                {paymentTransactionId && (
-                  <Text size="xs" color="muted">UTR: <Text as="span" size="xs" weight="medium">{paymentTransactionId}</Text></Text>
-                )}
-                {needsVerification && (
-                  <Stack gap="xs">
-                    {(displayedUpiId || buyerReportedUpiId) && (
-                      <Stack gap="xs">
-                        <Text size="xs" color="muted">
-                          Expected UPI: <Text as="span" size="xs" weight="medium">{displayedUpiId || "—"}</Text>
-                          {" · "}Buyer reported: <Text as="span" size="xs" weight="medium">{buyerReportedUpiId || "—"}</Text>
-                        </Text>
-                        {paymentUpiMismatch && (
-                          <Div rounded="lg" padding="inlineSm" className="border border-error/20" surface="danger-surface">
-                            <Text size="xs" className="text-error" weight="semibold">
-                              UPI mismatch — buyer-reported ID doesn't match the one shown for this order.
-                            </Text>
-                          </Div>
-                        )}
-                      </Stack>
-                    )}
-                    <Text size="xs" color="muted">
-                      Buyer marked as paid: <Text as="span" size="xs" weight="medium">{buyerMarkedPaid ? "Yes" : "No"}</Text>
-                      {" · "}Fraud agreement accepted: <Text as="span" size="xs" weight="medium">{buyerFraudAgreementAccepted ? "Yes" : "No"}</Text>
-                    </Text>
-                    <Stack gap="xs">
-                      <Label size="sm" weight="medium" color="primary">
-                        Review note
-                      </Label>
-                      {/*
-                        Says which buttons consume it. It is NOT part of "Save
-                        changes" — that saves the order fields above and has
-                        never carried this note.
-                      */}
-                      <Text size="xs" color="muted">
-                        Sent with <Text as="span" size="xs" weight="medium">Request re-upload</Text> or{" "}
-                        <Text as="span" size="xs" weight="medium">Reject as fraud</Text> below. Not saved by
-                        &ldquo;Save changes&rdquo;.
-                      </Text>
-                      <Textarea
-                        value={reviewNote}
-                        onChange={(e) => handleReviewNoteChange(e.target.value)}
-                        rows={2}
-                        aria-invalid={reviewNoteError ? true : undefined}
-                        placeholder="e.g. Screenshot is blurry — amount not readable / UPI ID doesn't match order"
-                      />
-                      {reviewNoteError && (
-                        <Text size="xs" color="error" role="alert">{reviewNoteError}</Text>
-                      )}
-                    </Stack>
-                    <Button
-                      type="button"
-                      action={ACTIONS.ADMIN["verify-payment"]}
-                      onClick={handleVerifyPayment}
-                      isLoading={isVerifyingPayment}
-                      disabled={isVerifyingPayment}
-                      variant="primary"
-                      className="w-full"
-                    />
-                    <Button
-                      type="button"
-                      action={ACTIONS.ADMIN["request-payment-reupload"]}
-                      onClick={handleRequestReupload}
-                      isLoading={isRequestingReupload}
-                      disabled={isRequestingReupload}
-                      variant="secondary"
-                      className="w-full"
-                    />
-                    <Button
-                      type="button"
-                      action={ACTIONS.ADMIN["reject-payment-fraud"]}
-                      onClick={handleRejectFraud}
-                      isLoading={isRejectingFraud}
-                      disabled={isRejectingFraud}
-                      variant="danger"
-                      className="w-full"
-                    />
-                  </Stack>
-                )}
-                {isVerified && (
-                  <Div rounded="lg" padding="inlineSm" className="border border-success/20" surface="success-surface">
-                    <Text size="xs" className="text-success" weight="medium">Payment verified</Text>
-                  </Div>
-                )}
-              </Stack>
-            ) : (
-              <Text size="xs" color="faint">No proof uploaded yet.</Text>
-            )}
-          </Stack>
-        )}
+        /*
+         * 🛑 The manual-payment PROOF REVIEW UI was removed here (manual
+         * payment stages 3a-3d). It showed a buyer-uploaded screenshot with
+         * Verify / Request re-upload / Reject-as-fraud actions, and the
+         * fields it read (paymentProofUrl, paymentTransactionId,
+         * paymentReviewOutcome, displayedUpiId, buyerReportedUpiId,
+         * paymentUpiMismatch, buyerMarkedPaid) are all off OrderDocument now.
+         *
+         * ⚠ The pre-order BALANCE review below is a DIFFERENT review and
+         * stays — the two judge two payments months apart, and their
+         * rejections do opposite things.
+         */
 
         {/*
           D55 — the pre-order BALANCE review, below the deposit's.

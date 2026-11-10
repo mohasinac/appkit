@@ -33,7 +33,6 @@ import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 import { ORDER_LANE_TABS } from "../../orders/constants/order-lane-tabs";
 import { OrderStatusValues } from "../../orders/schemas/firestore";
-import { isManualPaymentMethod } from "../../orders/constants/payment-window";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import {
@@ -762,19 +761,11 @@ export function SellerOrderDetailPanel({
                     <Div>
                       <Row align="center" justify="between" className="mb-1" gap="3">
                         <Text size="sm" weight="semibold">Method</Text>
-                        {isManualPaymentMethod(order.paymentMethod) && (
-                          <Badge variant={sellerPaymentBadge(order).variant}>{sellerPaymentBadge(order).label}</Badge>
-                        )}
                       </Row>
                       <Text size="sm" className="text-[var(--appkit-color-text-muted)]" transform="capitalize">{order.paymentMethod}</Text>
-                      {/* Read-only for sellers: verifying / rejecting a manual payment
-                          is admin+moderator only (`adminVerifyPaymentAction`). The
-                          buyer's payment screenshot itself is deliberately not shown
-                          here — it's a bank/UPI capture, and the seller only needs
-                          to know whether the money landed. */}
-                      {isManualPaymentMethod(order.paymentMethod) && order.paymentTransactionId && (
-                        <Text size="xs" color="muted" className="mt-1">UTR: {order.paymentTransactionId}</Text>
-                      )}
+                      {/* The manual-payment status badge and the UTR row were
+                          removed with manual payment (stages 3a-3d):
+                          `paymentTransactionId` is off `OrderDocument`. */}
                     </Div>
                   )}
 

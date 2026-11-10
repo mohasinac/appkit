@@ -92,7 +92,6 @@ import { formatMoney } from "../../../../utils/number.formatter";
 import { orderRepository } from "../../../../features/orders/repository/orders.repository";
 import type { OrderDocument } from "../../../../features/orders/schemas/firestore";
 import type { CancellationRefundOutcome } from "../../../../features/orders/types/index";
-import { isManualPaymentMethod } from "../../../../features/orders/constants/payment-window";
 import { MONEY_EPSILON } from "../../../shared/checkout/refundable-base";
 /*
  * 🛑 `refundCapacity` and NOT `totalPrice − platformFeeWithheld`, and the
@@ -407,21 +406,30 @@ export async function cancelOrderWithRefund(
   /*
    * ── No automatic rail exists ──────────────────────────────────────────────
    *
-   * Cash, UPI-manual and EMI reach `paymentStatus: "paid"` through the manual
-   * payment review flow — an admin verified a screenshot. There is no gateway
-   * transaction to reverse, so the money goes back by bank transfer and a human
-   * records the UTR. Calling `processRefundAction` with `method: "manual"` here
-   * would append a refund event claiming the money was returned when nobody has
-   * sent it, which is the dead-state trap this module exists to avoid, one
-   * level in.
+   * COD reaches `paymentStatus: "paid"` when the courier collects and settles
+   * back to us. There is no gateway transaction to reverse, so the money goes
+   * back by bank transfer and a human records the UTR. Calling
+   * `processRefundAction` with `method: "manual"` here would append a refund
+   * event claiming the money was returned when nobody has sent it, which is the
+   * dead-state trap this module exists to avoid, one level in.
+   *
+   * 🛑 This branch used to read `isManualPaymentMethod(...)`, covering cash,
+   * UPI-manual and EMI. Those methods were retired (manual payment stages 3a-3d,
+   * EMI stage 5), and the helper went with them — but the PROPERTY it protected
+   * did not: COD is now the surviving method that reaches "paid" with no gateway
+   * reference. Deleting the branch outright would have let a COD cancellation
+   * fall through to the `paymentId` check below; it would still have landed in
+   * an owed case, but labelled `no-gateway-reference` with a message telling an
+   * operator to find the payment in the gateway dashboard — where a COD payment
+   * has never been.
    *
    * The missing-reference case is folded in for the same reason: a gateway
    * refund is order-keyed on `order.paymentId`, so without it there is nothing
    * to call, and guessing is not an option.
    */
-  if (isManualPaymentMethod(order.paymentMethod)) {
+  if (order.paymentMethod === "cod") {
     const caseId = await openOwedCase(cancelled, amount, "manual-payment", [
-      `This order was paid by ${order.paymentMethod} — a manual method with no gateway transaction to reverse.`,
+      `This order was paid by ${order.paymentMethod} — collected by the courier, with no gateway transaction to reverse.`,
       "",
       "Transfer the amount to the buyer and record it from the admin order page, which captures the reference so the order and the bank statement agree.",
     ]);

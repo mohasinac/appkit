@@ -19,7 +19,6 @@
  * needs fee data, so there is exactly one definition of "buyer-facing fee".
  */
 import type { SiteSettingsDocument } from "../../../../features/admin/schemas/firestore";
-import type { EmiSettings } from "../emi/schedule";
 
 /**
  * = `StoreAddonsRates` ∪ `CodHandlingFeeRates` ∪ `{ codDepositPercent }` —
@@ -130,24 +129,8 @@ export function toBuyerFacingFees(
   };
 }
 
-/**
- * EMI settings minus `surchargeSellerSharePercent` — how the surcharge is
- * split between platform and seller is a commercial term, not something the
- * buyer's browser needs. Pair with `computeBuyerEmiQuote`, which is typed to
- * accept exactly this shape.
+/*
+ * 🛑 `BuyerEmiSettings` + `toBuyerEmiSettings` removed with EMI stage 5 —
+ * `_internal/shared/features/emi/` (choice · group · schedule) is deleted, so
+ * `EmiSettings` no longer exists to project from.
  */
-export type BuyerEmiSettings = Omit<EmiSettings, "surchargeSellerSharePercent">;
-
-export function toBuyerEmiSettings(
-  emi: SiteSettingsDocument["emi"] | null | undefined,
-): BuyerEmiSettings | null {
-  if (!emi) return null;
-  return {
-    enabled: emi.enabled,
-    minOrderValue: emi.minOrderValue,
-    tenureOptions: emi.tenureOptions,
-    tokenPercent: emi.tokenPercent,
-    billingDay: emi.billingDay,
-    surchargePercentPerMonth: emi.surchargePercentPerMonth,
-  };
-}

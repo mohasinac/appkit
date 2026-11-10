@@ -7220,11 +7220,9 @@ export type {
 // definition of "safe to send to a browser" for fee data. See fees.ts header.
 export {
   toBuyerFacingFees,
-  toBuyerEmiSettings,
 } from "./_internal/shared/features/site-settings/fees";
 export type {
   BuyerFacingFees,
-  BuyerEmiSettings,
 } from "./_internal/shared/features/site-settings/fees";
 // The gate on turning product GST on. Exported because BOTH ends need the same
 // implementation — `/api/admin/site` refuses the write and the admin form

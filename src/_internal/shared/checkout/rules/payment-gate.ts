@@ -185,7 +185,7 @@ export function blockedMethodsForCart(
  */
 export const PAYMENT_METHOD_LABEL: Partial<Record<CheckoutPaymentMethod, string>> = {
   cod: "cash on delivery",
-  cash: "cash on pickup",
+  // `cash` (cash on pickup) retired 2026-11-11 — online + COD only.
   emi: "EMI",
   online: "online payment",
 };

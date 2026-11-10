@@ -55,7 +55,6 @@ import type { OrderStatus, PaymentStatus } from "../types";
 // pull the checkout rule registry into the repository's runtime graph.
 import type { OrderType } from "../utils/order-splitter";
 import {
-  MANUAL_PAYMENT_METHODS,
   PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
   type PaymentReviewQueueMode,
 } from "../constants/payment-window";
@@ -1427,104 +1426,26 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         id: d.id,
         ref: d.ref as DocumentReference,
         data: ({ id: d.id, ...d.data() } as OrderDocument),
-      }))
-      .filter((entry) => !entry.data.paymentProofUrl);
+      }));
+    /* The `!paymentProofUrl` exclusion went with manual payment: no order can
+       carry a proof now, so every expired row was already admitted — this is
+       behaviour-preserving, not a widened sweep. */
   }
 
-  /**
-   * Cloud Functions: 2-hour auto-approve sweep — orders with a submitted
-   * proof that no admin has acted on yet (`paymentReviewOutcome` unset).
-   * Filters that in-memory rather than as a Firestore inequality for the
-   * same reason as `getExpiredPaymentDeadlines` — a `!= null` filter would
-   * silently exclude every doc where the field was never set at all.
+  /*
+   * 🛑 `getUnreviewedProofPastDeadline` removed with manual payment stage 3b.
+   * It fed the 2-hour auto-approve job — the one that promoted an UNREVIEWED
+   * proof to "paid" with `verifiedBy: "system:auto-approve"`, an unattended
+   * path from forged screenshot to dispatched goods. The job is gone and so is
+   * `paymentProofUploadedAt`; this had no caller left.
    */
-  async getUnreviewedProofPastDeadline(
-    hours = 2,
-  ): Promise<Array<{ id: string; ref: DocumentReference; data: OrderDocument }>> {
-    const cutoff = new Date();
-    cutoff.setHours(cutoff.getHours() - hours);
 
-    const snap = await this.db
-      .collection(this.collection)
-      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
-      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
-      .where(ORDER_FIELDS.PAYMENT_PROOF_UPLOADED_AT, "<=", cutoff)
-      .limit(500)
-      .get();
-
-    return snap.docs
-      .map((d) => ({
-        id: d.id,
-        ref: d.ref as DocumentReference,
-        data: ({ id: d.id, ...d.data() } as OrderDocument),
-      }))
-      .filter((entry) => !!entry.data.paymentProofUrl && !entry.data.paymentReviewOutcome);
-  }
-
-  /**
-   * Admin/seller payment-review queue — the manual-payment orders that are
-   * waiting on somebody. Two modes:
-   *
-   *  - `awaiting_proof`        — buyer hasn't uploaded a screenshot yet
-   *                              (the 15-minute `paymentDeadline` window).
-   *  - `awaiting_verification` — proof submitted, no admin decision recorded
-   *                              yet (the 2-hour auto-approve window).
-   *
-   * Both refinements — proof presence and manual `paymentMethod` — are done
-   * in-memory rather than as Firestore clauses, deliberately:
-   *
-   *  - `paymentProofUrl != null` would silently exclude every doc where the
-   *    field was never set at all, which is exactly the `awaiting_proof` set
-   *    (same reasoning as `getExpiredPaymentDeadlines` /
-   *    `getUnreviewedProofPastDeadline` above).
-   *  - keeping `paymentMethod` out of the query means this reuses the
-   *    existing `(status, paymentStatus, createdAt)` composite index instead
-   *    of needing a new four-field one.
-   *
-   * The scan is hard-bounded at {@link PAYMENT_REVIEW_QUEUE_SCAN_LIMIT} for
-   * the Vercel 10s ceiling. That bound is generous for this queue by
-   * construction: an order only sits in it for 15 minutes (awaiting proof) or
-   * 2 hours (awaiting verification) before a scheduled sweep resolves it, so
-   * the live set is inherently small. `total` therefore counts matches within
-   * the scan window, not an unbounded collection-wide count.
+  /*
+   * 🛑 `listPaymentReviewQueue` removed with manual payment (stages 3a-3d).
+   * It listed orders waiting on a buyer's screenshot or an admin's decision;
+   * `paymentProofUrl` and `paymentReviewOutcome` are off `OrderDocument` and
+   * there are no manual methods left to filter on.
    */
-  async listPaymentReviewQueue(
-    mode: PaymentReviewQueueMode,
-    opts: { page?: number; pageSize?: number } = {},
-  ): Promise<FirebaseSieveResult<OrderDocument>> {
-    const page = Math.max(1, opts.page ?? 1);
-    const pageSize = Math.min(50, Math.max(1, opts.pageSize ?? 25));
-
-    const snap = await this.db
-      .collection(this.collection)
-      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
-      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
-      .orderBy(ORDER_FIELDS.CREATED_AT, "desc")
-      .limit(PAYMENT_REVIEW_QUEUE_SCAN_LIMIT)
-      .get();
-
-    const matches = snap.docs
-      .map((d) => ({ id: d.id, ...d.data() } as OrderDocument))
-      .filter((order) => MANUAL_PAYMENT_METHODS.includes(order.paymentMethod ?? ""))
-      .filter((order) =>
-        mode === "awaiting_proof"
-          ? !order.paymentProofUrl
-          : !!order.paymentProofUrl && !order.paymentReviewOutcome,
-      );
-
-    const total = matches.length;
-    const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
-    const start = (page - 1) * pageSize;
-
-    return {
-      items: matches.slice(start, start + pageSize),
-      total,
-      page,
-      pageSize,
-      totalPages,
-      hasMore: page < totalPages,
-    };
-  }
 
   /**
    * Cloud Functions: find delivered orders eligible for the weekly payout sweep.
@@ -1635,7 +1556,8 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         ref: d.ref as DocumentReference,
         data: ({ id: d.id, ...d.data() } as OrderDocument),
       }))
-      .filter((o) => !o.data.emiEnabled || o.data.emiComplete)
+      /* The EMI hold (`!emiEnabled || emiComplete`) went with EMI stage 5 —
+         no order carries an EMI plan, so this admitted every row already. */
       .filter((o) => {
         /*
          * 🛑 A SHIPPED row is admitted only for a TRUSTED store, and then

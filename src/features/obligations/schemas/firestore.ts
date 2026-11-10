@@ -70,7 +70,6 @@ export type ObligationKind =
    * pre-order promising later than that cannot be split-settled at all.
    */
   | "preorder-deliver"
-  | "proof-reupload"
   // ── in transit ──────────────────────────────────────────────────────────
   | "delivery-confirm"
   // ── returns ─────────────────────────────────────────────────────────────
@@ -211,7 +210,6 @@ const OBLIGATION_KIND_MAP: Record<ObligationKind, true> = {
   "seller-accept": true,
   "seller-dispatch": true,
   "preorder-deliver": true,
-  "proof-reupload": true,
   "delivery-confirm": true,
   "return-respond": true,
   "return-post": true,
