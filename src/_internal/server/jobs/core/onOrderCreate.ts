@@ -2,6 +2,7 @@ import { normalizeError } from "../../../../errors/normalize";
 import { ORDER_PII_FIELDS, revealPii } from "../../../../security";
 import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
+import { safeRead } from "../../../../errors/safe-read";
 import { userRepository } from "../../../../features/auth/repository/user.repository";
 import { decryptPii } from "../../../../security/index";
 import {
@@ -228,6 +229,44 @@ export async function handleOrderCreate(
     return;
   }
 
+  /*
+   * 🛑 THE SELLER'S OWN OPT-IN, which this path ignored.
+   *
+   * Owner, 2026-11-10: *"the seller [in their] own dashboard has to enable
+   * it, then only they can see it."* Every other seller-facing send now
+   * honours `whatsappNotifySubscribed`; this one messaged them regardless, so
+   * a seller who had deliberately not enabled WhatsApp still got one.
+   *
+   * Fails CLOSED — an unreadable store or an unset flag means no send, so an
+   * outage cannot opt a seller in.
+   */
+  const store = await safeRead(() => storeRepository.findBySlug(storeId), {
+    route: "jobs/onOrderCreate",
+    key: "onOrderCreate.sellerOptIn",
+    fallback: null,
+  });
+  if (store?.whatsappNotifySubscribed !== true) {
+    ctx.logger.info("Seller has not enabled WhatsApp order updates — skipping announcement", {
+      orderId,
+      storeId,
+    });
+    return;
+  }
+
+  /*
+   * ⚠ KNOWN LIMITATION, left as-is rather than silently "fixed" here.
+   *
+   * `notifyStoreOwner` sends FREE-FORM text via `sendWhatsAppBusinessMessage`,
+   * and Meta rejects free-form business-initiated sends outside the 24h
+   * customer-service window — so in practice this rarely delivers. The real
+   * fix is to route the seller through `dispatchNotification` with the
+   * approved `tx_seller_order_update` template, which is PENDING approval.
+   *
+   * 🛑 Not switched over yet on purpose: the checkout path already sends the
+   * seller an `order_placed` notification, so enabling the template arm here
+   * before retiring that one would give an opted-in seller TWO messages for
+   * one order. One change at a time, each verifiable.
+   */
   await notifyStoreOwner(ctx, storeId, message, phoneNumberId, accessToken, orderId);
 
   ctx.logger.info(`Order announcement complete`, { orderId, storeId });
