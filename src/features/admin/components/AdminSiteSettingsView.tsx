@@ -1487,6 +1487,7 @@ export function AdminSiteSettingsView({
     waTemplateLanguage: "en", waTemplateOrderPlaced: "", waTemplateOrderConfirmed: "",
     waTemplateOrderShipped: "", waTemplateOrderDelivered: "",
     waTemplateOrderCancelled: "", waTemplateRefundInitiated: "",
+    waTemplateCheckoutOtp: "",
   });
   const {
     fields: whatsappVisibilityFields,
@@ -2024,6 +2025,7 @@ export function AdminSiteSettingsView({
       waTemplateOrderDelivered: s.credentialsMasked?.whatsappTemplateOrderDelivered ?? "",
       waTemplateOrderCancelled: s.credentialsMasked?.whatsappTemplateOrderCancelled ?? "",
       waTemplateRefundInitiated: s.credentialsMasked?.whatsappTemplateRefundInitiated ?? "",
+      waTemplateCheckoutOtp: s.credentialsMasked?.whatsappTemplateCheckoutOtp ?? "",
     });
 
     setNotificationsForm({
@@ -2241,6 +2243,7 @@ export function AdminSiteSettingsView({
         whatsappTemplateOrderDelivered: maskedOrReal("whatsappTemplateOrderDelivered", whatsappForm.waTemplateOrderDelivered ?? ""),
         whatsappTemplateOrderCancelled: maskedOrReal("whatsappTemplateOrderCancelled", whatsappForm.waTemplateOrderCancelled ?? ""),
         whatsappTemplateRefundInitiated: maskedOrReal("whatsappTemplateRefundInitiated", whatsappForm.waTemplateRefundInitiated ?? ""),
+        whatsappTemplateCheckoutOtp: maskedOrReal("whatsappTemplateCheckoutOtp", whatsappForm.waTemplateCheckoutOtp ?? ""),
         resendApiKey: maskedOrReal("resendApiKey", notificationsForm.resendApiKey ?? ""),
       },
       emailSettings: {

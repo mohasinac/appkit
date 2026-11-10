@@ -66,6 +66,20 @@ export const siteSettingsWhatsappFormSchema = z.object({
   waTemplateOrderDelivered: waField(8, "Order delivered template name", "e.g. order_delivered_update."),
   waTemplateOrderCancelled: waField(9, "Order cancelled template name", "e.g. order_cancelled_update."),
   waTemplateRefundInitiated: waField(10, "Refund initiated template name", "e.g. refund_initiated_update."),
+  /*
+   * 🛑 Not one of the six above, and not interchangeable with them. The six
+   * are UTILITY templates for order lifecycle events; this one must be
+   * AUTHENTICATION category, because Meta's policy check reads the CATEGORY
+   * rather than the wording — a UTILITY template carrying a code is refused
+   * however it is phrased.
+   *
+   * It is also the switch that makes WhatsApp the DEFAULT checkout OTP
+   * channel (`resolveDefaultOtpChannel`). Left blank, the default stays
+   * email, which is what stops an install without an approved authentication
+   * template from sending every buyer down a channel that cannot deliver.
+   */
+  waTemplateCheckoutOtp: waField(11, "Checkout OTP template name",
+    "AUTHENTICATION-category template used for the high-value checkout verification code, e.g. tx_checkout_otp. 🛑 Must be AUTHENTICATION, not UTILITY — Meta rejects a utility template carrying a one-time code. Setting this also makes WhatsApp the default OTP channel for buyers; leave blank to keep email the default."),
 });
 
 export type SiteSettingsWhatsappFormValues = z.infer<typeof siteSettingsWhatsappFormSchema>;
