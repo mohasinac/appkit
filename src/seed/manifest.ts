@@ -43,6 +43,7 @@ import { payoutsSeedData } from "./payouts-seed-data";
 import { shipmentsSeedData, shipmentLotsSeedData, shipmentItemsSeedData } from "./shipments-seed-data";
 import { blogPostsSeedData } from "./blog-posts-seed-data";
 import { eventsSeedData } from "./events-seed-data";
+import { eventLikesSeedData } from "./event-likes-seed-data";
 import { giveawayEntriesSeedData } from "./giveaway-entries-seed-data";
 import { sessionsSeedData } from "./sessions-seed-data";
 import { addressesSeedData } from "./addresses-seed-data";
@@ -77,6 +78,24 @@ export type SeedCollectionName =
   | "moderationQueue" | "reports"
   | "itemRequests" | "storeWhatsAppConfig" | "roleOverrides"
   | "customRoles" | "adminNotifications" | "lotteryEntries" | "shipments"
+  /*
+   * 🛑 ADDED 2026-11-11 — it was MISSING, and this manifest is what a
+   * wipe-and-reseed purges.
+   *
+   * `seed-cli.mjs` writes `eventLikes` (its collection map and its data map
+   * both carry it), so the rows exist. With no key here the purge could not
+   * see them: a reseed would report clean while leaving every seeded like in
+   * place, and the next load would add more on top. The same shape as the
+   * `lotteryEntries` note below — a key that does not match what is actually
+   * written leaves real documents untouched while reporting success.
+   *
+   * ⚠ This is the second list, and the drift is structural: `seed-cli.mjs`
+   * keeps its OWN collection list separate from this file, so the two can
+   * always disagree. Collections already removed from here (`storeAddresses`,
+   * `couponUsage`) still appear in `seed-cli status`. Harmless today; it is
+   * why this one went unnoticed.
+   */
+  | "eventLikes"
  ;
 
 export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
@@ -195,6 +214,42 @@ export const SEED_MANIFEST: SeedManifest = {
       name: e.title ?? e.id,
     })),
   ),
+  /*
+   * A like has no name of its own, so the composite `<eventId>__<userId>` id
+   * is the only honest label — `pick` would otherwise print `undefined`.
+   */
+  eventLikes: eventLikesSeedData.map((l) => ({
+    id: String(l.id),
+    name: String(l.id),
+  })),
+  /*
+   * 🛑 EMPTY ON PURPOSE, and re-affirmed 2026-11-11 — but read the cost.
+   *
+   * Owner, 2026-11-09: *demo entries in dev-db, none in prod.* The empty array
+   * is the only STRUCTURAL guarantee of the second half of that: there is no
+   * per-database row split in this manifest, so a non-empty `eventEntries`
+   * would reach PRODUCTION the moment anyone ran a load with
+   * `FIREBASE_SHOP_DATABASE_ID` unset — and unset means `(default)`, which is
+   * production. `isdev` does not help: it is a MARKER, stamped after the fact,
+   * and explicitly never a filter.
+   *
+   * ⚠ THE COST, stated rather than hidden: the whole entries surface that
+   * shipped in November — the gallery, the rank badges, the ~100-word note on
+   * the card, the slider, the lightbox, the five `entryRanking` rule sets and
+   * the vote arithmetic — has NO FIXTURE. Every one of them is exercised only
+   * against documents a human typed in by hand. That is exactly the hole the
+   * contest row itself was added to fill for `entryVoting`, one level down.
+   *
+   * 🛑 Do NOT close it by filling this array. Two things have to exist first,
+   * and neither is a seed edit:
+   *   1. a dev-only loader path, so demo entries cannot reach `(default)` by
+   *      an operator forgetting an env var;
+   *   2. entries whose `stats` agree with the event row they hang off — the
+   *      counters are denormalised and incremented by the WRITE path, so
+   *      seeded entries with a zeroed `stats.totalEntries` would reproduce the
+   *      "says 2, shows 1" defect this file already records twice.
+   * Flagged, not done.
+   */
   eventEntries: [],
   /*
    * 🛑 KEY STAYS `lotteryEntries` — it is the Firestore COLLECTION NAME, and

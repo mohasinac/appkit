@@ -148,7 +148,11 @@ const _raweventsSeedData: EventDocument[] = [
       `<ol>` +
       `<li>Take a photo of your collection, your stadium, or a battle in progress.</li>` +
       /*
-       * 🛑 THESE TWO LINES ARE PROSE DESCRIBING CONFIG, and both were WRONG.
+       * 🛑 THESE LINES ARE PROSE DESCRIBING CONFIG, and they were WRONG twice
+       * — once by contradicting the config, and once (2026-11-11) by being
+       * SILENT about a field the form had grown. Silence is the harder one to
+       * catch: a contradiction can at least be spotted by reading the two
+       * together, while a missing sentence looks exactly like a complete one.
        *
        * "up to four images" contradicted `entryMedia` on this same row, which
        * is `{ maxImages: 3, maxVideos: 1, maxTotal: 4 }` — three photos and a
@@ -162,13 +166,31 @@ const _raweventsSeedData: EventDocument[] = [
        * was about to tell a participant two different things about the same
        * contest in two different panels.
        *
-       * ⚠ Any edit to `entryMedia` or `entryApproval` below has to come back
-       * here. The real fix is that this copy should be generated from the
-       * config too — flagged, not done: it is admin-authored rich text with a
-       * live document already carrying an edited copy, so templating it is a
-       * content migration rather than a string change.
+       * ⚠ Any edit to `entryMedia`, `entryApproval` or `entryRanking` below has
+       * to come back here. The real fix is that this copy should be generated
+       * from the config too — flagged, not done: it is admin-authored rich text
+       * with a live document already carrying an edited copy, so templating it
+       * is a content migration rather than a string change.
+       *
+       * 🛑 And note which way the asymmetry runs. The FORM generates its rules
+       * sentence from `entryMedia` and its review notice from `entryApproval`,
+       * so those two cannot drift from the config. This paragraph can, and
+       * does. It is the only prose on this row with no generator behind it.
        */
       `<li>Submit it below — one entry per account: up to three photos and one video, four items in total.</li>` +
+      /*
+       * ⚠ ADDED 2026-11-11, and it is the same class of drift as the two lines
+       * above. The participate form has carried a ~100-word note field since
+       * the entries surface shipped, the gallery card renders it under the
+       * entrant's name, and the entry page renders it in full — while this
+       * paragraph, which is what a participant reads BEFORE opening the form,
+       * described a photo upload and nothing else.
+       *
+       * Optional, and said to be optional, because `checkEntryNote` only caps
+       * the length: an empty note is valid and a 101-word one is refused with
+       * "Keep it to 100 words".
+       */
+      `<li>Add a short note if you like — up to 100 words about your setup. It is optional, and it appears on your entry in the gallery.</li>` +
       `<li>Entries appear in the gallery as soon as you submit, so voting can start straight away.</li>` +
       `</ol>` +
       `<h2>How the winner is decided</h2>` +
@@ -226,6 +248,30 @@ const _raweventsSeedData: EventDocument[] = [
      */
     entryMedia: { maxImages: 3, maxVideos: 1, maxTotal: 4, requireImage: true },
     entryLimit: 1,
+    /*
+     * 🛑 SPELLED OUT, even though the `contest` TYPE already binds exactly this
+     * rule set (`event-types.ts` → `ruleSets.entryRanking: "ranking-most-likes"`).
+     *
+     * Same argument as `entryApproval` above, and it is not stylistic: an
+     * explicit value is a DECISION and an inherited one is an ACCIDENT. This
+     * row's own `description` promises *"Entries are ranked by likes… ties are
+     * broken by whichever entry was submitted first"*, and that promise is now
+     * ALSO rendered on three live surfaces from the rule set's `publicWording`
+     * — the gallery header, the empty state and the entry page. Three readers
+     * and one hand-written paragraph had no field linking them.
+     *
+     * 🛑 It stores a rule-set ID, never a rule key, and never an inline object.
+     * `"ranking-net-score"` — not `"net-score"`, and not `{ rule: … }`.
+     * `resolveEntryRankingRuleSet` looks the id up; an unknown id is carried
+     * through with `allowsDislike: false` and `publicWording: ""`, so a newer
+     * config against an older deploy prints no sentence and ranks by the
+     * unknown key rather than throwing. Degrading, not handled.
+     *
+     * Switching this contest to net-score — which would make the ♡ button
+     * appear, because `allowsDislike` rides on the SAME row as the wording —
+     * is this one field. Not a resolver, not a deploy.
+     */
+    entryRanking: "ranking-most-likes",
     showOnCarousel: false,
     /*
      * 🛑 NOT `isTestData`. It was set here on first write, reasoning from the
@@ -251,8 +297,26 @@ const _raweventsSeedData: EventDocument[] = [
      * unconditionally by the entries surfaces, and a document MISSING an
      * `orderBy` field drops out of its own index entirely (Root Cause #100) —
      * a contest that does not appear in the contest list.
+     *
+     * ⚠ `likeCount` now comes from the LOOKUP, like the row below it, rather
+     * than a hand-typed `0`. It resolves to 0 today because no like in
+     * `event-likes-seed-data.ts` points at this event — so the two agreed only
+     * by coincidence, which is the mirror-drift that import exists to prevent.
+     * Add one like for this contest and the hand-typed version would have been
+     * silently wrong, on a number the public reads first.
+     *
+     * 🛑 These four are DENORMALISED COUNTERS, and nothing here backfills them.
+     * They are correct on a fresh seed because the gallery is empty; they stay
+     * correct only because submit increments and delete decrements inside a
+     * transaction. A seed cannot repair a drifted counter on a live row —
+     * recomputing from the source collection is a script, not a reseed.
      */
-    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0, likeCount: 0 },
+    stats: {
+      totalEntries: 0,
+      approvedEntries: 0,
+      flaggedEntries: 0,
+      likeCount: SEEDED_LIKE_COUNTS["event-photo-contest-diwali"] ?? 0,
+    },
     createdBy: "user-admin-letitrip",
     createdAt: NOW,
     updatedAt: NOW,
