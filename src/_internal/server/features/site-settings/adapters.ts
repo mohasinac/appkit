@@ -222,10 +222,28 @@ export function toPublicSiteSettings(
     // setting that skips OTP and payment capture) and `smsVerification`, both
     // of which must never reach a client. `listings` is narrowed too:
     // `categoryTypes` has no client reader.
+    /*
+     * 🛑 `whatsappNumber` IS WITHHELD UNLESS EXPLICITLY PUBLISHED.
+     *
+     * It used to travel unconditionally, and the seed filled it with the
+     * owner's PRIVATE mobile — so a personal number was a public API field,
+     * readable by anyone calling site-settings, not merely by someone who
+     * reached the payment page that renders it.
+     *
+     * Gating here rather than at the render site is the whole fix: hiding the
+     * anchor tag while the number still rides in this payload leaves it one
+     * `curl` away. The disclosure is the payload.
+     *
+     * Omitted entirely rather than emitted as `""` — an absent key cannot be
+     * read, whereas an empty string invites a `|| fallback` somewhere
+     * downstream that puts it back.
+     */
     contact: {
       email: doc.contact?.email ?? "",
       phone: doc.contact?.phone ?? "",
-      whatsappNumber: doc.contact?.whatsappNumber ?? "",
+      ...(doc.contact?.publishWhatsappNumber === true && doc.contact?.whatsappNumber
+        ? { whatsappNumber: doc.contact.whatsappNumber }
+        : {}),
     },
     payment: {
       otpCheckoutThreshold: doc.payment?.otpCheckoutThreshold,

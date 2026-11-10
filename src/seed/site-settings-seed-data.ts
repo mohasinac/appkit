@@ -148,7 +148,26 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     phone: "",
     address: "Siddeshwar Peth, Solapur, Maharashtra 413001",
     upiVpa: "mohsin0502@okicici",
-    whatsappNumber: "918919665811",
+    /*
+     * 🛑 CLEARED 2026-11-10 — this held the proprietor's PRIVATE mobile, and
+     * `contact` is in `PUBLIC_SITE_SETTINGS_FIELDS`, so it was served to any
+     * caller of the public site-settings endpoint and rendered as a `wa.me`
+     * link to buyers on the payment-proof page.
+     *
+     * Owner: *"that is my private number, not the business number."*
+     *
+     * Exactly the reason `phone` above was already cleared — the same hazard,
+     * one field over, missed because nothing tied the two together. A seed
+     * value is the default every install ships with, so a personal number
+     * here is a personal number in every deployment.
+     *
+     * ⚠ `whatsappAdminNotifyNumbers` below still carries it, and that is
+     * CORRECT: those are alerts sent TO the owner, server-side, never
+     * published. Configured and published are different things, which is what
+     * `publishWhatsappNumber` now expresses.
+     */
+    whatsappNumber: "",
+    publishWhatsappNumber: false,
   },
   payment: {
     razorpayEnabled: false,

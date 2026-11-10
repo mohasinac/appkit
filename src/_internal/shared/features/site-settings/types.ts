@@ -27,7 +27,18 @@ export interface PublicSiteSettings {
   contact: {
     email: string;
     phone: string;
-    whatsappNumber: string;
+    /**
+     * 🛑 OPTIONAL, and the optionality carries meaning: the key is **omitted
+     * from the payload entirely** unless `contact.publishWhatsappNumber` is
+     * true. Absent means "the operator has not published a contact number",
+     * not "the value failed to load".
+     *
+     * It was required and always emitted, while the seed filled it with the
+     * owner's private mobile — so a personal number was a public API field.
+     * Typing it optional is what makes a consumer's presence check a
+     * **publish gate** rather than a null check.
+     */
+    whatsappNumber?: string;
   };
   /** Deliberately NOT the full `payment` block — only the checkout OTP threshold has a client reader. */
   payment: {

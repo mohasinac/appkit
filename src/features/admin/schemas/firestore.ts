@@ -651,6 +651,26 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** WhatsApp number with country code (market-specific) */
     whatsappNumber?: string;
     /**
+     * Whether `whatsappNumber` may be PUBLISHED to buyers.
+     *
+     * 🛑 DEFAULT FALSE, and the default is the point. This field sits inside
+     * `contact`, which is in `PUBLIC_SITE_SETTINGS_FIELDS` — so whatever is
+     * stored in `whatsappNumber` is served to any caller of the public
+     * site-settings endpoint, not only to someone who reaches the page that
+     * renders it. The seed shipped the OWNER'S PRIVATE NUMBER there
+     * (owner, 2026-11-10: *"that is my private number, not the business
+     * number"*), which made a personal mobile a public API field.
+     *
+     * 🛑 THIS GATES THE PROJECTION, NOT THE UI. Hiding the link while the
+     * number still travels in the payload leaves it one `curl` away — the
+     * disclosure is the payload, not the anchor tag. See
+     * `_internal/server/features/site-settings/adapters.ts`.
+     *
+     * Separating "configured" from "published" is what makes it safe to store
+     * a number for internal use (admin alerts) without exposing it.
+     */
+    publishWhatsappNumber?: boolean;
+    /**
      * Human-readable support hours, e.g. "Mon-Sat, 10:00-19:00 IST".
      *
      * Written by the admin form since long before it was declared here, which

@@ -674,6 +674,8 @@ export function AdminSiteSettingsView({
   const [contactForm, setContactForm] = React.useState<SiteSettingsContactFormValues>({
     supportEmail: "", supportPhone: "", supportAddress: "", supportHours: "",
     instagram: "", twitter: "", facebook: "", youtube: "", whatsapp: "",
+    // 🛑 `false`, so an unsaved form can never publish a stored number.
+    publishWhatsapp: false,
     upiVpa: "", linkedin: "", pinterest: "",
   });
   const {
@@ -1819,6 +1821,7 @@ export function AdminSiteSettingsView({
       facebook: s.socialLinks?.facebook ?? "",
       youtube: s.socialLinks?.youtube ?? "",
       whatsapp: s.contact?.whatsappNumber ?? "",
+      publishWhatsapp: s.contact?.publishWhatsappNumber === true,
       upiVpa: s.contact?.upiVpa ?? "",
       linkedin: s.socialLinks?.linkedin ?? "",
       pinterest: s.socialLinks?.pinterest ?? "",
@@ -2155,6 +2158,10 @@ export function AdminSiteSettingsView({
         address: contactForm.supportAddress,
         supportHours: contactForm.supportHours,
         whatsappNumber: contactForm.whatsapp,
+        // 🛑 `=== true`, not a truthiness coerce: an undefined form value must
+        // persist as NOT published. Defaulting an unset publish flag to `true`
+        // is how a private number gets republished by an unrelated tab save.
+        publishWhatsappNumber: contactForm.publishWhatsapp === true,
         upiVpa: contactForm.upiVpa,
       },
       socialLinks: {

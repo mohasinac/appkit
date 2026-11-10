@@ -48,7 +48,23 @@ export const siteSettingsContactFormSchema = z.object({
   }),
   whatsapp: annotate(optionalText(20), {
     section: "contact", order: 5, row: "pair", label: "WhatsApp number",
-    inputType: "tel", help: "e.g. +91XXXXXXXXXX.",
+    inputType: "tel", help: "e.g. +91XXXXXXXXXX. Stored but NOT shown to buyers unless the toggle below is on.",
+  }),
+  /*
+   * 🛑 Separating "configured" from "PUBLISHED", because this field was neither.
+   *
+   * `contact` is in `PUBLIC_SITE_SETTINGS_FIELDS`, so whatever is stored above
+   * used to be served to every caller of the public site-settings endpoint —
+   * and the seed filled it with the owner's private mobile. Storing a number
+   * for internal use must not imply publishing it.
+   *
+   * ⚠ The toggle gates the SERVER PROJECTION, not just this screen: with it
+   * off, the key is omitted from the payload entirely rather than hidden in
+   * the UI, because the disclosure is the payload and not the anchor tag.
+   */
+  publishWhatsapp: annotate(z.boolean().optional(), {
+    section: "contact", order: 6, row: "pair", label: "Publish the WhatsApp number to buyers",
+    help: "OFF by default. When off, the number is withheld from the public settings payload entirely — not merely hidden. Turn on only for a number you are happy to make public.",
   }),
   /*
    * 🛑 Already stored and already read by the manual-payment flow — see the
