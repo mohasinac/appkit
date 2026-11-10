@@ -601,19 +601,37 @@ function SidebarUserHeader({
             * accessible name. An inset overlay keeps the badge decorative and
             * gives the whole avatar one clean target.
             */}
+          {/*
+            * 🛑 A PLAIN `<a>`, NOT `TextLink` — and the reason is behavioural.
+            *
+            * `TextLink` adds `target="_blank"` to any href it considers
+            * foreign. That is right for a reference to another site and WRONG
+            * for an identity handoff: on a guest host `profileHref` resolves
+            * to the auth app, so the visitor would sign in inside a new tab
+            * while the tab they were actually reading stayed signed out.
+            *
+            * Measured on the live participate page: of 7 links to the auth
+            * host, 6 navigated in place and this one opened a tab. The sibling
+            * sign-in links were converted for exactly this reason; this one is
+            * never *labelled* "Sign in", so a sweep looking for sign-in links
+            * missed it — the question that generalises is "does following this
+            * leave the origin?", not "is it called sign-in?".
+            *
+            * `rel="noopener noreferrer"` is kept: it costs nothing same-tab
+            * and still applies if a consumer passes an external profile host.
+            */}
           {profileHref && (
-            <TextLink
+            <a
               href={profileHref}
-              variant="none"
+              rel="noopener noreferrer"
               onClick={onClose}
               className="absolute inset-0 rounded-full"
             >
-              {/* `TextLink` requires children, and a visually-hidden label is
-                  a better accessible name than a bare `aria-label` — it stays
-                  translatable and survives a screen reader that prefers
-                  content over attributes. */}
+              {/* A visually-hidden label is a better accessible name than a
+                  bare `aria-label` — it stays translatable and survives a
+                  screen reader that prefers content over attributes. */}
               <Span className="sr-only">View your profile</Span>
-            </TextLink>
+            </a>
           )}
         </Div>
         <Div className="flex-1 min-w-0">
