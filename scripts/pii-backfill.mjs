@@ -371,19 +371,52 @@ function planDocument(policy, raw) {
      * stamp is what makes a half-finished rotation detectable instead of
      * invisible.
      */
-    const stale = !Array.isArray(current) || currentKeyVersion !== CURRENT_BLIND_INDEX_KEY_VERSION;
-    if (stale) {
-      const values = tokensIndex.from
-        .map((f) => readPath(plain, f))
-        .filter((v) => typeof v === "string" && v);
-      if (values.length > 0) {
-        const tokens = buildTokensIndex(...values);
-        if (tokens.length > 0) {
-          patch[tokensIndex.field] = tokens;
-          patch[BLIND_INDEX_KEY_VERSION_FIELD] = CURRENT_BLIND_INDEX_KEY_VERSION;
-          reasons.add(`tokens:${tokensIndex.field}`);
-        }
-      }
+    const values = tokensIndex.from
+      .map((f) => readPath(plain, f))
+      .filter((v) => typeof v === "string" && v);
+    const expected = values.length > 0 ? buildTokensIndex(...values) : [];
+
+    /*
+     * 🛑 REWRITTEN WHEN IT DISAGREES WITH THE PLAINTEXT — not merely when it
+     * is absent.
+     *
+     * The original test was "absent, or a different key version". That cannot
+     * see an index which is PRESENT and WRONG, and wrong is the failure mode
+     * that actually occurred: index derivation is not idempotent, so a
+     * double-applied write hook tokenised the already-ENCRYPTED value. The
+     * digests then look healthy — a populated array, right key version — and
+     * match nothing.
+     *
+     * Measured on production 2026-11-11, three real accounts:
+     *   stored 11, expected 6, matching 3
+     *   stored  6, expected 4, matching 1
+     *   stored  7, expected 4, matching 1
+     * and this tool reported "0 would update" on all three. A repair tool
+     * blind to the corruption it exists to repair is worse than no tool: it
+     * returns a clean result and the operator stops looking.
+     *
+     * Comparing against the recomputed expectation also subsumes the two old
+     * conditions — absent and key-rotated both differ from `expected` — so
+     * nothing is lost by replacing them.
+     *
+     * 🛑 An empty `expected` means the SOURCES are unreadable (ciphertext that
+     * would not decrypt, or missing fields). Do not "repair" to `[]`: that
+     * would delete a possibly-good index on the strength of a failed read.
+     */
+    const sameAsExpected =
+      Array.isArray(current) &&
+      current.length === expected.length &&
+      expected.every((t) => current.includes(t));
+    const keyVersionCurrent = currentKeyVersion === CURRENT_BLIND_INDEX_KEY_VERSION;
+
+    if (expected.length > 0 && !(sameAsExpected && keyVersionCurrent)) {
+      patch[tokensIndex.field] = expected;
+      patch[BLIND_INDEX_KEY_VERSION_FIELD] = CURRENT_BLIND_INDEX_KEY_VERSION;
+      reasons.add(
+        Array.isArray(current) && current.length > 0
+          ? `tokens:${tokensIndex.field}(wrong→rebuilt)`
+          : `tokens:${tokensIndex.field}`,
+      );
     }
   }
 
