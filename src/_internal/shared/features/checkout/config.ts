@@ -55,7 +55,38 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
   platformShippingFixedMin: 50,
 } as const;
 
-export const CHECKOUT_PAYMENT_METHODS = ["cash", "cod", "online", "upi_manual", "admin_bypass", "emi"] as const;
+/**
+ * The methods checkout accepts.
+ *
+ * Owner, 2026-11-11: **gateway online + COD**. Two retired here:
+ *
+ * 🛑 `upi_manual` — a buyer paid a static VPA and uploaded a screenshot, which
+ * nothing could verify. A screenshot is forgeable in a minute and a typed UTR
+ * is an invented string; `payment-manual`'s own `listPayments()` returns `[]`
+ * with a comment saying there is no ledger to compare against. Owner: *"that
+ * is wrong to have."*
+ *
+ * ⚠ `emi` is ALSO retired (owner: now handled inside the payment gateways) but
+ * is deliberately still listed here. Removing it from the type produced **10
+ * compile errors across the checkout action and the checkout rules**, and
+ * `actions.ts` alone carries ~160 EMI references — that is a money-path
+ * refactor, not a list edit. Narrowing the type before the call sites are
+ * rewritten would leave checkout uncompilable.
+ *
+ * The flag already stops it: `emi.enabled` ships `false` and
+ * `checkEmiEligibility` returns `site_disabled`, so no new EMI order can be
+ * created regardless of this list. Stage five removes the code behind that.
+ *
+ * ⚠ `cash` is NOT `cod`: it is cash on **pickup** (see `PAYMENT_METHOD_LABEL`),
+ * a separate in-person flow, and it stays. `admin_bypass` is an operator tool
+ * rather than a buyer-selectable method.
+ *
+ * ⚠ This list is still a closed `as const`, and §B of the plan replaces it
+ * with the capability registry so a new method is a config row rather than a
+ * deploy. Narrowing it is correct in the meantime — a method nobody can serve
+ * should not be offerable — but it is not yet the end state.
+ */
+export const CHECKOUT_PAYMENT_METHODS = ["cash", "cod", "online", "admin_bypass", "emi"] as const;
 export type CheckoutPaymentMethod = (typeof CHECKOUT_PAYMENT_METHODS)[number];
 
 export const CHECKOUT_DEFAULT_EMI_SETTINGS = {

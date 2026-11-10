@@ -72,7 +72,7 @@ export type EmiChoiceResult =
   | { ok: false; reason: string };
 
 /** The tender a pre-2026-10-22 `paymentMethod: "emi"` request actually got. */
-const EMI_LEGACY_TENDER: EmiTender = "upi_manual";
+const EMI_LEGACY_TENDER: EmiTender = "cod";
 
 /**
  * Tenders that cannot carry an instalment plan, with the reason stated rather

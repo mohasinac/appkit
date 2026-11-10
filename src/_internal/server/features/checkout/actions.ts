@@ -1950,7 +1950,8 @@ async function createOrderForGroup(
   // order document. Skipped entirely when GST is off or the buyer's state is
   // unknown (digital-only carts have no shipping address).
 
-  const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual" || paymentMethod === "cash";
+  // upi_manual retired 2026-11-11 (owner): the unverifiable screenshot flow.
+  const isCodLike = paymentMethod === "cod" || paymentMethod === "cash";
   /*
    * 🛑 D43 — THE DEPOSIT/REMAINING SPLIT MOVED DOWN, BELOW `orderTotal`.
    *
@@ -2258,8 +2259,7 @@ async function createOrderForGroup(
    */
   const hasPaymentWindow =
     !adminBypass &&
-    (paymentMethod === PaymentMethodValues.UPI_MANUAL ||
-      paymentMethod === PaymentMethodValues.CASH);
+    paymentMethod === PaymentMethodValues.CASH;
   const paymentDeadline = hasPaymentWindow
     ? new Date(Date.now() + PAYMENT_WINDOW_MS)
     : undefined;
@@ -2639,7 +2639,7 @@ export async function createCheckoutOrderAction(
   // P-1 — enforce UPI/cash manual payment toggle.
   if (
     !adminBypass &&
-    (paymentMethod === "upi_manual" || paymentMethod === "cash") &&
+    paymentMethod === "cash" &&
     siteSettings?.payment?.upiManualEnabled === false
   ) {
     throw new ValidationError(

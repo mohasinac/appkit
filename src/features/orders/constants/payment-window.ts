@@ -37,6 +37,19 @@ export const PAYMENT_FRAUD_REJECTED_REASON = "payment_fraud_rejected";
  * orders ENTER the manual flow, not how existing ones are read. Same
  * stop-creating-before-deleting staging used for `upi_manual`.
  */
+/*
+ * ⚠ `upi_manual` STAYS in this list even though checkout no longer accepts it.
+ *
+ * Membership drives `isManualPaymentMethod`, which the ADMIN order editor and
+ * the payment-review queue use to decide whether to render a historical
+ * order's proof, UTR and review controls. Removing it would make every past
+ * `upi_manual` order un-reviewable — fields stay, actions go, which is the
+ * same staging used for the rest of this removal.
+ *
+ * The entry point is what was closed: `CHECKOUT_PAYMENT_METHODS` and the API
+ * validators no longer accept `upi_manual`, so no NEW order can enter the
+ * flow. This list only governs how existing ones are read.
+ */
 export const MANUAL_PAYMENT_METHODS: readonly string[] = ["cash", "upi_manual"];
 
 export function isManualPaymentMethod(method: string | undefined | null): boolean {

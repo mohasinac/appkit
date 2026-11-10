@@ -175,7 +175,6 @@ const PAYMENT_METHOD_LABEL: Partial<Record<CheckoutPaymentMethod, string>> = {
   cash: "cash on pickup",
   emi: "EMI",
   online: "online payment",
-  upi_manual: "manual bank/UPI transfer",
 };
 
 /**
