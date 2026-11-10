@@ -516,7 +516,28 @@ async function main() {
       databaseArg === "default"
         ? null
         : databaseArg || process.env.FIREBASE_SHOP_DATABASE_ID || null;
-    const db = databaseId ? admin.firestore(app, databaseId) : admin.firestore(app);
+    /*
+     * 🛑 `getFirestore(app, id)`, NEVER `admin.firestore(app, id)`.
+ *
+     * The positional form SILENTLY IGNORES the database id and returns
+     * `(default)` — which is PRODUCTION. It does not throw and it does not warn,
+     * so the script goes on printing the database it believes it is using while
+     * reading and writing the live one.
+ *
+     * Measured 2026-11-10, same credentials, same collection:
+     *   admin.firestore()                -> users: 20
+     *   admin.firestore(app, "dev-db")   -> users: 20   <- production
+     *   getFirestore(app, "dev-db")      -> users: 0    <- the real dev-db
+ *
+     * It had already caused damage: a `--collections users` load intended for
+     * dev-db wrote 20 user documents into production, on a database the owner
+     * specified must hold the admin account alone.
+ *
+     * `providers/db-firebase/admin.ts` has always used the modular form, which is
+     * why the APPS target the right database and only the scripts drifted.
+     */
+    const { getFirestore: _getFirestore } = require("firebase-admin/firestore");
+    const db = databaseId ? _getFirestore(app, databaseId) : _getFirestore(app);
     logStep(
       `Firestore target: ${databaseId ?? "(default)"}${databaseId ? "" : "  ← THIS IS PRODUCTION"}`,
     );
