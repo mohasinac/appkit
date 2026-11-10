@@ -89,7 +89,16 @@ export {
 export { rupeesToPaise, paiseToRupees } from "./core/money";
 
 // Payment (manual) — the default provider
-export { ManualPaymentProvider } from "./providers/payment-manual/index";
+/*
+ * 🛑 `ManualPaymentProvider` DELETED 2026-11-11 with the manual-payment flow.
+ *
+ * It implemented `IPaymentProvider` without a gateway: nothing to charge,
+ * nothing to capture, and its own `listPayments()` returned `[]` with a
+ * comment saying there is no ledger to reconcile against. Measured before
+ * deleting: it was re-exported from three barrels and NEVER INSTANTIATED --
+ * no registry call, no default fallback -- so removing it changes no runtime
+ * behaviour, only the public surface.
+ */
 
 // Shipping (manual) — the default (and only) provider
 export { ManualShippingProvider } from "./providers/shipping-manual/index";

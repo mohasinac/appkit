@@ -94,10 +94,12 @@ export const INTEGRATIONS: Record<IntegrationId, IntegrationDescriptor> = {
      *
      * Ungating those two routes does not fix it — `providers.config.ts` only
      * registers the gateway when this flag is on, so a completion path would
-     * reach `ManualPaymentProvider` and fail differently. The real fix is a
-     * bigger change (keep the provider registered for completion while refusing
-     * new orders), so until then this is a WARNING an admin must read rather
-     * than a hazard they discover.
+     * reach NO payment provider at all and fail differently. (It used to fall
+     * through to `ManualPaymentProvider`, deleted 2026-11-11 with the
+     * manual-payment flow; that removes a confusing failure, not this one.)
+     * The real fix is a bigger change — keep the provider registered for
+     * COMPLETION while refusing NEW orders — so until then this is a WARNING
+     * an admin must read rather than a hazard they discover.
      */
     offConsequence:
       "Buyers can no longer pay online. Checkout falls back to the manual methods (cash, UPI with a proof upload), which need an admin to verify every payment by hand. 🛑 Payments already in progress are abandoned — a buyer part-way through the gateway may be charged without an order being placed. Switch off when nobody is checking out.",

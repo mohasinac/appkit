@@ -642,8 +642,16 @@ export { rupeesToPaise } from "./core/money";
 // resolveKeys - resolves integration credentials (PhonePe etc.) from Firestore site settings, falling back to env vars. Used by providers.config.ts to construct PhonePeProvider when siteSettings.payment.phonepeEnabled is true.
 export { resolveKeys } from "./core/integration-keys";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// ManualPaymentProvider - the default IPaymentProvider implementation (no gateway).
-export { ManualPaymentProvider } from "./providers/payment-manual/index";
+/*
+ * 🛑 `ManualPaymentProvider` DELETED 2026-11-11 with the manual-payment flow.
+ *
+ * It implemented `IPaymentProvider` without a gateway: nothing to charge,
+ * nothing to capture, and its own `listPayments()` returned `[]` with a
+ * comment saying there is no ledger to reconcile against. Measured before
+ * deleting: it was re-exported from three barrels and NEVER INSTANTIATED --
+ * no registry call, no default fallback -- so removing it changes no runtime
+ * behaviour, only the public surface.
+ */
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ManualShippingProvider - the default (and only) IShippingProvider implementation.
 export { ManualShippingProvider } from "./providers/shipping-manual/index";

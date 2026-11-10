@@ -2733,8 +2733,16 @@ export type { RazorpayPaymentResult } from "./providers/payment-razorpay/signatu
 
 // ./providers/payment-manual/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// ManualPaymentProvider - the default IPaymentProvider implementation (no gateway).
-export { ManualPaymentProvider } from "./providers/payment-manual/index";
+/*
+ * 🛑 `ManualPaymentProvider` DELETED 2026-11-11 with the manual-payment flow.
+ *
+ * It implemented `IPaymentProvider` without a gateway: nothing to charge,
+ * nothing to capture, and its own `listPayments()` returned `[]` with a
+ * comment saying there is no ledger to reconcile against. Measured before
+ * deleting: it was re-exported from three barrels and NEVER INSTANTIATED --
+ * no registry call, no default fallback -- so removing it changes no runtime
+ * behaviour, only the public surface.
+ */
 
 // ./providers/shipping-manual/index
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

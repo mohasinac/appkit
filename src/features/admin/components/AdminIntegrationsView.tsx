@@ -148,9 +148,12 @@ export function AdminIntegrationsView({ settings, onSave }: AdminIntegrationsVie
         a 404 — so flipping payments off mid-checkout abandons that payment:
         captured, with no order. Ungating those two does not help,
         because `providers.config.ts` only registers the gateway while the flag
-        is on, so a completion path would reach `ManualPaymentProvider` and fail
-        differently. Until that larger change exists, this is a warning
-        somebody must read, not a hazard they discover.
+        is on, so a completion path would reach NO payment provider at all and
+        fail differently. (It used to fall through to `ManualPaymentProvider`,
+        deleted 2026-11-11 with the manual-payment flow — which removes a
+        confusing failure but not this hazard.) Until that larger change
+        exists, this is a warning somebody must read, not a hazard they
+        discover.
       */}
       <Alert variant="warning" title="Switch payments off only when nobody is checking out">
         Turning online payments off also closes the routes that FINISH a payment, including the
