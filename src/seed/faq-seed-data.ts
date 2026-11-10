@@ -635,17 +635,30 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-payment-methods",
     question: "What payment methods are accepted?",
-    answer: html(`<p>LetItRip's default payment method is <strong>Manual UPI / Bank Transfer</strong> — you pay directly and submit your payment reference, which the seller or LetItRip confirms before shipping. Where enabled, you can also pay instantly via <strong>PhonePe</strong> (cards, UPI, net banking), choose <strong>Cash on Delivery</strong> (a small deposit online plus cash on arrival), or spread the cost with <strong>EMI</strong> on eligible orders. Sellers only receive payout funds after you confirm delivery (or after the dispute window closes).</p>`),
+    /*
+     * 🛑 REWRITTEN 2026-11-11. The previous answer told buyers the DEFAULT
+     * method was "Manual UPI / Bank Transfer — you pay directly and submit
+     * your payment reference", which no longer exists: `upi_manual` was
+     * retired because a screenshot and a typed reference verify nothing. It
+     * also offered EMI, also retired.
+     *
+     * ⚠ Rewritten rather than deleted, and that is not a style choice.
+     * `appkit-seed load` uses `set({ merge: true })`, so it CANNOT remove a
+     * document or a field — dropping the row here would have left the stale
+     * answer live on every database that already has it, with nothing in the
+     * seed to explain where it came from.
+     */
+    answer: html(`<p>You can pay <strong>online</strong> — cards, UPI, net banking and wallets, all handled by our payment gateway — or choose <strong>Cash on Delivery</strong> where the seller offers it, which takes a small deposit online and the balance in cash when the item arrives. Which options you see depends on the seller and the individual listing. Sellers only receive payout funds after you confirm delivery (or after the dispute window closes).</p><p>We do not ask you to transfer money yourself or upload a payment screenshot. If you are ever asked to pay a seller directly, that is not us — please report it.</p>`),
     category: "orders_payment",
     showOnHomepage: true,
     showInFooter: true,
     isPinned: false,
     order: 25,
     priority: 8,
-    tags: ["payment", "upi", "phonepe", "cod", "emi"],
-    relatedFAQs: ["faq-what-is-escrow", "faq-emi-installments", "faq-payment-proof-verification"],
+    tags: ["payment", "upi", "cards", "gateway", "cod"],
+    relatedFAQs: ["faq-what-is-escrow", "faq-payment-proof-verification"],
     stats: makeStats(5100, 255),
-    seo: { slug: "faq-payment-methods", metaTitle: "Payment Methods on LetItRip", metaDescription: "Manual UPI, PhonePe, Cash on Delivery, and EMI — all payment options on LetItRip." },
+    seo: { slug: "faq-payment-methods", metaTitle: "Payment Methods on LetItRip", metaDescription: "Online card, UPI and net-banking payments plus Cash on Delivery — the payment options on LetItRip." },
     isActive: true,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(110),
@@ -653,18 +666,37 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   },
   {
     id: "faq-payment-proof-verification",
-    question: "How does manual payment proof verification work?",
-    answer: html(`<p>After placing an order with UPI/Bank Transfer, you have <strong>15 minutes</strong> to pay and upload your payment screenshot + transaction reference — the item is held for you during this window. If the window expires with no proof, the order is automatically cancelled and the item returns to stock; you're welcome to order again. When you submit proof, confirm the payment amount and UPI ID with the checkboxes provided — false declarations may result in your proof being rejected.</p><p>An admin usually reviews your proof within <strong>2 hours</strong>. If nobody has reviewed it by then, it's automatically confirmed as a safety net — you'll still be able to raise a dispute afterward if something looks wrong. Submitting proof that doesn't match your actual payment (a fake screenshot, a mismatched UPI ID) is treated as fraud: the order is cancelled and your account is suspended for 7 days.</p><p>Orders of ₹5,000 or more (except Cash on Delivery) also require a one-time email verification code before you can place the order, as an extra fraud-prevention step.</p>`),
+    /*
+     * 🛑 REPURPOSED 2026-11-11, id and slug KEPT ON PURPOSE.
+     *
+     * This row documented the manual payment-proof flow in detail — the
+     * 15-minute upload window, the screenshot, the UPI-ID declaration
+     * checkboxes, and the 2-hour auto-confirm. All of it is gone: the flow was
+     * retired and the auto-approve (an unattended path from forged screenshot
+     * to dispatched goods) was switched off before it.
+     *
+     * The id and slug stay because `set({ merge: true })` cannot delete the
+     * document, and because the stale page is INDEXED — a buyer searching
+     * "letitrip payment screenshot" lands here. Answering their real question
+     * on the same URL is strictly better than leaving instructions for a flow
+     * that would now reject them, and better than a 404.
+     *
+     * ⚠ The ₹5,000 figure is `siteSettings.payment.otpCheckoutThreshold`,
+     * which an admin can change — hence "orders above a certain value" in the
+     * copy rather than a number this file would have to chase.
+     */
+    question: "Do I need to upload a payment screenshot?",
+    answer: html(`<p><strong>No.</strong> Payments are confirmed automatically by the payment gateway, so there is nothing for you to upload and no reference number to type in. If you pay online your order is confirmed as soon as the payment clears; if you chose Cash on Delivery, the balance is collected when the item arrives.</p><p>Uploading a screenshot used to be required and no longer is. If you see an older guide or message asking for one, it is out of date — and anyone asking you to transfer money directly to a seller is not acting for us.</p><p>On orders above a certain value we send a <strong>one-time verification code</strong> before the order is placed, as a fraud-prevention step. It goes to your WhatsApp number by default, and you can choose email instead. Cash on Delivery orders are exempt.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,
     isPinned: false,
     order: 26,
     priority: 7,
-    tags: ["payment", "proof", "verification", "fraud", "timeout"],
+    tags: ["payment", "verification", "otp", "fraud", "gateway"],
     relatedFAQs: ["faq-payment-methods"],
     stats: makeStats(0, 0),
-    seo: { slug: "faq-payment-proof-verification", metaTitle: "Payment Proof Verification on LetItRip", metaDescription: "How the 15-minute payment window, proof review, auto-approval, and fraud policy work on LetItRip." },
+    seo: { slug: "faq-payment-proof-verification", metaTitle: "Payment Verification on LetItRip", metaDescription: "Payments are confirmed by the gateway — no screenshot needed. How the one-time code on high-value orders works." },
     isActive: true,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(1),
@@ -673,7 +705,24 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-emi-installments",
     question: "Can I pay in installments (EMI)?",
-    answer: html(`<p>Yes — on eligible orders. If the seller has EMI enabled and your order with them meets the minimum order value, "Pay in EMI" appears as a payment option at checkout. Choose a tenure of 2–6 months, pay a small token amount upfront, and the remaining balance plus a small monthly surcharge is billed automatically in equal installments each month. Your order ships once the EMI is fully paid — the token confirms your commitment and secures the item, it is not a dispatch trigger. A seller may opt an individual listing into earlier dispatch, and that is stated on the listing.</p>`),
+    /*
+     * 🛑 REWRITTEN 2026-11-11. Owner: *"emi is removed from the code as that is
+     * now built into the payment gateways."*
+     *
+     * `isActive: false` below already hid it, and that was NOT enough on its
+     * own: the row still carried a full how-to for a flow that no longer
+     * exists, and a flag is one admin click away from republishing it. The
+     * answer now matches reality, so re-activating it cannot mislead anyone.
+     *
+     * ⚠ Still not deleted, for the `set({ merge: true })` reason recorded
+     * above — and because the question is one buyers genuinely ask, so it is
+     * worth answering accurately rather than silently dropping.
+     *
+     * ⚠ Deliberately does NOT promise instalments will appear later. Whether a
+     * gateway surfaces them at payment time is the gateway's and the card
+     * issuer's decision, not a commitment this marketplace can make.
+     */
+    answer: html(`<p>We no longer run our own instalment plan. If your card or bank offers EMI, you may still be able to choose it on the payment screen when you pay online — that is handled by your bank and the payment provider, and any interest or processing fee is between you and them.</p><p>Orders placed on an older instalment plan are unaffected and continue on their existing schedule.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,
@@ -683,7 +732,7 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
     tags: ["emi", "installments", "payment"],
     relatedFAQs: ["faq-payment-methods"],
     stats: makeStats(1400, 70),
-    seo: { slug: "faq-emi-installments", metaTitle: "Pay in EMI on LetItRip", metaDescription: "How EMI installment payments work for eligible orders on LetItRip." },
+    seo: { slug: "faq-emi-installments", metaTitle: "Instalments and EMI on LetItRip", metaDescription: "LetItRip no longer runs its own instalment plan; bank EMI may be available at the payment step." },
     isActive: false,
     createdBy: "user-admin-letitrip",
     createdAt: daysAgo(20),
