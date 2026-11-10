@@ -113,15 +113,6 @@ interface OrderRow {
   physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
-interface EmiInstallmentView {
-  index: number;
-  dueDate?: string;
-  amount: number;
-  status: "pending" | "paid" | "overdue";
-  paidAt?: string;
-  transactionId?: string;
-}
-
 interface OrderDetail {
   id: string;
   status: string;
@@ -238,12 +229,6 @@ interface OrderDetail {
   shipmentProtectionFee?: number;
   couponCode?: string;
   couponDiscount?: number;
-  emiEnabled?: boolean;
-  emiTenureMonths?: number;
-  emiTokenAmount?: number;
-  emiRemainingBalance?: number;
-  emiComplete?: boolean;
-  emiInstallments?: EmiInstallmentView[];
 }
 
 type SellerOrderItem = NonNullable<OrderDetail["items"]>[number];
@@ -309,12 +294,6 @@ function sellerPaymentBadge(order: {
   if (order.paymentProofUrl) return { label: "Awaiting verification", variant: "info" };
   return { label: "Awaiting payment", variant: "warning" };
 }
-
-const EMI_INSTALLMENT_BADGE_VARIANT: Record<string, "success" | "warning" | "danger"> = {
-  paid: "success",
-  pending: "warning",
-  overdue: "danger",
-};
 
 interface SellerOrdersResponse {
   items?: unknown[];
@@ -459,8 +438,6 @@ export function SellerOrderDetailPanel({
   const [draft, setDraft] = useState<SellerOrderUpdateValues>({
     status: "", trackingNumber: "", carrier: "", trackingUrl: "",
   });
-  const [markingPaidIndex, setMarkingPaidIndex] = useState<number | null>(null);
-  const [emiError, setEmiError] = useState<string | null>(null);
   const { showToast } = useToast();
 
   const sections = React.useMemo(
@@ -510,29 +487,6 @@ export function SellerOrderDetailPanel({
       .catch(() => setFetchError("Failed to load order details"))
       .finally(() => setLoading(false));
   }, [orderId, apiBase]);
-
-  const handleMarkInstallmentPaid = async (installmentIndex: number) => {
-    setMarkingPaidIndex(installmentIndex);
-    setEmiError(null);
-    try {
-      const res = await fetch(`${apiBase}/${orderId}/emi-installment`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ installmentIndex }),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error((json as { error?: string })?.error ?? "Failed to mark installment paid");
-      setOrder((json as { data?: OrderDetail })?.data ?? (json as OrderDetail));
-      showToast("Installment marked paid.", "success");
-    } catch (err) {
-      void normalizeError(err);
-      const message = err instanceof Error ? err.message : "Failed to mark installment paid.";
-      setEmiError(message);
-      showToast(message, "error");
-    } finally {
-      setMarkingPaidIndex(null);
-    }
-  };
 
   const handleSave = async () => {
     if (!order) return;
@@ -799,7 +753,6 @@ export function SellerOrderDetailPanel({
             )}
 
             {(order.paymentMethod ||
-              order.emiEnabled ||
               (order.sourceContext?.path === "pre-order" && order.sourceContext.balanceDue > 0)) && (
               <Card variant="outlined" padding="md">
                 <Stack gap="md">
@@ -825,64 +778,6 @@ export function SellerOrderDetailPanel({
                     </Div>
                   )}
 
-                  {order.emiEnabled && (
-                    <Div>
-                      <Row align="center" justify="between" className="mb-2">
-                        <Text size="sm" weight="semibold">
-                          EMI plan {order.emiTenureMonths ? `· ${order.emiTenureMonths} months` : ""}
-                        </Text>
-                        <Badge variant={order.emiComplete ? "success" : "warning"}>
-                          {order.emiComplete ? "Fully paid" : "In progress"}
-                        </Badge>
-                      </Row>
-                      <Row align="center" justify="between" className="mb-2">
-                        <Text size="xs" color="muted">Token collected</Text>
-                        <Text size="xs" weight="medium">{toCurrency(order.emiTokenAmount ?? 0)}</Text>
-                      </Row>
-                      <Row align="center" justify="between" className="mb-3">
-                        <Text size="xs" color="muted">Remaining balance</Text>
-                        <Text size="xs" weight="medium">{toCurrency(order.emiRemainingBalance ?? 0)}</Text>
-                      </Row>
-                      <Div className="divide-y divide-[var(--appkit-color-border)] border border-[var(--appkit-color-border)]" rounded="lg">
-                        {(order.emiInstallments ?? []).map((inst) => (
-                          <Row key={inst.index} paddingY="y-xs-tall" padding="x-sm" align="center" justify="between" gap="3">
-                            <Div className="min-w-0">
-                              <Text size="sm" weight="medium">
-                                Installment {inst.index} · {toCurrency(inst.amount)}
-                              </Text>
-                              <Text size="xs" color="muted">
-                                {inst.status === "paid" && inst.paidAt
-                                  ? `Paid ${toRelativeDate(inst.paidAt)}`
-                                  : inst.dueDate
-                                    ? `Due ${toRelativeDate(inst.dueDate)}`
-                                    : ""}
-                              </Text>
-                            </Div>
-                            <Row align="center" gap="sm" className="shrink-0">
-                              <Badge variant={EMI_INSTALLMENT_BADGE_VARIANT[inst.status] ?? "default"}>{inst.status}</Badge>
-                              {inst.status !== "paid" && (
-                                <Button
-                                  action={ACTIONS.STORE["mark-installment-paid"]}
-                                  size="sm"
-                                  variant="outline"
-                                  isLoading={markingPaidIndex === inst.index}
-                                  disabled={markingPaidIndex !== null}
-                                  onClick={() => handleMarkInstallmentPaid(inst.index)}
-                                >
-                                  Mark paid
-                                </Button>
-                              )}
-                            </Row>
-                          </Row>
-                        ))}
-                      </Div>
-                      {emiError && (
-                        <Div textSize="xs" className="mt-2 border border-error/20" color="error" surface="danger-surface" padding="inlineSm" rounded="lg">
-                          {emiError}
-                        </Div>
-                      )}
-                    </Div>
-                  )}
 
                   {/*
                     D55 — the pre-order balance.
