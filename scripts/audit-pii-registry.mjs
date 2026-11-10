@@ -20,6 +20,17 @@
  *       forward guard, which catches a NEW collection nobody registered
  *   R3  every `constant` policy really does import its constant (nobody
  *       downgraded a checked entry to a copied one without saying so)
+ *   R4  every `explicit-call` policy carries an `enforcementException` saying
+ *       WHY it cannot use the declarative hook — the weak-enforcement guard
+ *
+ * 🛑 R4 exists because `explicit-call` used to PASS SILENTLY. Six collections
+ * encrypted from hand-written calls at their write sites, this audit printed
+ * each as an informational note, and a clean run looked clean. Opt-in-per-method
+ * encryption is the arrangement that left `sessions.deviceInfo.ip` in plaintext,
+ * so it is no longer a style one may choose by accident: five of the six moved
+ * to a hook on 2026-11-11, and the one that genuinely cannot (`messages` is a
+ * SUBCOLLECTION, which neither hook can address) has to argue for itself in the
+ * registry. A note nobody has to write is a note nobody reads.
  *
  * 🛑 R2 is the one that matters most and is the one no type could give you.
  * Adding `piiFields` to a repository makes new writes encrypt; it does NOT
@@ -118,6 +129,15 @@ const exportedArrays = new Map();
 const repoDeclarations = new Map();
 /** file (relative) -> the `encryptPiiFields(..., [...SYMBOL])` symbols it uses. */
 const explicitEncryptors = new Map();
+/**
+ * file (relative) -> its comment-stripped source.
+ *
+ * 🛑 Comment-stripped is load-bearing for the `provider-hook` check below: the
+ * registry entry and the enforcer BOTH carry long explanatory comments naming
+ * `piiPolicyFor` and `applyWriteHooks`, so a raw-text scan would pass on the
+ * prose alone and keep passing after the code was deleted.
+ */
+const sourceByRel = new Map();
 
 for (const rawFile of files) {
   const raw = readFileSync(rawFile, "utf8");
@@ -130,6 +150,7 @@ for (const rawFile of files) {
    * failure, which is the one result an audit must never produce.
    */
   const rel = relative(SRC, rawFile).replace(/\\/g, "/");
+  sourceByRel.set(rel, text);
 
   /*
    * `export const` AND a bare `const` — `NEWSLETTER_PII_FIELDS` is
@@ -247,11 +268,78 @@ for (const policy of PII_POLICIES) {
           "`encryptPiiFields(…, [...SYMBOL])` there resolves to the registry's field list " +
           `[${policy.fields.join(", ")}]. Found: ${[...symbols].join(", ") || "nothing"}.`,
       });
+    }
+
+    /*
+     * ── R4 — a weaker enforcement must be a DECLARED exception ────────────
+     *
+     * The wiring being real (R1 above) is not the whole question. Opt-in
+     * per-method encryption means a NEW write path is unencrypted by default
+     * and nothing fails, so choosing it needs a structural reason recorded in
+     * the registry — not a note this script writes on the author's behalf.
+     */
+    if (!policy.enforcementException) {
+      violations.push({
+        rule: "R4",
+        severity: "error",
+        message:
+          `${policy.collection}: enforcement:"explicit-call" with no ` +
+          "`enforcementException`. Per-method encryption leaves every NEW write " +
+          "path unencrypted by default, so it is a declared exception, not a " +
+          "default. Either move it onto `piiFields` (the write hook) or onto the " +
+          "generic provider hook, or record WHY neither is possible.",
+      });
+    } else if (matched) {
+      notes.push(
+        `${policy.collection}: DECLARED EXCEPTION — encrypted by an explicit call ` +
+          `(${matched} in ${policy.enforcedIn}) rather than a hook. Reason: ` +
+          policy.enforcementException,
+      );
+    }
+    continue;
+  }
+
+  /*
+   * ── `provider-hook` collections ──────────────────────────────────────────
+   *
+   * Reached through `IDbProvider.getRepository(name)`, i.e. the GENERIC
+   * `FirebaseRepository`. There is no per-collection subclass to declare
+   * `piiFields` on, so THIS REGISTRY is the declaration: the generic
+   * repository resolves the policy by collection name inside its own
+   * `applyWriteHooks`. Enforcement is as total as `write-hook`.
+   *
+   * What is verified is that the named module really does resolve the policy
+   * from here — a `provider-hook` entry whose enforcer stopped reading the
+   * registry would be a policy with no writer at all, which is the shape of
+   * the defect that made the generic repository's own docstring false for
+   * months (it promised `applyWriteHooks` and had none).
+   */
+  if (enforcement === "provider-hook") {
+    const enforcer = policy.enforcedIn ?? "";
+    const text = sourceByRel.get(enforcer);
+    if (!text) {
+      violations.push({
+        rule: "R1",
+        severity: "error",
+        message:
+          `${policy.collection}: enforcement:"provider-hook" names ` +
+          `${enforcer || "(no enforcedIn set)"}, which is not a file under appkit/src.`,
+      });
+    } else if (!/piiPolicyFor\s*\(/.test(text) || !/applyWriteHooks/.test(text)) {
+      violations.push({
+        rule: "R1",
+        severity: "error",
+        message:
+          `${policy.collection}: ${enforcer} is declared as the provider hook but does ` +
+          "not both call `piiPolicyFor(...)` and define `applyWriteHooks`. A policy " +
+          "whose enforcer no longer reads this registry has NO writer.",
+      });
     } else {
       notes.push(
-        `${policy.collection}: encrypted by an EXPLICIT CALL (${matched} in ${policy.enforcedIn}), ` +
-          "not by the declarative write hook — so every NEW write path on it is " +
-          "unencrypted by default and nothing fails.",
+        `${policy.collection}: encrypted by the GENERIC provider repository ` +
+          `(${enforcer}), which resolves this registry by collection name — there is ` +
+          "no per-collection subclass to declare `piiFields` on. ⚠ No `*TokensIndex` " +
+          "is written on that path; it needs a buildTokensIndexFor() override.",
       );
     }
     continue;

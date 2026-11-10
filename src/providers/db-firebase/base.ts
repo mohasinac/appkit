@@ -41,14 +41,87 @@ import {
   deserializeTimestamps,
   getFirestoreCount,
 } from "./helpers";
+import { encryptPiiFields, piiIndicesFor } from "../../security/pii-encrypt";
+import { piiPolicyFor } from "../../security/pii-registry";
 
 export class FirebaseRepository<
   T extends DocumentData,
 > implements IRepository<T> {
   protected readonly collection: string;
 
+  /**
+   * The PII policy for this collection, resolved from the ONE registry by
+   * collection NAME — because that is all this class ever knows about itself.
+   *
+   * ## 🛑 WHY THIS IS REGISTRY-DRIVEN AND NOT A `protected piiFields`
+   *
+   * `BaseRepository` is subclassed per collection, so a subclass can declare
+   * `piiFields`. This class is NOT: `IDbProvider.getRepository(collection)`
+   * instantiates it generically, with a string, for any collection a caller
+   * names. There is no subclass to put a declaration on, so the only thing
+   * that can know the policy is the registry.
+   *
+   * ## 🛑 THE DOCSTRING ON `create` BELOW USED TO BE FALSE
+   *
+   * It said *"`applyWriteHooks` runs `encryptPiiFields` over the subclass's
+   * `piiFields`"* — and this class had no `applyWriteHooks` and called none.
+   * So the generic repository accepted the PLAINTEXT shape, promised in writing
+   * to encrypt it, and wrote it straight to Firestore. Measured consequence:
+   * `features/account/api/[userId]/route.ts` PATCHes `users` through
+   * `db.getRepository("users")`, and `features/admin/api/reviews/route.ts`,
+   * `.../bids/route.ts` and `account/.../addresses/route.ts` do the same for
+   * three more registered PII collections — every one of them a plaintext write
+   * past a hook the comment said was running. The declared-but-unwired defect
+   * class, inside the very mechanism meant to prevent it.
+   *
+   * 🛑 Resolved LAZILY, not in a property initialiser. Initialisers run before
+   * the constructor body assigns `this.collection`, so
+   * `piiPolicyFor(this.collection)` there reads `undefined` and resolves no
+   * policy — an encryptor that compiles, runs, and encrypts nothing.
+   */
+  private piiPolicyResolved = false;
+  private piiPolicyCache: ReturnType<typeof piiPolicyFor>;
+
   constructor(collectionName: string) {
     this.collection = collectionName;
+  }
+
+  private get piiPolicy(): ReturnType<typeof piiPolicyFor> {
+    if (!this.piiPolicyResolved) {
+      this.piiPolicyCache = piiPolicyFor(this.collection);
+      this.piiPolicyResolved = true;
+    }
+    return this.piiPolicyCache;
+  }
+
+  /**
+   * The ONE write transform on this class. Every write path routes through it
+   * so a new method cannot silently skip encryption — the same contract
+   * `BaseRepository.applyWriteHooks` provides for the per-collection
+   * subclasses.
+   *
+   * A collection with no registry entry gets the input back untouched, so this
+   * is a no-op for the great majority of collections reached generically.
+   *
+   * ⚠ It does NOT write a `*TokensIndex`. That index is built by a
+   * `buildTokensIndexFor()` override, which only a per-collection
+   * `BaseRepository` subclass has. A generic write to `users` or `addresses`
+   * therefore leaves the stored token index STALE rather than wrong, and
+   * `scripts/pii-backfill.mjs` repairs it — the same posture `updateInTx`
+   * takes for the same reason. Stated here because the alternative, deriving
+   * it from `policy.tokensIndex` and hashing whatever subset of sources the
+   * caller happened to pass, is precisely the truncation defect fixed in
+   * `BaseRepository.mergedTokensIndexFor`.
+   */
+  protected applyWriteHooks<D extends object>(data: D): D {
+    const policy = this.piiPolicy;
+    if (!policy || policy.fields.length === 0) return data;
+    return {
+      ...encryptPiiFields(data, [...policy.fields]),
+      // Both read the PLAINTEXT `data` — hashing ciphertext yields an index
+      // nothing can look up. See piiIndicesFor's docstring.
+      ...piiIndicesFor(data, policy.indexMap),
+    } as D;
   }
 
   // -- Internals --------------------------------------------------------------
@@ -167,7 +240,7 @@ export class FirebaseRepository<
   ): Promise<T> {
     const now = new Date();
     const payload = prepareForFirestore({
-      ...data,
+      ...this.applyWriteHooks(data as object),
       createdAt: now,
       updatedAt: now,
     });
@@ -179,7 +252,7 @@ export class FirebaseRepository<
   /** Accepts the PLAINTEXT shape — see `create` for why. */
   async update(id: string, data: Partial<Plaintext<T>>): Promise<T> {
     const payload = prepareForFirestore({
-      ...data,
+      ...this.applyWriteHooks(data as object),
       updatedAt: new Date(),
     });
     await this.getCollection()
@@ -202,7 +275,7 @@ export class FirebaseRepository<
     const refs = items.map((item) => {
       const ref = this.getCollection().doc();
       const payload = prepareForFirestore({
-        ...item,
+        ...this.applyWriteHooks(item as object),
         createdAt: now,
         updatedAt: now,
       });

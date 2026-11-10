@@ -951,27 +951,25 @@ async function purgeCollection(path) {
 }
 
 /*
- * 🛑 `products` IS NOT IN THE REGISTRY, AND THAT IS A FLAGGED DIVERGENCE.
+ * ✅ `SEEDER_ONLY_PII_FIELDS` IS DELETED — 2026-11-11. Do not reintroduce it.
  *
- * This seeder encrypts `sellerName`/`sellerEmail` on products while
- * `ProductRepository` declares NO `piiFields` at all — so a SEEDED product
- * carries ciphertext and an app-created one carries plaintext, in the same
- * collection, with nothing to tell them apart.
+ * It held exactly one entry, `products: ["sellerName", "sellerEmail"]`, and it
+ * was the SIXTH copy of the PII policy: this seeder encrypted those two fields
+ * while `ProductRepository` declared no `piiFields` at all, so the collection
+ * carried both shapes — a seeded product with ciphertext, a seller-created one
+ * with plaintext — with nothing to tell them apart.
  *
- * It is kept here rather than moved into the registry because a registry
- * entry would make `pii-backfill.mjs` encrypt those fields on every existing
- * product, and a product card renders the seller name. Encrypting a field the
- * storefront displays is a visible outage, not a security fix. Measured
- * 2026-11-10: no sampled product document carries either field, so this map
- * is currently inert — which is exactly why it must not be "tidied" into the
- * registry by someone who checks only that the tests still pass.
+ * The reason recorded for keeping it outside the registry was that *"a product
+ * card renders the seller name"*, which would make encrypting it a visible
+ * outage. **Measured, that is false**: every public products route already
+ * DELETES both fields (`sanitizeProductForPublic`), the product page's
+ * `sellerName` is a local const assigned from `storeName`, and the one JSON-LD
+ * path that could have published it is never reached because no caller passes
+ * the field.
  *
- * Resolving it properly means deciding whether a seller's name is PII on a
- * public listing at all, then doing it in ONE place. Flagged, not fixed.
+ * So `products` is now a normal registry entry (`PRODUCT_PII_FIELDS`) and this
+ * seeder reads it like every other collection. One list, not two.
  */
-const SEEDER_ONLY_PII_FIELDS = {
-  products: ["sellerName", "sellerEmail"],
-};
 
 /**
  * Apply this collection's PII policy to one seed document.
@@ -995,7 +993,7 @@ const SEEDER_ONLY_PII_FIELDS = {
  */
 function encryptSeedPii(collection, data) {
   const policy = piiPolicyFor(collection);
-  const fields = policy?.fields ?? SEEDER_ONLY_PII_FIELDS[collection];
+  const fields = policy?.fields;
 
   let result = fields ? encryptPiiFields(data, [...fields]) : { ...data };
 

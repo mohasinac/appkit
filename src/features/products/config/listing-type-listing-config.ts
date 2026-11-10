@@ -121,8 +121,17 @@ export function buildListingTypeListingConfig(
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `${type}-${index}`),
         primary: toStringValue(item.title ?? item.productTitle, "Untitled listing"),
+        /*
+         * 🛑 `storeName`, not `sellerName`. Both are on the row, and this
+         * printed the wrong one: `sellerName` is the seller's PERSONAL name
+         * (`user.name ?? user.email`), which joined the PII registry on
+         * 2026-11-11 and is now ciphertext at rest — so this cell would have
+         * rendered `enc:v1:…`. `storeName` is the public business identity
+         * every buyer-facing surface already shows, which is what an admin
+         * scanning a listing table actually wants to read.
+         */
         secondary: [
-          toStringValue(item.sellerName, "Unknown seller"),
+          toStringValue(item.storeName, "Unknown store"),
           toCurrency(item.price),
         ].join(" · "),
         status: toStringValue(item.status, "draft"),

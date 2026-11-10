@@ -332,15 +332,23 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     return byStore;
   }
 
-  /** Override base update to preserve encryption/indexing for changed PII fields. */
+  /*
+   * Takes PLAINTEXT — `super.update` encrypts and indexes. The override exists
+   * ONLY to widen the parameter type.
+   *
+   * 🛑 It used to pre-call `applyWriteHooks(data)` and pass the RESULT to
+   * `super.update`, which applies them again. The second pass recomputed
+   * `sellerEmailIndex` as `HMAC(ciphertext)` and overwrote the correct digest —
+   * so the admin payout search by seller email stopped matching a payout whose
+   * email had been updated — and rebuilt `sellerTokensIndex` from the
+   * ciphertext too. Measured 2026-11-11; see
+   * `BaseRepository.plaintextOnlyIndexMap`.
+   */
   override async update(
     payoutId: string,
     data: Partial<PayoutPlain>,
   ): Promise<PayoutDocument> {
-    const encrypted = this.applyWriteHooks(
-      data,
-    );
-    return super.update(payoutId, encrypted as Partial<PayoutPlain>);
+    return super.update(payoutId, data);
   }
 
   /**

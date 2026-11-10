@@ -178,14 +178,21 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     return { id, ...reviewData };
   }
 
+  /*
+   * Takes PLAINTEXT — `super.update` encrypts and indexes. The override exists
+   * ONLY to widen the parameter type.
+   *
+   * 🛑 It used to pre-call `applyWriteHooks(data)` and pass the RESULT to
+   * `super.update`, which applies them again — recomputing `userNameIndex` as
+   * `HMAC(ciphertext)` and overwriting the correct digest, so the admin review
+   * search by reviewer name stopped matching any review that had been updated.
+   * Measured 2026-11-11; see `BaseRepository.plaintextOnlyIndexMap`.
+   */
   override async update(
     reviewId: string,
     data: Partial<ReviewPlain>,
   ): Promise<ReviewDocument> {
-    const encrypted = this.applyWriteHooks(
-      data,
-    );
-    return super.update(reviewId, encrypted as Partial<ReviewPlain>);
+    return super.update(reviewId, data);
   }
 
   async findByProduct(productId: string): Promise<ReviewDocument[]> {

@@ -119,21 +119,25 @@ export class AddressesRepository extends BaseRepository<AddressDocument> {
     id: string,
     data: Partial<AddressPlain>,
   ): Promise<AddressDocument> {
-    const encrypted = this.applyWriteHooks(data);
-    return super.createWithId(id, encrypted as Partial<AddressPlain>);
+    return super.createWithId(id, data);
   }
 
   /*
-   * Takes PLAINTEXT, like the base it overrides — this method is the thing
-   * that encrypts (`applyWriteHooks`), so demanding ciphertext from callers
-   * inverted its own contract.
+   * Takes PLAINTEXT, like the base it overrides — `super.update` is the thing
+   * that encrypts, so demanding ciphertext from callers inverted its own
+   * contract. Both overrides now exist ONLY to widen the parameter type.
+   *
+   * 🛑 Both used to call `applyWriteHooks(data)` and hand the RESULT to
+   * `super`, which applies them again. On a patch touching `fullName` that
+   * meant `nameTokensIndex` was rebuilt from the already-encrypted value — an
+   * index of base64 — and it overwrote the correct one. See
+   * `BaseRepository.plaintextOnlyIndexMap` for the measurement.
    */
   override async update(
     id: string,
     data: Partial<AddressPlain>,
   ): Promise<AddressDocument> {
-    const encrypted = this.applyWriteHooks(data);
-    return super.update(id, encrypted as Partial<AddressPlain>);
+    return super.update(id, data);
   }
 
   async listByOwner(

@@ -1,10 +1,7 @@
 import { getProviders } from "../contracts/registry";
 import type { IRepository, PagedResult } from "../contracts/repository";
-import {
-  decryptPiiFields,
-  encryptPiiFields,
-  hmacBlindIndex,
-} from "../security/pii-encrypt";
+import { decryptPiiFields, piiBlindIndex } from "../security/pii-encrypt";
+import { normalizeEmail } from "../validation/email.validator";
 
 export const NEWSLETTER_SUBSCRIBER_FIELDS = {
   EMAIL: "email",
@@ -61,11 +58,14 @@ export interface NewsletterListModel {
  * no-ops and every subscriber address sat in cleartext — with a perfectly good
  * `emailIndex` beside it.
  *
- * Safe to enable because the lookup path never depended on the plaintext:
- * `emailIndex` is written explicitly on create and queried first on read, with
- * a plaintext-equality fallback for rows written before this, and
- * `decryptNewsletterDoc` already covers all eight read sites. `encryptPiiFields`
- * derives the same `emailIndex` name, so the two agree rather than conflict.
+ * 🛑 THIS LIST IS NOW READ-SIDE ONLY. The WRITE side is the registry: this
+ * repository does not extend `BaseRepository`, it reaches Firestore through
+ * `IDbProvider.getRepository("newsletterSubscribers")`, and that generic
+ * `FirebaseRepository` resolves `piiFields` from
+ * `security/pii-registry.ts` by collection name. So encryption and the blind
+ * index are applied by the provider's write hook on EVERY write path — not by
+ * a call this file remembers to make. `scripts/audit-pii-registry.mjs`
+ * verifies this copy still matches the registry entry.
  */
 const NEWSLETTER_PII_FIELDS: string[] = ["email"];
 
@@ -128,15 +128,39 @@ export class NewsletterRepository {
     return doc ? decryptNewsletterDoc(doc) : null;
   }
 
+  /**
+   * 🛑 ONE NORMALISATION, APPLIED TO THE VALUE — never a second one applied to
+   * the hash input.
+   *
+   * This method used to hash `email.toLowerCase()` while
+   * `piiIndicesFor`/`encryptPiiFields` hash the value EXACTLY AS STORED. Two
+   * normalisations for one blind-index scheme, so the same address resolved to
+   * two different digests depending on which code path wrote it, and a lookup
+   * through the other one found nothing — reported to a human as "not
+   * subscribed".
+   *
+   * The platform rule, now the only rule: **a blind index is the HMAC of the
+   * stored value, byte for byte.** Canonicalising an email is a property of
+   * the VALUE, so `normalizeEmail` is applied before it is stored
+   * (`subscribe`) and to the argument of every lookup (here) — the same shared
+   * function in both places, never a private `.toLowerCase()` next to a hash
+   * call. `hmacBlindIndex`'s own docstring already demanded this: *"both sides
+   * must run the same normaliser BEFORE hashing"*.
+   *
+   * ⚠ No backfill is owed. `subscribe` lowercased the stored value as well as
+   * the hash input, so every existing row holds a lowercased email and
+   * `piiBlindIndex(storedEmail)` equals the digest already on it. Proven by
+   * hashing one address through both paths and comparing.
+   */
   async findByEmail(
     email: string,
   ): Promise<NewsletterSubscriberDocument | null> {
-    const normalized = email.toLowerCase();
+    const normalized = normalizeEmail(email);
 
     const byIndex = await this.repo.findWhere(
       "emailIndex",
       "==",
-      hmacBlindIndex(normalized),
+      piiBlindIndex(normalized),
     );
     if (byIndex[0]) return decryptNewsletterDoc(byIndex[0]);
 
@@ -150,11 +174,30 @@ export class NewsletterRepository {
     input: NewsletterSubscriberCreateInput,
   ): Promise<NewsletterSubscriberDocument> {
     const now = new Date();
+    /*
+     * 🛑 PLAINTEXT in, and no `emailIndex` written here.
+     *
+     * Both used to be this method's job: it called `encryptPiiFields` by hand
+     * and set `emailIndex: hmacBlindIndex(email.toLowerCase())` itself. That
+     * made `subscribe` the ONLY encrypted write path on this collection — a
+     * new method, or any caller reaching the generic
+     * `getRepository("newsletterSubscribers")`, stored the address in
+     * cleartext and nothing failed.
+     *
+     * The provider's registry-driven write hook now encrypts and derives
+     * `emailIndex` from the stored value on every path. Deleting the
+     * hand-written index is also what makes the single-normalisation rule in
+     * `findByEmail` true: there is no longer a second place that could compute
+     * a digest differently.
+     *
+     * `normalizeEmail` stays, because canonicalising the VALUE is this
+     * method's job — the hook hashes whatever is stored.
+     */
     const plaintext: Omit<
       NewsletterSubscriberDocument,
       "id" | "createdAt" | "updatedAt"
     > = {
-      email: input.email.toLowerCase(),
+      email: normalizeEmail(input.email),
       status: NEWSLETTER_SUBSCRIBER_FIELDS.STATUS_VALUES.ACTIVE,
       source: input.source,
       ipAddress: input.ipAddress,
@@ -162,15 +205,9 @@ export class NewsletterRepository {
       unsubscribedAt: null,
       resubscribedAt: undefined,
       adminNote: undefined,
-      emailIndex: hmacBlindIndex(input.email.toLowerCase()),
     };
 
-    const encrypted = encryptPiiFields(
-      plaintext as Record<string, unknown>,
-      NEWSLETTER_PII_FIELDS,
-    ) as Omit<NewsletterSubscriberDocument, "id" | "createdAt" | "updatedAt">;
-
-    const created = await this.repo.create(encrypted);
+    const created = await this.repo.create(plaintext);
     return decryptNewsletterDoc(created);
   }
 

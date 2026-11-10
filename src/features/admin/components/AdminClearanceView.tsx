@@ -165,8 +165,15 @@ export function AdminClearanceView({ children, pageRegionCards = [], ...props }:
         return {
           id: toStringValue(item.id, `clearance-${index}`),
           primary: toStringValue(item.title ?? item.name, "Untitled clearance"),
-          secondary: toStringValue(item.sellerName, ""),
-          storeName: toStringValue(item.sellerName ?? item.storeId, "Unknown store"),
+          /*
+           * 🛑 `storeName`, not `sellerName` — and the second line was already
+           * calling it `storeName` while reading the seller's PERSONAL name.
+           * That field joined the PII registry on 2026-11-11 and is ciphertext
+           * at rest, so both cells would have rendered `enc:v1:…`. The real
+           * store name is on the same row.
+           */
+          secondary: toStringValue(item.storeName, ""),
+          storeName: toStringValue(item.storeName ?? item.storeId, "Unknown store"),
           status: toStringValue(item.status, "draft"),
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           entryFee: priceRaw ? toCurrency(priceRaw) : "Free",

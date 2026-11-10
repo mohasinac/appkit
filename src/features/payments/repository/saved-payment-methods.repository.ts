@@ -16,7 +16,6 @@ import { serverLogger } from "../../../monitoring";
 import { BaseRepository, prepareForFirestore } from "../../../providers/db-firebase";
 import {
   PAYMENT_METHOD_PII_FIELDS,
-  encryptPiiFields,
   maskPii,
   revealPii,
 } from "../../../security";
@@ -45,9 +44,22 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
     super(SAVED_PAYMENT_METHODS_COLLECTION);
   }
 
-  private encrypt<T extends object>(data: T): T {
-    return encryptPiiFields(data, [...PAYMENT_METHOD_PII_FIELDS]);
-  }
+  /**
+   * DECLARED, not called per method.
+   *
+   * 🛑 This replaces a private `encrypt()` helper plus `createWithId` and
+   * `update` overrides that existed only to call it. Enforcement was therefore
+   * opt-in per method: `create`, `createInTx`, `createWithIdInTx`,
+   * `updateInTx`, `createInBatch`, `updateInBatch` and `batchUpdateMany` all
+   * inherited unhooked base implementations, so a card identifier or UPI VPA
+   * written through any of them was stored in PLAINTEXT and nothing failed.
+   * Two remembered call sites and seven that did not.
+   *
+   * With the fields declared, `BaseRepository.applyWriteHooks` runs on every
+   * one of them and the two overrides are deleted rather than kept as a second
+   * encryptor that could drift from this list.
+   */
+  protected override piiFields = PAYMENT_METHOD_PII_FIELDS;
 
   /*
    * 🛑 `mapDoc` is NOT overridden, and that absence IS the change.
@@ -88,26 +100,13 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
   }
 
   /*
-   * Takes PLAINTEXT, like the base it overrides — this method is what
-   * encrypts, so demanding ciphertext from callers inverted its own contract.
+   * 🛑 `createWithId` and `update` are NO LONGER overridden here, and that
+   * absence is the change. Both existed only to call the private `encrypt()`
+   * helper before delegating to `super`; the declared `piiFields` above does
+   * the same thing on every write path instead of on these two. The base
+   * signatures already accept the PLAINTEXT shape (`Partial<Plaintext<T>>`),
+   * which is exactly what these overrides were widening them to.
    */
-  override async createWithId(
-    id: string,
-    data: Partial<SavedPaymentMethodPlain>,
-  ): Promise<SavedPaymentMethodDocument> {
-    return super.createWithId(id, this.encrypt(data) as Partial<SavedPaymentMethodPlain>);
-  }
-
-  /*
-   * Takes PLAINTEXT, like the base it overrides — this method is what
-   * encrypts, so demanding ciphertext from callers inverted its own contract.
-   */
-  override async update(
-    id: string,
-    data: Partial<SavedPaymentMethodPlain>,
-  ): Promise<SavedPaymentMethodDocument> {
-    return super.update(id, this.encrypt(data) as Partial<SavedPaymentMethodPlain>);
-  }
 
   /** List all saved methods for a user. Never returns raw `identifier` — only `displayLabel`. */
   async listByUser(userId: string): Promise<SavedPaymentMethodDocument[]> {
@@ -165,7 +164,7 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
       }
 
       const docRef = this.getCollection().doc();
-      // PLAINTEXT in, ciphertext out: `this.encrypt(data)` below is what makes
+      // PLAINTEXT in, ciphertext out: `applyWriteHooks` below is what makes
       // the document type true, so the payload is typed as the plain shape.
       const data: Omit<SavedPaymentMethodPlain, "id"> = {
         userId,
@@ -178,7 +177,7 @@ export class SavedPaymentMethodsRepository extends BaseRepository<SavedPaymentMe
         createdAt: now,
         updatedAt: now,
       };
-      await docRef.set(prepareForFirestore(this.encrypt(data)));
+      await docRef.set(prepareForFirestore(this.applyWriteHooks(data)));
 
       serverLogger.info("Saved payment method created", { userId, type: input.type, docId: docRef.id });
 

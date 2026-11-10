@@ -31,7 +31,6 @@ import { OFFER_COLLECTION, OFFER_FIELDS, OFFER_TRACKED_FIELDS, createOfferId } f
 import { withHistory, type HistoryActor } from "../../../_internal/shared/history/index";
 import type { FirestoreDocument } from "../../../schemas/types";
 import {
-  encryptPiiFields,
   maskPii,
   revealPii,
   OFFER_PII_FIELDS,
@@ -94,6 +93,22 @@ class OfferRepository extends BaseRepository<OfferDocument> {
   maskedOffers(docs: readonly OfferDocument[]): OfferPlain[] {
     return docs.map((d) => this.maskedOffer(d));
   }
+
+  /**
+   * DECLARED, not called per method.
+   *
+   * 🛑 This collection used to encrypt by a hand-written
+   * `encryptPiiFields(...)` in `createOffer` and nowhere else. Every other
+   * write path — `update`, `updateStatus`, the whole `*InTx` / `*InBatch`
+   * family — inherited the unhooked base implementations, so a buyer name or
+   * email arriving through any of them was stored in PLAINTEXT and nothing
+   * failed. That is the same arrangement that left `sessions.deviceInfo.ip` in
+   * the clear: three call sites remembered and one did not.
+   *
+   * Declaring the fields moves enforcement to `BaseRepository.applyWriteHooks`,
+   * which every write path routes through, so a NEW method cannot skip it.
+   */
+  protected override piiFields = OFFER_PII_FIELDS;
 
   /**
    * Every Timestamp field here carries `parseValue: parseSieveDateValue`.
@@ -211,16 +226,22 @@ class OfferRepository extends BaseRepository<OfferDocument> {
       counterRound: input.counterRound ?? 1,
     };
 
-    // Encrypt PII fields before persisting
-    const encrypted = encryptPiiFields(
-      { ...data },
-      [...OFFER_PII_FIELDS],
-    ) as typeof data;
+    /*
+     * 🛑 `applyWriteHooks`, not a hand-written `encryptPiiFields(...)` call.
+     *
+     * The declared `piiFields` above is what encrypts; routing this bespoke
+     * `.set()` through the same hook means there is exactly ONE encryptor for
+     * this collection rather than a declaration plus a call that could drift
+     * from it. It also fixes a second defect for free: this write bypassed
+     * `buildSearchTxtFor` entirely, so a brand-new offer carried NO `searchTxt`
+     * and was unfindable in the admin offer search until something updated it.
+     */
+    const hooked = this.applyWriteHooks({ ...data }) as typeof data;
 
     await this.db
       .collection(this.collection)
       .doc(id)
-      .set(prepareForFirestore(encrypted));
+      .set(prepareForFirestore(hooked));
     return { id, ...data }; // return plaintext to caller
   }
 

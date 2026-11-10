@@ -77,6 +77,7 @@ import {
   USER_PII_INDEX_MAP,
   ADDRESS_PII_FIELDS,
   ORDER_PII_FIELDS,
+  PRODUCT_PII_FIELDS,
   PAYOUT_PII_FIELDS,
   PAYOUT_PII_INDEX_MAP,
   BID_PII_FIELDS,
@@ -138,16 +139,38 @@ export interface PiiCollectionPolicy {
    *   `BaseRepository.applyWriteHooks`. EVERY write path gets it: `create`,
    *   `createWithId`, `update` and the whole `*InTx` / `*InBatch` family. A new
    *   method cannot silently skip encryption.
+   * - **`provider-hook`** — the collection is reached through
+   *   `IDbProvider.getRepository(name)`, i.e. the GENERIC
+   *   `FirebaseRepository`, which has no per-collection subclass to declare
+   *   anything on. It resolves THIS registry by collection name in its own
+   *   `applyWriteHooks`, so enforcement is as total as `write-hook` —
+   *   `create`, `update` and `batchCreate` all run it — and the policy lives
+   *   here rather than in a subclass. ⚠ It writes no `*TokensIndex`: that
+   *   needs a `buildTokensIndexFor()` override, which only a subclass has.
    * - **`explicit-call`** — the repository calls `encryptPiiFields(...)` by hand
    *   at its write sites. That is encryption opt-in PER METHOD, which is the
    *   arrangement that left `sessions.deviceInfo.ip` in plaintext: three call
-   *   sites remembered and `createWithId` did not. Five collections are still
-   *   in this category. ⚠ A new write path on any of them is unencrypted by
-   *   DEFAULT, and nothing fails.
+   *   sites remembered and `createWithId` did not.
+   *
+   *   🛑 **As of 2026-11-11 this is a DECLARED EXCEPTION, not a default.**
+   *   Five of the six collections that used it moved to the hook; the one that
+   *   remains cannot, and must say why in `enforcementException`.
+   *   `scripts/audit-pii-registry.mjs` R4 ERRORS on an `explicit-call` policy
+   *   with no reason recorded, so the weaker arrangement can no longer be
+   *   adopted silently — it has to be argued for in this file.
    */
-  enforcement?: "write-hook" | "explicit-call";
-  /** The module holding the `explicit-call` writes, relative to `appkit/src`. */
+  enforcement?: "write-hook" | "provider-hook" | "explicit-call";
+  /**
+   * The module holding the `explicit-call` writes (or, for `provider-hook`,
+   * the generic repository running the hook), relative to `appkit/src`.
+   */
   enforcedIn?: string;
+  /**
+   * 🛑 REQUIRED when `enforcement` is `explicit-call`. Why this collection
+   * cannot use the declarative hook — a structural reason, not a to-do.
+   * Audited by R4.
+   */
+  enforcementException?: string;
   /**
    * Fields encrypted at rest, in `encryptPiiFields` notation: `email`,
    * `deviceInfo.ip`, `deliveryAmendments[].phone`.
@@ -281,12 +304,15 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     collection: "offers",
     label: "Offers",
     repository: "OfferRepository",
-    enforcement: "explicit-call",
-    enforcedIn: "features/seller/repository/offer.repository.ts",
     fields: OFFER_PII_FIELDS,
     fieldSource: "constant",
     indexMap: {},
     tokensIndex: null,
+    note:
+      "Moved from explicit-call to the write hook 2026-11-11. `createOffer`'s " +
+      "bespoke `.set()` now routes through applyWriteHooks too, which also gave " +
+      "it the `searchTxt` it never wrote — a new offer was unfindable in the " +
+      "admin search until something updated it.",
   },
   {
     collection: "emailVerificationTokens",
@@ -313,8 +339,6 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     collection: "eventEntries",
     label: "Event entries",
     repository: "EventEntryRepository",
-    enforcement: "explicit-call",
-    enforcedIn: "features/events/repository/event-entry.repository.ts",
     fields: EVENT_ENTRY_PII_FIELDS,
     fieldSource: "constant",
     indexMap: {},
@@ -325,8 +349,6 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     collection: "lotteryEntries",
     label: "Giveaway entries",
     repository: "GiveawayEntryRepository",
-    enforcement: "explicit-call",
-    enforcedIn: "features/giveaway/repository/giveaway-entry.repository.ts",
     fields: GIVEAWAY_ENTRY_PII_FIELDS,
     fieldSource: "constant",
     indexMap: {},
@@ -339,12 +361,14 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     collection: "savedPaymentMethods",
     label: "Saved payment methods",
     repository: "SavedPaymentMethodsRepository",
-    enforcement: "explicit-call",
-    enforcedIn: "features/payments/repository/saved-payment-methods.repository.ts",
     fields: PAYMENT_METHOD_PII_FIELDS,
     fieldSource: "constant",
     indexMap: {},
     tokensIndex: null,
+    note:
+      "Moved to the write hook 2026-11-11. The `createWithId`/`update` overrides " +
+      "that existed only to call a private encrypt() helper are DELETED — they " +
+      "covered 2 of 9 write paths.",
   },
   {
     collection: "conversations",
@@ -364,11 +388,57 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     repository: "MessagesRepository",
     enforcement: "explicit-call",
     enforcedIn: "features/messages/repository/messages.repository.ts",
+    /*
+     * 🛑 THE ONE REMAINING EXPLICIT-CALL COLLECTION, AND IT IS STRUCTURAL.
+     *
+     * "MessagesRepository" is not a repository at all — there is no class. It
+     * is four free functions over
+     * `conversations/{id}/messages/{msgId}`, because `BaseRepository`
+     * hard-codes `db.collection(this.collection)` and has no subcollection
+     * form, and `IDbProvider.getRepository(name)` takes a single collection
+     * name so the generic `FirebaseRepository` cannot address one either.
+     * There is no hook to declare anything on. Forcing it would mean giving
+     * BaseRepository a parent-path concept, which is a change to every
+     * repository in the platform to fix one module's enforcement style.
+     *
+     * ⚠ Measured mitigation, so this is a known weakness rather than an
+     * unknown one: the subcollection has exactly TWO write paths —
+     * `createMessage`, which encrypts, and `softDeleteMessage`, which writes
+     * `body: ""` (a tombstone; `encryptPiiFields` skips empty strings, so
+     * there is nothing to encrypt). Both are covered today. What is missing is
+     * the GUARANTEE for a third one.
+     */
+    enforcementException:
+      "conversations/{id}/messages is a SUBCOLLECTION. BaseRepository addresses " +
+      "only top-level collections and IDbProvider.getRepository() takes one " +
+      "collection name, so neither hook can reach it. Two write paths exist and " +
+      "both encrypt; a THIRD would not be covered by default.",
     fields: MESSAGE_PII_FIELDS,
     fieldSource: "constant",
     indexMap: {},
     tokensIndex: null,
     subcollectionOf: "conversations",
+  },
+  {
+    collection: "products",
+    label: "Products",
+    repository: "ProductRepository",
+    fields: PRODUCT_PII_FIELDS,
+    fieldSource: "constant",
+    indexMap: {},
+    tokensIndex: null,
+    readsReturnCiphertext: true,
+    note:
+      "🛑 ADDED 2026-11-11, closing a deliberate omission. The seeder encrypted " +
+      "sellerName/sellerEmail from its own SEEDER_ONLY_PII_FIELDS map while " +
+      "ProductRepository declared nothing — so a SEEDED product carried " +
+      "ciphertext and an app-created one carried plaintext, in one collection, " +
+      "with nothing to tell them apart. The reason recorded for keeping it out " +
+      "was that the storefront renders the seller name; measured, it does not " +
+      "(see PRODUCT_PII_FIELDS). mapDoc does NOT decrypt — use " +
+      "revealProduct/maskedProduct. Nothing queries either field, hence no " +
+      "indexMap; the two DERIVED siblings encryptPiiFields writes are swept out " +
+      "of every response by sanitizeProductForPublic/maskedProduct.",
   },
   {
     collection: "stores",
@@ -446,8 +516,8 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     collection: "newsletterSubscribers",
     label: "Newsletter subscribers",
     repository: "NewsletterRepository",
-    enforcement: "explicit-call",
-    enforcedIn: "core/newsletter.repository.ts",
+    enforcement: "provider-hook",
+    enforcedIn: "providers/db-firebase/base.ts",
     fields: ["email"],
     fieldSource: "transcribed",
     transcribedFrom:
@@ -455,10 +525,15 @@ export const PII_POLICIES: readonly PiiCollectionPolicy[] = [
     indexMap: { email: "emailIndex" },
     tokensIndex: null,
     note:
-      "🛑 NewsletterRepository does NOT extend BaseRepository — it encrypts through " +
-      "its own module-local list. The empty NEWSLETTER_PII_FIELDS/_INDEX_MAP pair " +
-      "in pii-schemas.ts was DELETED because it read as proof of coverage while " +
-      "doing nothing.",
+      "🛑 NewsletterRepository does NOT extend BaseRepository — it reaches " +
+      "Firestore through IDbProvider.getRepository(), so THIS ENTRY is what " +
+      "encrypts it: the generic FirebaseRepository resolves the policy by " +
+      "collection name in its own applyWriteHooks. Until 2026-11-11 it encrypted " +
+      "from a hand-written call in `subscribe` and nowhere else, and also wrote " +
+      "`emailIndex` itself over `email.toLowerCase()` — a SECOND normalisation " +
+      "that disagreed with piiIndicesFor. Both are gone; the index is now the " +
+      "HMAC of the stored value, and `normalizeEmail` canonicalises the VALUE " +
+      "at the one place it enters the collection.",
   },
 ];
 
@@ -585,7 +660,7 @@ export function notFlatlyCheckable(field: string): boolean {
  * the whole history: the CMS shows this number against what the sampled
  * documents actually carry, and they disagree until `pii-backfill.mjs` runs.
  */
-export const PII_POLICY_VERSION = 2;
+export const PII_POLICY_VERSION = 3;
 
 /**
  * What changed at each version, so the CMS can name the migration an operator
@@ -611,5 +686,23 @@ export const PII_POLICY_CHANGELOG: readonly {
       "written by the SEEDER as well as the repository. Existing rows predate both.",
     backfill:
       "node appkit/scripts/pii-backfill.mjs --database dev-db --write",
+  },
+  {
+    version: 3,
+    date: "2026-11-11",
+    change:
+      "products ADDED (sellerName, sellerEmail) — the seeder-only map that " +
+      "encrypted them outside this registry is deleted. Five collections moved " +
+      "from explicit-call enforcement to a declarative hook (offers, " +
+      "eventEntries, lotteryEntries, savedPaymentMethods via BaseRepository; " +
+      "newsletterSubscribers via the generic provider repository). " +
+      "newsletterSubscribers' second normalisation is gone.",
+    backfill:
+      "node appkit/scripts/pii-backfill.mjs --database dev-db --collections products --write" +
+      "  (🛑 products is the only collection with data to migrate: every " +
+      "seller- and admin-created listing stored both fields in PLAINTEXT. The " +
+      "four enforcement moves change no stored shape, and the newsletter " +
+      "normalisation change produces IDENTICAL digests because `subscribe` " +
+      "already lowercased the stored value.)",
   },
 ];

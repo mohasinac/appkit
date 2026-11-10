@@ -97,6 +97,45 @@ export const ORDER_PII_FIELDS = [
   "deliveryAmendments[].landmark",
 ] as const;
 
+/**
+ * PII fields on a PRODUCT — the seller's own name and email address.
+ *
+ * ## 🛑 WHY THESE ARE PII, MEASURED RATHER THAN ASSUMED
+ *
+ * This collection was deliberately left OUT of the PII registry on the
+ * recorded reasoning that *"a registry entry would make the backfill encrypt a
+ * field the storefront renders"* — i.e. encrypting these would be a visible
+ * outage. **That premise is false, and it was measured on 2026-11-11:**
+ *
+ *   · Every PUBLIC products response already DELETES both fields —
+ *     `sanitizeProductForPublic`'s `SELLER_IDENTITY_FIELDS`, applied on all 11
+ *     public GET routes. The platform had already decided they are not public.
+ *   · The public product page's `sellerName` is a LOCAL CONST assigned from
+ *     `product.storeName` (`ProductDetailPageView`: `storeName` →
+ *     `safeDisplayName` → `sellerName`). The similar name is what made the
+ *     field look rendered. It is not.
+ *   · `productJsonLd` accepts a `sellerName` and emits a `seller` node — and
+ *     NEITHER caller passes it, so that node is never produced.
+ *   · Neither field is in the products Sieve field map, in
+ *     `buildProductSearchTxt`, or in any `firestore.indexes.json` entry, so
+ *     nothing queries, sorts or searches by them.
+ *
+ * The only display reads were two ADMIN surfaces, and both already had
+ * `storeName` available on the same row — `AdminClearanceView` was literally
+ * assigning `storeName: item.sellerName`. They now read `storeName`, which is
+ * public business identity rather than a person's name.
+ *
+ * ⚠ `sellerEmail` is `user.email` copied onto the listing. It is the same value
+ * `USER_PII_FIELDS`, `ORDER_PII_FIELDS` and `PAYOUT_PII_FIELDS` all encrypt;
+ * leaving one plaintext copy of it on a 10,000-row public collection made the
+ * other three decorative.
+ *
+ * `sellerId` is NOT here: it is a Firebase UID, not a human identifier, it is
+ * the ownership key every seller-scoped query filters on, and encrypting it
+ * would break all of them.
+ */
+export const PRODUCT_PII_FIELDS = ["sellerName", "sellerEmail"] as const;
+
 /** PII fields in payouts */
 export const PAYOUT_PII_FIELDS = ["sellerEmail", "upiId"] as const;
 

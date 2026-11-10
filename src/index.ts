@@ -1356,6 +1356,9 @@ export { OFFER_PII_FIELDS } from "./security/pii-schemas";
 // ORDER_PII_FIELDS - Constant used across modules.
 export { ORDER_PII_FIELDS } from "./security/pii-schemas";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
+// PRODUCT_PII_FIELDS - Constant used across modules.
+export { PRODUCT_PII_FIELDS } from "./security/pii-schemas";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PAYOUT_PII_FIELDS - Constant used across modules.
 export { PAYOUT_PII_FIELDS } from "./security/pii-schemas";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.

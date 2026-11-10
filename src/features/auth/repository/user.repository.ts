@@ -240,8 +240,21 @@ export class UserRepository extends BaseRepository<UserDocument> {
     if (withUid.role != null || withUid.roles != null) {
       normalizeUserRoleFields(withUid);
     }
-    const encrypted = this.applyWriteHooks(withUid);
-    return super.createWithId(id, encrypted as Partial<UserPlain>);
+    /*
+     * 🛑 NO `applyWriteHooks` call here. `super.createWithId` runs them, and
+     * running them TWICE corrupted the token index: the second pass saw the
+     * already-encrypted `email` and rebuilt `nameTokensIndex` from the
+     * ciphertext, overwriting the correct one. Measured 2026-11-11 —
+     * 4 correct digests became 7, only 2 of them real, so the user was
+     * unsearchable by their email domain and five digests of base64 sat in the
+     * document indistinguishable from valid ones. `encryptPiiFields` is
+     * idempotent; `buildTokensIndexFor` is not.
+     *
+     * `BaseRepository.applyWriteHooks` now also refuses to tokenise a source
+     * that already carries `enc:v1:`, so the class cannot recur — but the
+     * redundant call goes anyway. One encryptor per write.
+     */
+    return super.createWithId(id, withUid);
   }
 
   override async create(
@@ -395,16 +408,29 @@ export class UserRepository extends BaseRepository<UserDocument> {
   }
 
   /*
-   * Takes PLAINTEXT, like the base it overrides — this method is the thing
-   * that encrypts (`applyWriteHooks`), so demanding ciphertext from callers
-   * inverted its own contract.
+   * Takes PLAINTEXT, like the base it overrides — `super.update` is the thing
+   * that encrypts, so demanding ciphertext from callers inverted its own
+   * contract. The override now exists ONLY to widen the parameter type.
+   *
+   * 🛑 It used to call `applyWriteHooks(data)` here and pass the RESULT to
+   * `super.update`, which applies them again. Two measured defects came out of
+   * that double application:
+   *
+   *   · `emailIndex` / `phoneIndex` were recomputed as `HMAC(ciphertext)` and
+   *     OVERWROTE the correct digests, so `findByEmail` could no longer find a
+   *     user whose email had been updated — silently, with the plaintext
+   *     intact and nothing logged.
+   *   · it pre-built `nameTokensIndex` from the PATCH ALONE, which is Defect 1
+   *     one level above the fix: `super.update`'s stored-document merge was
+   *     only winning it back because of spread order.
+   *
+   * One encryptor per write. See `BaseRepository.plaintextOnlyIndexMap`.
    */
   override async update(
     uid: string,
     data: Partial<UserPlain>,
   ): Promise<UserDocument> {
-    const encrypted = this.applyWriteHooks(data);
-    return super.update(uid, encrypted as Partial<UserPlain>);
+    return super.update(uid, data);
   }
 
   async markEmailAsVerified(uid: string): Promise<UserDocument> {

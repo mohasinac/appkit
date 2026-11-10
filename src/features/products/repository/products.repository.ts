@@ -59,6 +59,8 @@ import {
   buildCountPatch,
   applyCountPatch,
 } from "../../categories/repository/category-counts";
+import { PRODUCT_PII_FIELDS, maskPii, revealPii } from "../../../security";
+import type { FirestoreDocument } from "../../../schemas/types";
 // The ONE availability predicate — never a second copy (Root Cause #73).
 import { isListingRowAvailable } from "../../../_internal/shared/listing-types/_registry";
 import { TAX_CODES_COLLECTION } from "../../tax-codes/schemas/firestore";
@@ -308,6 +310,81 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
   constructor() {
     super(PRODUCT_COLLECTION);
+  }
+
+  /**
+   * The seller's own name and email, encrypted at rest.
+   *
+   * ## 🛑 ADDED 2026-11-11. THE REASON THIS WAS ABSENT WAS A FALSE PREMISE.
+   *
+   * `scripts/seed-cli.mjs` carried its own `SEEDER_ONLY_PII_FIELDS = {
+   * products: ["sellerName", "sellerEmail"] }` and encrypted them, while this
+   * repository declared nothing. So the collection held both shapes — a seeded
+   * product with ciphertext and a seller-created one with plaintext — and
+   * nothing distinguished them. The seeder's own comment explained the gap:
+   * *"a registry entry would make pii-backfill encrypt those fields on every
+   * existing product, and a product card renders the seller name"*.
+   *
+   * **It does not.** Measured on 2026-11-11: the public product page's
+   * `sellerName` is a local const assigned from `storeName`, every public
+   * products route already DELETES both fields via
+   * `sanitizeProductForPublic`, `productJsonLd`'s `seller` node is never
+   * emitted because no caller passes it, and neither field appears in the
+   * Sieve map, in `buildProductSearchTxt` or in any Firestore index. The full
+   * argument is on `PRODUCT_PII_FIELDS`.
+   *
+   * ⚠ `mapDoc` below does NOT decrypt — reads return ciphertext, and plaintext
+   * needs `revealProduct`. The two ADMIN surfaces that used to print
+   * `item.sellerName` now print `item.storeName`, which is on the same row and
+   * is public business identity rather than a person's name.
+   */
+  protected override piiFields = PRODUCT_PII_FIELDS;
+
+  /**
+   * Plaintext seller identity. **Opt-in and named** — for a payout dispute or
+   * an abuse investigation, where the real person is the point.
+   */
+  revealProduct(doc: ProductDocument): ProductDocument {
+    return revealPii<ProductDocument>(
+      doc as unknown as FirestoreDocument,
+      PRODUCT_PII_FIELDS,
+    );
+  }
+
+  /** As `revealProduct`, for a list read. */
+  revealProducts(docs: readonly ProductDocument[]): ProductDocument[] {
+    return docs.map((d) => this.revealProduct(d));
+  }
+
+  /**
+   * **The default for any admin or seller product list.** Decrypts, masks, and
+   * then sweeps every blind index off the row.
+   *
+   * 🛑 The index sweep is `/Index$/`, not a list taken from the registry, and
+   * that is deliberate: `encryptPiiFields` derives a `` `${field}Index` ``
+   * sibling for every top-level field with no map involved and no way to opt
+   * out, so products now carry `sellerNameIndex` and `sellerEmailIndex` that
+   * nothing queries. Publishing one is an offline *"is this address a seller
+   * here"* oracle — strictly worse than the ciphertext beside it — and this
+   * project has already shipped that leak twice from strip lists built out of
+   * declarations (`phoneNumberIndex` on `/api/admin/users`,
+   * `sellerTokensIndex` on `/api/admin/payouts`, both in the commit that
+   * "fixed" the route). A suffix sweep fails closed.
+   */
+  maskedProduct(doc: ProductDocument): ProductDocument {
+    const masked = maskPii<ProductDocument>(
+      doc as unknown as FirestoreDocument,
+      PRODUCT_PII_FIELDS,
+    ) as unknown as Record<string, unknown>;
+    for (const key of Object.keys(masked)) {
+      if (/Index$/.test(key)) delete masked[key];
+    }
+    return masked as unknown as ProductDocument;
+  }
+
+  /** As `maskedProduct`, for a list read. */
+  maskedProducts(docs: readonly ProductDocument[]): ProductDocument[] {
+    return docs.map((d) => this.maskedProduct(d));
   }
 
   private cacheKeyById(id: string): string {
@@ -1171,12 +1248,26 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       updatedAt: new Date(),
     };
 
+    /*
+     * 🛑 `applyWriteHooks`, so this bespoke `.set()` encrypts the declared
+     * `piiFields` like every other write path. Without it, declaring the
+     * fields would have covered `update` and the `*InTx`/`*InBatch` family and
+     * MISSED the one path every listing is actually created through — the
+     * exact half-wiring shape this registry exists to stop.
+     *
+     * `hooked`, not `productData`, is also what goes into the cache and the
+     * return value: caching the plaintext while Firestore holds ciphertext
+     * would make a cached read and a cold read disagree about the same
+     * document for 30 seconds.
+     */
+    const hooked = this.applyWriteHooks(productData) as Omit<ProductDocument, "id">;
+
     await this.db
       .collection(this.collection)
       .doc(id)
-      .set(prepareForFirestore(productData));
+      .set(prepareForFirestore(hooked));
 
-    const created = { id, ...productData };
+    const created = { id, ...hooked };
     this.cacheSet(created);
     await this.syncCategoryCounts(null, created);
     return created;

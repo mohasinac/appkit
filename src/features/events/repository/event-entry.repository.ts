@@ -12,7 +12,6 @@ import {
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
-  encryptPiiFields,
   maskPii,
   revealPii,
   EVENT_ENTRY_PII_FIELDS,
@@ -121,6 +120,19 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
   maskedEntrys(docs: readonly EventEntryDocument[]): EventEntryPlain[] {
     return docs.map((d) => this.maskedEntry(d));
   }
+
+  /**
+   * DECLARED, not called per method.
+   *
+   * 🛑 Encryption used to be one hand-written `encryptPiiFields(...)` inside
+   * `createEntry`. Every other write path — `update`, the moderation methods
+   * that route through it, the `*InTx` / `*InBatch` family — inherited the
+   * unhooked base implementations, so an entrant's display name, email or IP
+   * arriving through any of them was stored in PLAINTEXT with nothing failing.
+   * Declaring the fields puts enforcement in `applyWriteHooks`, which every
+   * write path runs, so a new method cannot silently skip it.
+   */
+  protected override piiFields = EVENT_ENTRY_PII_FIELDS;
 
   async listForEvent(
     eventId: string,
@@ -569,11 +581,14 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
   ): Promise<EventEntryDocument | null> {
     try {
       const now = new Date();
-      const encrypted = encryptPiiFields(input as FirestoreDocument, [
-        ...EVENT_ENTRY_PII_FIELDS,
-      ]);
+      /*
+       * 🛑 `applyWriteHooks`, not a hand-written `encryptPiiFields(...)`. The
+       * declared `piiFields` above is the single encryptor for this
+       * collection; this bespoke `ref.create()` path goes through the same hook
+       * so there is no second list to drift from it.
+       */
       const data = prepareForFirestore({
-        ...encrypted,
+        ...this.applyWriteHooks(input as FirestoreDocument),
         submittedAt: now,
       });
 

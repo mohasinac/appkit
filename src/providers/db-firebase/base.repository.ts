@@ -24,11 +24,13 @@ import {
 } from "./sieve";
 import { deserializeTimestamps, prepareForFirestore } from "./helpers";
 import { getAdminDb } from "./admin";
-import { encryptPiiFields, piiIndicesFor } from "../../security/pii-encrypt";
+import { encryptPiiFields, piiIndicesFor, decryptValue } from "../../security/pii-encrypt";
+import { isPiiEncrypted } from "../../security/pii-mask";
 import {
   BLIND_INDEX_KEY_VERSION_FIELD,
   CURRENT_BLIND_INDEX_KEY_VERSION,
 } from "../../security/blind-index-tokens";
+import { piiPolicyFor } from "../../security/pii-registry";
 import type { JsonValue } from "../../schemas/types";
 
 /**
@@ -215,7 +217,54 @@ export abstract class BaseRepository<T extends DocumentData> {
    * `enc:v1:` prefix), so a subclass that still encrypts by hand before calling
    * super is harmless rather than double-encrypted.
    */
-  protected applyWriteHooks<D extends object>(data: D): D {
+  /**
+   * `piiIndexMap` restricted to fields whose incoming value is still PLAINTEXT.
+   *
+   * ## 🛑 THE BUG THIS CLOSES, MEASURED 2026-11-11
+   *
+   * `piiIndicesFor` hashes whatever it is given, and `applyWriteHooks` hands it
+   * `data`. When `data` is ALREADY HOOKED — which happens whenever a subclass
+   * calls `applyWriteHooks` itself and then delegates to `super.update` — the
+   * mapped index is recomputed as `HMAC(ciphertext)` and **overwrites the
+   * correct digest**. The derived `` `${field}Index` `` sibling is safe because
+   * `encryptPiiFields` skips a value already carrying `enc:v1:`; the MAPPED
+   * path had no such guard.
+   *
+   * Proven in isolation:
+   *
+   *     pass 1 emailIndex == findByEmail digest : true
+   *     pass 2 emailIndex == findByEmail digest : false
+   *     pass 2 == hmac(ciphertext)              : true
+   *
+   * Four repositories pre-hooked and then delegated —
+   * `UserRepository.update`, `AddressesRepository.update`/`createWithId`,
+   * `PayoutRepository.update`, `ReviewRepository.update` — so
+   * `userRepository.update(uid, { email })` wrote a garbage `emailIndex` and
+   * `findByEmail` then **could not find that user**, with nothing logged and
+   * the plaintext still perfectly recoverable. Same shape for
+   * `reviews.userNameIndex` (the admin review search) and
+   * `payouts.sellerEmailIndex`.
+   *
+   * The redundant calls are removed, but this guard stays: those overrides were
+   * each individually reasonable-looking, and the next one would reintroduce
+   * it. Skipping a ciphertext source also leaves the EXISTING correct digest in
+   * place, because it rides along in `data`.
+   */
+  private plaintextOnlyIndexMap(data: object): Record<string, string> {
+    const access = data as Record<string, unknown>;
+    const out: Record<string, string> = {};
+    for (const [source, indexField] of Object.entries(this.piiIndexMap)) {
+      const value = access[source];
+      if (typeof value === "string" && isPiiEncrypted(value)) continue;
+      out[source] = indexField;
+    }
+    return out;
+  }
+
+  protected applyWriteHooks<D extends object>(
+    data: D,
+    opts?: { partial?: boolean },
+  ): D {
     let out: D = data;
 
     if (this.piiFields.length > 0) {
@@ -223,12 +272,69 @@ export abstract class BaseRepository<T extends DocumentData> {
         ...encryptPiiFields(out, [...this.piiFields]),
         // Indices are derived from the PLAINTEXT source and must not carry it
         // along — see piiIndicesFor's docstring for the bug that caused.
-        ...piiIndicesFor(data, this.piiIndexMap),
+        ...piiIndicesFor(data, this.plaintextOnlyIndexMap(data)),
       } as D;
     }
 
     const searchTxt = this.buildSearchTxtFor(out as Record<string, JsonValue>);
     if (searchTxt) (out as Record<string, JsonValue>).searchTxt = searchTxt;
+
+    /*
+     * 🛑 A PARTIAL patch that carries only SOME of the token index's sources
+     * writes NO token index at all.
+     *
+     * The index is an HMAC over several plaintext fields together, so building
+     * it from a subset produces a SHORTER valid-looking array — and the
+     * difference between "stale" and "truncated" is the difference between a
+     * recoverable state and an undetectable one. `update()` resolves this
+     * properly by reading the stored document and merging (see
+     * `mergedTokensIndexFor`); `updateInTx` / `updateInBatch` CANNOT, because
+     * they are synchronous and Firestore forbids a read after a write inside a
+     * transaction. So they leave the stored index alone and
+     * `scripts/pii-backfill.mjs` can repair it, instead of shrinking it where
+     * nothing would ever notice.
+     *
+     * Not applied to `create`/`createWithId`: there an absent source is a
+     * document that genuinely has no value for it (a user with no email), and
+     * indexing the fields that ARE present is correct. Only the caller knows
+     * which case it is, which is why this is an argument rather than a guess.
+     */
+    if (opts?.partial) {
+      const sources = this.tokensIndexSources();
+      const touched = sources.filter((f) => f in (data as Record<string, unknown>));
+      if (sources.length > 0 && touched.length > 0 && touched.length < sources.length) {
+        return out;
+      }
+    }
+
+    /*
+     * 🛑 REFUSE to tokenise a source that is ALREADY CIPHERTEXT.
+     *
+     * `data` is supposed to be the plaintext, but nothing in the type system
+     * says so, and a caller that has already run the hooks hands over
+     * `enc:v1:…`. `buildTokensIndex` would then hash base64 fragments of the
+     * ciphertext — digests of nothing, stored in the field admin search reads.
+     *
+     * MEASURED, 2026-11-11, and this was live: `UserRepository.createWithId`
+     * called `applyWriteHooks` itself and then delegated to
+     * `super.createWithId`, which applies them AGAIN. `encryptPiiFields` is
+     * idempotent so the encryption was fine, but the token index is NOT — the
+     * second pass rebuilt it from the ciphertext email and OVERWROTE the
+     * correct one. For `Proof Tester` / `proof.tester@example.com`: 4 correct
+     * digests became 7, of which only 2 were real. Searching that user by
+     * their email domain matched nothing, and five junk digests sat in the
+     * document looking exactly like valid ones.
+     *
+     * The redundant call is removed, but the guard stays: a silent wrong index
+     * is undetectable, and this makes the whole class unrepresentable rather
+     * than fixed in one caller.
+     */
+    const tokenSources = this.tokensIndexSources();
+    const sourceIsCiphertext = tokenSources.some((field) => {
+      const value = (data as Record<string, unknown>)[field];
+      return typeof value === "string" && isPiiEncrypted(value);
+    });
+    if (sourceIsCiphertext) return out;
 
     /*
      * `data`, not `out` — the plaintext source, same as `piiIndicesFor`
@@ -243,6 +349,137 @@ export abstract class BaseRepository<T extends DocumentData> {
     }
 
     return out;
+  }
+
+  /**
+   * The PLAINTEXT fields this collection's token index is hashed from, read
+   * from the ONE registry rather than re-declared here.
+   *
+   * 🛑 Deliberately NOT a new `protected tokensIndexSources` the subclass
+   * declares beside `buildTokensIndexFor()`. That would be a SECOND list of
+   * the same thing, one method body away from the first, and
+   * `security/pii-registry.ts` exists precisely because five copies of this
+   * policy drifted. `scripts/audit-pii-registry.mjs` already polices the
+   * registry against the repositories, so reading `tokensIndex.from` here puts
+   * the merge logic under an existing guard instead of inventing a new
+   * unguarded one.
+   *
+   * Returns `[]` for every collection with no token index — which is all but
+   * three — and that empty list is what makes `update()` free for them.
+   */
+  private tokensIndexSources(): readonly string[] {
+    return piiPolicyFor(this.collection)?.tokensIndex?.from ?? [];
+  }
+
+  /**
+   * Rebuild the `*TokensIndex` from the STORED document merged under a PARTIAL
+   * patch — or `null` when no read is needed.
+   *
+   * ## 🛑 THE DEFECT THIS CLOSES
+   *
+   * `applyWriteHooks` builds the token index from the data it is handed, which
+   * on `update()` is the PATCH. `buildTokensIndexFor` then sees only the fields
+   * that happen to be in the patch, so
+   *
+   *     update(uid, { displayName })
+   *
+   * rewrote `nameTokensIndex` with the digests of the NAME ALONE and silently
+   * dropped every email-derived token. The index does not break — it SHRINKS,
+   * on exactly the users who edited their profile, and the symptom is an admin
+   * search that stops finding someone it used to find. Production was
+   * backfilled 2026-11-11 to add these indices; this would have undone that one
+   * user at a time, invisibly.
+   *
+   * ## WHEN IT READS, AND WHY THAT IS NOT EVERY UPDATE
+   *
+   * A fetch on every `update()` would put one extra document read on the
+   * hottest write path in the platform. Three conditions gate it, and each
+   * removes a case that provably cannot need it:
+   *
+   *   1. **No token index declared** → return immediately. True for 17 of the
+   *      20 registered collections and for every collection that is not in the
+   *      registry at all, i.e. the overwhelming majority of `update()` calls.
+   *      Zero reads, zero behaviour change.
+   *   2. **The patch touches no source field** → `buildTokensIndexFor(patch)`
+   *      returns `null` anyway, so the stored index is already left alone.
+   *   3. **The patch carries EVERY source field** → it is self-sufficient and
+   *      `applyWriteHooks` already built the complete index from it. This is
+   *      the whole of `addresses` (`from: ["fullName"]`, a single source), so
+   *      that collection never pays a read either.
+   *
+   * What is left is the real case: a patch touching SOME but not all sources.
+   * `users` (`displayName` + `email`) and `payouts` (`sellerName` +
+   * `sellerEmail`) — one extra read on a profile edit, which already writes.
+   *
+   * ## 🛑 IT DECRYPTS, AND FAILS CLOSED IF IT CANNOT
+   *
+   * The stored values are CIPHERTEXT. Hashing them would produce digests of
+   * base64 — an index that matches nothing, which is the exact defect recorded
+   * against the deleted `backfill-blind-index.mjs` (it claimed to read through
+   * the repository and read `doc.data()` raw). So the missing sources are
+   * decrypted first.
+   *
+   * If any of them will not decrypt — wrong key, a settings-encrypted value, a
+   * corrupt row — this returns `null` and the stored index is left exactly as
+   * it was. `decryptPiiFields` is fail-soft and yields `""` for an unreadable
+   * value, and `""` contributes no tokens: taking that path would SHRINK the
+   * index, which is the thing this method exists to prevent. Leaving a stale
+   * index is recoverable by `scripts/pii-backfill.mjs`; silently truncating one
+   * is not detectable at all.
+   */
+  protected async mergedTokensIndexFor(
+    id: string,
+    patch: Record<string, JsonValue>,
+  ): Promise<Record<string, JsonValue> | null> {
+    const sources = this.tokensIndexSources();
+    if (sources.length === 0) return null;
+
+    const touched = sources.filter((f) => f in patch);
+    if (touched.length === 0) return null;
+    if (touched.length === sources.length) return null;
+
+    /*
+     * 🛑 A patch whose own source value is ALREADY CIPHERTEXT is not a
+     * plaintext patch, so merging it would hash base64. Leave the stored index
+     * alone — the same fail-closed choice as the undecryptable case below, and
+     * the same guard `applyWriteHooks` applies. This is reachable whenever a
+     * caller hands over an already-hooked object.
+     */
+    for (const field of touched) {
+      const value = patch[field];
+      if (typeof value === "string" && isPiiEncrypted(value)) return null;
+    }
+
+    const snap = await this.getCollection().doc(id).get();
+    if (!snap.exists) return null;
+    const stored = (snap.data() ?? {}) as Record<string, unknown>;
+
+    const merged: Record<string, JsonValue> = {};
+    for (const field of sources) {
+      if (field in patch) {
+        merged[field] = patch[field];
+        continue;
+      }
+      const value = stored[field];
+      if (typeof value !== "string" || !value) continue;
+      if (!isPiiEncrypted(value)) {
+        merged[field] = value;
+        continue;
+      }
+      try {
+        merged[field] = decryptValue(value);
+      } catch {
+        // Fail closed — see the docstring. Never a partial index.
+        return null;
+      }
+    }
+
+    const tokensIndex = this.buildTokensIndexFor(merged);
+    if (!tokensIndex) return null;
+    return {
+      ...(tokensIndex as unknown as Record<string, JsonValue>),
+      [BLIND_INDEX_KEY_VERSION_FIELD]: CURRENT_BLIND_INDEX_KEY_VERSION,
+    };
   }
 
   /**
@@ -459,8 +696,21 @@ export abstract class BaseRepository<T extends DocumentData> {
   /** Accepts the PLAINTEXT shape — see `create` for why. */
   async update(id: string, data: Partial<Plaintext<T>>): Promise<T> {
     try {
+      /*
+       * 🛑 The token index is rebuilt from the STORED document merged under the
+       * patch, not from the patch alone. `applyWriteHooks` can only see what it
+       * is handed, so on a single-field update it would truncate the index to
+       * the sources that happen to be in the patch. See
+       * `mergedTokensIndexFor` for the measured defect and for why this costs
+       * no read on all but two collections.
+       */
+      const merged = await this.mergedTokensIndexFor(
+        id,
+        data as unknown as Record<string, JsonValue>,
+      );
       const cleanData = prepareForFirestore({
-        ...this.applyWriteHooks(data as object),
+        ...this.applyWriteHooks(data as object, { partial: true }),
+        ...(merged ?? {}),
         updatedAt: new Date(),
       });
 
@@ -659,12 +909,21 @@ export abstract class BaseRepository<T extends DocumentData> {
     return docRef as DocumentReference;
   }
 
-  // Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+  /*
+   * Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+   *
+   * ⚠ `partial: true`, and unlike `update()` this one cannot then repair the
+   * token index: it is synchronous, and Firestore forbids a read after a write
+   * inside a transaction. So a patch touching only some of a token index's
+   * sources leaves the stored index STALE rather than truncating it — see the
+   * block comment in `applyWriteHooks`. Use `update()` when the index must be
+   * current, or follow up with `scripts/pii-backfill.mjs`.
+   */
   updateInTx(tx: Transaction, id: string, data: Partial<Plaintext<T>>): void {
     const docRef = this.getCollection().doc(id);
     tx.update(
       docRef,
-      prepareForFirestore({ ...this.applyWriteHooks(data as object), updatedAt: new Date() }) as DocumentData,
+      prepareForFirestore({ ...this.applyWriteHooks(data as object, { partial: true }), updatedAt: new Date() }) as DocumentData,
     );
   }
 
@@ -707,12 +966,16 @@ export abstract class BaseRepository<T extends DocumentData> {
     );
   }
 
-  // Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+  /*
+   * Plaintext<T> — these methods ENCRYPT via applyWriteHooks; see `create`.
+   * ⚠ `partial: true` with the same consequence as `updateInTx` — a stale
+   * token index rather than a truncated one.
+   */
   updateInBatch(batch: WriteBatch, id: string, data: Partial<Plaintext<T>>): void {
     const docRef = this.getCollection().doc(id);
     batch.update(
       docRef,
-      prepareForFirestore({ ...this.applyWriteHooks(data as object), updatedAt: new Date() }) as DocumentData,
+      prepareForFirestore({ ...this.applyWriteHooks(data as object, { partial: true }), updatedAt: new Date() }) as DocumentData,
     );
   }
 

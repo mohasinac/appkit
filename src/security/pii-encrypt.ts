@@ -146,6 +146,29 @@ export function decryptValue(ciphertext: string): string {
 /**
  * Produce a deterministic HMAC-SHA256 blind index for a PII value.
  * Used for equality lookups without decrypting (e.g. find-by-email).
+ *
+ * ## 🛑 THE ONE RULE: THE INDEX IS THE HMAC OF THE **STORED VALUE**, RAW
+ *
+ * This function does not normalise, and nothing above it may normalise either.
+ * Canonicalising a value is a property of the VALUE — applied by its own named
+ * normaliser (`normalizeEmail`, `normaliseIdentifier`) before the value is
+ * stored, and to the ARGUMENT of a lookup. `encryptPiiFields` and
+ * `piiIndicesFor` then hash the stored form byte for byte, so write and read
+ * agree by construction rather than by two call sites remembering the same
+ * transform.
+ *
+ * ⚠ A SECOND normalisation applied at the hash call site is the defect this
+ * rule exists to forbid. `NewsletterRepository` hashed
+ * `email.toLowerCase()` while `piiIndicesFor` hashed the stored value, so one
+ * address had two digests and a lookup through the other path returned
+ * nothing — surfaced to a human as "not subscribed" rather than as an error.
+ * Fixed 2026-11-11 by deleting the hand-written index, not by teaching a
+ * second site to lowercase.
+ *
+ * ⚠ `buildTokensIndex` is NOT an exception: it normalises TOKENS (its own
+ * documented scheme, shared with `tokensIndexQueryValue` in the same file so
+ * the two cannot be edited apart) and then calls this function on the already
+ * normalised token.
  */
 export function hmacBlindIndex(value: string): string {
   const { createHmac } = nodeCrypto();

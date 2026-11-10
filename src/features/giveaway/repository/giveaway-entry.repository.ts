@@ -12,7 +12,6 @@ import {
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
-  encryptPiiFields,
   maskPii,
   revealPii,
   GIVEAWAY_ENTRY_PII_FIELDS,
@@ -80,6 +79,18 @@ class GiveawayEntryRepository extends BaseRepository<GiveawayEntryDocument> {
   maskedEntries(docs: readonly GiveawayEntryDocument[]): GiveawayEntryPlain[] {
     return docs.map((d) => this.maskedEntry(d));
   }
+
+  /**
+   * DECLARED, not called per method.
+   *
+   * 🛑 One hand-written `encryptPiiFields(...)` in `createEntry` used to be the
+   * whole enforcement. `flagEntry`, `markWinner` and everything else routing
+   * through the inherited `update` had no encryption at all, so an entrant's
+   * phone, email or display name arriving on any of those paths was stored in
+   * PLAINTEXT with nothing failing. The declaration moves it to
+   * `applyWriteHooks`, which every write path runs.
+   */
+  protected override piiFields = GIVEAWAY_ENTRY_PII_FIELDS;
 
   /**
    * Get the next sequential userGiveawayNumber for a source atomically.
@@ -197,11 +208,16 @@ class GiveawayEntryRepository extends BaseRepository<GiveawayEntryDocument> {
     data: Omit<GiveawayEntryPlain, "id">,
   ): Promise<GiveawayEntryDocument> {
     try {
-      const encrypted = encryptPiiFields(
-        data as unknown as import("@mohasinac/appkit").FirestoreDocument,
-        [...GIVEAWAY_ENTRY_PII_FIELDS],
-      );
-      const prepared = prepareForFirestore({ ...encrypted });
+      /*
+       * 🛑 `applyWriteHooks`, not a hand-written `encryptPiiFields(...)` — the
+       * declared `piiFields` above is the single encryptor for this collection,
+       * and this bespoke `.add()` path goes through the same hook.
+       */
+      const prepared = prepareForFirestore({
+        ...this.applyWriteHooks(
+          data as unknown as import("@mohasinac/appkit").FirestoreDocument,
+        ),
+      });
       const ref = await this.getCollection().add(prepared);
       const created = await ref.get();
 
