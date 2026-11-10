@@ -25,11 +25,17 @@ const META_GRAPH_BASE = "https://graph.facebook.com/v20.0";
 /**
  * \uD83D\uDED1 The greeting is CONFIG, not code, and it used to be neither.
  *
- * This built `Hi Hobson! I'd like to place an order:` \u2014 a hardcoded personal
- * name, inside appkit, on the one string a BUYER sends from their own WhatsApp
- * account. It fails the domain-independence test twice over: someone's name
- * baked into a reusable package, in the most visible place a wrong one could
- * possibly appear.
+ * This hardcoded a specific person's first name into the greeting \u2014 inside
+ * appkit, on the one string a BUYER sends from their own WhatsApp account. It
+ * failed the domain-independence test twice over: an individual's name baked
+ * into a reusable package, in the most visible place a wrong one could appear.
+ *
+ * \uD83D\uDED1 The removed name is NOT quoted here, deliberately. Doc comments compile
+ * into the published `.js` AND `.d.ts`, so "explaining" a de-branding by
+ * repeating the offending string puts it straight back into the artefact every
+ * consumer installs. That is recorded in CLAUDE.md as having burned version
+ * 4.85.0 \u2014 and it happened again in 4.89.1, in this very comment, which is why
+ * the wording is now abstract. **Grep the tarball, not the tree.**
  *
  * `greetingName` is optional, and unset means no name at all \u2014 so the generic
  * form is the default and naming the recipient is a deliberate choice made by
