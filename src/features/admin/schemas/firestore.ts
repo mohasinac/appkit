@@ -1578,6 +1578,19 @@ export interface SiteSettingsDocument extends BaseDocument {
    * cancellation or a payment failure is worse than no cap.
    */
   notificationPerOrderCap?: { email?: number; whatsapp?: number };
+  /**
+   * Support-ticket categories that alert staff IMMEDIATELY instead of waiting
+   * for the daily roll-up.
+   *
+   * Owner, 2026-11-10: money flows are important; everything else can be a
+   * daily cron to the business number.
+   *
+   * ⚠ Unset falls back to `DEFAULT_MONEY_TICKET_CATEGORIES`, so an install
+   * that never touches this still escalates billing, refunds, order issues
+   * and grievances. An EMPTY ARRAY is different from unset and means "nothing
+   * is urgent" — a real choice, and the only way to express it.
+   */
+  supportMoneyCategories?: string[];
   notificationRules?: Record<
     string,
     {

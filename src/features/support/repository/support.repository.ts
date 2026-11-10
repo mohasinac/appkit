@@ -539,6 +539,34 @@ export class SupportRepository extends BaseRepository<SupportTicketDocument> {
     );
   }
 
+  /**
+   * Open tickets, for the daily digest.
+   *
+   * 🛑 Returns only `{ id, category, status }` — the digest reports COUNTS,
+   * and a support ticket carries customer names, emails and order details
+   * (`SUPPORT_TICKET_PII_FIELDS`). Reading whole documents to count them
+   * would pull that PII into a job that has no use for it, and into whatever
+   * logs the job writes.
+   *
+   * ⚠ Bounded by `PAYMENT_REVIEW_QUEUE_SCAN_LIMIT`-style reasoning: a digest
+   * that tries to read an unbounded backlog is a digest that stops working on
+   * the worst day. The cap is DECLARED in the result so a truncated count
+   * cannot be mistaken for a complete one.
+   */
+  async listOpenForDigest(
+    limit = 500,
+  ): Promise<Array<{ id: string; category?: string; status?: string }>> {
+    const snap = await this.db
+      .collection(SUPPORT_TICKET_COLLECTION)
+      .where(SUPPORT_TICKET_FIELDS.STATUS, "in", ACTIVE_TICKET_STATUSES)
+      .limit(limit)
+      .get();
+    return snap.docs.map((d) => {
+      const data = d.data() as { category?: string; status?: string };
+      return { id: d.id, category: data.category, status: data.status };
+    });
+  }
+
   async listAll(
     model: SieveModel,
   ): Promise<FirebaseSieveResult<SupportTicketDocument>> {

@@ -37,6 +37,7 @@ import {
   pageViewRollupHandler,
   pageViewPruneHandler,
   dailyStatusDigestHandler,
+  supportTicketDigestHandler,
   weeklyPayoutEligibilityHandler,
   testDataCleanupHandler,
 } from "../jobs/handlers";
@@ -394,6 +395,23 @@ export const dailyStatusDigest = defineFunction({
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
+/**
+ * The non-money half of the support split (owner, 2026-11-10): money-flow
+ * tickets escalate per-ticket the moment they arrive; everything else is
+ * summarised here once a day to the business WhatsApp number.
+ *
+ * ⚠ 10:30 IST, half an hour after `dailyStatusDigest`, so the two operator
+ * reports do not land in the same minute and get read as one.
+ */
+export const supportTicketDigest = defineFunction({
+  name: "supportTicketDigest",
+  description:
+    "Summarise open non-money support tickets to the business WhatsApp number every morning at 10:30 IST.",
+  trigger: { kind: "schedule", cron: "30 10 * * *", timeZone: "Asia/Kolkata" },
+  handler: supportTicketDigestHandler,
+  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
+});
+
 export const dailyDataCleanup = defineFunction({
   name: "dailyDataCleanup",
   description: "Daily data cleanup (drafts, transient records) at 02:00 UTC.",
@@ -656,6 +674,7 @@ export const SCHEDULED_FUNCTIONS = [
   pageViewRollup,
   pageViewPrune,
   dailyStatusDigest,
+  supportTicketDigest,
   dailyDataCleanup,
   countersReconcile,
   /*

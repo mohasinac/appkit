@@ -23,6 +23,30 @@ import type { Encrypted, Plaintext } from "../../../security/encrypted";
 // ENUMS
 // ============================================================================
 
+/**
+ * Ticket categories that are about MONEY, and therefore alert staff
+ * immediately rather than waiting for the daily roll-up.
+ *
+ * Owner, 2026-11-10: *"especially money flows which are important, rest can
+ * be [a] normal daily hook cron."*
+ *
+ * 🛑 A DEFAULT, overridable by `siteSettings.supportMoneyCategories`. Which
+ * categories count as urgent is a business judgement that differs per install
+ * — a marketplace with no EMI has no use for that row — so the list is config
+ * and this is only the shipped starting point.
+ *
+ * ⚠ `grievance` is here because it carries a STATUTORY clock
+ * (`acknowledgedAt`/`dueAt`, see `GRIEVANCE_PERIODS`), so a missed one is a
+ * compliance failure rather than a slow reply. It is the row most costly to
+ * leave in a digest.
+ */
+export const DEFAULT_MONEY_TICKET_CATEGORIES: readonly string[] = [
+  "billing_payment",
+  "refund_request",
+  "order_issue",
+  "grievance",
+];
+
 export const TicketCategoryValues = {
   ORDER_ISSUE: "order_issue",
   BILLING_PAYMENT: "billing_payment",
