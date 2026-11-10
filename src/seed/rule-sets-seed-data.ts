@@ -215,72 +215,26 @@ export const coinRuleSetsSeedData: CoinRuleSet[] = [
 ];
 
 
-/**
+/*
  * How a contest ranks its entries — a RULE SET, not an enum in code.
  *
- * Owner, 2026-11-08: *"nothing in the code should be fixed"* and *"the types we
- * have now are the default TEMPLATES"* — anyone who wants a different kind of
- * contest writes their own row and is done.
+ * 🛑 THE ROWS MOVED, THEY WERE NOT COPIED. They live in
+ * `features/events/config/entry-ranking-rules.ts`, because
+ * `schemas/entry-ranking.ts` reads them at runtime and the published package
+ * EXCLUDES `dist/seed` (`package.json` `files[]` → `"!dist/seed"`). A runtime
+ * module importing from here resolves fine locally against a synced dist and
+ * then fails for every consumer installing from the registry — which is how
+ * 4.87.0 shipped unusable. See that file's header for the full reasoning.
  *
- * So these six are shipped defaults, not the permitted set. `rule` is the key a
- * generic resolver interprets; `tieBreak` is published alongside it because a
- * tie has to be decided BEFORE a contest closes — deciding it afterwards,
- * however fairly, looks like deciding it to suit someone.
+ * The other rule-set families above stay here: they have no runtime reader in
+ * shipped code, so moving them would ship bytes nobody imports. **Add no entry
+ * ranking rows to this file** — a second copy of the table would be two
+ * divergent definitions.
  */
-export interface EntryRankingRuleSet {
-  id: string;
-  label: string;
-  /** Interpreted by `resolveEntryRanking`. A new key is a new case + a row. */
-  rule: "most-likes" | "net-score" | "most-votes" | "earliest" | "manual" | string;
-  tieBreak: "earliest-entry" | "latest-entry" | "manual" | string;
-  /** Whether a dislike button renders at all for entries ranked this way. */
-  allowsDislike: boolean;
-  /** What the public rules copy should say, so artwork and mechanic agree. */
-  publicWording: string;
-}
+export type { EntryRankingRuleSet } from "../features/events/config/entry-ranking-rules";
+export { ENTRY_RANKING_RULE_SET_DEFINITIONS as entryRankingRuleSetsSeedData } from "../features/events/config/entry-ranking-rules";
 
-export const entryRankingRuleSetsSeedData: EntryRankingRuleSet[] = [
-  {
-    id: "ranking-most-likes",
-    label: "Most liked wins",
-    rule: "most-likes",
-    tieBreak: "earliest-entry",
-    allowsDislike: false,
-    publicWording: "The photo with the most likes wins.",
-  },
-  {
-    id: "ranking-net-score",
-    label: "Net score (likes minus dislikes)",
-    rule: "net-score",
-    tieBreak: "earliest-entry",
-    allowsDislike: true,
-    publicWording: "Entries are ranked by likes minus dislikes.",
-  },
-  {
-    id: "ranking-most-votes",
-    label: "Most votes of either kind",
-    rule: "most-votes",
-    tieBreak: "earliest-entry",
-    allowsDislike: true,
-    publicWording: "The entry with the most votes wins.",
-  },
-  {
-    id: "ranking-earliest",
-    label: "First come, first served",
-    rule: "earliest",
-    tieBreak: "earliest-entry",
-    allowsDislike: false,
-    publicWording: "The earliest eligible entry wins.",
-  },
-  {
-    id: "ranking-jury",
-    label: "Jury pick",
-    rule: "manual",
-    tieBreak: "manual",
-    allowsDislike: false,
-    publicWording: "A judging panel selects the winner.",
-  },
-];
+import { ENTRY_RANKING_RULE_SET_DEFINITIONS } from "../features/events/config/entry-ranking-rules";
 
 /** Everything in one export, so the seeder writes one config document. */
 export const ruleSetsSeedData = {
@@ -290,5 +244,5 @@ export const ruleSetsSeedData = {
   tax: taxRuleSetsSeedData,
   offers: offerRuleSetsSeedData,
   coins: coinRuleSetsSeedData,
-  entryRanking: entryRankingRuleSetsSeedData,
+  entryRanking: ENTRY_RANKING_RULE_SET_DEFINITIONS,
 };

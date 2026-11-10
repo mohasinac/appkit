@@ -22,11 +22,16 @@
  *
  * ## 🛑 The rows are CONFIG, and this module does not own them
  *
- * `entryRankingRuleSetsSeedData` is imported rather than restated. A second
- * copy of the five shipped rows here would be two divergent copies of the
- * platform's default templates, and the first edit to either would be
+ * `ENTRY_RANKING_RULE_SET_DEFINITIONS` is imported rather than restated. A
+ * second copy of the five shipped rows here would be two divergent copies of
+ * the platform's default templates, and the first edit to either would be
  * invisible to the other. The import is pure data — that module has no
  * imports and no module-scope side effects.
+ *
+ * ⚠ It is imported from `../config/`, never from `../../../seed/`. The
+ * published package excludes `dist/seed`, so a runtime import into the seed
+ * resolves locally against a synced dist and then fails to resolve for every
+ * consumer who installs from the registry. 4.87.0 shipped exactly that way.
  *
  * ## 🛑 Nothing here throws
  *
@@ -40,10 +45,10 @@
  */
 
 import {
-  entryRankingRuleSetsSeedData,
+  ENTRY_RANKING_RULE_SET_DEFINITIONS,
   type EntryRankingRuleSet,
-} from "../../../seed/rule-sets-seed-data";
-import { eventTypesSeedData } from "../../../seed/event-types-seed-data";
+} from "../config/entry-ranking-rules";
+import { EVENT_TYPE_DEFINITIONS } from "../config/event-types";
 import {
   DEFAULT_ENTRY_RANKING,
   entryTieBreak,
@@ -61,7 +66,7 @@ export type { EntryRankingRuleSet };
  * the mechanism, the widgets and the rules, with the default templates".
  */
 export const ENTRY_RANKING_RULE_SETS: ReadonlyMap<string, EntryRankingRuleSet> =
-  new Map(entryRankingRuleSetsSeedData.map((r) => [r.id, r]));
+  new Map(ENTRY_RANKING_RULE_SET_DEFINITIONS.map((r) => [r.id, r]));
 
 /**
  * The platform default rule set — "the photo with the most likes wins".
@@ -102,7 +107,7 @@ export interface EntryRankingEventFields {
  *
  * 🛑 This is NOT `event.type === "contest"` branching. It is a lookup in the
  * event-type CONFIG table, which is where the choice lives: `contest` binds
- * `ruleSets.entryRanking: "ranking-most-likes"` as a seed field, and a type
+ * `ruleSets.entryRanking: "ranking-most-likes"` as a config field, and a type
  * that binds nothing contributes nothing. Adding a ranked type is a row.
  *
  * Matched on `key` first and `slug` second because a stored `type` value is
@@ -113,7 +118,9 @@ export function entryRankingRuleSetIdForEventType(
   type: string | undefined,
 ): string | undefined {
   if (!type) return undefined;
-  const def = eventTypesSeedData.find((t) => t.key === type || t.slug === type);
+  const def = EVENT_TYPE_DEFINITIONS.find(
+    (t) => t.key === type || t.slug === type,
+  );
   return def?.ruleSets?.entryRanking;
 }
 

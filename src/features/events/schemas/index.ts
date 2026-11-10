@@ -37,7 +37,7 @@ const eventCoverImageSchema = z
  * The eight below are the shipped templates, kept as a named list so the
  * common ones are discoverable and so a typo in one of THEM is still caught.
  * Anything else is accepted as a slug and resolved against the event-type
- * config (`seed/event-types-seed-data.ts`).
+ * config (`../config/event-types.ts`).
  *
  * The rejected shape was the previous one: a closed `z.enum` that 400s an
  * unknown value. It made a new kind of event — a photo contest judged by votes,

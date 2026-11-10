@@ -132,9 +132,10 @@ export interface EntryVoteAudit extends EntryVoteSummary {
  * a ranking we never imagined adds a rule-set row and a resolver case rather
  * than editing this file to ask permission.
  *
- * The rows live in `seed/rule-sets-seed-data.ts` under `entryRanking`, beside
- * payment, shipping, tax, offers and coins — a contest ranking is a rule set
- * like any other, not a special case.
+ * The rows live in `../config/entry-ranking-rules.ts` — shipped config, which
+ * is why they are not under `seed/` with payment, shipping, tax, offers and
+ * coins. A contest ranking is a rule set like any other, but it is the only
+ * family with a RUNTIME reader, and the published package excludes `dist/seed`.
  */
 export type EntryRankingRule =
   | "most-likes"

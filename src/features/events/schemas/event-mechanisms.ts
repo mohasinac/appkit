@@ -4,7 +4,7 @@
  * ## 🛑 This is the capability lookup that replaces `event.type === …`
  *
  * The governing principle: *a mechanism never asks "what type is this?" — it
- * asks "does this thing have the capability?"*. `event-types-seed-data.ts`
+ * asks "does this thing have the capability?"*. `config/event-types.ts`
  * already stores the answer as data: every type carries a boolean for each of
  * the thirteen declared mechanisms, and the `contest` row switches on
  * `submission`, `entryVoting`, `prizePool`, `capacityLimit` and `ageGate`.
@@ -13,7 +13,12 @@
  * event collect entries people vote on" had to write `type === "contest"` —
  * which then has to be edited for the second kind of event that does, and is
  * exactly what the table exists to avoid. One lookup here, and a new ranked,
- * submission-based event type is a seed row.
+ * submission-based event type is a config row.
+ *
+ * ⚠ The table is imported from `../config/`, never from `../../../seed/`. The
+ * published package excludes `dist/seed`, so a runtime import into the seed
+ * resolves locally against a synced dist and then fails to resolve for every
+ * consumer who installs from the registry. 4.87.0 shipped exactly that way.
  *
  * ## 🛑 Absent means OFF, and that is a degrade not a default
  *
@@ -27,9 +32,9 @@
  */
 
 import {
-  eventTypesSeedData,
+  EVENT_TYPE_DEFINITIONS,
   type EventTypeDefinition,
-} from "../../../seed/event-types-seed-data";
+} from "../config/event-types";
 
 /**
  * The mechanism ids this module is consulted about by name elsewhere.
@@ -52,7 +57,7 @@ export function eventTypeDefinition(
   if (!type) return undefined;
   // `key` first, `slug` second — a stored value is whichever the authoring
   // surface wrote, and they are equal for every shipped row.
-  return eventTypesSeedData.find((t) => t.key === type || t.slug === type);
+  return EVENT_TYPE_DEFINITIONS.find((t) => t.key === type || t.slug === type);
 }
 
 /**
