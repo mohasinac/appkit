@@ -10020,7 +10020,6 @@ export {
 export { raffleEntrySchema } from "./features/contact/schemas/inquiry-forms";
 export {
   orderCancelSchema,
-  paymentProofSchema,
 } from "./features/orders/schemas/buyer-forms";
 export { scamReportFormSchema } from "./features/scams/schemas/report-form";
 export { sublistingCategoryFormSchema } from "./features/store-extensions/schemas/sublisting-category-form";

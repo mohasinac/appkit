@@ -159,7 +159,7 @@ import { adminAddressCreateSchema } from "../features/addresses/schemas/address-
 import { adminOrderUpdateSchema, employeeInviteSchema, adminAdFormSchema } from "../features/admin/schemas/admin-ops-forms";
 import { adminUserUpdateSchema, whatsappSettingsSchema, giveawayPullSchema } from "../features/admin/schemas/admin-user-form";
 import { siteSettingsFormSchema } from "../features/admin/schemas/site-settings-form";
-import { orderCancelSchema, paymentProofSchema } from "../features/orders/schemas/buyer-forms";
+import { orderCancelSchema } from "../features/orders/schemas/buyer-forms";
 import { scamReportFormSchema } from "../features/scams/schemas/report-form";
 import { sublistingCategoryFormSchema } from "../features/store-extensions/schemas/sublisting-category-form";
 import { giveawayConfigWriteSchema } from "../features/giveaway/schemas/config-write";
@@ -210,7 +210,7 @@ const forms = {
   siteSettings: siteSettingsFormSchema,
   whatsappSettings: whatsappSettingsSchema,
   orderCancel: orderCancelSchema,
-  paymentProof: paymentProofSchema,
+  /* 🛑 `paymentProof` entry removed 2026-11-11 — the manual-payment form is gone. */
   scamReport: scamReportFormSchema,
   sublistingCategory: sublistingCategoryFormSchema,
   giveawayConfig: giveawayConfigWriteSchema,

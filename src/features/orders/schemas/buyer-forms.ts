@@ -53,85 +53,17 @@ export const orderCancelSchema = z.object({
 
 export type OrderCancelValues = z.infer<typeof orderCancelSchema>;
 
-/**
- * Uploading proof of a manual (cash / UPI / EMI) payment.
+/*
+ * 🛑 `paymentProofSchema` / `PaymentProofValues` DELETED 2026-11-11.
  *
- * ## Every field here is evidence
+ * This validated the buyer's manual-payment submission: a screenshot, a typed
+ * UTR, a "I have paid" declaration and a fraud agreement. Its own header
+ * opened with "Every field here is evidence" — and that was the problem. An
+ * uploaded image and a typed reference are ASSERTIONS; nothing in the chain
+ * compared either against a bank or a gateway.
  *
- * An admin verifies or rejects on this, and a rejection carries a 7-day ban
- * cascade — so the cost of a sloppy submission is real in both directions.
- *
- * `buyerMarkedPaid` and `buyerFraudAgreementAccepted` are `z.literal(true)`
- * rather than `z.boolean()`: an unchecked declaration is not a submission with
- * a `false` in it, it is a form that must not send.
+ * ⚠ One piece of its design is worth carrying forward: `buyerMarkedPaid` and
+ * `buyerFraudAgreementAccepted` were `z.literal(true)`, not `z.boolean()` —
+ * an unchecked declaration is not a submission containing `false`, it is a
+ * form that must not send. Reuse that shape for any required agreement.
  */
-export const paymentProofSchema = z.object({
-  /*
-   * The screenshot. It was the ONE thing the route hard-required
-   * (`MISSING_PROOF_URL`) and the one field this schema did not declare, so
-   * the page gated it with a toast instead of a field error — and the schema
-   * could never have reported the form's most important omission.
-   */
-  proofUrl: annotate(
-    z.string().min(1, "Upload a screenshot of the payment confirmation."),
-    {
-      section: "proof", sectionLabel: "Your payment", sectionRequired: true,
-      order: 1, row: "full", kind: "media",
-      label: "Payment screenshot (JPG/PNG/PDF)",
-      help: "A screenshot of the payment confirmation from your UPI app.",
-    },
-  ),
-  /*
-   * Optional, and format-checked when present.
-   *
-   * It was `.min(4)` REQUIRED here while the route never checked it and the
-   * page labelled it "(optional)" — three answers, and the schema's was
-   * unreachable because nothing parsed it. Required is wrong: `cash` is a
-   * manual payment method too and has no UTR, so demanding one would block
-   * every cash order. A short-but-non-empty reference is still a typo worth
-   * catching, which is what the refine keeps.
-   */
-  transactionId: annotate(
-    z
-      .string()
-      .trim()
-      .max(120, "Keep the reference under 120 characters.")
-      .refine(
-        (v) => v === "" || v.length >= 4,
-        "Enter the full UTR or reference number from your payment app.",
-      )
-      .optional()
-      .or(z.literal("")),
-    { section: "proof", quick: true, order: 2, row: "pair",
-      label: "UTR / transaction ID",
-      help: "The reference shown in your UPI app. Leave blank for a cash payment." },
-  ),
-  /*
-   * The UPI ID the buyer actually sent to. Compared against the store's
-   * displayed one so a mismatch is flagged to the admin — which is why the
-   * shape matters, not just its presence.
-   */
-  buyerReportedUpiId: annotate(
-    z
-      .string()
-      .trim()
-      .regex(/^[\w.\-_]{2,256}@[a-zA-Z]{2,64}$/, "Enter the UPI ID you paid to, e.g. name@bank.")
-      .optional()
-      .or(z.literal("")),
-    { section: "proof", order: 3, row: "pair",
-      label: "UPI ID you paid from",
-      help: "Shown in your UPI app's confirmation — it helps us verify faster." },
-  ),
-  buyerMarkedPaid: annotate(
-    z.literal(true, { errorMap: () => ({ message: "Confirm that you have sent the payment." }) }),
-    { section: "declare", sectionLabel: "Declaration", sectionRequired: true, order: 1, row: "full" },
-  ),
-  buyerFraudAgreementAccepted: annotate(
-    z.literal(true, {
-      errorMap: () => ({ message: "You must accept the fraud policy to submit proof." }),
-    }),
-    { section: "declare", order: 2, row: "full" },
-  ),
-});
-
-export type PaymentProofValues = z.infer<typeof paymentProofSchema>;

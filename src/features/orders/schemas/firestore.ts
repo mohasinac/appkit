@@ -1526,15 +1526,39 @@ export interface OrderDocument extends BaseDocument {
   /** Timestamp when the order was packed and ready for courier handoff. */
   packedAt?: Date;
 
-  // ── Manual / Cash / UPI payment proof (P-1) ─────────────────────────────
-  /** Media slug for buyer-uploaded UPI/bank screenshot (via /api/media proxy). */
-  paymentProofUrl?: string;
-  /** UTR / transaction reference entered by the buyer. */
-  paymentTransactionId?: string;
-  /** MIME type detected at finalize step (image/jpeg, image/png, application/pdf). */
-  paymentProofMimeType?: string;
-  /** When the buyer submitted the proof. */
-  paymentProofUploadedAt?: Date;
+  /*
+   * ── THE MANUAL PAYMENT-PROOF FIELDS WERE DELETED HERE 2026-11-11 ─────────
+   *
+   * Owner: *"then we can just remove the manual payment entirely as that is
+   * wrong to have"*, and then explicitly: *"we do not keep the manual or the
+   * emi flow schema as well."*
+   *
+   * Gone: `paymentProofUrl`, `paymentTransactionId`, `paymentProofMimeType`,
+   * `paymentProofUploadedAt`, and below them `displayedUpiId`,
+   * `buyerReportedUpiId`, `paymentUpiMismatch`, `buyerMarkedPaid(At)`,
+   * `buyerFraudAgreementAccepted(At)`, `paymentReviewOutcome`,
+   * `paymentReviewedBy`.
+   *
+   * 🛑 WHY, not just that it was asked for: a screenshot is forgeable in
+   * under a minute and OCR does not verify one — OCR reads what the image
+   * CLAIMS. A 12-digit UTR is a plausible string anyone can invent. Neither
+   * becomes evidence by being extracted accurately, and
+   * `payment-manual`'s own `listPayments()` returns `[]` with a comment
+   * saying there is no ledger to reconcile against. The fields recorded an
+   * assertion and dressed it as proof.
+   *
+   * 🛑 `paymentDeadline` SURVIVES, immediately below. It is the 15-minute
+   * payment window, not part of the proof flow, and `paymentWindowTimeout`
+   * still cancels and restocks on it. CLAUDE.md records it as reused rather
+   * than deleted.
+   *
+   * ⚠ TYPE REMOVAL, NOT A DATA MIGRATION — same as the EMI fields. Historical
+   * orders still carry these keys in Firestore and `set({ merge: true })`
+   * could not remove them anyway. What changes is that nothing here reads
+   * them, so a past manual order's proof renders nowhere. Accepted: the
+   * alternative is keeping the whole review surface alive to display evidence
+   * that was never evidence.
+   */
 
   // ── 15-minute payment window (Tier PP) ───────────────────────────────────
   /**
@@ -1550,24 +1574,25 @@ export interface OrderDocument extends BaseDocument {
   stockRestored?: boolean;
   stockRestoredAt?: Date;
 
-  /**
-   * UPI VPA resolved and shown to the buyer at order-creation time — the
-   * seller's own `payoutDetails.upiId` for seller-owned stores (falling back
-   * to `siteSettings.contact.upiVpa` if unconfigured), or the site UPI
-   * directly for admin-owned stores. Immutable "ground truth" for the
-   * cross-check below; never client-supplied.
+  /*
+   * 🛑 `displayedUpiId`, `buyerReportedUpiId`, `paymentUpiMismatch`,
+   * `buyerMarkedPaid(At)` and `buyerFraudAgreementAccepted(At)` DELETED
+   * 2026-11-11 — see the block above.
+   *
+   * ⚠ The UPI cross-check is worth understanding before anyone rebuilds
+   * something like it: `displayedUpiId` was ground truth, `buyerReportedUpiId`
+   * was what the buyer TYPED, and `paymentUpiMismatch` flagged the
+   * difference. That compares two strings WE and the BUYER supplied — it
+   * never touched a bank or a gateway, so a buyer who typed the address back
+   * correctly produced a clean match having paid nothing at all. It detected
+   * typos, not fraud.
+   *
+   * ⚠ `buyerFraudAgreementAccepted` is NOT lost as a concept. A buyer
+   * agreement that must be evidenceable now goes through `policy-consent`,
+   * which stores the TEXT, hashes it and versions it — the §C COD clauses are
+   * the live example. A bare boolean records that somebody ticked something,
+   * never WHAT they were shown.
    */
-  displayedUpiId?: string;
-  /** UPI VPA the buyer says they actually paid from/to, per their own UPI app — the real cross-check signal against `displayedUpiId`. */
-  buyerReportedUpiId?: string;
-  /** True when `buyerReportedUpiId` doesn't match `displayedUpiId` — surfaced prominently in the admin review UI. */
-  paymentUpiMismatch?: boolean;
-  /** Buyer's explicit "I have paid" declaration, distinct from admin's own verification. */
-  buyerMarkedPaid?: boolean;
-  buyerMarkedPaidAt?: Date;
-  /** Buyer's required "this payment is genuine, no fraudulent tricks/chargebacks" agreement — server-validated, not just a client-side disable. */
-  buyerFraudAgreementAccepted?: boolean;
-  buyerFraudAgreementAcceptedAt?: Date;
 
   /**
    * ── D55: the pre-order BALANCE, which is a second payment ──────────────
@@ -1622,12 +1647,23 @@ export interface OrderDocument extends BaseDocument {
     reviewNote?: string;
   };
 
-  /** Which of the three admin review actions was taken on this order's payment proof. */
-  paymentReviewOutcome?: "approved" | "reupload_requested" | "rejected_fraud";
-  /** Admin's reason text — required for both `reupload_requested` and `rejected_fraud`. */
-  paymentReviewNote?: string;
-  paymentReviewedBy?: string;
-  paymentReviewedAt?: Date;
+  /*
+   * 🛑 THE PAYMENT-REVIEW FIELDS WERE DELETED HERE 2026-11-11:
+   * `paymentReviewOutcome`, `paymentReviewNote`, `paymentReviewedBy`,
+   * `paymentReviewedAt`.
+   *
+   * They existed so an admin could adjudicate a screenshot. With manual
+   * payment retired there is nothing to adjudicate — a gateway either
+   * confirmed the payment or it did not, and that answer arrives signed on a
+   * webhook rather than as a human verdict.
+   *
+   * ⚠ The most dangerous thing in this group was never a field: the
+   * `runPaymentReviewAutoApprove` sweep promoted an UNREVIEWED proof to PAID
+   * after two hours, with `verifiedBy: "system:auto-approve"`. That is an
+   * unattended path from a forged screenshot to dispatched goods, and it was
+   * shipping. It was switched off earlier in this lane before any of this was
+   * deleted.
+   */
 
   /** True when `paymentReviewAutoApprove` approved this order after 2 hours of no manual admin review. */
   autoApproved?: boolean;
@@ -1864,8 +1900,13 @@ export const ORDER_UPDATABLE_FIELDS = ["notes", "shippingAddress"] as const;
 export const ORDER_TRACKED_FIELDS = [
   "status",
   "paymentStatus",
-  /** Manual-payment review: proof verified, re-upload requested, rejected. */
-  "paymentReviewOutcome",
+  /*
+   * 🛑 `paymentReviewOutcome` REMOVED 2026-11-11 with the manual-payment
+   * schema. Leaving it would have been harmless at runtime — the field simply
+   * never changes — but a tracked-fields list is read as a statement about
+   * what matters on this document, and naming a field that cannot exist sends
+   * the next reader looking for a flow that is gone.
+   */
   /** The substance of the "shipped" transition. */
   "trackingNumber",
   /** Why it was cancelled — a bare "cancelled" is not a useful entry. */
