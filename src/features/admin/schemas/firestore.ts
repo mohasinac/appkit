@@ -770,6 +770,39 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Tier PP — cart total (rupees) at/above which checkout requires OTP verification. Applies to all payment methods except COD. Optional — falls back to no OTP gate when unset. */
     otpCheckoutThreshold?: number;
     /**
+     * Hours after which an UNREVIEWED manual-payment proof is auto-approved
+     * and the order marked PAID.
+     *
+     * 🛑 **`0` or unset means DISABLED, and that is the default on purpose.**
+     * This automation was a hardcoded `AUTO_APPROVE_HOURS = 2`, which made the
+     * unsafe state the default: nothing verifies a payment screenshot or a
+     * typed UTR, so a forged proof became a *paid* order — and then dispatched
+     * goods — two hours later with `verifiedBy: "system:auto-approve"` and no
+     * human in the loop. A security-relevant automation has to be opted INTO,
+     * the same reasoning that made `ALLOW_UNVERIFIED_WEBHOOKS` an opt-in on
+     * the payment webhook.
+     *
+     * It is config rather than a deleted constant because the safety net is a
+     * legitimate choice for an install whose payments ARE verified (a gateway
+     * or bank-feed rail) — the choice belongs to the operator, the machinery
+     * belongs here.
+     *
+     * ⚠ Turning this on while manual payments are unverified means accepting
+     * that an unattended forged screenshot can take goods.
+     */
+    paymentProofAutoApproveHours?: number;
+    /**
+     * As above, for buyout orders, which get a longer window: a Buy Now
+     * purchase settles in a one-hour scramble against a live drop and the
+     * amounts are whole-listing, so an admin should get a working day rather
+     * than a window that can elapse overnight.
+     *
+     * Falls back to `paymentProofAutoApproveHours` when unset, so an operator
+     * who enables the sweep does not silently get a *shorter* window on the
+     * larger orders.
+     */
+    paymentProofAutoApproveBuyoutHours?: number;
+    /**
      * Phone-number OTP verification during signup/checkout. Real per-SMS cost
      * via the Firebase phone-auth quota, so it stays OFF by default.
      *

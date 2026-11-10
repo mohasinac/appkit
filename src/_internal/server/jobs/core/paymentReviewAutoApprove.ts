@@ -1,23 +1,46 @@
 import { orderRepository } from "../../../../repositories";
+import { siteSettingsRepository } from "../../../../features/admin/repository/site-settings.repository";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { normalizeError } from "../../../../errors/normalize";
+import { safeRead } from "../../../../errors/safe-read";
 import { ORDER_MESSAGES } from "../handlers/messages";
 import type { JobContext } from "../runtime/types";
 
-const AUTO_APPROVE_HOURS = 2;
-
 /**
- * Buyout orders get a full day of admin review instead of two hours.
+ * 🛑 THIS SWEEP IS NOW OFF BY DEFAULT, AND THAT IS THE FIX.
  *
- * A Buy Now purchase is settled in a one-hour scramble against a still-live
- * collector drop, and the amounts involved are whole-listing rather than incremental —
- * so an admin should get a proper working day to look at the proof before the
- * safety net fires, rather than a window that can elapse overnight.
+ * It used to be `const AUTO_APPROVE_HOURS = 2` — a hardcoded constant that made
+ * the UNSAFE state the default. Nothing in the manual-payment flow verifies
+ * anything: the buyer uploads a screenshot (forgeable in a minute) and types a
+ * UTR (an invented string), and no check compares either against a bank or a
+ * gateway. This sweep then turned that unreviewed claim into a PAID order —
+ * and therefore into dispatched goods — two hours later, stamped
+ * `verifiedBy: "system:auto-approve"`, with no human ever looking.
+ *
+ * That is an unattended path from a forged screenshot to lost stock. The same
+ * mistake, in the same shape, is already recorded on the payment webhook,
+ * where the signature bypass was keyed on `NODE_ENV` so the permissive state
+ * was the default. A security-relevant automation must be opted INTO.
+ *
+ * It is config rather than a deletion because the safety net is legitimate for
+ * an install whose payments are actually verified — a gateway or a bank-feed
+ * rail. The machinery stays; the choice moves to the operator. `0` or unset
+ * disables it.
  */
-const BUYOUT_AUTO_APPROVE_HOURS = 24;
+const AUTO_APPROVE_DISABLED = 0;
 
-function autoApproveHoursFor(order: { isBuyout?: boolean }): number {
-  return order.isBuyout === true ? BUYOUT_AUTO_APPROVE_HOURS : AUTO_APPROVE_HOURS;
+/** The query cutoff. Only used when the sweep is enabled at all. */
+function resolveWindows(settings: {
+  payment?: { paymentProofAutoApproveHours?: number; paymentProofAutoApproveBuyoutHours?: number };
+} | null): { standard: number; buyout: number } {
+  const standard = settings?.payment?.paymentProofAutoApproveHours ?? AUTO_APPROVE_DISABLED;
+  /*
+   * Falls back to the standard window rather than to a constant: an operator
+   * who enables the sweep must not silently get a SHORTER window on buyout
+   * orders, which are the largest ones on the site.
+   */
+  const buyout = settings?.payment?.paymentProofAutoApproveBuyoutHours ?? standard;
+  return { standard, buyout };
 }
 
 /**
@@ -34,11 +57,39 @@ function autoApproveHoursFor(order: { isBuyout?: boolean }): number {
  * than needing a second scan on a second cutoff.
  */
 export async function runPaymentReviewAutoApprove(ctx: JobContext): Promise<void> {
-  ctx.logger.info(`Scanning unreviewed payment proofs > ${AUTO_APPROVE_HOURS}h old`);
+  /*
+   * 🛑 Read the setting BEFORE the query, and return without touching anything
+   * when it is off. Scanning first and filtering later would still cost a
+   * Firestore read per sweep on every install that wants this disabled — and,
+   * worse, would leave the dangerous branch one edit away from running.
+   */
+  const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+    route: "jobs/paymentReviewAutoApprove",
+    key: "paymentReviewAutoApprove.settings",
+    fallback: null,
+  });
+  const { standard: AUTO_APPROVE_HOURS, buyout: BUYOUT_AUTO_APPROVE_HOURS } = resolveWindows(settings);
+
+  if (AUTO_APPROVE_HOURS <= AUTO_APPROVE_DISABLED) {
+    /*
+     * ⚠ `info`, not `warn`. Disabled is the correct and default state, so this
+     * must not look like a fault — it is the sweep reporting that a human
+     * reviews every proof, which is what we want while manual payments are
+     * unverified.
+     */
+    ctx.logger.info(
+      "Payment-proof auto-approve is DISABLED (payment.paymentProofAutoApproveHours unset or 0) — every proof needs a human",
+    );
+    return;
+  }
+
+  ctx.logger.warn(
+    `Payment-proof auto-approve is ENABLED at ${AUTO_APPROVE_HOURS}h — unreviewed proofs will be marked PAID without a human`,
+  );
 
   const scanned = await orderRepository.getUnreviewedProofPastDeadline(AUTO_APPROVE_HOURS);
   const unreviewed = scanned.filter((entry) => {
-    const hours = autoApproveHoursFor(entry.data);
+    const hours = entry.data.isBuyout === true ? BUYOUT_AUTO_APPROVE_HOURS : AUTO_APPROVE_HOURS;
     if (hours === AUTO_APPROVE_HOURS) return true;
     const uploadedAt = entry.data.paymentProofUploadedAt
       ? new Date(entry.data.paymentProofUploadedAt as unknown as string | Date)
