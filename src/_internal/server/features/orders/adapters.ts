@@ -216,13 +216,8 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     // whatsappNotifyAddon, and the packer needs giftWrapMessage in hand. An
     // adapter that drops them makes every downstream surface render its
     // "not applicable" fallback instead (Root Cause #57).
-    // EMI, so the buyer can see and pay their own schedule. Mapped with the
-    // add-ons above for the same reason recorded there: an adapter that drops
-    // a field makes every downstream surface render its not-applicable
-    // fallback (Root Cause #57).
-    emiEnabled: doc.emiEnabled,
-    emiInstallments: doc.emiInstallments,
-    emiRemainingBalance: doc.emiRemainingBalance,
+    // The EMI passthrough went with EMI stage 5a — `emiEnabled`,
+    // `emiInstallments` and `emiRemainingBalance` are off `OrderDocument`.
     whatsappNotifyAddon: doc.whatsappNotifyAddon,
     whatsappNotifyFee: doc.whatsappNotifyFee,
     giftWrapAddon: doc.giftWrapAddon,
@@ -353,22 +348,14 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
      * answer a yes/no question is the spread-and-publish shape (Root Cause #70).
      */
     refundCount: doc.refunds?.length ?? 0,
-    // Manual-payment (cash / UPI / EMI) passthrough. These were previously
-    // dropped here, which silently disabled the entire buyer proof-upload
-    // flow: `/user/orders/[id]/payment` branches on `paymentMethod` and so
-    // rendered "this order does not require manual payment upload" for every
-    // order, with no UPI ID and no countdown.
     paymentMethod: doc.paymentMethod,
-    displayedUpiId: doc.displayedUpiId,
+    /*
+     * The manual-payment proof passthrough went with stages 3a-3d. Only
+     * `paymentDeadline` survives — it is the 15-minute WINDOW, kept
+     * deliberately because it still drives `paymentWindowTimeout`'s
+     * cancel-and-restock.
+     */
     paymentDeadline: toIsoOrUndefined(doc.paymentDeadline),
-    paymentProofUrl: doc.paymentProofUrl,
-    paymentProofUploadedAt: toIsoOrUndefined(doc.paymentProofUploadedAt),
-    paymentTransactionId: doc.paymentTransactionId,
-    buyerReportedUpiId: doc.buyerReportedUpiId,
-    buyerMarkedPaid: doc.buyerMarkedPaid,
-    paymentUpiMismatch: doc.paymentUpiMismatch,
-    paymentReviewOutcome: doc.paymentReviewOutcome,
-    paymentReviewNote: doc.paymentReviewNote,
     cancellationReason: doc.cancellationReason,
     // ── W2: history + provenance ──────────────────────────────────────────
     //

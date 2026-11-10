@@ -707,12 +707,8 @@ export async function bulkSellerOrder(
       skipped.push(id);
       continue;
     }
-    if (order.emiEnabled && !order.emiComplete) {
-      // Delivered via the seller's allowShipBeforeEmiComplete override, but the
-      // buyer hasn't finished paying — hold the payout until emiComplete.
-      skipped.push(id);
-      continue;
-    }
+    /* The EMI payout hold went with EMI stage 5 — no order carries a plan,
+       so this skipped nothing. */
     eligible.push(order as NonNullable<typeof order>);
   }
 
@@ -1161,24 +1157,12 @@ export async function sellerDeleteProduct(
 
 // --- Custom Ship Order --------------------------------------------------------
 
-/**
- * EMI orders stay unshipped until every installment is paid, UNLESS every
- * product in the order has its `allowShipBeforeEmiComplete` flag set. This
- * is the single choke point for the "ship" transition, so it can't be
- * bypassed by a different route/action reaching `orderRepository.update`
- * directly with `status: "shipped"`.
+/*
+ * 🛑 `assertEmiShippable` removed with EMI stage 5. It was the choke point
+ * that refused to ship an order whose instalments were unpaid, unless every
+ * product allowed early shipping. `emiEnabled`/`emiComplete` are off
+ * `OrderDocument`, so it returned immediately for every order.
  */
-export async function assertEmiShippable(order: OrderDocument): Promise<void> {
-  if (!order.emiEnabled || order.emiComplete) return;
-  const productIds = (order.items ?? []).map((i) => i.productId).filter(Boolean);
-  const products = await Promise.all(productIds.map((id) => productRepository.findById(id)));
-  const allAllowEarlyShip = products.length > 0 && products.every((p) => p?.allowShipBeforeEmiComplete === true);
-  if (!allAllowEarlyShip) {
-    throw new ValidationError(
-      "This order is still on an EMI plan — it can't ship until all installments are paid, unless the seller has enabled early shipping for every item in the order.",
-    );
-  }
-}
 
 export async function customShipOrder(
   userId: string,
@@ -1201,7 +1185,8 @@ export async function customShipOrder(
     throw new ValidationError("Order is already shipped");
   if (order.status !== OrderStatusValues.CONFIRMED)
     throw new ValidationError("Order must be confirmed before shipping");
-  await assertEmiShippable(order);
+  /* The EMI shipment gate went with EMI stage 5 — it returned immediately
+     for every order once `emiEnabled` was deleted. */
 
   await orderRepository.update(orderId, {
     status: OrderStatusValues.SHIPPED,
@@ -1267,62 +1252,8 @@ export async function customShipOrder(
   return { orderId, method: "custom" };
 }
 
-/**
- * Records collection of one EMI installment. Seller/admin marks the
- * installment paid after verifying the buyer's manual transfer (UTR +
- * proof). Recomputes `emiRemainingBalance` from the still-pending
- * installments and flips `emiComplete` once none remain — that flag is the
- * single gate `assertEmiShippable` reads, so this is the only place an
- * EMI order can become shippable.
+/*
+ * 🛑 `markEmiInstallmentPaid` removed with EMI stage 5 — it read and wrote
+ * `emiInstallments` / `emiRemainingBalance` / `emiComplete`, all deleted.
  */
-export async function markEmiInstallmentPaid(
-  userId: string,
-  userRole: string,
-  orderId: string,
-  input: MarkEmiInstallmentPaidInput,
-): Promise<OrderDocument> {
-  const order = await orderRepository.findById(orderId);
-  if (!order) throw new NotFoundError("Order not found");
-  // order.storeId is the store slug, not the seller's Firebase UID.
-  if (userRole !== "admin") {
-    const store = await storeRepository.findByOwnerId(userId);
-    if (!store || order.storeId !== store.id)
-      throw new AuthorizationError("You do not own this order");
-  }
-  if (!order.emiEnabled) throw new ValidationError("This order is not on an EMI plan");
 
-  const installments = order.emiInstallments ?? [];
-  const target = installments.find((i) => i.index === input.installmentIndex);
-  if (!target) throw new ValidationError(`Installment ${input.installmentIndex} not found on this order`);
-  if (target.status === "paid") throw new ValidationError("This installment is already marked paid");
-
-  const updatedInstallments = installments.map((i) =>
-    i.index === input.installmentIndex
-      ? {
-          ...i,
-          status: "paid" as const,
-          paidAt: new Date(),
-          transactionId: input.transactionId,
-          proofUrl: input.proofUrl,
-        }
-      : i,
-  );
-  const emiRemainingBalance = updatedInstallments
-    .filter((i) => i.status !== "paid")
-    .reduce((sum, i) => sum + i.amount, 0);
-  const emiComplete = updatedInstallments.every((i) => i.status === "paid");
-
-  const updated = await orderRepository.update(orderId, {
-    emiInstallments: updatedInstallments,
-    emiRemainingBalance,
-    emiComplete,
-  });
-
-  serverLogger.info("markEmiInstallmentPaid", {
-    orderId,
-    userId,
-    installmentIndex: input.installmentIndex,
-    emiComplete,
-  });
-  return updated;
-}

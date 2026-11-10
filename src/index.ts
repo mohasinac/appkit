@@ -8339,11 +8339,6 @@ export { createStore } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // customShipOrder - Shared export for custom ship order.
 export { customShipOrder } from "./features/seller/actions/seller-actions";
-// assertEmiShippable - the single EMI shipment-gate choke point; any code path that transitions an order to "shipped" must call this first.
-export { assertEmiShippable } from "./features/seller/actions/seller-actions";
-// markEmiInstallmentPaid - records collection of one EMI installment; recomputes emiRemainingBalance/emiComplete.
-export { markEmiInstallmentPaid } from "./features/seller/actions/seller-actions";
-export type { MarkEmiInstallmentPaidInput } from "./features/seller/actions/seller-actions";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerAnalytics - Helper for get seller analytics.
 export { getSellerAnalytics } from "./features/seller/actions/seller-actions";
