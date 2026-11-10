@@ -3982,6 +3982,14 @@ export { CHECKOUT_VALUE_OTP_VERIFY_RATE_LIMIT } from "./features/auth/checkout-v
 export {
   sendCheckoutValueOtp,
   verifyCheckoutValueOtp,
+  // The resilient wrapper callers should prefer: falls back to the other
+  // channel instead of waiving the OTP gate on a single channel's outage.
+  deliverCheckoutValueOtp,
+  resolveDefaultOtpChannel,
+} from "./features/checkout/server";
+export type {
+  CheckoutValueOtpChannel,
+  CheckoutValueOtpDelivery,
 } from "./features/checkout/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // authMeGET - Shared export for auth me get.

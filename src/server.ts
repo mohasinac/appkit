@@ -949,6 +949,14 @@ export {
   sendCheckoutValueOtp,
   verifyCheckoutValueOtp,
   isCheckoutValueOtpVerified,
+  // Prefer `deliverCheckoutValueOtp` over the bare `sendCheckoutValueOtp`:
+  // the latter waives the gate when its one channel is down.
+  deliverCheckoutValueOtp,
+  resolveDefaultOtpChannel,
+} from "./features/checkout/server";
+export type {
+  CheckoutValueOtpChannel,
+  CheckoutValueOtpDelivery,
 } from "./features/checkout/server";
 export { FailedCheckoutRepository, failedCheckoutRepository } from "./features/checkout/repository/failed-checkout.repository";
 /*

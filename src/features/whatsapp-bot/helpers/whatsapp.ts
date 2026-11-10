@@ -204,9 +204,27 @@ export async function sendWhatsAppBusinessMessage(
 export async function sendWhatsAppTemplateMessage(
   input: WaBusinessTemplateSendInput,
 ): Promise<boolean> {
-  const { toPhone, phoneNumberId, accessToken, templateName, languageCode, bodyParams } = input;
+  const { toPhone, phoneNumberId, accessToken, templateName, languageCode, bodyParams, buttonParam } =
+    input;
   const cleanPhone = toPhone.replace(/\D/g, "");
   if (!cleanPhone || !phoneNumberId || !accessToken || !templateName) return false;
+
+  /*
+   * 🛑 `index` is a STRING ("0"), not a number — Meta rejects the numeric form.
+   * `sub_type: "url"` covers both a dynamic URL button and an AUTHENTICATION
+   * template's COPY_CODE button; the latter is documented under `url` rather
+   * than a type of its own, which is not obvious from the payload shape.
+   */
+  const buttonComponent = buttonParam
+    ? [
+        {
+          type: "button",
+          sub_type: "url",
+          index: "0",
+          parameters: [{ type: "text", text: buttonParam }],
+        },
+      ]
+    : [];
   try {
     const res = await fetch(`${META_GRAPH_BASE}/${phoneNumberId}/messages`, {
       method: "POST",
@@ -221,13 +239,18 @@ export async function sendWhatsAppTemplateMessage(
         template: {
           name: templateName,
           language: { code: languageCode },
-          ...(bodyParams?.length
+          ...(bodyParams?.length || buttonComponent.length
             ? {
                 components: [
-                  {
-                    type: "body",
-                    parameters: bodyParams.map((text) => ({ type: "text", text })),
-                  },
+                  ...(bodyParams?.length
+                    ? [
+                        {
+                          type: "body",
+                          parameters: bodyParams.map((text) => ({ type: "text", text })),
+                        },
+                      ]
+                    : []),
+                  ...buttonComponent,
                 ],
               }
             : {}),

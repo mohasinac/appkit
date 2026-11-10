@@ -8,7 +8,7 @@
  */
 
 import { timingSafeEqual } from "crypto";
-import { ValidationError } from "../../../errors";
+import { AuthorizationError, ValidationError } from "../../../errors";
 import { normalizeError } from "../../../errors/normalize";
 import { safeRead } from "../../../errors/safe-read";
 import { serverLogger } from "../../../monitoring";
@@ -17,7 +17,7 @@ import { getAdminDb } from "../../../providers/db-firebase";
 import { resolveDate } from "../../../utils";
 import { addressesRepository } from "../../addresses/repository/addresses.repository";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
-import { sendWhatsAppBusinessMessage } from "../../whatsapp-bot/helpers/whatsapp";
+import { sendWhatsAppTemplateMessage } from "../../whatsapp-bot/helpers/whatsapp";
 import { isChannelHealthy, withChannelRetry } from "../../../_internal/server/notifications/channel-health";
 import { guardSend, logSuppressedSend } from "../../../_internal/server/notifications/send-guard";
 import {
@@ -58,9 +58,25 @@ export async function sendCheckoutValueOtp(
   userEmail: string,
   channel: CheckoutValueOtpChannel = "email",
   addressId?: string,
+  opts?: {
+    /**
+     * Skip the per-user cooldown because the caller already paid it for this
+     * same buyer request.
+     *
+     * 🛑 Needed for the fallback in `deliverCheckoutValueOtp`, and without it
+     * the fallback cannot work AT ALL: `enforceCheckoutValueOtpRateLimit`
+     * WRITES `lastSentAt` on every call, so a second attempt moments later is
+     * refused by the cooldown the first attempt just set. One buyer pressing
+     * "send code" once is one request, however many channels it takes to
+     * deliver — so the cooldown belongs to the request, not the attempt.
+     *
+     * Deliberately opt-IN: every existing caller keeps being rate limited.
+     */
+    alreadyRateLimited?: boolean;
+  },
 ): Promise<{ maskedEmail?: string; maskedPhone?: string; skipped?: boolean }> {
   const db = getAdminDb();
-  await enforceCheckoutValueOtpRateLimit(db, userId);
+  if (!opts?.alreadyRateLimited) await enforceCheckoutValueOtpRateLimit(db, userId);
 
   const code = generateOtpCode();
   const codeHash = hashOtp(code);
@@ -91,8 +107,26 @@ export async function sendCheckoutValueOtp(
     const whatsappOtpEnabled = settings?.notificationChannels?.whatsapp?.otpEnabled === true;
     const phoneNumberId = creds.whatsappPhoneNumberId?.trim() ?? "";
     const accessToken = creds.whatsappCloudApiToken?.trim() ?? "";
+    /*
+     * 🛑 The AUTHENTICATION template is a HARD requirement, not a nicety. A
+     * checkout OTP is business-initiated and almost never falls inside the 24h
+     * customer-service window, and Meta rejects free-form `type: "text"` sends
+     * there — which is exactly what this path used to do. The symptom was not
+     * an error anyone would read: the send returned non-OK, the channel
+     * circuit-breaker tripped, and the OTP gate then reported itself SATISFIED
+     * (`skipped: true`) on every high-value checkout.
+     *
+     * Treated as part of `credsReady` so an install without one resolves to
+     * email rather than failing: see `resolveDefaultOtpChannel` below.
+     */
+    const otpTemplate = creds.whatsappTemplateCheckoutOtp?.trim() ?? "";
+    const templateLanguage = creds.whatsappTemplateLanguage?.trim() || "en";
     const credsReady =
-      phoneNumberId && accessToken && !phoneNumberId.includes("PLACEHOLDER") && !accessToken.includes("PLACEHOLDER");
+      phoneNumberId &&
+      accessToken &&
+      otpTemplate &&
+      !phoneNumberId.includes("PLACEHOLDER") &&
+      !accessToken.includes("PLACEHOLDER");
 
     if (!whatsappOtpEnabled || !credsReady) {
       throw new ValidationError("WhatsApp verification isn't available right now — send the code by email instead.");
@@ -145,7 +179,28 @@ export async function sendCheckoutValueOtp(
 
     try {
       const sent = await withChannelRetry("whatsapp", async () => {
-        const ok = await sendWhatsAppBusinessMessage({ toPhone: phone, message, phoneNumberId, accessToken });
+        /*
+         * 🛑 The code travels TWICE, and both are required.
+         *
+         * `bodyParams` fills the `{{1}}` Meta renders inside its own
+         * authentication copy (the body text of an AUTHENTICATION template is
+         * owned by Meta, not by us). `buttonParam` fills the COPY_CODE button
+         * — omit it and Meta 4xxs the send outright, because a copy button
+         * with nothing to copy is not a valid message.
+         *
+         * `message` is no longer sent: free-form text on a business-initiated
+         * send is rejected. It is still built above because the email branch
+         * and the rate-limit bookkeeping share it.
+         */
+        const ok = await sendWhatsAppTemplateMessage({
+          toPhone: phone,
+          phoneNumberId,
+          accessToken,
+          templateName: otpTemplate,
+          languageCode: templateLanguage,
+          bodyParams: [code],
+          buttonParam: code,
+        });
         if (!ok) throw new Error("WhatsApp Cloud API returned a non-OK response");
         return ok;
       });
@@ -231,6 +286,120 @@ export async function sendCheckoutValueOtp(
 
   serverLogger.info(`Checkout value OTP sent: uid=${userId}`);
   return { maskedEmail };
+}
+
+/** What `deliverCheckoutValueOtp` tells the caller about the attempt. */
+export interface CheckoutValueOtpDelivery {
+  maskedEmail?: string;
+  maskedPhone?: string;
+  /** The channel that actually delivered. Absent when nothing could. */
+  sentVia?: CheckoutValueOtpChannel;
+  /**
+   * The buyer asked for one channel and got the other. Surface this — a code
+   * that silently arrives somewhere the buyer is not looking reads to them as
+   * "no code arrived", and they retry into the cooldown.
+   */
+  fellBack?: boolean;
+  /** 🛑 BOTH channels unavailable — the OTP gate was WAIVED. */
+  skipped?: boolean;
+}
+
+/**
+ * Which channel a buyer gets by default when they have not chosen one.
+ *
+ * WhatsApp is the owner's preferred default (2026-11-10), but it is **earned,
+ * not assumed**: it wins only when the channel is switched on, the Cloud API
+ * credentials are real, and an AUTHENTICATION template name is configured.
+ * Any of those missing and this resolves to email.
+ *
+ * 🛑 That condition is the whole safety property. Defaulting every buyer to
+ * WhatsApp before an authentication template exists would send each one down a
+ * channel Meta physically rejects; the repeated failures trip the channel
+ * circuit-breaker, and an unhealthy channel used to make the OTP gate report
+ * itself SATISFIED. The default would then have quietly disabled high-value
+ * order verification for everyone. It flips itself on when the config lands —
+ * no redeploy, because the template name is config and not code.
+ */
+export async function resolveDefaultOtpChannel(): Promise<CheckoutValueOtpChannel> {
+  const settings = await safeRead(() => siteSettingsRepository.getSingleton(), {
+    route: "checkout/value-otp",
+    key: "checkoutValueOtp.defaultChannel",
+    fallback: null,
+  });
+  const creds = settings?.credentials ?? {};
+  const ready =
+    settings?.notificationChannels?.whatsapp?.otpEnabled === true &&
+    Boolean(creds.whatsappPhoneNumberId?.trim()) &&
+    Boolean(creds.whatsappCloudApiToken?.trim()) &&
+    Boolean(creds.whatsappTemplateCheckoutOtp?.trim());
+  if (!ready) return "email";
+  return (await isChannelHealthy("whatsapp")) ? "whatsapp" : "email";
+}
+
+/**
+ * Send the checkout-value OTP, falling back to the other channel rather than
+ * waiving the gate.
+ *
+ * 🛑 This exists because the single-channel primitive answers `skipped: true`
+ * when its channel is circuit-broken or unconfigured — i.e. a channel OUTAGE
+ * silently satisfied the high-value OTP gate and let the order through
+ * unverified. One provider having a bad afternoon should not be a way to skip
+ * identity verification on the largest orders on the site.
+ *
+ * Owner decision, 2026-11-10: **fall back to the other channel; only skip when
+ * BOTH are down.** Skipping stays possible on purpose — the alternative is
+ * that a Meta or Resend outage blocks every high-value checkout — but it is
+ * now the genuinely-last resort, and it is logged as the security event it is
+ * rather than as a routine info line.
+ */
+export async function deliverCheckoutValueOtp(
+  userId: string,
+  userEmail: string,
+  requested?: CheckoutValueOtpChannel,
+  addressId?: string,
+): Promise<CheckoutValueOtpDelivery> {
+  const preferred = requested ?? (await resolveDefaultOtpChannel());
+  const order: CheckoutValueOtpChannel[] =
+    preferred === "whatsapp" ? ["whatsapp", "email"] : ["email", "whatsapp"];
+
+  const failures: string[] = [];
+
+  for (const [index, candidate] of order.entries()) {
+    try {
+      const result = await sendCheckoutValueOtp(userId, userEmail, candidate, addressId, {
+        // 🛑 Only the FIRST attempt pays the cooldown — see the option's own
+        // note. Charging the fallback again refuses it instantly.
+        alreadyRateLimited: index > 0,
+      });
+      if (result.skipped) {
+        failures.push(`${candidate}: channel unavailable`);
+        continue;
+      }
+      return { ...result, sentVia: candidate, fellBack: candidate !== preferred };
+    } catch (err) {
+      /*
+       * A cooldown rejection is the buyer's own rate limit and must reach them
+       * verbatim — retrying the other channel would be answering "you asked
+       * too soon" by sending another message. Rethrown, not collected.
+       */
+      if (err instanceof AuthorizationError) throw err;
+      void normalizeError(err);
+      failures.push(`${candidate}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  /*
+   * 🛑 Both channels failed, so the gate is waived and a high-value order can
+   * be placed without verification. `error`, not `warn` or `info`: this is the
+   * one branch here with a security consequence, and the previous version of
+   * this behaviour was invisible precisely because it logged at `warn` next to
+   * ordinary noise.
+   */
+  serverLogger.error(
+    "deliverCheckoutValueOtp: EVERY channel failed — high-value OTP gate WAIVED",
+    { uid: userId, preferred, failures },
+  );
+  return { skipped: true };
 }
 
 /** Verifies the 6-digit checkout-value OTP and marks the Firestore record verified. */

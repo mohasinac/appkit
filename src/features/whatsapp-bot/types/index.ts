@@ -79,6 +79,21 @@ export interface WaBusinessTemplateSendInput {
   languageCode: string;
   /** Positional {{1}}, {{2}}… body parameters, in order. */
   bodyParams?: string[];
+  /**
+   * The value for the template's button at index 0, when that button carries a
+   * variable. One field covers the only two shapes in use, which is why it is
+   * not split per button type:
+   *
+   *   · a **dynamic URL** button — the value is appended to the approved URL
+   *     prefix (`…/track?order={{1}}`), so this is the order id;
+   *   · an **AUTHENTICATION** template's COPY_CODE button — Meta requires the
+   *     one-time code to be repeated here as well as in the body, or the send
+   *     is rejected. The copy button has nothing to copy otherwise.
+   *
+   * 🛑 Omitting it on a template whose button HAS a variable is a 4xx from
+   * Meta, not a button that silently renders without one.
+   */
+  buttonParam?: string;
 }
 
 /** A product mapped to the Meta Commerce API catalog item format. */

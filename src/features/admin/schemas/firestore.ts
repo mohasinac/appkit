@@ -336,6 +336,18 @@ export interface SiteSettingsCredentials {
   whatsappTemplateOrderDelivered?: string;
   whatsappTemplateOrderCancelled?: string;
   whatsappTemplateRefundInitiated?: string;
+  /**
+   * Name of the **AUTHENTICATION**-category template used for the checkout
+   * OTP. Separate from the six above, and not interchangeable with them:
+   * Meta's policy check is on the template's CATEGORY, not its wording, so a
+   * UTILITY template carrying a code is rejected however it is phrased.
+   *
+   * 🛑 This field is also the switch that makes WhatsApp the DEFAULT OTP
+   * channel. Unset, the default resolves to email — so an install that has
+   * not had an authentication template approved cannot accidentally send
+   * every buyer down a channel that physically cannot deliver.
+   */
+  whatsappTemplateCheckoutOtp?: string;
   /** BCP-47 language code the templates above were approved in, e.g. "en" or "en_US". */
   whatsappTemplateLanguage?: string;
 }
@@ -375,6 +387,7 @@ export interface SiteSettingsCredentialsMasked {
   whatsappTemplateOrderDelivered?: string;
   whatsappTemplateOrderCancelled?: string;
   whatsappTemplateRefundInitiated?: string;
+  whatsappTemplateCheckoutOtp?: string;
   whatsappTemplateLanguage?: string;
 }
 
