@@ -204,7 +204,28 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     otpCheckoutThreshold: 5000,
   },
   emi: {
-    enabled: true,
+    /*
+     * 🛑 OFF. Owner, 2026-11-11: *"emi is removed from the code as that is now
+     * built into the payment gateways"* — the bespoke instalment feature is
+     * superseded, and nothing may ship enabling it by default.
+     *
+     * ⚠ This is STAGE ONE of the removal, and it is deliberately the flag
+     * rather than the code. EMI touches 111 files across checkout, cart,
+     * pricing, API routes, schemas and jobs; deleting that in one sweep
+     * through the money path is how checkout breaks. The flag stops every new
+     * EMI plan immediately, at zero code risk, and lets the deletion proceed
+     * at a safe pace afterwards.
+     *
+     * ✅ Verified honoured rather than assumed: `checkEmiEligibility` returns
+     * `site_disabled` on `enabled: false`, and `groupEmiGate` — which the
+     * checkout action calls — refuses the order before any schedule is built.
+     * A config switch nothing reads is this repo's recurring defect, so the
+     * read path was traced before relying on it.
+     *
+     * The rest of this block is retained for the staged deletion and for any
+     * historical plan still being read. Owner confirmed there are none live.
+     */
+    enabled: false,
     minOrderValue: 10000,
     tenureOptions: [2, 3, 4, 5, 6],
     tokenPercent: 10,
