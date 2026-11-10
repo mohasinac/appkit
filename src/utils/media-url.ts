@@ -197,9 +197,8 @@ export function placeholderTileFor(absUrl: string): string | undefined {
  * Because the shipped file is not reachable from every host, and a placeholder
  * that 404s is worse than no placeholder at all. Measured 2026-11-10:
  *
- *   GET /images/seed-tiles/1e293b.svg
- *     www.letitrip.in     404      events.letitrip.in  404
- *     blogs.letitrip.in   404      media.letitrip.in   404
+ *   GET /images/seed-tiles/1e293b.svg  ->  404 on ALL FOUR hosts measured:
+ *     the shop (apex), the events host, the blogs host and the media host.
  *
  * The six tiles live in the SHOP's `public/` only; `appkit/events`,
  * `appkit/blogs` and `appkit/media` ship no `public/images/seed-tiles/` and no
