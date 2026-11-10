@@ -30,7 +30,6 @@ export { mediaTmpCleanupHandler } from "./mediaTmpCleanup";
 export { pendingOrderTimeoutHandler } from "./pendingOrderTimeout";
 export { paymentWindowTimeoutHandler } from "./paymentWindowTimeout";
 export { hardBanReinstatementHandler } from "./hardBanReinstatement";
-export { paymentReviewAutoApproveHandler } from "./paymentReviewAutoApprove";
 export { productStatsSyncHandler } from "./productStatsSync";
 export { revenueRollupHandler } from "./revenueRollup";
 export { sellerStandingRollupHandler } from "./sellerStandingRollup";

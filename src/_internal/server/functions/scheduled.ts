@@ -22,7 +22,6 @@ import {
   paymentReconcileHandler,
   paymentWindowTimeoutHandler,
   hardBanReinstatementHandler,
-  paymentReviewAutoApproveHandler,
   pendingOrderTimeoutHandler,
   positionsReconcileHandler,
   clearanceExpiryRevealHandler,
@@ -161,13 +160,16 @@ export const hardBanReinstatement = defineFunction({
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
 });
 
-export const paymentReviewAutoApprove = defineFunction({
-  name: "paymentReviewAutoApprove",
-  description: "Auto-approve manual payment proofs unreviewed after 2 hours.",
-  trigger: { kind: "schedule", cron: "*/15 * * * *" },
-  handler: paymentReviewAutoApproveHandler,
-  options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
-});
+/*
+ * 🛑 `paymentReviewAutoApprove` DELETED 2026-11-11, with the manual-payment
+ * flow it served.
+ *
+ * It ran every 15 minutes and promoted an UNREVIEWED payment proof to PAID
+ * after two hours, stamping `verifiedBy: "system:auto-approve"`. That is an
+ * unattended path from a forged screenshot to dispatched goods, and it was
+ * shipping. It was switched off by config earlier in this lane; deleting it
+ * makes the hazard unrepresentable rather than one settings edit away.
+ */
 
 export const couponExpiry = defineFunction({
   name: "couponExpiry",
@@ -650,7 +652,6 @@ export const SCHEDULED_FUNCTIONS = [
   pendingOrderTimeout,
   paymentWindowTimeout,
   hardBanReinstatement,
-  paymentReviewAutoApprove,
   couponExpiry,
   offerExpiry,
   reservationExpiry,
