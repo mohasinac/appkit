@@ -651,7 +651,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.FEES),
       String(ROUTES.PUBLIC.HELP_SELLER_BADGES),
       String(ROUTES.PUBLIC.HOW_COLLECTOR_DROPS_WORK),
-      String(ROUTES.PUBLIC.HOW_EMI_WORKS),
       String(ROUTES.PUBLIC.HOW_OFFERS_WORK),
       String(ROUTES.PUBLIC.HOW_PAYOUTS_WORK),
       String(ROUTES.PUBLIC.ITEM_REQUESTS),
