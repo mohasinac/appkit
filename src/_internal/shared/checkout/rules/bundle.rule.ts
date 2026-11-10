@@ -46,7 +46,12 @@ export const bundleRule: CategoryCheckoutRule = {
    * which skips multi-member lines, and a bundle line is always one. A value
    * here relying on preflight would be a silent no-op.
    */
-  blockedPaymentMethods: ["cod", "cash"],
+  /*
+   * ⚠ `"cash"` dropped 2026-11-11 -- that tender no longer exists. The rule
+   * itself is unchanged: a bundle is priced BELOW the sum of its parts and is
+   * reserved the moment it is ordered, so it must be paid for up front.
+   */
+  blockedPaymentMethods: ["cod"],
   blockedPaymentMessage:
-    "Bundles cannot be paid for on delivery or in cash — a bundle is priced below the sum of its parts and is reserved when you order.",
+    "Bundles cannot be paid for on delivery — a bundle is priced below the sum of its parts and is reserved when you order.",
 };

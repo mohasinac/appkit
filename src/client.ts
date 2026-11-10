@@ -974,8 +974,6 @@ export type { OrderAddonBadgesOrder, OrderAddonBadgesProps } from "./features/or
 // Manual-payment (cash / UPI / EMI) shared constants — pure data + predicates,
 // no server deps. Used by the buyer proof-upload page and order-detail CTAs.
 export {
-  MANUAL_PAYMENT_METHODS,
-  isManualPaymentMethod,
   PAYMENT_REVIEW_QUEUE_MODES,
   isPaymentReviewQueueMode,
   PAYMENT_WINDOW_MINUTES,

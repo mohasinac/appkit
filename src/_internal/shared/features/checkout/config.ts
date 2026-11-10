@@ -58,35 +58,50 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
 /**
  * The methods checkout accepts.
  *
- * Owner, 2026-11-11: **gateway online + COD**. Two retired here:
+ * Owner, 2026-11-11, final: **ONLINE and COD, nothing else** — *"that cash
+ * also can go, we only stick with online or cod which will be handled by the
+ * shipment provider."* So COD collection rides the courier (Shiprocket or
+ * equivalent) and settles back to us; there is no in-person tender left.
+ *
+ * Three methods retired, each for its own reason:
  *
  * 🛑 `upi_manual` — a buyer paid a static VPA and uploaded a screenshot, which
  * nothing could verify. A screenshot is forgeable in a minute and a typed UTR
- * is an invented string; `payment-manual`'s own `listPayments()` returns `[]`
- * with a comment saying there is no ledger to compare against. Owner: *"that
- * is wrong to have."*
+ * is an invented string; the manual provider's own `listPayments()` returned
+ * `[]` with a comment saying there was no ledger to compare against.
  *
- * ⚠ `emi` is ALSO retired (owner: now handled inside the payment gateways) but
- * is deliberately still listed here. Removing it from the type produced **10
- * compile errors across the checkout action and the checkout rules**, and
- * `actions.ts` alone carries ~160 EMI references — that is a money-path
- * refactor, not a list edit. Narrowing the type before the call sites are
- * rewritten would leave checkout uncompilable.
+ * 🛑 `cash` — cash on PICKUP. Not the same thing as `cod`, and it was briefly
+ * kept on the grounds that counter pickup is a real flow. The owner's decision
+ * removes it: an in-person tender nobody is staffed to collect is the same
+ * unverifiable shape as `upi_manual`, one step further from a gateway.
  *
- * The flag already stops it: `emi.enabled` ships `false` and
- * `checkEmiEligibility` returns `site_disabled`, so no new EMI order can be
- * created regardless of this list. Stage five removes the code behind that.
+ * ⚠ `emi` — retired too (now handled inside the payment gateways), and its
+ * modules and schema are already deleted. It stays in this list ONLY until the
+ * consumer sweep finishes: `actions.ts` alone still carries ~66 references and
+ * narrowing the type first leaves checkout uncompilable. `emi.enabled` ships
+ * `false`, so nothing new can be created meanwhile.
  *
- * ⚠ `cash` is NOT `cod`: it is cash on **pickup** (see `PAYMENT_METHOD_LABEL`),
- * a separate in-person flow, and it stays. `admin_bypass` is an operator tool
- * rather than a buyer-selectable method.
+ * ⚠ `admin_bypass` is an operator tool, not a buyer-selectable method — it
+ * exists so an admin can reach an order state without a real payment, is gated
+ * on a permission, and logs every use.
  *
- * ⚠ This list is still a closed `as const`, and §B of the plan replaces it
- * with the capability registry so a new method is a config row rather than a
- * deploy. Narrowing it is correct in the meantime — a method nobody can serve
- * should not be offerable — but it is not yet the end state.
+ * 🛑 REMOVING `cash` RETIRES THE 15-MINUTE PAYMENT WINDOW, which is not
+ * obvious from this line. `hasPaymentWindow` in the checkout action is
+ * `paymentMethod === CASH` and nothing else, so no order can be given a
+ * `paymentDeadline` any more and `paymentWindowTimeout` has nothing to expire.
+ *
+ * ⚠ DO NOT delete that sweep on the strength of this. `runPaymentWindowTimeout`
+ * carries TWO unrelated jobs riding along for cost reasons —
+ * `reconcileStuckGatewayEvents` (webhook events we received and lost) and
+ * `runDueJobRetries`. Deleting it would silently take out gateway-event
+ * reconciliation, which is a money path. Strip its payment-window half and
+ * keep the schedule.
+ *
+ * ⚠ This list is still a closed `as const`; §B replaces it with config-driven
+ * resolution so a new method is a row rather than a deploy. Narrowing it is
+ * right in the meantime — a method nobody can serve should not be offerable.
  */
-export const CHECKOUT_PAYMENT_METHODS = ["cash", "cod", "online", "admin_bypass", "emi"] as const;
+export const CHECKOUT_PAYMENT_METHODS = ["cod", "online", "admin_bypass", "emi"] as const;
 export type CheckoutPaymentMethod = (typeof CHECKOUT_PAYMENT_METHODS)[number];
 
 export const CHECKOUT_DEFAULT_EMI_SETTINGS = {

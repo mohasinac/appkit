@@ -10,51 +10,23 @@ export const PAYMENT_WINDOW_MS = PAYMENT_WINDOW_MINUTES * 60 * 1000;
 export const PAYMENT_WINDOW_EXPIRED_REASON = "payment_window_expired";
 export const PAYMENT_FRAUD_REJECTED_REASON = "payment_fraud_rejected";
 
-/**
- * The `paymentMethod` values that settle out-of-band and therefore require a
- * buyer-uploaded proof + a human review pass. Single source of truth for
- * `attachPaymentProofAction`'s guard, the admin payment-review queue, and the
- * buyer/seller "needs payment proof" UI — previously each site inlined its own
- * `pm !== "cash" && pm !== "upi_manual" && ...` chain and they could drift.
- */
-/**
- * Methods whose payment is confirmed by a HUMAN rather than by a provider.
- *
- * 🛑 `emi` was removed 2026-11-11 (owner: *"emi is removed from the code as
- * that is now built into the payment gateways"*), and its presence here was a
- * real defect rather than dead config. Membership drives
- * `isManualPaymentMethod`, which gates the proof-upload flow, the 15-minute
- * `paymentDeadline`, the admin payment-review queue and
- * `paymentWindowTimeout`'s auto-cancel.
- *
- * So a gateway-settled EMI order was being given a manual-payment window it
- * could never satisfy: nobody uploads a screenshot for an instalment the
- * gateway already confirmed, so the proof stayed absent, the deadline lapsed,
- * and `paymentWindowTimeout` would cancel and restock a legitimately paid
- * order. The method list was the only thing saying it was manual.
- *
- * ⚠ Historical EMI orders keep their stored fields — this changes which
- * orders ENTER the manual flow, not how existing ones are read. Same
- * stop-creating-before-deleting staging used for `upi_manual`.
- */
 /*
- * ⚠ `upi_manual` STAYS in this list even though checkout no longer accepts it.
+ * 🛑 `MANUAL_PAYMENT_METHODS` and `isManualPaymentMethod` DELETED 2026-11-11.
  *
- * Membership drives `isManualPaymentMethod`, which the ADMIN order editor and
- * the payment-review queue use to decide whether to render a historical
- * order's proof, UTR and review controls. Removing it would make every past
- * `upi_manual` order un-reviewable — fields stay, actions go, which is the
- * same staging used for the rest of this removal.
+ * The list named the tenders that settle OUT OF BAND and therefore need a
+ * human to confirm them. It is now empty: `upi_manual` was retired as
+ * unverifiable, and the owner then removed `cash` (cash on pickup) too --
+ * *"we only stick with online or cod which will be handled by the shipment
+ * provider."* COD is collected by the courier and settles back to us, so it
+ * is not an out-of-band tender a human adjudicates; `isManualPaymentMethod
+ * ("cod")` was always false by design.
  *
- * The entry point is what was closed: `CHECKOUT_PAYMENT_METHODS` and the API
- * validators no longer accept `upi_manual`, so no NEW order can enter the
- * flow. This list only governs how existing ones are read.
+ * ⚠ A predicate over an empty set is worse than no predicate: it compiles,
+ * it is callable, it silently answers `false` everywhere, and every branch
+ * it guards becomes unreachable code that still looks live. Deleting it
+ * forces each of its ~23 call sites to be looked at rather than quietly
+ * neutered.
  */
-export const MANUAL_PAYMENT_METHODS: readonly string[] = ["cash", "upi_manual"];
-
-export function isManualPaymentMethod(method: string | undefined | null): boolean {
-  return !!method && MANUAL_PAYMENT_METHODS.includes(method);
-}
 
 /**
  * The two states an unresolved manual payment can be in. Derived at query

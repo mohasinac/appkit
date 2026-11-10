@@ -2056,8 +2056,16 @@ async function createOrderForGroup(
   // order document. Skipped entirely when GST is off or the buyer's state is
   // unknown (digital-only carts have no shipping address).
 
-  // upi_manual retired 2026-11-11 (owner): the unverifiable screenshot flow.
-  const isCodLike = paymentMethod === "cod" || paymentMethod === "cash";
+  /*
+   * ⚠ `cod` ALONE now. `upi_manual` was retired as unverifiable and `cash`
+   * (cash on pickup) followed it 2026-11-11 -- owner: *"we only stick with
+   * online or cod which will be handled by the shipment provider."* The name
+   * survives because the predicate is about the SHAPE of the tender (money
+   * collected later, not before the order exists), and keeping it reads
+   * better at the call sites than `isCod` would if a second deferred tender
+   * ever appears.
+   */
+  const isCodLike = paymentMethod === "cod";
   /*
    * 🛑 D43 — THE DEPOSIT/REMAINING SPLIT MOVED DOWN, BELOW `orderTotal`.
    *
@@ -2352,23 +2360,27 @@ async function createOrderForGroup(
 
   // ── 15-minute payment window + seller UPI resolution (Tier PP) ──────────
   // Deadline + displayed UPI apply only to methods with a buyer-uploaded
-  // proof step — never cod (paid on delivery), online (paid before order
-  // creation), or admin_bypass (already marked paid above).
   /*
-   * 🛑 `PaymentMethodValues.EMI` was a third arm here and is gone on purpose,
-   * not by oversight. It is unreachable after `resolveEmiChoice` — an EMI
-   * order's tender is `online` / `upi_manual` / `cash` — and leaving it would
-   * assert that "EMI" is a way of paying, which is exactly the conflation 0f
-   * removed. An EMI buyer paying by bank transfer still gets the window,
-   * because their tender IS `upi_manual`; one paying online does not, because
-   * the token is captured before the order exists.
+   * ── 🛑 THE 15-MINUTE PAYMENT WINDOW IS RETIRED (2026-11-11) ──────────────
+   *
+   * It existed for tenders that settle OUT OF BAND: the buyer was shown an
+   * address, given 15 minutes to pay and upload proof, and the order was
+   * cancelled and restocked if they did not. Every one of those tenders is
+   * now gone -- `upi_manual` as unverifiable, then `cash` on the owner's
+   * decision. `cod` never had a window (money arrives with the courier) and
+   * `online` cannot have one (payment is captured before the order exists).
+   *
+   * So `paymentDeadline` is no longer stamped on any order.
+   *
+   * 🛑 DO NOT delete `paymentWindowTimeout` on the strength of that. The
+   * sweep carries TWO unrelated jobs riding along, folded in deliberately
+   * because Cloud Scheduler bills per registered job:
+   * `reconcileStuckGatewayEvents` (webhook events we received and lost) and
+   * `runDueJobRetries`. Removing the sweep would silently take out
+   * gateway-event reconciliation, which is a money path. Strip its
+   * payment-window half; keep the schedule and the passengers.
    */
-  const hasPaymentWindow =
-    !adminBypass &&
-    paymentMethod === PaymentMethodValues.CASH;
-  const paymentDeadline = hasPaymentWindow
-    ? new Date(Date.now() + PAYMENT_WINDOW_MS)
-    : undefined;
+  const paymentDeadline: Date | undefined = undefined;
   /*
    * 🛑 `displayedUpiId` / `resolveDisplayedUpiId` DELETED 2026-11-11.
    *

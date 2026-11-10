@@ -6450,8 +6450,6 @@ export type { OrderRefundEvent, RefundType } from "./features/orders/schemas/fir
 // queue discriminator. Pure data + predicates — no firebase-admin in the
 // import chain, so safe on the main barrel (see "appkit Export Rules").
 export {
-  MANUAL_PAYMENT_METHODS,
-  isManualPaymentMethod,
   PAYMENT_REVIEW_QUEUE_MODES,
   isPaymentReviewQueueMode,
   PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,

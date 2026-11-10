@@ -217,11 +217,13 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
      * has an opinion. Collapsing them is what makes an admin kill switch
      * overridable — see `method-resolution.ts`.
      *
-     * ⚠ `cash` ships `default: false` rather than `disabled: true`. It is cash
-     * on PICKUP, a real in-person flow that simply is not part of the launch
-     * set — so a seller who does counter pickup can turn it on for their own
-     * store, which a ceiling would forbid. "Not shipped by default" and
-     * "forbidden" are different statements and the config can say both.
+     * 🛑 `cash` ships `disabled: true` — a CEILING, corrected 2026-11-11.
+     * It briefly shipped as `default: false` (a floor a seller could lift) on
+     * the grounds that counter pickup is a real in-person flow. The owner's
+     * decision removes it outright: *"that cash also can go, we only stick
+     * with online or cod."* A floor would let any store re-enable a tender
+     * nobody is staffed to collect, which is the same unverifiable shape as
+     * `upi_manual` one step further from a gateway.
      *
      * 🛑 `upi_manual` ships `disabled: true` — a genuine ceiling. The buyer
      * paid a static VPA and uploaded a screenshot, which verifies nothing
@@ -239,7 +241,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     paymentMethodRules: {
       online: { default: true },
       cod: { default: true },
-      cash: { default: false },
+      cash: { disabled: true },
       upi_manual: { disabled: true },
     },
   },
