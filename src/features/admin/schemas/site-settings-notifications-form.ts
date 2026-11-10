@@ -122,6 +122,39 @@ export const siteSettingsNotificationsFormSchema = z.object({
     help: "How many WhatsApp messages ONE order may send. 0 = no limit. This is the bound that makes 're-send on every order write' affordable — each message is billed, so an unbounded order is an unbounded cost.",
   }),
 
+  /*
+   * ── THE MATRIX, INVERTED ────────────────────────────────────────────────
+   *
+   * The owner asked for a matrix of "which states notify whom". The literal
+   * shape is 29 types × audiences × channels × tier — a grid the form
+   * generator cannot express, and a custom 29-row renderer for one tab.
+   *
+   * ✅ Inverted instead: pick the TYPES for each setting, rather than the
+   * settings for each type. `notifEmailTypes`/`notifWhatsappTypes` above
+   * already work exactly this way, so this needs no new renderer and reads
+   * the same as the fields beside it. The stored shape is still per-type —
+   * these lists are folded into `notificationRules` on save — so the data
+   * model is unchanged and a real grid can be built later over the same rows.
+   *
+   * 🛑 EMPTY MEANS "USE THE DEFAULTS", not "nothing qualifies". The defaults
+   * already classify money and terminal states (see
+   * `DEFAULT_NOTIFICATION_TIERS`), and an operator opening this tab and
+   * saving without touching it must not silently strip a cancellation's
+   * exemption.
+   */
+  tierCriticalTypes: annotate(z.array(z.string()), {
+    section: "budget", order: 7, row: "full", label: "Always send — exempt from every cap",
+    help: "These bypass BOTH the per-order cap and the daily ceiling. Leave empty to use the built-in defaults: cancellations, refunds, payment review, overdue EMI and account actions. 🛑 A cap must be able to swallow chatter, never bad news — but marking everything critical makes the caps decoration.",
+  }),
+  tierImportantTypes: annotate(z.array(z.string()), {
+    section: "budget", order: 8, row: "full", label: "Exempt from the per-order cap only",
+    help: "Still counted against the daily ceiling. Leave empty for the defaults: order placed, delivered, EMI due soon, prize won.",
+  }),
+  audienceSellerTypes: annotate(z.array(z.string()), {
+    section: "budget", order: 9, row: "full", label: "Also notify the seller",
+    help: "Which order events reach the store owner as well as the buyer. ⚠ The seller still has to enable notifications in their own dashboard — this decides what is offered, not what is forced.",
+  }),
+
   notifEmailEnabled: annotate(z.boolean(), {
     section: "email", sectionLabel: "Email channel",
     order: 1, row: "full", kind: "toggle", label: "Email notifications",

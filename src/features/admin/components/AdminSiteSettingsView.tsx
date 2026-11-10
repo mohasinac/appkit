@@ -1669,6 +1669,10 @@ export function AdminSiteSettingsView({
     msgEmailEnabled: false, msgWhatsappEnabled: false, msgCeilingEmail: 80, msgCeilingWhatsapp: 200,
     // 0 = no limit. See the schema's note: an empty field must not gag the site.
     perOrderCapEmail: 0, perOrderCapWhatsapp: 0,
+    // Empty = use the built-in defaults, NOT "nothing qualifies".
+    tierCriticalTypes: [] as string[],
+    tierImportantTypes: [] as string[],
+    audienceSellerTypes: [] as string[],
     notifEmailEnabled: false, notifEmailMinPriority: "normal", resendApiKey: "",
     notifFromEmail: "", notifFromName: "", notifEmailTypes: [],
     digestEnabled: false, digestRecipients: "",
@@ -2050,6 +2054,28 @@ export function AdminSiteSettingsView({
       msgCeilingWhatsapp: s.messaging?.dailyCeiling?.whatsapp ?? 200,
       perOrderCapEmail: s.notificationPerOrderCap?.email ?? 0,
       perOrderCapWhatsapp: s.notificationPerOrderCap?.whatsapp ?? 0,
+      /*
+       * Read BACK out of the per-type rules, so the inverted lists and the
+       * stored per-type shape cannot drift. The form is a view of the data,
+       * not a second copy of it.
+       */
+      ...(() => {
+        // Typed once rather than three casts inline: `s` is the loosely-typed
+        // settings payload, so `Object.entries` widens each value to `{}`.
+        const rules = (s.notificationRules ?? {}) as Record<
+          string,
+          { tier?: string; audiences?: string[] }
+        >;
+        const withTier = (tier: string) =>
+          Object.keys(rules).filter((t) => rules[t]?.tier === tier);
+        return {
+          tierCriticalTypes: withTier("critical"),
+          tierImportantTypes: withTier("important"),
+          audienceSellerTypes: Object.keys(rules).filter((t) =>
+            rules[t]?.audiences?.includes("seller"),
+          ),
+        };
+      })(),
     });
 
     originalMaskedRef.current = {
@@ -2281,6 +2307,31 @@ export function AdminSiteSettingsView({
         email: notificationsForm.perOrderCapEmail,
         whatsapp: notificationsForm.perOrderCapWhatsapp,
       },
+      /*
+       * Fold the three inverted lists back into per-type rules.
+       *
+       * 🛑 Only types the operator actually named appear here. An empty list
+       * writes NO rows, so resolution falls through to
+       * `DEFAULT_NOTIFICATION_TIERS` — opening this tab and saving without
+       * touching it must not strip a cancellation's cap exemption.
+       *
+       * ⚠ A type can appear in both tier lists only by operator error;
+       * `critical` is applied last and wins, because the failure of being too
+       * permissive with a cap is a bigger bill, while the failure of being too
+       * strict is a buyer never hearing their order was cancelled.
+       */
+      notificationRules: (() => {
+        const rules: Record<string, { tier?: string; audiences?: string[] }> = {};
+        const touch = (t: string) => (rules[t] ??= {});
+        for (const t of notificationsForm.tierImportantTypes ?? []) touch(t).tier = "important";
+        for (const t of notificationsForm.tierCriticalTypes ?? []) touch(t).tier = "critical";
+        for (const t of notificationsForm.audienceSellerTypes ?? []) {
+          // Seller is ADDITIVE to the buyer, not a replacement — an order
+          // event the seller sees is still an event the buyer must see.
+          touch(t).audiences = ["buyer", "seller"];
+        }
+        return rules;
+      })(),
       integrations: {
         googleAnalyticsId: integrationsForm.gaMeasurementId,
         facebookPixelId: integrationsForm.fbPixelId,
