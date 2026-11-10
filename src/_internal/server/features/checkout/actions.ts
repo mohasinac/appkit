@@ -227,7 +227,11 @@ import { revalidateGroupLines } from "./group-rule-revalidation";
 import { cartIsDigitalOnly, cartRequiresShipping } from "../../../shared/listing-types/cart-shipping";
 import type { FirestoreDocument } from "../../../../schemas/types";
 import { processRefundAction } from "../refunds/actions";
-import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import {
+  sendNotification,
+  dispatchNotification,
+} from "../../../../features/admin/actions/notification-actions";
+import { ORDER_MESSAGES_SELLER } from "../../jobs/handlers/messages";
 import { resolveDisplayedUpiId } from "./upi-resolution";
 import { resolveSupplierIdentity } from "./supplier-identity";
 import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
@@ -397,6 +401,15 @@ function emitOrderPlacedNotifications(args: {
   orderId: string;
   buyerUid: string;
   buyerName: string;
+  /**
+   * ⚠ NO LONGER READ. The seller is resolved from `storeId` inside
+   * `dispatchNotification`, so a notification about a store follows the store
+   * rather than whoever owned it when the order was placed.
+   *
+   * Kept on the type because the caller already has it and removing it would
+   * push a signature change into the order-creation path for no behavioural
+   * gain. 🛑 Do not reintroduce a send that addresses it.
+   */
   storeOwnerId: string | undefined;
   productLabel: string;
   paid: boolean;
@@ -407,8 +420,34 @@ function emitOrderPlacedNotifications(args: {
    */
   storeId: string | undefined;
 }): void {
-  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid, storeId } = args;
-  const buyerNotif = sendNotification({
+  const { orderId, buyerUid, buyerName, productLabel, paid, storeId } = args;
+
+  /*
+   * ONE `dispatchNotification`, not two `sendNotification` calls.
+   *
+   * The two calls this replaces were correct about the thing most such pairs
+   * get wrong — the seller already had their own title, message and store
+   * action URL — but they were two independent statements of one event, and
+   * three things fell out of that:
+   *
+   * 🛑 The seller never received a WhatsApp message. Only the BUYER's call
+   * passed `storeId`, and `storeId` is what `sendNotification`'s WhatsApp arm
+   * resolves the store's subscription from. So a seller paying for WhatsApp
+   * order updates got an in-app row and an email and nothing on WhatsApp,
+   * from the one event they most wanted it for.
+   *
+   * ⚠ The seller was addressed by `storeOwnerId` captured at checkout rather
+   * than resolved from the store. A notification about a store should follow
+   * the store, not whoever owned it at the moment the order was placed.
+   *
+   * ⚠ Neither call consulted the registry, so an admin narrowing
+   * `order_placed` in the notification matrix changed nothing here — the
+   * screen would have claimed an authority it did not have over this path.
+   *
+   * `storeOwnerId` is consequently no longer read. It stays on the input type
+   * because the caller computes it for other purposes; see the note there.
+   */
+  void dispatchNotification({
     userId: buyerUid,
     type: "order_placed",
     priority: "normal",
@@ -416,34 +455,22 @@ function emitOrderPlacedNotifications(args: {
     message: `Your order for ${productLabel} has been placed.`,
     relatedId: orderId,
     relatedType: "order",
+    /*
+     * ⚠ Buyer-shaped, and only the buyer receives it: `audience: "seller"`
+     * makes the seller arm resolve its own `/store/orders/{id}/view`.
+     */
     actionUrl: `/user/orders/view/${orderId}`,
     storeId,
+    sellerCopy: {
+      title: ORDER_MESSAGES_SELLER.PLACED_TITLE,
+      message: ORDER_MESSAGES_SELLER.PLACED_MESSAGE(productLabel, buyerName, paid),
+    },
   }).catch((err: unknown) =>
-    serverLogger.warn("Failed to send buyer order_placed notification", {
+    serverLogger.warn("Failed to dispatch order_placed notifications", {
       err: err instanceof Error ? err.message : String(err),
       orderId,
     }),
   );
-  const sellerNotif = storeOwnerId
-    ? sendNotification({
-        userId: storeOwnerId,
-        type: "order_placed",
-        priority: "high",
-        title: "New order received",
-        message: `${paid ? "New paid order" : "New order"} from ${
- buyerName || "a buyer"
- } for ${productLabel}.`,
-        relatedId: orderId,
-        relatedType: "order",
-        actionUrl: `/store/orders/${orderId}/view`,
-      }).catch((err: unknown) =>
-        serverLogger.warn("Failed to send seller order_placed notification", {
-          err: err instanceof Error ? err.message : String(err),
-          orderId,
-        }),
-      )
-    : Promise.resolve();
-  void Promise.all([buyerNotif, sellerNotif]);
 }
 
 export interface CreateCheckoutOrderInput {

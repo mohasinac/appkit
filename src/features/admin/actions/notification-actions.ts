@@ -769,9 +769,11 @@ export async function sendNotification(
  * `sendNotification` has exactly one recipient, `input.userId`, and ~40 call
  * sites depend on that. Its `audience` field has never chosen a recipient —
  * it only picks which portal the action URL points at — and **no call site
- * passes `"seller"`**. So a seller has never received a notification through
- * this path at all: `onOrderCreate.notifyStoreOwner` sends them a raw
- * free-form WhatsApp message with no in-app row, no email, and no type.
+ * passes `"seller"`**. So before this function existed, a seller never
+ * received a notification through that path at all — `onOrderCreate` sent them
+ * a raw free-form WhatsApp message with no in-app row, no email and no type,
+ * which Meta refused outside the 24-hour window anyway. ✅ That code is
+ * DELETED as of 2026-11-11; this function is the only seller path now.
  *
  * Fanning out inside the primitive would change behaviour for all 40 callers
  * at once. Wrapping leaves them untouched and makes the new behaviour opt-in

@@ -1,16 +1,7 @@
 import { normalizeError } from "../../../../errors/normalize";
 import { ORDER_PII_FIELDS, revealPii } from "../../../../security";
 import { adminNotificationsRepository } from "../../../../features/store-extensions/repository/rbac.repositories";
-import { storeRepository } from "../../../../features/stores/repository/store.repository";
-import { safeRead } from "../../../../errors/safe-read";
-import { userRepository } from "../../../../features/auth/repository/user.repository";
-import { decryptPii } from "../../../../security/index";
-import {
-  sendWhatsAppBusinessMessage,
-  buildPurchaseAnnouncementMessage,
-} from "../../../../features/whatsapp-bot/server";
-import { resolveKeys, type ResolvedKeys } from "../../../../core/integration-keys";
-import { guardSend, logSuppressedSend } from "../../notifications/send-guard";
+import { buildPurchaseAnnouncementMessage } from "../../../../features/whatsapp-bot/server";
 import type { JobContext } from "../runtime/types";
 import type { OrderDocument, OrderDocumentItem } from "../../../../features/orders/schemas/firestore";
 
@@ -25,100 +16,27 @@ export interface HandleOrderCreateInput {
   order: NewOrder;
 }
 
-async function sendAnnouncement(
-  ctx: JobContext,
-  toPhone: string,
-  message: string,
-  phoneNumberId: string,
-  accessToken: string,
-  label: string,
-  orderId: string,
-): Promise<void> {
-  try {
-    const sent = await sendWhatsAppBusinessMessage({
-      toPhone,
-      message,
-      phoneNumberId,
-      accessToken,
-    });
-    if (sent) {
-      ctx.logger.info(`Announcement sent to ${label}`, {
-        orderId,
-        toPhone: `...${toPhone.slice(-4)}`,
-      });
-    } else {
-      ctx.logger.error(`Announcement delivery failed for ${label} (non-fatal)`, null, { orderId });
-    }
-  } catch (err) {
-    void normalizeError(err);
-    ctx.logger.error(`Announcement send threw for ${label} (non-fatal)`, err, { orderId });
-  }
-}
-
-async function notifyStoreOwner(
-  ctx: JobContext,
-  storeId: string,
-  message: string,
-  phoneNumberId: string,
-  accessToken: string,
-  orderId: string,
-): Promise<void> {
-  try {
-    const store = await storeRepository.findBySlug(storeId);
-    if (!store?.ownerId) return;
-    const owner = await userRepository.findById(store.ownerId);
-    const encryptedPhone = owner?.phoneNumber as string | undefined;
-    if (!encryptedPhone) return;
-    const ownerPhone = decryptPii(encryptedPhone) as string | null;
-    if (ownerPhone) {
-      await sendAnnouncement(ctx, ownerPhone, message, phoneNumberId, accessToken, "store-owner", orderId);
-    }
-  } catch (err) {
-    void normalizeError(err);
-    ctx.logger.error("Store owner lookup failed (non-fatal)", err, { orderId, storeId });
-  }
-}
-
-/**
- * Seeded credentials are `*_PLACEHOLDER` strings rather than empty, so an
- * emptiness test alone would happily send with a fake token. Mirrors the guard
- * in checkout-value-otp-actions.ts.
+/*
+ * 🛑 FOUR FUNCTIONS WERE DELETED HERE 2026-11-11, not merely unused.
+ *
+ * `sendAnnouncement`, `notifyStoreOwner`, `usable` and
+ * `resolveWhatsAppCredentials` existed solely to send the seller a FREE-FORM
+ * WhatsApp message about a new order. That send is now made by
+ * `dispatchNotification` from checkout, through the approved
+ * `tx_seller_order_update` template -- which, unlike free-form text, is not
+ * refused outside Meta's 24-hour customer-service window, and which also
+ * gives the seller an in-app row and an email.
+ *
+ * ⚠ Left behind, the chain would have been ~95 lines of credential resolution
+ * and PII decryption with no caller -- the kind of dead code that reads as the
+ * live path to the next person looking for where sellers get notified.
+ *
+ * ⚠ The useful knowledge in `resolveWhatsAppCredentials` is not lost: the
+ * `WHATSAPP_MESSAGES_TOKEN`-before-`WHATSAPP_CLOUD_API_TOKEN` ordering and the
+ * `*_PLACEHOLDER` guard both live in `core/integration-keys.ts`, which this
+ * copy already deferred to for its DB half.
  */
-function usable(value: string | undefined): string {
-  const v = value?.trim() ?? "";
-  return v && !v.includes("PLACEHOLDER") ? v : "";
-}
 
-async function resolveWhatsAppCredentials(
-  ctx: JobContext,
-  orderId: string,
-): Promise<{ phoneNumberId: string; accessToken: string }> {
-  let db: Partial<ResolvedKeys> = {};
-  try {
-    db = await resolveKeys();
-  } catch (err) {
-    void normalizeError(err);
-    // Firestore unreachable from the Functions runtime — env-only is still a
-    // valid configuration, so this is a warning, not a failure.
-    ctx.logger.warn("Credential lookup failed — falling back to env", { orderId });
-  }
-
-  return {
-    phoneNumberId:
-      usable(db.whatsappPhoneNumberId) || usable(ctx.env("WHATSAPP_PHONE_NUMBER_ID")),
-    /*
-     * 🛑 `WHATSAPP_MESSAGES_TOKEN` first — see the same note in
-     * `core/integration-keys.ts`. That is the name set on the deployment;
-     * `WHATSAPP_CLOUD_API_TOKEN` is set nowhere, so this resolver returned an
-     * empty token and the `usable()` guard below turned every purchase
-     * announcement into a silent no-op. The legacy name stays as a fallback.
-     */
-    accessToken:
-      usable(db.whatsappCloudApiToken) ||
-      usable(ctx.env("WHATSAPP_MESSAGES_TOKEN")) ||
-      usable(ctx.env("WHATSAPP_CLOUD_API_TOKEN")),
-  };
-}
 
 export async function handleOrderCreate(
   input: HandleOrderCreateInput,
@@ -195,79 +113,41 @@ export async function handleOrderCreate(
   }
 
   /*
-   * Seller side keeps WhatsApp: it is ONE message to ONE person about their
-   * own sale, which is the case the channel is good at. Credentials resolve
-   * DB-first (Admin → Site Settings → WhatsApp) with an env fallback — this
-   * read `ctx.env()` only until 2026-08-22, so credentials saved in Site
-   * Settings never reached the announcement and it silently no-op'd.
-   */
-  const storeId = order.storeId;
-  if (!storeId) {
-    ctx.logger.info("Order has no storeId — nothing to announce to a seller", { orderId });
-    return;
-  }
-
-  const { phoneNumberId, accessToken } = await resolveWhatsAppCredentials(ctx, orderId);
-  if (!phoneNumberId || !accessToken) {
-    ctx.logger.info("WhatsApp Cloud API not configured — skipping seller announcement", { orderId });
-    return;
-  }
-
-  // Audience is "user": a seller receiving news of their own sale is a
-  // marketplace participant, not an operator of the site. Staff exemption is
-  // for the digest and the payout summary, and widening it to "anyone we think
-  // ought to see this" would make the kill switch mean nothing.
-  const guard = {
-    channel: "whatsapp" as const,
-    feature: "order_placed_seller",
-    audience: "user" as const,
-  };
-  const decision = await guardSend(guard);
-  if (!decision.allow) {
-    logSuppressedSend(guard, decision);
-    ctx.logger.info("Seller order announcement suppressed by messaging guard", { orderId, storeId });
-    return;
-  }
-
-  /*
-   * 🛑 THE SELLER'S OWN OPT-IN, which this path ignored.
+   * ── THE SELLER'S OWN NOTIFICATION IS NO LONGER SENT FROM HERE ─────────────
    *
-   * Owner, 2026-11-10: *"the seller [in their] own dashboard has to enable
-   * it, then only they can see it."* Every other seller-facing send now
-   * honours `whatsappNotifySubscribed`; this one messaged them regardless, so
-   * a seller who had deliberately not enabled WhatsApp still got one.
+   * 🛑 RETIRED 2026-11-11, and the reason is that it had become a DUPLICATE.
    *
-   * Fails CLOSED — an unreadable store or an unset flag means no send, so an
-   * outage cannot opt a seller in.
+   * This path sent the seller a FREE-FORM WhatsApp message via
+   * `sendWhatsAppBusinessMessage`. Two things were wrong with it:
+   *
+   * 1. ⚠ It mostly never arrived. Meta rejects free-form business-initiated
+   *    sends outside the 24-hour customer-service window, so a seller who had
+   *    not messaged us in the last day — the normal case — got nothing, and
+   *    the failure looked like an outage rather than a policy rejection.
+   *
+   * 2. 🛑 It was the seller's ONLY signal, so it carried no in-app row, no
+   *    email and no notification type. A seller whose window had closed
+   *    learned about a sale from nothing at all.
+   *
+   * Both are now handled properly one layer up: checkout's
+   * `emitOrderPlacedNotifications` calls `dispatchNotification`, which reaches
+   * the seller through the registry with an in-app row, an email, and the
+   * approved `tx_seller_order_update` template on WhatsApp — a template send
+   * is exempt from the 24-hour window, which is the entire point of having
+   * one. Its CTA is `/store/orders/{id}/view`, not the buyer's track page.
+   *
+   * ⚠ This block's own deferral note said switching it on here first would
+   * give an opted-in seller TWO messages for one order. That was correct, and
+   * it is why the duplicate is being DELETED rather than converted: the
+   * surviving path is the one that reaches every channel.
+   *
+   * 🛑 What is deliberately KEPT above: the `adminNotifications` row. That is
+   * the STAFF signal, a different audience with a different purpose, and it is
+   * written before any credential check precisely so an unconfigured WhatsApp
+   * cannot erase the record that an order happened.
    */
-  const store = await safeRead(() => storeRepository.findBySlug(storeId), {
-    route: "jobs/onOrderCreate",
-    key: "onOrderCreate.sellerOptIn",
-    fallback: null,
+  ctx.logger.info("Order announcement complete (staff row written)", {
+    orderId,
+    storeId: order.storeId ?? null,
   });
-  if (store?.whatsappNotifySubscribed !== true) {
-    ctx.logger.info("Seller has not enabled WhatsApp order updates — skipping announcement", {
-      orderId,
-      storeId,
-    });
-    return;
-  }
-
-  /*
-   * ⚠ KNOWN LIMITATION, left as-is rather than silently "fixed" here.
-   *
-   * `notifyStoreOwner` sends FREE-FORM text via `sendWhatsAppBusinessMessage`,
-   * and Meta rejects free-form business-initiated sends outside the 24h
-   * customer-service window — so in practice this rarely delivers. The real
-   * fix is to route the seller through `dispatchNotification` with the
-   * approved `tx_seller_order_update` template, which is PENDING approval.
-   *
-   * 🛑 Not switched over yet on purpose: the checkout path already sends the
-   * seller an `order_placed` notification, so enabling the template arm here
-   * before retiring that one would give an opted-in seller TWO messages for
-   * one order. One change at a time, each verifiable.
-   */
-  await notifyStoreOwner(ctx, storeId, message, phoneNumberId, accessToken, orderId);
-
-  ctx.logger.info(`Order announcement complete`, { orderId, storeId });
 }
