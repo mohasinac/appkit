@@ -110,10 +110,22 @@ export const STORAGE_KEYS = {
   get announcementDismissed() {
     return storageKey("announcement-dismissed");
   },
-  /** OAuth return URL across the popup round-trip. Was `"letitrip_oauth_redirect"`. */
-  get oauthRedirect() {
-    return storageKey("oauth_redirect", "_");
-  },
+  /*
+   * 🛑 `oauthRedirect` WAS HERE AND IS DELIBERATELY GONE (2026-11-10).
+   *
+   * It carried the provider URL from the opener to a static `/auth.html` in the
+   * consumer's `public/`, which listened for a `storage` event and navigated
+   * itself. `useGoogleLogin` now holds the popup handle and assigns
+   * `popup.location.href` directly, so there is no second window to tell and no
+   * key to agree on.
+   *
+   * Removing it rather than leaving it unread is the point: a namespaced getter
+   * whose counterpart is a hardcoded literal in a file appkit cannot see is the
+   * mirror-field trap this module's own header warns about — and it had already
+   * taken Google sign-in down on a host that shipped no `public/` at all.
+   * Anyone who reaches for it now gets a compile error instead of a silent
+   * no-op, which is the correct direction to fail.
+   */
   /** Remembered search-type tab. Was `"letitrip_search_type"`. */
   get searchType() {
     return storageKey("search_type", "_");

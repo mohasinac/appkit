@@ -11,7 +11,7 @@ import { getClientSessionAdapter } from "../../../contracts/client-session";
  * namespacing one side only makes the popup post a message nobody hears, and
  * OAuth login fails silently with no type error anywhere.
  */
-import { MESSAGE_TYPES, STORAGE_KEYS } from "../../../constants/storage-keys";
+import { MESSAGE_TYPES } from "../../../constants/storage-keys";
 import { apiClient } from "../../../http";
 
 import type { AuthUser } from "../types";
@@ -108,6 +108,86 @@ export function useLogin(options?: {
     onSuccess: options?.onSuccess,
     onError: options?.onError,
   });
+}
+
+/*
+ * ── 🛑 THE OAUTH POPUP IS OPENED BLANK AND NAVIGATED BY ITS OPENER ─────────
+ *
+ * It used to be opened at the consumer's static `/auth.html`, which listened
+ * for a `storage` event and navigated itself to the URL this hook wrote into
+ * `localStorage`. That design made a WORKING GOOGLE SIGN-IN DEPEND ON TWO
+ * THINGS APPKIT CANNOT SEE:
+ *
+ *   1. a file at `/auth.html` in the consumer's `public/`, and
+ *   2. that file agreeing with `setStorageNamespace()` about the key name.
+ *
+ * Both failed in production. `auth.<domain>` has no `public/` directory at
+ * all, so the popup landed on the app's not-found page (HTTP 200, no
+ * listener), which then bounced to `/login` — the user clicked "Sign in with
+ * Google" and got a second copy of the sign-in form. Nothing threw, nothing
+ * logged, and the button simply spun until the RTDB channel timed out.
+ *
+ * The key agreement is the subtler half: `STORAGE_KEYS.oauthRedirect` is
+ * resolved from the namespace registered at boot, while a STATIC file can only
+ * hardcode one. They happen to match today; changing
+ * `NEXT_PUBLIC_STORAGE_NAMESPACE` would silently break sign-in with no commit
+ * to blame — the same mirror-field trap as a path that moves between patch
+ * versions.
+ *
+ * `window.open` must stay in the click's call stack or the popup is blocked,
+ * which is the whole reason a placeholder document was ever needed. But the
+ * OPENER holds the handle, and navigating a window you opened is permitted
+ * regardless of where it currently is — so the opener can just drive it once
+ * the async init resolves. No file, no storage key, no namespace coupling, and
+ * nothing for a consumer to forget to ship.
+ */
+
+/** Minimal same-origin placeholder so the popup is not a blank white rectangle
+ * for the one API round-trip before Google takes over. Deliberately unbranded
+ * and unthemed — it is visible for ~200ms and must not import anything. */
+const POPUP_PLACEHOLDER_HTML = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Signing in…</title><style>
+html{color-scheme:light dark}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;margin:0;gap:1.25rem;
+font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:GrayText;background:Canvas}
+.s{width:44px;height:44px;border:3px solid currentColor;border-top-color:transparent;border-radius:50%;animation:r .8s linear infinite;opacity:.5}
+@keyframes r{to{transform:rotate(360deg)}}
+</style></head><body><div class="s"></div><span>Redirecting to sign-in provider…</span></body></html>`;
+
+/**
+ * Open the OAuth popup synchronously (so the popup blocker allows it) with a
+ * placeholder document, returning `null` when it was blocked anyway.
+ *
+ * `about:blank` inherits the opener's origin, so writing to it is same-origin
+ * and needs no network round-trip.
+ */
+function openOAuthPopup(name: string): Window | null {
+  const popup = window.open(
+    "about:blank",
+    name,
+    "width=500,height=660,left=400,top=100",
+  );
+  if (!popup) return null;
+  try {
+    popup.document.write(POPUP_PLACEHOLDER_HTML);
+    popup.document.close();
+    // audit-silent-degrade-ok: the placeholder is cosmetic. If a browser
+    // refuses the write the popup stays blank and is navigated to the provider
+    // a moment later regardless — failing the sign-in over a spinner would be
+    // strictly worse than showing no spinner.
+  } catch (_err) {
+    void normalizeError(_err);
+  }
+  return popup;
+}
+
+/**
+ * Point the popup at the provider.
+ *
+ * 🛑 Assigning `location.href` on the handle, NOT writing a storage key for the
+ * popup to read. See the note above for why the indirection was removed.
+ */
+function navigateOAuthPopup(popup: Window, url: string): void {
+  popup.location.href = url;
 }
 
 export function useGoogleLogin(options?: {
@@ -211,11 +291,7 @@ export function useGoogleLogin(options?: {
 
   const mutate = useCallback(async () => {
     calledRef.current = false; // reset for each new auth flow
-    const popup = window.open(
-      `${window.location.origin}/auth.html`,
-      "oauth_google",
-      "width=500,height=660,left=400,top=100",
-    );
+    const popup = openOAuthPopup("oauth_google");
 
     if (!popup) {
       onErrorRef.current?.(
@@ -249,13 +325,20 @@ export function useGoogleLogin(options?: {
       }>(AUTH_ENDPOINTS.EVENT_INIT, {});
 
       const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
-      localStorage.setItem(STORAGE_KEYS.oauthRedirect, url);
 
+      /*
+       * Subscribe BEFORE navigating. The callback writes the outcome to RTDB as
+       * soon as Google returns, and a listener attached after that write misses
+       * the one-shot signal — it would then be carried only by the postMessage
+       * fallback, which is the channel that cannot survive Google's COOP header.
+       */
       // Only subscribe to RTDB if it's available — skipping avoids an immediate
       // FAILED status (token sign-in error) that would block the postMessage fallback.
       if (rtdbEnabled !== false) {
         authEvent.subscribe(eventId, customToken);
       }
+
+      navigateOAuthPopup(popup, url);
     } catch (err) {
       void normalizeError(err);
       clearClosePoll();
@@ -354,11 +437,7 @@ export function useLinkGoogleAccount(options?: {
 
   const mutate = useCallback(async () => {
     calledRef.current = false;
-    const popup = window.open(
-      `${window.location.origin}/auth.html`,
-      "oauth_google_link",
-      "width=500,height=660,left=400,top=100",
-    );
+    const popup = openOAuthPopup("oauth_google_link");
 
     if (!popup) {
       onErrorRef.current?.(
@@ -392,11 +471,13 @@ export function useLinkGoogleAccount(options?: {
       }>(AUTH_ENDPOINTS.EVENT_INIT, { mode: "link" });
 
       const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
-      localStorage.setItem(STORAGE_KEYS.oauthRedirect, url);
 
+      // Subscribe before navigating — see the note in useGoogleLogin.
       if (rtdbEnabled !== false) {
         authEvent.subscribe(eventId, customToken);
       }
+
+      navigateOAuthPopup(popup, url);
     } catch (err) {
       void normalizeError(err);
       clearClosePoll();

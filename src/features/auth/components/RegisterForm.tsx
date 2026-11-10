@@ -11,6 +11,7 @@ import { FieldInput } from "../../../ui/forms/FieldInput";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
 import { FormShellContext, useFormShellState } from "../../../ui/forms/FormShell";
+import { SocialAuthButtons } from "./SocialAuthButtons";
 import { registerSchema, registerPasswordSchema } from "../schemas";
 import { FormErrorSummary } from "../../../ui/forms/FormErrorSummary";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
@@ -27,6 +28,20 @@ export interface RegisterFormValues {
 
 export interface RegisterFormProps {
   onSubmit: (values: RegisterFormValues) => Promise<void>;
+  /*
+   * Google sign-up — the SAME prop shape `LoginForm` already had.
+   *
+   * 🛑 This asymmetry was the defect, not the design. A Google identity is
+   * provisioned on FIRST USE (the OAuth callback creates the Auth user and the
+   * `users` document when neither exists), so "sign in with Google" and "sign
+   * up with Google" are one button and one code path. Only `LoginForm` offered
+   * it, which meant a new user who landed on the register screen had no way to
+   * use the provisioning path at all — they were pushed into email/password,
+   * where registration IS deliberately a separate explicit step.
+   *
+   * Omitted, nothing renders: email/password-only consumers are unaffected.
+   */
+  onGoogleLogin?: () => Promise<void> | void;
   isLoading?: boolean;
   error?: string | null;
   success?: string | null;
@@ -45,6 +60,12 @@ export interface RegisterFormProps {
     submitLabel?: string;
     submittingLabel?: string;
     passwordMismatch?: string;
+    /** Divider above the social buttons. Mirrors `LoginFormProps.labels`. */
+    orSeparator?: string;
+    /** Label on the Google button. Defaults to a sign-UP wording here, where
+     * `LoginForm` defaults to a sign-IN one — same mechanism, same provisioning,
+     * but the screen the user chose should be the one it sounds like. */
+    googleLabel?: string;
   };
   renderSocialButtons?: () => React.ReactNode;
   renderLoginLink?: () => React.ReactNode;
@@ -156,6 +177,7 @@ function buildSections(
 
 export function RegisterForm({
   onSubmit,
+  onGoogleLogin,
   isLoading = false,
   error,
   success,
@@ -254,7 +276,19 @@ export function RegisterForm({
           />
         </FormShellContext.Provider>
 
-        {renderSocialButtons?.()}
+        {/* Same precedence rule as LoginForm: an explicit `renderSocialButtons`
+            always wins, so a consumer with its own provider set is never given
+            a Google button it did not ask for. */}
+        {onGoogleLogin && !renderSocialButtons ? (
+          <SocialAuthButtons
+            onGoogle={onGoogleLogin}
+            disabled={isLoading}
+            dividerLabel={labels.orSeparator ?? "Or continue with"}
+            googleLabel={labels.googleLabel ?? "Sign up with Google"}
+          />
+        ) : (
+          renderSocialButtons?.()
+        )}
       </Stack>
     </Row>
   );
