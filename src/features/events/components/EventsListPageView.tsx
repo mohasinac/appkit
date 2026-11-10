@@ -5,6 +5,7 @@ import { Container } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { PageHeroHeading } from "../../../ui/components/PageHeroHeading";
+import type { PageHeroCopy } from "../../../ui/components/PageHeroHeading";
 import { EventsIndexListing } from "./EventsIndexListing";
 import { EVENT_FIELDS } from "../../../constants/field-names";
 import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
@@ -83,14 +84,39 @@ function buildEventFilters(params: SearchParamsRecord): string {
 }
 
 export interface EventsListPageViewProps {
-  /** Forwarded to the listing and on to every card. See `EventCard.buildHref`. */
-  buildHref?: (slugOrId: string) => string;
+  /**
+   * Base path event detail pages live under on THIS host. Forwarded to the
+   * listing and on to every card. See `EventCard.hrefPrefix`.
+   *
+   * 🛑 A STRING, and it must stay one. This is a SERVER component that
+   * forwards the prop into `"use client"` children, so anything
+   * non-serializable here is an error row in the RSC flight payload: the
+   * server still returns 200 with complete HTML and the BROWSER dies at
+   * hydration with React #441, above every `<Suspense>` boundary. Its
+   * predecessor was `buildHref?: (slugOrId: string) => string` and it took two
+   * content hosts down for a week. See `joinHrefPrefix`.
+   */
+  hrefPrefix?: string;
   searchParams?: SearchParamsRecord;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
+  /**
+   * Hero copy. Defaults are deliberately VERTICAL-NEUTRAL: appkit ships the
+   * mechanism and a default template, and the consumer overrides it — so a
+   * default must never name a brand, a product line or a country. Pass your
+   * own, or an empty string to drop a line entirely.
+   */
+  heroCopy?: PageHeroCopy;
 }
 
-export async function EventsListPageView({ searchParams = {}, pageRegionCards = [], buildHref }: EventsListPageViewProps) {
+/** Vertical-neutral default hero copy — see `heroCopy`. */
+const EVENTS_HERO_DEFAULTS = {
+  pill: "Events & offers",
+  title: "Events",
+  description: "Everything running right now, and what is opening next.",
+} as const;
+
+export async function EventsListPageView({ searchParams = {}, pageRegionCards = [], hrefPrefix, heroCopy = {} }: EventsListPageViewProps) {
   const sort = firstParam(searchParams, "sort") || sortBy(EVENT_FIELDS.STARTS_AT, "ASC");
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
@@ -154,13 +180,13 @@ export async function EventsListPageView({ searchParams = {}, pageRegionCards = 
             */}
           <PageHeroHeading
             className="mb-8"
-            pill="Events & Offers"
-            title="Events"
-            description="Sales, spin wheels, giveaways and polls — everything running right now, and what is opening next."
+            pill={heroCopy.pill ?? EVENTS_HERO_DEFAULTS.pill}
+            title={heroCopy.title ?? EVENTS_HERO_DEFAULTS.title}
+            description={heroCopy.description ?? EVENTS_HERO_DEFAULTS.description}
             meta={publicResult?.total ? `${publicResult.total} running` : undefined}
           />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} buildHref={buildHref} />
+          <EventsIndexListing initialData={publicResult} facetCounts={facetCounts} hrefPrefix={hrefPrefix} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
           <Div className="mt-8">
             <AdminComposableRegion pageId="events" initialCards={pageRegionCards} />

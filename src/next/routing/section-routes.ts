@@ -116,6 +116,48 @@ export function resolveSectionHref(href: string): string {
   return href;
 }
 
+/**
+ * Join a caller-supplied `hrefPrefix` to one item's slug or id.
+ *
+ * ## 🛑 Why this exists instead of a `buildHref` callback
+ *
+ * The obvious API for "let the host decide the detail URL" is
+ * `buildHref?: (slugOrId: string) => string`, and appkit shipped exactly that
+ * on `EventsListPageView` / `BlogIndexPageView` / `EventCard`. Both page views
+ * are SERVER components that forward the prop to a `"use client"` child, and a
+ * function cannot be serialized into the RSC flight payload:
+ *
+ * ```
+ * Functions cannot be passed directly to Client Components unless you
+ * explicitly expose it by marking it with "use server".
+ *   <... initialData={Null} facetCounts=... buildHref={function buildHref}>
+ * ```
+ *
+ * React writes an ERROR ROW at that prop position. The server render still
+ * succeeds — 200, complete HTML — and the browser dies **deserializing that
+ * row at hydration** with minified error #441. No `<Suspense fallback>` can
+ * catch it: the failure is above every boundary in the tree. It took two
+ * content hosts down for a week.
+ *
+ * A `string` prefix carries the same information and serializes. The rule it
+ * leaves: **a prop whose TYPE is a function is one only a CLIENT component may
+ * pass.** A Server Action (`"use server"`) is the one exception, because React
+ * serializes it as a reference rather than a value — which is why the four
+ * other server→client function props in appkit (`onBuyNow`, `onPlaceBid`,
+ * `onReserveNow`, `onAddToCart`) are safe and this one was not.
+ *
+ * @param hrefPrefix Base path items live under on the calling host. `""` or
+ *   `"/"` means "my own root" (`/<slug>`). May be an absolute origin.
+ * @param slugOrId The item's slug, or its id when it has no slug.
+ */
+export function joinHrefPrefix(hrefPrefix: string, slugOrId: string): string {
+  const base = hrefPrefix.trim().replace(/\/+$/, "");
+  const leaf = String(slugOrId).replace(/^\/+/, "");
+  // `leaf` empty would otherwise produce a bare origin with no path, or an
+  // empty href — both render as a link that goes nowhere.
+  return leaf ? `${base}/${leaf}` : `${base}/`;
+}
+
 /** Drop all registrations. Tests only. */
 export function _resetSectionRoutes(): void {
   basesByPrefix = {};

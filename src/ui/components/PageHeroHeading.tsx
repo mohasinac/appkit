@@ -28,6 +28,24 @@ import { Div } from "./Div";
 import { Row, Stack } from "./Layout";
 import { Heading, Span, Text } from "./Typography";
 
+/**
+ * Overridable hero copy for a page view that ships its own default.
+ *
+ * 🛑 Every field is OPTIONAL and every appkit default behind it must be
+ * VERTICAL-NEUTRAL — no brand, no product line, no country. appkit ships the
+ * mechanism and a default template; the consumer owns the words. A branded
+ * default is worse than none, because it is the string that ends up in a
+ * second client's bundle where no review looks.
+ *
+ * `meta` is deliberately absent: it is a live figure the page computes from
+ * its own result, not editorial copy anyone should be able to set.
+ */
+export interface PageHeroCopy {
+  pill?: string;
+  title?: string;
+  description?: string;
+}
+
 export interface PageHeroHeadingProps {
   /** Small uppercase label above the heading. */
   pill?: string;

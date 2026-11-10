@@ -1059,6 +1059,18 @@ export function AppLayoutShell({
   // a single consumer-level QueryProvider is the correct architecture.
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  /*
+   * 🛑 No slot, no search control — anywhere.
+   *
+   * The overlay below is `{searchOpen && (searchSlotRenderer ? … : searchSlot)}`,
+   * so on a consumer that mounts this shell without either slot it renders
+   * NOTHING while the title bar and bottom nav both still drew a magnifying
+   * glass. Measured on `auth.` and `audit.`: tapping it opened an empty
+   * overlay. This shell is the only layer that knows whether there is
+   * anything to open, so it is the layer that decides.
+   */
+  const hasSearchSlot = !!(searchSlot || searchSlotRenderer);
+  const toggleSearch = hasSearchSlot ? () => setSearchOpen((prev) => !prev) : undefined;
   const pathname = usePathname();
   useEffect(() => { setSidebarOpen(false); }, [pathname]);
   const { theme, toggleTheme, activeTheme } = useTheme();
@@ -1177,8 +1189,9 @@ export function AppLayoutShell({
           <TitleBar
             onToggleSidebar={handleTogglePublicSidebar}
             sidebarOpen={sidebarOpen}
-            onSearchToggle={() => setSearchOpen((prev) => !prev)}
+            onSearchToggle={toggleSearch}
             searchOpen={searchOpen}
+            showSearch={hasSearchSlot}
             brandName={brandName}
             brandTld={brandTld}
             brandShortName={brandShortName}
@@ -1346,7 +1359,7 @@ export function AppLayoutShell({
             wishlistHref={wishlistHref}
             profileHref={profileHref}
             loginHref={loginHref}
-            onSearchToggle={() => setSearchOpen((prev) => !prev)}
+            onSearchToggle={toggleSearch}
             navItems={navItems}
             onMoreToggle={handleTogglePublicSidebar}
           />

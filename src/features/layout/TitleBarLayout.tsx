@@ -22,8 +22,27 @@ export interface TitleBarUser {
 export interface TitleBarLayoutProps {
   onToggleSidebar: () => void;
   sidebarOpen: boolean;
-  onSearchToggle: () => void;
-  searchOpen: boolean;
+  /**
+   * Toggle the consumer's search overlay. Omit it and no search button is
+   * rendered — see `showSearch`.
+   */
+  onSearchToggle?: () => void;
+  searchOpen?: boolean;
+  /**
+   * Whether to render the search button at all.
+   *
+   * 🛑 Gated the way `cartHref` gates `cartEl`: a control the host cannot
+   * service must not be drawn. The button used to render unconditionally with
+   * no prop and no gate, so `auth.` and `audit.` — which mount
+   * `AppLayoutShell` with no `searchSlot` — showed a magnifying glass that
+   * opened an EMPTY overlay. Nothing errored; it just looked broken.
+   *
+   * `AppLayoutShell` computes this from `!!(searchSlot || searchSlotRenderer)`,
+   * so the decision is made by the layer that actually knows whether there is
+   * anything to open. Defaults to `true` here only so a direct consumer that
+   * passes `onSearchToggle` keeps its button.
+   */
+  showSearch?: boolean;
   brandName: string;
   brandShortName?: string;
   /**
@@ -148,7 +167,8 @@ export function TitleBarLayout({
   onToggleSidebar,
   sidebarOpen,
   onSearchToggle,
-  searchOpen,
+  searchOpen = false,
+  showSearch = true,
   brandName,
   brandTld,
   brandShortName,
@@ -230,7 +250,7 @@ export function TitleBarLayout({
     </Link>
   ) : null;
 
-  const searchBtn = (
+  const searchBtn = showSearch && onSearchToggle ? (
     <IconButton
       size="touch"
       variant="ghost"
@@ -241,7 +261,7 @@ export function TitleBarLayout({
       data-tour="nav-search"
       icon={<Icon name="search" size="lg" />}
     />
-  );
+  ) : null;
 
   // Dedicated notification bell — rendered immediately before the wishlist
   // icon (per layout request). Falls back to invisible when no href is set;

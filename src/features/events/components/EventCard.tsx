@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { BaseListingCard } from "../../../ui/components/BaseListingCard";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
@@ -16,6 +15,7 @@ import { EventStatusBadge } from "./EventStatusBadge";
 import { EventTypeBadge } from "./EventTypeBadge";
 import { eventTypeMeta } from "../constants/event-type-meta";
 import { ROUTES } from "../../../next/routing/route-map";
+import { joinHrefPrefix } from "../../../next/routing/section-routes";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { RecordOwnerQuickActions } from "../../admin/components/RecordOwnerQuickActions";
 
@@ -30,10 +30,16 @@ const __O = {
 
 interface EventCardProps {
   /**
-   * Build the detail URL for one event. Omit for the shop's `/events/<slug>`.
-   * A host that serves events at its own root passes `(s) => `/${s}``.
+   * Base path event detail pages live under on THIS host — `""` for a host
+   * that serves them at its own root, `"/events"` on the shop.
+   *
+   * 🛑 Omit it. The default resolves the shop's path through the section-route
+   * registry, which is the one place that knows who owns `/events`. This prop
+   * is the escape hatch for a host that is not registered, and it is a STRING
+   * because its predecessor was a `buildHref` callback — see `joinHrefPrefix`
+   * for the week-long outage that caused.
    */
-  buildHref?: (slugOrId: string) => string;
+  hrefPrefix?: string;
   event: EventItem;
   labels?: {
     participate?: string;
@@ -59,7 +65,7 @@ interface EventCardProps {
 }
 
 export function EventCard({
-  buildHref,
+  hrefPrefix,
   event,
   labels = {},
   onParticipate,
@@ -77,23 +83,28 @@ export function EventCard({
   const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
 
   /*
-   * 🛑 The SHOP's path by default, overridable by the host that owns events.
+   * 🛑 ONE href for all THREE links on this card — cover, title, CTA.
    *
-   * `ROUTES.PUBLIC.EVENT_DETAIL` yields `/events/<slug>`, which is correct on
-   * www. On `events.<domain>` the hostname already carries that meaning and a
-   * detail page lives at `/<slug>` — so the inherited path 404s there.
+   * Measured 2026-11-10, before this change: the three rendered
+   * `["/events/<slug>", "/events/<slug>", "/<slug>"]`. The cover and the title
+   * used raw `next/link`, so only the CTA's `TextLink` reached
+   * `resolveSectionHref` — two thirds of the card's clickable area stayed
+   * shop-shaped on a host that serves events at its own root, and the first
+   * report of it was the owner clicking a card on events.<domain> and getting
+   * a 404. The event was unreachable from its own card.
    *
-   * Measured 2026-11-09: the contest card on events.letitrip.in linked to
-   * `/events/diwali-photo-contest` and that URL returned 404, making the event
-   * unreachable from its own card.
+   * All three are `TextLink` now, which resolves through the section registry
+   * in exactly one place and also gives a cross-host href the `target`/`rel`
+   * an external link needs. So this value stays UNRESOLVED on purpose.
    *
-   * A prop rather than changing ROUTES: www still serves `/events/*` and still
-   * 301s to here, so the shop's map is right for its owner. Same reasoning as
-   * the sitemap prefix strip and the canonical override.
+   * A registry lookup rather than changing ROUTES: www still serves
+   * `/events/*` and still 308s to here, so the shop's map is right for its
+   * owner.
    */
-  const detailHref = buildHref
-    ? buildHref(event.slug ?? event.id)
-    : String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
+  const detailHref =
+    hrefPrefix === undefined
+      ? String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id))
+      : joinHrefPrefix(hrefPrefix, event.slug ?? event.id);
 
   const card = (
     <Stack as="article" border="default"
@@ -115,7 +126,7 @@ export function EventCard({
           className={selectable || isSelected ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"}
         />
       )}
-      <Link href={detailHref} className="block flex-shrink-0">
+      <TextLink href={detailHref} variant="bare" className="block flex-shrink-0">
         {event.coverImageUrl || event.coverImage?.url ? (
           <Div className={`relative aspect-video ${__O.hidden}`}>
             <MediaImage
@@ -132,7 +143,7 @@ export function EventCard({
             </Span>
           </Row>
         )}
-      </Link>
+      </TextLink>
       <Stack className={`flex-1 ${__P.p4}`}>
         {/*
           * 🛑 A LABELLED type chip, not a bare emoji. This row used to render
@@ -146,14 +157,14 @@ export function EventCard({
           <EventTypeBadge type={event.type} />
           <EventStatusBadge status={event.status} />
         </Row>
-        <Link href={detailHref} className="block">
+        <TextLink href={detailHref} variant="bare" className="block">
           <Heading
             level={3}
             className="text-[var(--appkit-color-text)] leading-snug mb-1 group-hover:text-primary transition-colors" size="base" weight="semibold"
           >
             {safeTitle}
           </Heading>
-        </Link>
+        </TextLink>
         <RichText
           html={normalizeRichTextHtml(event.description ?? "")}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"

@@ -1,5 +1,4 @@
 import React from "react";
-import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { Article } from "../../../ui/components/Semantic";
@@ -10,6 +9,7 @@ import { OverflowRow } from "../../../ui/components/OverflowRow";
 import type { OverflowRowItem } from "../../../ui/components/OverflowRow";
 import { Pagination } from "../../../ui/components/Pagination";
 import { MediaImage } from "../../../ui/components/MediaImage";
+import { TextLink } from "../../../ui/components/TextLink";
 import { blogCategoryBadge } from "../constants/category-badge";
 
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -144,10 +144,17 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
   );
 
   if (href) {
+    /*
+     * 🛑 `TextLink`, not raw `next/link` — it is what runs the href through
+     * the section-route registry. This card used `next/link` and therefore
+     * emitted the SHOP's `/blog/<slug>` on a host that serves articles at its
+     * own root, which is a 404 nobody clicks during review. Same defect
+     * `EventCard` had on two of its three links.
+     */
     return (
-      <Link href={href} className="block h-full">
+      <TextLink href={href} variant="bare" className="block h-full">
         {card}
-      </Link>
+      </TextLink>
     );
   }
   return card;

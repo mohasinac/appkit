@@ -157,7 +157,15 @@ export interface BottomNavbarProps {
   profileHref: string;
   /** href for the Login page (shown when unauthenticated) */
   loginHref: string;
-  /** Called when the Search slot is tapped */
+  /**
+   * Called when the Search slot is tapped.
+   *
+   * 🛑 Omitted means NO SEARCH SLOT, not an inert one. The slot used to render
+   * regardless and fired `onClick={undefined}` — a tap that did nothing on
+   * every consumer with no search overlay to open. Same gate as
+   * `TitleBarLayout.showSearch`; `AppLayoutShell` decides both from whether a
+   * `searchSlot` exists at all.
+   */
   onSearchToggle?: () => void;
   /**
    * When provided, renders these items in the bottom nav (first 4 shown, 5th slot = "More" button).
@@ -402,7 +410,8 @@ export function BottomNavbar({
         />
       </Li>
 
-      {/* 3 — Search */}
+      {/* 3 — Search. Absent entirely when there is nothing to open. */}
+      {onSearchToggle && (
       <Li
         className="flex-1"
       >
@@ -418,6 +427,7 @@ export function BottomNavbar({
           <Span className={labelClassName}>{labels.search}</Span>
         </button>
       </Li>
+      )}
 
       {/* 4 — Cart */}
       <Li

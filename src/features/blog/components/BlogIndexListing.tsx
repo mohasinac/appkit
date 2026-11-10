@@ -11,6 +11,7 @@ import { Pagination } from "../../../ui/components/Pagination";
 import { Text } from "../../../ui/components/Typography";
 import { StickyToolbar } from "../../../ui/components/StickyToolbar";
 import { ROUTES } from "../../../next/routing/route-map";
+import { joinHrefPrefix } from "../../../next/routing/section-routes";
 import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -29,14 +30,24 @@ const __O = {
 
 type BlogPost = Parameters<typeof BlogCard>[0]["post"];
 
+/*
+ * Left UNRESOLVED on purpose — `BlogCard` renders it through `TextLink`,
+ * which resolves it against the section registry in exactly one place.
+ */
+function articleHref(slug: string, hrefPrefix?: string): string {
+  return hrefPrefix === undefined
+    ? String(ROUTES.BLOG.ARTICLE(slug))
+    : joinHrefPrefix(hrefPrefix, slug);
+}
+
 function renderBlogGrid(props: {
   isLoading: boolean;
   posts: BlogPost[];
   view: "grid" | "list";
-  /** See `BlogIndexListingProps.buildHref`. Threaded through, not re-derived. */
-  buildHref?: (slug: string) => string;
+  /** See `BlogIndexListingProps.hrefPrefix`. Threaded through, not re-derived. */
+  hrefPrefix?: string;
 }) {
-  const { isLoading, posts, view, buildHref } = props;
+  const { isLoading, posts, view, hrefPrefix } = props;
   if (isLoading) {
     return (
       <Grid cols="cards" gap="lg">
@@ -60,13 +71,13 @@ function renderBlogGrid(props: {
   if (view === "list") {
     return (
       <Stack className="divide-y divide-zinc-100 divide-[var(--appkit-color-border-subtle)]" border="subtle" rounded="xl">
-        {posts.map((post) => <BlogCard key={post.id} post={post} href={buildHref ? buildHref(post.slug) : String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
+        {posts.map((post) => <BlogCard key={post.id} post={post} href={articleHref(post.slug, hrefPrefix)} />)}
       </Stack>
     );
   }
   return (
     <Grid cols="cards" gap="lg">
-      {posts.map((post) => <BlogCard key={post.id} post={post} href={buildHref ? buildHref(post.slug) : String(ROUTES.BLOG.ARTICLE(post.slug))} />)}
+      {posts.map((post) => <BlogCard key={post.id} post={post} href={articleHref(post.slug, hrefPrefix)} />)}
     </Grid>
   );
 }
@@ -90,21 +101,19 @@ const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_
 
 export interface BlogIndexListingProps {
   /**
-   * Build the detail URL for one item. Omit for the SHOP's path.
+   * Base path article pages live under on THIS host. Omit it and the href
+   * resolves through the section-route registry.
    *
-   * 🛑 A host that OWNS this section serves it at its own root, so the
-   * shop's `/section/<slug>` form 404s there. Measured 2026-11-09 on
-   * events.letitrip.in: every card linked to `/events/<slug>` and every one
-   * returned 404, leaving the event unreachable from its own card.
-   *
-   * A prop rather than changing ROUTES — www still serves those paths and
-   * still 301s to the subdomain, so the shop's map is right for its owner.
+   * 🛑 A STRING, not a callback. This component is `"use client"` and
+   * `BlogIndexPageView` is a SERVER component — a function here is an error
+   * row in the flight payload and a dead page at hydration. See
+   * `joinHrefPrefix`.
    */
-  buildHref?: (slugOrId: string) => string;
+  hrefPrefix?: string;
   initialData?: any;
 }
 
-export function BlogIndexListing({ initialData, buildHref }: BlogIndexListingProps) {
+export function BlogIndexListing({ initialData, hrefPrefix }: BlogIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -255,7 +264,7 @@ export function BlogIndexListing({ initialData, buildHref }: BlogIndexListingPro
 
         <Div className="lg:col-span-8 xl:col-span-9">
           {/* ── Blog grid ────────────────────────────────────────────────── */}
-          <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view, buildHref })}</Div>
+          <Div padding="y-lg">{renderBlogGrid({ isLoading, posts, view, hrefPrefix })}</Div>
         </Div>
       </Div>
 

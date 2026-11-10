@@ -3,6 +3,7 @@ import { blogRepository } from "../../../repositories";
 import { Container } from "../../../ui/components/Layout";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { PageHeroHeading } from "../../../ui/components/PageHeroHeading";
+import type { PageHeroCopy } from "../../../ui/components/PageHeroHeading";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
 import { BLOG_DEFAULT_PUBLIC_SORT } from "../schemas/firestore";
@@ -16,23 +17,44 @@ import type { DashboardCard } from "../../../_internal/shared/features/dashboard
 
 export interface BlogIndexPageViewProps {
   /**
-   * Build the detail URL for one item. Omit for the SHOP's path.
+   * Base path article pages live under on THIS host — `""` for a host that
+   * serves them at its own root, `"/blog"` on the shop. Omit it and the href
+   * resolves through the section-route registry, which is the one place that
+   * knows who owns `/blog`.
    *
-   * 🛑 A host that OWNS this section serves it at its own root, so the
-   * shop's `/section/<slug>` form 404s there. Measured 2026-11-09 on
-   * events.letitrip.in: every card linked to `/events/<slug>` and every one
-   * returned 404, leaving the event unreachable from its own card.
-   *
-   * A prop rather than changing ROUTES — www still serves those paths and
-   * still 301s to the subdomain, so the shop's map is right for its owner.
+   * 🛑 A STRING, and it must stay one. This is a SERVER component that
+   * forwards the prop into a `"use client"` child, so anything
+   * non-serializable here is an error row in the RSC flight payload: the
+   * server still returns 200 with complete HTML and the BROWSER dies at
+   * hydration with React #441, above every `<Suspense>` boundary. Its
+   * predecessor was `buildHref?: (slugOrId: string) => string` and it took two
+   * content hosts down for a week. See `joinHrefPrefix`.
    */
-  buildHref?: (slugOrId: string) => string;
+  hrefPrefix?: string;
   searchParams?: SearchParamsRecord;
   /** Admin-curated page-region cards (Phase 12). Omit for no extra content. */
   pageRegionCards?: DashboardCard[];
+  /**
+   * Hero copy. See `heroCopy` on `EventsListPageView` and `PageHeroCopy`.
+   *
+   * 🛑 This is the prop that exists because the defaults below were once
+   * `"From the shop floor"` and `"…importing and grading Beyblades."` — one
+   * client's voice and one client's product line, hardcoded inside a library
+   * whose acceptance test is *no real brand or host in source*, shipped to
+   * every consumer's blog index. The replacements say what the page IS,
+   * without naming what anyone sells.
+   */
+  heroCopy?: PageHeroCopy;
 }
 
-export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [], buildHref }: BlogIndexPageViewProps) {
+/** Vertical-neutral default hero copy — see `heroCopy`. */
+const BLOG_HERO_DEFAULTS = {
+  pill: "Articles & updates",
+  title: "Blog",
+  description: "Guides, product notes and what the team has been working on.",
+} as const;
+
+export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [], hrefPrefix, heroCopy = {} }: BlogIndexPageViewProps) {
   const sort = firstParam(searchParams, "sort") || BLOG_DEFAULT_PUBLIC_SORT;
   const page = Number(firstParam(searchParams, "page")) || 1;
   const pageSize = Number(firstParam(searchParams, "pageSize")) || 24;
@@ -85,14 +107,14 @@ export async function BlogIndexPageView({ searchParams = {}, pageRegionCards = [
             */}
           <PageHeroHeading
             className="mb-8"
-            pill="From the shop floor"
-            title="Blog"
-            description="Buying guides, release notes and what we have learned importing and grading Beyblades."
+            pill={heroCopy.pill ?? BLOG_HERO_DEFAULTS.pill}
+            title={heroCopy.title ?? BLOG_HERO_DEFAULTS.title}
+            description={heroCopy.description ?? BLOG_HERO_DEFAULTS.description}
             meta={initialData?.meta?.total ? `${initialData.meta.total} articles` : undefined}
           />
           <AdminComposableRegion pageId="blog" initialCards={pageRegionCards} />
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <BlogIndexListing initialData={initialData} buildHref={buildHref} />
+          <BlogIndexListing initialData={initialData} hrefPrefix={hrefPrefix} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>
