@@ -124,8 +124,19 @@ export function hashPolicyClauses(
 export function resolveCheckoutPolicyOffer(
   settings: CheckoutPolicySettings | undefined,
   listingTypes: readonly ListingType[],
+  /**
+   * §C — the tender, for clauses carrying `appliesWhenPaymentMethod`.
+   *
+   * 🛑 BOTH the UI offer and the gate must pass the SAME value, or they
+   * compute different clause sets and therefore different hashes, and the
+   * buyer is permanently unable to check out — the exact failure this
+   * function's own header exists to prevent. The UI learns the method when the
+   * buyer picks one and re-fetches the offer; the gate uses the method it is
+   * about to write onto the order.
+   */
+  paymentMethod?: string,
 ): CheckoutPolicyOffer {
-  const clauses = resolveCheckoutPolicyClauses(settings, listingTypes);
+  const clauses = resolveCheckoutPolicyClauses(settings, listingTypes, paymentMethod);
   return {
     version: resolveCheckoutPolicyVersion(settings),
     hash: hashPolicyClauses(clauses),
@@ -149,6 +160,17 @@ export interface AssertBuyerPolicyConsentInput {
    * cannot be reused by a caller that did not exist when it was written.
    */
   listingTypes: readonly ListingType[];
+  /**
+   * §C — the tender this checkout will use, for clauses restricted by
+   * `appliesWhenPaymentMethod` (cash on delivery today).
+   *
+   * ⚠ Optional for the same reason as on the resolver: a caller that has not
+   * been updated still gets every unrestricted clause enforced. What it loses
+   * is only the COD-specific pair, and it loses them CONSISTENTLY -- offer and
+   * gate both omit them -- so the failure mode is a missing clause, never an
+   * unplaceable order.
+   */
+  paymentMethod?: string;
   settings: CheckoutPolicySettings | undefined;
   submitted: SubmittedPolicyConsent | undefined;
   capturedOn: OrderPolicyConsent["capturedOn"];
@@ -194,7 +216,8 @@ const ADMIN_BYPASS_PERMISSION = "admin:checkout:bypass" as const;
 export async function assertBuyerPolicyConsent(
   input: AssertBuyerPolicyConsentInput,
 ): Promise<OrderPolicyConsent> {
-  const { uid, listingTypes, settings, submitted, capturedOn, requestAdminBypass } = input;
+  const { uid, listingTypes, settings, submitted, capturedOn, requestAdminBypass, paymentMethod } =
+    input;
 
   /*
    * 🛑 AN EMPTY SUBJECT IS A REFUSAL, NOT A TRIVIAL PASS.
@@ -239,7 +262,15 @@ export async function assertBuyerPolicyConsent(
     adminBypass = true;
   }
 
-  const offer = resolveCheckoutPolicyOffer(settings, listingTypes);
+  /*
+   * 🛑 `paymentMethod` MUST be passed here. Omitting it would resolve the
+   * clause set WITHOUT the COD clauses, hash that set, and then compare it to
+   * a buyer who correctly accepted the set including them -- a hash mismatch
+   * on every COD checkout, reported as BUYER_POLICY_CONSENT_STALE, which
+   * reads as "the buyer agreed to an old policy" rather than "the gate forgot
+   * an input". The UI and the gate must compute over identical inputs.
+   */
+  const offer = resolveCheckoutPolicyOffer(settings, listingTypes, paymentMethod);
   const snapshotClauses = offer.clauses.map((clause) => ({
     id: clause.id,
     text: clause.text,

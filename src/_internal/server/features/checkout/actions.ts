@@ -2982,6 +2982,14 @@ export async function createCheckoutOrderAction(
           item.listingType ??
           "standard") as ListingType,
     ),
+    /*
+     * §C — the TENDER, so the cash-on-delivery clauses resolve. Passing the
+     * normalised `paymentMethod` rather than `input.paymentMethod`: the
+     * legacy `"emi"` tender is mapped before this point, and the gate must
+     * hash the method the ORDER will actually carry, not the one the request
+     * named.
+     */
+    paymentMethod,
     settings: siteSettings?.checkoutPolicies,
     submitted: input.policyConsent,
     capturedOn: "checkout",

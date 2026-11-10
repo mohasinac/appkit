@@ -64,6 +64,30 @@ export interface CheckoutPolicyClause {
    */
   id: string;
   /**
+   * ── §C: restrict the clause to particular PAYMENT METHODS ───────────────
+   *
+   * Absent ⇒ the clause applies whatever the buyer pays with, which is every
+   * existing clause and is why this is additive.
+   *
+   * 🛑 This is what makes the COD consent gate a CLAUSE rather than a second
+   * consent system. The obvious alternative was a pair of booleans on the
+   * order (`codShipmentTermsAccepted` + `…AcceptedAt`, mirroring
+   * `buyerFraudAgreementAccepted`) — and that would have been a divergent copy
+   * of a mechanism that already does strictly more: it stores the TEXT the
+   * buyer read, hashes it, versions it, and refuses a stale acceptance. A
+   * boolean says somebody ticked something, not WHAT they were shown, and this
+   * module's own header exists to make that distinction.
+   *
+   * 🛑 A METHOD SLUG, matched case-sensitively against `paymentMethod` — not a
+   * capability. The clause is a consequence of how the buyer is PAYING, which
+   * is not a property of any listing type in the cart, so it cannot hang off
+   * the capability registry the way the others do.
+   *
+   * ⚠ Still config: the admin edits the clause list, so "COD also requires an
+   * age-check acknowledgement" is a row, not a deploy.
+   */
+  appliesWhenPaymentMethod?: readonly string[];
+  /**
    * The consequence, in plain language, as the buyer reads it INLINE at the
    * point of agreement. 🛑 Not a link to a policy page: the whole point of the
    * blocking step is that the consequence is in front of them when they tick.
@@ -176,6 +200,42 @@ export const DEFAULT_CHECKOUT_POLICY_CLAUSES: readonly CheckoutPolicyClause[] = 
     text:
       "This order contains a restricted item. I confirm I am legally permitted to receive it at my delivery address, and I accept that the order will be cancelled if that turns out not to be the case.",
   },
+  /*
+   * ── §C: CASH ON DELIVERY ────────────────────────────────────────────────
+   *
+   * Owner: a COD buyer must agree to the shipment terms AND to the COD
+   * conditions. Two clauses rather than one because they are two different
+   * obligations with two different consequences — and a single sentence
+   * covering both is precisely how `no-refund-after-ship` managed to be wrong
+   * in both directions, as the note above records.
+   *
+   * 🛑 `appliesWhen: "supportsShipping"` AND the method filter, so these never
+   * appear on a digital-only cart. A clause promising someone will be present
+   * to receive a parcel is nonsense on a code delivered by email, and an
+   * irrelevant waiver in a consent record is worse than none.
+   */
+  {
+    id: "cod-shipment-terms",
+    appliesWhen: "supportsShipping",
+    appliesWhenPaymentMethod: ["cod"],
+    text:
+      "I am paying cash on delivery. Someone must be available at my delivery address to receive the parcel and pay the balance in full, and I understand delivery may be attempted a limited number of times before the order is returned to the seller.",
+  },
+  {
+    id: "cod-conditions",
+    appliesWhen: "supportsShipping",
+    appliesWhenPaymentMethod: ["cod"],
+    /*
+     * ⚠ States the consequence of refusal WITHOUT naming a number of strikes
+     * or a ban. The graduated restriction is a soft-ban row an admin applies
+     * (`{ action: "use_payment_method", target: "cod" }`), and baking "after
+     * two refusals" into a clause would make the stored consent text disagree
+     * with whatever policy an admin actually operates — the same two-owners
+     * defect flagged on the returns-window clause above.
+     */
+    text:
+      "I understand that refusing or failing to accept a cash-on-delivery parcel costs the seller the full cost of shipping it both ways, and that repeated refusals may result in cash on delivery being withdrawn from my account for future orders.",
+  },
 ];
 
 /**
@@ -190,7 +250,23 @@ export const DEFAULT_CHECKOUT_POLICY_CLAUSES: readonly CheckoutPolicyClause[] = 
  * tell them apart would be to re-derive a hash from an old settings snapshot
  * nobody kept.
  */
-export const DEFAULT_CHECKOUT_POLICY_VERSION = 2;
+export const DEFAULT_CHECKOUT_POLICY_VERSION = 3;
+
+/*
+ * 2 → 3 on 2026-11-11, when the two cash-on-delivery clauses were added.
+ *
+ * ⚠ Bumping this does NOT invalidate anyone's in-flight acceptance, and it is
+ * worth being precise about why, because the instinct is to fear it: staleness
+ * is judged on the HASH (`submitted.hash !== offer.hash`), and the hash is
+ * taken over the clauses RESOLVED for that specific checkout. The COD clauses
+ * resolve only for a COD cart, so a card buyer's clause set — and therefore
+ * their hash — is byte-identical before and after this change. Only a COD
+ * buyer is asked to accept the new set, which is exactly the intent.
+ *
+ * The version is the human handle in a dispute ("they accepted policy v2,
+ * which said nothing about COD"). Leaving it at 2 across a material addition
+ * would make two genuinely different documents indistinguishable by name.
+ */
 
 /**
  * Does any listing type present in this checkout carry the capability the
@@ -204,7 +280,31 @@ export const DEFAULT_CHECKOUT_POLICY_VERSION = 2;
 function clauseApplies(
   clause: CheckoutPolicyClause,
   listingTypes: readonly ListingType[],
+  paymentMethod: string | undefined,
 ): boolean {
+  /*
+   * ── §C: the payment-method filter, applied FIRST and as an AND ──────────
+   *
+   * A clause restricted to `["cod"]` must not appear on a card checkout even
+   * if its `appliesWhen` capability is present in the cart. Checked before the
+   * capability so the restriction can never be widened by one.
+   *
+   * 🛑 An UNKNOWN payment method (undefined — a caller that has not been
+   * updated, or a method resolved after this ran) DROPS a restricted clause
+   * rather than showing it. That is the safe direction here, and it is the
+   * opposite of the usual fail-closed instinct, so it is worth stating why:
+   * showing a COD clause to someone paying by card would make them accept a
+   * consequence that does not apply to them, and a consent record containing
+   * irrelevant waivers is exactly the kind that gets struck — taking the rest
+   * of the document's credibility with it. The gate still refuses the ORDER if
+   * the method genuinely needs a clause, because the server re-resolves with
+   * the real method in hand.
+   */
+  if (clause.appliesWhenPaymentMethod && clause.appliesWhenPaymentMethod.length > 0) {
+    if (!paymentMethod) return false;
+    if (!clause.appliesWhenPaymentMethod.includes(paymentMethod)) return false;
+  }
+
   if (clause.appliesWhen === "always") return true;
   const key = clause.appliesWhen;
   const present = listingTypes.some((type) => {
@@ -230,12 +330,28 @@ function clauseApplies(
 export function resolveCheckoutPolicyClauses(
   settings: CheckoutPolicySettings | undefined,
   listingTypes: readonly ListingType[],
+  /**
+   * The tender this checkout will use, for `appliesWhenPaymentMethod`.
+   *
+   * ⚠ OPTIONAL on purpose, and the reason is the opposite of convenience.
+   * Making it required would be the better signal in general — this session
+   * has already found three things that compiled and could not run — but the
+   * clause set is also resolved to BUILD the offer the buyer is shown, and at
+   * that moment the buyer has not chosen a method yet. A required parameter
+   * would force those callers to invent one.
+   *
+   * 🛑 So the safety is placed where it actually binds: the SERVER gate
+   * re-resolves with the real method in hand immediately before writing the
+   * order, so a caller that omits it cannot result in a missing consent — only
+   * in a clause that was not shown early, which the gate then refuses.
+   */
+  paymentMethod?: string,
 ): CheckoutPolicyClause[] {
   const configured =
     settings?.clauses && settings.clauses.length > 0
       ? settings.clauses
       : DEFAULT_CHECKOUT_POLICY_CLAUSES;
-  return configured.filter((clause) => clauseApplies(clause, listingTypes));
+  return configured.filter((clause) => clauseApplies(clause, listingTypes, paymentMethod));
 }
 
 export function resolveCheckoutPolicyVersion(
