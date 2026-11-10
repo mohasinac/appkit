@@ -344,15 +344,20 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
    * Plaintext seller identity. **Opt-in and named** — for a payout dispute or
    * an abuse investigation, where the real person is the point.
    */
-  revealProduct(doc: ProductDocument): ProductDocument {
-    return revealPii<ProductDocument>(
-      doc as unknown as FirestoreDocument,
-      PRODUCT_PII_FIELDS,
-    );
+  /*
+   * 🛑 Generic over the ROW SHAPE, like `sanitizeProductForPublic`, not typed
+   * `ProductDocument`. Every real caller is a list route whose rows come from
+   * `listPublicProducts`, and that returns `Record<string, JsonValue>[]` —
+   * Sieve-projected rows, not full documents. Typing these `ProductDocument`
+   * would force a cast at each call site, and a cast at a PII boundary is the
+   * thing that stops being checked.
+   */
+  revealProduct<T extends object>(doc: T): T {
+    return revealPii<T>(doc as unknown as FirestoreDocument, PRODUCT_PII_FIELDS);
   }
 
   /** As `revealProduct`, for a list read. */
-  revealProducts(docs: readonly ProductDocument[]): ProductDocument[] {
+  revealProducts<T extends object>(docs: readonly T[]): T[] {
     return docs.map((d) => this.revealProduct(d));
   }
 
@@ -371,19 +376,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
    * `sellerTokensIndex` on `/api/admin/payouts`, both in the commit that
    * "fixed" the route). A suffix sweep fails closed.
    */
-  maskedProduct(doc: ProductDocument): ProductDocument {
-    const masked = maskPii<ProductDocument>(
+  maskedProduct<T extends object>(doc: T): T {
+    const masked = maskPii<T>(
       doc as unknown as FirestoreDocument,
       PRODUCT_PII_FIELDS,
     ) as unknown as Record<string, unknown>;
     for (const key of Object.keys(masked)) {
       if (/Index$/.test(key)) delete masked[key];
     }
-    return masked as unknown as ProductDocument;
+    return masked as unknown as T;
   }
 
   /** As `maskedProduct`, for a list read. */
-  maskedProducts(docs: readonly ProductDocument[]): ProductDocument[] {
+  maskedProducts<T extends object>(docs: readonly T[]): T[] {
     return docs.map((d) => this.maskedProduct(d));
   }
 
