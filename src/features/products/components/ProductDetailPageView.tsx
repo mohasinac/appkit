@@ -894,8 +894,6 @@ export async function ProductDetailPageView({
                 freeShipping={freeShipping}
                 codAvailable={codEnabled === true}
                 codHref={String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS)}
-                emiAvailable={emiEnabled === true}
-                emiHref={String(ROUTES.PUBLIC.HOW_EMI_WORKS)}
                 condition={condition ?? undefined}
                 returnable={!finalSale && returnsEnabled}
                 finalSale={finalSale}
@@ -912,7 +910,6 @@ export async function ProductDetailPageView({
                   finalSale: "Final Sale",
                   freeShipping: "Free Shipping",
                   codAvailable: "Cash on Delivery",
-                  emiAvailable: "EMI Available",
                   wishlistCount: (n) => `${n} wishlisted`,
                   categoryProductCount: (n, cat) => `${n} in ${cat}`,
                 }}

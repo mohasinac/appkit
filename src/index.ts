@@ -2774,8 +2774,7 @@ export { HowCollectorDropsWorkView } from "./features/about/components/HowCollec
 // HowCheckoutWorksView - Component for how checkout works view.
 export { HowCheckoutWorksView } from "./features/about/components/HowCheckoutWorksView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// HowEmiWorksView - Component for how EMI works view.
-export { HowEmiWorksView } from "./features/about/components/HowEmiWorksView";
+
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // HowOffersWorkView - Component for how offers work view.
 export { HowOffersWorkView } from "./features/about/components/HowOffersWorkView";
@@ -2839,8 +2838,7 @@ export type { HowCollectorDropsWorkViewProps } from "./features/about/components
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowCheckoutWorksViewProps - Type contract for how checkout works view props.
 export type { HowCheckoutWorksViewProps } from "./features/about/components/HowCheckoutWorksView";
-// HowEmiWorksViewProps - Type contract for how EMI works view props.
-export type { HowEmiWorksViewProps } from "./features/about/components/HowEmiWorksView";
+
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // HowOffersWorkViewProps - Type contract for how offers work view props.
 export type { HowOffersWorkViewProps } from "./features/about/components/HowOffersWorkView";
@@ -9702,7 +9700,6 @@ export type {
   RevealState,
   WorkflowStatus,
 } from "./_internal/shared/features/orders/workflow-registry";
-
 
 // Checkout rule registry â€" pure TS, safe in both client and server bundles.
 export {

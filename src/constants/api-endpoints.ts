@@ -404,7 +404,6 @@ export const CART_ENDPOINTS = {
    * two requests (`/api/payment/create-order` captures, `/api/payment/verify`
    * writes the order). Same reasoning as `POINTS` and `ADDONS` above.
    */
-  EMI: "/api/cart/emi",
   COUPON: "/api/cart/coupon",
   /**
    * Add a buyer-assembled group selection as ONE line. Separate from `GET`'s

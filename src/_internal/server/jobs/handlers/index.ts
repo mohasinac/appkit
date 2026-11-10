@@ -93,7 +93,6 @@ export { draftPruneHandler } from "./draftPrune";
 export { testDataCleanupHandler } from "./testDataCleanup";
 // Tester program — every-4h revert-live-edits + prune-extras refresh (faster than the 7-day sweep above)
 // EMI — installment reminder + overdue-flagging sweep
-export { emiInstallmentReminderHandler } from "./emiInstallmentReminder";
 // Procurement Shipments — 3-function recompute cascade (item→lot, lot/header→shipment allocation, cascade-delete)
 export { onShipmentItemWriteHandler } from "./onShipmentItemWrite";
 export { onShipmentLotWriteHandler, onShipmentHeaderWriteHandler } from "./onShipmentAllocationSync";

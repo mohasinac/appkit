@@ -57,7 +57,6 @@ export async function GuidesHubView({ pageRegionCards = [] }: GuidesHubViewProps
         { href: String(ROUTES.PUBLIC.HOW_OFFERS_WORK), label: t("howOffers"), text: t("howOffersText") },
         { href: String(ROUTES.PUBLIC.HOW_PRE_ORDERS_WORK), label: t("howPreOrders"), text: t("howPreOrdersText") },
         { href: String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS), label: t("howCheckout"), text: t("howCheckoutText") },
-        { href: String(ROUTES.PUBLIC.HOW_EMI_WORKS), label: t("howEmi"), text: t("howEmiText") },
         { href: String(ROUTES.PUBLIC.HOW_ORDERS_WORK), label: t("howOrders"), text: t("howOrdersText") },
       ],
     },

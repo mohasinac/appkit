@@ -955,8 +955,8 @@ export type { ProtectionClaimReason } from "./features/protection-claims/schemas
 export { OrderCompletionPanel } from "./features/orders/components/OrderCompletionPanel";
 export type { OrderCompletionPanelProps, RateableLine } from "./features/orders/components/OrderCompletionPanel";
 // Buyer-facing EMI schedule with a pay-any-instalment action.
-export { EmiInstallmentsPanel } from "./features/orders/components/EmiInstallmentsPanel";
-export type { EmiInstallmentsPanelProps } from "./features/orders/components/EmiInstallmentsPanel";
+
+
 
 // D55 — the pre-order balance collector's buyer panel and its write shapes.
 export { BalancePaymentPanel } from "./features/orders/components/BalancePaymentPanel";

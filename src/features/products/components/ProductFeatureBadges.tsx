@@ -17,7 +17,6 @@ interface ProductFeatureBadgeLabels {
   finalSale: string;
   freeShipping: string;
   codAvailable: string;
-  emiAvailable: string;
   wishlistCount: (count: number) => string;
   categoryProductCount: (count: string, category: string) => string;
 }
@@ -42,9 +41,6 @@ interface ProductFeatureBadgesProps {
   codAvailable?: boolean;
   /** When set, the COD badge links here (e.g. the "How Checkout Works" policy page). */
   codHref?: string;
-  emiAvailable?: boolean;
-  /** When set, the EMI badge links here (e.g. the "How EMI Works" policy page). */
-  emiHref?: string;
   labels: ProductFeatureBadgeLabels;
   formatCount?: (value: number) => string;
   categoryBadgeClassName?: string;
@@ -72,8 +68,6 @@ export function ProductFeatureBadges({
   categoryName,
   codAvailable,
   codHref,
-  emiAvailable,
-  emiHref,
   labels,
   formatCount,
   categoryBadgeClassName,
@@ -188,16 +182,6 @@ export function ProductFeatureBadges({
     });
   }
 
-  if (emiAvailable) {
-    badges.push({
-      key: "emi",
-      icon: <Span size="xs">📅</Span>,
-      label: labels.emiAvailable,
-      colorClass: "text-accent-a dark:text-accent-a",
-      bgClass: "bg-accent-a-surface dark:bg-accent-a-surface border-accent-a dark:border-accent-a",
-      href: emiHref,
-    });
-  }
 
   if (wishlistCount && wishlistCount > 0) {
     badges.push({

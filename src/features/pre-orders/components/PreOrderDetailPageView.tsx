@@ -196,8 +196,7 @@ function PreOrderInfoSection({
           finalSale: "Final Sale",
           freeShipping: "Free Shipping",
           codAvailable: "Cash on Delivery",
-          emiAvailable: "EMI Available",
-          wishlistCount: (n) => `${n} wishlisted`,
+                    wishlistCount: (n) => `${n} wishlisted`,
           categoryProductCount: (n, cat) => `${n} in ${cat}`,
         }}
       />
