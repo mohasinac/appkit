@@ -105,8 +105,17 @@ async function resolveWhatsAppCredentials(
   return {
     phoneNumberId:
       usable(db.whatsappPhoneNumberId) || usable(ctx.env("WHATSAPP_PHONE_NUMBER_ID")),
+    /*
+     * 🛑 `WHATSAPP_MESSAGES_TOKEN` first — see the same note in
+     * `core/integration-keys.ts`. That is the name set on the deployment;
+     * `WHATSAPP_CLOUD_API_TOKEN` is set nowhere, so this resolver returned an
+     * empty token and the `usable()` guard below turned every purchase
+     * announcement into a silent no-op. The legacy name stays as a fallback.
+     */
     accessToken:
-      usable(db.whatsappCloudApiToken) || usable(ctx.env("WHATSAPP_CLOUD_API_TOKEN")),
+      usable(db.whatsappCloudApiToken) ||
+      usable(ctx.env("WHATSAPP_MESSAGES_TOKEN")) ||
+      usable(ctx.env("WHATSAPP_CLOUD_API_TOKEN")),
   };
 }
 

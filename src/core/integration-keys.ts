@@ -145,8 +145,29 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
     whatsappApiKey: db.whatsappApiKey || process.env.WHATSAPP_API_KEY || "",
     whatsappPhoneNumberId:
       db.whatsappPhoneNumberId || process.env.WHATSAPP_PHONE_NUMBER_ID || "",
+    /*
+     * 🛑 TWO ENV NAMES, ONE CREDENTIAL — `WHATSAPP_MESSAGES_TOKEN` first.
+     *
+     * `features/admin/actions/notification-actions.ts` has always read
+     * `WHATSAPP_MESSAGES_TOKEN`, and that is the name actually set on the
+     * deployment; this resolver and `jobs/core/onOrderCreate.ts` read
+     * `WHATSAPP_CLOUD_API_TOKEN`, which is set nowhere. So notifications
+     * authenticated while the order-create announcement and the checkout OTP
+     * silently received an empty token — and an empty token is not an error
+     * here, it is a disabled channel: `sendWhatsAppBusinessMessage` returns
+     * `false` on a falsy token and `onOrderCreate`'s `usable()` guard skips
+     * the send outright. Nothing logs, nothing throws, the message simply
+     * never arrives.
+     *
+     * The legacy name is kept as a fallback rather than removed, so an install
+     * configured the old way keeps working: this changes precedence, not
+     * behaviour, and nothing has to be migrated.
+     */
     whatsappCloudApiToken:
-      db.whatsappCloudApiToken || process.env.WHATSAPP_CLOUD_API_TOKEN || "",
+      db.whatsappCloudApiToken ||
+      process.env.WHATSAPP_MESSAGES_TOKEN ||
+      process.env.WHATSAPP_CLOUD_API_TOKEN ||
+      "",
     whatsappAdminNotifyNumbers:
       db.whatsappAdminNotifyNumbers ||
       process.env.WHATSAPP_ADMIN_NOTIFY_NUMBERS ||

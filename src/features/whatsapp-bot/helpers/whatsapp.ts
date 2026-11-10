@@ -22,15 +22,29 @@ import { formatMoney } from "../../../utils/number.formatter";
 
 const META_GRAPH_BASE = "https://graph.facebook.com/v20.0";
 
+/**
+ * \uD83D\uDED1 The greeting is CONFIG, not code, and it used to be neither.
+ *
+ * This built `Hi Hobson! I'd like to place an order:` \u2014 a hardcoded personal
+ * name, inside appkit, on the one string a BUYER sends from their own WhatsApp
+ * account. It fails the domain-independence test twice over: someone's name
+ * baked into a reusable package, in the most visible place a wrong one could
+ * possibly appear.
+ *
+ * `greetingName` is optional, and unset means no name at all \u2014 so the generic
+ * form is the default and naming the recipient is a deliberate choice made by
+ * the caller, never a constant shipped in the library.
+ */
 export function buildCheckoutMessageURL(input: CheckoutMessageInput): string {
-  const { waNumber, cart, total, address, isPreorder = false } = input;
+  const { waNumber, cart, total, address, isPreorder = false, greetingName } = input;
   const prefix = isPreorder ? "\uD83D\uDD16 *PRE-ORDER*\n\n" : "";
+  const greeting = greetingName?.trim() ? `Hi ${greetingName.trim()}!` : "Hi!";
   const lines = cart.map(
     (i) =>
       `• ${i.name} ×${i.qty} — ${getDefaultCurrencySymbol()}${(i.salePrice * i.qty).toLocaleString(getDefaultLocale())}`,
   );
   const body = [
-    `${prefix}Hi Hobson! I'd like to place an order:`,
+    `${prefix}${greeting} I'd like to place an order:`,
     "",
     ...lines,
     "",

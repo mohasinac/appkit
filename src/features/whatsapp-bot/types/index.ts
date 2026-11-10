@@ -11,6 +11,13 @@ export interface CheckoutMessageInput {
     pincode: string;
   };
   isPreorder?: boolean;
+  /**
+   * Who the buyer's message greets, e.g. a store owner's first name. Omitted
+   * means an unnamed `Hi!` — see `buildCheckoutMessageURL`. Deliberately
+   * optional: a default here would be a brand name baked into appkit, which is
+   * the defect this field replaced.
+   */
+  greetingName?: string;
 }
 
 export interface StatusNotificationInput {
