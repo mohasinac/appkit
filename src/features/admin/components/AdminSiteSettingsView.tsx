@@ -1486,7 +1486,7 @@ export function AdminSiteSettingsView({
   // calls collapsed into one combined object.
   const [whatsappForm, setWhatsappForm] = React.useState<SiteSettingsWhatsappFormValues>({
     waPhoneNumberId: "", waCloudApiToken: "", waAdminNotifyNumbers: "",
-    waTemplateLanguage: "en", waTemplateOrderUpdate: "",
+    waTemplateLanguage: "en", waSenderPhoneNumberId: "", waTemplateOrderUpdate: "",
     waTemplateCheckoutOtp: "",
   });
   const {
@@ -2026,6 +2026,7 @@ export function AdminSiteSettingsView({
       waCloudApiToken: s.credentialsMasked?.whatsappCloudApiToken ?? "",
       waAdminNotifyNumbers: s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "",
       waTemplateLanguage: s.credentialsMasked?.whatsappTemplateLanguage ?? "en",
+      waSenderPhoneNumberId: s.credentialsMasked?.whatsappSenderPhoneNumberId ?? "",
       waTemplateOrderUpdate: s.credentialsMasked?.whatsappTemplateOrderUpdate ?? "",
       waTemplateCheckoutOtp: s.credentialsMasked?.whatsappTemplateCheckoutOtp ?? "",
     });
@@ -2267,6 +2268,7 @@ export function AdminSiteSettingsView({
         whatsappCloudApiToken: maskedOrReal("whatsappCloudApiToken", whatsappForm.waCloudApiToken ?? ""),
         whatsappAdminNotifyNumbers: maskedOrReal("whatsappAdminNotifyNumbers", whatsappForm.waAdminNotifyNumbers ?? ""),
         whatsappTemplateLanguage: maskedOrReal("whatsappTemplateLanguage", whatsappForm.waTemplateLanguage ?? ""),
+        whatsappSenderPhoneNumberId: maskedOrReal("whatsappSenderPhoneNumberId", whatsappForm.waSenderPhoneNumberId ?? ""),
         whatsappTemplateOrderUpdate: maskedOrReal("whatsappTemplateOrderUpdate", whatsappForm.waTemplateOrderUpdate ?? ""),
         whatsappTemplateCheckoutOtp: maskedOrReal("whatsappTemplateCheckoutOtp", whatsappForm.waTemplateCheckoutOtp ?? ""),
         resendApiKey: maskedOrReal("resendApiKey", notificationsForm.resendApiKey ?? ""),

@@ -69,6 +69,19 @@ export const siteSettingsWhatsappFormSchema = z.object({
    * status, payment status and per-shipment tracking. Refunds ride its payment
    * slot, which is why no separate money template exists to configure.
    */
+  /*
+   * 🛑 Which NUMBER messages come from, when the account has more than one.
+   *
+   * Not a constant anywhere, because this id is not stable — it changed three
+   * times on 2026-11-10 alone. The interesting choice is a display-name-only
+   * sender: buyers see the business NAME in the chat header rather than a
+   * phone number, so the operator's real number is never exposed.
+   *
+   * ⚠ Blank keeps today's behaviour (the env var). Templates are per-account,
+   * not per-number, so switching needs no re-approval.
+   */
+  waSenderPhoneNumberId: waField(4.5, "Send from (phone number ID)",
+    "Blank = use the deployment's configured number. Set this to a specific Meta phone number ID to send from that one instead — e.g. a display-name-only sender, which shows your business name to buyers instead of a phone number. Find the ID in WhatsApp Manager → Phone numbers."),
   waTemplateOrderUpdate: waField(5, "Order update template name",
     "The single UTILITY template covering the whole order lifecycle — contents, status, payment and shipments. e.g. tx_order_update. Created by `node scripts/wa-templates.mjs create`. Blank means WhatsApp is skipped for order notifications; in-app and email still fire."),
   /*

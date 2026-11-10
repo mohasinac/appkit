@@ -347,6 +347,27 @@ export interface SiteSettingsCredentials {
    */
   whatsappTemplateOrderUpdate?: string;
   /**
+   * The Meta phone-number ID to SEND from, when the account has more than one.
+   *
+   * 🛑 Config, not a constant, because this id is NOT stable. It changed
+   * three times on 2026-11-10 alone — a test number, then a rebuilt account,
+   * then a display-name-only sender. Anything hardcoding it is already wrong.
+   *
+   * The second sender is the interesting one: a **display-name-only** number
+   * shows the business NAME in the chat header instead of a phone number, so
+   * the operator's real number is never exposed to buyers. Meta allocates it
+   * from the reserved `+1 555` fictional range precisely because nobody is
+   * meant to see or dial it.
+   *
+   * ⚠ Unset falls back to `WHATSAPP_PHONE_NUMBER_ID` from the environment,
+   * which is today's behaviour — so this field changed nothing until an
+   * operator chooses a sender.
+   *
+   * ✅ Templates are per-WABA, not per-number, so switching sender needs no
+   * re-approval. The swap really is just config.
+   */
+  whatsappSenderPhoneNumberId?: string;
+  /**
    * Name of the **AUTHENTICATION**-category template used for the checkout
    * OTP. Separate from the six above, and not interchangeable with them:
    * Meta's policy check is on the template's CATEGORY, not its wording, so a
@@ -391,6 +412,7 @@ export interface SiteSettingsCredentialsMasked {
   whatsappPhoneNumberId?: string;
   whatsappCloudApiToken?: string;
   whatsappAdminNotifyNumbers?: string;
+  whatsappSenderPhoneNumberId?: string;
   whatsappTemplateOrderUpdate?: string;
   whatsappTemplateCheckoutOtp?: string;
   whatsappTemplateLanguage?: string;

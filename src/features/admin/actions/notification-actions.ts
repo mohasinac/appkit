@@ -692,6 +692,20 @@ export async function sendNotification(
      * behaviour, and nothing has to be migrated.
      */
     const phoneNumberId =
+      /*
+       * 🛑 THE CHOSEN SENDER WINS, and it is first on purpose.
+       *
+       * The rest of this block is env-first because credentials are
+       * deployment config. The SENDER is different: which of the account's
+       * numbers a message comes from is an operator choice, not a secret, and
+       * the whole point of the setting is to switch to the display-name-only
+       * number so the real number is never shown to buyers. An env var that
+       * overrode it would make the admin screen a lie.
+       *
+       * ⚠ Unset falls through to exactly the previous order, so this is inert
+       * until somebody picks a sender.
+       */
+      creds.whatsappSenderPhoneNumberId?.trim() ||
       process.env.WHATSAPP_PHONE_NUMBER_ID?.trim() ||
       (creds.whatsappPhoneNumberId?.trim() ?? "");
     const accessToken =
