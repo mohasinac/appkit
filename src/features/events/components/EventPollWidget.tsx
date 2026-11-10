@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { JsonValue } from "@mohasinac/appkit/client";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
+import { useSignInHref } from "../../../react/hooks/useReturnTo";
 import { ROUTES } from "../../../next/routing/route-map";
 import { Button } from "../../../ui/components/Button";
 import { Checkbox } from "../../../ui/components/Checkbox";
@@ -46,6 +47,14 @@ export function EventPollWidget({
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. The raw `ROUTES.AUTH.LOGIN` is
+   * the SHOP's `/auth/login`, which 404s on every other host, and without
+   * `next` the visitor signs in and lands on the identity provider's default
+   * rather than back on the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const toggleVote = (id: string) => {
@@ -113,7 +122,7 @@ export function EventPollWidget({
         <Text size="sm" color="muted">You need an account to participate in this poll.</Text>
         <TextLink
           variant="bare"
-          href={String(ROUTES.AUTH.LOGIN)}
+          href={signInHref}
           rounded="xl"
           size="sm"
           weight="semibold"

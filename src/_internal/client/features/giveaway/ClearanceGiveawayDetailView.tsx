@@ -9,6 +9,7 @@ import { Div } from "../../../../ui/components/Div";
 import { Anchor } from "../../../../ui/components/Anchor";
 import { MediaImage } from "../../../../ui/components/MediaImage";
 import { ROUTES } from "../../../../next/routing/route-map";
+import { useSignInHref } from "../../../../react/hooks/useReturnTo";
 import { GiveawaySlotGrid } from "./GiveawaySlotGrid";
 import { GiveawayPullForm } from "./GiveawayPullForm";
 import { ClearanceCollage } from "../../../../features/products/components/ClearanceCollage";
@@ -45,6 +46,13 @@ export function ClearanceGiveawayDetailView({
   currentEntry,
   pageRegionCards = [],
 }: ClearanceGiveawayDetailViewProps) {
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. The raw `ROUTES.AUTH.LOGIN` is
+   * the SHOP's `/auth/login`, a 404 on every other host, and a bare link signs
+   * the visitor in somewhere other than the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
+
   const [pulledEntry, setPulledEntry] = useState<{
     userGiveawayNumber: number;
     assignedPrizeSlotNumber: number;
@@ -119,7 +127,7 @@ export function ClearanceGiveawayDetailView({
                 <Stack gap="md" className="text-center">
                   <Heading level={2} size="xl" weight="semibold">Want to Enter?</Heading>
                   <Text color="muted">Log in to submit your entry.</Text>
-                  <Anchor href={String(ROUTES.AUTH.LOGIN)} tone="brand">
+                  <Anchor href={signInHref} tone="brand">
                     Log In to Enter
                   </Anchor>
                 </Stack>

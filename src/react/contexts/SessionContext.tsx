@@ -146,6 +146,17 @@ export interface SessionEndpoints {
   logout: string;
   /** GET — fetch user profile */
   userProfile: string;
+  /**
+   * GET — WHO the session cookie belongs to.
+   *
+   * 🛑 This is the IDENTITY endpoint and it is not interchangeable with
+   * `userProfile`. `userProfile` returns the stored profile DOCUMENT, which the
+   * shop owns; `me` verifies the session cookie and answers with the account.
+   * On a host that is not the shop the first is a proxy that may be absent or
+   * degrade to an empty object, while the second is served by the identity
+   * provider and always has an answer. See `resolveSessionFromCookie`.
+   */
+  me: string;
 }
 
 const DEFAULT_ENDPOINTS: SessionEndpoints = {
@@ -154,7 +165,42 @@ const DEFAULT_ENDPOINTS: SessionEndpoints = {
   sessionValidate: AUTH_ENDPOINTS.SESSION_VALIDATE,
   logout: AUTH_ENDPOINTS.LOGOUT,
   userProfile: ACCOUNT_ENDPOINTS.PROFILE,
+  me: AUTH_ENDPOINTS.ME,
 };
+
+/**
+ * What `GET /api/auth/me` answers with.
+ *
+ * ⚠ The field names differ from `SessionUser` and that is not a mistake to
+ * normalise away upstream: `id` rather than `uid`, `isEmailVerified` rather
+ * than `emailVerified`. It is a public identity payload with its own shape, and
+ * three deployments already serve it. Mapping it here keeps the wire contract
+ * where it is.
+ */
+interface MeResponse {
+  id?: string;
+  email?: string | null;
+  displayName?: string | null;
+  photoURL?: string | null;
+  role?: string;
+  roles?: string[];
+  permissions?: string[];
+  isEmailVerified?: boolean;
+}
+
+/**
+ * Why a cookie-only session resolution ended the way it did.
+ *
+ * 🛑 Three outcomes, not two. "The server says you are nobody" and "I could not
+ * reach the server" must not be collapsed, because the first justifies deleting
+ * the session cookies and the second does not — and the code below used to do
+ * exactly that collapsing, which is how a cold sibling deployment logged a
+ * signed-in visitor out.
+ */
+type CookieSessionResult =
+  | { readonly outcome: "resolved"; readonly user: SessionUser }
+  | { readonly outcome: "signed-out" }
+  | { readonly outcome: "unknown" };
 
 // ---------------------------------------------------------------------------
 // Session cookie constants
@@ -285,6 +331,60 @@ function buildSessionUser(
   };
 }
 
+/**
+ * Map the stored profile document onto a `SessionUser`, or `null` when it names
+ * nobody.
+ *
+ * 🛑 `null` RATHER THAN A uid OF `""`. The previous `uid: data.uid ?? ""` turned
+ * an empty payload into a TRUTHY user with no identity — and a guest host's
+ * profile proxy degrades to exactly that `{}` when the shop is unreachable. The
+ * app then believed it had a signed-in viewer while every uid-keyed read
+ * addressed nothing, which is worse than being signed out because nothing
+ * reports it.
+ */
+function buildUserFromProfile(
+  data: Partial<SessionUser>,
+): SessionUser | null {
+  const uid = (data.uid ?? "").trim();
+  if (!uid) return null;
+  const currentSessionId = getSessionIdFromCookie();
+  return {
+    uid,
+    email: data.email || null,
+    emailVerified: data.emailVerified || false,
+    displayName: data.displayName || null,
+    photoURL: data.photoURL || null,
+    phoneNumber: data.phoneNumber || null,
+    role: data.role || "user",
+    roles: data.roles,
+    primaryRole: data.primaryRole,
+    disabled: data.disabled,
+    createdAt: data.createdAt ? new Date(data.createdAt) : undefined,
+    updatedAt: data.updatedAt ? new Date(data.updatedAt) : undefined,
+    sessionId: currentSessionId || undefined,
+    phoneVerified: data.phoneVerified,
+    storeId: data.storeId,
+    isTester: data.isTester,
+    canTestAdmin: data.canTestAdmin,
+    permissions: data.permissions,
+    avatarMetadata: data.avatarMetadata?.url
+      ? {
+          url: data.avatarMetadata.url,
+          position: data.avatarMetadata.position || { x: 50, y: 50 },
+          zoom: data.avatarMetadata.zoom || 1,
+        }
+      : null,
+    publicProfile: data.publicProfile,
+    stats: data.stats,
+    metadata: data.metadata,
+    scamAwarenessAcknowledgedAt: data.scamAwarenessAcknowledgedAt
+      ? new Date(data.scamAwarenessAcknowledgedAt as unknown as string)
+      : null,
+    dismissedBannerHash: data.dismissedBannerHash,
+    uiPreferences: data.uiPreferences,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Provider
 // ---------------------------------------------------------------------------
@@ -341,50 +441,139 @@ export function SessionProvider({
     [ep.userProfile],
   );
 
-  const fetchUserProfileFromServer =
-    useCallback(async (): Promise<SessionUser | null> => {
+  /*
+   * ═══════════════════════════════════════════════════════════════════════════
+   * 🛑 CROSS-HOST SIGN-IN: resolving a session from the COOKIE ALONE
+   * ═══════════════════════════════════════════════════════════════════════════
+   *
+   * The session cookie is scoped to the registrable domain, so signing in on
+   * `auth.<domain>` authenticates the visitor on every sibling host. But
+   * Firebase's CLIENT auth state is PER-ORIGIN (IndexedDB): a sibling host's
+   * Firebase SDK has never seen a sign-in, so `onAuthStateChanged` yields
+   * `null` there forever. That is the path below — the only one a guest host
+   * ever takes — and it was broken.
+   *
+   * Measured in a real browser, 2026-11-10, signed in as an admin on
+   * `events.<domain>/<id>/entries`:
+   *
+   *   GET /api/auth/me        -> 200  {"id":"user-admin-…","role":"admin"}
+   *   GET /api/user/profile   -> 404  (an HTML page)
+   *   header renders          -> "Sign in  Register"
+   *
+   * So the cookie worked, the proxy forwarded it, the identity provider
+   * verified it — and the UI said signed out, because this resolver asked only
+   * `userProfile`. Two separate defects fed that:
+   *
+   *   1. `userProfile` is SHOP-OWNED. On a guest host it is a forwarding proxy
+   *      that 404s when absent and DEGRADES TO `{}` when the shop is
+   *      unreachable. Either way it cannot answer "who is this".
+   *   2. A thrown request was treated as proof of signed-out, and the cookies
+   *      were DELETED. A cold sibling deployment therefore logged the visitor
+   *      out rather than failing to hydrate.
+   *
+   * And `{}` was worse than the 404: `uid: data.uid ?? ""` built a user with an
+   * EMPTY uid, which is truthy — so the app held a "signed-in" viewer with no
+   * identity, and every uid-keyed read silently addressed nothing.
+   *
+   * The order below is PROFILE FIRST, THEN IDENTITY, deliberately:
+   *
+   *   - On the shop, `userProfile` answers fully (roles, permissions, store id,
+   *     preferences). Nothing changes there — this is additive, which is why it
+   *     carries no regression risk for the only host that was working.
+   *   - On a guest host it falls through to `me`, which always has an answer,
+   *     and the richer profile fields are simply absent. `rolesOf()` already
+   *     documents the scalar `role` as the fallback for a session hydrated
+   *     before `roles` existed, so that degrade has a defined meaning.
+   *
+   * 🛑 A uid is MANDATORY at every exit. "No uid" is not a session.
+   */
+
+  /** Map `/api/auth/me`'s wire shape onto a `SessionUser`. */
+  const buildUserFromMe = useCallback((me: MeResponse): SessionUser | null => {
+    const uid = (me.id ?? "").trim();
+    if (!uid) return null;
+    const currentSessionId = getSessionIdFromCookie();
+    return {
+      uid,
+      email: me.email ?? null,
+      emailVerified: me.isEmailVerified === true,
+      displayName: me.displayName ?? null,
+      photoURL: me.photoURL ?? null,
+      phoneNumber: null,
+      role: me.role || "user",
+      ...(me.roles ? { roles: me.roles } : {}),
+      ...(me.permissions ? { permissions: me.permissions } : {}),
+      ...(currentSessionId ? { sessionId: currentSessionId } : {}),
+      avatarMetadata: null,
+      scamAwarenessAcknowledgedAt: null,
+    };
+  }, []);
+
+  /**
+   * Resolve the signed-in viewer from the session cookie, across hosts.
+   *
+   * 🛑 Returns a THREE-way result. Collapsing "signed out" and "could not tell"
+   * is what made an unreachable endpoint destroy a valid session.
+   */
+  const resolveSessionFromCookie =
+    useCallback(async (): Promise<CookieSessionResult> => {
+      // ── 1. The profile document (the shop's own, complete answer) ──────────
+      let profileReachable = false;
       try {
         const data = await apiClient.get<Partial<SessionUser>>(ep.userProfile);
-        const currentSessionId = getSessionIdFromCookie();
-        return {
-          uid: data.uid ?? "",
-          email: data.email || null,
-          emailVerified: data.emailVerified || false,
-          displayName: data.displayName || null,
-          photoURL: data.photoURL || null,
-          phoneNumber: data.phoneNumber || null,
-          role: data.role || "user",
-          roles: data.roles,
-          primaryRole: data.primaryRole,
-          disabled: data.disabled,
-          createdAt: data.createdAt ? new Date(data.createdAt) : undefined,
-          updatedAt: data.updatedAt ? new Date(data.updatedAt) : undefined,
-          sessionId: currentSessionId || undefined,
-          phoneVerified: data.phoneVerified,
-          storeId: data.storeId,
-          isTester: data.isTester,
-          canTestAdmin: data.canTestAdmin,
-          avatarMetadata: data.avatarMetadata?.url
-            ? {
-                url: data.avatarMetadata.url,
-                position: data.avatarMetadata.position || { x: 50, y: 50 },
-                zoom: data.avatarMetadata.zoom || 1,
-              }
-            : null,
-          publicProfile: data.publicProfile,
-          stats: data.stats,
-          metadata: data.metadata,
-          scamAwarenessAcknowledgedAt: data.scamAwarenessAcknowledgedAt
-            ? new Date(data.scamAwarenessAcknowledgedAt as unknown as string)
-            : null,
-          dismissedBannerHash: data.dismissedBannerHash,
-          uiPreferences: data.uiPreferences,
-        };
-      } catch (_err) {
-        void normalizeError(_err);
-        return null;
+        profileReachable = true;
+        const fromProfile = buildUserFromProfile(data);
+        if (fromProfile) return { outcome: "resolved", user: fromProfile };
+        /*
+         * Reached, and it named nobody. On the shop that means signed out. On a
+         * guest host it is the degraded `{}` payload the proxy returns when the
+         * shop is unreachable — indistinguishable from here, which is exactly
+         * why `me` is consulted before concluding anything.
+         */
+      } catch (err) {
+        void normalizeError(err);
       }
-    }, [ep.userProfile]);
+
+      // ── 2. The identity endpoint (every host serves or proxies this) ───────
+      try {
+        const me = await apiClient.get<MeResponse>(ep.me);
+        const fromMe = buildUserFromMe(me);
+        if (fromMe) return { outcome: "resolved", user: fromMe };
+        // Answered 200 and named nobody: genuinely signed out.
+        return { outcome: "signed-out" };
+      } catch (err) {
+        const status = (err as { status?: number } | null)?.status;
+        void normalizeError(err);
+        /*
+         * 🛑 Only an AUTHENTICATION answer may be read as signed-out. A 401/403
+         * is the identity provider saying "this cookie is not a session"; a
+         * 404, a 5xx or a network failure says nothing about the cookie, and
+         * treating those as signed-out is what deleted a live session.
+         *
+         * ⚠ If the profile endpoint was reachable and named nobody AND the
+         * identity endpoint is also unavailable, there is still no basis for
+         * destroying the cookie — the profile route on a guest host answers 200
+         * with `{}` by design.
+         */
+        if (status === 401 || status === 403) return { outcome: "signed-out" };
+        logger.debug("Cookie session could not be resolved", {
+          status,
+          profileReachable,
+        });
+        return { outcome: "unknown" };
+      }
+    }, [ep.userProfile, ep.me, buildUserFromMe]);
+
+  /**
+   * Back-compat shim: the old single-value shape, for callers that only want a
+   * user or `null` and have no cookie to destroy.
+   */
+  const fetchUserProfileFromServer =
+    useCallback(async (): Promise<SessionUser | null> => {
+      const result = await resolveSessionFromCookie();
+      return result.outcome === "resolved" ? result.user : null;
+    }, [resolveSessionFromCookie]);
+
 
   // -----------------------------------------------------------------------
   // Session activity
@@ -572,22 +761,47 @@ export function SessionProvider({
       }
     }
 
+    /**
+     * No Firebase auth user, but a session cookie — i.e. CROSS-HOST SIGN-IN.
+     *
+     * 🛑 This is the ONLY path a guest host ever takes, because Firebase's
+     * client auth state is per-origin while the session cookie is scoped to the
+     * registrable domain. Every subdomain's chrome resolves its viewer here.
+     */
     async function handleNoAuthUser(
       version: number,
       getVersion: () => number,
     ): Promise<boolean> {
       if (!hasSessionCookie()) return false;
-      const serverUser = await fetchUserProfileFromServer();
+      const result = await resolveSessionFromCookie();
       if (version !== getVersion()) return true;
-      if (serverUser) {
-        setUser(serverUser);
+
+      if (result.outcome === "resolved") {
+        setUser(result.user);
         const sid = getSessionIdFromCookie();
         if (sid) setSessionId(sid);
         setLoading(false);
         return true;
       }
-      deleteCookie(SESSION_COOKIE);
-      deleteCookie(SESSION_ID_COOKIE);
+
+      /*
+       * 🛑 DESTROY THE COOKIE ONLY WHEN THE SERVER SAID "NOBODY".
+       *
+       * This block used to run on ANY failed lookup, which meant an endpoint
+       * that 404'd or a sibling deployment that was merely cold DELETED a valid
+       * session — a visitor signed in on the identity host, opened a subdomain,
+       * and was logged out by the act of visiting it. `resolveSessionFromCookie`
+       * separates "not authenticated" (a 401/403, or a 200 naming nobody) from
+       * "could not tell", and only the first reaches here.
+       *
+       * `"unknown"` falls through to the caller's signed-out UI WITHOUT
+       * touching the cookie, so the next load — or the next `refreshUser()` —
+       * can still resolve it.
+       */
+      if (result.outcome === "signed-out") {
+        deleteCookie(SESSION_COOKIE);
+        deleteCookie(SESSION_ID_COOKIE);
+      }
       return false;
     }
 
@@ -647,7 +861,7 @@ export function SessionProvider({
       unsubscribe();
       if (activityUpdateRef.current) clearInterval(activityUpdateRef.current);
     };
-  }, [ep.createSession, fetchUserProfile, fetchUserProfileFromServer]);
+  }, [ep.createSession, fetchUserProfile, resolveSessionFromCookie]);
 
   // -----------------------------------------------------------------------
   // Memoized value

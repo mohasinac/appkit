@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 // QueryClientProvider intentionally NOT imported here. Consumer's QueryProvider
 // owns the singleton; nesting another would risk Turbopack chunk-splitting.
 // The actual 2.8.8 SSR crash was a peer-dep duplicate fixed by the
@@ -16,6 +16,7 @@ const ROLE_DOT_BG_CLASS: Record<string, string> = {
 };
 import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
+import { useReturnTo } from "../../react/hooks/useReturnTo";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 import { useListingTypeFlags } from "../../react/hooks/useListingTypeFlags";
 import { isBuyerUser, isSellerUser, holdsRole } from "../auth/role-predicates";
@@ -799,10 +800,24 @@ function SidebarContent({
       {!isAuthenticated && sidebarPrimaryActions && sidebarPrimaryActions.length > 0 && (
         <Stack gap="sm">
           {sidebarPrimaryActions.map((action) => (
-            <TextLink
+            /*
+             * 🛑 A PLAIN `<a>`, NOT `TextLink`, AND THAT IS A BUG FIX.
+             *
+             * `TextLink` adds `target="_blank" rel="noopener noreferrer"` to any
+             * href on another origin — correct for an outbound reference, wrong
+             * for a sign-in HANDOFF. Measured in a browser 2026-11-10: these two
+             * buttons opened the identity provider in a NEW TAB, so the visitor
+             * signed in there and the tab they were actually reading stayed
+             * signed out. On mobile, where this sidebar is the primary nav, that
+             * is the whole sign-in flow landing in the wrong window — and
+             * `?next=` makes it worse, not better, because the return lands in
+             * the popup too.
+             *
+             * A handoff replaces the current document by definition.
+             */
+            <a
               key={`${action.href}-${action.label}`}
               href={action.href}
-              variant="none"
               className={[
                 "block w-full rounded-lg px-[var(--appkit-space-3)] py-[var(--appkit-space-2-5)] text-center text-[length:var(--appkit-text-sm)] font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
                 action.variant === "outline"
@@ -811,7 +826,7 @@ function SidebarContent({
               ].join(" ")}
             >
               {action.label}
-            </TextLink>
+            </a>
           ))}
         </Stack>
       )}
@@ -1077,6 +1092,70 @@ export function AppLayoutShell({
   const { closeNav: closeDashboardNav } = useDashboardNav();
   const { user: authUser } = useAuth();
 
+  /*
+   * ── 🛑 `?next=` IS STAMPED HERE, ONCE, FOR THE WHOLE CHROME ───────────────
+   *
+   * Sign-in lives on its own host, so every "Sign in" / "Register" link in this
+   * shell is a cross-origin link. Measured 2026-11-10 in a browser, every one
+   * of them on every subdomain was bare — so signing in from an events entry
+   * page returned the visitor to the identity provider's configured default,
+   * never to the entry they came from.
+   *
+   * This shell is the right layer: it is the single CLIENT ancestor of the
+   * title bar, the mobile tab bar and the sidebar, all three of which render
+   * the same two hrefs. Stamping it in each of them instead would be three
+   * places to forget, and stamping it in the CONSUMER (`AppShell` in each app)
+   * would be five.
+   *
+   * 🛑 The alternative that must not be used: a `buildHref`-style function
+   * prop so the page can supply its own URL. A function cannot be serialized
+   * into the RSC flight payload, and the last time appkit shipped that shape it
+   * took two content hosts down for a week (minified React #441 at hydration,
+   * above every `<Suspense>` boundary). `useReturnTo` reads
+   * `window.location.href` in a client component and returns a STRING.
+   *
+   * An unresolvable current URL (the SSR pass, before mount) yields the href
+   * UNCHANGED rather than a relative `next` — the provider's allowlist rejects
+   * a relative value and silently substitutes its canonical origin, which
+   * looks like a working login and is not.
+   */
+  const loginHrefWithReturn = useReturnTo(loginHref);
+  const registerHrefWithReturn = useReturnTo(registerHref ?? "");
+
+  /*
+   * 🛑 THE SIDEBAR IS A FOURTH SURFACE FOR THE SAME TWO LINKS, and it was the
+   * one a naive sweep misses.
+   *
+   * Measured in a browser 2026-11-10 on a built events app: nine links pointed
+   * at the identity host and exactly two lacked `?next=` — both in the mobile
+   * sidebar, because the consumer builds `sidebarPrimaryActions` from its OWN
+   * resolved hrefs and never passes through the two props stamped above.
+   *
+   * Rewritten here rather than in each consumer: this shell is where the
+   * canonical stamped values already exist, and three apps building the same
+   * pair by hand is three chances to diverge — which is precisely what had
+   * happened.
+   */
+  const sidebarActionsWithReturn = useMemo(
+    () =>
+      sidebarPrimaryActions?.map((action) => {
+        if (loginHref && action.href === loginHref) {
+          return { ...action, href: loginHrefWithReturn };
+        }
+        if (registerHref && action.href === registerHref) {
+          return { ...action, href: registerHrefWithReturn };
+        }
+        return action;
+      }),
+    [
+      sidebarPrimaryActions,
+      loginHref,
+      registerHref,
+      loginHrefWithReturn,
+      registerHrefWithReturn,
+    ],
+  );
+
   const headerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = headerRef.current;
@@ -1119,7 +1198,7 @@ export function AppLayoutShell({
       sidebarItems={sidebarItems}
       sidebarSections={sidebarSections}
       renderSidebarItemAction={renderSidebarItemAction}
-      sidebarPrimaryActions={sidebarPrimaryActions}
+      sidebarPrimaryActions={sidebarActionsWithReturn}
       user={user}
       activeHref={pathname ?? ""}
       profileHref={profileHref}
@@ -1204,8 +1283,8 @@ export function AppLayoutShell({
             unreadMessageCount={unreadMessageCount}
             userId={userId}
             profileHref={profileHref}
-            loginHref={loginHref}
-            registerHref={registerHref}
+            loginHref={loginHrefWithReturn}
+            registerHref={registerHrefWithReturn || undefined}
             user={user}
             navSlot={titleBarNavSlot}
             notificationSlot={titleBarNotificationSlot}
@@ -1358,7 +1437,7 @@ export function AppLayoutShell({
             cartHref={cartHref}
             wishlistHref={wishlistHref}
             profileHref={profileHref}
-            loginHref={loginHref}
+            loginHref={loginHrefWithReturn}
             onSearchToggle={toggleSearch}
             navItems={navItems}
             onMoreToggle={handleTogglePublicSidebar}

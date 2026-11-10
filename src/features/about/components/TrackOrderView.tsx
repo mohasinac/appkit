@@ -14,6 +14,7 @@ import { Div } from "../../../ui/components/Div";
 import { Grid, Stack } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
+import { SignInLink } from "../../../ui/components/SignInLink";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
@@ -88,12 +89,14 @@ export async function TrackOrderView({
             {t("signInPrompt")}
           </Heading>
           <Stack direction="sm-row" justify="center" className="mt-6" gap="3">
-            <TextLink rounded="lg" paddingX="xl" paddingY="md" layout="inline-flex" align="center" justify="center" gap="sm"
+            {/* See the SignInLink note: a server view cannot read the current
+                URL, and a function prop to supply it is the RSC #441 shape. */}
+            <SignInLink
               href={String(ROUTES.AUTH.LOGIN)}
-              className={`bg-primary hover:bg-primary/90 text-white transition-colors`} weight="medium"
+              className={`inline-flex items-center justify-center gap-[var(--appkit-space-2)] rounded-lg px-[var(--appkit-space-6)] py-[var(--appkit-space-3)] font-medium bg-primary hover:bg-primary/90 text-white transition-colors`}
             >
               {t("signIn")}
-            </TextLink>
+            </SignInLink>
             <TextLink rounded="lg" paddingX="xl" paddingY="md" layout="inline-flex" align="center" justify="center" gap="sm"
               href={String(ROUTES.USER.ORDERS)}
               className={`${themed.bgPrimary} border ${themed.border} ${themed.textPrimary} hover:opacity-80 transition-opacity`} weight="medium"

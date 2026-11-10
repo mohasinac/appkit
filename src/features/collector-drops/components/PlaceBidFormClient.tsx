@@ -15,6 +15,7 @@ import { Span, Text } from "../../../ui/components/Typography";
 import { TextLink } from "../../../ui/components/TextLink";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useCanSeePrices } from "../../../react/hooks/useCanSeePrices";
+import { useSignInHref } from "../../../react/hooks/useReturnTo";
 import { Form } from "../../../ui/components/Form";
 import { FieldInput } from "../../../ui/forms/FieldInput";
 import { applyZodIssues } from "../../../ui/forms/apply-zod-issues";
@@ -121,6 +122,14 @@ export function PlaceBidFormClient({
   onPlaceBid,
   onBuyNow,
 }: PlaceBidFormClientProps) {
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. The raw `ROUTES.AUTH.LOGIN` is
+   * the SHOP's `/auth/login`, which 404s on every other host, and without
+   * `next` the visitor signs in and lands on the identity provider's default
+   * rather than back on the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
+
   /*
    * 🛑 Derived here, not trusted from the server.
    *
@@ -343,7 +352,7 @@ export function PlaceBidFormClient({
         <Text size="xs" color="muted">
           Sign in to see the current bid and place your own.
         </Text>
-        <TextLink href={String(ROUTES.AUTH.LOGIN)} weight="semibold" size="sm">
+        <TextLink href={signInHref} weight="semibold" size="sm">
           Sign in to bid
         </TextLink>
       </Stack>

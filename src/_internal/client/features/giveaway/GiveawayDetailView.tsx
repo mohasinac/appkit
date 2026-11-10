@@ -10,6 +10,7 @@ import { Anchor } from "../../../../ui/components/Anchor";
 import { MediaImage } from "../../../../ui/components/MediaImage";
 import { useOptionalSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
+import { useSignInHref } from "../../../../react/hooks/useReturnTo";
 import { GiveawaySlotGrid } from "./GiveawaySlotGrid";
 import { GiveawayPullForm } from "./GiveawayPullForm";
 import { ClearanceCollage } from "../../../../features/products/components/ClearanceCollage";
@@ -47,6 +48,12 @@ interface GiveawayDetailViewProps {
  * Shows cover + description + slot grid + pull form (if active + logged in).
  */
 export function GiveawayDetailView({ event, user, currentEntry, pageRegionCards = [] }: GiveawayDetailViewProps) {
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. The raw `ROUTES.AUTH.LOGIN` is
+   * the SHOP's `/auth/login`, a 404 on every other host, and a bare link signs
+   * the visitor in somewhere other than the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
   /*
    * 🛑 Viewer identity is read on the CLIENT, not taken from the `user` prop.
    *
@@ -170,7 +177,7 @@ export function GiveawayDetailView({ event, user, currentEntry, pageRegionCards 
                     Log in to submit your giveaway entry.
                   </Text>
                   <Anchor
-                    href={String(ROUTES.AUTH.LOGIN)}
+                    href={signInHref}
                     tone="brand"
                   >
                     Log In to Enter

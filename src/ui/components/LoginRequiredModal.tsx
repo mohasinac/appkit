@@ -6,6 +6,7 @@ import { Button } from "./Button";
 import { Div } from "./Div";
 import { Text } from "./Typography";
 import { ROUTES } from "../../next/routing/route-map";
+import { useSignInHref } from "../../react/hooks/useReturnTo";
 
 export interface LoginRequiredModalProps {
   isOpen: boolean;
@@ -22,7 +23,14 @@ export function LoginRequiredModal({
   message = "You need to be signed in to continue. Please log in or create an account.",
   loginHref,
 }: LoginRequiredModalProps) {
-  const href = loginHref ?? String(ROUTES.AUTH.LOGIN);
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. Both were missing: the raw
+   * `/auth/login` is the SHOP's path and 404s on every other host, and without
+   * `next` a visitor who was interrupted mid-action signed in and landed
+   * somewhere unrelated — so the action they were trying to take was lost
+   * rather than resumed, which is the whole purpose of this modal.
+   */
+  const href = useSignInHref(loginHref ?? String(ROUTES.AUTH.LOGIN));
   return (
     <Modal
       isOpen={isOpen}

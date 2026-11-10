@@ -14,6 +14,7 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Button } from "../../../ui/components/Button";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { EmptyState } from "../../../ui/components/EmptyState";
+import { useSignInHref } from "../../../react/hooks/useReturnTo";
 import { MediaImage } from "../../../ui/components/MediaImage";
 import { TextLink } from "../../../ui/components/TextLink";
 import { pluginFor } from "../../../_internal/shared/listing-types/_registry";
@@ -160,13 +161,20 @@ export function ConversationThreadView({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [data?.items.length, pending.length]);
 
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. A bare `/auth/login` is the
+   * SHOP's path (a 404 on every other host) and signs the visitor in somewhere
+   * other than the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
+
   if (loading) return null;
   if (!user) {
     return (
       <EmptyState
         title="Sign in to view this conversation"
         actionLabel="Sign in"
-        actionHref="/auth/login"
+        actionHref={signInHref}
       />
     );
   }

@@ -15,7 +15,23 @@
 import { Row } from "../../ui/components/Layout";
 import { Heading, Text } from "../../ui/components/Typography";
 import { TextLink } from "../../ui/components/TextLink";
+import { SignInLink } from "../../ui/components/SignInLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
+
+/*
+ * 🛑 THE SIGN-IN LINK IS A CLIENT COMPONENT, AND THAT IS NOT INCIDENTAL.
+ *
+ * This view is a SERVER component, so it cannot read `window.location` to put
+ * the current page into `?next=`. The two ways to get it here are a prop
+ * threaded from every page that renders this view, or a client leaf that reads
+ * it itself. `SignInLink` is the leaf.
+ *
+ * 🛑 What must NOT be done is a `() => string` prop. A function cannot be
+ * serialized into the RSC flight payload; React writes an error row at that
+ * prop position, the server render still returns 200 with complete HTML, and
+ * the browser dies deserializing it at hydration (minified #441, above every
+ * `<Suspense>` boundary). That shape took two content hosts down for a week.
+ */
 import { AdminComposableRegion } from "../../features/dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../_internal/shared/features/dashboard/recent-entry";
 
@@ -58,7 +74,9 @@ export function UnauthorizedView({
         {description}
       </Text>
       <Row gap="md">
-        <TextLink href={loginHref}>{loginLabel}</TextLink>
+        <SignInLink href={loginHref} className="text-primary hover:underline">
+          {loginLabel}
+        </SignInLink>
         <TextLink href={homeHref}>{homeLabel}</TextLink>
       </Row>
       <AdminComposableRegion pageId="unauthorized" initialCards={pageRegionCards} />

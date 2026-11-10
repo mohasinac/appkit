@@ -390,6 +390,12 @@ export function DashboardLayoutClient({
       void normalizeError(_err);
       showToast("Signed out", "info");
     }
+    /*
+     * 🛑 NO `?next=` here, and that is deliberate rather than an omission the
+     * sign-in sweep missed: this is the SIGN-OUT path. Returning the user to
+     * the dashboard page they just signed out of would bounce them straight
+     * back through the guard they were leaving.
+     */
     router.push(String(ROUTES.AUTH.LOGIN));
   }, [signOut, queryClient, router, showToast]);
   const { data: settings } = useSiteSettings<{

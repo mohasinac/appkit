@@ -20,6 +20,7 @@ import { useSiteSearch } from "../../search/hooks/useSiteSearch";
 import { useSearchIndex } from "../../search/hooks/useSearchIndex";
 import { searchIndex } from "../../../_internal/shared/search/match";
 import { useOptionalSession } from "../../../react/contexts/SessionContext";
+import { useSignInHref } from "../../../react/hooks/useReturnTo";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { normalizeError } from "../../../errors/normalize";
@@ -580,13 +581,20 @@ function ComputedMarketCard({ market }: { market: PriceIndexMarketRowView }) {
  * sign-in and why it is worth having, rather than implying no data exists.
  */
 function MarketSignInPrompt() {
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. The raw `ROUTES.AUTH.LOGIN` is
+   * the SHOP's `/auth/login`, which 404s on every other host, and without
+   * `next` the visitor signs in and lands on the identity provider's default
+   * rather than back on the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
   return (
     <Stack gap="xs" padding="sm" rounded="lg" surface="muted" className="min-w-0">
       <Text size="sm" weight="semibold">Asking prices elsewhere</Text>
       <Text size="sm" color="muted">
         We measured what other Indian shops ask for this, from a crawl of
         fifteen catalogues.{" "}
-        <TextLink href={String(ROUTES.AUTH.LOGIN)}>Sign in</TextLink> to see the
+        <TextLink href={signInHref}>Sign in</TextLink> to see the
         range.
       </Text>
     </Stack>

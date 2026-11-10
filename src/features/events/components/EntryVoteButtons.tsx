@@ -24,6 +24,7 @@ import { useCallback, useState } from "react";
 import { Button } from "../../../ui/components/Button";
 import { Div } from "../../../ui/components/Div";
 import { Span } from "../../../ui/components/Typography";
+import { useReturnTo } from "../../../react/hooks/useReturnTo";
 import type { EntryVoteValue } from "../schemas/entry-votes";
 
 export interface EntryVoteButtonsProps {
@@ -51,6 +52,23 @@ export function EntryVoteButtons({
 }: EntryVoteButtonsProps) {
   const [state, setState] = useState({ likes, dislikes, myVote });
   const [busy, setBusy] = useState(false);
+
+  /*
+   * 🛑 "Sign in to vote" has to come BACK to this gallery, and the page that
+   * supplies `signInHref` is a SERVER component that cannot know the URL.
+   *
+   * It is resolved here instead: this component is already `"use client"`, so
+   * `window.location.href` is available and the answer is a plain string. The
+   * alternative — a `() => string` prop so the page can build it — is the exact
+   * shape that took two content hosts down for a week (RSC #441 at hydration);
+   * see `next/routing/section-routes.ts`.
+   *
+   * Without this the visitor signed in and landed on the identity provider's
+   * configured default, which on the measured deployment is a different site
+   * entirely — so the vote they clicked for was unreachable from where they
+   * ended up.
+   */
+  const signInWithReturn = useReturnTo(signInHref ?? "");
 
   const cast = useCallback(
     async (value: EntryVoteValue) => {
@@ -94,9 +112,9 @@ export function EntryVoteButtons({
       <Div className="flex items-center gap-2">
         <Span>♥ {state.likes}</Span>
         {allowsDislike ? <Span>♡ {state.dislikes}</Span> : null}
-        {signInHref ? (
+        {signInWithReturn ? (
           <Span>
-            <a href={signInHref}>Sign in to vote</a>
+            <a href={signInWithReturn}>Sign in to vote</a>
           </Span>
         ) : null}
       </Div>

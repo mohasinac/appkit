@@ -17,6 +17,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ProtectedRoute, type AuthGuardUser } from "../../../../features/auth/components/Guards";
 import { useSession } from "../../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../../next/routing/route-map";
+import { useSignInHref } from "../../../../react/hooks/useReturnTo";
 import type { LayoutRole } from "../../../shared/features/layout/types";
 
 export interface RoleGuardProps {
@@ -42,6 +43,17 @@ export function RoleGuard({
 }: RoleGuardProps) {
   const { user, loading, refreshUser } = useSession();
   const router = useRouter();
+
+  /*
+   * 🛑 The sign-in bounce must come BACK, and it must be section-resolved.
+   *
+   * `ProtectedRoute` does `router.push(loginPath)` when there is no session. A
+   * bare `/auth/login` was wrong twice over on any host but the shop: it is a
+   * path that host does not serve, and an authenticated visitor was dropped on
+   * the identity provider's default instead of the gated page they asked for —
+   * which reads as "signing in did nothing".
+   */
+  const signInPath = useSignInHref(loginPath ?? String(ROUTES.AUTH.LOGIN));
 
   // SessionContext only refreshes role/disabled periodically (every 5
   // minutes) or on a hard reload/re-login — never on ordinary client-side
@@ -71,7 +83,7 @@ export function RoleGuard({
       requireRole={role}
       onNavigate={(path) => router.push(path)}
       routes={{
-        loginPath: loginPath ?? String(ROUTES.AUTH.LOGIN),
+        loginPath: signInPath,
         unauthorizedPath: unauthorizedPath ?? String(ROUTES.ERRORS.UNAUTHORIZED),
       }}
       loadingComponent={loadingComponent}

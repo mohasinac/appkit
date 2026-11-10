@@ -28,6 +28,7 @@ import { Container, Grid, Row, Stack } from "../../../ui/components/Layout";
 import { Disclaimer } from "../../../ui/components/Disclaimer";
 import { Div } from "../../../ui/components/Div";
 import { EmptyState } from "../../../ui/components/EmptyState";
+import { SignInLink } from "../../../ui/components/SignInLink";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Main, Section } from "../../../ui/components/Semantic";
 import { MediaImage } from "../../../ui/components/MediaImage";
@@ -238,7 +239,19 @@ function ScammerCommentsSection({
   isAuthenticated: boolean;
   scammerId: string;
 }) {
-  const commentLoginHref = `${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(`/scams/${scammerId}`)}`;
+  /*
+   * 🛑 `?redirect=` HAD ZERO READERS — grepped to zero across appkit, the shop
+   * and the auth app. Three sign-in links here carried a parameter nothing has
+   * ever consumed, and its value was a RELATIVE path, which the one real reader
+   * (`isAllowedRelyingPartyUrl`) rejects by design. So this was broken twice
+   * over and silently: the visitor signed in and landed on the provider's
+   * default, and the only evidence was a query string in the URL bar.
+   *
+   * The parameter is `next`, spelled once in `next/routing/return-to.ts`, and
+   * its value is read from the live page by `SignInLink` — which is also why
+   * the path no longer has to be reconstructed from an id here.
+   */
+  const commentLoginHref = resolveSectionHref(String(ROUTES.AUTH.LOGIN));
   return (
     <Stack gap="sm">
       <Row justify="between" align="center">
@@ -253,12 +266,12 @@ function ScammerCommentsSection({
             Leave a comment
           </Link>
         ) : (
-          <Link
-            href={resolveSectionHref(commentLoginHref)}
+          <SignInLink
+            href={commentLoginHref}
             className="text-[length:var(--appkit-text-xs)] text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
           >
             Sign in to comment
-          </Link>
+          </SignInLink>
         )}
       </Row>
       {comments.length === 0 ? (
@@ -325,13 +338,13 @@ function ScammerActionsColumn({
                 Report another incident
               </Link>
             ) : (
-              <Link
-                href={resolveSectionHref(`${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(reportHref)}`)}
+              <SignInLink
+                href={resolveSectionHref(String(ROUTES.AUTH.LOGIN))}
                 className={CLS_OUTLINE_BTN}
               >
                 <AlertOctagon className="h-4 w-4 text-[color:var(--appkit-color-danger,theme(colors.red.500))]" />
                 Sign in to report an incident
-              </Link>
+              </SignInLink>
             )}
 
             {isAuthenticated ? (
@@ -343,13 +356,13 @@ function ScammerActionsColumn({
                 Contest this profile
               </Link>
             ) : (
-              <Link
-                href={resolveSectionHref(contestLoginHref)}
+              <SignInLink
+                href={contestLoginHref}
                 className="appkit-button appkit-button--ghost appkit-button--md flex w-full items-center gap-[var(--appkit-space-2)]"
               >
                 <Flag className="h-4 w-4" />
                 Sign in to contest
-              </Link>
+              </SignInLink>
             )}
 
             <Text variant="secondary" size="xs">
@@ -412,7 +425,8 @@ export function ScamProfileView({
 }: ScamProfileViewProps) {
   const reportHref = String(ROUTES.PUBLIC.SCAM_REPORT);
   const registryHref = String(ROUTES.PUBLIC.SCAMS);
-  const contestLoginHref = `${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(`/scams/${scammer.id}`)}`;
+  // See the `?redirect=` note above: one parameter name, value read live.
+  const contestLoginHref = resolveSectionHref(String(ROUTES.AUTH.LOGIN));
 
   const scamTypeDef = getScamType(scammer.scamType);
 

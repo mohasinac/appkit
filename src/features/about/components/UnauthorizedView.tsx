@@ -5,10 +5,26 @@ import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Row } from "../../../ui/components/Layout";
 import { Section } from "../../../ui/components/Semantic";
 import { TextLink } from "../../../ui/components/TextLink";
+import { SignInLink } from "../../../ui/components/SignInLink";
 import { ShieldAlert, Home, LogIn } from "lucide-react";
 
 export interface UnauthorizedViewProps {
 }
+
+/*
+ * 🛑 THE SIGN-IN LINK IS A CLIENT COMPONENT, AND THAT IS NOT INCIDENTAL.
+ *
+ * This view is a SERVER component, so it cannot read `window.location` to put
+ * the current page into `?next=`. The two ways to get it here are a prop
+ * threaded from every page that renders this view, or a client leaf that reads
+ * it itself. `SignInLink` is the leaf.
+ *
+ * 🛑 What must NOT be done is a `() => string` prop. A function cannot be
+ * serialized into the RSC flight payload; React writes an error row at that
+ * prop position, the server render still returns 200 with complete HTML, and
+ * the browser dies deserializing it at hydration (minified #441, above every
+ * `<Suspense>` boundary). That shape took two content hosts down for a week.
+ */
 
 export async function UnauthorizedView({
 }: UnauthorizedViewProps = {}) {
@@ -22,12 +38,14 @@ export async function UnauthorizedView({
       label: t("linkHome"),
       href: String(ROUTES.HOME),
       isPrimary: true,
+      isSignIn: false,
     },
     {
       icon: LogIn,
       label: t("linkLogin"),
       href: String(ROUTES.AUTH.LOGIN),
       isPrimary: false,
+      isSignIn: true,
     },
   ];
 
@@ -54,22 +72,26 @@ export async function UnauthorizedView({
             {t("subtitle")}
           </Text>
           <Row align="center" justify="center" gap="md" wrap >
-            {LINKS.map(({ icon: Icon, label, href, isPrimary }) => (
-              <TextLink
-                key={href}
-                href={href}
-                className={
-                  isPrimary
-                    ? "bg-white text-rose-700 font-semibold px-[var(--appkit-space-6)] py-[var(--appkit-space-2-5)] rounded-xl hover:bg-white/90 transition-colors"
-                    : "border border-white/40 text-white px-[var(--appkit-space-6)] py-[var(--appkit-space-2-5)] rounded-xl hover:bg-white/10 transition-colors"
-                }
-              >
+            {LINKS.map(({ icon: Icon, label, href, isPrimary, isSignIn }) => {
+              const cls = isPrimary
+                ? "bg-white text-rose-700 font-semibold px-[var(--appkit-space-6)] py-[var(--appkit-space-2-5)] rounded-xl hover:bg-white/90 transition-colors"
+                : "border border-white/40 text-white px-[var(--appkit-space-6)] py-[var(--appkit-space-2-5)] rounded-xl hover:bg-white/10 transition-colors";
+              const body = (
                 <Span layout="inline-flex" gap="md" >
                   <Icon className="w-4 h-4" />
                   {label}
                 </Span>
-              </TextLink>
-            ))}
+              );
+              return isSignIn ? (
+                <SignInLink key={href} href={href} className={cls}>
+                  {body}
+                </SignInLink>
+              ) : (
+                <TextLink key={href} href={href} className={cls}>
+                  {body}
+                </TextLink>
+              );
+            })}
           </Row>
         </Div>
       </Section>

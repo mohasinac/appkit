@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { EmptyState } from "../../../ui/components/EmptyState";
+import { useSignInHref } from "../../../react/hooks/useReturnTo";
 import type { ConversationDocument } from "../schemas/firestore";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
@@ -103,6 +104,12 @@ export interface ConversationsInboxViewProps {
 export function ConversationsInboxView({ pageRegionCards = [] }: ConversationsInboxViewProps = {}) {
   const { user, loading } = useAuth();
   const { data, isPending, isError } = useConversations(20, Boolean(user));
+  /*
+   * 🛑 Section-resolved AND carrying `?next=`. The raw `ROUTES.AUTH.LOGIN` is
+   * the SHOP's `/auth/login`, a 404 on every other host, and a bare link signs
+   * the visitor in somewhere other than the surface that asked them to.
+   */
+  const signInHref = useSignInHref();
 
   if (loading) return null;
   if (!user) {
@@ -111,7 +118,7 @@ export function ConversationsInboxView({ pageRegionCards = [] }: ConversationsIn
         title="Sign in to view your messages"
         description="Conversations with buyers and sellers are only visible once you're signed in."
         actionLabel="Sign in"
-        actionHref="/auth/login"
+        actionHref={signInHref}
       />
     );
   }
