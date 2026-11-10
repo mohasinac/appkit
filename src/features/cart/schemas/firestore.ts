@@ -347,32 +347,20 @@ export interface CartDocument extends BaseDocument {
    */
   useAllPoints?: boolean;
 
-  /**
-   * "Pay in instalments", with the chosen tenure — an opt-in ON THE ORDER,
-   * orthogonal to how the token is tendered.
+  /*
+   * 🛑 `emiPlan` / `CartEmiPlan` DELETED 2026-11-11 with the rest of the
+   * instalment schema (owner: do not keep the EMI flow schema).
    *
-   * 🛑 It lives HERE, on the cart, for exactly the reason `storeAddons` does:
-   * the online path creates the gateway order in one request
-   * (`/api/payment/create-order`, which decides the CAPTURE amount) and the
-   * order document in a later one (`/api/payment/verify`). A choice carried in
-   * a request body cannot be read by both, so the two would be free to
-   * disagree about how much of the total is deferred — and the difference is
-   * money captured that the order does not record (the D37/D38/D40 class).
-   *
-   * `useAllPoints` is the precedent and the shape is deliberately the same: a
-   * durable selection the server re-reads, never a client-supplied amount.
-   *
-   * Absent means a plain full-price order, which is why it is written with
-   * `FieldValue.delete()` rather than `{ optIn: false }` — a stored false and
-   * an absent field must not be two ways of saying the same thing.
+   * ⚠ The REASON it lived on the cart is worth keeping, because the next
+   * durable buyer selection will face it: the online path creates the
+   * gateway order in one request and the order document in a later one, so
+   * a choice carried in a request body cannot be read by both -- and the
+   * two are then free to disagree about how much of the total is deferred,
+   * which is money captured that the order does not record.
+   * `useAllPoints` remains the live example of that shape.
    */
-  emiPlan?: CartEmiPlan;
 }
 
-/** The buyer's instalment selection. `tenureMonths` is validated against the live `emi.tenureOptions` at order time, never here. */
-export interface CartEmiPlan {
-  tenureMonths: number;
-}
 
 export const CART_COLLECTION = "carts" as const;
 

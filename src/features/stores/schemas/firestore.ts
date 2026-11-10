@@ -386,12 +386,7 @@ export interface StoreDocument extends BaseDocument {
    */
   shippingConfig?: StoreShippingConfig;
 
-  /**
-   * Seller opt-in for EMI (installment) checkout. EMI is offered on this
-   * store's items only when this AND `siteSettings.emi.enabled` are both
-   * true. Default false — sellers must explicitly opt in.
-   */
-  emiEnabled?: boolean;
+  /* 🛑 `emiEnabled` DELETED 2026-11-11 — the seller opt-in for a retired flow. */
 
   /**
    * How this seller THINKS about the prices they type. An authoring

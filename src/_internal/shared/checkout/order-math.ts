@@ -1046,3 +1046,31 @@ export function computePreOrderDepositAmount(
   }, 0);
   return roundRupees(raw);
 }
+
+/**
+ * What the buyer actually pays at checkout, after coins are applied.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 MOVED HERE 2026-11-11 FROM `_internal/shared/features/emi/group.ts`
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * It lived in the EMI module because instalments were the second thing that
+ * could defer part of an order's total, and it was deleted along with that
+ * module — but it is NOT an EMI function and never was. It is the one
+ * expression that answers "how much do we collect NOW", and it is on every
+ * order path including the ones that have never heard of instalments.
+ *
+ * ⚠ Its `emiRemainingBalance` parameter is GONE, not defaulted to zero. With
+ * instalments retired, nothing can defer part of a total any more, so a
+ * parameter that is always `0` would be a slot inviting a future reader to
+ * wonder what else belongs in it — and `amountDue` is a money field where an
+ * unexplained subtrahend is exactly the wrong kind of mystery.
+ *
+ * 🛑 `Math.max(0, …)` is load-bearing, not defensive dressing. Coins can
+ * legitimately cover an order in full (10 coins = ₹1, and a large balance on
+ * a small order), and a negative `amountDue` would be sent to a gateway as a
+ * negative capture — which is a refund instruction, not a no-op.
+ */
+export function amountDueNow(args: { orderTotal: number; pointsApplied: number }): number {
+  return roundRupees(Math.max(0, args.orderTotal - args.pointsApplied));
+}

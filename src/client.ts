@@ -1534,20 +1534,12 @@ export { useProduct } from "./features/products/hooks/useProducts";
 export type { ProductDocument } from "./features/products/schemas/firestore";
 export { BUNDLE_COPY } from "./_internal/shared/features/categories/bundle-copy";
 export { useSiteSettings } from "./core/hooks/useSiteSettings";
-export {
-  checkEmiEligibility,
-  computeEmiSchedule,
-  computeBuyerEmiQuote,
-} from "./_internal/shared/features/emi/schedule";
-export type { EmiSettings, BuyerEmiQuote } from "./_internal/shared/features/emi/schedule";
 /*
  * 0f — the checkout client needs to know which tenders can carry instalments
  * so it can DISABLE an incompatible one with a reason rather than let the
  * buyer pick it and be refused at submit. Same map the server refuses from, so
  * the affordance and the rule cannot disagree.
  */
-export { emiTenderBlockReason, isTenderCompatibleWithEmi } from "./_internal/shared/features/emi/choice";
-export type { EmiTender } from "./_internal/shared/features/emi/choice";
 /* The derivation strings for the fee breakdown — pure, no I/O. */
 export {
   explainCodHandlingFee,

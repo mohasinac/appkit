@@ -370,6 +370,14 @@ export {
    */
   pointsBaseForGroup,
   resolvePointsTender,
+  /*
+   * Re-homed 2026-11-11. `amountDueNow` was exported from the EMI barrel
+   * line, because it lived in the EMI module -- and it is not an EMI
+   * function. It answers "how much do we collect NOW" on EVERY order path,
+   * so it moved to `order-math` with the rest of the checkout maths and is
+   * exported beside them.
+   */
+  amountDueNow,
   type GroupGstSummary,
   type GstRateSlice,
 } from "./_internal/shared/checkout/order-math";

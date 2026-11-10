@@ -194,23 +194,13 @@ export const OutOfStockPolicyValues = {
   SKIP_ITEMS: "skip_items",
 } as const satisfies Record<string, OutOfStockPolicy>;
 
-export type EmiInstallmentStatus = "pending" | "paid" | "overdue";
-
-export interface EmiInstallment {
-  /** 1-based installment number. */
-  index: number;
-  dueDate: Date;
-  /** Installment amount in decimal rupees (principal share + surcharge share for this installment). */
-  amount: number;
-  status: EmiInstallmentStatus;
-  paidAt?: Date;
-  /** Buyer-uploaded UTR/reference number for this installment's manual payment. */
-  transactionId?: string;
-  /** Signed-URL media slug for the buyer's payment proof for this installment. */
-  proofUrl?: string;
-  /** Set once the reminder sweep has notified the buyer for this installment, so it isn't re-sent on every sweep run. */
-  reminderSentAt?: Date;
-}
+/*
+ * 🛑 `EmiInstallmentStatus` and `EmiInstallment` DELETED 2026-11-11 with the
+ * rest of the instalment schema. The interface carried `transactionId` and
+ * `proofUrl` -- a buyer-typed reference and an uploaded screenshot, i.e. the
+ * same unverifiable claim as the retired `upi_manual` flow, one instalment
+ * at a time.
+ */
 
 /** Runtime-accessible refund status values â€" use instead of bare string literals. */
 export const RefundStatusValues = {
@@ -1159,39 +1149,37 @@ export interface OrderDocument extends BaseDocument {
     extraShippingFee: number;
   };
 
-  // ── EMI (installment) fields — only set when paymentMethod === "emi" ────────
-  emiEnabled?: boolean;
-  /** Number of monthly installments the buyer chose (2–6). */
-  emiTenureMonths?: number;
-  /** Down payment collected at checkout, in decimal rupees (emiTokenPercent × seller subtotal). */
-  emiTokenAmount?: number;
-  /** Extra cost of choosing EMI over full payment, in decimal rupees — split between platform and seller. */
-  emiSurchargeAmount?: number;
-  /**
-   * The SELLER's share of the EMI surcharge, in decimal rupees.
+  /*
+   * ── THE EMI FIELDS WERE DELETED HERE 2026-11-11 ──────────────────────────
    *
-   * 🛑 D45, the half that is a data gap rather than a commercial decision.
-   * `computeEmiSchedule` computes `surchargeSellerShare` (from
-   * `emi.surchargeSellerSharePercent`, seeded at 50) and it was **persisted
-   * nowhere** — so the split existed as a setting, a form field and a returned
-   * value with no field to land in and therefore no reader in the payout path.
-   * The platform kept 100% of a surcharge it had already decided to split.
+   * Owner: *"emi is removed from the code as that is now built into the
+   * payment gateways"*, and then explicitly: *"we do not keep the manual or
+   * the emi flow schema as well."*
    *
-   * 🛑 Persisting it moves NO money on its own, and that is deliberate.
-   * Whether the seller is actually PAID this — along with shipping and the COD
-   * handling fee, the other two D45 terms — is a commercial decision about who
-   * keeps which revenue, and it is the owner's to make, not a defect to quietly
-   * fix. What was broken is that the decision had already been made (the
-   * setting exists, defaulted to 50%) and the number was then thrown away. Now
-   * it is recorded, so honouring it is a payout change rather than an
-   * archaeology exercise.
+   * Eleven fields are gone: `emiEnabled`, `emiTenureMonths`, `emiTokenAmount`,
+   * `emiSurchargeAmount`, `emiSurchargeSellerShare`, `emiInstallments`,
+   * `emiRemainingBalance`, `emiComplete`, and the cart/store/product siblings.
+   *
+   * 🛑 THIS IS A TYPE REMOVAL, NOT A DATA MIGRATION. Firestore documents are
+   * schemaless: every historical EMI order still CARRIES these keys on disk,
+   * and `appkit-seed load`'s `set({ merge: true })` cannot remove a field even
+   * if we wanted it to. What changes is that nothing in this codebase can read
+   * them any more.
+   *
+   * ⚠ The consequence, stated rather than discovered later: a historical EMI
+   * order's instalment schedule is no longer rendered anywhere. That is the
+   * owner's decision — the alternative was keeping eleven fields, their types,
+   * and every reader alive to serve orders on a retired plan. If those figures
+   * are ever needed for an accounting question, they are still in the
+   * documents and reachable by a one-off script.
+   *
+   * 🛑 `amountDueNow` MOVED rather than died — to
+   * `_internal/shared/checkout/order-math.ts`. It lived in the EMI module
+   * because instalments were the second thing that could defer part of a
+   * total, but it is on every order path including ones that never had EMI.
+   * Deleting it with the module would have taken out the one expression that
+   * answers "how much do we collect now".
    */
-  emiSurchargeSellerShare?: number;
-  emiInstallments?: EmiInstallment[];
-  /** Sum of unpaid installment amounts, in decimal rupees. 0 once all installments are paid. */
-  emiRemainingBalance?: number;
-  /** True once every installment's status is "paid". Gates shipment unless the product's `allowShipBeforeEmiComplete` flag is set. */
-  emiComplete?: boolean;
 
   shippingFee?: number;
   shippingMethod?: ShippingMethod;
