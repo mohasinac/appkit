@@ -15,6 +15,7 @@ import {
   parseSieveDateValue,
 } from "../../../providers/db-firebase";
 import {
+  EVENT_ENTRY_FIELDS,
   EVENT_FIELDS,
   EVENTS_COLLECTION,
   type EventCreateInput,
@@ -308,6 +309,119 @@ class EventRepository extends BaseRepository<EventDocument> {
       void normalizeError(error);
       throw new DatabaseError(
         `Failed to increment flaggedEntries for event ${id}`,
+        error,
+      );
+    }
+  }
+
+  /**
+   * ── THE MISSING HALF OF THE COUNTERS ────────────────────────────────────
+   *
+   * ## 🛑 The defect this fixes, measured twice on 2026-11-10
+   *
+   * Submitting incremented `stats.totalEntries` (and `approvedEntries` under
+   * auto-approval); DELETING the entry document decremented NOTHING. Five test
+   * submissions left `totalEntries: 5` against ZERO entries. The gallery counts
+   * real documents, so the two disagreed — and the denormalised number is the
+   * one the public sees first, above a gallery that contradicts it.
+   *
+   * It was survivable while only this project's tests deleted entries. Owner,
+   * 2026-11-10: *"the user can delete their entries as well"* — so a delete is
+   * now a first-class participant action and an only-ever-growing counter
+   * would be wrong on every live contest.
+   *
+   * ## 🛑 WHY A TRANSACTION AND NOT `increment(-1)`
+   *
+   * `FieldValue.increment(-1)` is atomic but UNCLAMPED: it will happily write
+   * `totalEntries: -1`. That matters here because the counters have genuine
+   * pre-existing drift (the five orphaned increments above are only the ones
+   * that got measured), so the very first real delete on a drifted document
+   * would publish a negative participant count. A read-modify-write in a
+   * transaction is still atomic against other transactions and can floor at
+   * zero, which is the only value that is never a lie.
+   *
+   * ⚠ Residual, stated rather than implied: a transaction serialises against
+   * other TRANSACTIONS, and the increments above are plain `update()` calls.
+   * A delete concurrent with a submission can therefore still lose one count.
+   * The honest fix is to drop the denormalised counters in favour of the
+   * gallery's own aggregate — `total` on the entries response is already a real
+   * Firestore `count()`. That is a bigger change than this lane, and it is
+   * flagged, not silently done.
+   *
+   * @param reviewStatus the DELETED entry's stored `reviewStatus`, which
+   *   decides which secondary counter moves. `approved` decrements
+   *   `approvedEntries`; `flagged` decrements `flaggedEntries`; `pending`
+   *   decrements neither, because nothing ever incremented one for it.
+   */
+  async decrementEntryStats(
+    id: string,
+    reviewStatus: string | undefined,
+  ): Promise<void> {
+    const ref = this.getCollection().doc(id);
+    try {
+      await this.db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists) {
+          /*
+           * The event is gone but an entry of its was just deleted. Nothing to
+           * decrement, and creating the document to hold a count of zero would
+           * resurrect a deleted event. Logged rather than thrown: the entry
+           * delete already succeeded and must not be rolled back by a counter.
+           */
+          serverLogger.warn("decrementEntryStats: event document missing", {
+            eventId: id,
+          });
+          return;
+        }
+        /*
+         * ⚠ The STORED shape is a nested `stats` MAP; the write keys below are
+         * DOTTED PATHS into it. Reading `data().stats.totalEntries` and
+         * writing `"stats.totalEntries"` is not an inconsistency — it is the
+         * same field addressed the two ways Firestore offers, and the dotted
+         * form only works in `update()`.
+         */
+        const stats =
+          (snap.data()?.["stats"] as Record<string, unknown> | undefined) ?? {};
+        const readCount = (key: string): number => {
+          const raw = stats[key];
+          return typeof raw === "number" && Number.isFinite(raw) ? raw : 0;
+        };
+        const next: Record<string, number> = {
+          [EVENT_FIELDS.STATS.TOTAL_ENTRIES]: Math.max(
+            0,
+            readCount("totalEntries") - 1,
+          ),
+        };
+        if (reviewStatus === EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED) {
+          next[EVENT_FIELDS.STATS.APPROVED_ENTRIES] = Math.max(
+            0,
+            readCount("approvedEntries") - 1,
+          );
+        } else if (
+          reviewStatus === EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.FLAGGED
+        ) {
+          next[EVENT_FIELDS.STATS.FLAGGED_ENTRIES] = Math.max(
+            0,
+            readCount("flaggedEntries") - 1,
+          );
+        }
+        /*
+         * 🛑 `tx.update`, never `tx.set`. CLAUDE.md records that Firestore only
+         * resolves a DOTTED key as a path in `update()` — `set()` writes a
+         * literal field named `"stats.totalEntries"`, which is exactly how the
+         * `surfaceCounts` rollup came to never fire once. The keys here are
+         * dotted (`stats.totalEntries`), so this call shape is load-bearing.
+         */
+        tx.update(ref, next);
+      });
+      serverLogger.info("Event entry stats decremented", {
+        eventId: id,
+        reviewStatus: reviewStatus ?? "unknown",
+      });
+    } catch (error) {
+      void normalizeError(error);
+      throw new DatabaseError(
+        `Failed to decrement entry stats for event ${id}`,
         error,
       );
     }

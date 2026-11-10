@@ -382,6 +382,21 @@ export interface PublicEventEntryItem {
   dislikes: number;
   /** The VIEWER's own vote. `null` when signed out or not yet voted. */
   myVote: "like" | "dislike" | null;
+  /**
+   * Is this the VIEWER's own entry?
+   *
+   * 🛑 A derived BOOLEAN, never the entry's `userId`. The owner wants inline
+   * edit/delete on the card, which needs "is this mine" on every row — and the
+   * cheap way to answer that client-side would be to publish `userId` and
+   * compare. That would hand every visitor a map of which account filed which
+   * entry on a surface whose whole point is that entrants are MASKED. The
+   * comparison happens on the server, against the verified session uid, and
+   * only its answer travels.
+   *
+   * ⚠ Always `false` for an anonymous reader, which is also what keeps the
+   * anonymous response publicly cacheable.
+   */
+  mine: boolean;
 }
 
 /**
@@ -424,6 +439,27 @@ export interface PublicEventEntriesResponse {
   ranking: PublicEntryRanking;
   /** Whether this event's type switches on the voting mechanism at all. */
   votingEnabled: boolean;
+  /**
+   * May the VIEWER edit or remove ANY entry here — i.e. are they a moderator?
+   *
+   * 🛑 Resolved through the PERMISSION REGISTRY on the server
+   * (`admin:event-entries:write`), never from a role string. It is a hint for
+   * rendering, not the gate: the PATCH and DELETE routes re-resolve the same
+   * answer, because a hidden button is not a permission.
+   *
+   * ⚠ Always `false` for an anonymous reader — which is what keeps the
+   * anonymous response publicly cacheable.
+   */
+  canModerate: boolean;
+  /**
+   * This event's resolved per-participant entry limit, 1..`ENTRY_LIMIT_MAX`.
+   *
+   * Travels with the gallery so the card controls and the "you have N of M"
+   * copy read the EVENT's number rather than assuming one — the defect the
+   * owner named. Resolved through `resolveEntryLimit`, the same function the
+   * write path enforces.
+   */
+  entryLimit: number;
 }
 
 export interface LeaderboardEntry {

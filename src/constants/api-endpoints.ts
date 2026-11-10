@@ -631,6 +631,20 @@ export const EVENT_ENDPOINTS = {
   LIST: "/api/events",
   BY_ID: (id: string) => `/api/events/${id}`,
   ENTRIES: (id: string) => `/api/events/${id}/entries`,
+  /**
+   * ONE entry — `PATCH` to edit it, `DELETE` to remove it.
+   *
+   * Reachable by the entry's OWNER or by a moderator holding
+   * `admin:event-entries:write`; both gates are resolved SERVER-side on every
+   * request (see `entry-access.ts`), so this is not an admin-only path and it
+   * is deliberately not under `/api/admin`.
+   *
+   * 🛑 `encodeURIComponent` on the entry id. An entry id is the slot id
+   * `<eventId>:<uid>:<slot>`, and a raw `:` is not valid in a path segment —
+   * the same encode/decode pair the entry detail LINK already uses.
+   */
+  ENTRY: (id: string, entryId: string) =>
+    `/api/events/${id}/entries/${encodeURIComponent(entryId)}`,
   /*
    * Voting on a contest entry. The response carries COUNTS only — the voter
    * list is admin-only and comes from a different handler, so a public caller

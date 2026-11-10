@@ -159,6 +159,73 @@ export class EventEntryVotesRepository extends BaseRepository<EventEntryVoteDocu
     }
   }
 
+  /**
+   * ── THE CASCADE `cast` ALREADY ASSUMED EXISTED ──────────────────────────
+   *
+   * Remove every vote row for one entry. Called when the entry is deleted.
+   *
+   * ## 🛑 Why this is REQUIRED, not hygiene
+   *
+   * An entry's document id is the deterministic per-participant SLOT —
+   * `<eventId>:<uid>:<slot>` — and a vote's id is `<entryId>__<voterUid>`. So
+   * when a participant deletes their entry and files a new one, the new entry
+   * REUSES THE SAME DOCUMENT ID, and every stale vote row addresses it.
+   *
+   * The consequences, on a contest with a prize:
+   *
+   *   - `myVote` resolves from the stale row, so a voter sees their old vote on
+   *     a photo they have never seen.
+   *   - `cast` reads `previous === value` and treats a FIRST vote on the new
+   *     entry as a RETRACTION — the voter presses like, the count goes to zero,
+   *     and the button appears to do the opposite of what it says.
+   *   - `audit` reports voters for content that no longer exists.
+   *
+   * None of that errors. `cast`'s own comment says *"voting on a deleted entry
+   * would strand a row the cascade cannot find — the cleanup keys on the entry
+   * existing"* — this is that cleanup, which had never been written.
+   *
+   * ⚠ `bulkWriter`, not `batch()`. CLAUDE.md records that a 450-delete
+   * `db.batch()` fails `INVALID_ARGUMENT: Transaction too big` — the 500-op cap
+   * is not the only limit, total payload size matters — and `bulkWriter` chunks
+   * and retries. Bounded by `max` regardless, because an unbounded delete on a
+   * request path is its own hazard; the bound is far above any plausible vote
+   * count for one entry and is reported back so a caller can tell "done" from
+   * "truncated".
+   *
+   * ⚠ Needs NO composite index. One equality on `entryId` is served by the
+   * automatic single-field index, which is the same shape `audit` above
+   * already relies on — a new composite would have to be deployed, and an
+   * undeployed index answers `FAILED_PRECONDITION` that a catch turns into a
+   * silently empty result.
+   */
+  async deleteForEntry(entryId: string, max = 500): Promise<number> {
+    try {
+      const snap = await this.getCollection()
+        .where(EVENT_ENTRY_VOTE_FIELDS.ENTRY_ID, "==", entryId)
+        .limit(max)
+        .get();
+      if (snap.empty) return 0;
+
+      const writer = this.db.bulkWriter();
+      for (const doc of snap.docs) writer.delete(doc.ref);
+      await writer.close();
+
+      serverLogger.info("entryVotes.deleteForEntry", {
+        entryId,
+        deleted: snap.size,
+        truncated: snap.size >= max,
+      });
+      return snap.size;
+    } catch (err) {
+      const e = normalizeError(err);
+      serverLogger.error("entryVotes.deleteForEntry failed", {
+        entryId,
+        message: e.message,
+      });
+      throw new DatabaseError(`Failed to remove votes for entry: ${e.message}`);
+    }
+  }
+
   /** How this user voted. One document read — no query, no index. */
   async myVote(entryId: string, userId: string): Promise<EntryVoteValue | null> {
     try {

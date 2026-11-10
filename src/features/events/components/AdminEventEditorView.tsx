@@ -1,5 +1,11 @@
 "use client";
 import { normalizeError } from "../../../errors/normalize";
+/*
+ * The event's entry FORM, resolved from the document rather than from its
+ * type. See `../schemas/entry-form.ts` for the three `event.type ===`
+ * comparisons that made this a survey-only feature.
+ */
+import { resolveEntryFormFields } from "../schemas/entry-form";
 
 import { useApiMutation } from "@mohasinac/appkit/client";
 import type { JsonObjectWithUndefined } from "@mohasinac/appkit/client";
@@ -275,10 +281,31 @@ interface EventDraft {
   hasPointSystem: boolean;
   pointsLabel: string;
   entryReviewRequired: boolean;
-  surveyFields: SurveyFormField[];
   // Feedback
   anonymous: boolean;
-  feedbackFields: SurveyFormField[];
+  /**
+   * -- THE EVENT'S ENTRY FORM, type-NEUTRAL --------------------------------
+   *
+   * Owner, 2026-11-10: "do not hardcode the forms for the contest or
+   * anything, make them dynamic like how the user can set them up per event
+   * -- different forms".
+   *
+   * THIS REPLACED `surveyFields` AND `feedbackFields`, which were the same
+   * list under two type-specific names, each with its own `FormFieldBuilder`
+   * mounted behind `values.type === "survey"` / `=== "feedback"`. That is why
+   * a contest could not have a form even though every piece of the machinery
+   * -- the field type, the builder, the renderer, the per-field validator and
+   * the `formResponses` storage bag -- already existed.
+   *
+   * Both are DELETED rather than left unread: two unused draft fields that
+   * still look authoritative are how the next lane writes to the wrong one.
+   *
+   * WARNING: hydrated through `resolveEntryFormFields`, which falls back to
+   * the two legacy DOCUMENT keys -- so opening an existing survey event shows
+   * the fields it already has, and saving carries them into the new key. See
+   * `schemas/entry-form.ts`.
+   */
+  entryFields: SurveyFormField[];
   // Raffle
   hasRaffle: boolean;
   raffleType: RaffleType;
@@ -362,9 +389,8 @@ const DEFAULT_DRAFT: EventDraft = {
   hasPointSystem: false,
   pointsLabel: "Points",
   entryReviewRequired: false,
-  surveyFields: [],
   anonymous: false,
-  feedbackFields: [],
+  entryFields: [],
   hasRaffle: false,
   raffleType: "open_raffle",
   raffleTopN: "10",
@@ -383,9 +409,46 @@ function buildEventTypeConfig(draft: EventDraft): JsonObjectWithUndefined {
   if (draft.type === "sale") return { saleConfig: { discountPercent: Number(draft.discountPercent) || 10, bannerText: draft.saleBannerText || undefined } };
   if (draft.type === "offer") return { offerConfig: { couponId: draft.couponId, displayCode: draft.displayCode, bannerText: draft.offerBannerText || undefined } };
   if (draft.type === "poll") return { pollConfig: { options: draft.pollOptions.filter((o) => o.label.trim()), allowMultiSelect: draft.allowMultiSelect, allowComment: draft.allowComment, resultsVisibility: draft.resultsVisibility } };
-  if (draft.type === "survey") return { surveyConfig: { requireLogin: draft.requireLogin, maxEntriesPerUser: Number(draft.maxEntriesPerUser) || 1, hasLeaderboard: draft.hasLeaderboard, hasPointSystem: draft.hasPointSystem, pointsLabel: draft.hasPointSystem ? (draft.pointsLabel.trim() || "Points") : undefined, entryReviewRequired: draft.entryReviewRequired, formFields: draft.surveyFields.map((f, i) => ({ ...f, order: i })) } };
-  if (draft.type === "feedback") return { feedbackConfig: { anonymous: draft.anonymous, formFields: draft.feedbackFields.map((f, i) => ({ ...f, order: i })) } };
+  /*
+   * -- formFields NOW COMES FROM `draft.entryFields`, NOT FROM A SECOND LIST
+   *
+   * `surveyFields` / `feedbackFields` used to be two independent draft lists
+   * with two independent builders, each mounted behind a `values.type ===`
+   * comparison. They are now hydrated FROM and written FROM the single
+   * `entryFields` list, so the legacy per-type key keeps holding what it
+   * always held and cannot drift from the type-neutral one -- it is one
+   * source written to two places, not two sources.
+   *
+   * WARNING: a TRANSITIONAL dual write, deliberately. Dropping `formFields`
+   * here would blank the stored form on every existing survey and feedback
+   * event the first time one is saved, and anything still reading the legacy
+   * key would then see an empty form. `resolveEntryFormFields` prefers
+   * `entryForm.fields`, so the legacy copy is read only by code that has not
+   * been converted. Remove it once nothing reads it -- and MEASURE that, do
+   * not assume it.
+   */
+  if (draft.type === "survey") return { surveyConfig: { requireLogin: draft.requireLogin, maxEntriesPerUser: Number(draft.maxEntriesPerUser) || 1, hasLeaderboard: draft.hasLeaderboard, hasPointSystem: draft.hasPointSystem, pointsLabel: draft.hasPointSystem ? (draft.pointsLabel.trim() || "Points") : undefined, entryReviewRequired: draft.entryReviewRequired, formFields: draft.entryFields.map((f, i) => ({ ...f, order: i })) } };
+  if (draft.type === "feedback") return { feedbackConfig: { anonymous: draft.anonymous, formFields: draft.entryFields.map((f, i) => ({ ...f, order: i })) } };
   return {};
+}
+
+/**
+ * The type-NEUTRAL entry form, always sent.
+ *
+ * Separate from `buildEventTypeConfig` because it is not type config. Every
+ * event may declare a form; which type it is decides nothing about that.
+ *
+ * WARNING: sent even when EMPTY, so clearing the last field actually clears
+ * it. An `undefined` here would be stripped by `prepareForFirestore` and the
+ * removed fields would come back on the next read -- the "looks saved, did
+ * nothing" shape this project keeps hitting.
+ */
+function buildEntryForm(draft: EventDraft): JsonObjectWithUndefined {
+  return {
+    entryForm: {
+      fields: draft.entryFields.map((f, i) => ({ ...f, order: i })),
+    },
+  };
 }
 
 /**
@@ -614,9 +677,16 @@ function eventToDraft(event: Record<string, any>): EventDraft {
         hasPointSystem: Boolean(event.surveyConfig?.hasPointSystem),
         pointsLabel: event.surveyConfig?.pointsLabel ?? "Points",
         entryReviewRequired: Boolean(event.surveyConfig?.entryReviewRequired),
-        surveyFields: Array.isArray(event.surveyConfig?.formFields) ? event.surveyConfig.formFields : [],
         anonymous: Boolean(event.feedbackConfig?.anonymous),
-        feedbackFields: Array.isArray(event.feedbackConfig?.formFields) ? event.feedbackConfig.formFields : [],
+        /*
+         * Through the RESOLVER, not from one key. It reads `entryForm.fields`
+         * first and falls back to `surveyConfig.formFields` then
+         * `feedbackConfig.formFields`, so opening ANY already-stored event
+         * shows the form it actually has -- including every survey authored
+         * before the field moved. Reading only the new key would show an
+         * empty builder over a live form and then save the emptiness.
+         */
+        entryFields: resolveEntryFormFields(event as never),
         hasRaffle: Boolean(event.hasRaffle),
         raffleType: (event.raffleType as RaffleType) || "open_raffle",
         raffleTopN: String(event.raffleTopN ?? 10),
@@ -713,6 +783,7 @@ export function AdminEventEditorView({
          */
         couponIds: draft.couponIds,
         ...buildEventTypeConfig(draft),
+        ...buildEntryForm(draft),
         ...buildEventRaffleFields(draft),
         ...buildCarouselFields(draft),
       };
@@ -866,7 +937,7 @@ export function AdminEventEditorView({
     {
       id: "settings",
       label: "Settings",
-      fields: ["status", "allowGuestParticipation", "isPinned", "showOnCarousel", "carouselEyebrow", "carouselTitle", "carouselDescription", "carouselButtonText", "carouselBackgroundMediaSlug", "carouselOrder", "couponIds", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "surveyFields", "anonymous", "feedbackFields"],
+      fields: ["status", "allowGuestParticipation", "isPinned", "showOnCarousel", "carouselEyebrow", "carouselTitle", "carouselDescription", "carouselButtonText", "carouselBackgroundMediaSlug", "carouselOrder", "couponIds", "discountPercent", "saleBannerText", "couponId", "displayCode", "offerBannerText", "pollOptions", "resultsVisibility", "allowMultiSelect", "allowComment", "maxEntriesPerUser", "hasLeaderboard", "hasPointSystem", "pointsLabel", "entryReviewRequired", "anonymous", "entryFields"],
       // Same: the offer-coupon, offer-display-code and poll-minimum-options
       // rules are all stated in eventDraftSchema's superRefine, which now
       // surfaces them inline on the field instead of as a step-blocking banner.
@@ -1052,7 +1123,6 @@ export function AdminEventEditorView({
                 <Toggle checked={values.hasPointSystem} onChange={(v) => onChange({ hasPointSystem: v })} label="Enable point system" />
                 <Toggle checked={values.entryReviewRequired} onChange={(v) => onChange({ entryReviewRequired: v })} label="Require employee review before entry is approved" />
               </Stack>
-              <FormFieldBuilder fields={values.surveyFields} setFields={(f) => onChange({ surveyFields: f })} />
             </Stack>
           )}
 
@@ -1061,9 +1131,42 @@ export function AdminEventEditorView({
             <Stack gap="md" rounded="xl" border="default" padding="md">
               <Text size="sm" weight="semibold" color="muted">Feedback configuration</Text>
               <Toggle checked={values.anonymous} onChange={(v) => onChange({ anonymous: v })} label="Allow anonymous submissions" />
-              <FormFieldBuilder fields={values.feedbackFields} setFields={(f) => onChange({ feedbackFields: f })} />
             </Stack>
           )}
+
+          {/*
+            -- THE ENTRY FORM, FOR EVERY EVENT TYPE -------------------------
+            Owner, 2026-11-10: "do not hardcode the forms for the contest or
+            anything, make them dynamic like how the user can set them up per
+            event -- different forms -- and keep the website capable to handle
+            that as well."
+
+            This builder existed already. It was mounted TWICE, behind
+            `values.type === "survey"` and `values.type === "feedback"`, over
+            two separate draft lists -- which is why a contest had no form and
+            why the owner's requirement read as new work. It is now ONE
+            builder over ONE list, outside every type branch, written to the
+            type-neutral `entryForm.fields`.
+
+            WARNING: `file` is offered by the type picker and DOES NOT UPLOAD
+            ANYTHING -- it stores the chosen file's name. Real entry media is
+            the `entryMedia` caps + the `media[]` array + the signed upload
+            through the media subdomain, which is what
+            `mocks/40-forms-catalogue.qm` specifies for a contest ("Media
+            rules come from config, not this form"). Flagged at
+            `schemas/entry-form.ts`; not papered over here.
+          */}
+          <Stack gap="md" rounded="xl" border="default" padding="md">
+            <Text size="sm" weight="semibold" color="muted">
+              Entry form — the fields a participant fills in
+            </Text>
+            <Text size="xs" color="faint">
+              Any event may collect answers. Leave it empty to collect nothing
+              beyond whatever else this event is configured for (photos, a poll
+              vote). Every rule you set here is enforced on the server too.
+            </Text>
+            <FormFieldBuilder fields={values.entryFields} setFields={(f) => onChange({ entryFields: f })} />
+          </Stack>
         </Stack>
       ),
     },

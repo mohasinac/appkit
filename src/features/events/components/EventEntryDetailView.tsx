@@ -28,17 +28,19 @@
  * @tag layer:component
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "../../../ui/components/Badge";
+import { DetailPageGallery } from "../../../ui/components/DetailPageGallery";
 import { DetailViewShell } from "../../../ui/components/DetailViewShell";
-import { Div } from "../../../ui/components/Div";
-import { Grid, Row, Stack } from "../../../ui/components/Layout";
+import { Row, Stack } from "../../../ui/components/Layout";
 import { ImageLightbox, type LightboxImage } from "../../../ui/components/ImageLightbox";
 import { TextLink } from "../../../ui/components/TextLink";
 import { Heading, Text } from "../../../ui/components/Typography";
+import { EntryInlineActions } from "./EntryInlineActions";
 import { EntryMediaThumb } from "./EntryMediaThumb";
 import { EntryVoteButtons } from "./EntryVoteButtons";
 import { useEntryVoteCaster } from "../hooks/useEntryVote";
+import type { EventEntryMediaLimits } from "../schemas/firestore";
 import type { PublicEntryRanking, PublicEventEntryItem } from "../types";
 
 export interface EventEntryDetailLabels {
@@ -67,6 +69,27 @@ export interface EventEntryDetailViewProps {
   backHref?: string;
   /** How many entries are in the contest, for "Rank 3 of 12". */
   total?: number;
+  /**
+   * ── INLINE EDIT / DELETE, the same controls the gallery card carries ──────
+   *
+   * The owner asked for them *"on the cards"*; an entry's own page is the other
+   * half of the same surface, and an entrant who followed "View details" to
+   * look at their photo should not have to navigate back to manage it.
+   *
+   * `entry.mine` (per row) and `canModerate` (per viewer) are both
+   * SERVER-resolved, and the PATCH/DELETE routes re-resolve them from the
+   * stored document — a hidden button is not a permission.
+   */
+  allowInlineEdit?: boolean;
+  /** The viewer holds `admin:event-entries:write`. Server-resolved. */
+  canModerate?: boolean;
+  /** This event's per-entry media caps, so the edit form enforces ITS rules. */
+  entryMedia?: EventEntryMediaLimits;
+  /** Only used to derive the SEO filename the media host stamps on an upload. */
+  eventTitle?: string;
+  /** Media proxy endpoints on THIS host. Strings — a server page may pass them. */
+  signEndpoint?: string;
+  finalizeEndpoint?: string;
   labels?: EventEntryDetailLabels;
   className?: string;
 }
@@ -80,21 +103,41 @@ export function EventEntryDetailView({
   signInHref,
   backHref,
   total,
+  allowInlineEdit = true,
+  canModerate = false,
+  entryMedia,
+  eventTitle,
+  signEndpoint,
+  finalizeEndpoint,
   labels,
   className = "",
 }: EventEntryDetailViewProps) {
   const copy = { ...DEFAULT_LABELS, ...labels };
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  /**
+   * The entry as it stands AFTER any inline edit in this page session.
+   *
+   * 🛑 Local, not a refresh. The server has already accepted the change; a
+   * `router.refresh()` would re-run the ranked window read, and on a contest
+   * ranked by likes an unrelated vote landing in between would change the rank
+   * badge above the photo the moment someone pressed Save — which reads as the
+   * edit having moved them.
+   *
+   * ⚠ Seeded from the prop and re-seeded when it changes, so a genuine server
+   * re-render (a vote, a navigation) still wins.
+   */
+  const [live, setLive] = useState(entry);
+  useEffect(() => setLive(entry), [entry]);
   const castVote = useEntryVoteCaster(eventId);
 
-  const entrant = entry.userDisplayName ?? copy.entrantFallback;
+  const entrant = live.userDisplayName ?? copy.entrantFallback;
 
-  const images: LightboxImage[] = entry.media.map((item) => ({
+  const images: LightboxImage[] = live.media.map((item) => ({
     src: item.url,
     ...(item.alt ? { alt: item.alt } : {}),
     kind: item.type,
-    badge: `#${entry.rank}`,
-    ...(entry.note ? { caption: entry.note } : {}),
+    badge: `#${live.rank}`,
+    ...(live.note ? { caption: live.note } : {}),
     sub: entrant,
   }));
 
@@ -107,8 +150,8 @@ export function EventEntryDetailView({
    * locale to everyone, which is worse and is what the date fields on the
    * event header already avoid.
    */
-  const submitted = entry.submittedAt
-    ? new Date(entry.submittedAt).toLocaleDateString(undefined, {
+  const submitted = live.submittedAt
+    ? new Date(live.submittedAt).toLocaleDateString(undefined, {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -127,7 +170,7 @@ export function EventEntryDetailView({
           {entrant}
         </Heading>
         <Badge variant="default">
-          {copy.rankPrefix} {entry.rank}
+          {copy.rankPrefix} {live.rank}
           {typeof total === "number" && total > 0 ? ` / ${total}` : ""}
         </Badge>
       </Row>
@@ -139,60 +182,105 @@ export function EventEntryDetailView({
     </Stack>
   );
 
+  /*
+   * ── 🛑 A SLIDER, NOT ALL OF THEM AT ONCE ────────────────────────────────
+   *
+   * Owner, 2026-11-10: *"where is my slider? i do not want the images to be
+   * shown all together, they should be like we do on the product details
+   * screens / listing details just larger"*.
+   *
+   * This used to render the cover at full width PLUS every remaining item in a
+   * `Grid cols={3}` — i.e. the whole entry at once, which is exactly what the
+   * owner reported. It is now `DetailPageGallery`, the primitive the product /
+   * collector-drop / pre-order detail pages are built from, at `size="lg"` for
+   * the "just larger" half.
+   *
+   * 🛑 NOT A THIRD GALLERY. `DetailPageGallery` gained `kind` (so a video item
+   * renders a `<video>` frame), `resolve="raw"` and the arrows — all opt-in,
+   * all defaulting to its previous behaviour. Writing an entry-specific slider
+   * here is what `A19r` forbids: one composed view per SHAPE, never one per
+   * type.
+   *
+   * 🛑 `resolve="raw"` is load-bearing on this host. Entry media is stored as
+   * a host-agnostic `/media/<shortId>` resolved by the deployment's own
+   * rewrite, and the media host is not a configured `next/image` loader domain
+   * here — the optimized path refuses it at RUNTIME while compiling perfectly.
+   * Same reason `EntryMediaThumb` is a plain `<img>`.
+   *
+   * `onOpen` hands the active index to `ImageLightbox`, which already handles
+   * image AND video with per-item badge and caption — so there is still one
+   * lightbox and no video special-casing anywhere in this file.
+   */
   const gallery = (
-    <Stack gap="sm">
-      {/*
-        The cover at full width, the rest as a strip. Clicking any of them
-        opens `ImageLightbox` at that index — which already handles image AND
-        video plus per-item badge and caption, so there is no second lightbox
-        and no video special-casing here.
-      */}
-      <button
-        type="button"
-        onClick={() => setActiveIndex(0)}
-        aria-label={`Open ${entrant}'s entry full size`}
-        className="relative block aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl border border-[var(--appkit-color-border)] p-0"
-      >
-        <EntryMediaThumb item={entry.media[0]} fallbackAlt={`Entry by ${entrant}`} />
-      </button>
-
-      {entry.media.length > 1 ? (
-        <Grid cols={3} gap="sm">
-          {entry.media.slice(1).map((item, index) => (
-            <button
-              key={`${item.url}-${index}`}
-              type="button"
-              onClick={() => setActiveIndex(index + 1)}
-              aria-label={`Open item ${index + 2} of ${entry.media.length}`}
-              className="relative block aspect-square w-full cursor-zoom-in overflow-hidden rounded-lg border border-[var(--appkit-color-border)] p-0"
-            >
-              <EntryMediaThumb item={item} fallbackAlt={`Entry by ${entrant}`} />
-              {item.type === "video" ? (
-                <Div className="pointer-events-none absolute bottom-1 right-1">
-                  <Badge variant="default">▶</Badge>
-                </Div>
-              ) : null}
-            </button>
-          ))}
-        </Grid>
-      ) : null}
-    </Stack>
+    <DetailPageGallery
+      images={live.media.map((item) => ({
+        url: item.url,
+        alt: item.alt ?? `Entry by ${entrant}`,
+        kind: item.type,
+      }))}
+      title={`Entry by ${entrant}`}
+      aspect="square"
+      size="lg"
+      resolve="raw"
+      showArrows
+      onOpen={(index) => setActiveIndex(index)}
+      fallback={
+        <EntryMediaThumb item={undefined} fallbackAlt={`Entry by ${entrant}`} />
+      }
+    />
   );
 
   const body = (
     <Stack gap="md">
-      {entry.note ? <Text color="muted">{entry.note}</Text> : null}
+      {live.note ? <Text color="muted">{live.note}</Text> : null}
+
+      {/*
+        ── 🛑 INLINE, on the entry's own page ────────────────────────────────
+        Shown for the entry's OWNER or a moderator holding
+        `admin:event-entries:write`; absent — not disabled — for everyone else,
+        so a signed-out visitor's page is identical to what it always was.
+
+        On DELETE this navigates to the gallery with a FULL page load rather
+        than a client push: the gallery's entry count is server-rendered and
+        `event.stats` has just been decremented, so a soft navigation would
+        show the stale total next to the correct rows — the exact disagreement
+        the stats fix exists to remove. `backHref` is unprefixed and this
+        deployment uses `localePrefix: "never"`, so it resolves as-is.
+      */}
+      {allowInlineEdit && (live.mine || canModerate) ? (
+        <EntryInlineActions
+          eventId={eventId}
+          entry={live}
+          canModerate={canModerate}
+          {...(entryMedia ? { entryMedia } : {})}
+          eventTitle={eventTitle ?? ""}
+          {...(signEndpoint ? { signEndpoint } : {})}
+          {...(finalizeEndpoint ? { finalizeEndpoint } : {})}
+          onSaved={(patch) =>
+            setLive((current) => ({
+              ...current,
+              media: patch.media,
+              ...(patch.note ? { note: patch.note } : { note: undefined }),
+            }))
+          }
+          onDeleted={() => {
+            if (typeof window !== "undefined") {
+              window.location.assign(backHref ?? "/");
+            }
+          }}
+        />
+      ) : null}
 
       {votingEnabled ? (
         <Stack gap="xs">
           <EntryVoteButtons
-            likes={entry.likes}
-            dislikes={entry.dislikes}
-            myVote={entry.myVote}
+            likes={live.likes}
+            dislikes={live.dislikes}
+            myVote={live.myVote}
             allowsDislike={ranking.allowsDislike}
             canVote={canVote}
             {...(signInHref ? { signInHref } : {})}
-            onVote={(value) => castVote(entry.id, value)}
+            onVote={(value) => castVote(live.id, value)}
           />
           {/*
             The rule, from the same row that produced this entry's rank. It is
@@ -207,7 +295,7 @@ export function EventEntryDetailView({
         </Stack>
       ) : (
         <Text size="sm" color="faint">
-          {entry.likes} {entry.likes === 1 ? "like" : "likes"}
+          {live.likes} {live.likes === 1 ? "like" : "likes"}
         </Text>
       )}
     </Stack>

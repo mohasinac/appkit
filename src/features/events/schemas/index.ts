@@ -1,6 +1,7 @@
 export * from "./firestore";
 export * from "./entry-votes";
 export * from "./entry-ranking";
+export * from "./entry-form";
 export * from "./event-mechanisms";
 import { z } from "zod";
 import { mediaUrlSchema } from "../../../validation/schemas";

@@ -36,6 +36,27 @@ export { EntryVoteButtons } from "./EntryVoteButtons";
 export type { EntryVoteButtonsProps } from "./EntryVoteButtons";
 export { EntryMediaThumb } from "./EntryMediaThumb";
 export type { EntryMediaThumbProps } from "./EntryMediaThumb";
+/*
+ * The entry UPLOAD field and the inline edit/delete controls. Both moved or
+ * were added 2026-11-10 for the owner's inline-management requirement; the
+ * upload field moved IN from the events app so appkit's card can mount it
+ * without a function prop crossing a server boundary (React #441).
+ */
+export { EntryMediaUploadField, describeEntryMediaRules } from "./EntryMediaUploadField";
+export type { EntryMediaUploadFieldProps } from "./EntryMediaUploadField";
+export { EntryInlineActions } from "./EntryInlineActions";
+export type {
+  EntryInlineActionsProps,
+  EntryInlineActionsLabels,
+  EntryInlineActionsEntry,
+} from "./EntryInlineActions";
+export { EventEntryLimitField } from "./EventEntryLimitField";
+export type { EventEntryLimitFieldProps } from "./EventEntryLimitField";
+export { EventInlineAdminActions } from "./EventInlineAdminActions";
+export type {
+  EventInlineAdminActionsProps,
+  EventInlineAdminActionsLabels,
+} from "./EventInlineAdminActions";
 export { EventEntriesListView } from "./EventEntriesListView";
 export type {
   EventEntriesListViewProps,

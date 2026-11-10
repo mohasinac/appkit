@@ -54,11 +54,13 @@ import {
   type EventEntryDocument,
   type EventEntryPlain,
 } from "../schemas/firestore";
+import { resolveEntryLimit } from "../schemas/firestore";
 import {
   rankEntries,
   resolveEntryRankingRuleSet,
   type EntryRankingRuleSet,
 } from "../schemas/entry-ranking";
+import { viewerCanModerateEntries } from "./entry-access";
 import { eventTypeHasEntryVoting } from "../schemas/event-mechanisms";
 import type {
   PublicEntryMedia,
@@ -250,6 +252,7 @@ async function resolveMyVotes(
 function toPublicEntry(
   row: RankedRow,
   myVote: "like" | "dislike" | null,
+  viewerUid: string,
 ): PublicEventEntryItem {
   const entry = row.entry;
   return {
@@ -262,6 +265,17 @@ function toPublicEntry(
     likes: row.likes,
     dislikes: row.dislikes,
     myVote,
+    /*
+     * 🛑 The COMPARISON happens here and only its ANSWER travels. `userId` is
+     * not in `EVENT_ENTRY_PII_FIELDS` so it survives the mask untouched, and
+     * publishing it would hand every visitor a map of which account filed
+     * which entry on a surface whose entrant names are deliberately masked.
+     *
+     * `viewerUid` is `""` for an anonymous reader, and an entry with no
+     * `userId` (a guest entry) must never match it — hence the length check
+     * rather than a bare `===`.
+     */
+    mine: viewerUid.length > 0 && String(entry.userId ?? "") === viewerUid,
   };
 }
 
@@ -300,17 +314,30 @@ export async function getPublicEventEntries(
   const start = (page - 1) * pageSize;
   const pageRows = win.rows.slice(start, start + pageSize);
 
-  const myVotes = opts.viewerUid
-    ? await resolveMyVotes(
-        pageRows.map((r) => String(r.entry.id ?? "")),
-        opts.viewerUid,
-      )
-    : new Map<string, "like" | "dislike" | null>();
+  /*
+   * Two viewer-scoped reads, in parallel, and both only for a signed-in
+   * caller. An anonymous visitor pays for neither and gets `myVote: null` /
+   * `canModerate: false` — which is also what keeps the anonymous response
+   * publicly cacheable (Rule #6's round-trip budget).
+   */
+  const [myVotes, canModerate] = await Promise.all([
+    opts.viewerUid
+      ? resolveMyVotes(
+          pageRows.map((r) => String(r.entry.id ?? "")),
+          opts.viewerUid,
+        )
+      : Promise.resolve(new Map<string, "like" | "dislike" | null>()),
+    viewerCanModerateEntries(opts.viewerUid),
+  ]);
 
   const ranked = win.rows.length;
   return {
     items: pageRows.map((row) =>
-      toPublicEntry(row, myVotes.get(String(row.entry.id ?? "")) ?? null),
+      toPublicEntry(
+        row,
+        myVotes.get(String(row.entry.id ?? "")) ?? null,
+        opts.viewerUid ?? "",
+      ),
     ),
     total: win.total,
     page,
@@ -320,6 +347,14 @@ export async function getPublicEventEntries(
     truncated: win.total > ranked,
     ranking: toPublicRanking(win.ruleSet),
     votingEnabled: win.votingEnabled,
+    canModerate,
+    /*
+     * 🛑 The EVENT's number, resolved through the same function the write path
+     * enforces. The card controls need it to say "1 of 3 entries used" without
+     * a second request, and a hardcoded 1 or 5 anywhere is the defect this
+     * whole change exists to remove.
+     */
+    entryLimit: resolveEntryLimit(win.event.entryLimit),
   };
 }
 
@@ -350,6 +385,10 @@ export async function getPublicEventEntry(
   ranking: PublicEntryRanking;
   votingEnabled: boolean;
   total: number;
+  /** As on the list response — a rendering hint, re-resolved by every write. */
+  canModerate: boolean;
+  /** This event's resolved per-participant entry limit. */
+  entryLimit: number;
 } | null> {
   const win = await rankedWindow(eventIdOrSlug);
   if (!win) return null;
@@ -357,14 +396,19 @@ export async function getPublicEventEntry(
   const row = win.rows.find((r) => String(r.entry.id ?? "") === entryId);
   if (!row) return null;
 
-  const myVotes = opts.viewerUid
-    ? await resolveMyVotes([entryId], opts.viewerUid)
-    : new Map<string, "like" | "dislike" | null>();
+  const [myVotes, canModerate] = await Promise.all([
+    opts.viewerUid
+      ? resolveMyVotes([entryId], opts.viewerUid)
+      : Promise.resolve(new Map<string, "like" | "dislike" | null>()),
+    viewerCanModerateEntries(opts.viewerUid),
+  ]);
 
   return {
-    entry: toPublicEntry(row, myVotes.get(entryId) ?? null),
+    entry: toPublicEntry(row, myVotes.get(entryId) ?? null, opts.viewerUid ?? ""),
     ranking: toPublicRanking(win.ruleSet),
     votingEnabled: win.votingEnabled,
     total: win.total,
+    canModerate,
+    entryLimit: resolveEntryLimit(win.event.entryLimit),
   };
 }

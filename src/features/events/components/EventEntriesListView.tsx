@@ -63,6 +63,8 @@ import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { EntryMediaThumb } from "./EntryMediaThumb";
 import { EntryVoteButtons } from "./EntryVoteButtons";
 import { useEntryVoteCaster } from "../hooks/useEntryVote";
+import { EntryInlineActions } from "./EntryInlineActions";
+import type { EventEntryMediaLimits } from "../schemas/firestore";
 import type { PublicEventEntriesResponse, PublicEventEntryItem } from "../types";
 
 /** Overridable copy — DEFAULT TEMPLATES, per "we ship the default templates". */
@@ -110,6 +112,35 @@ export interface EventEntriesListViewProps {
   signInHref?: string;
   /** Offered on the empty state, when the event is still open. */
   participateHref?: string;
+  /**
+   * ── INLINE EDIT / DELETE ON THE CARD ──────────────────────────────────────
+   *
+   * Owner, 2026-11-10: *"allow users who have already added entries to see the
+   * edit their entry option … the user can delete their entries as well … for
+   * admin accounts show inline options to directly edit the entries or the
+   * cards or delete the entries"*.
+   *
+   * Which cards get controls is decided per ROW by `entry.mine` and per
+   * RESPONSE by `initialData.canModerate` — both server-resolved, and both
+   * re-resolved by the PATCH/DELETE routes. This flag only says whether the
+   * host wants the affordance at all (a read-only embed may not), and defaults
+   * to `true` because an entrant who cannot manage their own entry is the
+   * defect being fixed.
+   */
+  allowInlineEdit?: boolean;
+  /**
+   * This event's per-entry media caps, straight off its document — so the edit
+   * form offers the same slots and enforces the same rules as the submit form.
+   *
+   * ⚠ Unset is NOT "no media". `resolveEntryMediaLimits` fills every missing
+   * field from the PLATFORM default, which includes `requireImage: true`.
+   */
+  entryMedia?: EventEntryMediaLimits;
+  /** Only used to derive the SEO filename the media host stamps on an upload. */
+  eventTitle?: string;
+  /** Media proxy endpoints on THIS host. Strings — a server page may pass them. */
+  signEndpoint?: string;
+  finalizeEndpoint?: string;
   labels?: EventEntriesListLabels;
   className?: string;
 }
@@ -133,6 +164,11 @@ export function EventEntriesListView({
   canVote,
   signInHref,
   participateHref,
+  allowInlineEdit = true,
+  entryMedia,
+  eventTitle,
+  signEndpoint,
+  finalizeEndpoint,
   labels,
   className = "",
 }: EventEntriesListViewProps) {
@@ -185,6 +221,62 @@ export function EventEntriesListView({
     },
     [busy, data.page, data.pageSize, eventId],
   );
+
+  /*
+   * ── AFTER AN INLINE EDIT: PATCH THE ROW IN PLACE ──────────────────────────
+   *
+   * 🛑 Not a refetch. The server has already accepted the change, and a refetch
+   * would re-run the ranked read — on a contest ranked by likes, an unrelated
+   * vote landing between the save and the refetch would REORDER the gallery
+   * under the person who just pressed Save, which reads as the edit having
+   * moved someone else's entry. Patching the one row shows exactly the change
+   * that was made and nothing else.
+   *
+   * ⚠ `rank`, `likes` and `total` are deliberately untouched: nothing about an
+   * edit changes them, and recomputing a rank here would be a second owner of
+   * the ranking rule (see `entry-gallery.ts`).
+   */
+  const applyEntryPatch = useCallback(
+    (entryId: string, patch: Pick<PublicEventEntryItem, "media" | "note">) => {
+      setData((current) => ({
+        ...current,
+        items: current.items.map((item) =>
+          item.id === entryId
+            ? { ...item, media: patch.media, ...(patch.note ? { note: patch.note } : { note: undefined }) }
+            : item,
+        ),
+      }));
+      setLightbox(null);
+    },
+    [],
+  );
+
+  /*
+   * ── AFTER A DELETE: DROP THE ROW AND CORRECT THE TOTAL ────────────────────
+   *
+   * 🛑 `total` is decremented here too, and that is the point of the whole
+   * stats fix: the number above the gallery and the rows inside it must agree.
+   * The server has already decremented `event.stats` (floored at zero) in the
+   * same request, so this is the client half of one change rather than an
+   * optimistic guess.
+   *
+   * ⚠ The page is NOT re-paginated. Deleting the last row of page 3 leaves an
+   * empty page 3 rather than silently jumping the viewer somewhere else; the
+   * pager is still there and page 2 is one click away. Jumping would lose the
+   * place of a moderator working through a gallery.
+   */
+  const dropEntry = useCallback((entryId: string) => {
+    setData((current) => {
+      const items = current.items.filter((item) => item.id !== entryId);
+      const removed = items.length !== current.items.length;
+      return {
+        ...current,
+        items,
+        total: removed ? Math.max(0, current.total - 1) : current.total,
+      };
+    });
+    setLightbox(null);
+  }, []);
 
   const lightboxEntry = useMemo(
     () => data.items.find((item) => item.id === lightbox?.entryId),
@@ -305,8 +397,23 @@ export function EventEntriesListView({
                 <Text size="sm" weight="semibold" truncate>
                   {entrant}
                 </Text>
+                {/*
+                  ── 🛑 THE NOTE. Owner, 2026-11-10: *"where is the 100 words
+                  text?"* ────────────────────────────────────────────────────
+                  This branch has been here since the gallery shipped and had
+                  never once been reached, because NOTHING COULD PRODUCE A
+                  NOTE: `note` was accepted by the POST schema, stored by
+                  `enterEvent` and projected by `entry-gallery`, and the
+                  participate form had no field for it at all. The missing text
+                  was a missing INPUT, three layers away from the component
+                  that was blamed for not rendering it.
+
+                  `truncate={3}` rather than 2: 100 words is a paragraph, and
+                  the card is the surface most visitors read. The full text is
+                  on the entry's own page and in the lightbox caption.
+                */}
                 {entry.note ? (
-                  <Text size="xs" color="muted" truncate={2}>
+                  <Text size="xs" color="muted" truncate={3}>
                     {entry.note}
                   </Text>
                 ) : null}
@@ -339,6 +446,36 @@ export function EventEntriesListView({
                     </TextLink>
                   ) : null}
                 </Row>
+
+                {/*
+                  ── 🛑 INLINE, ON THE CARD ──────────────────────────────────
+                  Rendered for the entry's OWNER (`entry.mine`) and for a
+                  moderator (`data.canModerate`, which resolves
+                  `admin:event-entries:write` through the permission registry —
+                  never a role string). Both are server-resolved HINTS: the
+                  PATCH and DELETE routes re-resolve the same two gates against
+                  the stored document, because a hidden button is not a
+                  permission.
+
+                  A signed-out visitor gets `mine: false` on every row and
+                  `canModerate: false`, so neither control exists for them —
+                  absent, not disabled.
+                */}
+                {allowInlineEdit && (entry.mine || data.canModerate) ? (
+                  <Div className="pt-2">
+                    <EntryInlineActions
+                      eventId={eventId}
+                      entry={entry}
+                      canModerate={data.canModerate}
+                      {...(entryMedia ? { entryMedia } : {})}
+                      eventTitle={eventTitle ?? ""}
+                      {...(signEndpoint ? { signEndpoint } : {})}
+                      {...(finalizeEndpoint ? { finalizeEndpoint } : {})}
+                      onSaved={(patch) => applyEntryPatch(entry.id, patch)}
+                      onDeleted={() => dropEntry(entry.id)}
+                    />
+                  </Div>
+                ) : null}
               </BaseListingCard.Info>
             </BaseListingCard>
           );

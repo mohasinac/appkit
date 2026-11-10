@@ -988,9 +988,68 @@ export function checkEntryMedia(
 /** How many entries one participant may submit. Platform default: 1. */
 export const DEFAULT_ENTRY_LIMIT = 1;
 
-/** This event's per-participant entry limit. */
+/**
+ * The PLATFORM ceiling on `entryLimit` — owner, 2026-11-10: *"a user can
+ * submit only 1 entry or max 5 entries based on the value set by the event
+ * instance"*.
+ *
+ * 🛑 A named platform constant, NOT a number typed into a form or a route. The
+ * per-event CHOICE is `event.entryLimit`; this is the ceiling the platform
+ * imposes on that choice, and it is the same object as the `platform.disabled`
+ * half of CLAUDE.md's config-precedence rule — an event may pick any value
+ * inside it and cannot exceed it.
+ *
+ * ⚠ A stored `entryLimit` ABOVE this clamps rather than throwing. Newer config
+ * against an older deploy must not take a public contest page down, and
+ * clamping errs toward refusing an extra entry — the recoverable direction.
+ */
+export const ENTRY_LIMIT_MAX = 5;
+
+/**
+ * This event's per-participant entry limit, clamped to the platform ceiling.
+ *
+ * 🛑 ONE owner for this number. The write path (`enterEvent`), the participate
+ * form, the slot allocator in `createEntry` and the inline card controls all
+ * call this — a second expression anywhere is how a form offers an entry the
+ * server then refuses.
+ */
 export function resolveEntryLimit(entryLimit?: number): number {
-  return typeof entryLimit === "number" && entryLimit > 0
-    ? entryLimit
-    : DEFAULT_ENTRY_LIMIT;
+  if (typeof entryLimit !== "number" || !Number.isFinite(entryLimit)) {
+    return DEFAULT_ENTRY_LIMIT;
+  }
+  const floored = Math.floor(entryLimit);
+  if (floored < 1) return DEFAULT_ENTRY_LIMIT;
+  return Math.min(floored, ENTRY_LIMIT_MAX);
+}
+
+/**
+ * The entrant's own words — the "~100 word note" the owner asked for.
+ *
+ * 🛑 ONE owner for the cap, because there are now THREE callers: the submit
+ * schema, the edit route, and the form that counts words as you type. The
+ * number used to live only in a `.refine()` inside the POST route's zod schema,
+ * which is why no form could display it.
+ *
+ * ⚠ Words, not characters — that is how the rule was written. The character
+ * bound is a separate backstop against one pathological "word" and is enforced
+ * by the request schemas, which also have to bound the document.
+ */
+export const ENTRY_NOTE_MAX_WORDS = 100;
+
+/** Words in a note, by the same split the cap is enforced with. */
+export function countNoteWords(note: string | undefined): number {
+  return (note ?? "").split(/\s+/).filter(Boolean).length;
+}
+
+/**
+ * Check a note against the word cap. Returns the reason, or `null` to pass.
+ *
+ * A string rather than a boolean for the same reason `checkEntryMedia` returns
+ * one: the caller shows it to the participant.
+ */
+export function checkEntryNote(note: string | undefined): string | null {
+  if (!note) return null;
+  return countNoteWords(note) > ENTRY_NOTE_MAX_WORDS
+    ? `Keep it to ${ENTRY_NOTE_MAX_WORDS} words`
+    : null;
 }

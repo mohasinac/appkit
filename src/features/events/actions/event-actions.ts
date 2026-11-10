@@ -3,6 +3,15 @@ import {
   checkEntryMedia,
   resolveEntryLimit,
 } from "../schemas/firestore";
+/*
+ * The event's own entry FORM — resolved from the document, never from its
+ * type. See `../schemas/entry-form.ts` for the three `event.type ===`
+ * comparisons this replaced and why only `required` used to be enforced here.
+ */
+import {
+  checkEntryFormResponses,
+  resolveEntryFormFields,
+} from "../schemas/entry-form";
 /**
  * Event Domain Actions (appkit/features/events)
  *
@@ -760,18 +769,48 @@ export async function enterEvent(
     }
   }
 
-  if (
-    (event.type === "survey" || event.type === "feedback") &&
-    event[`${event.type}Config` as "surveyConfig" | "feedbackConfig"]
-  ) {
-    const config =
-      event[`${event.type}Config` as "surveyConfig" | "feedbackConfig"]!;
-    const formFields = "formFields" in config ? (config as any).formFields : [];
-    for (const field of formFields) {
-      if (field.required && !input.formResponses?.[field.id]) {
-        throw new ValidationError(`Required: ${field.label}`);
-      }
-    }
+  /*
+   * ── THE EVENT'S OWN ENTRY FORM, enforced on the SERVER ──────────────────
+   *
+   * 🛑 NO `event.type ===` HERE ANY MORE, and the removal is the point.
+   *
+   * This block used to read:
+   *
+   *     if ((event.type === "survey" || event.type === "feedback") && …) {
+   *       const formFields = …;
+   *       for (const field of formFields) {
+   *         if (field.required && !input.formResponses?.[field.id]) …
+   *       }
+   *     }
+   *
+   * Two defects in four lines, both measured:
+   *
+   *  1. **Type-gated.** An event that is not a survey or a feedback form could
+   *     not have a form at all — on the server OR in the UI — even though the
+   *     field definition, the renderer, the per-field validator, the admin
+   *     BUILDER and the `formResponses` storage bag all already existed. Owner,
+   *     2026-11-10: *"make them dynamic like how the user can set them up per
+   *     event — different forms"*. The machinery was there; three `type ===`
+   *     comparisons were what made it a survey feature.
+   *  2. **Only `required` was re-checked.** `minLength`, `maxLength`, `min`,
+   *     `max` and `pattern` are all authorable in `FormFieldBuilder` and were
+   *     enforced by the CLIENT alone — so a direct POST wrote whatever it
+   *     liked past every one of them. A form that disables a button is not a
+   *     rule; this is the write path, so it is where the rules have to hold.
+   *
+   * `resolveEntryFormFields` reads `entryForm.fields` first and falls back to
+   * the two legacy per-type keys, so every stored survey and feedback event
+   * behaves exactly as before. `checkEntryFormResponses` is the SAME function
+   * the participate form calls, so the message a participant sees before
+   * submitting and the refusal they would get are identical by construction.
+   */
+  const entryFormFields = resolveEntryFormFields(event);
+  if (entryFormFields.length > 0) {
+    const formProblem = checkEntryFormResponses(
+      entryFormFields,
+      input.formResponses,
+    );
+    if (formProblem) throw new ValidationError(formProblem);
   }
 
   /*
