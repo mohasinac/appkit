@@ -78,6 +78,8 @@ export type {
 } from "./hooks/useInlineRowEdit";
 
 // Form state preservation in URL (S-STORE-CROSS-C)
+export { useFormDraft, FORM_DRAFT_DEFAULT_TTL_MS, FORM_DRAFT_DEFAULT_MAX_BYTES } from "./hooks/useFormDraft";
+export type { UseFormDraftOptions, UseFormDraftResult } from "./hooks/useFormDraft";
 export { useFormStatePreservation } from "./hooks/useFormStatePreservation";
 export type { FormStatePreservationOptions } from "./hooks/useFormStatePreservation";
 

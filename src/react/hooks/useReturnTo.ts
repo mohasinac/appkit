@@ -38,6 +38,7 @@ import { useEffect, useState } from "react";
 import {
   browserPageUrl,
   withReturnTo,
+  withReturnToOnHandoff,
   RETURN_TO_PARAM,
 } from "../../next/routing/return-to";
 import { ROUTES } from "../../next/routing/route-map";
@@ -95,6 +96,26 @@ export function useReturnTo(
 ): string {
   const currentUrl = useCurrentPageUrl();
   return withReturnTo(signInHref, currentUrl, param);
+}
+
+/**
+ * A href that carries `?next=<this page>` **only if it leaves this origin**.
+ *
+ * For destinations that are a sign-in link on one host and a local page on
+ * another — `profileHref` is the live example, and the one the first `?next=`
+ * sweep missed on all three of its surfaces. See `withReturnToOnHandoff` for
+ * the measurement and for why "does this leave the origin?" is the question
+ * that generalises, rather than "is this path `/auth`?".
+ *
+ * Same-origin and relative hrefs pass through byte-identical, so adopting this
+ * on a prop cannot change any URL on a deployment that serves that prop itself.
+ */
+export function useHandoffHref(
+  href: string,
+  param: string = RETURN_TO_PARAM,
+): string {
+  const currentUrl = useCurrentPageUrl();
+  return withReturnToOnHandoff(href, currentUrl, param);
 }
 
 /**

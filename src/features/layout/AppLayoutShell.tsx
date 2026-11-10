@@ -16,7 +16,7 @@ const ROLE_DOT_BG_CLASS: Record<string, string> = {
 };
 import { useTheme } from "../../_internal/client/theme";
 import { useAuth } from "../../react/contexts/SessionContext";
-import { useReturnTo } from "../../react/hooks/useReturnTo";
+import { useReturnTo, useHandoffHref } from "../../react/hooks/useReturnTo";
 import { useVisualViewportInset } from "../../react/hooks/useVisualViewportInset";
 import { useListingTypeFlags } from "../../react/hooks/useListingTypeFlags";
 import { isBuyerUser, isSellerUser, holdsRole } from "../auth/role-predicates";
@@ -1123,6 +1123,32 @@ export function AppLayoutShell({
   const registerHrefWithReturn = useReturnTo(registerHref ?? "");
 
   /*
+   * 🛑 `profileHref` IS A SIGN-IN LINK, and that is why the first sweep missed
+   * it on all three of its surfaces.
+   *
+   * Measured in a browser on a live events host, 2026-11-10, after hydration:
+   * seven links pointed at the identity origin and exactly three were bare —
+   * every one of them this prop. It is never called a sign-in link, and twelve
+   * lines of `TitleBarLayout` render it with `aria-label="Sign in"` when there
+   * is no user; on a host that serves no profile page of its own it resolves to
+   * the identity app's ROOT, which serves the sign-in screen. So the one icon a
+   * signed-out mobile visitor taps to sign in was the one link that did not say
+   * where to come back to.
+   *
+   * 🛑 `useHandoffHref`, not `useReturnTo`. This prop is LOCAL on the shop
+   * (`/user/profile`) and cross-origin only on the satellite hosts, so the
+   * condition is "does following it leave this origin?" rather than "is the
+   * path `/auth`?" — a same-origin or relative value passes through
+   * byte-identical and the shop's URLs do not move.
+   *
+   * ⚠ Flagged, not fixed here, and it belongs to the auth lane: the identity
+   * app's root currently renders the sign-in FORM to a visitor who is already
+   * signed in, rather than their account. `?next=` makes that recoverable (they
+   * land back here) but it does not make it right.
+   */
+  const profileHrefWithReturn = useHandoffHref(profileHref);
+
+  /*
    * 🛑 THE SIDEBAR IS A FOURTH SURFACE FOR THE SAME TWO LINKS, and it was the
    * one a naive sweep misses.
    *
@@ -1201,7 +1227,7 @@ export function AppLayoutShell({
       sidebarPrimaryActions={sidebarActionsWithReturn}
       user={user}
       activeHref={pathname ?? ""}
-      profileHref={profileHref}
+      profileHref={profileHrefWithReturn}
       userOrdersHref={userOrdersHref}
       userWishlistHref={userWishlistHref}
       userSettingsHref={userSettingsHref}
@@ -1282,7 +1308,7 @@ export function AppLayoutShell({
             messagesHref={messagesHref}
             unreadMessageCount={unreadMessageCount}
             userId={userId}
-            profileHref={profileHref}
+            profileHref={profileHrefWithReturn}
             loginHref={loginHrefWithReturn}
             registerHref={registerHrefWithReturn || undefined}
             user={user}
@@ -1319,7 +1345,7 @@ export function AppLayoutShell({
                 <SidebarUserHeader
                   user={user}
                   onClose={() => setSidebarOpen(false)}
-                  profileHref={profileHref}
+                  profileHref={profileHrefWithReturn}
                 />
               ) : (
                 <SidebarGuestHeader sidebarTitle={sidebarTitle} onClose={() => setSidebarOpen(false)} />
@@ -1436,7 +1462,7 @@ export function AppLayoutShell({
             shopHref={shopHref}
             cartHref={cartHref}
             wishlistHref={wishlistHref}
-            profileHref={profileHref}
+            profileHref={profileHrefWithReturn}
             loginHref={loginHrefWithReturn}
             onSearchToggle={toggleSearch}
             navItems={navItems}

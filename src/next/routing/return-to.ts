@@ -153,6 +153,61 @@ export function withReturnTo(
 }
 
 /**
+ * Attach `?next=` only when the href HANDS THE VISITOR TO ANOTHER DEPLOYMENT.
+ *
+ * ## 🛑 Why the sweep above was incomplete, measured
+ *
+ * The first pass asked *"is this a sign-in link?"* and answered it from the
+ * shop-shaped path (`isSignInPath`). That found the links whose LABEL says
+ * "Sign in" and missed the ones whose label does not. Measured in a real
+ * browser on `events.<domain>/<id>/participate`, 2026-11-10, after hydration:
+ *
+ * ```
+ * auth links: 7 total — 4 carry ?next=, 3 are BARE
+ *   bare ×3 → https://auth.<domain>/        ← profileHref
+ * ```
+ *
+ * All three were `profileHref`. It is not called a sign-in link anywhere, and
+ * `TitleBarLayout` renders it with `aria-label="Sign in"` when there is no
+ * user — so for a signed-out visitor it IS the sign-in link, and on these
+ * hosts it points at the identity app's root, which serves the sign-in screen.
+ * Clicking it signed you in and dropped you on the provider's default.
+ *
+ * So the question that actually generalises is not "is this /auth?" but **"does
+ * following this link leave this origin?"** A link to another origin is a
+ * handoff: whatever is there, the visitor's intent is to come back. A link
+ * within this origin needs nothing — the browser never unloaded the app, and
+ * stamping one would be a silent change to a URL nobody asked to change (the
+ * shop's `profileHref` is its own local `/user/profile`).
+ *
+ * @param href The destination, already resolved for this host. `""` → `""`.
+ * @param currentUrl The ABSOLUTE URL of the page the visitor is on.
+ * @returns `href` with `?next=`, or `href` untouched when it is relative, when
+ *   it is same-origin, or when the current URL is unknown (the SSR pass).
+ */
+export function withReturnToOnHandoff(
+  href: string,
+  currentUrl: string | null | undefined,
+  param: string = RETURN_TO_PARAM,
+): string {
+  if (!href) return "";
+
+  const here = parseAbsolute(currentUrl);
+  /*
+   * A relative href is served by THIS deployment, so there is no handoff and
+   * nothing to return from. Checked before `here` so an unparseable current URL
+   * and a local destination are not conflated — they have the same outcome but
+   * for different reasons, and only one of them changes once mounted.
+   */
+  const there = parseAbsolute(href);
+  if (!there) return href;
+  if (!here) return href;
+  if (here.origin === there.origin) return href;
+
+  return withReturnTo(href, currentUrl, param);
+}
+
+/**
  * The absolute URL of the page the browser is on, or `null` on the server.
  *
  * Deliberately not a React hook so a non-React caller (an event handler, a

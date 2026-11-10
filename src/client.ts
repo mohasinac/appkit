@@ -188,6 +188,8 @@ export type {
   InlineToggleResult,
   InlineTextResult,
 } from "./react/hooks/useInlineRowEdit";
+export { useFormDraft, FORM_DRAFT_DEFAULT_TTL_MS, FORM_DRAFT_DEFAULT_MAX_BYTES } from "./react/hooks/useFormDraft";
+export type { UseFormDraftOptions, UseFormDraftResult } from "./react/hooks/useFormDraft";
 export { useFormStatePreservation } from "./react/hooks/useFormStatePreservation";
 export type { FormStatePreservationOptions } from "./react/hooks/useFormStatePreservation";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
