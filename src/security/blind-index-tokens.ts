@@ -43,7 +43,7 @@
  * @tag layer:shared
  * @tag pattern:none
  * @tag access:server
- * @tag consumers:UserRepository,PayoutRepository,AddressesRepository,backfill-blind-index
+ * @tag consumers:UserRepository,PayoutRepository,AddressesRepository,pii-backfill,seed-cli
  * @tag sideEffects:none
  */
 
@@ -148,9 +148,9 @@ export const BLIND_INDEX_KEY_VERSION_FIELD = "blindIndexKeyVersion";
  * two rotations apart.
  *
  * Read from `PII_HMAC_KEY_VERSION` so the repository write path (which runs
- * inside the Next.js/Functions runtime) and `backfill-blind-index.mjs`
- * (which runs as a standalone script before `appkit/dist` is necessarily
- * current) agree without importing from each other.
+ * inside the Next.js/Functions runtime), `scripts/seed-cli.mjs` and
+ * `scripts/pii-backfill.mjs` (standalone scripts) all agree without importing
+ * from each other.
  */
 export const CURRENT_BLIND_INDEX_KEY_VERSION = Number(
   (typeof process !== "undefined" ? process.env?.PII_HMAC_KEY_VERSION : undefined) ?? "1",

@@ -291,6 +291,46 @@ const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBank
   buildTokensIndex, BLIND_INDEX_KEY_VERSION_FIELD, CURRENT_BLIND_INDEX_KEY_VERSION } = appkitServer;
 
 /*
+ * ── 🛑 THE PII POLICY REGISTRY — read, never re-declared ─────────────────
+ *
+ * This file used to carry its OWN copies of what the repositories declare: a
+ * module-local `PII_MAP` inside `encryptSeedPii`, a `TOKENS_INDEX_MAP`, and
+ * two bespoke blocks (`loadUsers`, `addresses`) that encrypted by hand. All
+ * three drifted, and the drift produced two live defects measured in dev-db
+ * on 2026-11-10:
+ *
+ *   · `PII_MAP` omitted `supportTickets`      -> userEmail PLAINTEXT on 2/2
+ *   · `TOKENS_INDEX_MAP` omitted `users`      -> nameTokensIndex ABSENT on 20/20
+ *     and `addresses`                            and on 3/3
+ *
+ * The repository write hooks were never broken — `UserRepository.
+ * applyWriteHooks` returns a 4-digest `nameTokensIndex` when called directly.
+ * Every missing index was missing because THIS FILE writes straight to
+ * Firestore and never ran it. The giveaway was `payouts`: the one collection
+ * the old map covered is the one collection whose token index is present.
+ *
+ * A RELATIVE dist path, like `importSeedModule` above and for the same reason
+ * — it must be THIS repo's registry, not whatever an installed copy holds.
+ */
+const PII_REGISTRY_PATH = resolve(__dirname, "../dist/security/pii-registry.js");
+let piiRegistry;
+try {
+  piiRegistry = await import(pathToFileURL(PII_REGISTRY_PATH).href);
+} catch (err) {
+  console.error(
+    "[31m✗ Could not load the PII policy registry.[0m\n" +
+      `  Tried: ${PII_REGISTRY_PATH}\n` +
+      `  ${err?.code ?? err?.message ?? err}\n\n` +
+      "  It decides which fields are encrypted and which are blind-indexed, so a\n" +
+      "  load without it would write PII in cleartext. Build appkit first:\n\n" +
+      "      npm --prefix ./appkit run build\n",
+  );
+  process.exit(2);
+}
+const { piiPolicyFor, PII_POLICY_VERSION } = piiRegistry;
+console.log(`✓ PII policy registry v${PII_POLICY_VERSION}`);
+
+/*
  * ── `isdev` — mark everything this run writes to a NON-PRODUCTION database ──
  *
  * Owner, 2026-11-10: "for each dev seed add a boolean flag called isdev".
@@ -359,11 +399,19 @@ const {
   MODEL_COMPOSITION_COLLECTION,
   TESTER_CHECKLIST_ITEM_COLLECTION,
   TESTER_CHECKLIST_RESPONSE_COLLECTION,
-  // PII field/index constants (plain data, still in the main barrel — the
-  // crypto functions themselves come from appkitServer above)
-  USER_PII_FIELDS, USER_PII_INDEX_MAP,
-  ADDRESS_PII_FIELDS, ORDER_PII_FIELDS, BID_PII_FIELDS, PAYOUT_PII_FIELDS,
-  REVIEW_PII_FIELDS, OFFER_PII_FIELDS, EVENT_ENTRY_PII_FIELDS,
+  /*
+   * 🛑 The nine `*_PII_FIELDS` / `*_PII_INDEX_MAP` imports that used to sit
+   * here are GONE. They were destructured into this file and then re-assembled
+   * into a module-local `PII_MAP` that omitted `supportTickets` and a
+   * `TOKENS_INDEX_MAP` that omitted `users` and `addresses` — i.e. the import
+   * list was complete and the USE of it was not, which is the failure mode an
+   * import list cannot protect against.
+   *
+   * `encryptSeedPii` now reads `piiPolicyFor(collection)` from the registry, so
+   * adding a collection to the platform's PII policy reaches the seeder with no
+   * edit here at all. Leaving the constants imported-but-unused would have left
+   * a grep for `USER_PII_FIELDS` in this file landing on a dead symbol.
+   */
   // misc
   generateFAQId,
   /*
@@ -903,63 +951,99 @@ async function purgeCollection(path) {
 }
 
 /*
- * 🛑 `TOKENS_INDEX_MAP` holds ONLY `payouts`, and that is a measured fact
- * about this file, not an oversight.
+ * 🛑 `products` IS NOT IN THE REGISTRY, AND THAT IS A FLAGGED DIVERGENCE.
  *
- * `encryptSeedPii` is called from exactly one place — `loadGeneric`'s
- * per-doc loop. `users` and `addresses` are seeded by their OWN dedicated
- * loaders (`loadUsers`, the addresses block near line 1029) that write
- * straight to Firestore and never call this function — so a `users`/
- * `addresses` entry here would be dead code, silently unreachable, which is
- * worse than no entry: it would read as "handled" to the next person who
- * greps for it.
+ * This seeder encrypts `sellerName`/`sellerEmail` on products while
+ * `ProductRepository` declares NO `piiFields` at all — so a SEEDED product
+ * carries ciphertext and an app-created one carries plaintext, in the same
+ * collection, with nothing to tell them apart.
  *
- * It is also the right scope rather than a gap, because `users` and
- * `addresses` are PRESERVE-tier in the tester harness — never wiped, never
- * reseeded — so the only two things that can write their `*TokensIndex`
- * are a REAL write (covered by `UserRepository`/`AddressesRepository`'s
- * `buildTokensIndexFor`, wired separately) and the one-time bootstrap seed
- * load `appkit-seed load --collections users` documented in CLAUDE.md's
- * § "Claude Tester" — which `backfill-blind-index.mjs` exists to catch up
- * after. `payouts` has no such safety net: it is SEED_TRANSACTIONAL, so it
- * cascades and RESEEDS on every tester run that touches its store, through
- * exactly this function — which is why it is the one entry that matters.
+ * It is kept here rather than moved into the registry because a registry
+ * entry would make `pii-backfill.mjs` encrypt those fields on every existing
+ * product, and a product card renders the seller name. Encrypting a field the
+ * storefront displays is a visible outage, not a security fix. Measured
+ * 2026-11-10: no sampled product document carries either field, so this map
+ * is currently inert — which is exactly why it must not be "tidied" into the
+ * registry by someone who checks only that the tests still pass.
+ *
+ * Resolving it properly means deciding whether a seller's name is PII on a
+ * public listing at all, then doing it in ONE place. Flagged, not fixed.
  */
-const TOKENS_INDEX_MAP = {
-  payouts: { field: "sellerTokensIndex", from: ["sellerName", "sellerEmail"] },
+const SEEDER_ONLY_PII_FIELDS = {
+  products: ["sellerName", "sellerEmail"],
 };
 
+/**
+ * Apply this collection's PII policy to one seed document.
+ *
+ * 🛑 Called by EVERY loader now, including `loadUsers` and the two address
+ * blocks, which each used to do their own partial version of this. There is
+ * exactly one place where a seeded document is encrypted and indexed, and it
+ * reads the same registry the repositories do.
+ *
+ * Three writers, in the order `BaseRepository.applyWriteHooks` runs them:
+ *   1. `encryptPiiFields` — encrypts each listed field and writes the DERIVED
+ *      `${field}Index` sibling for every top-level one.
+ *   2. `piiIndicesFor(data, indexMap)` — the MAPPED index names, hashed from
+ *      the PLAINTEXT `data`. Both arguments read `data`, never `result`:
+ *      hashing ciphertext yields an index nothing can look up.
+ *   3. `buildTokensIndex` — the whole-word `*TokensIndex`, also from plaintext.
+ *
+ * Returning indices from `piiIndicesFor` ONLY (never `{...source, ...indices}`)
+ * is what stops the plaintext being spread back over the ciphertext — the bug
+ * that put `payouts.sellerEmail` and `reviews.userName` in the clear.
+ */
 function encryptSeedPii(collection, data) {
-  const PII_MAP = {
-    orders: ORDER_PII_FIELDS,
-    bids: BID_PII_FIELDS,
-    payouts: PAYOUT_PII_FIELDS,
-    reviews: REVIEW_PII_FIELDS,
-    products: ["sellerName", "sellerEmail"],
-    offers: OFFER_PII_FIELDS,
-    eventEntries: EVENT_ENTRY_PII_FIELDS,
-  };
-  const fields = PII_MAP[collection];
+  const policy = piiPolicyFor(collection);
+  const fields = policy?.fields ?? SEEDER_ONLY_PII_FIELDS[collection];
+
   let result = fields ? encryptPiiFields(data, [...fields]) : { ...data };
+
+  if (policy && Object.keys(policy.indexMap).length > 0) {
+    result = { ...result, ...piiIndicesFor(data, policy.indexMap) };
+  }
+
   if (collection === "payouts" && result.bankAccount) {
     result.bankAccount = encryptPayoutBankAccount(result.bankAccount);
   }
 
   /*
-   * 🛑 THIS IS WHAT MAKES `payouts` SURVIVE A TESTER WIPE WITH A WORKING
-   * SEARCH INDEX. `payouts` is SEED_TRANSACTIONAL in the tester harness —
-   * it cascades on `storeId` whenever its store is wiped, then gets
-   * RE-SEEDED by exactly this function. Without this block, the reseeded
-   * documents would carry ciphertext and no `sellerTokensIndex` at all,
-   * silently undoing a one-shot backfill on the very next tester run.
+   * 🛑 THIS IS WHAT MAKES A RESEEDED ROW SEARCHABLE.
+   *
+   * `payouts` is SEED_TRANSACTIONAL in the tester harness — it cascades on
+   * `storeId` whenever its store is wiped, then gets RE-SEEDED through here.
+   * Without this block the reseeded documents would carry ciphertext and no
+   * `sellerTokensIndex`, silently undoing a backfill on the next tester run.
+   *
+   * `users` and `addresses` are PRESERVE-tier and are not reseeded — but they
+   * ARE bootstrap-loaded, and the previous version of this file left them out
+   * on the argument that `backfill-blind-index.mjs` would catch up. That
+   * script hard-required a `firebase-admin-key.json` which does not exist in
+   * this repo and targeted `admin.firestore()` = PRODUCTION, so it had never
+   * run once. **A safety net nobody can run is not a safety net.** It is
+   * deleted; `scripts/pii-backfill.mjs` replaces it, reads this same registry,
+   * takes `--database`, and is dry-run by default.
    */
-  const tokensIndex = TOKENS_INDEX_MAP[collection];
-  if (tokensIndex) {
-    const values = tokensIndex.from.map((f) => data[f]).filter((v) => typeof v === "string");
+  if (policy?.tokensIndex) {
+    const values = policy.tokensIndex.from
+      .map((f) => data[f])
+      .filter((v) => typeof v === "string" && v);
     if (values.length > 0) {
-      result[tokensIndex.field] = buildTokensIndex(...values);
+      result[policy.tokensIndex.field] = buildTokensIndex(...values);
       result[BLIND_INDEX_KEY_VERSION_FIELD] = CURRENT_BLIND_INDEX_KEY_VERSION;
     }
+  }
+
+  /*
+   * The nested-object encryptors. `encryptPiiFields` cannot reach these —
+   * they are whole objects with their own field lists, which is why the
+   * registry records them by NAME rather than as paths.
+   */
+  if (policy?.nestedEncryptors?.includes("encryptPayoutDetails") && result.payoutDetails) {
+    result.payoutDetails = encryptPayoutDetails(result.payoutDetails);
+  }
+  if (policy?.nestedEncryptors?.includes("encryptShippingConfig") && result.shippingConfig) {
+    result.shippingConfig = encryptShippingConfig(result.shippingConfig);
   }
 
   return result;
@@ -1159,13 +1243,17 @@ async function loadUsers(seed, stats) {
        * hashed from plaintext and the encryption must not see a hashed value,
        * so nothing may be added to `docData` after that pair runs.
        */
+      /*
+       * 🛑 `encryptSeedPii`, not a hand-rolled copy of it.
+       *
+       * This block used to inline `encryptPiiFields(plain, USER_PII_FIELDS)` +
+       * `piiIndicesFor(plain, USER_PII_INDEX_MAP)` and nothing else — which is
+       * precisely why `nameTokensIndex` was absent on 20 of 20 user documents
+       * and the user CMS's name search returned 0 rows for every one of them.
+       * The policy lives in the registry; this loader applies it.
+       */
       const plain = stripUndefined(stampSeedPurpose("users", { ...u }));
-      let docData = {
-        ...encryptPiiFields(plain, [...USER_PII_FIELDS]),
-        ...piiIndicesFor(plain, USER_PII_INDEX_MAP),
-      };
-      if (docData.payoutDetails) docData.payoutDetails = encryptPayoutDetails(docData.payoutDetails);
-      if (docData.shippingConfig) docData.shippingConfig = encryptShippingConfig(docData.shippingConfig);
+      const docData = encryptSeedPii("users", plain);
       await docRef.set(docData, { merge: true });
       stats.created++;
       if (VERBOSE) console.log(`    + ${uid}`);
@@ -1611,9 +1699,11 @@ async function cmdLoad() {
           try {
             const { id, ownerType, ownerId, ...data } = d;
             if (!id || !ownerType || !ownerId) { stats.errors++; continue; }
-            const payload = encryptPiiFields(
+            // `encryptSeedPii`, so this row gets the `nameTokensIndex` the
+            // repository's buildTokensIndexFor writes — absent on 3/3 before.
+            const payload = encryptSeedPii(
+              "addresses",
               stripUndefined(stampSeedPurpose("addresses", { ownerType, ownerId, ...data }, id)),
-              [...ADDRESS_PII_FIELDS],
             );
             await db.collection("addresses").doc(id).set(payload, { merge: true });
             stats.created++;
@@ -1635,11 +1725,19 @@ async function cmdLoad() {
              * stamping under the write target would make the two disagree the
              * day one of them changes.
              */
-            const payload = encryptPiiFields(
+            /*
+             * The POLICY is keyed on the WRITE TARGET (`addresses`), while the
+             * seed PURPOSE is keyed on the seed key (`storeAddresses`). Both
+             * resolve the same today; they are different lookups and have to
+             * stay that way, because the purpose table is keyed on the seed key
+             * and the encryption policy is a property of the collection that
+             * ends up holding the bytes.
+             */
+            const payload = encryptSeedPii(
+              "addresses",
               stripUndefined(
                 stampSeedPurpose("storeAddresses", { ownerType: "store", ownerId: storeSlug, ...data }, id),
               ),
-              [...ADDRESS_PII_FIELDS],
             );
             await db.collection("addresses").doc(id).set(payload, { merge: true });
             stats.created++;

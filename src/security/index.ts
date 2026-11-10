@@ -84,7 +84,35 @@ export {
   PAYMENT_METHOD_PII_FIELDS,
   CONVERSATION_PII_FIELDS,
   MESSAGE_PII_FIELDS,
+  /*
+   * `STORE_PII_FIELDS` was missing from this barrel while every other list was
+   * here — which is why `auth`'s PII CMS transcribed `["pan"]` by hand rather
+   * than importing it. A list that cannot be imported gets copied.
+   */
+  STORE_PII_FIELDS,
 } from "./pii-schemas";
+/*
+ * The ONE PII policy registry. Pure data — no crypto, no Firestore — so it is
+ * safe in the universal barrel and readable by the seeder, the backfill tool
+ * and the auth PII CMS alike. See its header for the five copies it replaces.
+ */
+export {
+  PII_POLICIES,
+  PII_POLICY_VERSION,
+  PII_POLICY_CHANGELOG,
+  piiPolicyFor,
+  derivedIndexFieldsFor,
+  allIndexFieldsFor,
+  indexSourceFieldsFor,
+  classifyIndexField,
+  notFlatlyCheckable,
+} from "./pii-registry";
+export type {
+  PiiCollectionPolicy,
+  PiiTokensIndexSpec,
+  PiiFieldSource,
+  PiiIndexWriter,
+} from "./pii-registry";
 export {
   encryptSecret,
   decryptSecret,

@@ -20,9 +20,14 @@
  *
  * Existing rows stay plaintext until backfilled and keep reading correctly —
  * `decryptValue` passes a non-`enc:v1:` string through unchanged — so new
- * writes encrypt while old rows converge, never diverge. Add
- * `googleLinkedEmail` to the `users` target in `backfill-pii.mjs` when that
- * backfill is next run.
+ * writes encrypt while old rows converge, never diverge.
+ *
+ * ✅ No longer needs a hand-added backfill target. `scripts/pii-backfill.mjs`
+ * reads `security/pii-registry.ts`, which reads THIS constant, so a field
+ * added here is covered by the backfill with no second edit anywhere. The
+ * instruction that used to live on this line — *"add googleLinkedEmail to the
+ * `users` target in backfill-pii.mjs"* — was itself the drift: it asked a
+ * human to keep two lists in step.
  */
 export const USER_PII_FIELDS = ["email", "phoneNumber", "googleLinkedEmail"] as const;
 
