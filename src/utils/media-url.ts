@@ -23,6 +23,32 @@ export const GCS_HOST = "storage.googleapis.com";
 export const MEDIA_PROXY_PREFIX = "/media/";
 const PROXY_PREFIX = MEDIA_PROXY_PREFIX;
 
+/**
+ * Absolute base for CDN-served media, or `""` when none is configured.
+ *
+ * Read at CALL TIME, not module scope: `NEXT_PUBLIC_*` is inlined at build
+ * time in a browser bundle but a server render may be started with a
+ * different env, and a module-scope capture would freeze whichever ran first.
+ *
+ * Tolerates a bare hostname (`cdn.example.com`) because that is how the
+ * variable is documented, and refuses anything blank so a misconfigured
+ * deployment falls back to the relative path instead of emitting
+ * `https:///media/...`.
+ */
+function cdnMediaBase(): string {
+  const raw = process.env["NEXT_PUBLIC_MEDIA_HOST"]?.trim() ?? "";
+  if (!raw) return "";
+  const withScheme = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  const trimmed = withScheme.replace(/\/+$/, "");
+  // `https://` alone, or anything with no host, is a misconfiguration.
+  try {
+    if (!new URL(trimmed).host) return "";
+  } catch {
+    return "";
+  }
+  return trimmed;
+}
+
 /** Cap for any stored media reference. Matches the previous schema bound. */
 export const MEDIA_URL_MAX_LENGTH = 2048;
 
@@ -352,7 +378,39 @@ export function resolveMediaUrl(
     );
     return undefined;
   }
-  if (url.startsWith(PROXY_PREFIX)) return url;
+  /*
+   * ── SERVE BYTES FROM THE CDN, NOT THROUGH THIS APP ────────────────────
+   *
+   * Stored documents hold the host-agnostic `/media/<shortId>` form, and that
+   * must not change: it is what lets one document render on the shop, on a
+   * subdomain, and on a future client's deployment. So the HOST is applied
+   * here, at render, rather than baked into the data.
+   *
+   * With `NEXT_PUBLIC_MEDIA_HOST` set, the browser fetches the bytes straight
+   * from the CDN. Unset, this returns the relative path exactly as before and
+   * the per-app `rewrites()` proxy (driven by NEXT_PUBLIC_MEDIA_ORIGIN) serves
+   * it — so an install that has not configured a CDN behaves identically.
+   *
+   * 🛑 WHY THIS IS WORTH A CODE PATH: without it every image is a serverless
+   * function invocation plus origin transfer on whichever app rendered the
+   * page, for an asset that already answers
+   * `Cache-Control: public, max-age=86400, immutable` with a CDN cache HIT.
+   * This project was suspended once with HTTP 402 Fast Origin Transfer, and
+   * the owner watched Vercel spend climb $13 -> $17 in a day.
+   *
+   * 🛑 The two variables are NOT interchangeable and swapping them 404s every
+   * image while the page still reports 200:
+   *   NEXT_PUBLIC_MEDIA_ORIGIN — where the SERVER proxies to (API/CMS host)
+   *   NEXT_PUBLIC_MEDIA_HOST   — where the BROWSER fetches bytes (CDN host)
+   *
+   * A bare hostname is accepted and gets `https://`, because that is how the
+   * variable is documented; a blank or whitespace value must fall through
+   * rather than produce `https:///media/...`.
+   */
+  if (url.startsWith(PROXY_PREFIX)) {
+    const cdn = cdnMediaBase();
+    return cdn ? `${cdn}${url}` : url;
+  }
   if (url.startsWith(SEED_TILE_PREFIX)) return url;
   // A blob:/data: URI is only ever valid in the tab that created it (e.g. a
   // freshly-selected file preview via URL.createObjectURL, or a FileReader
