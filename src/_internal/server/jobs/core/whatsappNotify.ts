@@ -38,6 +38,27 @@ export interface WhatsAppNotifyPayload {
   templateName?: string;
   /** BCP-47 language code the template was approved in. Defaults to "en". */
   templateLanguage?: string;
+  /**
+   * Positional {{1}}, {{2}}… values for the template's body.
+   *
+   * 🛑 This has to travel per-notification, because the count is a property of
+   * the TEMPLATE and differs between them: an order-shipped template carrying
+   * courier, tracking number and an ETA needs five, a delivery confirmation
+   * needs three. The previous `[title, message]` was a two-slot shape applied
+   * to every template, so any template with a different arity was rejected by
+   * Meta — and a rejection here is a boolean `false`, indistinguishable from
+   * an outage.
+   *
+   * Falls back to `[title, message]` when absent, which is exactly the old
+   * behaviour and still correct for a two-parameter template.
+   */
+  templateParams?: string[];
+  /**
+   * Value for the template's button at index 0 when that button is dynamic —
+   * for an order-shipped template, the order id that completes the
+   * track-order URL.
+   */
+  templateButtonParam?: string;
   notificationId: string;
   phoneNumberId: string;
   accessToken: string;
@@ -54,7 +75,19 @@ export async function runWhatsAppNotify(
   payload: WhatsAppNotifyPayload,
   ctx: JobContext,
 ): Promise<JobRunResult> {
-  const { toPhone, title, message, type, templateName, templateLanguage, notificationId, phoneNumberId, accessToken } = payload;
+  const {
+    toPhone,
+    title,
+    message,
+    type,
+    templateName,
+    templateLanguage,
+    templateParams,
+    templateButtonParam,
+    notificationId,
+    phoneNumberId,
+    accessToken,
+  } = payload;
 
   /*
    * The messaging guard, applied HERE rather than inside
@@ -125,7 +158,10 @@ export async function runWhatsAppNotify(
             accessToken,
             templateName,
             languageCode: templateLanguage ?? "en",
-            bodyParams: [title, message],
+            // `[title, message]` is the historical two-slot shape, kept as the
+            // fallback so a template that genuinely takes two keeps working.
+            bodyParams: templateParams?.length ? templateParams : [title, message],
+            ...(templateButtonParam ? { buttonParam: templateButtonParam } : {}),
           })
         : await sendWhatsAppBusinessMessage({
             toPhone,

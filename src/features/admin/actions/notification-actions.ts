@@ -167,6 +167,25 @@ export interface SendNotificationInput extends NotificationCreateInput {
   /** Pre-rendered email HTML — falls back to a plain-text <p> when absent. */
   emailHtml?: string;
   /**
+   * Positional {{1}}, {{2}}… values for the WhatsApp template this type maps
+   * to. Supplied by the caller because only the caller knows the order's
+   * courier, tracking number or refund amount.
+   *
+   * 🛑 The count must match the APPROVED template exactly. Meta rejects an
+   * arity mismatch, and `sendWhatsAppTemplateMessage` reports that as a plain
+   * `false` — indistinguishable from an outage, retried three times, then
+   * recorded as a failed send with no hint that the template was the problem.
+   *
+   * Omitted, the job falls back to `[title, message]` — correct only for a
+   * two-parameter template.
+   */
+  whatsappTemplateParams?: string[];
+  /**
+   * Value for the template's dynamic button at index 0 — e.g. the order id
+   * that completes a `…/track?order={{1}}` track-order URL.
+   */
+  whatsappTemplateButtonParam?: string;
+  /**
    * The store this notification is about, for the order-lifecycle types in
    * `ORDER_GATED_TYPES`. Its WhatsApp subscription decides whether the
    * WhatsApp arm runs; absent, those types fall back to in-app + email.
@@ -499,6 +518,12 @@ export async function sendNotification(
             type,
             templateName: resolveWhatsAppTemplateName(type, creds),
             templateLanguage: creds.whatsappTemplateLanguage ?? "en",
+            ...(input.whatsappTemplateParams?.length
+              ? { templateParams: input.whatsappTemplateParams }
+              : {}),
+            ...(input.whatsappTemplateButtonParam
+              ? { templateButtonParam: input.whatsappTemplateButtonParam }
+              : {}),
             notificationId: notification.id,
             phoneNumberId,
             accessToken,
