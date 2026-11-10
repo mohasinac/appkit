@@ -24,6 +24,7 @@ import {
   resolveNotificationAudiences,
   ruleAllowsChannel,
   capDecision,
+  DEFAULT_NOTIFICATION_TIERS,
   type NotificationRule,
 } from "../../../_internal/shared/features/notifications/registry";
 import {
@@ -509,6 +510,10 @@ export async function sendNotification(
       whatsappEligible: () => true,
       prefsKeyOf: (t: string) => typeToPrefsKey[t as NotificationType],
       storeGated: (t: string) => ORDER_GATED_TYPES.has(t),
+      // Money and terminal states are exempt from caps — see the table's own
+      // note. Unlisted types stay `routine`, so a new type is droppable by
+      // default rather than silently gaining a bypass.
+      tierOf: (t: string) => DEFAULT_NOTIFICATION_TIERS[t],
     },
     settings.notificationRules ?? {},
   );
@@ -796,7 +801,22 @@ export async function dispatchNotification(
   if (audiences.includes("seller") && input.storeId) {
     try {
       const store = await storeRepository.findBySlug(input.storeId);
-      if (store?.ownerId) {
+      /*
+       * 🛑 THE SELLER'S OWN OPT-IN GATES THIS. Owner, 2026-11-10: *"the seller
+       * [in their] own dashboard has to enable it, then only they can see
+       * it."*
+       *
+       * So shipping this is safe by construction — a seller who has not
+       * enabled notifications receives nothing, and turning the code on
+       * changes nobody's experience until they choose it themselves. That is
+       * also why the gate is the STORE's flag and not an admin setting: it is
+       * the seller's inbox being spent.
+       *
+       * ⚠ Fails CLOSED. An unreadable store, a missing owner, or an unset
+       * flag all mean no send. Defaulting to "notify" on a failed read would
+       * opt every seller in via an outage.
+       */
+      if (store?.ownerId && store.whatsappNotifySubscribed === true) {
         /*
          * 🛑 `audience: "seller"` is what makes the action URL resolve to
          * `/store/orders/{id}/view` instead of the buyer's tracking page.

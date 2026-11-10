@@ -1,7 +1,7 @@
 import { normalizeError } from "../../../../errors/normalize";
 
 import { decryptPii } from "../../../../security/index";
-import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { dispatchNotification } from "../../../../features/admin/actions/notification-actions";
 import { orderRepository } from "../../../../features/orders/repository/orders.repository";
 /* Phase 7 — numbering only; the PDF renderer lives in `functions/` because
  * `pdfkit` must not enter appkit's module graph. */
@@ -166,7 +166,22 @@ export async function handleOrderStatusChange(
       trackingNumber: after.trackingNumber,
     });
 
-    await sendNotification({
+    /*
+     * `dispatchNotification`, not `sendNotification` — one event, every
+     * audience the registry says should receive it.
+     *
+     * ⚠ Until now this told ONLY the buyer. A seller learned about their own
+     * order through a separate hand-rolled path that sent a raw WhatsApp
+     * message with no in-app row, no email and no notification type — and
+     * nothing at all on a status change.
+     *
+     * 🛑 Safe to switch on: the seller arm is gated on that store's own
+     * `whatsappNotifySubscribed` flag (owner, 2026-11-10 — *"the seller [in
+     * their] own dashboard has to enable it, then only they can see it"*), so
+     * a seller who has not opted in receives nothing and nobody's experience
+     * changes until they choose it.
+     */
+    await dispatchNotification({
       userId: after.userId,
       type: config.type,
       priority: config.priority,

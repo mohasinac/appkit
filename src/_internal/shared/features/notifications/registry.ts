@@ -81,6 +81,42 @@ export const NOTIFICATION_TIER_POLICY: Readonly<Record<NotificationTier, Notific
   critical: { perOrderCap: false, dailyCeiling: false },
 };
 
+/**
+ * Default tier per notification type (owner, 2026-11-10: *money and terminal
+ * states are critical*).
+ *
+ * 🛑 The principle: a cap may swallow CHATTER, never BAD NEWS. "You already
+ * had three updates, so we did not tell you your order was cancelled" is the
+ * exact failure this table prevents. Anything that tells a buyer their money
+ * moved, failed to move, or that the order is over is exempt.
+ *
+ * ⚠ Anything NOT listed resolves to `routine` — so a new type is droppable by
+ * default. That is the safe direction: a type nobody classified should not
+ * silently gain the right to bypass every cap on the site.
+ *
+ * ⚠ This is a DEFAULT, not a decision. Admin config overrides any row, which
+ * is why the table lives here as machinery rather than being inlined at the
+ * call sites that read it.
+ */
+export const DEFAULT_NOTIFICATION_TIERS: Readonly<Record<string, NotificationTier>> = {
+  // ── critical: the order is over, or money went wrong ──────────────────────
+  order_cancelled: "critical",
+  refund_initiated: "critical",
+  payment_review: "critical",
+  emi_installment_overdue: "critical",
+  // An account action is a security event; a cap must never hide one.
+  account_action: "critical",
+
+  // ── important: money moved, or the buyer is owed an action ────────────────
+  order_placed: "important",
+  order_delivered: "important",
+  emi_installment_due_soon: "important",
+  prize_won: "important",
+
+  // ── everything else stays routine, including order_confirmed/shipped ──────
+  // Progress updates are precisely the chatter a per-order cap exists to bound.
+};
+
 /** A fully resolved rule: defaults merged with config overrides. */
 export interface NotificationRule {
   /**
