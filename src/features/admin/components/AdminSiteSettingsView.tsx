@@ -667,7 +667,9 @@ export function AdminSiteSettingsView({
   // object was a live bug until 2026-10-19 under the old per-field state.
   // `buildFullPayload()` writes the WHOLE `contact` group, so a key this
   // component does not carry is erased on the next save of ANY tab.
-  // `contact.upiVpa` is the site-wide fallback `resolveDisplayedUpiId` uses
+  // `contact.upiVpa` records the business VPA. ⚠ Its checkout consumer
+  // (`resolveDisplayedUpiId`) was deleted 2026-11-11 with manual payment, so
+  // nothing shows this to a buyer any more — it is a stored business detail.
   // when a seller has no UPI configured or the store is admin-owned — i.e.
   // the VPA a manual-payment buyer is told to pay into. Carried through
   // unconditionally below, same as every other field in this object.

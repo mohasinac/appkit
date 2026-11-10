@@ -235,7 +235,6 @@ import {
   dispatchNotification,
 } from "../../../../features/admin/actions/notification-actions";
 import { ORDER_MESSAGES_SELLER } from "../../jobs/handlers/messages";
-import { resolveDisplayedUpiId } from "./upi-resolution";
 import { resolveSupplierIdentity } from "./supplier-identity";
 import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
 import { assertCheckoutValueOtp } from "./value-otp-gate";
@@ -1390,8 +1389,13 @@ interface OrderGroupContext {
    * setting invites it to read things that are not its business.
    */
   paymentSettings?: SiteSettingsDocument["payment"];
-  /** Site-wide UPI VPA fallback (`siteSettings.contact.upiVpa`) — used by `resolveDisplayedUpiId` when a seller has no UPI configured, or the store is admin-owned. */
-  siteContactUpiVpa?: string;
+  /*
+   * 🛑 `siteContactUpiVpa` DELETED 2026-11-11. Its ONLY consumer was
+   * `resolveDisplayedUpiId`, which went with the manual-payment flow, so it
+   * had become config plumbing threaded three levels deep to reach nothing.
+   * ⚠ `siteSettings.contact.upiVpa` itself STAYS — an admin can still record
+   * the business VPA; checkout simply no longer shows it to a buyer.
+   */
   /**
    * Item 1.39 — the buyer's policy agreement for this checkout.
    *
@@ -1744,7 +1748,6 @@ async function createOrderForGroup(
     droppedItems,
     buyerState,
     gstSettings,
-    siteContactUpiVpa,
     storeAddons,
     policyConsent,
     platformFeeByStore,
@@ -2366,9 +2369,21 @@ async function createOrderForGroup(
   const paymentDeadline = hasPaymentWindow
     ? new Date(Date.now() + PAYMENT_WINDOW_MS)
     : undefined;
-  const displayedUpiId = hasPaymentWindow
-    ? await resolveDisplayedUpiId(firstItem.storeId, siteContactUpiVpa)
-    : undefined;
+  /*
+   * 🛑 `displayedUpiId` / `resolveDisplayedUpiId` DELETED 2026-11-11.
+   *
+   * It resolved the seller's UPI address to show a buyer paying by hand, and
+   * stored it on the order as the "ground truth" half of the
+   * buyer-reported-UPI cross-check. Both halves are gone: with manual payment
+   * retired nobody is shown an address to pay, and the cross-check it fed
+   * compared two strings WE and the BUYER supplied -- it never touched a bank,
+   * so a buyer who copied the address back correctly produced a clean match
+   * having paid nothing.
+   *
+   * ⚠ `paymentDeadline` above SURVIVES. It is the payment WINDOW, still used
+   * by `paymentWindowTimeout` to cancel and restock a cash-on-pickup order
+   * nobody completes.
+   */
 
   /*
    * ── POINTS TENDER (D46/D47) — a STAGE, after `orderTotal` is rounded ──────
@@ -3375,7 +3390,6 @@ export async function createCheckoutOrderAction(
     buyerState: resolvedAddress?.state,
     gstSettings: siteSettings?.gst,
     paymentSettings: siteSettings?.payment,
-    siteContactUpiVpa: siteSettings?.contact?.upiVpa,
     storeAddons: cart.storeAddons,
     policyConsent,
     platformFeeByStore,
