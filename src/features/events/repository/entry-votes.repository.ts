@@ -71,6 +71,27 @@ export class EventEntryVotesRepository extends BaseRepository<EventEntryVoteDocu
           throw new DatabaseError(`Entry not found: ${entryId}`);
         }
 
+        /*
+         * 🛑 The entry must belong to the event named in the path.
+         *
+         * `entryId` is a document id in a FLAT collection, so without this the
+         * event segment of the URL was decorative: any event id would accept a
+         * vote on any entry, and the vote row would then denormalise the wrong
+         * `eventId` — which is the field an admin sweep and the per-event
+         * cascade both key on. The counters would still land on the right
+         * entry, so nothing would look broken; the audit trail would simply
+         * attribute the vote to an event it was never cast on.
+         *
+         * Checked inside the transaction because that is where the entry is
+         * already read — it costs nothing extra.
+         */
+        const entryEventId = (entrySnap.data() as { eventId?: string } | undefined)?.eventId;
+        if (entryEventId && entryEventId !== eventId) {
+          throw new DatabaseError(
+            `Entry ${entryId} does not belong to event ${eventId}`,
+          );
+        }
+
         const counters = (entrySnap.data() as EntryVoteCounters | undefined) ?? {};
         let likes = Number(counters.likeCount ?? 0);
         let dislikes = Number(counters.dislikeCount ?? 0);

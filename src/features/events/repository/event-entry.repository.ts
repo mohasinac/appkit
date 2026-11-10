@@ -57,6 +57,27 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     status: { canFilter: true, canSort: false },
     submittedAt: { canFilter: true, canSort: true, parseValue: parseSieveDateValue },
     points: { canFilter: true, canSort: true },
+    /*
+     * 🛑 SORTABLE, but the public gallery must NOT use it — and the reason is
+     * the same one `isPinned` carries on the event document.
+     *
+     * A Firestore `orderBy` EXCLUDES every document that lacks the ordering
+     * field (Root Cause #100). `likeCount` is absent until an entry's first
+     * vote, so `sorts: "-likeCount"` would answer HTTP 200 with every
+     * never-voted entry missing — i.e. nearly the whole gallery on the day a
+     * contest opens, and silently.
+     *
+     * Declared anyway because an ADMIN leaderboard over a settled contest is a
+     * legitimate caller, and because a counter that is written, declared on
+     * the document and then not sortable is a trap of its own. Whoever uses it
+     * needs the `(eventId, reviewStatus, likeCount DESC)` composite deployed.
+     *
+     * The ranked read goes through `resolveEntryRanking` in memory, which is
+     * also the only thing that can honour a CONFIGURED rule — net-score,
+     * most-votes, earliest and jury are not expressible as one Firestore sort.
+     */
+    likeCount: { canFilter: true, canSort: true },
+    dislikeCount: { canFilter: true, canSort: true },
   };
 
   constructor() {

@@ -332,6 +332,100 @@ export interface EventEntryItem {
   submittedAt: string;
 }
 
+/**
+ * One media item on a contest entry, as published.
+ *
+ * 🛑 `url` is the host-agnostic relative form `/media/<shortId>` that
+ * `/api/media/finalize` returns. It is NOT an absolute URL and it is NOT a
+ * configured `next/image` loader domain on the events host — render it with
+ * `MediaImage` or a plain `<img>` and let the deployment's `/media/:path*`
+ * rewrite resolve it. Baking an absolute media hostname into stored data is
+ * what the relative form exists to prevent.
+ */
+export interface PublicEntryMedia {
+  url: string;
+  type: "image" | "video";
+  alt?: string;
+}
+
+/**
+ * ONE PUBLISHED ENTRY, as a public visitor may see it.
+ *
+ * ## 🛑 A separate type from `EventEntryItem`, deliberately
+ *
+ * `EventEntryItem` is the ADMIN shape: it carries `userEmail`, `userId`,
+ * `formResponses`, `reviewedBy` and `reviewNote`. Publishing it from a public
+ * handler by spreading an entry is the deny-list mistake that leaked spin
+ * `weight` and the categories' `createdBy` (Root Cause #70). This type simply
+ * does not have those fields, so the leak is a compile error instead of a
+ * review item.
+ *
+ * `userDisplayName` is the MASKED value — the stored field is encrypted at
+ * rest, and `maskPii` decrypts then masks. Never `revealEntry` here.
+ *
+ * ⚠ `myVote` is viewer-scoped, which is why the entries response must not be
+ * cached per-URL for a signed-in caller. `createRouteHandler` already declines
+ * to attach a public `Cache-Control` when the request carries a cookie.
+ */
+export interface PublicEventEntryItem {
+  id: string;
+  /** 1-based position under the event's resolved `entryRanking` rule. */
+  rank: number;
+  /** Masked entrant name. `undefined` for a guest entry. */
+  userDisplayName?: string;
+  /** The entrant's own words, capped at 100 of them on the write path. */
+  note?: string;
+  /** In display order — the FIRST item is the entry's cover everywhere. */
+  media: PublicEntryMedia[];
+  submittedAt: string;
+  likes: number;
+  dislikes: number;
+  /** The VIEWER's own vote. `null` when signed out or not yet voted. */
+  myVote: "like" | "dislike" | null;
+}
+
+/**
+ * The ranking rule in force, published alongside the entries.
+ *
+ * 🛑 It travels ON THE WIRE rather than being re-derived by the client, and
+ * that is the point: the sentence the page prints (`publicWording`), whether a
+ * dislike control exists (`allowsDislike`) and the order the rows arrive in
+ * all come from ONE resolved row. A client that re-derived any of the three
+ * could disagree with the server about who is winning, which is the one thing
+ * a contest cannot be wrong about.
+ */
+export interface PublicEntryRanking {
+  id: string;
+  rule: string;
+  tieBreak: string;
+  allowsDislike: boolean;
+  /** Empty string when the rule is one this deploy does not implement. */
+  publicWording: string;
+}
+
+/** `GET /api/events/:id/entries` — the public, ranked, paginated gallery. */
+export interface PublicEventEntriesResponse {
+  items: PublicEventEntryItem[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  hasMore: boolean;
+  /**
+   * `true` when the ranked window saturated, so `total` is a FLOOR, not a
+   * count.
+   *
+   * 🛑 DECLARED ON THE WIRE rather than hidden. Ranking happens in memory over
+   * a bounded read (see the route), and a silently truncated leaderboard looks
+   * completely correct while being wrong — the same reasoning the audit seam
+   * uses for truncated `refunds[]`.
+   */
+  truncated: boolean;
+  ranking: PublicEntryRanking;
+  /** Whether this event's type switches on the voting mechanism at all. */
+  votingEnabled: boolean;
+}
+
 export interface LeaderboardEntry {
   rank: number;
   userId: string;

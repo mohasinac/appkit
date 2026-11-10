@@ -5113,6 +5113,12 @@ export { EventFormDrawer } from "./features/events/components/EventFormDrawer";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventLeaderboard - Shared export for event leaderboard.
 export { EventLeaderboard } from "./features/events/components/EventLeaderboard";
+// [CLIENT-ONLY]-Vote controls for a contest entry. Was exported from NOTHING until 2026-11-10.
+export { EntryVoteButtons } from "./features/events/components/EntryVoteButtons";
+// [CLIENT-ONLY]-The public contest entry gallery (card listing).
+export { EventEntriesListView } from "./features/events/components/EventEntriesListView";
+// [CLIENT-ONLY]-One contest entry on its own shareable page.
+export { EventEntryDetailView } from "./features/events/components/EventEntryDetailView";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // EventParticipateView - Component for event participate view.
 export { EventParticipateView } from "./features/events/components/EventParticipateView";

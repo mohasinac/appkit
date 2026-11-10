@@ -22,6 +22,30 @@ export { EventParticipateView } from "./EventParticipateView";
 export type { EventParticipateViewProps } from "./EventParticipateView";
 export { EventLeaderboard } from "./EventLeaderboard";
 export type { EventLeaderboardProps } from "./EventLeaderboard";
+
+/*
+ * ── THE CONTEST ENTRY SURFACES ──────────────────────────────────────────────
+ *
+ * 🛑 `EntryVoteButtons` was exported from NOTHING — not this barrel, not
+ * `src/index.ts`, not `client.ts`. It had correct optimistic math, the right
+ * `allowsDislike` behaviour and a full docstring, and no consumer could import
+ * it. A component that cannot be reached is the same as one that does not
+ * exist; the whole voting mechanic was unreachable for this reason alone.
+ */
+export { EntryVoteButtons } from "./EntryVoteButtons";
+export type { EntryVoteButtonsProps } from "./EntryVoteButtons";
+export { EntryMediaThumb } from "./EntryMediaThumb";
+export type { EntryMediaThumbProps } from "./EntryMediaThumb";
+export { EventEntriesListView } from "./EventEntriesListView";
+export type {
+  EventEntriesListViewProps,
+  EventEntriesListLabels,
+} from "./EventEntriesListView";
+export { EventEntryDetailView } from "./EventEntryDetailView";
+export type {
+  EventEntryDetailViewProps,
+  EventEntryDetailLabels,
+} from "./EventEntryDetailView";
 export { AdminEventsView } from "./AdminEventsView";
 export type { AdminEventsViewProps } from "./AdminEventsView";
 export { AdminEventEditorView } from "./AdminEventEditorView";

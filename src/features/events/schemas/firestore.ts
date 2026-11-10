@@ -206,6 +206,33 @@ export interface EventDocument extends BaseDocument {
    * happens.
    */
   entryLimit?: number;
+  /**
+   * This event's own `entryRanking` RULE-SET ID — the per-event override.
+   *
+   * ## 🛑 Why the field has to exist at all
+   *
+   * `event-types-seed-data.ts` binds `ruleSets.entryRanking: "ranking-most-likes"`
+   * on the `contest` TYPE, which is the right default home for it. But a type
+   * default is shared by every event of that type, so with only that binding a
+   * second contest that wants net-score ranking could not be configured
+   * without editing the type and changing the first contest with it. The
+   * precedence chain the platform uses everywhere else needs a row-level slot,
+   * and this is it.
+   *
+   * ⚠ It stores a rule-set ID (`"ranking-net-score"`), NOT a rule key
+   * (`"net-score"`). The ID is what resolves to a row carrying `allowsDislike`
+   * and `publicWording` as well as the rule, and those three have to travel
+   * together — a contest whose copy says "most likes wins" while the resolver
+   * computes a net score is the drift this indirection exists to prevent.
+   *
+   * 🛑 A plain `string`, not a union. Unknown IDs degrade in
+   * `resolveEntryRankingRuleSet` (see `entry-ranking.ts`); they never throw,
+   * because newer config against an older deploy must not take a public
+   * gallery down.
+   *
+   * Unset falls back to the type's default, then to the platform default.
+   */
+  entryRanking?: string;
   isTestData?: boolean;
   /** When isTestData, the cutoff after which testDataCleanup deletes this doc. */
   testDataExpiresAt?: Date;
@@ -472,6 +499,35 @@ export type EventEntryDocument = {
    * the rule was written as, and a word count is what the form shows.
    */
   note?: string;
+  /**
+   * Public like tally for this entry.
+   *
+   * 🛑 DECLARED 2026-11-10, having been WRITTEN since the vote route shipped.
+   * `entry-votes.repository.ts` sets both counters inside its `cast`
+   * transaction (`tx.update(entryRef, { likeCount, dislikeCount, … })`) and
+   * neither appeared on this type — so a gallery could not read them without a
+   * cast, and `tsc` could not see that the ranking key and the stored field
+   * were the same thing. Same class as `createdAt` above: a field written but
+   * undeclared is invisible to type-driven review.
+   *
+   * ⚠ OPTIONAL, and it must stay optional. Every entry submitted before its
+   * first vote has no value at all, and `undefined` must stay interchangeable
+   * with `0` — which is also why the entries read ranks IN MEMORY rather than
+   * with a Firestore `orderBy likeCount`: an `orderBy` EXCLUDES documents that
+   * lack the ordering field (Root Cause #100), so ordering on this would hide
+   * every entry nobody has voted on yet — i.e. most of a contest on day one.
+   */
+  likeCount?: number;
+  /**
+   * Public dislike tally. Written by the same transaction as `likeCount`.
+   *
+   * ⚠ Present even on events whose `entryRanking` rule sets
+   * `allowsDislike: false`, where it stays 0 — the vote route refuses a
+   * dislike there, so the counter simply never moves. It is NOT conditional
+   * on the rule, because the rule can be changed on a live event and the
+   * stored shape must not have to change with it.
+   */
+  dislikeCount?: number;
   submittedAt: Date;
 }
 
@@ -511,6 +567,23 @@ export const EVENT_ENTRY_INDEXED_FIELDS = [
   "submittedAt",
   "points",
   "spinWonAt",
+  /*
+   * 🛑 Listed so Sieve may `orderBy` them (see `SIEVE_FIELDS` in
+   * `event-entry.repository.ts`), NOT because the public gallery uses that
+   * sort. It deliberately does not: a Firestore `orderBy` drops every document
+   * missing the ordering field, and an entry with no votes has no `likeCount`
+   * — so a sort-by-likes query would omit exactly the entries a new contest is
+   * made of. The gallery reads a bounded window ordered by `submittedAt` (an
+   * index that already exists) and ranks in memory through
+   * `resolveEntryRanking`, which is also the only way a CONFIGURED rule —
+   * net-score, most-votes, earliest, jury — can be honoured at all.
+   *
+   * ⚠ An admin surface that does want the raw sort needs the composite
+   * `(eventId, reviewStatus, likeCount DESC)` deployed; it is in
+   * `firestore.indexes.json`.
+   */
+  "likeCount",
+  "dislikeCount",
 ] as const;
 
 export const EVENT_FIELDS = {
@@ -590,6 +663,11 @@ export const EVENT_ENTRY_FIELDS = {
   SPIN_PRIZE_ID: "spinPrizeId",
   SPIN_PRIZE_COUPON_CODE: "spinPrizeCouponCode",
   SPIN_WON_AT: "spinWonAt",
+  /** Vote counters — written by `entry-votes.repository.ts`'s transaction. */
+  LIKE_COUNT: "likeCount",
+  DISLIKE_COUNT: "dislikeCount",
+  MEDIA: "media",
+  NOTE: "note",
   REVIEW_STATUS_VALUES: {
     PENDING: "pending" as EntryReviewStatus,
     APPROVED: "approved" as EntryReviewStatus,
