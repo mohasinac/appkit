@@ -554,6 +554,53 @@ export function resolveSeedPurpose(
 
 export interface SeedPurposeFields {
   seedPurpose: SeedPurpose;
+  /**
+   * `true` when this row was seeded into a NON-PRODUCTION database.
+   *
+   * 🛑 A MARKER, NEVER A FILTER. Nothing may read this to hide a row from a
+   * public surface, and that restriction is the entire reason it is a new
+   * field rather than a revival of `isTestData`: deriving visibility from a
+   * seed marker once hid every seeded product, category and store from the
+   * public site while the load reported clean. It also produced the
+   * "says 2, shows 1" defect, where a count and a grid disagreed because one
+   * applied the filter and the other did not.
+   *
+   * Its one job is a reliable delete path — "remove everything this seeder
+   * wrote" is answerable as `where("isdev", "==", true)` without guessing
+   * from ids or timestamps.
+   *
+   * Absent means "not written by a dev seed", which includes every organic
+   * row and every row seeded into production.
+   */
+  isdev?: boolean;
+}
+
+/**
+ * Whether the active seed run is targeting a non-production database.
+ *
+ * Module state, set ONCE by the CLI from the database it actually resolved —
+ * so the marker cannot disagree with the destination. Defaults to `false`:
+ * an un-configured caller writes no marker, which is the safe direction. A
+ * production row wrongly marked `isdev` invites a delete; a dev row missing
+ * the marker merely survives one.
+ */
+let seedTargetIsDev = false;
+
+/**
+ * Declare the target of this seed run. Call before any loader writes.
+ *
+ * `isDev` is the CLI's resolved answer to "is this database production?",
+ * not a guess from an env var — `FIREBASE_SHOP_DATABASE_ID` being unset means
+ * `(default)`, i.e. PRODUCTION, and that inversion has caused real damage
+ * before.
+ */
+export function configureSeedTarget({ isDev }: { isDev: boolean }): void {
+  seedTargetIsDev = isDev;
+}
+
+/** Current target flag, for diagnostics and tests. */
+export function seedTargetIsDevDatabase(): boolean {
+  return seedTargetIsDev;
 }
 
 /**
@@ -569,7 +616,19 @@ export interface SeedPurposeFields {
  * (if one is ever justified) lands in one place.
  */
 export function seedPurposeFields(purpose: SeedPurpose): SeedPurposeFields {
-  return { seedPurpose: purpose };
+  /*
+   * `isdev` is added ONLY for a non-production target, and only as a marker.
+   * See the field's own note for why it must never gate visibility.
+   *
+   * Omitted rather than written `false` on production: `appkit-seed load`
+   * uses `set({ merge: true })` and therefore CANNOT remove a field later, so
+   * a value written here is permanent. Absent is the honest encoding of
+   * "this was not a dev seed", and it leaves the field free to mean exactly
+   * one thing wherever it does appear.
+   */
+  return seedTargetIsDev
+    ? { seedPurpose: purpose, isdev: true }
+    : { seedPurpose: purpose };
 }
 
 /**

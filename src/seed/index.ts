@@ -282,6 +282,8 @@ export {
   resolveSeedPurpose,
   seedPurposeFields,
   stampSeedPurpose,
+  configureSeedTarget,
+  seedTargetIsDevDatabase,
   asSeedPurpose,
 } from "./seed-purpose";
 

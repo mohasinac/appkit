@@ -269,6 +269,27 @@ const appkitServer = await import("@mohasinac/appkit/server");
 const { encryptPiiFields, piiIndicesFor, encryptPayoutDetails, encryptPayoutBankAccount, encryptShippingConfig,
   buildTokensIndex, BLIND_INDEX_KEY_VERSION_FIELD, CURRENT_BLIND_INDEX_KEY_VERSION } = appkitServer;
 
+/*
+ * ── `isdev` — mark everything this run writes to a NON-PRODUCTION database ──
+ *
+ * Owner, 2026-11-10: "for each dev seed add a boolean flag called isdev".
+ *
+ * Declared ONCE here, from the database the CLI actually resolved, so the
+ * marker cannot disagree with the destination. `seedPurposeFields` is the
+ * single place every loader passes through, so no loader can be forgotten.
+ *
+ * 🛑 An EMPTY `FIREBASE_SHOP_DATABASE_ID` means `(default)`, which is
+ * PRODUCTION — so the test is "a database id was given", not "the variable
+ * exists". Getting that inversion backwards is how a local seed writes to the
+ * live shop, which this file already warns about above.
+ *
+ * 🛑 The marker must never gate visibility. Its predecessor `isTestData` did,
+ * and it hid every seeded product, category and store from the public site
+ * while reporting a clean load.
+ */
+appkit.configureSeedTarget({ isDev: Boolean(SHOP_DATABASE_ID) });
+console.log(`✓ isdev marker: ${SHOP_DATABASE_ID ? "ON (non-production target)" : "OFF (production target)"}`);
+
 const {
   // seed data
   usersSeedData, addressesSeedData, storeAddressesSeedData, sellerProfilesSeedData,
@@ -1039,6 +1060,14 @@ async function resolveAuthConflicts(uid, authUserData) {
   }
 }
 
+const nodeCrypto = require("crypto");
+/*
+ * Passwords generated for NEWLY created Auth accounts in this run. Existing
+ * accounts are never touched — `createUser` only runs in the `!userExists`
+ * branch — so an account you already hold a password for keeps it.
+ */
+const seededCredentials = [];
+
 async function loadUsers(seed, stats) {
   for (const u of seed) {
     try {
@@ -1066,7 +1095,24 @@ async function loadUsers(seed, stats) {
 
       if (!userExists) {
         await resolveAuthConflicts(uid, authUserData);
-        await auth.createUser({ uid, ...authUserData, password: "TempPass123!" });
+        /*
+         * 🛑 A RANDOM password per persona, never a shared literal.
+         *
+         * It used to be `password: "TempPass123!"` for all of them. Firebase
+         * Auth is PROJECT-WIDE — there is one user pool behind both
+         * `(default)` and `dev-db` — so every seeded "test" account can
+         * authenticate against the PRODUCTION hosts too. A single guessable
+         * password across 19 accounts is therefore a live credential, not a
+         * fixture.
+         *
+         * They hold no production `users` document and so carry no role, but
+         * "can sign in" is already further than a demo account should reach.
+         * The generated passwords are printed once, as a table, at the end of
+         * the run — the only place they exist.
+         */
+        const generatedPassword = nodeCrypto.randomBytes(12).toString("base64url");
+        await auth.createUser({ uid, ...authUserData, password: generatedPassword });
+        seededCredentials.push({ uid, email: email ?? "(no email)", password: generatedPassword });
       }
       if (u.role && u.role !== "user") {
         await auth.setCustomUserClaims(uid, { role: u.role });
@@ -1106,6 +1152,17 @@ async function loadUsers(seed, stats) {
       console.error(`    ✗ user ${u.uid}: ${err.message}`);
       stats.errors++;
     }
+  }
+
+  if (seededCredentials.length > 0) {
+    console.log("");
+    console.log("  ─── NEW Auth accounts and their generated passwords ───");
+    console.log("  (printed ONCE — they are stored nowhere else)");
+    for (const c of seededCredentials) {
+      console.log("    " + c.email.padEnd(32) + " " + c.password);
+    }
+    console.log("  ───────────────────────────────────────────────────────");
+    console.log("");
   }
 }
 
