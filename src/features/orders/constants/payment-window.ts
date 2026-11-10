@@ -17,7 +17,27 @@ export const PAYMENT_FRAUD_REJECTED_REASON = "payment_fraud_rejected";
  * buyer/seller "needs payment proof" UI — previously each site inlined its own
  * `pm !== "cash" && pm !== "upi_manual" && ...` chain and they could drift.
  */
-export const MANUAL_PAYMENT_METHODS: readonly string[] = ["cash", "upi_manual", "emi"];
+/**
+ * Methods whose payment is confirmed by a HUMAN rather than by a provider.
+ *
+ * 🛑 `emi` was removed 2026-11-11 (owner: *"emi is removed from the code as
+ * that is now built into the payment gateways"*), and its presence here was a
+ * real defect rather than dead config. Membership drives
+ * `isManualPaymentMethod`, which gates the proof-upload flow, the 15-minute
+ * `paymentDeadline`, the admin payment-review queue and
+ * `paymentWindowTimeout`'s auto-cancel.
+ *
+ * So a gateway-settled EMI order was being given a manual-payment window it
+ * could never satisfy: nobody uploads a screenshot for an instalment the
+ * gateway already confirmed, so the proof stayed absent, the deadline lapsed,
+ * and `paymentWindowTimeout` would cancel and restock a legitimately paid
+ * order. The method list was the only thing saying it was manual.
+ *
+ * ⚠ Historical EMI orders keep their stored fields — this changes which
+ * orders ENTER the manual flow, not how existing ones are read. Same
+ * stop-creating-before-deleting staging used for `upi_manual`.
+ */
+export const MANUAL_PAYMENT_METHODS: readonly string[] = ["cash", "upi_manual"];
 
 export function isManualPaymentMethod(method: string | undefined | null): boolean {
   return !!method && MANUAL_PAYMENT_METHODS.includes(method);
