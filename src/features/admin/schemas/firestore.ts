@@ -1703,6 +1703,23 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     otpCheckoutThreshold: 5000,
     smsVerification: false,
     adminCheckoutBypass: false,
+    /*
+     * ⚠ `paymentMethodRules` is deliberately ABSENT here, and that is not an
+     * omission to be tidied up later.
+     *
+     * This object is appkit's GENERIC fallback for an install with no settings
+     * document (note `siteName: "My Store"`). The seeded rules in
+     * `site-settings-seed-data.ts` encode ONE client's launch choice — gateway
+     * online + COD, cash-on-pickup off — and baking that in here would impose
+     * it on every other install, which the domain-independence rule forbids.
+     *
+     * 🛑 An absent map is already the correct generic behaviour:
+     * `platformMethodRule` answers `{ disabled: false, default: true }` for a
+     * method nobody has an opinion about, so a fresh install can still take
+     * money. Seeding `false`s here would make a new deploy refuse every
+     * payment method, which reads to an operator as a broken checkout rather
+     * than as unset config.
+     */
   },
   // Mirrors MESSAGE_BUDGET_DEFAULTS — both channels start OFF. A fresh install
   // that has made no decision should be quiet, not mailing real people from a

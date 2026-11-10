@@ -202,6 +202,46 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,
+    /*
+     * ── §B: THE PLATFORM LEVEL OF THE PAYMENT-METHOD PRECEDENCE ───────────
+     *
+     * Owner, 2026-11-11: the shipped methods are **gateway online + COD**.
+     * This is the DEFAULT TEMPLATE for that — the project rule is that we
+     * ship the mechanism and the default templates, and the operator
+     * overrides them, so these are rows an admin edits rather than anything
+     * the code decides.
+     *
+     * 🛑 `disabled` is a hard CEILING and `default` is a soft FLOOR, and they
+     * are separate fields on purpose. A ceiling cannot be overridden by any
+     * store or listing; a floor is only consulted when nobody more specific
+     * has an opinion. Collapsing them is what makes an admin kill switch
+     * overridable — see `method-resolution.ts`.
+     *
+     * ⚠ `cash` ships `default: false` rather than `disabled: true`. It is cash
+     * on PICKUP, a real in-person flow that simply is not part of the launch
+     * set — so a seller who does counter pickup can turn it on for their own
+     * store, which a ceiling would forbid. "Not shipped by default" and
+     * "forbidden" are different statements and the config can say both.
+     *
+     * 🛑 `upi_manual` ships `disabled: true` — a genuine ceiling. The buyer
+     * paid a static VPA and uploaded a screenshot, which verifies nothing
+     * (owner: *"that is wrong to have"*). It is already closed at the type
+     * level, so this is belt-and-braces; it is seeded anyway so the intent is
+     * legible in config rather than only inferable from an absent enum member.
+     *
+     * ⚠ NOT SEEDED, deliberately: `store.paymentMethods` and
+     * `product.paymentMethods`. Absent means "no opinion — inherit", which is
+     * the entire point of the `listing ?? store ?? platformDefault` chain.
+     * Seeding either with an explicit map would teach every future reader that
+     * stores must enumerate methods, and would silently pin whatever the seed
+     * happened to say at the moment a method was added.
+     */
+    paymentMethodRules: {
+      online: { default: true },
+      cod: { default: true },
+      cash: { default: false },
+      upi_manual: { disabled: true },
+    },
   },
   emi: {
     /*
