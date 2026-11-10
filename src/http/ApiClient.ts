@@ -98,12 +98,36 @@ export class ApiClient {
      * An unregistered prefix returns `undefined` and nothing below changes —
      * an install that has not adopted the seam behaves exactly as before.
      */
+    /*
+     * 🛑 IN A BROWSER, THE CURRENT ORIGIN WINS over `NEXT_PUBLIC_APP_URL`.
+     *
+     * `baseURL` defaults to that env var at construction, and it used to beat
+     * `window.location.origin` outright. That pins every API call to whatever
+     * host the build was configured for — so a PREVIEW deployment and a local
+     * build both call PRODUCTION, cross-origin, and fail CORS.
+     *
+     * Measured 2026-11-09 on a preview deployment: every request went to
+     * the CONFIGURED production host from a preview origin, the
+     * preflight was refused, and the rejected fetch surfaced as React error
+     * #441 — a blank "This page couldn't load" on a page that worked in
+     * production. It cost most of a day, because it makes previews and
+     * localhost fail in a way production never does, which defeats both
+     * testing channels at once.
+     *
+     * An EXPLICIT `new ApiClient({ baseURL })` still wins — that is a caller
+     * deliberately pointing somewhere. Only the env-var DEFAULT yields to the
+     * live origin, and only in a browser; on the server there is no origin to
+     * read, so the env var remains correct there.
+     */
+    const isBrowser = typeof window !== "undefined";
+    const envDefault = process.env.NEXT_PUBLIC_APP_URL ?? "";
+    const baseIsEnvDefault = this.baseURL !== "" && this.baseURL === envDefault;
     const origin =
       serviceOriginFor(endpoint) ||
-      this.baseURL ||
-      (typeof window !== "undefined"
+      (isBrowser && (baseIsEnvDefault || !this.baseURL)
         ? window.location.origin
-        : (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"));
+        : this.baseURL) ||
+      (isBrowser ? window.location.origin : envDefault || "http://localhost:3000");
     const url = new URL(endpoint, origin);
     if (params) {
       Object.entries(params).forEach(([key, value]) =>
