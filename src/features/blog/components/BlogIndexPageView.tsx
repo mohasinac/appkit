@@ -37,12 +37,16 @@ export interface BlogIndexPageViewProps {
   /**
    * Hero copy. See `heroCopy` on `EventsListPageView` and `PageHeroCopy`.
    *
-   * 🛑 This is the prop that exists because the defaults below were once
-   * `"From the shop floor"` and `"…importing and grading Beyblades."` — one
-   * client's voice and one client's product line, hardcoded inside a library
-   * whose acceptance test is *no real brand or host in source*, shipped to
-   * every consumer's blog index. The replacements say what the page IS,
-   * without naming what anyone sells.
+   * 🛑 This prop exists because the defaults below were once one client's
+   * house voice naming one client's product line and trade — hardcoded inside
+   * a library whose acceptance test is *no real brand or host in source*, and
+   * shipped to every consumer's blog index. The replacements say what the page
+   * IS, without naming what anyone sells.
+   *
+   * ⚠ The offending strings are deliberately NOT quoted here. A doc comment
+   * compiles into the published `.d.ts`, so quoting them to explain the fix
+   * puts the brand straight back into the dist that every consumer installs —
+   * which is this exact defect, one layer out. Git history has the literals.
    */
   heroCopy?: PageHeroCopy;
 }

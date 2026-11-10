@@ -264,8 +264,8 @@ export function SiteLogo({
         It used to sit at `x=169` with `width=43`, numbers derived from one
         particular eight-glyph name — so a shorter name left it floating in
         space and a longer one had the wordmark run underneath it. The pill
-        width now follows the tld's own length too, so `.in` and `.co.uk` both
-        get a pill that fits them.
+        width now follows the tld's own length too, so a two-letter tld and a
+        `.co.uk` both get a pill that fits them.
       */}
       {tld && (
         <>
