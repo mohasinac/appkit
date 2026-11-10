@@ -24,6 +24,7 @@ import { createRequire } from "node:module";
 import { randomBytes } from "node:crypto";
 
 const DRY = process.argv.includes("--dry-run");
+const WIPE = process.argv.includes("--wipe-all-users");
 const pwArg = process.argv.find((a) => a.startsWith("--password="));
 
 const envPath = resolve(process.cwd(), ".env.local");
@@ -107,6 +108,64 @@ console.log("");
 console.log("  database : (default)   ← THIS IS PRODUCTION");
 console.log("  email    : " + EMAIL);
 console.log("");
+
+/*
+ * ── --wipe-all-users ──────────────────────────────────────────────────────
+ *
+ * 🛑 DELETES EVERY FIREBASE AUTH ACCOUNT, including real ones. Owner
+ * authorised this explicitly and repeatedly; it is not a default and the
+ * flag has to be typed.
+ *
+ * Order is deliberate: wipe EVERYTHING first, then create the admin fresh.
+ * Preserving one account across the wipe would leave it holding whatever
+ * password and claims it already had, which is exactly the ambiguity this
+ * is meant to remove — "only the admin exists" should mean an account this
+ * run created, not one that happened to survive.
+ *
+ * `deleteUsers` takes at most 1000 uids per call and is not transactional,
+ * so it is paged. Listing is re-run after each batch rather than paginated
+ * through, because deleting while holding a page token invalidates it.
+ */
+if (WIPE) {
+  let total = 0;
+  for (;;) {
+    const page = await auth.listUsers(1000);
+    if (page.users.length === 0) break;
+    const uids = page.users.map((u) => u.uid);
+    if (DRY) {
+      console.log("  [dry-run] would delete " + uids.length + " Auth users");
+      total += uids.length;
+      break;
+    }
+    const res = await auth.deleteUsers(uids);
+    total += res.successCount;
+    if (res.failureCount > 0) {
+      console.error("  ✗ " + res.failureCount + " deletions failed");
+      for (const e of res.errors.slice(0, 5)) console.error("    " + e.error.message);
+      break;
+    }
+  }
+  console.log((DRY ? "  [dry-run] " : "✓ ") + "Auth users removed: " + total);
+
+  /*
+   * The production `users` documents go with them. An orphaned user doc is
+   * worse than none: it carries a role for a uid that can no longer sign in,
+   * and the next account to be issued that uid would inherit it.
+   */
+  const stale = await db.collection("users").get();
+  if (!stale.empty) {
+    if (DRY) {
+      console.log("  [dry-run] would delete " + stale.size + " users docs");
+    } else {
+      const writer = db.bulkWriter();
+      for (const d of stale.docs) writer.delete(d.ref);
+      await writer.close();
+      console.log("✓ users documents removed: " + stale.size);
+    }
+  } else {
+    console.log("  users documents: 0 (nothing to remove)");
+  }
+}
 
 let userRec = null;
 try {
