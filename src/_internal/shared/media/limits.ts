@@ -71,6 +71,25 @@ export const REVIEW_MAX_IMAGES = 6;
  */
 export const PRODUCT_IMAGE_INDEX_MAX = PRODUCT_MAX_IMAGES + 1;
 
+/**
+ * Highest legal `index` in a PARTICIPANT entry-media filename.
+ *
+ * 🛑 THIS IS NOT AN ALLOWANCE, and reading it as one is the mistake this
+ * whole family of fields exists to undo. How many photos and videos one entry
+ * may carry is `event.entryMedia` on the EVENT DOCUMENT, enforced by
+ * `checkEntryMedia` on the write path — a contest allowing 3 photos and 1
+ * video is a seed row, not a constant.
+ *
+ * What this bounds is the INDEX SPACE of the generated SEO filename, exactly
+ * as `PRODUCT_IMAGE_INDEX_MAX` does for products: `applyMediaContextGuards`
+ * compares it against the ordinal baked into the name so a caller cannot mint
+ * `event-entry-x-image-999999.jpg`. It is deliberately far above any
+ * plausible `maxImages`/`maxVideos` so that raising an event's own limit never
+ * needs an appkit release — the same relationship the entries route's
+ * `.max(20)` request bound has to the per-event rule it does not express.
+ */
+export const EVENT_ENTRY_MEDIA_INDEX_MAX = 24;
+
 export const MAX_LABEL: Record<MediaKind, string> = {
   image: "10MB",
   video: "50MB",
@@ -129,6 +148,21 @@ export type AllowedMime = (typeof ALLOWED_MIMES)[number];
  * Deriving the attribute from the allowlist makes the picker refuse it first.
  */
 export const IMAGE_ACCEPT_ATTR = ALLOWED_IMAGE_MIMES.join(",");
+
+/**
+ * The `accept` attribute for a video picker.
+ *
+ * 🛑 Never `video/*`, for the same reason {@link IMAGE_ACCEPT_ATTR} is never
+ * `image/*`: the wildcard matches containers this allowlist refuses (AVI,
+ * WMV, FLV, MPEG-TS — see `VIDEO_CONVERSION_HINTS`), so the picker would
+ * accept a file `/api/media/sign` is going to 400. Derived from the allowlist
+ * so the two cannot drift.
+ *
+ * ⚠ Hand-enumerating a picker's list is how they drift: a caller offering
+ * `image/avif` had a picker accepting a type the server allowlist does not
+ * contain, which turns a rule into a failure at upload time.
+ */
+export const VIDEO_ACCEPT_ATTR = ALLOWED_VIDEO_MIMES.join(",");
 
 export const ALLOWED_TYPES_LABEL =
   "JPEG, PNG, GIF, WebP, MP4, WebM, QuickTime, 3GP, MKV, PDF";

@@ -6,6 +6,14 @@ import type { MediaField } from "../../media/types";
 import type { JsonValue } from "../../../schemas/types";
 import type { BaseDocument } from "../../../_internal/shared/types/base-document";
 import type { EventType, EventStatus, EntryReviewStatus, SaleConfig, OfferConfig, PollConfig, SurveyConfig, FeedbackConfig, RaffleType, SpinPrize } from "../types";
+/*
+ * A VALUE import, uniquely in this file's import block, and it is required:
+ * `legacyEntryAutoApprove` below has to normalise the three pre-2026-10-31
+ * type spellings or it silently answers "moderated" for every stored
+ * `raffle`/`spin_wheel` document. `../types` imports only types itself, so
+ * this introduces no cycle.
+ */
+import { normalizeEventType } from "../types";
 import type { GiveawayConfig } from "../../giveaway/types";
 import type { Encrypted, Plaintext } from "../../../security/encrypted";
 
@@ -684,6 +692,151 @@ export function resolveEntryApproval(
   const chosen = event.entryApproval ?? typeDefault;
   if (chosen !== undefined) return chosen === "auto" ? "auto" : "moderated";
   return legacyAutoApprove ? "auto" : "moderated";
+}
+
+/** The shape every approval-mode reader needs off an event document. */
+export interface EntryApprovalEventFields {
+  entryApproval?: EntryApprovalMode;
+  type?: string;
+  surveyConfig?: unknown;
+  feedbackConfig?: unknown;
+}
+
+/**
+ * The LEGACY `event.type ===` expression, in one place.
+ *
+ * ⚠ MIGRATION PATH, not a design — the governing principle names type
+ * branching as a defect. It survives only so events already in the database
+ * behave exactly as they did before `entryApproval` existed, and
+ * {@link resolveEntryApproval} consults it last. Delete it once every event
+ * type declares its own default in `event-types-seed-data.ts`.
+ *
+ * 🛑 It lives HERE rather than inside `enterEvent` because two surfaces now
+ * need the answer: the write path, and the UI that has to tell a participant
+ * whether their entry will be published or reviewed. A second copy in the
+ * reading app would be a second owner of the rule, and the two would say
+ * different things to the same person about the same entry.
+ *
+ * 🛑 Do NOT add a type to this expression.
+ */
+export function legacyEntryAutoApprove(event: EntryApprovalEventFields): boolean {
+  const normalized = normalizeEventType(event.type);
+  return (
+    event.type === "poll" ||
+    event.type === "feedback" ||
+    normalized === "giveaway" ||
+    (event.type === "survey" &&
+      !(event.surveyConfig as { entryReviewRequired?: boolean } | undefined)
+        ?.entryReviewRequired)
+  );
+}
+
+/**
+ * The complete chain, for one event document: its own `entryApproval`, then
+ * the type's default, then the legacy expression. Fails closed to
+ * `"moderated"`.
+ *
+ * This is what a PAGE calls. `enterEvent` calls it too, so the message a
+ * participant reads before submitting and the `reviewStatus` actually written
+ * are produced by the same function rather than by two that agree today.
+ */
+export function resolveEventEntryApproval(
+  event: EntryApprovalEventFields,
+  typeDefault?: EntryApprovalMode,
+): "auto" | "moderated" {
+  return resolveEntryApproval(event, typeDefault, legacyEntryAutoApprove(event));
+}
+
+/**
+ * Participant-facing copy for one approval mode — the DEFAULT TEMPLATE.
+ *
+ * ## 🛑 Why wording belongs beside the resolver and not in a view
+ *
+ * `entryApproval` had ZERO readers (the fifth instance of the
+ * declared-but-unwired class CLAUDE.md tracks). The contest is `"moderated"`,
+ * which is enforced on the write path: the entry is stored `pending` and the
+ * public gallery shows only `approved` rows. So a participant submitted, saw a
+ * bare green "Entry submitted", and then could not find their photo — which
+ * reads as a lost upload and generates exactly the support ticket a review
+ * notice exists to prevent.
+ *
+ * Returning the copy from the same module that resolves the mode means a host
+ * cannot render "live now" over a `pending` write. A consumer is free to
+ * override the strings — they are a default template, per CLAUDE.md's "we ship
+ * the mechanism and the default templates; the user overrides them" — but it
+ * has to do so deliberately rather than by forgetting the branch exists.
+ *
+ * 🛑 Keyed on the resolved MODE, never on `event.type`.
+ */
+export interface EntryApprovalWording {
+  /** Short status chip, e.g. over a submit-confirmation panel. */
+  badge: string;
+  /** Panel heading. */
+  heading: string;
+  /** One sentence telling the participant what happens next. */
+  body: string;
+}
+
+export const ENTRY_APPROVAL_WORDING: Record<"auto" | "moderated", EntryApprovalWording> = {
+  auto: {
+    badge: "Published",
+    heading: "Entry submitted",
+    body: "Your entry is live and visible to everyone right away.",
+  },
+  moderated: {
+    badge: "Awaiting review",
+    heading: "Entry received — awaiting review",
+    body:
+      "Entries for this event are checked by a moderator before they appear publicly, so yours is not visible in the gallery yet. Nothing more is needed from you.",
+  },
+};
+
+/** The copy for an event's resolved mode. Unknown modes get the moderated copy. */
+export function describeEntryApproval(
+  mode: "auto" | "moderated",
+): EntryApprovalWording {
+  return ENTRY_APPROVAL_WORDING[mode] ?? ENTRY_APPROVAL_WORDING.moderated;
+}
+
+/**
+ * Participant-facing copy for the state ONE of their entries is in.
+ *
+ * ⚠ The stored vocabulary is `pending | approved | flagged`
+ * (`EntryReviewStatus`), NOT "rejected" — there is no rejected state in the
+ * data, and inventing one in the UI would describe a status the moderation
+ * tools cannot produce. `flagged` is what an admin sets when an entry is
+ * removed from consideration, so that is what this reports, in the
+ * participant's language rather than the moderator's.
+ */
+export const ENTRY_REVIEW_STATUS_WORDING: Record<
+  EntryReviewStatus,
+  { label: string; tone: "pending" | "approved" | "rejected"; body: string }
+> = {
+  pending: {
+    label: "Awaiting review",
+    tone: "pending",
+    body: "A moderator has not looked at this entry yet. It is not in the public gallery.",
+  },
+  approved: {
+    label: "Approved",
+    tone: "approved",
+    body: "This entry is published and visible to everyone.",
+  },
+  flagged: {
+    label: "Not accepted",
+    tone: "rejected",
+    body: "This entry was removed from the event by a moderator. Contact support if you think that is wrong.",
+  },
+};
+
+/** Copy for a stored `reviewStatus`. Unknown values degrade to the pending copy. */
+export function describeEntryReviewStatus(
+  status: string | undefined,
+): { label: string; tone: "pending" | "approved" | "rejected"; body: string } {
+  return (
+    ENTRY_REVIEW_STATUS_WORDING[status as EntryReviewStatus] ??
+    ENTRY_REVIEW_STATUS_WORDING.pending
+  );
 }
 
 

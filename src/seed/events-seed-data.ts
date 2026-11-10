@@ -147,8 +147,29 @@ const _raweventsSeedData: EventDocument[] = [
       `<h2>How to enter</h2>` +
       `<ol>` +
       `<li>Take a photo of your collection, your stadium, or a battle in progress.</li>` +
-      `<li>Submit it below — one entry per account, up to four images.</li>` +
-      `<li>Entries are reviewed before they appear in the gallery.</li>` +
+      /*
+       * 🛑 THESE TWO LINES ARE PROSE DESCRIBING CONFIG, and both were WRONG.
+       *
+       * "up to four images" contradicted `entryMedia` on this same row, which
+       * is `{ maxImages: 3, maxVideos: 1, maxTotal: 4 }` — three photos and a
+       * VIDEO, not four photos. "Entries are reviewed before they appear"
+       * contradicted `entryApproval`, which the owner set to `"auto"` on
+       * 2026-11-10.
+       *
+       * Neither could fail a typecheck, which is exactly why this drift is the
+       * recurring kind: the participate FORM generates its rules sentence from
+       * `entryMedia` and its review notice from `entryApproval`, so the page
+       * was about to tell a participant two different things about the same
+       * contest in two different panels.
+       *
+       * ⚠ Any edit to `entryMedia` or `entryApproval` below has to come back
+       * here. The real fix is that this copy should be generated from the
+       * config too — flagged, not done: it is admin-authored rich text with a
+       * live document already carrying an edited copy, so templating it is a
+       * content migration rather than a string change.
+       */
+      `<li>Submit it below — one entry per account: up to three photos and one video, four items in total.</li>` +
+      `<li>Entries appear in the gallery as soon as you submit, so voting can start straight away.</li>` +
       `</ol>` +
       `<h2>How the winner is decided</h2>` +
       `<p>Entries are ranked by <strong>likes</strong>. Anyone signed in can vote, one vote per entry, and you can change your mind — voting again on the same entry takes your vote back.</p>` +
@@ -164,20 +185,31 @@ const _raweventsSeedData: EventDocument[] = [
     },
     tags: ["contest", "photo", "ugc", "diwali", "community"],
     /*
-     * 🛑 MODERATED, set EXPLICITLY on this row (owner, 2026-11-09:
-     * auto-approve or moderator approval is configured on the event itself).
+     * 🛑 `"auto"` — owner, 2026-11-10: *"for this event entry approval is
+     * optional"*. Changed on the LIVE document first (via the events admin
+     * API, `PATCH` → 200) and mirrored here so the seed and production agree.
+     * CLAUDE.md records three separate seed-vs-live drifts found in one round;
+     * leaving this row `"moderated"` would have been a fourth, and the next
+     * reseed would have silently re-moderated a live contest.
      *
-     * It is spelled out rather than left to the default for two reasons.
-     * First, this is USER-SUBMITTED PHOTOGRAPHY on a public gallery — the one
-     * content type where "it defaulted to the safe thing" is not good enough
-     * to rely on. Second, `contest` was absent from the hardcoded type switch
-     * this field replaced, so it was moderated by ACCIDENT; an explicit value
-     * turns that accident into a decision.
+     * The reason it is coherent rather than just permissive: the mechanic the
+     * poster advertises is *"the most liked photo wins"*, and entries have to
+     * be VISIBLE in order to be liked. A review queue in front of a
+     * popularity vote delays the vote, not the risk.
      *
-     * Flip to `"auto"` to publish entries immediately. That is a seed edit,
-     * not a deploy — which is the whole point of moving it onto the row.
+     * 🛑 It is spelled out on the row rather than left to the default, and
+     * that still matters. `resolveEntryApproval` falls closed to
+     * `"moderated"` when the field is absent — which is the right default for
+     * user-submitted photography in general and is NOT what this contest
+     * wants. An explicit value is a decision; an inherited one is an accident
+     * (`contest` was absent from the hardcoded type switch this field
+     * replaced, so these entries used to be moderated by accident).
+     *
+     * Flip back to `"moderated"` to hold entries for a moderator. That is a
+     * seed edit — or one admin PATCH on the live row — never a deploy, which
+     * is the whole point of the field being on the document.
      */
-    entryApproval: "moderated",
+    entryApproval: "auto",
     /*
      * Owner spec 2026-11-09: **up to 3 photos and 1 video, 4 items total**,
      * and **one entry per person** for now.

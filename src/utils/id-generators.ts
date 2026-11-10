@@ -599,6 +599,51 @@ function generateEventImageFilename(
   return `event-${title}-image-${n}.${ext}`;
 }
 
+/**
+ * A PARTICIPANT's entry media, not the organiser's event artwork.
+ *
+ * ## 🛑 Why this is a separate context family from `event-image`
+ *
+ * `event-cover` / `event-image` / `event-winner-image` /
+ * `event-additional-image` are all authored by whoever runs the event, and all
+ * four are IMAGE-ONLY by design — an event cover is a picture. Entry media is
+ * the opposite case: it is submitted by a member of the public, under rules the
+ * EVENT DOCUMENT carries (`entryMedia: { maxImages, maxVideos, … }`), and a
+ * contest that advertises a video slot has to be able to accept one.
+ *
+ * Before this existed the only way to upload an entry video was to borrow
+ * `product-video` or `review-video` — the two video-capable contexts — which
+ * would have stamped `contextType: "review-video"` on a contest entry's
+ * `mediaAssets` row. `/api/media/finalize` re-derives `contextType` FROM the
+ * filename (see {@link deriveContextTypeFromFilename}), so that mislabel is not
+ * cosmetic: it persists into the row the watermark resolver branches on. A
+ * purpose-built context is the fix; a borrowed one is a lie written to disk.
+ *
+ * 🛑 `index` here is an SEO slug ordinal, NOT an allowance and NOT an identity.
+ * Two entrants uploading their first photo to the same contest both produce
+ * `event-entry-<title>-image-1.<ext>`; they do not collide because
+ * `/api/media/sign` scopes the object under `tmp/<folder>/<uid>/`, i.e. the UID
+ * in the PATH separates them. How many a participant may actually send is
+ * `checkEntryMedia(media, event.entryMedia)` on the write path — the event's
+ * own numbers, not a constant in this file.
+ */
+export interface GenerateEventEntryMediaFilenameInput {
+  /** The EVENT's title — the slug this filename is built from. */
+  title: string;
+  index?: number;
+  ext?: string;
+}
+
+function generateEventEntryMediaFilename(
+  input: GenerateEventEntryMediaFilenameInput,
+  kind: "image" | "video",
+): string {
+  const title = slugify(input.title).substring(0, 50).replace(/-+$/, "");
+  const n = input.index ?? 1;
+  const ext = (input.ext ?? (kind === "video" ? "mp4" : "webp")).replace(/^\./, "");
+  return `event-entry-${title}-${kind}-${n}.${ext}`;
+}
+
 export interface GenerateRichTextImageFilenameInput {
   entity: string;
   name: string;
@@ -705,6 +750,13 @@ export type MediaFilenameContext =
   | ({ type: "event-cover" } & GenerateEventImageFilenameInput)
   | ({ type: "event-winner-image" } & GenerateEventImageFilenameInput)
   | ({ type: "event-additional-image" } & GenerateEventImageFilenameInput)
+  /*
+   * PARTICIPANT-submitted entry media. `event-entry-video` is the ONLY
+   * event-family context that accepts a video — see
+   * `GenerateEventEntryMediaFilenameInput` and `IMAGE_ONLY_CONTEXT_TYPES`.
+   */
+  | ({ type: "event-entry-image" } & GenerateEventEntryMediaFilenameInput)
+  | ({ type: "event-entry-video" } & GenerateEventEntryMediaFilenameInput)
   | ({ type: "rich-text-image" } & GenerateRichTextImageFilenameInput)
   | { type: "category-image"; name: string; ext?: string }
   | { type: "user-avatar"; firstName: string; lastName: string; ext?: string }
@@ -755,6 +807,10 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
       return generateEventImageFilename(ctx);
     case "event-additional-image":
       return generateEventImageFilename(ctx);
+    case "event-entry-image":
+      return generateEventEntryMediaFilename(ctx, "image");
+    case "event-entry-video":
+      return generateEventEntryMediaFilename(ctx, "video");
     case "rich-text-image":
       return generateRichTextImageFilename(ctx);
     case "category-image":
@@ -849,6 +905,21 @@ const MEDIA_FILENAME_PATTERNS: ReadonlyArray<{ context: string; pattern: RegExp 
   { context: "brand-logo", pattern: new RegExp(`^brand-${SLUG_PART}-logo\\.${EXT_PART}$`) },
   { context: "brand-banner", pattern: new RegExp(`^brand-${SLUG_PART}-banner\\.${EXT_PART}$`) },
   { context: "blog-image", pattern: new RegExp(`^blog-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  /*
+   * 🛑 THESE TWO MUST STAY ABOVE `event-image`, and the order is load-bearing.
+   *
+   * `SLUG_PART` admits hyphens, so `^event-<SLUG>-image-\d+` matches
+   * `event-entry-<title>-image-1.jpg` perfectly well.
+   * `deriveContextTypeFromFilename` returns the FIRST match and
+   * `/api/media/finalize` writes that string to `MediaAssetDocument.contextType`
+   * — so with `event-image` first, every participant's entry photo would be
+   * stamped as organiser artwork, permanently, in the row the watermark
+   * resolver branches on. Being specific-first is what keeps the provenance
+   * honest. Same reason `validateMediaFilename` is unaffected: it only asks
+   * whether SOME pattern matches.
+   */
+  { context: "event-entry-image", pattern: new RegExp(`^event-entry-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
+  { context: "event-entry-video", pattern: new RegExp(`^event-entry-${SLUG_PART}-video-\\d+\\.${EXT_PART}$`) },
   { context: "event-image", pattern: new RegExp(`^event-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
   { context: "rich-text-image", pattern: new RegExp(`^rich-text-${SLUG_PART}-image-\\d+\\.${EXT_PART}$`) },
   { context: "category-image", pattern: new RegExp(`^category-${SLUG_PART}-image\\.${EXT_PART}$`) },

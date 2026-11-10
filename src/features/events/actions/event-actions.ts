@@ -1,5 +1,5 @@
 import {
-  resolveEntryApproval,
+  resolveEventEntryApproval,
   checkEntryMedia,
   resolveEntryLimit,
 } from "../schemas/firestore";
@@ -57,7 +57,7 @@ import type {
   EventEntryDocument,
   EventEntryMedia,
 } from "../schemas";
-import type { EventStatus } from "../types";
+import type { EventStatus, EntryReviewStatus } from "../types";
 import { normalizeEventType } from "../types";
 import { hidePublicTestData } from "../../../_internal/server/features/tester/visibility";
 import { sortPinnedFirst } from "../utils/sort-pinned";
@@ -588,7 +588,28 @@ export async function enterEvent(
   input: EnterEventInput,
   user?: { uid: string; displayName?: string; email?: string },
   request?: Request,
-): Promise<{ entryId: string }> {
+  /*
+   * ## 🛑 WHY THE OUTCOME IS RETURNED, not just the id
+   *
+   * This used to return `{ entryId }` alone, so the only thing a caller could
+   * say was "submitted". Under `entryApproval: "moderated"` the entry is
+   * written `pending` and the public gallery renders only `approved` rows — so
+   * a participant saw a green success message and then could not find their
+   * photo anywhere, with nothing on screen explaining why. That reads as a lost
+   * upload.
+   *
+   * `reviewStatus` is the value actually WRITTEN and `entryApproval` is the
+   * mode that produced it, both resolved here. A client could in principle
+   * resolve the mode itself from the event document, and that is exactly the
+   * duplication to avoid: the message a participant reads must come from the
+   * same decision the write made, not from a second evaluation of the same
+   * config that may be reading a stale copy of the event.
+   */
+): Promise<{
+  entryId: string;
+  reviewStatus: EntryReviewStatus;
+  entryApproval: "auto" | "moderated";
+}> {
   const event = await eventRepository.findByIdOrSlug(eventId);
   if (!event || event.status !== "active") {
     throw new NotFoundError(ERROR_MESSAGES.EVENT.ENTRIES_CLOSED);
@@ -770,25 +791,21 @@ export async function enterEvent(
    * entrant.
    */
   /*
-   * ⚠ LEGACY FALLBACK ONLY — do not add a type to this expression.
+   * ⚠ THE LEGACY FALLBACK MOVED, it did not go away.
    *
-   * This was the whole decision until 2026-11-09, and it is `event.type ===`
-   * branching: the exact shape the governing principle calls a defect. It also
-   * meant a new type could not choose — `contest` is absent, so contest
-   * entries were moderated by accident, and changing that needed a release.
+   * The `event.type ===` expression that used to sit here is now
+   * `legacyEntryAutoApprove` in `../schemas/firestore`, consulted last by
+   * `resolveEventEntryApproval`. Behaviour is identical for every stored
+   * document — including the pre-2026-10-31 `raffle`/`spin_wheel` spellings,
+   * which it still normalises.
    *
-   * It survives ONLY so events already in the database behave exactly as they
-   * did. `resolveEntryApproval` consults it last. A NEW type declares its
-   * default in `event-types-seed-data.ts`; a single event overrides with
-   * `entryApproval` on its own row. Delete this once every type has a default.
+   * 🛑 It moved because a SECOND surface needs the answer: the participate
+   * page has to tell a participant whether their entry publishes immediately
+   * or waits for a moderator, and `entryApproval` had zero readers until it
+   * did. A copy of this expression in the reading app would be a second owner
+   * of the rule, and the two would eventually tell one person two different
+   * things about one entry.
    */
-  const legacyAutoApprove =
-    event.type === "poll" ||
-    event.type === "feedback" ||
-    eventType === "giveaway" ||
-    (event.type === "survey" &&
-      !(event.surveyConfig as any)?.entryReviewRequired);
-
   /*
    * The event's own setting wins, then the type's default, then the legacy
    * expression. Anything unrecognised resolves to MODERATED — fail closed, so
@@ -863,7 +880,7 @@ export async function enterEvent(
     entryStartSlot = already;
   }
 
-  const approvalMode = resolveEntryApproval(event, undefined, legacyAutoApprove);
+  const approvalMode = resolveEventEntryApproval(event);
   const autoApprove = approvalMode === "auto";
 
   const reviewStatus = autoApprove ? "approved" : "pending";
@@ -918,5 +935,5 @@ export async function enterEvent(
     userId: user?.uid,
   });
 
-  return { entryId: entry.id };
+  return { entryId: entry.id, reviewStatus, entryApproval: approvalMode };
 }

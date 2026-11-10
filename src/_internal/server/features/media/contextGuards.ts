@@ -16,6 +16,7 @@ import {
   type AllowedMime,
   PRODUCT_IMAGE_INDEX_MAX,
   PRODUCT_MAX_VIDEOS,
+  EVENT_ENTRY_MEDIA_INDEX_MAX,
 } from "../../../shared/media/limits";
 import {
   generateMediaFilename,
@@ -73,6 +74,18 @@ export const CONTEXT_LIMITS = {
   EVENT_IMAGE_MAX: 10,
   EVENT_WINNER_IMAGE_MAX: 5,
   EVENT_ADDITIONAL_IMAGE_MAX: 10,
+  /*
+   * PARTICIPANT entry media — INDEX space, not the per-event allowance.
+   *
+   * 🛑 Both read the same constant on purpose. The number of photos and the
+   * number of videos one entry may carry live on the EVENT DOCUMENT
+   * (`entryMedia.maxImages` / `entryMedia.maxVideos`) and are enforced by
+   * `checkEntryMedia`; writing 3 and 1 here would hardcode one contest's rules
+   * into the signed-URL issuer, where no event can override them. See
+   * `EVENT_ENTRY_MEDIA_INDEX_MAX`.
+   */
+  EVENT_ENTRY_IMAGE_MAX: EVENT_ENTRY_MEDIA_INDEX_MAX,
+  EVENT_ENTRY_VIDEO_MAX: EVENT_ENTRY_MEDIA_INDEX_MAX,
   BLOG_COVER_MAX: 1,
   BLOG_CONTENT_IMAGE_MAX: 10,
   BLOG_ADDITIONAL_IMAGE_MAX: 5,
@@ -86,6 +99,19 @@ type ImageOrPdfContextType = (typeof IMAGE_OR_PDF_CONTEXTS)[number];
 const PDF_ONLY_CONTEXTS = ["invoice", "payout-doc"] as const;
 type PdfOnlyContextType = (typeof PDF_ONLY_CONTEXTS)[number];
 
+/*
+ * 🛑 `event-entry-video` IS DELIBERATELY ABSENT FROM THIS SET.
+ *
+ * Every `event-*` context used to be in here, which made `maxVideos` on an
+ * event document unsatisfiable: a contest could advertise "3 photos and 1
+ * video", the server validator would accept a video, and the signed-URL
+ * issuer would refuse to mint a URL for one — so the number was configurable
+ * and unreachable at the same time. `event-entry-image` stays listed (an
+ * image slot must refuse a video); `event-entry-video` is checked in the
+ * opposite direction below, like `review-video`.
+ *
+ * Adding a new `event-*` context? Decide which of the two it is, explicitly.
+ */
 const IMAGE_ONLY_CONTEXT_TYPES = new Set([
   "store-logo",
   "store-banner",
@@ -94,6 +120,7 @@ const IMAGE_ONLY_CONTEXT_TYPES = new Set([
   "event-image",
   "event-winner-image",
   "event-additional-image",
+  "event-entry-image",
   "blog-cover",
   "blog-content-image",
   "blog-additional-image",
@@ -283,6 +310,44 @@ function applyMediaContextGuardsInner({
       idx,
       CONTEXT_LIMITS.EVENT_ADDITIONAL_IMAGE_MAX,
       "Event additional image index exceeds max allowed",
+    );
+    if (err) return err;
+  }
+
+  if (ctx.type === "event-entry-image") {
+    const idx = ctx.index ?? 1;
+    const err = indexGuard(
+      idx,
+      CONTEXT_LIMITS.EVENT_ENTRY_IMAGE_MAX,
+      "Entry image index exceeds max allowed",
+    );
+    if (err) return err;
+  }
+
+  /*
+   * The ONE video-capable event context. Checked in the opposite direction
+   * from the image-only set: a video slot must refuse a photo, so an entry
+   * photo cannot be filed as the entry's video and slip past the event's
+   * `maxImages` by being counted in the wrong bucket.
+   *
+   * ⚠ `detectedMime`-based, like `review-video` — the browser's `File.type` is
+   * untrusted and `/api/media/finalize` re-checks the magic bytes. This is the
+   * context-affinity rule, not the content check.
+   */
+  if (ctx.type === "event-entry-video") {
+    if (!isVideo) {
+      return {
+        ok: false,
+        status: 400,
+        error: "event-entry-video context requires a video file",
+        details: { context: ctx.type, detected: detectedMime },
+      };
+    }
+    const idx = ctx.index ?? 1;
+    const err = indexGuard(
+      idx,
+      CONTEXT_LIMITS.EVENT_ENTRY_VIDEO_MAX,
+      "Entry video index exceeds max allowed",
     );
     if (err) return err;
   }
