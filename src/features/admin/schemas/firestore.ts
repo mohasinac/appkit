@@ -1500,6 +1500,48 @@ export interface SiteSettingsDocument extends BaseDocument {
      */
     bornBy?: "buyer" | "seller";
   };
+  /**
+   * Buyer-protection cover — the CAP and the CLAIM WINDOWS.
+   *
+   * 🛑 These were constants, and the numbers are the product: how much cover
+   * is sold, and for how long it can be claimed. Changing either was a deploy,
+   * which is the deploy test failing on the thing a buyer paid for.
+   *
+   * ⚠ ABSENT MEANS THE CODE DEFAULT, not "unlimited" and not "zero". The
+   * constants in `shared/features/shipping/protections.ts` stay the fallback
+   * and keep their full reasoning — ₹25,000 came from this catalogue's own
+   * measured price bands, 48h/168h from what each failure can still be
+   * attributed within. Config moves the numbers; it does not invent them.
+   *
+   * 🛑 LENGTHENING A CLAIM WINDOW MOVES THE PAYOUT HOLD WITH IT. The hold must
+   * outlast every window money can still flow back out through, and
+   * `resolvePayoutHoldDays` already takes `maxClaimWindowHours` for exactly
+   * this. Callers must pass the RESOLVED window, never the constant — a
+   * 30-day claim window beside a 7-day hold pays a seller three weeks before
+   * the buyer's cover expires, and we would be funding the claim ourselves.
+   */
+  protection?: {
+    /** Rupee ceiling on a SALE-protection claim, line total including shipping. */
+    saleMaxValue?: number;
+    /**
+     * Hours from the delivery anchor in which a claim may be filed.
+     *
+     * ⚠ Per KIND, because the two are not the same product: a transit failure
+     * is knowable almost immediately, while "not as described" needs the buyer
+     * to actually inspect a collectible against its listing.
+     */
+    claimWindowHours?: { shipping?: number; sale?: number };
+    /**
+     * Listing types sale protection is never offered on.
+     *
+     * ⚠ An ARRAY REPLACES the code list wholesale when present — it does not
+     * merge. Merging would make an exclusion impossible to REMOVE by config,
+     * which is half a knob.
+     */
+    excludedListingTypes?: string[];
+    /** Whether a third-party graded item is excluded from sale protection. */
+    excludesGraded?: boolean;
+  };
   /*
    * 🛑 There is deliberately NO `sellerStanding` threshold group here, and it
    * was removed rather than triaged.
