@@ -7107,6 +7107,25 @@ export type {
   ListingTypeAccessContext,
   ListingTypeTier,
 } from "./_internal/shared/listing-types/tiers";
+/*
+ * Who may sell — the platform's own store, or anyone.
+ *
+ * 🛑 Absent config means OFF, unlike every sibling flag in
+ * `siteSettings.listings`. Collecting a buyer's money for a third party's
+ * goods is Payment Aggregator activity; the gate fails closed on purpose.
+ */
+export {
+  assertSellingAllowed,
+  blockedSellingStoreIds,
+  isSellingAllowedFor,
+  isThirdPartySellingEnabled,
+  platformSellerStoreId,
+  sellingRefusalReason,
+} from "./_internal/shared/selling/selling-gate";
+export type {
+  SellingGateContext,
+  SellingGateSettings,
+} from "./_internal/shared/selling/selling-gate";
 // SB-UNI-X5 2026-05-13 â€" action telemetry sink.
 export {
  actionTracker,

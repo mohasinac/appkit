@@ -1316,6 +1316,54 @@ export interface SiteSettingsDocument extends BaseDocument {
      * and removing an entry re-opens it.
      */
     closedPaths?: string[];
+    /**
+     * May anyone OTHER than the platform's own store create listings and sell?
+     *
+     * ────────────────────────────────────────────────────────────────────
+     * 🛑 ABSENT MEANS OFF. The opposite contract to every sibling above.
+     * ────────────────────────────────────────────────────────────────────
+     *
+     * `listingTypes` / `categoryTypes` / `browsePages` all read "absent means
+     * ENABLED", because withholding a browse page is a withdrawal of something
+     * that otherwise works. This one inverts deliberately: an install that has
+     * never seen this screen must NOT be selling other people's goods, because
+     * collecting a buyer's money for a third party's stock is unauthorised
+     * Payment Aggregator activity under the RBI (Regulation of Payment
+     * Aggregators) Directions 2025 — a criminal exposure under PSS Act s.26,
+     * not a product defect. **Fail closed.**
+     *
+     * ⚠ Reading an absent value as `true` here is the single mistake this
+     * field exists to prevent. Every reader must spell `=== true`.
+     *
+     * 🛑 A KILL SWITCH, NOT A LAUNCH FLAG — it is flipped in BOTH directions,
+     * at any time, by an admin. Turning it off must not strand money: orders
+     * already in flight complete (delivery, disputes, refunds, any owed
+     * settlement), existing third-party listings are hidden rather than
+     * deleted, and seller dashboards stay READABLE so a seller can still see
+     * their history. Only NEW listings and NEW checkouts are refused.
+     *
+     * ⚠ Refusals must NAME the reason. A payout or a checkout that silently
+     * no-ops is how money goes missing; one that refuses with a stated cause
+     * is a state an operator can act on.
+     */
+    thirdPartySellingEnabled?: boolean;
+    /**
+     * The platform's OWN store — the one account that may sell while
+     * `thirdPartySellingEnabled` is off.
+     *
+     * 🛑 An ID, not a branch. The platform store is an ORDINARY seller
+     * account that happens to be named here; it pays the same fees, ranks the
+     * same way and carries the same dispute exposure as any other. Giving it
+     * preferential treatment is both the conduct the CCI acted on against
+     * Amazon and Flipkart, and a measurement error — first-party margins that
+     * skip their own commission read ~8% better than they are, and every
+     * stocking decision made off that comparison is wrong.
+     *
+     * ⚠ Absent while `thirdPartySellingEnabled` is off means NOBODY may sell.
+     * That is the correct degradation — a misconfigured install sells nothing
+     * rather than selling everything.
+     */
+    platformSellerStoreId?: string;
   };
   /**
    * Admin-authored HTML overrides for the public policy pages. When a key holds
