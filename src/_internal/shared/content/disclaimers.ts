@@ -60,7 +60,9 @@ export type DisclaimerId =
   /** GST shown on an invoice. */
   | "tax-computation"
   /** An automated decision — a timer cancelled, approved or completed something. */
-  | "automated-decision";
+  | "automated-decision"
+  /** WHO PAYS to send an item back, or when a delivery fails. */
+  | "return-cost";
 
 export interface DisclaimerEntry {
   /** Short heading, when the surface renders one. Omit for inline notes. */
@@ -322,6 +324,53 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
       "obligation notifications",
       "OrderStatusTimeline",
       "AdminObligationsView",
+    ],
+  },
+
+  /*
+   * ── 🛑 THE ONE THE SCHEMA ASKED FOR IN WRITING ───────────────────────────
+   *
+   * `siteSettings.returns.bornBy` carries its own instruction: *"Must be
+   * DISCLOSED before purchase. A buyer who learns at RTO that they owe
+   * freight has been charged for something they never agreed to, which is a
+   * chargeback with a good story behind it."*
+   *
+   * The field had ZERO readers — schema, two seeds, nothing else. So the
+   * requirement was recorded and then not met, which is this project's
+   * recurring defect class and was shipped by the lane that added the field.
+   *
+   * Three things this text has to do:
+   *
+   *  1. **Name WHO PAYS, from config**, so an operator changing the setting
+   *     changes the published promise rather than contradicting it.
+   *  2. 🛑 **Say it is a DEFAULT, not a verdict.** The schema is explicit that
+   *     fault moves it: not-as-described moves it to the seller, a wrong
+   *     address moves it to the buyer. Publishing it as absolute would be a
+   *     statement we overrule in practice every week.
+   *  3. **Cover the FAILED DELIVERY case by name.** RTO is where this
+   *     actually bites and it is the one a buyer has never thought about —
+   *     "returns" alone reads as "if I change my mind".
+   *
+   * ⚠ `legal`, not `warning`. It qualifies a decision rather than preventing
+   * an irreversible one, and the tone doc reserves `warning` for the latter.
+   */
+  "return-cost": {
+    heading: "Who pays for a return",
+    body:
+      "If an item goes back, return postage is normally paid by {{returnCostBornBy}} — and the same applies " +
+      "to a delivery that fails and comes back to us because it was refused, the address was wrong or nobody " +
+      "could be reached. " +
+      "This is the default when nobody is at fault. Where fault is established it moves: an item that is not " +
+      "as described, is the wrong item or arrives faulty is returned at the seller's cost, and you are not " +
+      "charged freight for our or a seller's mistake. " +
+      "{{siteName}} does not absorb return freight, so this cost is never simply written off.",
+    tone: "legal",
+    surfaces: [
+      "CheckoutSummary",
+      "ProductDetailPageView",
+      "/refund-policy",
+      "/fees",
+      "OrderDetailView",
     ],
   },
 };

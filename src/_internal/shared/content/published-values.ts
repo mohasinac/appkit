@@ -131,6 +131,21 @@ export type PublishedValueKey =
   | "refundBusinessDaysMin"
   | "refundBusinessDaysMax"
   /*
+   * WHO PAYS to send an item back, and who eats a failed delivery.
+   *
+   * 🛑 Published because `siteSettings.returns.bornBy`'s own schema comment
+   * says it MUST be: *"a buyer who learns at RTO that they owe freight has
+   * been charged for something they never agreed to, which is a chargeback
+   * with a good story behind it."* The requirement was written down and had
+   * no implementation — the field had ZERO readers of any kind.
+   *
+   * ⚠ Renders as a NOUN PHRASE ("the buyer" / "the seller"), not the raw
+   * slug, so one token composes into several sentences without each surface
+   * re-deriving the wording — and so a third option can never leak a bare
+   * enum member into published legal copy.
+   */
+  | "returnCostBornBy"
+  /*
    * ── The operator's own name ───────────────────────────────────────────────
    *
    * Seven disclaimer bodies name the platform — "the draw is run by X", "X is
@@ -172,6 +187,15 @@ export interface PublishedValueSettings {
   codDepositPercent?: number;
   giftWrapFee?: number;
   returnWindowDays?: number;
+  /**
+   * `siteSettings.returns.bornBy`.
+   *
+   * 🛑 The union has no `"platform"` member here either, deliberately — the
+   * settings schema already made the forbidden option unrepresentable, and
+   * widening it at the copy layer would let a value the settings cannot hold
+   * be published as policy.
+   */
+  returnsBornBy?: "buyer" | "seller";
 }
 
 /*
@@ -240,6 +264,44 @@ function policyHours(kind: keyof typeof OBLIGATION_POLICIES): number {
  * constant the code enforces, and restating it here is how the four
  * contradictions above happened in the first place.
  */
+/**
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 MEASURED 2026-11-12: NO CALLER PASSES `settings`. NOT ONE.
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * Eight call sites across the tree, every one of them `resolvePublishedValues()`
+ * with no argument:
+ *
+ *   core/brand-text.ts ×2 · BuyerCollectorDropsGuideView · AdminOrdersGuideView
+ *   FAQAccordion · RefundRequestView · StoreOrdersGuideView · ui/Disclaimer
+ *
+ * The ONLY occurrence of an argument anywhere is inside a doc comment on
+ * `FAQAccordion` telling a future caller to build them that way.
+ *
+ * **So every settings-driven token below currently publishes its FALLBACK**,
+ * whatever an admin has configured — `platformFeeMax`, `platformFeePercent`,
+ * both protection percents and minimums, `codHandlingPercent`,
+ * `codDepositPercent`, `giftWrapFee`, `returnWindowDays` and the new
+ * `returnCostBornBy`.
+ *
+ * ⚠ This is PRE-EXISTING and not caused by the token that prompted the
+ * measurement. It is recorded here because the whole point of this indirection
+ * is that published copy cannot drift from config — and a reader finding the
+ * `{{token}}` mechanism would reasonably assume it is wired. It is wired at
+ * the DEFINITION and not at the CALL.
+ *
+ * 🛑 It cannot be fixed inside this function. `resolvePublishedValues()` is
+ * pure and synchronous and is called at MODULE SCOPE in client components; a
+ * settings read here is exactly what `FAQAccordion`'s and `Disclaimer`'s own
+ * comments forbid, and would fire one read per accordion. The fix belongs at
+ * the PAGE level: build the values from settings once and pass them down,
+ * which both of those components already accept as a prop.
+ *
+ * ⚠ Consequence while it stands: the code defaults and the SEEDED settings
+ * must agree, or the page says one thing and the charge is another. They do
+ * today — checked for `returnCostBornBy` specifically, whose seed and schema
+ * default are both `"buyer"`.
+ */
 export function resolvePublishedValues(
   settings?: PublishedValueSettings,
 ): PublishedValues {
@@ -298,6 +360,23 @@ export function resolvePublishedValues(
      */
     refundBusinessDaysMin: "5",
     refundBusinessDaysMax: "7",
+
+    /*
+     * 🛑 THE FALLBACK MUST MATCH THE SCHEMA'S, or the page says one thing and
+     * the code does another — which is worse than not publishing at all,
+     * because a disclosed-but-wrong policy is the one a buyer relies on.
+     *
+     * `siteSettings.returns.bornBy` documents *"absent means `buyer`"*, so
+     * absent publishes "the buyer". Not a preference: it matches how COD RTO
+     * actually arises (refused, unreachable, wrong address) rather than
+     * asserting seller fault by default.
+     *
+     * ⚠ `=== "seller"` rather than a lookup table, so an unrecognised value
+     * from a newer deploy publishes the DEFAULT rather than a bare slug. A
+     * disclaimer reading "paid by courier_partner" is the degradation this
+     * avoids.
+     */
+    returnCostBornBy: settings?.returnsBornBy === "seller" ? "the seller" : "the buyer",
 
     /*
      * Admin setting first, then the brand the consumer INJECTED at boot.

@@ -38,6 +38,7 @@ import { Button } from "../../../ui/components/Button";
 import { Container, Row, Stack } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
+import { Disclaimer } from "../../../ui/components/Disclaimer";
 import { Main, Section, Ul, Ol, Li } from "../../../ui/components/Semantic";
 import { PriceDisplay } from "../../../ui/components/PriceDisplay";
 import { RichText } from "../../../ui/rich-text/RichText";
@@ -1158,6 +1159,24 @@ export async function ProductDetailPageView({
                       </Text>
                     </Row>
                   )}
+                  {/*
+                    🛑 WHO PAYS the return freight — and the schema field it
+                    renders asked for this in writing: *"Must be DISCLOSED
+                    before purchase. A buyer who learns at RTO that they owe
+                    freight has been charged for something they never agreed
+                    to, which is a chargeback with a good story behind it."*
+
+                    Here rather than on `/refund-policy`, for the reason rule 1
+                    of the registry gives: visible before the decision it
+                    qualifies. The decision is on this page.
+
+                    ⚠ Inside the Delivery & Returns block deliberately, so it
+                    sits with "Returns accepted" / "Final sale" rather than
+                    below the fold as a separate legal slab. The rows above say
+                    WHETHER you can return; this says what it COSTS, which is
+                    the half a buyer never thinks to ask.
+                  */}
+                  <Disclaimer id="return-cost" inline />
                 </Stack>
               )}
 
