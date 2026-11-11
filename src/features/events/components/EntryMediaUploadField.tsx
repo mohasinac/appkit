@@ -50,6 +50,7 @@
  */
 
 import { useCallback, useMemo } from "react";
+import { useImageCropGate } from "../../media/upload/useImageCropGate";
 import { MediaUploadList } from "../../media/upload/MediaUploadList";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import type { MediaField } from "../../media/types/index";
@@ -130,8 +131,22 @@ export function EntryMediaUploadField({
     finalize: finalizeEndpoint,
   });
 
+  const cropGate = useImageCropGate();
+
   const handleUpload = useCallback(
-    async (file: File): Promise<string> => {
+    async (rawFile: File): Promise<string> => {
+      /*
+       * ── 🛑 THE CROP STEP ──────────────────────────────────────────────
+       *
+       * Owner, 2026-11-11: *"keep the crop tool as universal"*. An entrant
+       * submits a photo to be JUDGED, so framing it is part of entering —
+       * and this field had zero references to the cropper that already
+       * shipped in appkit.
+       *
+       * Images only: a contest video goes straight through, because there is
+       * no canvas crop for one. Cancelling uploads the original.
+       */
+      const { file } = await cropGate.beginAsync(rawFile);
       /*
        * 🛑 `classifyMime`, the SAME classifier `applyMediaContextGuards` runs
        * server-side — not a `startsWith("video/")` test. The server decides
@@ -181,6 +196,12 @@ export function EntryMediaUploadField({
   );
 
   return (
+    <>
+    {/*
+      🛑 The crop modal must be mounted, or `beginAsync`'s promise never
+      settles and every image upload hangs with a spinner and no way out.
+    */}
+    {cropGate.modal}
     <MediaUploadList
       /*
        * The label names what this event accepts. It said "Your photos" while
@@ -227,5 +248,6 @@ export function EntryMediaUploadField({
       helperText={describeEntryMediaRules(limits)}
       disabled={disabled}
     />
+    </>
   );
 }

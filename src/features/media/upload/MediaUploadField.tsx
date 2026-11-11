@@ -32,6 +32,7 @@ import dynamic from "next/dynamic";
 import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { extractVideoPosterFrame, posterBlobAsFile } from "./video-poster";
+import { useImageCropGate } from "./useImageCropGate";
 import { downscaleImageFile } from "./downscale-image";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 import {
@@ -121,6 +122,14 @@ export interface MediaUploadFieldProps {
   captureSource?: "file-only" | "camera-only" | "both";
   captureMode?: "photo" | "video" | "both";
   enableTrim?: boolean;
+  /**
+   * Offer the crop step on image uploads. **Defaults to `true`** — owner,
+   * 2026-11-11: *"keep the crop tool as universal"*.
+   *
+   * ⚠ Only ever applies to images; a video goes straight through (there is no
+   * canvas crop for one) and is handled by `enableTrim` instead.
+   */
+  enableCrop?: boolean;
   enableThumbnail?: boolean;
   onThumbnailChange?: (url: string) => void;
   /**
@@ -458,6 +467,7 @@ export function MediaUploadField({
   captureSource = "both",
   captureMode = "photo",
   enableTrim = true,
+  enableCrop = true,
   enableThumbnail = true,
   onThumbnailChange,
   onDurationChange,
@@ -471,6 +481,7 @@ export function MediaUploadField({
   autoCapturePoster = true,
 }: MediaUploadFieldProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const cropGate = useImageCropGate(enableCrop);
   const [error, setError] = useState<string | null>(null);
   const [pendingVideoUrl, setPendingVideoUrl] = useState<string | null>(null);
   const [showTrimModal, setShowTrimModal] = useState(false);
@@ -689,7 +700,20 @@ export function MediaUploadField({
     setPendingVideoUrl(null);
   };
 
-  const uploadSingleFile = async (file: File) => {
+  const uploadSingleFile = async (rawFile: File) => {
+    /*
+     * ── 🛑 THE CROP STEP, for every field that uses this one ──────────────
+     *
+     * Owner, 2026-11-11: *"keep the crop tool as universal"*. The cropper was
+     * built, exported and wired into `ImageUpload` and `AvatarUpload` only —
+     * this SHARED field, which product, store and blog forms upload through,
+     * had zero references to it. So a seller cropping a product photo was a
+     * feature that existed and could not be reached.
+     *
+     * Images only, and cancelling proceeds with the original — see
+     * `useImageCropGate`.
+     */
+    const { file } = await cropGate.beginAsync(rawFile);
     /*
      * Bound the pixel dimensions BEFORE the byte check, deliberately.
      *
@@ -972,6 +996,14 @@ export function MediaUploadField({
       )}
 
       {error && <Alert variant="error">{error}</Alert>}
+
+      {/*
+        🛑 The crop modal MUST render here. `beginAsync` returns a promise that
+        only settles when the user crops or cancels — so a field that gates its
+        upload on it and never mounts the modal would hang on every image
+        forever, with a spinner and no way out.
+      */}
+      {cropGate.modal}
 
       {pendingVideoUrl && (
         <VideoTrimModal
