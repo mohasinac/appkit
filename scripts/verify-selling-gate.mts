@@ -33,6 +33,8 @@ import {
   sellingRefusalReason,
   type SellingGateSettings,
 } from "../src/_internal/shared/selling/selling-gate";
+import { siteSettingsSeedData } from "../src/seed/site-settings-seed-data";
+import { storesSeedData } from "../src/seed/stores-seed-data";
 
 let failures = 0;
 let checks = 0;
@@ -159,6 +161,42 @@ check(
   "a missing store id is reported as an offender, not skipped",
   blockedSellingStoreIds([OURS, undefined], closed),
   [""],
+);
+
+/*
+ * ── The seed, against the real store rows ────────────────────────────────
+ *
+ * 🛑 Everything above tests the LOGIC with hand-made settings. This tests the
+ * DATA WE SHIP, which is a different failure: the resolver can be perfect
+ * while the seed names a store that does not exist, or forgets the id
+ * entirely — in which case a freshly seeded site sells nothing and the cause
+ * is three files away from the code anyone would look at.
+ *
+ * It is the same class as the `closedPaths` erasure found while building
+ * this: correct code, wrong data, and nothing failing loudly.
+ */
+console.log("\n── the SEEDED config against the SEEDED stores ──");
+const seededSettings = siteSettingsSeedData as SellingGateSettings;
+const seededStoreIds = storesSeedData.map((s) => s.id).filter((id): id is string => typeof id === "string");
+
+check("seed ships the flag explicitly", seededSettings.listings?.thirdPartySellingEnabled, false);
+check("seed names a platform store", typeof platformSellerStoreId(seededSettings), "string");
+check(
+  "🛑 the nominated store EXISTS in the store seed",
+  seededStoreIds.includes(platformSellerStoreId(seededSettings) ?? ""),
+  true,
+);
+const sellers = seededStoreIds.filter((id) => isSellingAllowedFor(id, seededSettings));
+check("exactly ONE seeded store may sell", sellers.length, 1);
+check("and it is the nominated one", sellers[0], platformSellerStoreId(seededSettings));
+check(
+  "every other seeded store is refused",
+  seededStoreIds.filter((id) => !isSellingAllowedFor(id, seededSettings)).length,
+  seededStoreIds.length - 1,
+);
+console.log(
+  `       (${seededStoreIds.length} seeded stores — ${sellers.length} sells, ` +
+    `${seededStoreIds.length - 1} refused: ${seededStoreIds.filter((i) => i !== sellers[0]).join(", ")})`,
 );
 
 console.log(
