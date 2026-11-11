@@ -1049,6 +1049,42 @@ export interface OrderDocument extends BaseDocument {
   /** Fee charged for sale protection, decimal rupees — snapshot of siteSettings.commissions.saleProtectionFeePercent/Min at order time. */
   saleProtectionFee?: number;
 
+  /**
+   * Add-ons by registry id, and what each one was CHARGED.
+   *
+   * The generic shape that lets a fifth add-on be an `ADDON_REGISTRY` row
+   * instead of another pair of fields here. Read through
+   * `resolveAddonSelection`, which knows the precedence against the named
+   * fields above.
+   *
+   * ────────────────────────────────────────────────────────────────────────
+   * 🛑 A SNAPSHOT, exactly like its named predecessors — and for the reason
+   * `saleProtectionAddon` already documents above.
+   * ────────────────────────────────────────────────────────────────────────
+   *
+   * An admin turning an add-on off platform-wide, or repricing it, must NOT
+   * retroactively void or alter cover a buyer already paid for. Eligibility
+   * and refunds at claim time read THESE fields, never the live registry or
+   * the live `commissions`. The registry says what is *offered and priced
+   * today*; the order says what was *sold*.
+   *
+   * 🛑 `addonFees` is therefore NOT derivable by re-running the pricing, and
+   * must never be recomputed on read. The configured percentage may have
+   * moved since; the charge did not.
+   *
+   * ⚠ Both are keyed by registry id, so 🛑 renaming an id is a DATA
+   * MIGRATION — historical orders carry the old key and nothing rewrites
+   * them. Stated on `AddonDescriptor.id` too, because this is the file where
+   * forgetting it costs a refund calculation.
+   *
+   * ⚠ Absent on every order written before this existed. That is not missing
+   * data: those orders' add-ons live in the named fields, which stay
+   * authoritative for the four they name.
+   */
+  addons?: Record<string, boolean>;
+  /** What each add-on was actually charged, decimal rupees. See `addons`. */
+  addonFees?: Record<string, number>;
+
   // ── P-8 GST — buyer-facing tax breakdown, all decimal rupees, set when siteSettings.gst.enabled ──
   /** Order subtotal before GST — the amount GST is computed on. */
   taxableAmount?: number;
