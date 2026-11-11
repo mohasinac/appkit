@@ -381,6 +381,21 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   },
   returns: {
     windowDays: 7,
+    /*
+     * 🛑 Never the platform — owner, 2026-11-11. At 40% COD × 30% RTO that is
+     * ~12 returns a month and ~11% of net profit if absorbed, which is the
+     * largest avoidable loss in the fee model.
+     *
+     * `"buyer"` because that is how a COD RTO actually arises — refused,
+     * unreachable, wrong address. ⚠ It is the no-fault DEFAULT only: a
+     * dispute finding the item was not as described moves the cost to the
+     * seller, and that adjudication lives with disputes, not here.
+     *
+     * 🛑 Owed alongside this: SAYING SO before purchase. A buyer who first
+     * learns they owe return freight at RTO has been charged for something
+     * they never agreed to.
+     */
+    bornBy: "buyer",
   },
   faq: {
     variables: {

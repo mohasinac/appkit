@@ -1470,6 +1470,35 @@ export interface SiteSettingsDocument extends BaseDocument {
   };
   returns: {
     windowDays: number;
+    /**
+     * Who pays when a parcel comes back — a buyer return, or an RTO.
+     *
+     * 🛑 NEVER the platform. Owner, 2026-11-11: *"RTO and returns are borne by
+     * the buyer or the seller, not by the platform."* Sized on the real
+     * numbers: at 40% COD × 30% RTO that is ~12 RTOs a month and roughly
+     * **11% of net profit** if absorbed — the single largest avoidable loss
+     * in the model, which is why it is a setting and not an accident.
+     *
+     * ⚠ The union deliberately has no `"platform"` member. Making the
+     * forbidden option unrepresentable is cheaper than a rule that says not
+     * to pick it, and this is a value an operator will be tempted by the
+     * first time a buyer complains.
+     *
+     * ⚠ A DEFAULT, not a verdict. It decides who bears the cost when fault is
+     * not established; a dispute that finds the item was not as described
+     * moves it to the seller regardless, and one that finds the address was
+     * wrong moves it to the buyer. The adjudication lives with disputes
+     * (Lane D), not here.
+     *
+     * 🛑 Must be DISCLOSED before purchase. A buyer who learns at RTO that
+     * they owe freight has been charged for something they never agreed to,
+     * which is a chargeback with a good story behind it.
+     *
+     * Absent means `"buyer"` — matching how COD RTO actually arises
+     * (refused, unreachable, wrong address) rather than asserting seller
+     * fault by default.
+     */
+    bornBy?: "buyer" | "seller";
   };
   /*
    * 🛑 There is deliberately NO `sellerStanding` threshold group here, and it
@@ -2028,6 +2057,17 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   },
   returns: {
     windowDays: 7,
+    /*
+     * ⚠ Spelled out even though absent already means `"buyer"`, because this
+     * is a field whose absence reads as "undecided" rather than as a default —
+     * and who pays for a returned parcel is not something an install should
+     * discover by experiment.
+     *
+     * ✅ Generic-safe, unlike `platformSellerStoreId`: every install wants
+     * returns borne by a party to the sale, so this belongs in appkit's
+     * fallback rather than only in one client's seed.
+     */
+    bornBy: "buyer",
   },
   // Reachable is the safe default, and an older settings document with no
   // `support` group must not read as "support is off".
