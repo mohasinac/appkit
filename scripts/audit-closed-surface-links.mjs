@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: inspects appkit's BUILT dist, not source; consumers ship no dist.
 /**
  * audit-closed-surface-links — seeded CONTENT must not advertise a surface the
  * seeded SETTINGS close.

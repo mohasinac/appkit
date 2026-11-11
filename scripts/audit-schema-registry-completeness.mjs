@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: appkit owns the schema registry; apps re-export it.
 /**
  * audit-schema-registry-completeness
  *

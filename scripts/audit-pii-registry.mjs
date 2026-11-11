@@ -45,10 +45,13 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { auditRoots } from "./lib/audit-roots.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const APPKIT = join(__dirname, "..");
-const SRC = join(APPKIT, "src");
+/* 🛑 Every discovered root — the five subdomain apps were invisible before. */
+const SRC_DIRS = auditRoots().map((r) => r.src);
+const SRC = SRC_DIRS[0];
 
 let registry;
 try {

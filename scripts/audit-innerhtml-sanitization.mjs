@@ -26,17 +26,35 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { auditRoots, REPO_ROOT } from "./lib/audit-roots.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SRC_DIR = join(__dirname, "..", "src");
+/*
+ * 🛑 EVERY root, not just appkit's own `src`.
+ *
+ * This read `join(__dirname, "..", "src")`, so the five subdomain apps —
+ * auth, blogs, bookkeeping, events, media — were invisible to this rule, and
+ * they are where the route handlers and admin surfaces now live. Roots are
+ * DISCOVERED, so a sixth app is covered the day it exists.
+ */
+const SRC_DIRS = auditRoots().map((r) => r.src);
 
 // Files already audited and confirmed to sanitize before every .innerHTML
 // assignment (RichTextEditor.tsx: sanitizeRichTextHtml(); RichText.tsx:
 // sanitiseHtml()). Adding a file here is a manual, reviewed decision — not
 // something this script infers automatically.
+/*
+ * 🛑 REPO-RELATIVE paths, because the scan now covers several roots.
+ *
+ * These were root-relative (`ui/components/RichTextEditor.tsx`), which was
+ * unambiguous while only `appkit/src` was scanned and silently stopped
+ * matching the moment the subdomain apps joined — turning two reviewed,
+ * sanitising call sites back into failures. Naming the app makes an
+ * allowlist entry mean one file rather than one file per root.
+ */
 const ALLOWLIST = new Set([
-  "ui/components/RichTextEditor.tsx",
-  "ui/rich-text/RichText.tsx",
+  "appkit/src/ui/components/RichTextEditor.tsx",
+  "appkit/src/ui/rich-text/RichText.tsx",
 ]);
 
 const SUPPRESS_RE = /\/\/\s*audit-innerhtml-ok\b/;
@@ -58,9 +76,9 @@ function walk(dir, files = []) {
 
 const violations = [];
 
-for (const file of walk(SRC_DIR)) {
+for (const file of SRC_DIRS.flatMap((d) => walk(d))) {
   if (/__tests__|\.test\.[tj]sx?$/.test(file)) continue;
-  const rel = relative(SRC_DIR, file).replace(/\\/g, "/");
+  const rel = relative(REPO_ROOT, file).replace(/\\/g, "/");
   if (ALLOWLIST.has(rel)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
   for (let i = 0; i < lines.length; i++) {

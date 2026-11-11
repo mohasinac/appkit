@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: verifies appkit's built dist CSS artefacts; consumers ship no dist.
 /*
  * Every stylesheet appkit owns must actually SHIP in dist/styles.css.
  *

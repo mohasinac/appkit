@@ -29,9 +29,18 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { auditRoots, REPO_ROOT } from "./lib/audit-roots.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SRC_DIR = join(__dirname, "..", "src");
+/*
+ * 🛑 EVERY root, not just appkit's own `src`.
+ *
+ * This read `join(__dirname, "..", "src")`, so the five subdomain apps —
+ * auth, blogs, bookkeeping, events, media — were invisible to this rule, and
+ * they are where the route handlers and admin surfaces now live. Roots are
+ * DISCOVERED, so a sixth app is covered the day it exists.
+ */
+const SRC_DIRS = auditRoots().map((r) => r.src);
 
 const REQUIRED_KEYS = [
   "surface", "padding", "paddingX", "paddingY",
@@ -135,7 +144,7 @@ function extractShorthandKeys(objectText) {
 
 const violations = [];
 
-for (const file of walk(SRC_DIR)) {
+for (const file of SRC_DIRS.flatMap((d) => walk(d))) {
   if (/__tests__|\.test\.[tj]sx?$/.test(file)) continue;
   const content = readFileSync(file, "utf8");
   if (!content.includes("SurfaceProps")) continue;
@@ -151,7 +160,7 @@ for (const file of walk(SRC_DIR)) {
   }
   if (interfaces.length === 0) continue;
 
-  const rel = relative(SRC_DIR, file).replace(/\\/g, "/");
+  const rel = relative(REPO_ROOT, file).replace(/\\/g, "/");
 
   interfaces.forEach((iface, idx) => {
     if (SUPPRESS_RE.test(lineText(content, iface.index))) return;

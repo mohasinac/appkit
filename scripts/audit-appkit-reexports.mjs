@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: checks appkit's own barrel re-exports; a consumer has no barrels to audit.
 /**
  * audit-appkit-reexports.mjs — barrel discipline for the appkit public API.
  *

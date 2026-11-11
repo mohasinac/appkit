@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: appkit owns the Sieve constants these views read.
 /**
  * audit-sieve-constants-views.mjs — Sieve / sort string-literal usage in view files.
  *

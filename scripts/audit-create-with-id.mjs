@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: appkit owns BaseRepository and its create paths.
 /**
  * audit-create-with-id.mjs — PII-encrypting repos must override `createWithId`.
  *

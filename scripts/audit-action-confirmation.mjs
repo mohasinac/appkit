@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: reads appkit's own action-registry.ts; apps consume actions, never declare them.
 /**
  * audit-action-confirmation.mjs — danger ActionDefs must have confirmation.
  *

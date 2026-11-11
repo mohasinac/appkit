@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: enforces appkit's internal _internal/{client,shared,server} layering, which exists only in appkit.
 /**
  * appkit-audit — boundary violation checker.
  *

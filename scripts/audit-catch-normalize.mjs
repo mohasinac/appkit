@@ -27,14 +27,20 @@
 import { readFileSync, statSync, readdirSync } from "node:fs";
 import { join, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { auditRoots } from "./lib/audit-roots.mjs";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(SCRIPT_DIR, "..", "..");
 
-const SCAN_ROOTS = [
-  join(REPO_ROOT, "appkit", "src"),
-  join(REPO_ROOT, "src"),
-];
+/*
+ * 🛑 Every audited root, INCLUDING the five subdomain apps.
+ *
+ * This list was `[appkit/src, src]` — appkit and the shop. The subdomains
+ * (auth, blogs, bookkeeping, events, media) carry 271 source files between
+ * them, and not one was ever scanned by this rule. They are discovered rather
+ * than listed, so a sixth app is covered the day it exists.
+ */
+const SCAN_ROOTS = auditRoots().map((r) => r.src);
 
 const EXCLUDED_DIRS = new Set([
   "node_modules", "dist", ".next", "out", "__tests__", "__mocks__",

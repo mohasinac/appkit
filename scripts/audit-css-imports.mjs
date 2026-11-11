@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: governs how appkit's own components import their stylesheets.
 /**
  * audit-css-imports.mjs — block CSS `@import` of node_modules.
  *

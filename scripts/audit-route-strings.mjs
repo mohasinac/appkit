@@ -18,6 +18,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join, extname, relative, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { auditRoots } from "./lib/audit-roots.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const APPKIT_ROOT = join(__dirname, "..");
@@ -52,7 +53,8 @@ function walk(dir, files = []) {
 }
 
 const violations = [];
-for (const root of [join(APPKIT_ROOT, "src"), join(REPO_ROOT, "src")]) {
+/* 🛑 Every discovered root — the five subdomain apps were invisible before. */
+for (const root of auditRoots().map((r) => r.src)) {
   for (const file of walk(root)) {
     const rel = relative(REPO_ROOT, file).replace(/\\/g, "/");
     if (EXCLUDE_FILE_SUFFIXES.some(s => rel.endsWith(s))) continue;

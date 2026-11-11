@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: governs appkit's ui/forms primitives; apps use them, never define them.
 /**
  * audit-field-primitive-contract.mjs — ui/forms Field* wrapper contract check.
  *

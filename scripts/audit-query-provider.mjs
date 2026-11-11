@@ -20,11 +20,13 @@ import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { auditRoots } from "./lib/audit-roots.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 
-const SCAN_DIRS = [join(ROOT, "src"), join(ROOT, "../src")];
+/* 🛑 Every discovered root — the five subdomain apps were invisible before. */
+const SCAN_DIRS = auditRoots().map((r) => r.src);
 
 const SKIP_DIRS = new Set(["node_modules", ".next", "dist", "scripts", "__tests__", "__mocks__"]);
 const SKIP_FILE_RE = /\.(d\.ts|test\.tsx?|spec\.tsx?)$/;

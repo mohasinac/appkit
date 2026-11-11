@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: appkit owns the Firestore document schemas.
 /**
  * audit-firestore-schema-coverage
  *

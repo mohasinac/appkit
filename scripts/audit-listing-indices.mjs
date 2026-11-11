@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: takes an explicit path argument; the caller chooses the scope.
 /**
  * audit-listing-indices.mjs — listing-page Firestore composite-index coverage.
  *

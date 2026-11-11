@@ -28,9 +28,18 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, extname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { dirname } from "node:path";
+import { auditRoots } from "./lib/audit-roots.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SRC_DIR = join(__dirname, "..", "src");
+/*
+ * 🛑 EVERY root, not just appkit's own `src`.
+ *
+ * This read `join(__dirname, "..", "src")`, so the five subdomain apps —
+ * auth, blogs, bookkeeping, events, media — were invisible to this rule, and
+ * they are where the route handlers and admin surfaces now live. Roots are
+ * DISCOVERED, so a sixth app is covered the day it exists.
+ */
+const SRC_DIRS = auditRoots().map((r) => r.src);
 
 // Matches a hyphen immediately followed by an arbitrary-value bracket that
 // opens with a template interpolation: `-[${`. This exact character
@@ -54,7 +63,7 @@ function walk(dir, files = []) {
 
 const violations = [];
 
-for (const file of walk(SRC_DIR)) {
+for (const file of SRC_DIRS.flatMap((d) => walk(d))) {
   if (/__tests__|\.test\.[tj]sx?$/.test(file)) continue;
   const lines = readFileSync(file, "utf8").split("\n");
   for (let i = 0; i < lines.length; i++) {

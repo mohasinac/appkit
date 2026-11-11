@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: appkit owns every repository; apps call them, never define them.
 /**
  * audit-repository-fields.mjs — repository Sieve field correctness checker.
  *

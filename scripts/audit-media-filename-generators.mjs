@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: targets one appkit file (utils/id-generators.ts) by design.
 /**
  * audit-media-filename-generators
  *

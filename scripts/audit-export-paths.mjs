@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// audit-scope-ok: validates appkit's package.json `exports` map; consumers do not publish subpaths.
 /**
  * audit-export-paths.mjs — verifies every re-export in appkit entry points resolves to a
  * source file that actually exists on disk.
