@@ -22,6 +22,7 @@ import {
 } from "../../../errors";
 import { assertListingTypeAllowed } from "../../../_internal/shared/listing-types/tiers";
 import { assertSellingAllowed } from "../../../_internal/shared/selling/selling-gate";
+import { stripUnearnedPromotion } from "../../../_internal/shared/selling/promotion-fields";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { sellerProfileRepository } from "../repository/seller-profile.repository";
@@ -911,7 +912,33 @@ export async function createSellerProduct(
     capabilities: store.capabilities,
   });
 
-  const finalizedData = await finalizeProductMediaReferences(input);
+  /*
+   * 🛑 A seller cannot promote their own listing for free.
+   *
+   * `isPromoted` and `featured` are in the seller form schema, the product
+   * write allowlist AND the public allowlist, with nothing between them
+   * checking anything — so ticking a box put a listing in the homepage deals
+   * rail at no cost. `featured_placement` has been the capability for this all
+   * along: declared, admin-grantable, and promised to sellers in the
+   * capabilities guide, with zero enforcement readers.
+   *
+   * ⚠ STRIPPED, not refused. Rejecting the write would lock a seller out of
+   * editing a listing an admin promoted, because every edit form re-sends the
+   * whole document — the trap `assertListingTypeAllowed` documents. The edit
+   * succeeds; the flag just does not rise.
+   */
+  const { value: gatedInput, dropped: droppedPromotion } = stripUnearnedPromotion(input, {
+    capabilities: store.capabilities,
+    isPrivileged: userRole === "admin",
+  });
+  if (droppedPromotion.length > 0) {
+    serverLogger.warn("seller: dropped unearned promotion flags on create", {
+      storeId: store.id,
+      fields: droppedPromotion,
+    });
+  }
+
+  const finalizedData = await finalizeProductMediaReferences(gatedInput);
   await productRepository.create({
     ...finalizedData,
     sellerId: userId,
@@ -1188,7 +1215,34 @@ export async function sellerUpdateProduct(
     },
     productId,
   );
-  const finalizedData = await finalizeProductMediaReferences(input);
+  /*
+   * Same promotion gate as the create path — see there for why it strips
+   * rather than refuses.
+   *
+   * 🛑 `existing` is passed so a value that merely REPEATS what is stored is
+   * not treated as an escalation. Without it, a seller re-saving a listing an
+   * ADMIN promoted would silently have the promotion stripped by their own
+   * typo fix — turning a gate into a destructive one, which is worse than the
+   * hole it closes.
+   *
+   * ⚠ `store` is null on the privileged path (the ownership branch above skips
+   * the lookup for admins), which is exactly when `isPrivileged` is true and
+   * capabilities are not consulted.
+   */
+  const { value: gatedInput, dropped: droppedPromotion } = stripUnearnedPromotion(
+    input,
+    { capabilities: store?.capabilities, isPrivileged },
+    existing,
+  );
+  if (droppedPromotion.length > 0) {
+    serverLogger.warn("seller: dropped unearned promotion flags on update", {
+      productId,
+      storeId: existing.storeId,
+      fields: droppedPromotion,
+    });
+  }
+
+  const finalizedData = await finalizeProductMediaReferences(gatedInput);
   const updated = await productRepository.updateProduct(
     productId,
     finalizedData as any,

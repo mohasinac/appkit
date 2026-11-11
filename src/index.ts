@@ -7126,6 +7126,20 @@ export type {
   SellingGateContext,
   SellingGateSettings,
 } from "./_internal/shared/selling/selling-gate";
+/*
+ * Who may raise `isPromoted` / `featured` on their own listing — the
+ * `featured_placement` capability, which was declared, admin-grantable and
+ * promised to sellers in the capabilities guide with no enforcement at all.
+ */
+export {
+  PROMOTION_FIELDS,
+  canPromoteOwnListing,
+  stripUnearnedPromotion,
+} from "./_internal/shared/selling/promotion-fields";
+export type {
+  PromotionField,
+  PromotionGateContext,
+} from "./_internal/shared/selling/promotion-fields";
 // SB-UNI-X5 2026-05-13 â€" action telemetry sink.
 export {
  actionTracker,

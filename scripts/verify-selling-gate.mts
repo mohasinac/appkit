@@ -33,6 +33,11 @@ import {
   sellingRefusalReason,
   type SellingGateSettings,
 } from "../src/_internal/shared/selling/selling-gate";
+import {
+  PROMOTION_FIELDS,
+  canPromoteOwnListing,
+  stripUnearnedPromotion,
+} from "../src/_internal/shared/selling/promotion-fields";
 import { siteSettingsSeedData } from "../src/seed/site-settings-seed-data";
 import { storesSeedData } from "../src/seed/stores-seed-data";
 
@@ -198,6 +203,72 @@ console.log(
   `       (${seededStoreIds.length} seeded stores — ${sellers.length} sells, ` +
     `${seededStoreIds.length - 1} refused: ${seededStoreIds.filter((i) => i !== sellers[0]).join(", ")})`,
 );
+
+/*
+ * ── Self-promotion ───────────────────────────────────────────────────────
+ *
+ * 🛑 The two cases that matter are opposites, and both are easy to get wrong:
+ * a seller must not RAISE a promotion flag without the capability, and the
+ * gate must not CLEAR one an admin already set. A strip that is too eager is
+ * destructive; one that is too lax is the free ranking boost it exists to
+ * close.
+ */
+console.log("\n── promotion flags: may a seller promote their own listing? ──");
+const noCaps = { capabilities: [] as string[] };
+const withCap = { capabilities: ["featured_placement"] };
+const asAdmin = { capabilities: [] as string[], isPrivileged: true };
+
+check("no capability → may not", canPromoteOwnListing(noCaps), false);
+check("with featured_placement → may", canPromoteOwnListing(withCap), true);
+check("admin → may", canPromoteOwnListing(asAdmin), true);
+check("no context at all → may not", canPromoteOwnListing(), false);
+
+check(
+  "🛑 raising isPromoted without the capability is DROPPED",
+  stripUnearnedPromotion({ title: "x", isPromoted: true }, noCaps).value,
+  { title: "x" },
+);
+check(
+  "both flags dropped together",
+  stripUnearnedPromotion({ isPromoted: true, featured: true }, noCaps).dropped,
+  ["isPromoted", "featured"],
+);
+check(
+  "with the capability it passes through",
+  stripUnearnedPromotion({ isPromoted: true }, withCap).value,
+  { isPromoted: true },
+);
+check(
+  "admin passes through",
+  stripUnearnedPromotion({ isPromoted: true }, asAdmin).dropped,
+  [],
+);
+check(
+  "setting FALSE is never an escalation — giving up placement needs no grant",
+  stripUnearnedPromotion({ isPromoted: false }, noCaps).value,
+  { isPromoted: false },
+);
+check(
+  "🛑 re-saving an ADMIN-promoted listing does NOT strip it",
+  stripUnearnedPromotion({ isPromoted: true }, noCaps, { isPromoted: true }).dropped,
+  [],
+);
+check(
+  "but raising it when stored is false IS stripped",
+  stripUnearnedPromotion({ isPromoted: true }, noCaps, { isPromoted: false }).dropped,
+  ["isPromoted"],
+);
+check(
+  "untouched input keeps the SAME reference (callers can test cheaply)",
+  stripUnearnedPromotion({ title: "x" }, noCaps).value === undefined,
+  false,
+);
+check(
+  "a field not present is not invented",
+  "isPromoted" in stripUnearnedPromotion({ title: "x" }, noCaps).value,
+  false,
+);
+check("PROMOTION_FIELDS is the pair we gate", [...PROMOTION_FIELDS], ["isPromoted", "featured"]);
 
 console.log(
   `\n${failures === 0 ? "✅" : "🛑"} ${checks - failures}/${checks} checks passed` +
