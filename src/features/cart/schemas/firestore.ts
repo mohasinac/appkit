@@ -304,6 +304,70 @@ export interface CartStoreAddons {
    * `_internal/shared/features/shipping/protections.ts`.
    */
   saleProtectionAddon?: boolean;
+  /**
+   * Add-ons by registry id — the shape a FIFTH add-on uses, so adding one is
+   * a row in `ADDON_REGISTRY` rather than a field here plus four other files.
+   *
+   * ────────────────────────────────────────────────────────────────────────
+   * 🛑 ADDITIVE. The four named booleans above STAY.
+   * ────────────────────────────────────────────────────────────────────────
+   *
+   * Carts and orders written before this field exists carry only the named
+   * ones, and an order is a financial record — rewriting history to fit a
+   * newer shape is not a migration, it is losing the evidence of what was
+   * actually agreed. So both are read, with `resolveAddonSelection` as the
+   * single reader that knows the precedence.
+   *
+   * ⚠ The named fields are therefore NOT deprecated-and-ignorable. They are
+   * the only record for every row already in the database, and they stay
+   * authoritative for the four they name until a backfill exists — which is
+   * a separate, deliberate piece of work.
+   *
+   * ⚠ `giftWrapMessage` stays a sibling rather than moving in here: this map
+   * is `boolean`, and the message is text. The registry's `payload` slot
+   * names where such a value lives; it does not put it in this map.
+   */
+  addons?: Record<string, boolean>;
+}
+
+/**
+ * The four legacy fields, mapped to the registry ids that supersede them.
+ *
+ * 🛑 This map is the whole compatibility story, in one place. The alternative
+ * — four `??` expressions scattered across the fee code — is how one of them
+ * gets missed and a buyer is silently not charged for something they ticked.
+ */
+export const LEGACY_ADDON_FIELDS: Readonly<Record<string, keyof CartStoreAddons>> = {
+  whatsappNotify: "whatsappNotifyAddon",
+  giftWrap: "giftWrapAddon",
+  shipmentProtection: "shipmentProtectionAddon",
+  saleProtection: "saleProtectionAddon",
+};
+
+/**
+ * Did the buyer select this add-on?
+ *
+ * Precedence: the generic map wins when it holds an explicit boolean for the
+ * id, otherwise the legacy named field, otherwise `false`.
+ *
+ * 🛑 `=== true` / `=== false` rather than truthiness, and the ORDER matters:
+ * a generic `false` must beat a legacy `true`, because that is a buyer
+ * UNSELECTING something on a cart that still carries the old field. Reading
+ * the legacy field first would re-charge them for an add-on they removed.
+ *
+ * ⚠ An unknown id answers `false` — a newer config against an older deploy
+ * must not charge for something this build cannot price.
+ */
+export function resolveAddonSelection(
+  addons: CartStoreAddons | undefined | null,
+  id: string,
+): boolean {
+  if (!addons) return false;
+  const generic = addons.addons?.[id];
+  if (generic === true) return true;
+  if (generic === false) return false;
+  const legacyKey = LEGACY_ADDON_FIELDS[id];
+  return legacyKey !== undefined && addons[legacyKey] === true;
 }
 
 export interface CartDocument extends BaseDocument {

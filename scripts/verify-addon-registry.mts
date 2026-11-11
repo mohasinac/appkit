@@ -32,6 +32,10 @@ import {
   isAddonEnabled,
   readSettingsPath,
 } from "../src/_internal/shared/fees/addon-registry";
+import {
+  LEGACY_ADDON_FIELDS,
+  resolveAddonSelection,
+} from "../src/features/cart/schemas/firestore";
 /*
  * ────────────────────────────────────────────────────────────────────────
  * 🛑 A FROZEN COPY OF THE ORIGINAL ARITHMETIC. DO NOT IMPORT THE REAL ONES.
@@ -229,6 +233,53 @@ check("every price path resolves too",
       : readSettingsPath(configured, p.percentPath) === undefined ||
         readSettingsPath(configured, p.minimumPath) === undefined;
   }).map((a) => a.id), []);
+
+/*
+ * ── Legacy ↔ generic selection ───────────────────────────────────────────
+ *
+ * 🛑 THE CASE THAT COSTS A BUYER MONEY IF READ IN THE WRONG ORDER: a generic
+ * `false` beside a legacy `true` is someone UNSELECTING an add-on on a cart
+ * that still carries the old field. Reading the legacy field first re-charges
+ * them for something they just removed — silently, because nothing errors.
+ */
+console.log("\n── legacy ↔ generic add-on selection ──");
+check("legacy only, true", resolveAddonSelection({ giftWrapAddon: true }, "giftWrap"), true);
+check("legacy only, false", resolveAddonSelection({ giftWrapAddon: false }, "giftWrap"), false);
+check("generic only, true", resolveAddonSelection({ addons: { giftWrap: true } }, "giftWrap"), true);
+check("generic only, false", resolveAddonSelection({ addons: { giftWrap: false } }, "giftWrap"), false);
+check(
+  "🛑 generic FALSE beats legacy TRUE (the unselect case)",
+  resolveAddonSelection({ giftWrapAddon: true, addons: { giftWrap: false } }, "giftWrap"),
+  false,
+);
+check(
+  "generic TRUE beats legacy false",
+  resolveAddonSelection({ giftWrapAddon: false, addons: { giftWrap: true } }, "giftWrap"),
+  true,
+);
+check("absent everywhere", resolveAddonSelection({}, "giftWrap"), false);
+check("null addons object", resolveAddonSelection(null, "giftWrap"), false);
+check("undefined addons object", resolveAddonSelection(undefined, "giftWrap"), false);
+check(
+  "an id this build cannot price answers false",
+  resolveAddonSelection({ addons: { somethingNewer: true } }, "somethingNewer"),
+  false === (addonById("somethingNewer") !== undefined),
+);
+check(
+  'a "true" STRING does not select',
+  resolveAddonSelection({ addons: { giftWrap: "true" as unknown as boolean } }, "giftWrap"),
+  false,
+);
+check(
+  "every registry id has a legacy field today (none orphaned)",
+  ADDON_REGISTRY.filter((a) => LEGACY_ADDON_FIELDS[a.id] === undefined).map((a) => a.id),
+  [],
+);
+check(
+  "and every legacy field maps to a real registry id",
+  Object.keys(LEGACY_ADDON_FIELDS).filter((id) => addonById(id) === undefined),
+  [],
+);
 
 console.log(
   `\n${failures === 0 ? "✅" : "🛑"} ${checks - failures}/${checks} checks passed` +
