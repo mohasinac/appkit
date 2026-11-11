@@ -1,4 +1,5 @@
 import { formatMoney } from "../../../../utils/number.formatter";
+import { hasReversibleCapture } from "../../../shared/payments/method-capabilities";
 /**
  * Cancel an order AND give the money back — one owner, three callers.
  *
@@ -427,7 +428,22 @@ export async function cancelOrderWithRefund(
    * refund is order-keyed on `order.paymentId`, so without it there is nothing
    * to call, and guessing is not an option.
    */
-  if (order.paymentMethod === "cod") {
+  /*
+   * 🛑 The PROPERTY, not the name. This branch exists because there is no
+   * gateway transaction to reverse — which its own message says out loud —
+   * and that is `hasReversibleCapture`, not `=== "cod"`.
+   *
+   * CLAUDE.md records this exact site being retargeted from a deleted
+   * `isManualPaymentMethod` onto `cod` under the rule *"translate the
+   * PROPERTY, do not just silence the error."* The property now exists, so
+   * the translation is a lookup rather than a judgement call.
+   *
+   * ⚠ An UNKNOWN method lands here too, deliberately: a method this build
+   * cannot describe must not have a gateway refund fired at it. Slower and
+   * visible beats a refund that silently fails while the system believes it
+   * paid the buyer.
+   */
+  if (!hasReversibleCapture(order.paymentMethod)) {
     const caseId = await openOwedCase(cancelled, amount, "manual-payment", [
       `This order was paid by ${order.paymentMethod} — collected by the courier, with no gateway transaction to reverse.`,
       "",

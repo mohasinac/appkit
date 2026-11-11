@@ -188,6 +188,7 @@ import { paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { safeRead } from "../../../../errors/safe-read";
 import { methodRefusalMessage } from "../../payments/method-gate";
+import { collectsOnDelivery } from "../../../shared/payments/method-capabilities";
 import { PAYMENT_METHOD_LABEL } from "../../../shared/checkout/rules/payment-gate";
 /*
  * 🛑 `amountDueNow` MOVED here from the deleted `features/emi/group` (EMI
@@ -2057,7 +2058,15 @@ async function createOrderForGroup(
    * better at the call sites than `isCod` would if a second deferred tender
    * ever appears.
    */
-  const isCodLike = paymentMethod === "cod";
+  /*
+   * 🛑 The variable was already named for the PROPERTY while testing the
+   * IDENTITY — `isCodLike`, one line above `=== "cod"`. It asks whether money
+   * arrives at delivery rather than at checkout, which is now a lookup.
+   *
+   * ⚠ An unknown method answers `false` here: an order must not be placeable
+   * with nothing captured on a method this build cannot describe.
+   */
+  const isCodLike = collectsOnDelivery(paymentMethod);
   /*
    * 🛑 D43 — THE DEPOSIT/REMAINING SPLIT MOVED DOWN, BELOW `orderTotal`.
    *
