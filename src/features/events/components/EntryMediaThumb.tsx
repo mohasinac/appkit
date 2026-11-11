@@ -33,6 +33,17 @@ import { Span } from "../../../ui/components/Typography";
 import type { PublicEntryMedia } from "../types";
 
 export interface EntryMediaThumbProps {
+  /**
+   * How the thumbnail sits in its tile. Defaults to `"cover"`.
+   *
+   * 🛑 Deliberately NOT `"contain"`, unlike the entry DETAIL view. A grid of
+   * uniform tiles is the point of the card listing — letterboxing every card
+   * to its own aspect makes the gallery ragged, and the card is a doorway to
+   * the full image rather than the thing being judged. The detail page is
+   * where nothing may be trimmed.
+   */
+  fit?: "cover" | "contain";
+
   item?: PublicEntryMedia;
   /** Alt text fallback when the entrant supplied none. */
   fallbackAlt: string;
@@ -43,6 +54,7 @@ export function EntryMediaThumb({
   item,
   fallbackAlt,
   className = "",
+  fit = "cover",
 }: EntryMediaThumbProps) {
   if (!item) {
     /*
@@ -72,7 +84,7 @@ export function EntryMediaThumb({
         muted
         playsInline
         aria-label={item.alt ?? fallbackAlt}
-        className={`h-full w-full object-cover ${className}`}
+        className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} ${className}`}
       />
     );
   }
@@ -83,7 +95,7 @@ export function EntryMediaThumb({
       src={item.url}
       alt={item.alt ?? fallbackAlt}
       loading="lazy"
-      className={`h-full w-full object-cover ${className}`}
+      className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} ${className}`}
     />
   );
 }
