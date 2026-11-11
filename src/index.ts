@@ -10235,3 +10235,6 @@ export {
   resetPlatformSupplier,
 } from "./_internal/shared/features/site-settings/supplier-of-record";
 export type { PlatformSupplierIdentity } from "./_internal/shared/features/site-settings/supplier-of-record";
+
+// createUnavailableStorageProvider - a storage provider that REFUSES, for apps that must not touch the bucket (media owns all bytes).
+export { createUnavailableStorageProvider } from "./providers/storage-unavailable";
