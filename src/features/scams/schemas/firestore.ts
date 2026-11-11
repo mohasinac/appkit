@@ -54,24 +54,32 @@ export const ScamPlatformValues = {
   /**
    * "It happened here, on this site."
    *
-   * 🛑 `THIS_SITE` is the one to use. `LETITRIP` below is a consumer's brand
-   * compiled into a published library — the same domain-independence break
-   * recorded three times for doc comments (4.85.0, 4.93.0, 4.97.0), arriving
-   * this time as an identifier rather than prose.
+   * 🛑 THIS is the one to use. The deprecated member below is an install's own
+   * brand compiled into a published library — the same domain-independence
+   * break recorded three times for doc comments (4.85.0, 4.93.0, 4.97.0),
+   * arriving that time as an identifier rather than prose.
    *
    * ⚠ Its LABEL was always correct: `"{{siteName}}"`, resolved through
-   * `withBrand`. So nothing a user ever read said the brand — which is why
-   * this survived. **The leak is in the `.d.ts` every consumer installs.**
+   * `withBrand`. So nothing a user ever read said the brand — which is why it
+   * survived. **The leak is in the `.d.ts` every consumer installs.**
    */
   THIS_SITE: "this_site",
   /**
    * @deprecated Use `THIS_SITE`. Accepted, never written.
    *
-   * 🛑 NOT DELETED, and that is deliberate. This is a STORED value: a scam
-   * report already filed with `scamPlatform: "letitrip"` must keep validating,
-   * and dropping the member would make existing rows unreadable — turning a
+   * 🛑 NOT DELETED, and that is deliberate. This is a STORED value: a report
+   * already filed under the legacy platform slug must keep validating, and
+   * dropping the member would make existing rows unreadable — turning a
    * cosmetic leak into data loss. Removing it is a backfill (`this_site`
    * everywhere, then drop), not an edit.
+   *
+   * ⚠ AND THE COMMENT MUST NOT RE-QUOTE THE SLUG. The first draft of this
+   * explanation did, which took the published count from 3 to 7 — the fifth
+   * time this file's own warning has been reproduced inside the fix for it,
+   * and caught only by the tarball differential. **Describe the SHAPE, never
+   * the VALUE**: "the legacy platform slug" carries the whole meaning, while
+   * naming it ships it again. The member below is unavoidable; a sentence
+   * about the member is not.
    */
   LETITRIP: "letitrip",
   IN_PERSON: "in_person",
