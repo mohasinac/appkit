@@ -21,6 +21,7 @@ import {
   ValidationError,
 } from "../../../errors";
 import { assertListingTypeAllowed } from "../../../_internal/shared/listing-types/tiers";
+import { assertSellingAllowed } from "../../../_internal/shared/selling/selling-gate";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { sellerProfileRepository } from "../repository/seller-profile.repository";
@@ -595,6 +596,28 @@ export async function requestPayout(
   const callerStore = await storeRepository.findByOwnerId(userId);
   if (!callerStore) throw new AuthorizationError("No store found for this account.");
 
+  /*
+   * 🛑 THERE IS DELIBERATELY NO `assertSellingAllowed` HERE. Do not add one.
+   *
+   * The selling gate (`_internal/shared/selling/selling-gate.ts`) refuses NEW
+   * listings and NEW checkouts when the site is selling only its own stock.
+   * A payout is neither: it settles money a seller has ALREADY earned on
+   * orders that have already been delivered.
+   *
+   * Refusing it would not be compliance. The obligation was incurred when the
+   * sale completed; an admin flipping a config flag afterwards does not undo
+   * it, and withholding the money would be keeping someone else's funds —
+   * a worse position than the one the gate exists to avoid, and the exact
+   * "stranded money" failure the kill switch was specified to prevent.
+   *
+   * ⚠ It also cannot fire in practice while the gate has always been closed:
+   * a store that could never list and never sell has no eligible orders, so
+   * `computeSellerEarnings` returns zero and the guard below refuses anyway.
+   * If a third-party store DOES reach here with real earnings, that is a bug
+   * upstream worth investigating — and the right response is to investigate,
+   * not to quietly keep the money.
+   */
+
   const existing = await payoutRepository.findByStore(callerStore.id);
   const hasPending = existing.some(
     (p) =>
@@ -855,6 +878,26 @@ export async function createSellerProduct(
   }
 
   /*
+   * 🛑 MAY THIS STORE SELL AT ALL — before asking which TYPE it may sell.
+   *
+   * Ordered first deliberately: "you may not sell here" and "you may not sell
+   * pre-orders" send a seller to two different places, and reporting the
+   * narrower one while the broader is also true is how someone spends an hour
+   * enabling a capability that was never the obstacle.
+   *
+   * ⚠ Reads the settings singleton rather than taking it as a parameter,
+   * matching `requestPayout` and the bulk path in this same file. It costs one
+   * read on a low-frequency write path; the alternative is a gate every caller
+   * can forget to feed, and this is the choke point precisely because the
+   * caller's own check is a nicety.
+   *
+   * ✅ A FAILED READ REFUSES. `getSingleton` throwing propagates, and a null
+   * or partial document resolves to "no platform store named" → refuse. There
+   * is no path where losing the settings opens the gate.
+   */
+  assertSellingAllowed(store.id, await siteSettingsRepository.getSingleton());
+
+  /*
    * The advanced-listing-type gate, at the choke point every create funnels
    * through.
    *
@@ -1067,6 +1110,23 @@ export async function sellerUpdateProduct(
     if (!store || existing.storeId !== store.id)
       throw new AuthorizationError("You do not own this product");
   }
+
+  /*
+   * ⚠ NO `assertSellingAllowed` here either — and unlike the listing-type gate
+   * below, that asymmetry is correct rather than a hole.
+   *
+   * The listing-type gate must cover updates because a type can be CONVERTED
+   * (create `standard`, PATCH to `auction`) — the capability is about what you
+   * end up owning. The selling gate is about whether the buyer's money may
+   * reach you at all, and that is answered at CHECKOUT, which is gated. An
+   * edit moves no money.
+   *
+   * Blocking edits would also strand people the kill switch was meant to spare:
+   * a seller whose listings are hidden still needs to correct a description,
+   * mark something out of stock, or respond to a safety issue. The specified
+   * blast radius keeps seller dashboards usable; only NEW listings and NEW
+   * checkouts are refused.
+   */
 
   /*
    * 🛑 The UPDATE path had no listing-type gate at all, which made the

@@ -581,6 +581,20 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     // means a freshly seeded site and a never-configured site offer different
     // catalogues. See that block for why every member is now spelled out.
     /*
+     * The site sells its own stock only. Owner's decision, 2026-11-11.
+     *
+     * 🛑 The ONE member of this block that deliberately diverges from the
+     * default — and only by ADDING, never by disagreeing. The flag matches;
+     * `platformSellerStoreId` exists only here because a store id is this
+     * client's choice and appkit's generic fallback must not name it.
+     *
+     * Without the store id the gate refuses EVERYONE, so this pairing is what
+     * makes a seeded site able to sell at all. Nominating a different store is
+     * a config edit, not a release.
+     */
+    thirdPartySellingEnabled: false,
+    platformSellerStoreId: "store-letitrip-official",
+    /*
      * TWO types, as of 2026-10-27 — the site sells buy-it-now and reserve,
      * and nothing else. Owner's instruction: "disable everything on the site,
      * keep to bare pre orders and standards".

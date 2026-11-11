@@ -65,6 +65,33 @@ const flagRecord = () =>
   z.record(z.string(), z.union([z.boolean(), z.literal("unlisted")]));
 
 export const siteSettingsListingsFormSchema = z.object({
+  /*
+   * 🛑 WHO MAY SELL — ordered first because it outranks every flag below it.
+   *
+   * The three registry grids answer "what do we offer"; this answers "whose
+   * goods are they". Collecting a buyer's money for a third party's stock is
+   * Payment Aggregator activity (RBI Directions 2025 para 4(i)), so this is a
+   * compliance control wearing a toggle, not a catalogue preference.
+   *
+   * ⚠ A plain `z.boolean()` here, unlike its neighbours' three-state
+   * `boolean | "unlisted"`. There is no middle state to express: either other
+   * people's goods may be sold or they may not, and inventing an "unlisted"
+   * third option would create exactly the ambiguity the gate exists to remove.
+   *
+   * 🛑 Both fields render even when selling is closed. Hiding the store picker
+   * behind the toggle is how an admin turns third-party selling on and
+   * discovers afterwards that nothing sells because no store is nominated.
+   */
+  thirdPartySellingEnabled: annotate(z.boolean(), {
+    section: "who-sells", sectionLabel: "Who may sell", sectionRequired: true,
+    order: 1, row: "full", label: "Allow other stores to sell",
+    help: "Off means this site sells only its own stock. Leave it off unless the payments setup settles each seller directly — collecting a buyer's money for someone else's goods and paying it on afterwards requires a Payment Aggregator authorisation. Turning it off refuses NEW listings and checkouts from other stores; orders already placed still deliver, dispute, refund and settle, and existing listings are hidden rather than deleted.",
+  }),
+  platformSellerStoreId: annotate(z.string().optional(), {
+    section: "who-sells", sectionLabel: "Who may sell",
+    order: 2, row: "full", label: "This site's own store",
+    help: "The store ID whose listings this site sells as its own — it is an ordinary store that pays the same fees and ranks the same way, just nominated here. While 'Allow other stores to sell' is off and this is empty, nothing can be sold at all.",
+  }),
   listingTypeFlags: annotate(flagRecord(), {
     section: "listing-types", sectionLabel: "Listing types", sectionRequired: true,
     order: 1, row: "full", label: "Listing types",

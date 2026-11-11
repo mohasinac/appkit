@@ -1159,8 +1159,27 @@ export function AdminSiteSettingsView({
   // site-settings-listings-form.ts's header for why that's a Record field
   // with a custom renderer rather than per-key schema fields.
   const [listingsForm, setListingsForm] = React.useState<SiteSettingsListingsFormValues>({
+    thirdPartySellingEnabled: false,
+    platformSellerStoreId: "",
     listingTypeFlags: {}, categoryTypeFlags: {}, browsePageFlags: {},
   });
+  /*
+   * 🛑 NOT a form field — a value carried so SAVING does not DELETE it.
+   *
+   * `buildFullPayload()` writes every group wholesale and Firestore's
+   * `.update()` replaces a nested map entirely, so any `listings.*` key this
+   * component does not hold is erased on the next save. `closedPaths` is
+   * seeded, read by `hidden-surfaces.ts`, and is what gates seller onboarding
+   * — and nothing here carried it, so opening this tab and pressing Save
+   * silently re-opened every withdrawn surface. Pre-existing; found while
+   * adding the fields above, which would have been destroyed the same way.
+   *
+   * ⚠ Kept as opaque state rather than given a control on purpose: this tab
+   * is "what the marketplace offers", and `closedPaths` is edited through the
+   * nav/surface tooling that derives it. Preserving beats exposing — a field
+   * with two editors is how they drift.
+   */
+  const [preservedClosedPaths, setPreservedClosedPaths] = React.useState<string[] | undefined>(undefined);
   const {
     fields: listingsVisibilityFields,
     setVisible: setListingsFieldVisible,
@@ -1974,10 +1993,19 @@ export function AdminSiteSettingsView({
      * which rendered it as "on" and overwrote it on the next click.
      */
     setListingsForm({
+      /*
+       * ⚠ `=== true`, not `??` — the stored contract is ABSENT MEANS OFF, the
+       * inverse of every flag beside it. `?? true` or a truthiness read here
+       * would show a closed gate as open and let one Save write that back.
+       */
+      thirdPartySellingEnabled: s.listings?.thirdPartySellingEnabled === true,
+      platformSellerStoreId: s.listings?.platformSellerStoreId ?? "",
       listingTypeFlags: (s.listings?.listingTypes as Record<string, FlagValue> | undefined) ?? {},
       categoryTypeFlags: (s.listings?.categoryTypes as Record<string, FlagValue> | undefined) ?? {},
       browsePageFlags: (s.listings?.browsePages as Record<string, FlagValue> | undefined) ?? {},
     });
+    // See `preservedClosedPaths` — carried so the next Save does not erase it.
+    setPreservedClosedPaths(s.listings?.closedPaths);
 
     setCollectorDropForm({
       bidIncrementTiers: s.collectorDropConfig?.bidIncrementTiers ?? DEFAULT_COLLECTOR_DROP_BID_INCREMENT_TIERS,
@@ -2390,9 +2418,22 @@ export function AdminSiteSettingsView({
       // used to carry existed to preserve `adminCheckoutBypass`, which is now a
       // permission rather than a stored flag.
       listings: {
+        thirdPartySellingEnabled: listingsForm.thirdPartySellingEnabled === true,
+        /*
+         * ⚠ Empty string means "not nominated" and must be stored as absent,
+         * not as "". `platformSellerStoreId("")` already resolves to
+         * undefined in the gate, but writing "" would make a cleared field
+         * look configured to anything reading the document directly.
+         */
+        ...(listingsForm.platformSellerStoreId?.trim()
+          ? { platformSellerStoreId: listingsForm.platformSellerStoreId.trim() }
+          : {}),
         listingTypes: listingsForm.listingTypeFlags,
         categoryTypes: listingsForm.categoryTypeFlags,
         browsePages: listingsForm.browsePageFlags,
+        // Carried, never edited here — this group is written wholesale, so
+        // omitting it DELETES it. See `preservedClosedPaths`.
+        ...(preservedClosedPaths !== undefined ? { closedPaths: preservedClosedPaths } : {}),
       },
       notificationChannels: {
         inApp: { enabled: true, readOnly: true },

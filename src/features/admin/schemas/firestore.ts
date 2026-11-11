@@ -1882,6 +1882,26 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
    * disagreement both comments exist to forbid. Change them together.
    */
   listings: {
+    /*
+     * 🛑 Spelled out as `false` even though ABSENT already means off, because
+     * this is the one flag in the group whose absence a reader is likely to
+     * misread as "not implemented yet" rather than "closed". The resolver
+     * (`_internal/shared/selling/selling-gate.ts`) treats absent and `false`
+     * identically, so this changes no behaviour — it makes the intent legible,
+     * which is what the block comment below asks of every member here.
+     *
+     * ⚠ `platformSellerStoreId` is deliberately NOT defaulted alongside it.
+     * A store id is one client's choice; baking `store-letitrip-official` into
+     * appkit's generic fallback is the domain-independence break that
+     * `paymentMethodRules` is already kept out of this object to avoid. It is
+     * seeded instead, in `seed/site-settings-seed-data.ts`.
+     *
+     * Consequence, stated rather than discovered: a never-configured install
+     * has the gate closed AND no platform store, so it sells nothing until an
+     * admin nominates one. That is the correct degradation — selling nothing
+     * beats selling everything.
+     */
+    thirdPartySellingEnabled: false,
     listingTypes: {
       standard: true,
       "pre-order": true,
