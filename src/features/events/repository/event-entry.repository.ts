@@ -1,4 +1,9 @@
 import { normalizeError } from "../../../errors/normalize";
+import {
+  rankEntries,
+  DEFAULT_ENTRY_RANKING_RULE_SET,
+  type EntryRankingRuleSet,
+} from "../schemas/entry-ranking";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import type {
@@ -303,9 +308,35 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     }
   }
 
+  /**
+   * The scoreboard — ranked ENTRIES, ordered by the event's own ranking rule.
+   *
+   * ## 🛑 This used to sum `points` PER USER, and it always read zero
+   *
+   * `points` is an admin-typed field that nothing in the contest path sets, so
+   * every row rendered `0 pts` — the owner screenshotted exactly that. Worse,
+   * grouping by user made a PHOTO contest rank photographers: two entries from
+   * one person collapsed into a row that named neither, and the projection
+   * carried no entry id, so no row could link to the thing being judged.
+   *
+   * It now ranks entries through `rankEntries`, the SAME resolver the gallery
+   * and the winner resolution use, so the three cannot disagree about who is
+   * winning. The rule comes from the event's `entryRanking` rule set — for the
+   * photo contest that is `ranking-most-likes`, whose own `publicWording` the
+   * page already renders.
+   *
+   * ⚠ `points` is untouched on the document: admin-scored events are a real
+   * mechanic. Which field ranks is the rule set's decision, not this method's.
+   *
+   * ⚠ Ordering is done IN MEMORY, deliberately, for the reason
+   * `entry-gallery.ts` records: a Firestore `orderBy likeCount` drops every
+   * document where the field is absent, and `likeCount` does not exist until
+   * an entry's first vote — so a database sort would HIDE most of a contest.
+   */
   async getLeaderboard(
     eventId: string,
     limit = 50,
+    ruleSet?: Pick<EntryRankingRuleSet, "rule" | "tieBreak">,
   ): Promise<import("../types").LeaderboardEntry[]> {
     try {
       const snapshot = await this.getCollection()
@@ -317,9 +348,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
         )
         .get();
 
-      // Aggregate per user: sum all approved entry points
-      const byUser = new Map<string, { displayName: string; totalPoints: number; entryCount: number }>();
-      for (const doc of snapshot.docs) {
+      const rows = snapshot.docs.map((doc) => {
         /*
          * MASKED, not decrypted. This builds a public LEADERBOARD, so it needs
          * a name to show and has no business holding the real one — the rows
@@ -331,30 +360,48 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
           { id: doc.id, ...doc.data() } as FirestoreDocument,
           EVENT_ENTRY_PII_FIELDS,
         );
-        if (!raw.userId) continue;
-        const existing = byUser.get(raw.userId);
-        const pts = typeof raw.points === "number" ? raw.points : 0;
-        if (existing) {
-          existing.totalPoints += pts;
-          existing.entryCount += 1;
-        } else {
-          byUser.set(raw.userId, {
-            displayName: raw.userDisplayName ?? raw.userId,
-            totalPoints: pts,
-            entryCount: 1,
-          });
-        }
-      }
+        const likes = typeof raw.likeCount === "number" ? raw.likeCount : 0;
+        const dislikes =
+          typeof raw.dislikeCount === "number" ? raw.dislikeCount : 0;
+        /*
+         * An unreadable `submittedAt` sorts EARLIEST, matching
+         * `entry-gallery.ts`. The tie-break must be total or two entries on the
+         * same like count can swap places between requests.
+         */
+        const submittedAt =
+          raw.submittedAt instanceof Date
+            ? raw.submittedAt
+            : new Date(String(raw.submittedAt ?? 0));
+        const cover = Array.isArray(raw.media) ? raw.media[0] : undefined;
+        return {
+          entryId: doc.id,
+          userId: raw.userId ?? doc.id,
+          userDisplayName: raw.userDisplayName ?? raw.userId ?? doc.id,
+          likes,
+          dislikes,
+          submittedAt,
+          points: typeof raw.points === "number" ? raw.points : 0,
+          coverUrl:
+            cover && typeof cover === "object" && "url" in cover
+              ? String((cover as { url?: unknown }).url ?? "")
+              : undefined,
+        };
+      });
 
-      return Array.from(byUser.entries())
-        .sort((a, b) => b[1].totalPoints - a[1].totalPoints)
+      const rule = ruleSet ?? DEFAULT_ENTRY_RANKING_RULE_SET;
+      return rankEntries(rule, rows)
         .slice(0, limit)
-        .map(([userId, data], idx) => ({
-          rank: idx + 1,
-          userId,
-          userDisplayName: data.displayName,
-          totalPoints: data.totalPoints,
-          entryCount: data.entryCount,
+        .map((row) => ({
+          rank: row.rank,
+          userId: row.userId,
+          userDisplayName: row.userDisplayName,
+          /* Kept on the wire so an admin-scored event still reports its score. */
+          totalPoints: row.points,
+          entryCount: 1,
+          entryId: row.entryId,
+          likeCount: row.likes,
+          dislikeCount: row.dislikes,
+          ...(row.coverUrl ? { coverUrl: row.coverUrl } : {}),
         }));
     } catch (error) {
       void normalizeError(error);

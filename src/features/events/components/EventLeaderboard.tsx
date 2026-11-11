@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
@@ -13,6 +14,21 @@ export interface EventLeaderboardProps {
   renderEntry?: (entry: LeaderboardEntry, index: number) => React.ReactNode;
   /** Entries — used only when renderEntry is provided */
   entries?: LeaderboardEntry[];
+  /**
+   * Absolute-or-resolved href for one entry's detail page.
+   *
+   * 🛑 A STRING PREFIX, not a function. A function prop crossing a server →
+   * client boundary is React #441 — it cannot be serialised, React writes an
+   * error row at that prop position, the server still returns a complete 200
+   * and the BROWSER dies at hydration. That defect took both content hosts
+   * down for a week; `buildHref` was removed from the appkit views for exactly
+   * this reason. The caller resolves the prefix through `resolveSectionHref`
+   * and passes the result.
+   *
+   * Omitted → rows render unlinked, which is the correct degradation for a
+   * host that does not serve entry detail pages.
+   */
+  entryHrefPrefix?: string;
   /**
    * When provided, renders a per-option vote-tally view instead of the
    * ranked voter list — use for event.type === "poll", where a
@@ -41,6 +57,7 @@ export function EventLeaderboard({
   renderList,
   renderEntry,
   entries = [],
+  entryHrefPrefix,
   pollResults,
   renderPollResult,
   renderEmpty,
@@ -101,8 +118,14 @@ export function EventLeaderboard({
             {renderEntry(entry, i)}
           </React.Fragment>
         ) : (
+          /*
+           * 🛑 Keyed by `entryId` when present, not `userId`. The rows are PER
+           * ENTRY now, so one entrant with two approved entries produced two
+           * rows with the SAME React key — the duplicate-key bug that makes a
+           * list reorder wrongly on re-render.
+           */
           <Div
-            key={entry.userId}
+            key={entry.entryId ?? entry.userId}
             layout="flex"
             align="center"
             justify="between"
@@ -110,11 +133,39 @@ export function EventLeaderboard({
             padding="sm"
             className="border"
            data-section="eventleaderboard-div-282">
-            <Span weight="medium">
-              #{entry.rank} {entry.userDisplayName}
-            </Span>
+            {/*
+              The row LINKS to the entry being ranked. Owner, 2026-11-11: *"the
+              leaderboard should clearly show the like count as well as the
+              link to the entry details page"*. Unlinked when no prefix is
+              given — a host that does not serve entry pages should not render
+              a dead link.
+            */}
+            {entry.entryId && entryHrefPrefix ? (
+              <Link
+                href={`${entryHrefPrefix.replace(/\/+$/, "")}/${encodeURIComponent(entry.entryId)}`}
+                className="font-medium underline-offset-2 hover:underline"
+              >
+                #{entry.rank} {entry.userDisplayName}
+              </Link>
+            ) : (
+              <Span weight="medium">
+                #{entry.rank} {entry.userDisplayName}
+              </Span>
+            )}
+            {/*
+              🛑 The VOTE COUNT, not `totalPoints`.
+              `points` is admin-typed and nothing in the contest path sets it,
+              so every row read "0 pts" on a contest with real likes on it.
+              `likeCount` is what the ranking rule actually ordered by, so the
+              number shown and the order shown now come from one source.
+
+              `totalPoints` is still rendered when an event has no votes but
+              does carry a score — admin-judged events are a real mechanic.
+            */}
             <Span>
-              {entry.totalPoints} {labels.points ?? "pts"}
+              {typeof entry.likeCount === "number"
+                ? `${entry.likeCount} ${labels.votes ?? "likes"}`
+                : `${entry.totalPoints} ${labels.points ?? "pts"}`}
             </Span>
           </Div>
         ),

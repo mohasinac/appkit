@@ -469,6 +469,18 @@ export interface LeaderboardEntry {
   /** Sum of all approved entry points for this user in the event */
   totalPoints: number;
   entryCount: number;
+  /**
+   * The ranked ENTRY this row stands for, so the row can link to it.
+   *
+   * 🛑 Absent before 2026-11-11, which is why no leaderboard row could link
+   * anywhere: the projection grouped by USER and carried no entry id at all.
+   */
+  entryId?: string;
+  /** Votes on that entry — what a like-ranked contest is actually ordered by. */
+  likeCount?: number;
+  dislikeCount?: number;
+  /** `media[0]`, the entry's cover, for a thumbnail beside the row. */
+  coverUrl?: string;
 }
 
 /**
