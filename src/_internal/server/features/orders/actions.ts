@@ -11,6 +11,7 @@
  * it failed on two `react-server-dom-webpack/*` requires and two @vercel/og
  * .wasm files, naming none of the responsible files. Root Cause #18.
  */
+import { selectOrderLines } from "../checkout/expand-order-items";
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 import { adminNotificationsRepository, orderRepository, storeRepository } from "../../../../repositories";
 import { requireRoleUser, requireAuthUser } from "../../../../providers/auth-firebase/helpers";
@@ -143,9 +144,7 @@ export async function requestReturnAction(input: unknown): Promise<ActionResult<
       if (!isFinalSaleExempt(reasonCode)) {
         const order = await orderRepository.findById(orderId);
         if (!order) throw new OrderNotFoundError(orderId);
-        const scopedItems = itemIds?.length
-          ? (order.items ?? []).filter((i) => itemIds.includes(i.productId))
-          : (order.items ?? []);
+        const scopedItems = selectOrderLines(order.items, itemIds);
         if (scopedItems.some((i) => i.finalSale === true)) {
           throw new ValidationError(REFUND_COPY.request.finalSaleBlockedMessage);
         }

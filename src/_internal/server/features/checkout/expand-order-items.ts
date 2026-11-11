@@ -233,3 +233,72 @@ export function expandCartLineToOrderRows(
     };
   });
 }
+
+/**
+ * Stamp each line with its own id, unique within the order.
+ *
+ * ──────────────────────────────────────────────────────────────────────────────
+ * 🛑 ONE OWNER, CALLED BY BOTH CREATION PATHS — and that is the whole point.
+ * ──────────────────────────────────────────────────────────────────────────────
+ *
+ * Two places build an order's `items[]`: `createOrderForGroup` and the gateway
+ * path (`createPhonePeGroupOrder`). They have diverged before and the cost is
+ * recorded at the second one's own call site — *"an accepted offer paid through
+ * PhonePe was recorded at the seller's list price"* — because something was
+ * added to one path and not the other.
+ *
+ * So this is a named function rather than a `.map()` inlined twice. Its
+ * existence is greppable, and a third creation path that forgets it shows up as
+ * a missing call rather than as orders whose lines silently have no identity.
+ *
+ * ⚠ Applied AFTER the per-cart-line `flatMap`, never inside
+ * `expandCartLineToOrderRows`. That function expands ONE cart line, so indices
+ * assigned there would restart per line and collide the moment an order has two
+ * lines — which is every multi-item order.
+ *
+ * ⚠ Positional and 1-based: `L1`, `L2`, … The id is read aloud in support
+ * conversations (`ODID-10234 · L2`), so it is short and human, and it never
+ * encodes product or quantity — see the field's own note for why a
+ * content-derived id is not unique.
+ *
+ * 🛑 NEVER RENUMBER AN EXISTING ORDER. These ids are referenced by dispute
+ * entries, shipment contents and refund records once written. This runs at
+ * creation only; a later edit that reorders `items[]` must preserve each line's
+ * stamped id rather than re-running this.
+ */
+export function assignOrderLineIds<T extends { lineId?: string }>(lines: T[]): T[] {
+  return lines.map((line, i) => ({ ...line, lineId: line.lineId ?? `L${i + 1}` }));
+}
+
+/**
+ * The lines an `itemIds[]` selection refers to.
+ *
+ * ⚠ ONE OWNER for an expression that was written out twice — in the
+ * return-request action and in the refund action — and would have had to be
+ * patched twice when `lineId` arrived. A rule stated twice is a rule that
+ * drifts.
+ *
+ * 🛑 `lineId ?? productId`, and the fallback is load-bearing rather than
+ * defensive. Orders created before `lineId` existed have none, so a selection
+ * on a historical order still resolves by product id — with the ambiguity it
+ * always had, which is no worse than before. New orders resolve by line and
+ * can finally distinguish two bundle rows carrying the same product.
+ *
+ * ⚠ Matching on EITHER key, not on a mode flag. A caller holding ids from an
+ * old UI may still send product ids for a new order; accepting both means that
+ * is simply correct rather than a migration everyone has to coordinate.
+ *
+ * ⚠ An EMPTY or absent selection means THE WHOLE ORDER — the convention
+ * refunds, returns and protection claims already share ("omit for a whole-order
+ * return"). Returning `[]` here instead would silently scope a whole-order
+ * refund to nothing.
+ */
+export function selectOrderLines<T extends { lineId?: string; productId: string }>(
+  items: readonly T[] | undefined,
+  itemIds: readonly string[] | undefined,
+): T[] {
+  const all = items ?? [];
+  if (!itemIds?.length) return [...all];
+  const wanted = new Set(itemIds);
+  return all.filter((i) => wanted.has(i.lineId ?? i.productId) || wanted.has(i.productId));
+}

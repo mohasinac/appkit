@@ -11,6 +11,7 @@
  * it failed on two `react-server-dom-webpack/*` requires and two @vercel/og
  * .wasm files, naming none of the responsible files. Root Cause #18.
  */
+import { selectOrderLines } from "../checkout/expand-order-items";
 import { wrapAction, type ActionResult } from "../../../shared/types/action-result";
 /**
  * processRefundAction — append a refund event to an order.
@@ -275,9 +276,7 @@ export async function processRefundAction(
        * would let a seller flip the switch afterwards.
        */
       if (!isFinalSaleExempt(input.reasonCode)) {
-        const scopedItems = input.itemIds?.length
-          ? (order.items ?? []).filter((i) => input.itemIds!.includes(i.productId))
-          : (order.items ?? []);
+        const scopedItems = selectOrderLines(order.items, input.itemIds);
         if (scopedItems.some((i) => i.finalSale === true)) {
           throw new ValidationError(REFUND_COPY.request.finalSaleBlockedMessage);
         }

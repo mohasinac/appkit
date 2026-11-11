@@ -286,6 +286,43 @@ export const ORDER_ITEM_DESCRIPTION_MAX = 2000;
 export const ORDER_ITEM_SPECIFICATIONS_MAX = 30;
 
 export interface OrderDocumentItem {
+  /**
+   * This LINE's own identity, unique within the order — `"L1"`, `"L2"`, …
+   *
+   * ────────────────────────────────────────────────────────────────────────
+   * 🛑 WHY A LINE NEEDS AN ID AT ALL
+   * ────────────────────────────────────────────────────────────────────────
+   *
+   * Until 2026-11-11 a line was identified by its `productId`, and every
+   * per-item path keyed on it — `items.filter(i => itemIds.includes(i.productId))`
+   * in both the returns and the refunds actions. **That is ambiguous**: a
+   * bundle or a group puts the SAME `productId` on separate lines (they carry
+   * different `groupSlug`/`groupSource`), so "refund that item" could not say
+   * which of the two it meant.
+   *
+   * Per-item disputes and quantity-split shipments both make the line the
+   * subject of a record that has to survive and be argued over, so the line
+   * needs an identity of its own.
+   *
+   * 🛑 POSITIONAL, NOT DERIVED FROM CONTENT. The obvious
+   * `productId + quantity` reads naturally and is **not unique** — two lines
+   * of the same product with the same quantity collide, which is exactly the
+   * bundle case this exists to fix. An index assigned at creation cannot
+   * collide.
+   *
+   * ⚠ OPTIONAL, and it must stay optional. Orders created before this field
+   * existed have no `lineId`, so every reader resolves
+   * `lineId ?? productId` — a dispute on a historical order still has
+   * something to name, and the ambiguity it inherits is the one it always had.
+   * Making this required would make every old order unreadable.
+   *
+   * ⚠ Stamped by `assignOrderLineIds`, which BOTH creation paths call. Two
+   * paths build this array (`createOrderForGroup` and the gateway path) and
+   * this project has already paid for a field added to one and not the other —
+   * an accepted offer paid through PhonePe was recorded at the seller's list
+   * price for exactly that reason.
+   */
+  lineId?: string;
   productId: string;
   productTitle: string;
   /** Snapshotted from the product/cart-item at order time so the order-detail UI can render a thumbnail without an extra product fetch. */

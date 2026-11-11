@@ -166,7 +166,7 @@ import {
   isMultiMemberLine,
   type StockBucketResult,
 } from "./bundle-expansion";
-import { expandCartLineToOrderRows } from "./expand-order-items";
+import { expandCartLineToOrderRows, assignOrderLineIds } from "./expand-order-items";
 import {
   OrderStatusValues,
   PaymentStatusValues,
@@ -1822,7 +1822,12 @@ async function createOrderForGroup(
    * it already does for tools. There is no composition to read here any more,
    * so this is the pure expansion it always wanted to be.
    */
-  const orderItems = baseOrderItems;
+  /*
+   * 🛑 Line ids stamped HERE, after the flatMap -- see `assignOrderLineIds`.
+   * The gateway path calls the same function; a line with no id cannot be the
+   * subject of a dispute entry or a shipment's contents.
+   */
+  const orderItems = assignOrderLineIds(baseOrderItems);
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
   /*
@@ -4833,7 +4838,12 @@ async function createPhonePeGroupOrder(
    * seller's list price.
    */
     // Part 14 removed — see the note at the other call site.
-  const orderItems = basePhonepeItems;
+  /*
+   * 🛑 The SAME stamper as the other creation path. The comment a few lines
+   * above records what it cost last time something was added to one path and
+   * not the other.
+   */
+  const orderItems = assignOrderLineIds(basePhonepeItems);
   const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
   const imageUrls = [
