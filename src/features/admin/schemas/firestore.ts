@@ -1891,10 +1891,10 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
      * which is what the block comment below asks of every member here.
      *
      * ⚠ `platformSellerStoreId` is deliberately NOT defaulted alongside it.
-     * A store id is one client's choice; baking `store-letitrip-official` into
-     * appkit's generic fallback is the domain-independence break that
-     * `paymentMethodRules` is already kept out of this object to avoid. It is
-     * seeded instead, in `seed/site-settings-seed-data.ts`.
+     * A store id is one install's own choice; naming any particular one here
+     * is the domain-independence break that `paymentMethodRules` is already
+     * kept out of this object to avoid. It is seeded instead, in
+     * `seed/site-settings-seed-data.ts`, where install-specific values belong.
      *
      * Consequence, stated rather than discovered: a never-configured install
      * has the gate closed AND no platform store, so it sells nothing until an
