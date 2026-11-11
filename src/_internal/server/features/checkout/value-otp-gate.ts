@@ -30,6 +30,7 @@
 
 import { ApiError } from "../../../../errors/api-error";
 import { isCheckoutValueOtpVerified } from "../../../../features/checkout/actions/checkout-value-otp-actions";
+import { collectsOnDelivery } from "../../../shared/payments/method-capabilities";
 
 export interface CheckoutValueOtpGateInput {
   uid: string;
@@ -38,10 +39,11 @@ export interface CheckoutValueOtpGateInput {
   /** `siteSettings.payment.otpCheckoutThreshold`. Absent or ≤ 0 disables the gate. */
   threshold: number | undefined;
   /**
-   * 🛑 COD is exempt, and that is a real decision rather than an oversight:
-   * a physical hand-off at the door is its own verification, and nothing has
-   * been captured when the gate would fire. Pass the method so the exemption
-   * lives here instead of being re-remembered at each call site.
+   * 🛑 A tender collected at DELIVERY is exempt, and that is a real decision
+   * rather than an oversight: a physical hand-off at the door is its own
+   * verification, and nothing has been captured when the gate would fire.
+   * Pass the method so the exemption lives here instead of being re-remembered
+   * at each call site.
    */
   paymentMethod?: string;
   /** The admin checkout bypass (`siteSettings.featureFlags.adminCheckoutBypass`). */
@@ -63,7 +65,18 @@ export async function assertCheckoutValueOtp(
   const { uid, amount, threshold, paymentMethod, adminBypass } = input;
 
   if (adminBypass) return;
-  if (paymentMethod === "cod") return;
+  /*
+   * 🛑 The exemption is `collectsOnDelivery`, and the doc comment on the input
+   * field already said so in prose: *"nothing has been captured when the gate
+   * would fire."* That is the property; `"cod"` was the name of the one tender
+   * that has it.
+   *
+   * ⚠ An unknown method answers `false`, so the gate FIRES — more
+   * verification, never less. That is the right direction for a value gate:
+   * being wrong costs a buyer one OTP, where the other way costs an
+   * unverified high-value capture.
+   */
+  if (collectsOnDelivery(paymentMethod)) return;
   if (typeof threshold !== "number" || threshold <= 0) return;
   /*
    * `>=`, not `>`. A threshold of ₹5,000 means a ₹5,000 checkout is gated —

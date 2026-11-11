@@ -188,7 +188,10 @@ import { paiseToRupees } from "../../../../core/money";
 import { CHECKOUT_DEFAULT_COMMISSIONS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { safeRead } from "../../../../errors/safe-read";
 import { methodRefusalMessage } from "../../payments/method-gate";
-import { collectsOnDelivery } from "../../../shared/payments/method-capabilities";
+import {
+  collectsOnDelivery,
+  hasReversibleCapture,
+} from "../../../shared/payments/method-capabilities";
 import { PAYMENT_METHOD_LABEL } from "../../../shared/checkout/rules/payment-gate";
 /*
  * 🛑 `amountDueNow` MOVED here from the deleted `features/emi/group` (EMI
@@ -2090,10 +2093,22 @@ async function createOrderForGroup(
    * which is deleted. No order can carry a plan now, so there is nothing to
    * gate and nothing to schedule.
    */
-  // Handling fee charged to the buyer for choosing COD, on top of the order
-  // total — not deducted from the deposit/remaining split above.
-  const codHandlingFee =
-    paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+  /*
+   * Handling fee charged to the buyer for choosing a tender the COURIER
+   * collects, on top of the order total — not deducted from the
+   * deposit/remaining split above.
+   *
+   * 🛑 The fee exists because a cash-collecting delivery costs us real money
+   * (the carrier's COD remittance cut), so the question is whether money is
+   * collected AT DELIVERY — not whether the slug reads "cod".
+   *
+   * ⚠ An unknown method answers `false` and is charged nothing. That is the
+   * safe direction here: under-charging ourselves is recoverable, inventing a
+   * fee on a tender we cannot describe is a buyer-facing overcharge.
+   */
+  const codHandlingFee = collectsOnDelivery(paymentMethod)
+    ? computeCodHandlingFee(groupTotal, commissions)
+    : 0;
   const whatsappNotifyFee = computeWhatsAppNotifyFee(whatsappNotifyAddon, commissions);
   const giftWrapFee = computeGiftWrapFee(giftWrapAddon, commissions);
   /*
@@ -2849,7 +2864,17 @@ export async function createCheckoutOrderAction(
    * `>` not `>=`: the setting is a maximum, so a cart exactly at the cap is
    * allowed. The client comparison is spelled the same way.
    */
-  if (!adminBypass && paymentMethod === "cod") {
+  /*
+   * 🛑 The cap exists because NOTHING IS CAPTURED when the order is placed —
+   * our whole exposure is the goods, until someone opens a door. So the
+   * question is `collectsOnDelivery`, not the slug.
+   *
+   * ⚠ An unknown method answers `false` and skips the cap, which is only safe
+   * because the SAME predicate decides the deposit split above: a method this
+   * build cannot describe is treated as prepaid everywhere, so there is no
+   * uncaptured exposure for the cap to bound. The two must not diverge.
+   */
+  if (!adminBypass && collectsOnDelivery(paymentMethod)) {
     const codMax = siteSettings?.payment?.codMaxOrderValue;
     const effectiveCodMax =
       typeof codMax === "number" ? codMax : COD_MAX_ORDER_VALUE_FALLBACK;
@@ -3019,13 +3044,20 @@ export async function createCheckoutOrderAction(
   /*
    * ── Phase 1c: WHICH gateway may collect, for the ONLINE tender ────────────
    *
-   * 🛑 Gated on `paymentMethod === "online"`, and that gate is the rule rather
-   * than an optimisation. The commingling this guards against is a property of
-   * a GATEWAY CAPTURE: the money lands in the aggregator's escrow and is
-   * settled out of it. COD, cash and a manual bank/UPI transfer involve no
-   * capture at all — a manual transfer is already buyer-to-whoever-the-admin-
-   * names — so applying the rule there would refuse the one set of tenders
-   * that has no commingling problem.
+   * 🛑 Gated on `hasReversibleCapture`, and that gate is the rule rather than
+   * an optimisation. The commingling this guards against is a property of a
+   * GATEWAY CAPTURE: the money lands in the aggregator's escrow and is settled
+   * out of it. COD, cash and a manual bank/UPI transfer involve no capture at
+   * all — a manual transfer is already buyer-to-whoever-the-admin-names — so
+   * applying the rule there would refuse the one set of tenders that has no
+   * commingling problem.
+   *
+   * ⚠ The predicate IS the paragraph above. It used to read `=== "online"`,
+   * which is the name of one tender that happens to have the property; a
+   * second gateway-captured tender would have slipped the gate silently.
+   * An unknown method answers `false`, so it is never handed a gateway —
+   * `assertPaymentMethodAllowed` below still measures it against the process
+   * default, which is the unchanged non-online path.
    *
    * 🛑 Reachable, which is why this is not capture-route-only: `/api/checkout`
    * accepts `paymentMethod: "online"`, so this action creates orders for an
@@ -3039,14 +3071,13 @@ export async function createCheckoutOrderAction(
    * Phase 1c exists to make work. The two gates then compose instead of
    * disagreeing.
    */
-  const collectingGateway =
-    paymentMethod === "online"
-      ? resolveCollectingGatewayForCart({
-          items: cartItems,
-          productById: preTxProductById,
-          platformStoreId: siteSettings?.payment?.platformStoreId,
-        })
-      : null;
+  const collectingGateway = hasReversibleCapture(paymentMethod)
+    ? resolveCollectingGatewayForCart({
+        items: cartItems,
+        productById: preTxProductById,
+        platformStoreId: siteSettings?.payment?.platformStoreId,
+      })
+    : null;
 
   assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod, {
     /*
@@ -3836,11 +3867,18 @@ export async function previewCheckoutPricing(
     // createOrderForGroup will read when the order is actually placed.
     const addons = cart.storeAddons?.[firstItem.storeId] ?? {};
 
-    // Mirrors createOrderForGroup exactly — the COD handling fee is only
-    // ever charged for literal "cod" (pay the courier), never upi_manual or
-    // cash (both pre-paid via UPI/bank transfer before dispatch).
-    const groupCodHandlingFee =
-      paymentMethod === "cod" ? computeCodHandlingFee(groupTotal, commissions) : 0;
+    /*
+     * Mirrors createOrderForGroup exactly — the handling fee is charged only
+     * for a tender the COURIER collects, never for anything pre-paid.
+     *
+     * 🛑 THE PREDICATE MUST BE THE SAME CALL, not the same idea. This is the
+     * PREVIEW; the other is the CHARGE. Two spellings of "is it COD" drift
+     * into a shown-vs-charged gap, which is the exact defect the EMI
+     * surcharge note below this line records.
+     */
+    const groupCodHandlingFee = collectsOnDelivery(paymentMethod)
+      ? computeCodHandlingFee(groupTotal, commissions)
+      : 0;
 
     /*
      * 🛑 The EMI surcharge is a TERM OF THE TOTAL, and it was missing here

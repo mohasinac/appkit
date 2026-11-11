@@ -31,6 +31,7 @@ import { orderRepository } from "../../../../features/orders/repository/orders.r
 import { storeRepository } from "../../../../features/stores/repository/store.repository";
 import { addressesRepository } from "../../../../features/addresses/repository/addresses.repository";
 import { deliveryPartyFor } from "../../../shared/features/orders/delivery-snapshot";
+import { collectsOnDelivery } from "../../../shared/payments/method-capabilities";
 import { revealPii } from "../../../../security/pii-accessors";
 import { ORDER_PII_FIELDS } from "../../../../security/pii-schemas";
 
@@ -207,7 +208,16 @@ export async function bookShipment(input: BookShipmentInput): Promise<BookShipme
     dimensions: input.dimensions,
     pickup,
     delivery,
-    ...(order.paymentMethod === "cod"
+    /*
+     * 🛑 `isCod` tells the CARRIER to collect money at the door, so the
+     * question is literally `collectsOnDelivery` — the carrier does not care
+     * what we call the tender, only whether it has to take cash.
+     *
+     * ⚠ An unknown method answers `false`, booking a PREPAID parcel. Wrong in
+     * that direction the carrier simply delivers and collects nothing; wrong
+     * the other way it demands money from a buyer who has already paid.
+     */
+    ...(collectsOnDelivery(order.paymentMethod)
       ? { isCod: true, codAmount: order.codRemainingAmount ?? order.totalPrice }
       : {}),
   };

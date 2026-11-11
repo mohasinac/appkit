@@ -338,6 +338,35 @@ export {
   type CheckoutPricingPreview,
 } from "./_internal/server/features/checkout/index";
 
+/*
+ * WHAT A PAYMENT METHOD DOES — exported for the same reason as everything in
+ * the block above: the consumer owns routes on the money path that currently
+ * branch on the LITERAL slug, and a literal cannot answer a question about a
+ * method added by config.
+ *
+ * 🛑 Two consumer routes specifically, both of which get SAFER by the change:
+ *   · `/api/admin/orders/[id]/refund` tests `paymentMethod !== "cod"` before
+ *     firing a gateway refund — so an unknown method attempts to reverse a
+ *     capture that may never have existed. `hasReversibleCapture` answers
+ *     `false` and routes it to the human-settled path instead.
+ *   · `/api/store/orders/[id]` gates "mark COD collected" on `!== "cod"`.
+ *
+ * ⚠ On this barrel, not a deep import: `exports["."]` is where every other
+ * checkout rule the consumer needs already resolves, and a second specifier
+ * for one symbol is how the dual-module-instance defect documented in that
+ * route's own header happens.
+ */
+export {
+  capabilitiesFor,
+  collectsOnDelivery,
+  hasReversibleCapture,
+  bypassesCapture,
+  isKnownPaymentMethod,
+  PAYMENT_METHOD_CAPABILITIES,
+  UNKNOWN_METHOD_CAPABILITIES,
+  type PaymentMethodCapabilities,
+} from "./_internal/shared/payments/method-capabilities";
+
 // The one definition of "what does this cart line cost". Exported because the
 // consumer's Razorpay create-order route needs it: that route used to hand-roll
 // the rule and reproduced only the bundle branch, so it captured the LIST price

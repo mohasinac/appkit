@@ -44,6 +44,7 @@ import {
   type CheckoutPaymentMethod,
 } from "../../features/checkout/config";
 import { getCartItemMemberIds } from "../line-members";
+import { bypassesCapture } from "../../payments/method-capabilities";
 import { getCategoryRule, getListingRule } from "./_registry";
 
 /**
@@ -206,12 +207,17 @@ export function assertPaymentMethodAllowed(
   if (!paymentMethod) return;
 
   /*
-   * 🛑 `admin_bypass` is exempt, deliberately. It exists so an admin can reach
-   * an order state without a real payment, is gated by a site-settings flag
-   * plus an admin role, and logs every use. Blocking it would make the one tool
-   * for testing these flows unable to test them.
+   * 🛑 A capture-bypassing tender is exempt, deliberately. It exists so an
+   * admin can reach an order state without a real payment, is gated by a
+   * site-settings flag plus an admin role, and logs every use. Blocking it
+   * would make the one tool for testing these flows unable to test them.
+   *
+   * ⚠ `bypassesCapture` is the ONE capability whose unknown fallback being
+   * `false` matters most: an unrecognised slug must never inherit the staff
+   * override, so it falls through to the normal gate below. That is exactly
+   * what the fallback was chosen for.
    */
-  if (paymentMethod === "admin_bypass") return;
+  if (bypassesCapture(paymentMethod)) return;
 
   const blocked = blockedMethodsForCart(items, productById, ctx);
   const offender = blocked.get(paymentMethod);
@@ -220,9 +226,14 @@ export function assertPaymentMethodAllowed(
   /*
    * The methods that remain, derived from the union rather than a second list —
    * a seventh payment method must not quietly go unmentioned here.
+   *
+   * 🛑 Capture-bypassing tenders are excluded from the SUGGESTION too, by the
+   * same predicate that exempted them above. A staff override is not an
+   * alternative to offer a buyer, and spelling the exclusion a second way is
+   * how the two would drift.
    */
   const allowed = CHECKOUT_PAYMENT_METHODS.filter(
-    (m) => m !== "admin_bypass" && !blocked.has(m),
+    (m) => !bypassesCapture(m) && !blocked.has(m),
   ).map((m) => PAYMENT_METHOD_LABEL[m] ?? m);
 
   throw Object.assign(

@@ -10,6 +10,10 @@ import { recordSendAttempt } from "../../_internal/server/notifications/send-rec
 import type { SendGuardContext } from "../../_internal/shared/features/messaging/config";
 import type { JsonValue } from "../../schemas/types";
 import { getProviders } from "../../contracts";
+import {
+  collectsOnDelivery,
+  hasReversibleCapture,
+} from "../../_internal/shared/payments/method-capabilities";
 import type { EmailOptions, IEmailProvider } from "../../contracts/email";
 import { createResendProvider } from "../../providers/email-resend/provider";
 import { siteSettingsRepository } from "../admin/repository/site-settings.repository";
@@ -318,8 +322,23 @@ export async function sendOrderConfirmationEmail(
 
   const orderUrl = `${siteUrl}/user/orders/view/${orderId}`;
   const formattedTotal = formatCurrency(totalPrice, currency);
-  const paymentLabel =
-    paymentMethod === "cod" ? "Cash on Delivery" : "Online Payment";
+  /*
+   * 🛑 THE `else` USED TO LIE. It read `=== "cod" ? "Cash on Delivery" :
+   * "Online Payment"`, so EVERY method that is not COD — including one this
+   * build has never heard of — was asserted to the buyer, in their order
+   * confirmation, as an online payment.
+   *
+   * A label in a confirmation email is a statement of fact about money that
+   * has moved. Three arms, each only claiming what the capability actually
+   * says: collected at the door · captured by a gateway · neither, so say
+   * nothing more specific than "Payment". A vaguer label is recoverable; a
+   * confident wrong one is what a buyer quotes back in a dispute.
+   */
+  const paymentLabel = collectsOnDelivery(paymentMethod)
+    ? "Cash on Delivery"
+    : hasReversibleCapture(paymentMethod)
+      ? "Online Payment"
+      : "Payment";
 
   const html = `<!DOCTYPE html>${renderToStaticMarkup(
     <EmailDoc title="Order confirmed">

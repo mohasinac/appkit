@@ -118,6 +118,95 @@ check(
   [],
 );
 
+/*
+ * ── THE MIGRATED CALL SITES, each asserted as the QUESTION IT ASKS ─────────
+ *
+ * 🛑 Not a restatement of the table above. Each row below is a real branch,
+ * named by what it decides, so that "which capability did that site mean?"
+ * has a recorded answer rather than being re-derived from the diff. Getting
+ * the mapping wrong is silent — the code compiles either way.
+ */
+console.log("\n── the migrated branch sites ──");
+
+/** `createOrderForGroup` + the preview mirror: charge the carrier handling fee? */
+const chargesHandlingFee = collectsOnDelivery;
+check("cod pays a handling fee", chargesHandlingFee("cod"), true);
+check("online does not", chargesHandlingFee("online"), false);
+check("🛑 an unknown method is charged NOTHING, never a guessed fee", chargesHandlingFee("bnpl"), false);
+
+/** The COD value cap: bounded because nothing was captured. */
+const needsUncapturedCap = collectsOnDelivery;
+check("cod is capped", needsUncapturedCap("cod"), true);
+check(
+  "🛑 the cap predicate IS the deposit-split predicate — they must never diverge",
+  needsUncapturedCap("bnpl") === chargesHandlingFee("bnpl"),
+  true,
+);
+
+/** The high-value OTP gate: exempt only what collects at the door. */
+const otpExempt = collectsOnDelivery;
+check("cod is OTP-exempt", otpExempt("cod"), true);
+check("online is NOT exempt", otpExempt("online"), false);
+check(
+  "🛑 an unknown method is NOT exempt — the gate FIRES, which is more verification not less",
+  otpExempt("bnpl"),
+  false,
+);
+
+/** `bookShipment`: tell the carrier to collect cash. */
+const bookAsCod = collectsOnDelivery;
+check("cod books isCod", bookAsCod("cod"), true);
+check(
+  "🛑 an unknown method books PREPAID — never demand money from a buyer who already paid",
+  bookAsCod("bnpl"),
+  false,
+);
+
+/** Phase 1c: resolve a collecting gateway only for a gateway-captured tender. */
+const resolvesGateway = hasReversibleCapture;
+check("online resolves a collecting gateway", resolvesGateway("online"), true);
+check("cod does not — there is no capture to commingle", resolvesGateway("cod"), false);
+check("🛑 an unknown method is never handed a gateway", resolvesGateway("bnpl"), false);
+
+/** `assertPaymentMethodAllowed`: exempt the staff override, and never SUGGEST it. */
+check("admin_bypass skips the cart gate", bypassesCapture("admin_bypass"), true);
+check(
+  "🛑 an unknown slug does NOT inherit the staff override — it falls through to the gate",
+  bypassesCapture("admin_bypass_"),
+  false,
+);
+check(
+  "🛑 exactly ONE known method bypasses capture — a second would silently become suggestable",
+  Object.entries(PAYMENT_METHOD_CAPABILITIES)
+    .filter(([, c]) => c.bypassesCapture)
+    .map(([m]) => m),
+  ["admin_bypass"],
+);
+
+/**
+ * The order-confirmation email label.
+ *
+ * 🛑 The regression this locks: the old `cod ? … : "Online Payment"` asserted
+ * an online payment for EVERY other method, including unknown ones.
+ */
+function emailPaymentLabel(method: string | undefined): string {
+  return collectsOnDelivery(method)
+    ? "Cash on Delivery"
+    : hasReversibleCapture(method)
+      ? "Online Payment"
+      : "Payment";
+}
+check("cod label", emailPaymentLabel("cod"), "Cash on Delivery");
+check("online label", emailPaymentLabel("online"), "Online Payment");
+check("razorpay label", emailPaymentLabel("razorpay"), "Online Payment");
+check(
+  "🛑 an unknown method is NOT called an online payment in a buyer's confirmation",
+  emailPaymentLabel("bnpl"),
+  "Payment",
+);
+check("🛑 nor is admin_bypass", emailPaymentLabel("admin_bypass"), "Payment");
+check("undefined degrades, never throws", emailPaymentLabel(undefined), "Payment");
+
 console.log(
   `\n${failures === 0 ? "✅" : "🛑"} ${checks - failures}/${checks} checks passed` +
     (failures > 0 ? ` — ${failures} FAILED` : ""),
