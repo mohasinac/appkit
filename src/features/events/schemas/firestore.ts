@@ -931,6 +931,27 @@ export interface EventEntryMediaLimits {
   maxTotal?: number;
   /** Require at least one image. Platform default: true. */
   requireImage?: boolean;
+  /**
+   * The FRAME entry media is displayed in. Platform default: `"square"`.
+   *
+   * Owner, 2026-11-10, carried here from the cover-orientation ask: *"later
+   * add support for portrait or landscape flags for the events instances
+   * config"*. This is that flag, at the event level — how a cover renders is
+   * machinery, WHICH shape this event's media is, is config.
+   */
+  aspect?: "square" | "portrait" | "wide" | "video";
+  /**
+   * Whether media FILLS the frame (cropping the overflow) or FITS inside it.
+   *
+   * 🛑 Platform default is `"contain"`, deliberately unlike the product
+   * galleries. Owner, 2026-11-11: *"just properly contain the image inside the
+   * box not trim it"* — a 1199x1312 portrait poster in a square frame was
+   * losing the word "Diwali" off both edges. Entrants submit whatever shape
+   * their camera produced, so cropping an entry destroys the thing being
+   * judged; a product catalogue, where uniform tiles are the point, keeps
+   * `"cover"`.
+   */
+  fit?: "cover" | "contain";
 }
 
 /**
@@ -946,7 +967,15 @@ export const DEFAULT_ENTRY_MEDIA_LIMITS: Required<EventEntryMediaLimits> = {
   maxVideos: 1,
   maxTotal: 4,
   requireImage: true,
+  aspect: "square",
+  fit: "contain",
 };
+
+/** The frames an event may ask for. Anything else degrades to the default. */
+const ENTRY_MEDIA_ASPECTS: readonly NonNullable<EventEntryMediaLimits["aspect"]>[] =
+  ["square", "portrait", "wide", "video"];
+const ENTRY_MEDIA_FITS: readonly NonNullable<EventEntryMediaLimits["fit"]>[] =
+  ["cover", "contain"];
 
 /** This event's caps, with every unset field filled from the platform default. */
 export function resolveEntryMediaLimits(
@@ -957,6 +986,22 @@ export function resolveEntryMediaLimits(
     maxVideos: limits?.maxVideos ?? DEFAULT_ENTRY_MEDIA_LIMITS.maxVideos,
     maxTotal: limits?.maxTotal ?? DEFAULT_ENTRY_MEDIA_LIMITS.maxTotal,
     requireImage: limits?.requireImage ?? DEFAULT_ENTRY_MEDIA_LIMITS.requireImage,
+    /*
+     * 🛑 Validated against the allowed set, not passed through. A stored value
+     * this deploy has never heard of — newer config against an older build —
+     * must fall back to the default, never reach a className as-is and never
+     * throw. Same rule as every other open slug in this codebase.
+     */
+    aspect: ENTRY_MEDIA_ASPECTS.includes(
+      limits?.aspect as NonNullable<EventEntryMediaLimits["aspect"]>,
+    )
+      ? (limits!.aspect as NonNullable<EventEntryMediaLimits["aspect"]>)
+      : DEFAULT_ENTRY_MEDIA_LIMITS.aspect,
+    fit: ENTRY_MEDIA_FITS.includes(
+      limits?.fit as NonNullable<EventEntryMediaLimits["fit"]>,
+    )
+      ? (limits!.fit as NonNullable<EventEntryMediaLimits["fit"]>)
+      : DEFAULT_ENTRY_MEDIA_LIMITS.fit,
   };
 }
 

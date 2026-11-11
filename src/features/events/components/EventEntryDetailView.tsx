@@ -41,6 +41,7 @@ import { EntryMediaThumb } from "./EntryMediaThumb";
 import { EntryVoteButtons } from "./EntryVoteButtons";
 import { useEntryVoteCaster } from "../hooks/useEntryVote";
 import type { EventEntryMediaLimits } from "../schemas/firestore";
+import { resolveEntryMediaLimits } from "../schemas/firestore";
 import type { PublicEntryRanking, PublicEventEntryItem } from "../types";
 
 export interface EventEntryDetailLabels {
@@ -211,6 +212,8 @@ export function EventEntryDetailView({
    * image AND video with per-item badge and caption — so there is still one
    * lightbox and no video special-casing anywhere in this file.
    */
+  const mediaDisplay = resolveEntryMediaLimits(entryMedia);
+
   const gallery = (
     <DetailPageGallery
       images={live.media.map((item) => ({
@@ -219,7 +222,18 @@ export function EventEntryDetailView({
         kind: item.type,
       }))}
       title={`Entry by ${entrant}`}
-      aspect="square"
+      /*
+       * 🛑 FROM THE EVENT'S OWN CONFIG, not a constant. `aspect="square"` was
+       * hardcoded here, and with the gallery's `object-cover` default that cut
+       * a 1199x1312 portrait poster off on both edges — the owner opened the
+       * entry and found the word "Diwali" missing from a Diwali contest.
+       *
+       * `resolveEntryMediaLimits` fills both from the platform default when
+       * the event sets neither, and refuses a value it does not recognise, so
+       * a newer config against an older deploy letterboxes rather than throws.
+       */
+      aspect={mediaDisplay.aspect}
+      fit={mediaDisplay.fit}
       size="lg"
       resolve="raw"
       showArrows

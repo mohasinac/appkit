@@ -2,6 +2,7 @@
 import React, { useEffect, useState, type ReactNode } from "react";
 import { Div } from "./Div";
 import { MediaImage } from "./MediaImage";
+import { resolveMediaUrl } from "../../utils/media-url";
 
 const __O = {
   xAuto: "overflow-x-auto",
@@ -33,6 +34,23 @@ export interface DetailPageGalleryProps {
   title?: string;
   /** Aspect ratio for the main image — defaults to `square`. */
   aspect?: "square" | "video" | "portrait" | "wide";
+  /**
+   * How the image sits in the frame. `"cover"` fills it and CROPS the
+   * overflow; `"contain"` fits the whole image and letterboxes instead.
+   *
+   * 🛑 Owner, 2026-11-11, on a portrait poster in a square frame: *"just
+   * properly contain the image inside the box not trim it"*. The Diwali
+   * contest cover is 1199x1312 and was being cut on both edges, taking the
+   * word "Diwali" with it.
+   *
+   * Defaults to `"cover"` so every existing caller is unchanged — product,
+   * collector-drop and pre-order galleries are built around uniform tiles
+   * where cropping is the intended look.
+   *
+   * ⚠ An unrecognised value falls back to `"cover"` rather than throwing:
+   * newer config against an older deploy must not take a page down.
+   */
+  fit?: "cover" | "contain";
   /** Optional fallback slot rendered when `images` is empty. */
   fallback?: ReactNode;
   /** Initial selected index. */
@@ -112,12 +130,16 @@ function GalleryMedia({
   alt,
   resolve,
   optimizedSize,
+  fit,
 }: {
   item: DetailPageGalleryImage;
   alt: string;
   resolve: NonNullable<DetailPageGalleryProps["resolve"]>;
   optimizedSize: "hero" | "thumbnail";
+  fit: NonNullable<DetailPageGalleryProps["fit"]>;
 }) {
+  /* Unknown value degrades to the historical behaviour. */
+  const fitClass = fit === "contain" ? "object-contain" : "object-cover";
   if (item.kind === "video") {
     /*
      * Always raw. There is no `next/image` path for a video, and `preload
@@ -131,18 +153,37 @@ function GalleryMedia({
         muted
         playsInline
         aria-label={alt}
-        className="h-full w-full object-cover"
+        className={`h-full w-full ${fitClass}`}
       />
     );
   }
   if (resolve === "raw") {
     return (
+      /*
+       * 🛑 `resolveMediaUrl` IS APPLIED HERE, even on the "raw" path.
+       *
+       * `raw` exists to skip `next/image`, whose loader refuses the media host
+       * at runtime on the subdomains — it was never meant to skip URL
+       * RESOLUTION, which is a pure string transform. Without this the stored
+       * host-agnostic `/media/<shortId>` is handed to the browser as-is, so it
+       * resolves against the CURRENT origin and every image is fetched through
+       * this app's own `/media/:path*` rewrite.
+       *
+       * Owner, 2026-11-11: *"why is the media still getting events url? they
+       * should be get directly from the cdn or media subdomain"*. That proxy
+       * hop costs a serverless invocation per image plus origin transfer, and
+       * it is the first cost lever recorded in CLAUDE.md.
+       *
+       * With `NEXT_PUBLIC_MEDIA_HOST` set this now emits an absolute CDN URL;
+       * unset, `resolveMediaUrl` returns the path unchanged and behaviour is
+       * exactly what it was.
+       */
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={item.url}
+        src={resolveMediaUrl(item.url)}
         alt={alt}
         loading="lazy"
-        className="h-full w-full object-cover"
+        className={`h-full w-full ${fitClass}`}
       />
     );
   }
@@ -166,6 +207,7 @@ export function DetailPageGallery({
   images,
   title,
   aspect = "square",
+  fit = "cover",
   fallback,
   initialIndex = 0,
   size = "md",
@@ -227,6 +269,7 @@ export function DetailPageGallery({
       alt={activeAlt}
       resolve={resolve}
       optimizedSize="hero"
+      fit={fit}
     />
   );
 
@@ -314,6 +357,7 @@ export function DetailPageGallery({
                 alt={img.alt ?? `${title ?? ""} ${idx + 1}`}
                 resolve={resolve}
                 optimizedSize="thumbnail"
+                fit={fit}
               />
             </button>
           ))}
