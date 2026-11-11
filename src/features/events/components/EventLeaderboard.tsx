@@ -1,8 +1,8 @@
 import React from "react";
-import Link from "next/link";
 import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Span, Text } from "../../../ui/components/Typography";
+import { TextLink } from "../../../ui/components/TextLink";
 import type { LeaderboardEntry, PollResultEntry } from "../types";
 
 export interface EventLeaderboardProps {
@@ -140,13 +140,20 @@ export function EventLeaderboard({
               given — a host that does not serve entry pages should not render
               a dead link.
             */}
+            {/*
+              🛑 `TextLink`, never a bare `<Link className="font-medium">`.
+              A raw className carries no colour token, so the row inherits
+              something invisible on a dark surface — that shipped once and the
+              owner screenshotted an unreadable leaderboard.
+            */}
             {entry.entryId && entryHrefPrefix ? (
-              <Link
+              <TextLink
                 href={`${entryHrefPrefix.replace(/\/+$/, "")}/${encodeURIComponent(entry.entryId)}`}
-                className="font-medium underline-offset-2 hover:underline"
+                variant="default"
+                weight="medium"
               >
                 #{entry.rank} {entry.userDisplayName}
-              </Link>
+              </TextLink>
             ) : (
               <Span weight="medium">
                 #{entry.rank} {entry.userDisplayName}
