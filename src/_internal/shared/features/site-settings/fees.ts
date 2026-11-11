@@ -124,6 +124,28 @@ export function toBuyerFacingFees(
     codDepositPercent: commissions.codDepositPercent,
     platformFeePercent: commissions.platformFeePercent,
     platformFeeMax: commissions.platformFeeMax,
+    /*
+     * The two-line addition this file's own comment promised: both fields now
+     * exist on `SiteSettingsDocument["commissions"]`, so the taper can be
+     * projected instead of being handed to the explainer by the server.
+     *
+     * ⚠ Still PUBLIC-SAFE, which is why they belong here rather than in the
+     * withheld list. The taper is what the buyer is actually charged and what
+     * the checkout explainer narrates — publishing it lets a buyer check the
+     * arithmetic, which is the whole point of that surface. Nothing about
+     * seller economics is exposed: `gatewayFeePercent`, the shipping splits
+     * and the payout knobs stay withheld.
+     *
+     * 🛑 Projected as a COPY, not the stored reference. These objects cross
+     * into a client payload, and handing out the array the settings cache
+     * holds means any consumer that sorts or mutates it corrupts the cached
+     * singleton for every later reader in the same process.
+     */
+    platformFeeUnitBands: commissions.platformFeeUnitBands?.map((b) => ({
+      minUnits: b.minUnits,
+      ratePerUnit: b.ratePerUnit,
+    })),
+    platformFeePerUnitFloor: commissions.platformFeePerUnitFloor,
     gstPercent: commissions.gstPercent,
     minimumTransactionFee: commissions.minimumTransactionFee,
   };

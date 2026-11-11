@@ -722,6 +722,36 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       String(ROUTES.PUBLIC.SELLER_GUIDE),
     ],
   },
+  /*
+   * 🛑 THE PER-ORDER MESSAGE CAP — seeded because UNSET MEANS UNLIMITED.
+   *
+   * `message-budget.repository.ts` reads `const unlimited = cap <= 0`, and
+   * `notification-actions.ts` passes `?? 0`. So an install that has never set
+   * this has NO cap at all. That is the right fail-open direction for a
+   * mechanism which could otherwise swallow a payment failure — and the wrong
+   * state for the fee model.
+   *
+   * The platform fee is sized against a BOUNDED worst case. An unbounded one
+   * cannot be covered at any price, because cost per order has no ceiling
+   * while the fee does. So this is not a safety valve, it is the pricing
+   * assumption — and leaving it unset prices the fee against a number nothing
+   * enforces.
+   *
+   * ⚠ A FLAT per-order number, which is less than the model wants. The fee
+   * curve assumes `max(20, 6 x lines)` so revenue and capped cost scale
+   * together; this field cannot express that, and 20 is its floor. It bounds
+   * the ordinary order and makes the mechanism real, but **a 20-line order is
+   * still under-capped relative to the fee it pays**. Line-scaling is a
+   * change to the FIELD, not a reason to leave it unset meanwhile.
+   *
+   * ⚠ `important`/`critical` types are EXEMPT but still counted, so this can
+   * never silence a cancellation or a payment failure — only the routine
+   * progress traffic the paid add-on exists to sell.
+   */
+  notificationPerOrderCap: {
+    whatsapp: 20,
+    email: 8,
+  },
   credentials: {
     phonepeClientId: "PGTESTPAYUAT_PLACEHOLDER",
     phonepeClientSecret: "secret_PLACEHOLDER",

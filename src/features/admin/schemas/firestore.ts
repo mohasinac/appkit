@@ -935,6 +935,40 @@ export interface SiteSettingsDocument extends BaseDocument {
      * Optional so pre-existing documents keep working — falls back to ₹10.
      */ // audit-money-units-ok: rupee ceiling, not paise
     platformFeeMax?: number;
+    /**
+     * The per-unit taper: how the platform fee rate falls as an order gets
+     * bigger. Lowest `minUnits` first; a unit pays the rate of the highest
+     * band whose `minUnits` it reaches.
+     *
+     * 🛑 THESE TWO FIELDS WERE REFERENCED BEFORE THEY EXISTED.
+     * `_internal/shared/features/site-settings/fees.ts` declares both on
+     * `BuyerFacingFees` with a note that *"neither field exists on
+     * SiteSettingsDocument['commissions'], and that schema belongs to another
+     * lane"* — so `toBuyerFacingFees` could not project them and the checkout
+     * explainer had to be handed the server's computed lines instead of
+     * deriving its own. This is that lane; the projection is now possible.
+     *
+     * ⚠ Absent means `DEFAULT_PLATFORM_FEE_UNIT_BANDS` in
+     * `_internal/shared/fees/calculator.ts`, which is where the shipped curve
+     * lives. Setting this REPLACES the table wholesale rather than merging —
+     * a partial table is a different curve, not a patched one, and merging
+     * would make the effective rate impossible to read off the stored value.
+     *
+     * 🛑 Admin-editable, so it can be edited badly. `resolvePlatformFeeUnitRate`
+     * applies `platformFeePerUnitFloor` to whatever the table returns, so a
+     * table with a zero or negative rate still cannot charge below the floor.
+     * The floor is the guarantee; the table is the intent.
+     */
+    platformFeeUnitBands?: { minUnits: number; ratePerUnit: number }[];
+    /**
+     * The hard floor on the tapered per-unit rate — owner: *"never less than
+     * 5 rs"*. Absent means `DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR`.
+     *
+     * ⚠ Not the same as the bottom band, even though they are equal today.
+     * The bottom band is where the taper stops; this is what no band can go
+     * under. They agree by convenience, not by mechanism.
+     */
+    platformFeePerUnitFloor?: number;
     /** Razorpay gateway cost % (absorbed by platform, not passed through separately). */
     gatewayFeePercent: number;
     codDepositPercent: number;
