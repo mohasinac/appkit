@@ -1952,7 +1952,7 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
   {
     id: "faq-why-is-my-total-more-than-the-price",
     question: "Why is my total more than the listed price?",
-    answer: html("<p>The item price already includes GST, so the difference is the things you chose plus one small platform fee:</p><ul><li><strong>Shipping</strong>, set by the seller — free, a flat rate, or a live courier quote for your address.</li><li><strong>Platform fee</strong> — capped at <strong>₹10</strong> per checkout, plus 18% GST on that fee. It is charged once for the whole order, not per seller or per item.</li><li><strong>Anything you ticked</strong>: COD handling, gift wrap, WhatsApp updates, shipment or sale protection.</li></ul><p>Every line is itemised before you pay. If a figure appears you did not choose, that is a bug worth reporting rather than a policy.</p>"),
+    answer: html("<p>The item price already includes GST, so the difference is the things you chose plus one small platform fee:</p><ul><li><strong>Shipping</strong>, set by the seller — free, a flat rate, or a live courier quote for your address.</li><li><strong>Platform fee</strong> — capped at <strong>₹10</strong> per checkout, plus 18% GST on that fee. It is charged once for the whole order, not per seller or per item.</li><li><strong>Anything you ticked</strong>: COD handling, gift wrap, shipment or sale protection.</li></ul><p>Every line is itemised before you pay. If a figure appears you did not choose, that is a bug worth reporting rather than a policy.</p>"),
     category: "fees_and_taxes",
     showOnHomepage: true,
     showInFooter: false,
@@ -1981,7 +1981,7 @@ const faqSeedRecords: Partial<FAQDocument>[] = [
      * changes it, and this answer is itself admin-editable, so two editable
      * copies of one number is the worst arrangement available.
      */
-    answer: html("<p><strong>You do, and it is capped at {{platformFeeMax}}</strong> per checkout plus GST on that fee. It is charged once per order regardless of how many items or sellers are involved.</p><p>The seller pays a separate commission out of their own proceeds — you are not charged twice for the same thing, and the seller's commission never appears on your bill.</p>"),
+    answer: html("<p><strong>You do, and it is capped at {{platformFeeMax}}</strong> per checkout plus GST on that fee. It is charged once per order regardless of how many items or sellers are involved.</p><p><strong>What it pays for:</strong> keeping you informed about your order — the WhatsApp messages and emails we send as it is confirmed, packed, shipped and delivered — and the running costs of the platform itself. Those messages cost us per message, and we do not charge you per message for them.</p><p>The seller pays a separate commission out of their own proceeds — you are not charged twice for the same thing, and the seller's commission never appears on your bill.</p>"),
     category: "fees_and_taxes",
     showOnHomepage: false,
     showInFooter: false,

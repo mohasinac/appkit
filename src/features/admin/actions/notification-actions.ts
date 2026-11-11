@@ -97,14 +97,73 @@ async function storeWhatsAppSubscribed(storeId: string | undefined): Promise<boo
   return store?.whatsappNotifySubscribed === true;
 }
 
-const ORDER_GATED_TYPES = new Set([
-  "order_placed",
-  "order_confirmed",
-  "order_shipped",
-  "order_delivered",
-  "order_cancelled",
-  "refund_initiated",
-]);
+/**
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 WHAT THE SELLER'S SUBSCRIPTION ACTUALLY BUYS (owner, 2026-11-11)
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * *"The order confirmation message is mandatory, that is not included in the
+ * add-on. The payments and all other tracking info needs that add-on. Also
+ * the OTP one is also free, and the platform bears the cost."*
+ *
+ * So the subscription is NOT "WhatsApp on/off for this store". It is the
+ * ONGOING updates. Two things always go, whoever is or is not paying:
+ *
+ *   · the ORDER CONFIRMATION — the buyer's receipt that their money was taken
+ *     and the order exists. Withholding that because a seller did not buy an
+ *     add-on would make the platform look broken to the buyer, who has no
+ *     idea the add-on exists and did not choose the seller's billing.
+ *   · the CHECKOUT OTP — a security gate, never a feature. It was already
+ *     ungated (it is not an order type and never appeared in this set); the
+ *     owner's instruction confirms that rather than changing it.
+ *
+ * ⚠ THE PLATFORM BEARS THOSE. At ₹0.115 per utility/authentication message
+ * that is the cost of one message per order plus one per high-value checkout —
+ * measured against real billing, ₹1.27 for 12 messages. Negligible, and it is
+ * the platform's own interest being served: an unconfirmed order becomes a
+ * support ticket.
+ *
+ * 🛑 `order_placed` AND `order_confirmed` are BOTH removed, not just one.
+ * They are two names for the same moment on this install — the first send
+ * happens on payment-confirmed and *"the order confirmation IS the payment
+ * confirmation, not two messages"*. Gating one and freeing the other would
+ * make the buyer's receipt depend on which code path happened to fire.
+ *
+ * ────────────────────────────────────────────────────────────────────────────
+ * 🛑 AND THE SET IS EMPTY FOR NOW — owner, 2026-11-11, same conversation
+ * ────────────────────────────────────────────────────────────────────────────
+ *
+ * *"The add-ons and the seller-side stuff is for future updates."*
+ *
+ * So the seller subscription is NOT a launch feature. That makes an empty set
+ * the only correct value, and the reasoning is worth keeping because the
+ * tempting alternative is actively harmful:
+ *
+ * ⚠ Leaving `order_shipped` / `order_delivered` / `refund_initiated` gated
+ * would mean they are gated on `store.whatsappNotifySubscribed`, which NO
+ * STORE CAN SET because the surface to buy it does not exist. Every tracking
+ * and refund message would silently never send — gated on a flag nobody can
+ * turn on is indistinguishable from deleted, except that it looks configured.
+ * That is this project's own declared-but-unwired defect, and it has already
+ * cost three separate finds in this lane alone.
+ *
+ * ✅ So the PLATFORM bears all of it at launch: confirmation, tracking,
+ * refunds, OTP. The measured cost makes that easy to carry — ₹1.27 for 12
+ * messages, i.e. ~₹1,150 + GST for 10,000. The platform fee is stated to
+ * cover exactly this (see `explainPlatformFee`).
+ *
+ * 🛑 THE MECHANISM IS KEPT, ONLY THE MEMBERSHIP IS EMPTY. `requiresStoreSubscription`,
+ * `storeWhatsAppSubscribed` and the registry override all still work, so
+ * turning the add-on on later is adding type names here — or, better, a config
+ * override per type, with no code change at all. Deleting the machinery would
+ * make a planned feature a rewrite.
+ *
+ * ⚠ When it IS switched on, `order_placed` / `order_confirmed` must STAY out
+ * of it: the confirmation is mandatory and platform-borne by the owner's
+ * decision above, permanently. Only tracking and money-movement updates ever
+ * belong behind the add-on.
+ */
+const ORDER_GATED_TYPES = new Set<string>([]);
 
 /**
  * Notification type → the flat `SiteSettingsCredentials` field holding its

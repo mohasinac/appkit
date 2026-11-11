@@ -81,12 +81,24 @@ export async function FeesView({
       who: t("paidByBuyer"),
       note: t("codHandlingFeeNote"),
     },
-    {
-      category: t("whatsappNotifyFeeTitle"),
-      rate: t("whatsappNotifyFeeRate"),
-      who: t("paidByBuyer"),
-      note: t("whatsappNotifyFeeNote"),
-    },
+    /*
+     * 🛑 THE BUYER "WhatsApp updates" FEE ROW IS REMOVED (2026-11-11).
+     *
+     * It was rendered UNCONDITIONALLY, so this public fees page advertised a
+     * ₹10 per-order charge that `whatsappNotifyFeeEnabled: false` had already
+     * switched off — a published price for something nobody is charged.
+     *
+     * Owner's decision replaced it twice over: the per-order buyer add-on
+     * became a seller subscription, and then *"the add-ons and the
+     * seller-side stuff is for future updates"*. So there is no buyer-facing
+     * notification fee at all. Order messages are covered by the platform fee,
+     * which now says so in its own derivation (`explainPlatformFee`).
+     *
+     * ⚠ The `whatsappNotifyFee*` translation keys and the settings fields are
+     * LEFT IN PLACE deliberately — the subscription is a planned feature and
+     * deleting its copy would make switching it on a translation job as well
+     * as a config one. Unused copy is cheap; a published wrong price is not.
+     */
     {
       category: t("giftWrapFeeTitle"),
       rate: t("giftWrapFeeRate"),

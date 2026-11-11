@@ -106,6 +106,30 @@ export function explainPlatformFee(
 
   steps.push(`You pay ${money(charged)}`);
 
+  /*
+   * 🛑 SAY WHAT THE FEE BUYS. Owner, 2026-11-11: *"the platform fees we take,
+   * clearly mention that we do this for the notification of WhatsApp, the
+   * emails and the server costs."*
+   *
+   * A fee with no stated purpose reads as rent. These three are also the
+   * honest answer: WhatsApp order messages bill per message (₹0.115 each,
+   * measured), transactional email has its own per-send cost, and both ride
+   * infrastructure that runs whether or not an order is placed.
+   *
+   * ⚠ It belongs in the DERIVATION, not only in a help page. This is the text
+   * shown beside the number at the moment a buyer is deciding whether the
+   * charge is reasonable — which is the only moment the explanation is worth
+   * anything.
+   *
+   * ⚠ Deliberately names no brand and promises no specific channel. The
+   * notification channels a given install actually runs are config, and copy
+   * that names WhatsApp as a guarantee would be wrong on an install that has
+   * it switched off.
+   */
+  steps.push(
+    "This covers your order notifications — WhatsApp and email — and the running costs of the platform",
+  );
+
   const cheapest = Math.min(...billable.map((l) => l.ratePerUnit));
   return {
     summary: tapered
