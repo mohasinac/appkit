@@ -77,6 +77,43 @@ export const siteSettingsFeesFormSchema = z.object({
     section: "fees", order: 5, label: "Maximum platform fee (₹)",
     help: "Ceiling on the buyer's platform commission, charged once per checkout on every payment method. GST is calculated on the capped amount.",
   }),
+  /*
+   * 🛑 THE FLOOR THE TAPER CANNOT FALL THROUGH — and it was CONFIG NOBODY
+   * COULD EDIT. `platformFeePerUnitFloor` is read by `calculator.ts` and
+   * projected by `fees.ts`, and had no control anywhere, so the one number
+   * that stops the marginal taper running to zero on a large order was a
+   * deploy to change. That is the deploy test failing on the fee model's own
+   * safety rail.
+   *
+   * ⚠ `order: 5.5` on purpose, not a renumber of the twelve fields below it.
+   * `order` is a plain sort key, and renumbering a dozen unrelated lines to
+   * insert one field is a diff nobody can review for what it actually
+   * changes. It belongs beside `platformFeeMax` — the two together are the
+   * ceiling and the floor of the same charge.
+   */
+  /*
+   * ⚠ `platformFeeUnitBands` IS STILL NOT EDITABLE HERE, and that is stated
+   * rather than left for someone to discover.
+   *
+   * It is an ARRAY of `{minUnits, ratePerUnit}`, and this tab's own header
+   * records that it was migrated precisely because *"every field is a plain
+   * percentage, rupee amount or enable toggle, no media/list/masked-credential
+   * renderer needed anywhere in it"*. A repeatable row editor is the one thing
+   * it has never had.
+   *
+   * 🛑 And the save shape is not the same problem as the floor's: the
+   * repository flattens nested maps to dotted paths but deliberately does NOT
+   * flatten arrays, so a bands edit is a WHOLE-ARRAY write. A partial editor
+   * that posted three bands where four were stored would delete the fourth
+   * silently — which is why half-building this would be worse than the gap.
+   */
+  platformFeePerUnitFloor: annotate(z.number().min(0), {
+    section: "fees", order: 5.5, label: "Platform fee floor per unit (₹)",
+    help:
+      "The per-unit rate never tapers below this, however large the order. " +
+      "The taper is marginal — each unit pays its own band's rate — so this is " +
+      "the rate the last unit of a very large order pays, not a discount cap.",
+  }),
   payoutHoldDays: annotate(z.number().min(0), {
     section: "fees", order: 6, label: "Seller payout hold (days)",
   }),

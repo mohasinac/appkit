@@ -15,6 +15,13 @@ import { ImageUpload } from "../../media/upload/ImageUpload";
  * `_internal/server` reach, so this is safe in a `"use client"` file.
  */
 import { PAYOUT_HOLD_FLOOR_DAYS } from "../../../_internal/shared/fees/payout-hold";
+/*
+ * 🛑 The SAME constant the calculator falls back to, not a literal `5`.
+ * A second copy here would make the form's default and the charged rate two
+ * numbers that agree only by luck — the drift this whole settings layer
+ * exists to prevent.
+ */
+import { DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR } from "../../../_internal/shared/fees/calculator";
 import { MediaUploadField } from "../../media/upload/MediaUploadField";
 import { useMediaUpload } from "../../media/hooks/useMedia";
 import { apiClient } from "../../../http";
@@ -996,6 +1003,7 @@ export function AdminSiteSettingsView({
   // true to match the platform-tier default (the SELLER tier is the opt-in).
   const [feesForm, setFeesForm] = React.useState<SiteSettingsFeesFormValues>({
     platformFeePercent: 5, gstPercent: 18, minimumTransactionFee: 0, platformFeeMax: 10,
+    platformFeePerUnitFloor: DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR,
     gatewayFeePercent: 2, payoutHoldDays: 7, minPayoutAmount: 100,
     collectorDropListingFee: 0, preOrderListingFee: 0, featuredSlotFee: 999, promotedSlotFee: 499,
     codDepositPercent: 10,
@@ -1875,6 +1883,14 @@ export function AdminSiteSettingsView({
       gstPercent: s.commissions?.gstPercent ?? 18,
       minimumTransactionFee: s.commissions?.minimumTransactionFee ?? 0,
       platformFeeMax: s.commissions?.platformFeeMax ?? 10,
+      /*
+       * 🛑 `??`, so a configured `0` survives the load. With `||` an admin who
+       * deliberately set the floor to zero — letting the taper run all the way
+       * down — would silently get ₹5 back on every open-and-save, which is a
+       * price change nobody made.
+       */
+      platformFeePerUnitFloor:
+        s.commissions?.platformFeePerUnitFloor ?? DEFAULT_PLATFORM_FEE_PER_UNIT_FLOOR,
       gatewayFeePercent: s.commissions?.gatewayFeePercent ?? 2,
       /*
        * 🛑 Clamped UP to the floor on load, deliberately.
