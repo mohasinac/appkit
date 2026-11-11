@@ -85,8 +85,27 @@ export interface AddonDescriptor {
   label: string;
   /** What the buyer is actually getting, in their words. */
   description: string;
-  /** Dotted `siteSettings` path to the boolean that enables it platform-wide. */
+  /** TIER 1 — dotted `siteSettings` path to the boolean that enables it platform-wide. */
   enabledPath: string;
+  /**
+   * TIER 2 — dotted path into the STORE document for the seller's opt-in.
+   *
+   * ⚠ ABSENT MEANS NO SELLER OPT-IN IS NEEDED, which is the right default for
+   * a condiment: a seller does not consent to gift wrap. Present means the
+   * seller must have said yes, and absent-on-the-store reads as NO — they
+   * have not been asked, and enrolling them in a liability they never
+   * accepted is the worse failure.
+   */
+  sellerEnabledPath?: string;
+  /**
+   * TIER 3 — key into `ADDON_ITEM_RULES` for per-item eligibility.
+   *
+   * 🛑 A KEY, not a predicate, so the CHOICE stays a row. Absent means the
+   * add-on applies to any item — again the right default, and the reason a
+   * fifth add-on needs no code. An unknown key degrades to AVAILABLE rather
+   * than throwing; see `addon-availability.ts`.
+   */
+  itemRule?: string;
   pricing: AddonPricing;
   scope: AddonScope;
   refund: AddonRefundPolicy;
@@ -160,6 +179,13 @@ export const ADDON_REGISTRY: readonly AddonDescriptor[] = [
     label: "Shipment protection",
     description: "Covers loss or damage IN TRANSIT.",
     enabledPath: "commissions.shipmentProtectionFeeEnabled",
+    /*
+     * 🛑 The two upper tiers the picker already evaluated by hand. Declaring
+     * them makes `addonAvailability` reproduce the SAME three-step answer the
+     * picker open-codes, which is what lets the picker stop open-coding it.
+     */
+    sellerEnabledPath: "supportsShippingProtection",
+    itemRule: "shipmentProtection",
     pricing: {
       kind: "percentOfSubtotal",
       percentPath: "commissions.shipmentProtectionFeePercent",
@@ -176,6 +202,13 @@ export const ADDON_REGISTRY: readonly AddonDescriptor[] = [
     label: "Item protection",
     description: "Covers the ITEM — not as described, wrong item sent, item faults.",
     enabledPath: "commissions.saleProtectionFeeEnabled",
+    sellerEnabledPath: "supportsSaleProtection",
+    /*
+     * 🛑 THE RULE THAT MADE THE HOOK NECESSARY. Without it a `finalSale` item
+     * would be sold sale protection that can never pay out — "no returns" and
+     * "no-questions-asked refund" are a plain contradiction.
+     */
+    itemRule: "saleProtection",
     pricing: {
       kind: "percentOfSubtotal",
       percentPath: "commissions.saleProtectionFeePercent",

@@ -10,6 +10,33 @@ import { IconBox } from "../../../ui/components/IconBox";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { addonById } from "../../../_internal/shared/fees/addon-registry";
+import {
+  addonAvailability,
+  type AddonAvailability,
+} from "../../../_internal/shared/fees/addon-availability";
+
+/**
+ * The picker receives the `commissions.*` keys FLAT; the registry reads them
+ * by dotted path from a settings-shaped object.
+ *
+ * ⚠ A re-nest, not a re-declaration. The field names are unchanged and the
+ * registry's `enabledPath` still owns which key gates what — this only
+ * restores the shape the path is written against, so the picker and the server
+ * read the SAME path rather than two spellings of one flag.
+ */
+function addonSettingsFromRates(rates: StoreAddonsRates): { commissions: StoreAddonsRates } {
+  return { commissions: rates };
+}
+
+/**
+ * What to show when a descriptor is missing from the registry entirely.
+ *
+ * 🛑 NOT OFFERED, and specifically `platform-disabled` so it renders NOTHING.
+ * An add-on this build cannot describe must not be sold, and must not generate
+ * a risk notice about a seller who did nothing wrong.
+ */
+const NOT_OFFERED: AddonAvailability = { available: false, reason: "platform-disabled" };
 
 /**
  * Paid add-on checkboxes for ONE store.
@@ -144,21 +171,37 @@ export function StoreAddonsPicker({
   const saleFee = feeFor(49, rates.saleProtectionFeeMin, rates.saleProtectionFeePercent, 3);
 
   /*
-   * All three tiers, evaluated platform → seller → item, exactly as
-   * `protectionAvailability` does server-side. The buyer-facing message differs
-   * per tier and that is the point: platform-off shows NOTHING (there is
-   * nothing to disclose about this seller), seller-off shows the risk notice,
-   * item-ineligible says why.
+   * All three tiers, evaluated platform → seller → item.
+   *
+   * 🛑 THESE FIVE BOOLEANS USED TO BE HAND-ROLLED HERE, and the comment above
+   * them said they matched `protectionAvailability` "exactly" server-side —
+   * which is a promise no compiler checks. Two definitions of who is covered
+   * is the one thing a protection product cannot have: the picker decides what
+   * a buyer is CHARGED for, the server decides what gets PAID OUT, and a
+   * divergence means selling cover that will be declined.
+   *
+   * `addonAvailability` is now the single answer, and it delegates to
+   * `protectionAvailability` rather than re-deriving anything.
+   *
+   * ⚠ The three MESSAGES stay distinct, because that distinction is the point:
+   * platform-off shows NOTHING (there is nothing to disclose about this seller
+   * or this item), seller-off shows the risk notice, item-ineligible says why.
    */
-  const shippingOffered = !!rates.shipmentProtectionFeeEnabled && !!protection?.supportsShippingProtection;
-  const saleOffered =
-    !!rates.saleProtectionFeeEnabled &&
-    !!protection?.supportsSaleProtection &&
-    !protection?.hasFinalSaleItem;
-  const shippingDeclined = !!rates.shipmentProtectionFeeEnabled && !protection?.supportsShippingProtection;
-  const saleDeclined = !!rates.saleProtectionFeeEnabled && !protection?.supportsSaleProtection;
-  const saleBlockedByFinalSale =
-    !!rates.saleProtectionFeeEnabled && !!protection?.supportsSaleProtection && !!protection?.hasFinalSaleItem;
+  const sellerFlags = {
+    supportsShippingProtection: protection?.supportsShippingProtection === true,
+    supportsSaleProtection: protection?.supportsSaleProtection === true,
+  };
+  const tierCtx = { settings: addonSettingsFromRates(rates), sellerFlags, finalSale: protection?.hasFinalSaleItem === true };
+  const shipDescriptor = addonById("shipmentProtection");
+  const saleDescriptor = addonById("saleProtection");
+  const shipAvail = shipDescriptor ? addonAvailability(shipDescriptor, tierCtx) : NOT_OFFERED;
+  const saleAvail = saleDescriptor ? addonAvailability(saleDescriptor, tierCtx) : NOT_OFFERED;
+
+  const shippingOffered = shipAvail.available;
+  const saleOffered = saleAvail.available;
+  const shippingDeclined = !shipAvail.available && shipAvail.reason === "seller-not-supported";
+  const saleDeclined = !saleAvail.available && saleAvail.reason === "seller-not-supported";
+  const saleBlockedByFinalSale = !saleAvail.available && saleAvail.reason === "final-sale";
 
   return (
     <Stack gap="xs" className={`min-w-0 ${className}`}>
