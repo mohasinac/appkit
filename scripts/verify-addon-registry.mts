@@ -32,12 +32,58 @@ import {
   isAddonEnabled,
   readSettingsPath,
 } from "../src/_internal/shared/fees/addon-registry";
-import {
-  computeGiftWrapFee,
-  computeSaleProtectionFee,
-  computeShipmentProtectionFee,
-  computeWhatsAppNotifyFee,
-} from "../src/_internal/shared/fees/calculator";
+/*
+ * ────────────────────────────────────────────────────────────────────────
+ * 🛑 A FROZEN COPY OF THE ORIGINAL ARITHMETIC. DO NOT IMPORT THE REAL ONES.
+ * ────────────────────────────────────────────────────────────────────────
+ *
+ * The four `compute*Fee` functions in `calculator.ts` now DELEGATE to the
+ * registry. The moment they did, importing them here would have made every
+ * equivalence row a tautology — `registry === registry` — and the file would
+ * have gone on reporting 86/86 while verifying nothing at all.
+ *
+ * That is the same trap as the rounding check in this file's own history,
+ * one level up: a test whose expectation is derived from the thing under
+ * test. So the pre-delegation behaviour is transcribed here, by hand, and
+ * this is now the independent record of what those functions did on
+ * 2026-11-12 before the swap.
+ *
+ * ⚠ If a number here ever needs to change, that is a PRICE CHANGE and needs
+ * saying out loud — not a test fix.
+ */
+const DEFAULTS = {
+  whatsappNotifyFee: 10,
+  giftWrapFee: 49,
+  shipmentProtectionFeePercent: 2,
+  shipmentProtectionFeeMin: 30,
+  saleProtectionFeePercent: 3,
+  saleProtectionFeeMin: 49,
+};
+const round2 = (n: number): number => Math.round(n * 100) / 100;
+
+type Rates = Record<string, unknown>;
+const n = (v: unknown, d: number): number => (typeof v === "number" && Number.isFinite(v) ? v : d);
+
+function computeWhatsAppNotifyFee(selected: boolean, r: Rates): number {
+  if (!selected || !r["whatsappNotifyFeeEnabled"]) return 0;
+  return n(r["whatsappNotifyFee"], DEFAULTS.whatsappNotifyFee);
+}
+function computeGiftWrapFee(selected: boolean, r: Rates): number {
+  if (!selected || !r["giftWrapFeeEnabled"]) return 0;
+  return n(r["giftWrapFee"], DEFAULTS.giftWrapFee);
+}
+function computeShipmentProtectionFee(subtotal: number, selected: boolean, r: Rates): number {
+  if (!selected || !r["shipmentProtectionFeeEnabled"]) return 0;
+  const percent = n(r["shipmentProtectionFeePercent"], DEFAULTS.shipmentProtectionFeePercent);
+  const min = n(r["shipmentProtectionFeeMin"], DEFAULTS.shipmentProtectionFeeMin);
+  return Math.max(min, round2(subtotal * (percent / 100)));
+}
+function computeSaleProtectionFee(subtotal: number, selected: boolean, r: Rates): number {
+  if (!selected || !r["saleProtectionFeeEnabled"]) return 0;
+  const percent = n(r["saleProtectionFeePercent"], DEFAULTS.saleProtectionFeePercent);
+  const min = n(r["saleProtectionFeeMin"], DEFAULTS.saleProtectionFeeMin);
+  return Math.max(min, round2(subtotal * (percent / 100)));
+}
 
 let failures = 0;
 let checks = 0;

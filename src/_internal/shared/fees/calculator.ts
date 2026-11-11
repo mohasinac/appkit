@@ -16,6 +16,7 @@
  */
 
 import { roundRupees } from "../../../utils/number.formatter";
+import { addonById, computeAddonPrice } from "./addon-registry";
 import { resolveStateKey } from "./india-states";
 
 export interface FeeCommissionRates {
@@ -659,12 +660,42 @@ export interface WhatsAppNotifyFeeRates {
   whatsappNotifyFee?: number;
 }
 
-const DEFAULT_WHATSAPP_NOTIFY_FEE = 10;
+/*
+ * ──────────────────────────────────────────────────────────────────────────
+ * The four add-on fees now DELEGATE to `addon-registry.ts`.
+ * ──────────────────────────────────────────────────────────────────────────
+ *
+ * 🛑 Not an abstraction for its own sake — leaving the registry beside these
+ * functions would have been TWO DIVERGENT COPIES of the same pricing, which
+ * is the thing this project forbids outright. One of them had to become the
+ * other's caller, and the registry is the one a fifth add-on can extend
+ * without a release.
+ *
+ * ⚠ These signatures STAY. They take a `rates` object (the `commissions`
+ * sub-document) rather than full settings, and ~a dozen call sites pass it
+ * that way. Changing the shape here would be a refactor of every caller
+ * bundled into a pricing change — exactly the mixing that makes a diff
+ * unreviewable. The adapter is one object literal.
+ *
+ * ⚠ `addonSelected` stays a parameter rather than moving into the registry:
+ * whether a BUYER ticked the box is order state, not configuration. The
+ * registry answers "what does this cost and is it offered", never "did they
+ * want it".
+ *
+ * ✅ Equivalence is proven against a FROZEN transcript of the pre-delegation
+ * arithmetic in `scripts/verify-addon-registry.mts` — deliberately not
+ * against these functions, which would now be circular.
+ */
+function addonFee(id: string, rates: unknown, subtotal: number): number {
+  const descriptor = addonById(id);
+  if (!descriptor) return 0;
+  return computeAddonPrice(descriptor, { commissions: rates }, { subtotal, lineCount: 1 });
+}
 
 /** Flat WhatsApp order-updates addon fee — charged only when the buyer opted in AND the admin has the addon enabled. */
 export function computeWhatsAppNotifyFee(addonSelected: boolean, rates: WhatsAppNotifyFeeRates): number {
-  if (!addonSelected || !rates.whatsappNotifyFeeEnabled) return 0;
-  return rates.whatsappNotifyFee ?? DEFAULT_WHATSAPP_NOTIFY_FEE;
+  if (!addonSelected) return 0;
+  return addonFee("whatsappNotify", rates, 0);
 }
 
 export interface GiftWrapFeeRates {
@@ -674,12 +705,10 @@ export interface GiftWrapFeeRates {
   giftWrapFee?: number;
 }
 
-const DEFAULT_GIFT_WRAP_FEE = 49;
-
 /** Flat gift-wrap addon fee — charged only when the buyer opted in AND the admin has the addon enabled. */
 export function computeGiftWrapFee(addonSelected: boolean, rates: GiftWrapFeeRates): number {
-  if (!addonSelected || !rates.giftWrapFeeEnabled) return 0;
-  return rates.giftWrapFee ?? DEFAULT_GIFT_WRAP_FEE;
+  if (!addonSelected) return 0;
+  return addonFee("giftWrap", rates, 0);
 }
 
 export interface ShipmentProtectionFeeRates {
@@ -691,16 +720,21 @@ export interface ShipmentProtectionFeeRates {
   shipmentProtectionFeeMin?: number;
 }
 
-const DEFAULT_SHIPMENT_PROTECTION_FEE_PERCENT = 2;
-const DEFAULT_SHIPMENT_PROTECTION_FEE_MIN = 30;
+/*
+ * 🛑 The DEFAULT_* fallbacks moved to `addon-registry.ts` with the pricing,
+ * deliberately rather than being left here beside it. Two files holding the
+ * same ₹30 is the duplication this delegation exists to remove, and the copy
+ * nothing reads is the one that silently goes stale.
+ *
+ * ⚠ The VALUES are unchanged and are asserted against a frozen transcript in
+ * `scripts/verify-addon-registry.mts`. Changing one there is a price change,
+ * not a test fix.
+ */
 
 /** Shipment-protection addon fee: max(fixed floor, subtotal × percent) — charged only when the buyer opted in AND the admin has the addon enabled. */
 export function computeShipmentProtectionFee(subtotal: number, addonSelected: boolean, rates: ShipmentProtectionFeeRates): number {
-  if (!addonSelected || !rates.shipmentProtectionFeeEnabled) return 0;
-  const percent = rates.shipmentProtectionFeePercent ?? DEFAULT_SHIPMENT_PROTECTION_FEE_PERCENT;
-  const min = rates.shipmentProtectionFeeMin ?? DEFAULT_SHIPMENT_PROTECTION_FEE_MIN;
-  const percentFee = roundRupees(subtotal * (percent / 100));
-  return Math.max(min, percentFee);
+  if (!addonSelected) return 0;
+  return addonFee("shipmentProtection", rates, subtotal);
 }
 
 /**
@@ -726,16 +760,12 @@ export interface SaleProtectionFeeRates {
   saleProtectionFeeMin?: number;
 }
 
-const DEFAULT_SALE_PROTECTION_FEE_PERCENT = 3;
-const DEFAULT_SALE_PROTECTION_FEE_MIN = 49;
+/* Fallbacks live in `addon-registry.ts` — see the note above. */
 
 /** Sale-protection addon fee: max(fixed floor, subtotal × percent) — charged only when the buyer opted in AND the admin has the addon enabled. */
 export function computeSaleProtectionFee(subtotal: number, addonSelected: boolean, rates: SaleProtectionFeeRates): number {
-  if (!addonSelected || !rates.saleProtectionFeeEnabled) return 0;
-  const percent = rates.saleProtectionFeePercent ?? DEFAULT_SALE_PROTECTION_FEE_PERCENT;
-  const min = rates.saleProtectionFeeMin ?? DEFAULT_SALE_PROTECTION_FEE_MIN;
-  const percentFee = roundRupees(subtotal * (percent / 100));
-  return Math.max(min, percentFee);
+  if (!addonSelected) return 0;
+  return addonFee("saleProtection", rates, subtotal);
 }
 
 /**
