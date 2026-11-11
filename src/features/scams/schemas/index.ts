@@ -27,6 +27,10 @@ export const scamPlatformSchema = z.enum([
   "twitter",
   "olx",
   "facebook_marketplace",
+  // 🛑 Use `this_site`. `letitrip` is a consumer's brand in a published
+  // library and is kept ONLY so already-filed reports still validate — see
+  // the deprecation note on `SCAM_PLATFORM.LETITRIP` in ./firestore.
+  "this_site",
   "letitrip",
   "in_person",
   "phone_call",

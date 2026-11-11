@@ -51,6 +51,28 @@ export const ScamPlatformValues = {
   TWITTER: "twitter",
   OLX: "olx",
   FACEBOOK_MARKETPLACE: "facebook_marketplace",
+  /**
+   * "It happened here, on this site."
+   *
+   * 🛑 `THIS_SITE` is the one to use. `LETITRIP` below is a consumer's brand
+   * compiled into a published library — the same domain-independence break
+   * recorded three times for doc comments (4.85.0, 4.93.0, 4.97.0), arriving
+   * this time as an identifier rather than prose.
+   *
+   * ⚠ Its LABEL was always correct: `"{{siteName}}"`, resolved through
+   * `withBrand`. So nothing a user ever read said the brand — which is why
+   * this survived. **The leak is in the `.d.ts` every consumer installs.**
+   */
+  THIS_SITE: "this_site",
+  /**
+   * @deprecated Use `THIS_SITE`. Accepted, never written.
+   *
+   * 🛑 NOT DELETED, and that is deliberate. This is a STORED value: a scam
+   * report already filed with `scamPlatform: "letitrip"` must keep validating,
+   * and dropping the member would make existing rows unreadable — turning a
+   * cosmetic leak into data loss. Removing it is a backfill (`this_site`
+   * everywhere, then drop), not an edit.
+   */
   LETITRIP: "letitrip",
   IN_PERSON: "in_person",
   PHONE_CALL: "phone_call",
@@ -657,6 +679,9 @@ export const SCAM_PLATFORM_LABELS: Record<ScamPlatform, string> = {
   twitter: "X (Twitter)",
   olx: "OLX",
   facebook_marketplace: "Facebook Marketplace",
+  this_site: "{{siteName}}",
+  /* Historical rows only — same token, so the two are indistinguishable to a
+   * reader. See the deprecation note on `SCAM_PLATFORM.LETITRIP`. */
   letitrip: "{{siteName}}",
   in_person: "In Person",
   phone_call: "Phone Call",
