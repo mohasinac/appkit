@@ -107,7 +107,19 @@ export interface MediaUploadFieldProps {
   value: string;
   onChange: (url: string) => void;
   onChangeField?: (media: MediaField | null) => void;
-  onUpload: (file: File) => Promise<string>;
+  /**
+   * Upload one file and return its URL.
+   *
+   * ⚠ The second argument is the DISPLAY CROP, never an instruction to modify
+   * the bytes — the file passed is always the original the user chose. A
+   * caller that ignores it keeps working unchanged (which is every existing
+   * caller); one that forwards it to `/api/media/finalize` gets the framing
+   * stored on the `mediaAssets` document beside the untouched original.
+   */
+  onUpload: (
+    file: File,
+    crop?: { position: { x: number; y: number }; zoom: number },
+  ) => Promise<string>;
   accept?: string;
   maxSizeMB?: number;
   /**
@@ -713,7 +725,13 @@ export function MediaUploadField({
      * Images only, and cancelling proceeds with the original — see
      * `useImageCropGate`.
      */
-    const { file } = await cropGate.beginAsync(rawFile);
+    const crop = await cropGate.beginAsync(rawFile);
+    /*
+     * 🛑 The ORIGINAL file is uploaded. `crop` is display metadata that rides
+     * to `/api/media/finalize` and lands on the mediaAssets document, so the
+     * bytes in Storage are always what the user chose.
+     */
+    const file = rawFile;
     /*
      * Bound the pixel dimensions BEFORE the byte check, deliberately.
      *
@@ -729,7 +747,7 @@ export function MediaUploadField({
       setError(`${prepared.name}: exceeds ${maxSizeMB}MB limit`);
       return null;
     }
-    const url = await onUpload(prepared);
+    const url = await onUpload(prepared, crop ?? undefined);
     stageUrl(url);
     return { url, type: prepared.type };
   };

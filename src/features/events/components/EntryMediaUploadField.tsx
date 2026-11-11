@@ -146,7 +146,9 @@ export function EntryMediaUploadField({
        * Images only: a contest video goes straight through, because there is
        * no canvas crop for one. Cancelling uploads the original.
        */
-      const { file } = await cropGate.beginAsync(rawFile);
+      const crop = await cropGate.beginAsync(rawFile);
+      /* 🛑 The ORIGINAL file is uploaded; `crop` is only how it is framed. */
+      const file = rawFile;
       /*
        * 🛑 `classifyMime`, the SAME classifier `applyMediaContextGuards` runs
        * server-side — not a `startsWith("video/")` test. The server decides
@@ -190,7 +192,7 @@ export function EntryMediaUploadField({
         title: eventTitle,
         index,
         ext: MIME_TO_EXT[file.type.toLowerCase()] ?? "bin",
-      });
+      }, crop ?? undefined);
     },
     [upload, eventTitle, value],
   );

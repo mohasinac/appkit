@@ -47,6 +47,14 @@ interface UploadVariables {
   folder: string;
   isPublic: boolean;
   context?: MediaFilenameContext | Record<string, JsonValue>;
+  /**
+   * Display framing for the asset — NOT applied to the bytes.
+   *
+   * 🛑 The ORIGINAL file is always what is PUT to Storage. This rides along to
+   * `/api/media/finalize`, which stores it on the `mediaAssets` document, so
+   * re-framing later is a metadata update rather than a re-upload.
+   */
+  crop?: { position: { x: number; y: number }; zoom: number };
 }
 
 export interface MediaCropInput {
@@ -85,7 +93,7 @@ export function useMediaUpload(
   const finalizeEndpoint = endpoints.finalize ?? MEDIA_ENDPOINTS.FINALIZE;
 
   const mutation = useMutation<MediaUploadResult, Error, UploadVariables>({
-    mutationFn: async ({ file, folder, isPublic, context }) => {
+    mutationFn: async ({ file, folder, isPublic, context, crop }) => {
       const contentType = file.type;
 
       // Client-side precheck — fail fast before any network call. Catches
@@ -144,6 +152,8 @@ export function useMediaUpload(
          * itself.
          */
         originalFilename: file.name,
+        /* Omitted when absent — "no crop" must read as the whole image. */
+        ...(crop ? { crop } : {}),
       });
     },
   });
@@ -153,8 +163,15 @@ export function useMediaUpload(
     folder = "uploads",
     isPublic = true,
     context?: MediaFilenameContext | Record<string, JsonValue>,
+    crop?: { position: { x: number; y: number }; zoom: number },
   ): Promise<string> => {
-    const data = await mutation.mutateAsync({ file, folder, isPublic, context });
+    const data = await mutation.mutateAsync({
+      file,
+      folder,
+      isPublic,
+      context,
+      ...(crop ? { crop } : {}),
+    });
     return data.url;
   };
 

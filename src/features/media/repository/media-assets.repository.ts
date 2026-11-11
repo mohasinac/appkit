@@ -14,6 +14,30 @@ export interface MediaAssetDocument {
   /** staged = still in tmp/; finalized = moved to media/ by finalizeStagedMediaUrl. */
   status: "staged" | "finalized";
   /**
+   * How this asset is FRAMED on display — never how its bytes are stored.
+   *
+   * 🛑 Owner, 2026-11-11: *"we always upload the original but display using
+   * the meta data"*, and *"that reference sits in the media collection of
+   * firebase with the meta data, while the original file sits in the
+   * storage"*. This is that metadata.
+   *
+   * The crop is NON-DESTRUCTIVE by construction: `useImageCropGate` cannot
+   * return a modified file, so the bytes in Storage are always what the user
+   * selected. Re-framing later is an update to this field, not a re-upload,
+   * and one set of bytes can be framed differently on different surfaces.
+   *
+   * Same shape and same display maths as the avatar precedent
+   * (`avatarMetadata` + `AvatarDisplay`): `zoom` scales, `position` is the
+   * centre of the visible frame as a percentage of the original.
+   *
+   * ⚠ Absent means "uncropped", which every reader must treat as the whole
+   * image — not as a crop of zero size.
+   */
+  crop?: {
+    position: { x: number; y: number };
+    zoom: number;
+  };
+  /**
    * The media-filename context type this asset was uploaded under (e.g.
    * "catalogue-image", "product-image") — stamped at finalize time from the
    * same ctx.type already passed to generateMediaFilename(). Undefined for
