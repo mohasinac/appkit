@@ -1558,7 +1558,18 @@ export type {
 // against this so a client reading a field the endpoint no longer returns is a
 // compile error rather than a silent `undefined`.
 export type { PublicSiteSettings } from "./_internal/shared/features/site-settings/types";
-export { computeCodHandlingFee } from "./_internal/shared/fees/calculator"; // reexport-from-internal-ok: pure fee-calc utility consumed directly by public checkout UI (CheckoutRouteClient.tsx), same category as the sibling computeEmiSchedule/checkEmiEligibility re-export two lines above
+/*
+ * ⚠ The suppression below used to justify itself as "the same category as the
+ * sibling `computeEmiSchedule`/`checkEmiEligibility` re-export two lines
+ * above". Both of those are gone with the instalment tender, so it was
+ * pointing at nothing — corrected 2026-11-12 to stand on its own grounds.
+ *
+ * 🛑 A suppression that justifies itself by pointing at a NEIGHBOUR is a
+ * dangling reference waiting to happen: delete the neighbour and the reason
+ * silently evaporates while the suppression keeps working.
+ */
+// reexport-from-internal-ok: pure fee-calc utility, no server deps, consumed directly by the public checkout UI (CheckoutRouteClient.tsx).
+export { computeCodHandlingFee } from "./_internal/shared/fees/calculator";
 export type {
   CodHandlingFeeRates,
   WhatsAppNotifyFeeRates,
