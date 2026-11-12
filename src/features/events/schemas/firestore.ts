@@ -1098,3 +1098,56 @@ export function checkEntryNote(note: string | undefined): string | null {
     ? `Keep it to ${ENTRY_NOTE_MAX_WORDS} words`
     : null;
 }
+
+/**
+ * The live word counter beside a note field.
+ *
+ * ## 🛑 `"18 / 100 words"` READ AS A TARGET, AND THAT WAS THE DEFECT
+ *
+ * Owner, 2026-11-12: *"the site also says optional but makes them write 100
+ * words — it means 1-100 words, not like 100 exact."*
+ *
+ * The rule was always a CEILING: `checkEntryNote` only refuses a note ABOVE
+ * the cap, an empty note is valid, and the POST schemas agree. Nothing
+ * enforced a minimum anywhere. What went wrong was entirely the PRESENTATION
+ * — a progress-bar grammar (`n / max`) in front of a maximum. A participant
+ * reads "18 / 100" as 82 words still owed, and the word "Optional" was only in
+ * the placeholder, which disappears on the first keystroke.
+ *
+ * ⚠ So this is a copy fix for a rule that was already correct, and it is worth
+ * naming as its own class: a correct validator with a misleading counter is
+ * indistinguishable, to the person filling the form, from a wrong validator.
+ * No typecheck and no audit can see it.
+ *
+ * 🛑 ONE owner, because there are two note fields — the submit form on the
+ * participate page and the inline EDIT form on the entry card — and they sat
+ * in different repositories rendering the same hand-written string. Two copies
+ * of one sentence is how a fix lands on one of them.
+ *
+ * Three states, all phrased as a maximum:
+ *   0        -> "Optional — up to 100 words"
+ *   1..100   -> "18 words · 100 max"
+ *   over     -> "118 words · 18 over the 100-word limit"
+ */
+export function describeEntryNoteCount(words: number): string {
+  if (words <= 0) return `Optional — up to ${ENTRY_NOTE_MAX_WORDS} words`;
+  if (words <= ENTRY_NOTE_MAX_WORDS) {
+    return `${words} ${words === 1 ? "word" : "words"} · ${ENTRY_NOTE_MAX_WORDS} max`;
+  }
+  const over = words - ENTRY_NOTE_MAX_WORDS;
+  return `${words} words · ${over} over the ${ENTRY_NOTE_MAX_WORDS}-word limit`;
+}
+
+/**
+ * The note field's label, with its optionality IN the label.
+ *
+ * 🛑 Not in the placeholder. A placeholder is gone the moment someone types,
+ * so "Optional" lived exactly as long as it took to stop being readable — and
+ * the field a participant was looking at while deciding how much to write
+ * carried no statement about it at all.
+ */
+export const ENTRY_NOTE_LABEL = "Tell us about your entry (optional)";
+
+/** The note field's placeholder. States the cap as a cap. */
+export const ENTRY_NOTE_PLACEHOLDER =
+  `A few words about your entry — anything up to ${ENTRY_NOTE_MAX_WORDS}. You can leave this blank.`;

@@ -56,7 +56,10 @@ import {
   checkEntryMedia,
   checkEntryNote,
   countNoteWords,
+  describeEntryNoteCount,
+  ENTRY_NOTE_LABEL,
   ENTRY_NOTE_MAX_WORDS,
+  ENTRY_NOTE_PLACEHOLDER,
   type EventEntryMediaLimits,
 } from "../schemas/firestore";
 import type { PublicEntryMedia } from "../types";
@@ -103,8 +106,15 @@ const DEFAULT_LABELS: Required<EntryInlineActionsLabels> = {
   save: "Save changes",
   cancel: "Cancel",
   editTitle: "Edit entry",
-  noteLabel: "Your note",
-  notePlaceholder: "Tell us about your entry…",
+  /*
+   * 🛑 From appkit's own constants, not written here. The participate page's
+   * submit form has the same two strings, in a different repository, and
+   * "Your note" said nothing about the note being optional while the counter
+   * beside it read `n / 100` — see `describeEntryNoteCount` for the owner
+   * report and why the optionality belongs in the LABEL.
+   */
+  noteLabel: ENTRY_NOTE_LABEL,
+  notePlaceholder: ENTRY_NOTE_PLACEHOLDER,
   deleteTitle: "Delete this entry?",
   deleteMessage:
     "The entry and its votes are removed for good. This cannot be undone.",
@@ -368,9 +378,15 @@ export function EntryInlineActions({
                 POST route's zod schema, so no form could display the limit it
                 was being judged by — and an over-long note arrived as a failed
                 round trip rather than as a rule.
+
+                🛑 PHRASED AS A MAXIMUM, via `describeEntryNoteCount`. This read
+                `{words} / {ENTRY_NOTE_MAX_WORDS} words`, and `n / max` is
+                progress-bar grammar: the owner reported it as the form
+                demanding 100 words on a field the copy called optional. The
+                rule never had a minimum — only the counter implied one.
               */}
               <Text size="xs" color={words > ENTRY_NOTE_MAX_WORDS ? "error" : "faint"}>
-                {words} / {ENTRY_NOTE_MAX_WORDS} words
+                {describeEntryNoteCount(words)}
               </Text>
             </Stack>
 
