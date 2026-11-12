@@ -35,7 +35,8 @@ export interface CartPriceBreakdownStore {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
-  emiSurcharge: number;
+  /* `emiSurcharge` removed with EMI stage 5a — the server preview no longer
+     returns it, and requiring it here is what broke every consumer. */
   gstAmount: number;
   couponDiscount: number;
   total: number;
@@ -59,7 +60,8 @@ export interface CartPriceBreakdownData {
   giftWrapFee: number;
   shipmentProtectionFee: number;
   saleProtectionFee: number;
-  emiSurcharge: number;
+  /* `emiSurcharge` removed with EMI stage 5a — the server preview no longer
+     returns it, and requiring it here is what broke every consumer. */
   gstAmount: number;
   couponDiscount: number;
   platformFee: number;
@@ -274,13 +276,6 @@ export function CartPriceBreakdown({
         choosing EMI over paying in full — it belongs in the column, unlike the
         tax-inclusive item GST below the Total.
       */}
-      {preview.emiSurcharge > 0 && (
-        <Line
-          label="EMI surcharge"
-          amount={money(preview.emiSurcharge)}
-          derivation={derivations?.emiSurcharge}
-        />
-      )}
       {/*
         S5a — named for what the buyer asked for, not for the mechanism.
         "Split delivery" is what they chose; "shared-purchase handling fee plus
