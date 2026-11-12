@@ -121,7 +121,11 @@ const _rawOrdersSeedData: Partial<OrderPlain>[] = [
     currency: "INR",
     status: "confirmed",
     paymentStatus: "paid",
-    paymentMethod: "upi_manual",
+    /* Was `upi_manual` until 2026-11-12 -- the SEED was still CREATING
+       documents with a retired tender, so every reseed reintroduced the
+       thing being purged. `online`, not `cod`: both rows are
+       `paymentStatus: "paid"`, and COD settles on delivery. */
+    paymentMethod: "online",
     createdAt: daysAgo(3),
   },
   {
@@ -140,7 +144,11 @@ const _rawOrdersSeedData: Partial<OrderPlain>[] = [
     currency: "INR",
     status: "shipped",
     paymentStatus: "paid",
-    paymentMethod: "upi_manual",
+    /* Was `upi_manual` until 2026-11-12 -- the SEED was still CREATING
+       documents with a retired tender, so every reseed reintroduced the
+       thing being purged. `online`, not `cod`: both rows are
+       `paymentStatus: "paid"`, and COD settles on delivery. */
+    paymentMethod: "online",
     trackingNumber: "TEST-TRACK-001",
     createdAt: daysAgo(5),
   },

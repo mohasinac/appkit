@@ -225,7 +225,16 @@ export const PRIVATE_STORE_FIELDS = [
   "customCommissionRate", // commercial terms for this seller
   "googleReviews", // placeId is billed-API config; the RSC reads it server-side
   "shippingConfig", // resolved server-side into per-item shipping at cart time
-  "emiEnabled", // read server-side by the checkout/product RSCs, never from a public payload
+  /* 🛑 `"emiEnabled"` removed from this list 2026-11-12 with the field it
+     named — `StoreDocument.emiEnabled` went on 2026-11-11 and the zod schema
+     followed today.
+     ⚠ Nothing would have caught it. This is a TRIAGE declaration, not the
+     projection itself: the allow-list above builds the response, and
+     `audit-public-projection-parity` asserts every SCHEMA field is in exactly
+     one of the two lists — "but not the reverse ... it never asks whether a
+     listed name is real". Only the duplicate half is enforced (R5). So this
+     entry would have gone on naming a property no store document has,
+     exactly like the `whatsappConfig` entry recorded above it. */
   // A seller AUTHORING preference with no public reader by construction: the
   // stored `price` is always tax-inclusive, so a buyer never needs to know how
   // the seller typed it. Read only by `ProductRepository` at write time, and

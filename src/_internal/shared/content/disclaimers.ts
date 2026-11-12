@@ -273,13 +273,36 @@ export const DISCLAIMERS: Record<DisclaimerId, DisclaimerEntry> = {
     surfaces: ["PlaceBidForm", "CollectorDropDetailPageView", "/collector-drops"],
   },
 
+  /*
+   * 🛑 KEPT ON PURPOSE 2026-11-12, while the rest of the EMI consumer code was
+   * purged — and the reason is the one thing that must not be deferred.
+   *
+   * `"emi"` is STILL a member of `CHECKOUT_PAYMENT_METHODS` (removing it was
+   * measured at ~160 references and is out of scope) and `siteSettings.emi.*`
+   * still exists, so an admin flipping `emi.enabled: true` makes the tender
+   * selectable again by CONFIG, with no deploy. Deleting its legal disclosure
+   * would leave a surcharge-bearing tender that can be switched on with
+   * nothing disclosing the surcharge. Dead copy is cheap; a missing
+   * disclosure on a live money path is not.
+   *
+   * ⚠ `surfaces` CORRECTED — it claimed `["CheckoutRouteClient", "/fees",
+   * "EmiScheduleTable"]`. `EmiScheduleTable` does not exist in either repo,
+   * and no surface passes `id="emi"` to `<Disclaimer>`, so this entry renders
+   * NOWHERE today. The field is a documentation claim nothing verifies, which
+   * is how it came to name a deleted component.
+   *
+   * 🛑 So the gap is real right now: `/fees` does advertise an EMI surcharge
+   * (`FeesView`, via `messages/en.json`) and this disclaimer is not shown
+   * beside it. Reported rather than fixed here — the fee copy is authored
+   * disclosure and the owner's call.
+   */
   "emi": {
     body:
       "EMI adds a surcharge to the order total, shown before you pay. The instalment plan is between you " +
       "and {{siteName}} rather than a bank, and a missed instalment may suspend access to the order and is " +
       "recoverable as a debt.",
     tone: "legal",
-    surfaces: ["CheckoutRouteClient", "/fees", "EmiScheduleTable"],
+    surfaces: [],
   },
 
   "delivery-estimate": {

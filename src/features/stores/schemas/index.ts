@@ -97,7 +97,14 @@ export const storeFirestoreSchema = z.object({
     })
     .optional(),
   shippingConfig: storeShippingConfigSchema.optional(),
-  emiEnabled: z.boolean().optional(),
+  /*
+   * 🛑 `emiEnabled` DELETED 2026-11-12 — and the two schemas DISAGREED until
+   * now: `StoreDocument.emiEnabled` was removed on 2026-11-11 while this zod
+   * schema went on accepting the field. An optional member over a property
+   * the document type does not have is the quietest kind of drift — the
+   * schema validates a write that then cannot be typed, so one half says the
+   * seller may opt in and the other says there is nothing to opt into.
+   */
   whatsappConfig: z
     .object({
       phoneNumber: z.string().optional(),
