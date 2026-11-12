@@ -380,6 +380,22 @@ export const SEED_ROW_PURPOSE: Record<string, SeedPurpose> = {
    * (beyblade-arena, blader-bazaar, vintage-vault-co) are test fixtures. */
   "stores:store-letitrip-official": "permanent",
   /*
+   * 🛑 THE ONLY DOCUMENT IN PRODUCTION. Pinned 2026-11-12.
+   *
+   * Production holds exactly one collection with one row — this contest —
+   * by the owner's instruction that prod carry only the Diwali media-entry
+   * contest and nothing else. It resolved to `test`, so the authorised wipe
+   * would have DELETED THE ONLY THING PRODUCTION CONTAINS.
+   *
+   * ⚠ And the reseed could not restore it: a full `appkit-seed load` against
+   * production is explicitly forbidden (it writes 6,000+ documents), so the
+   * row would have to be hand-written back from memory.
+   *
+   * ⚠ The COLLECTION default stays `test` deliberately — every other seeded
+   * event is a fixture. A one-row exception is exactly what this map is for.
+   */
+  "events:event-photo-contest-diwali": "permanent",
+  /*
    * ── 🛑 THE ONLY GENUINELY PURCHASABLE PRODUCTS ─────────────────────────
    *
    * 12 real, wiki-verified Beyblade X listings under
