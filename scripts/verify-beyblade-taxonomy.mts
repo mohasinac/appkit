@@ -17,9 +17,38 @@
  */
 import {
   BEYBLADE_TAXONOMY,
+  INCUMBENT_SLUG_MAP,
   deriveTaxonomy,
   type TaxonomyNode,
 } from "../src/seed/R1/beyblade-taxonomy";
+
+/*
+ * The 19 distinct `categorySlugs` MEASURED across the 17 production listings
+ * on 2026-11-12. Hard-coded on purpose: it is the observed state the migration
+ * has to account for, so if production later carries a slug that is not here,
+ * the loader's own reconciliation check must fail rather than silently drop it.
+ */
+const MEASURED_PRODUCTION_SLUGS = [
+  "category-beyblade-x",
+  "category-spinning-tops",
+  "category-x-tops",
+  "category-x-basic",
+  "category-aeropegasus-3-70a",
+  "category-x-unique-ux",
+  "category-x-launchers",
+  "category-x-xtreme-stadiums",
+  "category-x-stadiums",
+  "category-x-customize-sets",
+  "category-knightshield-3-80n",
+  "category-x-string-launchers",
+  "category-x-winders",
+  "category-wizardarrow-4-80b",
+  "category-valkyrievolt-s4-70v",
+  "category-x-custom-cx",
+  "category-elevate",
+  "category-x-bits",
+  "category-x-parts",
+];
 
 let fail = 0;
 const check = (ok: boolean, label: string, detail = "") => {
@@ -34,12 +63,31 @@ console.log(`\n  ${derived.length} nodes derived\n`);
 
 /* ── 1 · the shape dev-db got wrong ──────────────────────────────────────── */
 const roots = derived.filter((d) => d.tier === 0);
-const categoryRoots = roots.filter((d) => (d.kind ?? "category") === "category");
 const brands = derived.filter((d) => d.kind === "brand");
+const generationRoots = roots.filter((d) => d.axis === "generation");
+const kindRoots = roots.filter((d) => d.axis === "kind");
 check(
-  categoryRoots.length === 5,
+  generationRoots.length === 5,
   `5 generation roots (dev-db has 4,000 accidental ones)`,
-  `${categoryRoots.map((r) => r.slug).join(", ")}`,
+  generationRoots.map((r) => r.slug).join(", "),
+);
+check(kindRoots.length === 6, "6 product-kind roots — the second axis", kindRoots.map((r) => r.slug).join(", "));
+
+/*
+ * 🛑 Every row must resolve to a facet group. A row with no axis renders in no
+ * group, i.e. nowhere — and nothing errors. This is the single field that
+ * decides whether a filter is visible at all.
+ */
+check(
+  derived.every((d) => d.axis === "generation" || d.axis === "kind" || d.axis === "brand"),
+  "every node resolves to exactly one facet group",
+  `generation ${derived.filter((d) => d.axis === "generation").length} · kind ${
+    derived.filter((d) => d.axis === "kind").length
+  } · brand ${derived.filter((d) => d.axis === "brand").length}`,
+);
+check(
+  derived.every((d) => d.tier === 0 || d.axis === bySlug.get(d.rootId)!.axis),
+  "a system inherits its generation's axis",
 );
 check(
   derived.length - roots.length > 0,
@@ -141,6 +189,44 @@ check(
   `${burstKids.length} systems`,
 );
 
+/* ── 3b · THE JOIN. An unmapped or mistyped slug = a silently empty facet ── */
+const unmapped = MEASURED_PRODUCTION_SLUGS.filter((s) => !(s in INCUMBENT_SLUG_MAP));
+check(
+  unmapped.length === 0,
+  "every slug measured in production is accounted for in the map",
+  unmapped.length ? `UNMAPPED: ${unmapped.join(", ")}` : `all ${MEASURED_PRODUCTION_SLUGS.length}`,
+);
+
+/*
+ * 🛑 THE ONE ASSERTION THAT WOULD HAVE CAUGHT THE WHOLE CLASS. Every non-null
+ * target must exist as a node in the tree. A typo here does not throw, does not
+ * fail a typecheck, and does not show up in any status check — it produces a
+ * product pointing at a category that does not exist, and `array-contains`
+ * reports that as an empty result rather than an error.
+ */
+const danglingTargets = Object.entries(INCUMBENT_SLUG_MAP)
+  .filter(([, to]) => to !== null)
+  .filter(([, to]) => !bySlug.has(to!))
+  .map(([from, to]) => `${from} → ${to}`);
+check(
+  danglingTargets.length === 0,
+  "every mapped target resolves to a real node in the tree",
+  danglingTargets.length ? `DANGLING: ${danglingTargets.join(", ")}` : "no dangling targets",
+);
+
+const dropped = Object.entries(INCUMBENT_SLUG_MAP).filter(([, to]) => to === null);
+check(
+  dropped.length === 6,
+  "6 slugs are deliberately dropped (5 per-product rows + the catalogue root)",
+  dropped.map(([k]) => k.replace("category-", "")).join(" · "),
+);
+
+/* Both axes must survive the migration, or the facet loses a dimension. */
+const targets = new Set(Object.values(INCUMBENT_SLUG_MAP).filter(Boolean) as string[]);
+const axisA = [...targets].filter((t) => (bySlug.get(t)!.tier === 1) || bySlug.get(t)!.slug === "beyblade-x");
+const axisB = [...targets].filter((t) => ["tops", "launchers", "stadiums", "parts", "sets"].includes(t));
+check(axisA.length > 0 && axisB.length > 0, "the migration preserves BOTH axes", `A: ${axisA.length} · B: ${axisB.length}`);
+
 /* ── 4 · PROVE THE CHECKER CAN FAIL ──────────────────────────────────────── */
 console.log("\n  self-tests — each must be REFUSED:");
 const mustThrow = (label: string, nodes: TaxonomyNode[]) => {
@@ -161,6 +247,9 @@ mustThrow("a 2-cycle", [
   { slug: "a", name: "A", parent: "b" },
   { slug: "b", name: "B", parent: "a" },
 ]);
+/* The newest invariant, and the quietest one if it ever broke: a root with no
+ * axis yields rows that belong to no facet group and therefore render nowhere. */
+mustThrow("a root that declares no axis", [{ slug: "groupless", name: "Groupless" }]);
 
 /* And the positive control: the real tree must NOT throw. A checker that
  * refuses everything is as useless as one that accepts everything. */

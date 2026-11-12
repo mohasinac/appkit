@@ -93,6 +93,19 @@ export interface TaxonomyNode {
   parent?: string;
   /** Defaults to `"category"`. Brands share the collection, discriminated. */
   kind?: CategoryType;
+  /**
+   * Which facet GROUP this row belongs to.
+   *
+   * 🛑 DECLARED, never inferred. The facet UI has to render "Generation" and
+   * "Type" as two separate groups — a single flat list of 11 roots mixing
+   * `Beyblade X` with `Stadiums` is not a filter, it is a pile. Inferring the
+   * group from `tier` or from a hardcoded slug list is what makes adding a row
+   * a code change, which is the thing this project's governing principle
+   * forbids.
+   *
+   * Inherited by children: a system's axis is its generation's.
+   */
+  axis?: "generation" | "kind" | "brand";
   /** Surfaces on the homepage band / brand tiles. */
   featured?: boolean;
   /** One line. Becomes the meta description and the facet tooltip. */
@@ -132,6 +145,7 @@ export const BEYBLADE_TAXONOMY: TaxonomyNode[] = [
     slug: "beyblade-x",
     name: "Beyblade X",
     featured: true,
+    axis: "generation",
     chain: 4,
     blurb: "The current generation — the Xtreme Gear rail and the X-Celerator Gear System.",
   },
@@ -139,6 +153,7 @@ export const BEYBLADE_TAXONOMY: TaxonomyNode[] = [
     slug: "beyblade-burst",
     name: "Beyblade Burst",
     featured: true,
+    axis: "generation",
     chain: 3,
     blurb: "Burst finishes, and the generation with the most systems of any.",
   },
@@ -146,6 +161,7 @@ export const BEYBLADE_TAXONOMY: TaxonomyNode[] = [
     slug: "metal-saga",
     name: "Metal Saga",
     featured: true,
+    axis: "generation",
     chain: 2,
     blurb: "Metal Fight Beyblade — the metal-wheel generation.",
   },
@@ -153,12 +169,14 @@ export const BEYBLADE_TAXONOMY: TaxonomyNode[] = [
     slug: "original-series",
     name: "Original Series",
     featured: true,
+    axis: "generation",
     chain: 1,
     blurb: "Bakuten Shoot Beyblade — where it started, through to Hard Metal System.",
   },
   {
     slug: "spin-offs",
     name: "Spin-offs",
+    axis: "generation",
     blurb: "BeyWheelz, BeyWarriors and BeyRaiderz — related lines, outside the main succession.",
   },
 
@@ -244,6 +262,40 @@ export const BEYBLADE_TAXONOMY: TaxonomyNode[] = [
     blurb: "HMS — the final architecture of the first generation.",
   },
 
+  /* ══ AXIS B · PRODUCT KIND ═══════════════════════════════════════════════
+   *
+   * 🛑 A SECOND AXIS, found by reading the real products rather than by design
+   * — and dropping it would have destroyed live categorisation.
+   *
+   * Measured on the 17 production listings: they carry slugs from TWO
+   * independent axes at once. `category-beyblade-x` + `category-x-unique-ux`
+   * is generation→system; `category-x-tops`, `category-x-launchers`,
+   * `category-x-stadiums`, `category-x-parts`, `category-x-customize-sets` is
+   * *what kind of thing it is*. A stadium is not a system of anything, and a
+   * launcher belongs to no generation's succession.
+   *
+   * ✅ Keeping them as a SECOND SHALLOW TREE rather than nesting them under
+   * each generation is what keeps the owner's depth rule intact. Nesting would
+   * give `beyblade-x → x-tops → …` (depth 2, and the same rows repeated per
+   * generation — 5 generations × 5 kinds is how a taxonomy starts multiplying).
+   * Two flat axes stay depth-1 and compose at QUERY time: a buyer filters
+   * `?category=beyblade-x&category=launchers` and gets X launchers, with no
+   * row for that intersection existing anywhere.
+   *
+   * ⚠ This is also why the five per-product rows in production
+   * (`category-aeropegasus-3-70a`, `category-knightshield-3-80n`,
+   * `category-wizardarrow-4-80b`, `category-valkyrievolt-s4-70v`,
+   * `category-elevate`) are DROPPED and not migrated: a category with exactly
+   * one product, named after that product, is a product wearing a category's
+   * clothes. Four thousand of those is the state dev-db is in.
+   */
+  { slug: "tops", axis: "kind", name: "Beyblades", featured: true, blurb: "Complete spinning tops, ready to battle." },
+  { slug: "launchers", axis: "kind", name: "Launchers & Winders", featured: true, blurb: "String launchers, winders and grips." },
+  { slug: "stadiums", axis: "kind", name: "Stadiums", featured: true, blurb: "Beystadiums, including Xtreme stadiums." },
+  { slug: "parts", axis: "kind", name: "Parts & Spares", featured: true, blurb: "Individual parts for customising and repair." },
+  { slug: "sets", axis: "kind", name: "Sets & Bundles", blurb: "Customise sets and multi-item bundles." },
+  { slug: "accessories", axis: "kind", name: "Accessories", blurb: "Maintenance, storage and tools." },
+
   /* ── BRANDS — same collection, discriminated by `categoryType` ────────────
    * 🛑 `brandId` DOES NOT EXIST and must not be added. CLAUDE.md records the
    * measurement: `franchiseId` is 0/0 and `brandId` is 1/29, because *"a
@@ -255,22 +307,84 @@ export const BEYBLADE_TAXONOMY: TaxonomyNode[] = [
   {
     slug: "takara-tomy",
     name: "Takara Tomy",
-    kind: "brand",
+    kind: "brand", axis: "brand",
     featured: true,
     blurb: "The originator. Japanese releases, and the reference for system and part naming.",
   },
   {
     slug: "hasbro",
     name: "Hasbro",
-    kind: "brand",
+    kind: "brand", axis: "brand",
     featured: true,
     blurb: "International releases. Names and some moulds differ from Takara Tomy.",
   },
-  { slug: "sonokong", name: "Sonokong", kind: "brand", blurb: "Korean releases." },
+  { slug: "sonokong", name: "Sonokong", kind: "brand", axis: "brand", blurb: "Korean releases." },
 ];
+
+/*
+ * ── THE INCUMBENT VOCABULARY, and why a rewrite is owed ─────────────────────
+ *
+ * 🛑 THIS MAP IS THE DIFFERENCE BETWEEN A WORKING FACET AND AN EMPTY ONE, and
+ * it was nearly missed. The tree above uses clean slugs (`beyblade-x`); the 17
+ * real production listings carry `category-beyblade-x`. Seeding the tree
+ * without reconciling the two would have produced the project's signature
+ * failure in its purest form: 35 categories written successfully, every
+ * product still pointing at slugs no category has, and therefore a facet that
+ * returns nothing while every status check reads green.
+ *
+ * ⚠ It is only visible by joining the two sides. `categorySlugs` is matched
+ * with `array-contains`, which cannot report "no such category" — it reports
+ * an empty result, indistinguishable from "no products in this category".
+ * That is the same silent-empty shape CLAUDE.md records for the missing index
+ * that made every contest entry invisible.
+ *
+ * Every key below was MEASURED from production, not assumed — see the counts
+ * in the loader's output. `null` means *deliberately dropped*: a category
+ * named after a single product is a product, and migrating it would carry the
+ * 4,000-row pattern into the new tree.
+ */
+export const INCUMBENT_SLUG_MAP: Record<string, string | null> = {
+  /* Axis A — generation and system. */
+  "category-beyblade-x": "beyblade-x",
+  "category-x-basic": "x-basic-line",
+  "category-x-unique-ux": "x-unique-line",
+  "category-x-custom-cx": "x-custom-line",
+
+  /* Axis B — product kind. Note the collapses: `x-string-launchers` and
+   * `x-winders` both fold into `launchers`, and `x-xtreme-stadiums` into
+   * `stadiums`. The X-specific half of each name is already carried by the
+   * generation slug on the same product, so keeping it twice would be the
+   * duplicate-vocabulary defect this project keeps paying for. */
+  "category-x-tops": "tops",
+  "category-x-launchers": "launchers",
+  "category-x-string-launchers": "launchers",
+  "category-x-winders": "launchers",
+  "category-x-stadiums": "stadiums",
+  "category-x-xtreme-stadiums": "stadiums",
+  "category-x-parts": "parts",
+  "category-x-bits": "parts",
+  "category-x-customize-sets": "sets",
+
+  /* 🛑 The catalogue root. Every product carried it (17/17) and it has no
+   * counterpart: with two axes there is no single "everything" node, and
+   * `/products` with no filter already is that page. A root category whose
+   * only property is "contains the entire catalogue" earns nothing and makes
+   * every closure one element longer. */
+  "category-spinning-tops": null,
+
+  /* Products masquerading as categories — 1 to 3 listings each, named after
+   * the listing. Dropped. */
+  "category-aeropegasus-3-70a": null,
+  "category-knightshield-3-80n": null,
+  "category-wizardarrow-4-80b": null,
+  "category-valkyrievolt-s4-70v": null,
+  "category-elevate": null,
+};
 
 /** What `deriveTaxonomy` returns — the structural half of the stored shape. */
 export interface DerivedTaxonomyNode extends TaxonomyNode {
+  /** Resolved, never optional — inherited from the root when not declared. */
+  axis: NonNullable<TaxonomyNode["axis"]>;
   rootId: string;
   parentIds: string[];
   childrenIds: string[];
@@ -355,9 +469,23 @@ export function deriveTaxonomy(nodes: TaxonomyNode[] = BEYBLADE_TAXONOMY): Deriv
   return nodes.map((n, i) => {
     const chain = chainOf(n.slug);
     const kids = childrenOf.get(n.slug) ?? [];
+    const rootId = chain[0] ?? n.slug;
+
+    /*
+     * A system inherits its generation's axis. 🛑 Resolved to a REQUIRED value
+     * rather than left optional: an `undefined` axis means the facet UI has no
+     * group to put the row in, and a row in no group renders nowhere — the
+     * silent-omission failure, on the one field that decides whether a filter
+     * is visible at all. A root that declares no axis is a bug in the literal,
+     * so it throws here rather than disappearing from a facet later.
+     */
+    const axis = n.axis ?? bySlug.get(rootId)?.axis;
+    if (!axis) throw new Error(`[taxonomy] "${n.slug}" resolves to no axis (root "${rootId}" declares none)`);
+
     return {
       ...n,
-      rootId: chain[0] ?? n.slug,
+      axis,
+      rootId,
       parentIds: n.parent ? [n.parent] : [],
       childrenIds: kids,
       tier: chain.length,
