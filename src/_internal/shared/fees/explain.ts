@@ -198,6 +198,16 @@ export function explainCodHandlingFee(
 export interface FeeDerivations {
   platformFee?: FeeDerivation | null;
   gstOnFee?: FeeDerivation | null;
-  emiSurcharge?: FeeDerivation | null;
+  /*
+   * 🛑 `emiSurcharge` DELETED 2026-11-12. Its PRODUCER
+   * (`explainEmiSurcharge`) went with EMI stage 5 — see the note above
+   * `explainCodHandlingFee` — so the slot had no writer and the "key with no
+   * entry renders no disclosure" rule meant it silently rendered nothing.
+   *
+   * ⚠ The shop's `CheckoutRouteClient` carried a standing comment that there
+   * is "no `emiSurcharge` derivation" while the slot stayed in the type. That
+   * is the live hazard of an unproduced optional: it reads as a line somebody
+   * still has to wire, on a fee nobody charges.
+   */
   codHandlingFee?: FeeDerivation | null;
 }

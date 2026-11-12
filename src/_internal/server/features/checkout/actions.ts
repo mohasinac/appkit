@@ -482,21 +482,18 @@ export interface CreateCheckoutOrderInput {
   /** Required for physical carts; omitted for digital-code-only carts (no shipping). */
   addressId?: string;
   paymentMethod: CheckoutPaymentMethod;
-  /**
-   * LEGACY ONLY. The instalment plan lives on `CartDocument.emiPlan`, written
-   * by `PUT /api/cart/emi`, because the online path needs the same answer in
-   * two separate requests (see that field's own note). This is honoured solely
-   * for a tab opened before 2026-10-22, which posts `paymentMethod: "emi"`
-   * plus a tenure here and has nothing on the cart — and it is ignored
-   * whenever the cart carries a plan, so a client can never re-price a quote
-   * the server has already issued.
+  /*
+   * 🛑 `emiTenureMonths` DELETED 2026-11-12. It was ACCEPTED AND IGNORED: the
+   * expressions that consumed it (`resolveEmiChoice`, `emiTenderFor`) went
+   * with EMI stage 5a, and `CartDocument.emiPlan` — the place its docblock
+   * pointed at — was deleted 2026-11-11 along with `PUT /api/cart/emi`.
    *
-   * 🛑 "Pay in instalments" is an opt-in ON THE ORDER, orthogonal to the
-   * tender: the token is collected by whichever payment method the buyer
-   * picked. `resolveEmiChoice` is the one expression both axes resolve
-   * through, and `emiTenderFor` maps the legacy `"emi"` tender.
+   * ⚠ An optional input nothing reads is the worst kind to leave: the caller
+   * gets no error, the value is silently discarded, and a buyer who chose a
+   * tenure would have been charged as though they had not. Its own comment
+   * said it was "honoured solely for a tab opened before 2026-10-22" — by
+   * then it was honoured for nobody.
    */
-  emiTenureMonths?: number;
   /**
    * WHICH shipping option the buyer picked. Only `courierId` is read.
    *
@@ -3496,24 +3493,20 @@ export interface CheckoutPricingPreviewInput {
    * is currently gated off.
    */
   lane?: CartLane;
-  /**
-   * LEGACY ONLY — see `CreateCheckoutOrderInput.emiTenureMonths`.
+  /*
+   * 🛑 `emiTenureMonths` DELETED 2026-11-12 — same reason as its twin on
+   * `CreateCheckoutOrderInput`: accepted and ignored. The preview resolved
+   * the plan off `CartDocument.emiPlan`, which was deleted 2026-11-11, so
+   * there was nothing left to agree with.
    *
-   * 🛑 The plan is read off `CartDocument.emiPlan`, so the preview and the
-   * order resolve it from the same durable value. This docstring used to argue
-   * the opposite — *"the tenure is NOT on the cart document: it is picked on
-   * the payment step and belongs to the order, so it has to travel with the
-   * request"* — and that reasoning is what left the ONLINE path unable to
-   * agree with itself, because `/api/payment/create-order` decides the capture
-   * amount in one request and `/api/payment/verify` writes the order in
-   * another. A request body cannot be read by both.
-   *
-   * The surcharge is `principalRemaining × surchargePercentPerMonth ×
-   * tenureMonths`, so it genuinely cannot be derived from the cart ITEMS
-   * alone — which is why the tenure had to become part of the cart DOCUMENT
-   * rather than part of the request.
+   * ⚠ The design lesson its docblock recorded is worth keeping even though
+   * the field is not: a durable buyer selection cannot live in a REQUEST
+   * BODY when the online path spans two requests —
+   * `/api/payment/create-order` decides the capture amount in one and
+   * `/api/payment/verify` writes the order in another, and a body cannot be
+   * read by both. That is what put the tenure on the cart document in the
+   * first place, and it is the trap the next durable selection will hit.
    */
-  emiTenureMonths?: number;
   /**
    * Add-on selections are NOT accepted here. They live on the cart document,
    * keyed per store (`CartDocument.storeAddons`), because that is the

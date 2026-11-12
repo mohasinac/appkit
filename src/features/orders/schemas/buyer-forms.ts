@@ -1,23 +1,22 @@
 /*
- * WHY: Two buyer-facing order forms rendered `<Form>` with no schema.
+ * WHY: Buyer-facing order forms rendered `<Form>` with no schema.
  *
- *      The manual-payment one is the consequential case. It carries the
- *      buyer's own claim that they have paid — a UTR, the UPI ID they sent to,
- *      and a fraud declaration — and an admin decides on that evidence whether
- *      to release goods. `transactionId` was free text with no floor, so a
- *      single character satisfied it and reached the review queue looking like
- *      a reference.
+ *      ⚠ This file used to hold TWO. The manual-payment one — a screenshot, a
+ *      typed UTR and a fraud declaration — was deleted 2026-11-11 with the
+ *      tender; see the note where it stood, which keeps the one piece of its
+ *      design worth reusing. Only the cancellation form remains, so the header
+ *      no longer advertises an export that is gone (corrected 2026-11-12).
  *
- * WHAT: The two schemas, plus a shared `cancellationReason`.
+ * WHAT: The order-cancellation schema.
  *
  * EXPORTS:
- *   orderCancelSchema, paymentProofSchema, and their inferred value types
+ *   orderCancelSchema, OrderCancelValues
  *
  * @tag domain:orders
  * @tag layer:schema
  * @tag pattern:none
  * @tag access:isomorphic
- * @tag consumers:user/orders/[id]/cancel,user/orders/[id]/payment
+ * @tag consumers:user/orders/[id]/cancel
  * @tag sideEffects:none
  */
 
