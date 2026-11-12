@@ -64,7 +64,7 @@ import { EntryMediaThumb } from "./EntryMediaThumb";
 import { EntryVoteButtons } from "./EntryVoteButtons";
 import { useEntryVoteCaster } from "../hooks/useEntryVote";
 import { EntryInlineActions } from "./EntryInlineActions";
-import type { EventEntryMediaLimits } from "../schemas/firestore";
+import { resolveEntryMediaLimits, type EventEntryMediaLimits } from "../schemas/firestore";
 import type { PublicEventEntriesResponse, PublicEventEntryItem } from "../types";
 
 /** Overridable copy — DEFAULT TEMPLATES, per "we ship the default templates". */
@@ -323,9 +323,56 @@ export function EventEntriesListView({
         ) : (
           <span />
         )}
-        <Text size="xs" color="faint">
-          {copy.countLabel(data.total)}
-        </Text>
+        <Row align="center" gap="sm" className="flex-wrap">
+          <Text size="xs" color="faint">
+            {copy.countLabel(data.total)}
+          </Text>
+          {/*
+            ── 🛑 THE WAY IN, ON THE POPULATED GALLERY TOO ────────────────────
+            Owner, 2026-11-12: *"normal registered guys don't get the submit
+            entry"*.
+
+            `participateHref` reached exactly ONE place: the `EmptyState` in
+            the zero-entries branch above. Its own prop doc said so — *"offered
+            on the empty state, when the event is still open"* — so the contest
+            advertised a way to enter only while nobody had entered, and the
+            FIRST submission removed the invitation for everyone after it.
+
+            That left the "Participate" tab in the event tab strip as the only
+            route to the form on the whole site. An admin never notices,
+            because `EventAdminBar` gives them a visible control block on the
+            same page and they already know the URL; a participant arriving on
+            a shared gallery link sees other people's entries and nothing to
+            press. The CTA is the single most important control on this
+            surface and it was conditional on the surface being empty.
+
+            🛑 Still gated on `participateHref` being PASSED, which the host
+            does only while `eventIsActive(event)` — so a finished contest
+            keeps its gallery (the result) and loses the invitation, which is
+            the correct asymmetry and is unchanged.
+
+            ⚠ NOT gated on whether this viewer has entries left. That needs
+            the session, and this view is rendered inside a CDN-cached page.
+            The participate page itself resolves the count server-side and
+            answers "you have reached the maximum of N" with the state of the
+            entries already filed — so a returning entrant lands on the
+            surface built for them rather than on a dead end.
+          */}
+          {participateHref ? (
+            <TextLink
+              variant="bare"
+              href={participateHref}
+              rounded="xl"
+              size="sm"
+              weight="semibold"
+              paddingX="xl"
+              paddingY="sm"
+              className="inline-block bg-primary text-white hover:bg-primary-600"
+            >
+              {copy.enterCta}
+            </TextLink>
+          ) : null}
+        </Row>
       </Row>
 
       {/*
@@ -378,9 +425,43 @@ export function EventEntriesListView({
                   aria-label={`Open ${entrant}'s entry`}
                   className="absolute inset-0 h-full w-full cursor-zoom-in p-0"
                 >
+                  {/*
+                    ── 🛑 THE COVER IS CONTAINED, NOT CROPPED ────────────────
+                    Owner, 2026-11-12: *"first pic is cover so contain it not
+                    span it entirely"*.
+
+                    `EntryMediaThumb` has had a `fit` prop since the entry
+                    detail page needed one, and NOTHING EVER PASSED IT — a
+                    grep for `fit=` across both call sites returned zero — so
+                    every card took its `"cover"` default and filled the square
+                    frame by cropping. The event document already carries the
+                    answer (`entryMedia.fit`, platform default `"contain"`) and
+                    `EventEntryDetailView` already reads it through
+                    `resolveEntryMediaLimits`. So the gallery card and the
+                    entry page were rendering the same photo under two
+                    different rules, and the card was the one most visitors
+                    see.
+
+                    🛑 Resolved through the SAME function as the detail view,
+                    not a literal. A cropped entry destroys the thing being
+                    judged — it is what cut "Diwali" off a Diwali poster — and
+                    whether this event's media is contained is a per-event
+                    choice, not a component's.
+
+                    ⚠ FLAGGED, not fixed here: `entryMedia.aspect` is still
+                    not honoured on the CARD. `BaseListingCard.Hero` accepts
+                    only `"square" | "4/3"` — deliberately, because Tailwind's
+                    static scanner cannot see an interpolated `aspect-[…]` —
+                    so an event configuring `portrait` or `wide` gets a square
+                    frame here and its real frame on the entry page. With
+                    `fit="contain"` that letterboxes rather than crops, which
+                    is the recoverable direction; widening Hero's union needs
+                    static classes and is its own change.
+                  */}
                   <EntryMediaThumb
                     item={entry.media[0]}
                     fallbackAlt={`Entry by ${entrant}`}
+                    fit={resolveEntryMediaLimits(entryMedia).fit}
                   />
                 </button>
                 <Div className="pointer-events-none absolute left-2 top-2">
