@@ -689,7 +689,7 @@ export const SCAM_PLATFORM_LABELS: Record<ScamPlatform, string> = {
   facebook_marketplace: "Facebook Marketplace",
   this_site: "{{siteName}}",
   /* Historical rows only — same token, so the two are indistinguishable to a
-   * reader. See the deprecation note on `SCAM_PLATFORM.LETITRIP`. */
+   * reader. See the deprecation note on the legacy platform member. */
   letitrip: "{{siteName}}",
   in_person: "In Person",
   phone_call: "Phone Call",
