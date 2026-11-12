@@ -37,6 +37,7 @@ import {
   isContentVisible,
   type ContentTag,
 } from "../src/_internal/shared/features/content-tags/registry";
+import { getFragmentedParagraph } from "../src/_internal/shared/content/fragmented-paragraphs/index";
 
 let fail = 0;
 function check(name: string, actual: unknown, expected: unknown): void {
@@ -83,6 +84,34 @@ check(
   isContentVisible([{ governs: "somethingNew" as ContentTag["governs"], value: "x" }], null),
   false,
 );
+
+/*
+ * ── THE REGISTRY ENTRIES, RESOLVED ────────────────────────────────────────
+ *
+ * The three cases above prove the FLAG works. These prove the three PARAGRAPHS
+ * are wired to it and say different things in each state — which is the part a
+ * typecheck cannot see and the part that actually ships. A registry entry that
+ * compiles and resolves to the same text in both states is the defect this
+ * whole axis exists to prevent.
+ */
+console.log("\nthe payment paragraphs — both arms, actually resolved");
+for (const id of ["privacy.payment", "terms.payment", "refundPolicy.payment"] as const) {
+  const online = getFragmentedParagraph(id, "en", { payment: { razorpayEnabled: true } });
+  const codOnly = getFragmentedParagraph(id, "en", ALL_OFF);
+  const unknown = getFragmentedParagraph(id, "en", null);
+
+  check(`${id}: online arm is non-empty`, online.length > 0, true);
+  check(`${id}: COD-only arm is non-empty`, codOnly.length > 0, true);
+  check(`${id}: the two arms DIFFER`, online !== codOnly, true);
+  // The whole point: a failed read must publish the fuller disclosure.
+  check(`${id}: unknown snapshot publishes the ONLINE arm`, unknown === online, true);
+  // The approved wording is the COD-only arm, and must survive verbatim.
+  check(
+    `${id}: COD-only arm still says "Cash on Delivery"`,
+    codOnly.includes("Cash on Delivery"),
+    true,
+  );
+}
 
 console.log(`\n${fail === 0 ? "✅ all passed" : `🛑 ${fail} FAILED`}`);
 process.exit(fail === 0 ? 0 : 1);

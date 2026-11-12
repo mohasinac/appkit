@@ -12,7 +12,10 @@ import { TextLink } from "../../../ui/components/TextLink";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import type { SiteSettingsDocument } from "../../admin/schemas/firestore";
 import { getCompositeSentence } from "../../../_internal/shared/content/composite-sentences";
-import { getFragmentedParagraph } from "../../../_internal/shared/content/fragmented-paragraphs";
+import {
+  getFragmentedParagraph,
+  type FragmentedParagraphId,
+} from "../../../_internal/shared/content/fragmented-paragraphs";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
 
@@ -333,6 +336,62 @@ export async function PolicyPageView({
       heading: getCompositeSentence("cancellationPolicy.sections.3.heading", locale, settings),
       body: getFragmentedParagraph("cancellationPolicy.sections.3.body", locale, settings),
     };
+  }
+
+  /*
+   * ── THE PAYMENT DISCLOSURE, DERIVED FROM GATEWAY CONFIG ───────────────────
+   *
+   * 🛑 Why this is not copy. The approved policy text asserts COD-only in
+   * load-bearing prose — *"Our only payment method is Cash on Delivery"*,
+   * *"We do not ask for, collect, or store any card, UPI or bank account
+   * details on this site"*. True of an install with no gateway, and a FAILURE
+   * TO DISCLOSE the moment one is enabled, which is an explicit R1 step. A
+   * payment paragraph frozen into prose is a policy that goes stale silently.
+   *
+   * So it is resolved per-request from `settings.payment` through the
+   * `paymentMethod` content axis: gateway live publishes the both-tenders
+   * disclosure, a COD-only install publishes the approved wording verbatim.
+   *
+   * ⚠ APPENDED, never substituted. Every existing section here is reviewed
+   * copy; overwriting one to inject this would put unreviewed text inside a
+   * reviewed clause. Appending adds the disclosure and leaves the review
+   * surface intact — and `sections` is already a local mutable array (the
+   * cancellation override above reassigns into it), so this needs no new
+   * plumbing.
+   *
+   * ⚠ `terms` already has a "Payments and Fees" section, so there is mild
+   * redundancy there. Accepted deliberately: appending uniformly across all
+   * three is one mechanism, whereas special-casing terms to merge into its
+   * existing body would be two — and two is how this codebase's drift starts.
+   *
+   * 🛑 `settings` may be undefined here (the read above catches and warns).
+   * That is handled where it matters: `isOnlinePaymentEnabled` answers `true`
+   * for an absent snapshot, so a failed read publishes the FULLER disclosure
+   * rather than silently claiming we take no card details.
+   */
+  /*
+   * 🛑 Typed `Partial<Record<PolicyKey, …>>` and NOT an inline object with a
+   * cast. The keys here are POLICY keys (`refund`) and the ids are PARAGRAPH
+   * ids (`refundPolicy.payment`) — one character of similarity apart, and a
+   * `refundPolicy:` key would have compiled fine as a plain object literal,
+   * matched no policy, and silently never fired. That is the project's
+   * signature defect, and this annotation makes it a compile error instead.
+   * `FragmentedParagraphId` does the same for the ids.
+   */
+  const PAYMENT_DISCLOSURE: Partial<
+    Record<PolicyKey, { id: FragmentedParagraphId; heading: string }>
+  > = {
+    privacy: { id: "privacy.payment", heading: "Payment information" },
+    terms: { id: "terms.payment", heading: "Payment methods" },
+    refund: { id: "refundPolicy.payment", heading: "How refunds are paid" },
+  };
+  const disclosure = policy ? PAYMENT_DISCLOSURE[policy] : undefined;
+  if (disclosure) {
+    const body = getFragmentedParagraph(disclosure.id, locale, settings);
+    // An empty resolve would append a heading with no prose, which reads as a
+    // broken page. Every arm is non-empty today (asserted in
+    // verify-payment-prose.mts) — this is the degrade, not the expectation.
+    if (body) sections.push({ heading: disclosure.heading, body });
   }
 
   // Derived from POLICY_META, so a newly added policy appears in every other
