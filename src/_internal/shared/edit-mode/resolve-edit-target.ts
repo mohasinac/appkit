@@ -43,7 +43,15 @@
 
 /** Minimal shape of the viewer. Deliberately not the full user document. */
 export interface EditViewer {
-  /** Resolved permission keys. The resolver never reads roles. */
+  /**
+   * The admin flag from `permissionsFor(user).isAdmin`.
+   *
+   * 🛑 Required for correctness, not a shortcut: an admin's entitlement lives
+   * in this flag and NOT in `permissions`, so omitting it makes every admin arm
+   * unreachable for real admins. See the note on `has()` below.
+   */
+  isAdmin?: boolean;
+  /** Resolved permission keys, from `permissionsFor(user).permissions`. */
   permissions: readonly string[];
   /** Stores this viewer owns or operates. Empty for a buyer. */
   storeIds?: readonly string[];
@@ -100,7 +108,24 @@ export interface EditTarget {
   reason: string;
 }
 
-const has = (v: EditViewer, key: string) => v.permissions.includes(key);
+/*
+ * 🛑 `isAdmin` SHORT-CIRCUITS, exactly as `can()` does — *"Admin always does"*.
+ *
+ * This is not a convenience. `permissionsFor(user)` returns
+ * `{ isAdmin, permissions }`, and an admin's entitlement comes from the FLAG,
+ * not from the strings: a real admin can hold an EMPTY `permissions` array and
+ * still be allowed everything. So a membership test alone —
+ * `permissions.includes("admin:products:write")` — returns `false` for an
+ * actual admin, and every admin arm in this file would have been dead on
+ * arrival.
+ *
+ * ⚠ The verifier did NOT catch this, and the reason is worth keeping: its
+ * `admin` fixture lists the four permission strings explicitly, so it tested a
+ * viewer shape the application never produces. A test built from the same
+ * misunderstanding as the code agrees with it. Fixed by giving the fixture the
+ * shape `permissionsFor` actually returns.
+ */
+const has = (v: EditViewer, key: string) => v.isAdmin === true || v.permissions.includes(key);
 
 /*
  * The subject → destination table. 🛑 CONFIG-SHAPED ON PURPOSE: adding a new
@@ -214,6 +239,8 @@ export function resolveEditTarget(subject: EditSubject, viewer: EditViewer | nul
  */
 export function viewerCanUseEditMode(viewer: EditViewer | null | undefined): boolean {
   if (!viewer || !Array.isArray(viewer.permissions)) return false;
+  /* Same short-circuit as `has()` — an admin's entitlement is the flag. */
+  if (viewer.isAdmin === true) return true;
   return (
     viewer.permissions.some(
       (p) =>

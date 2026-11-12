@@ -28,7 +28,26 @@ const check = (ok: boolean, label: string, detail = "") => {
 };
 
 /* ── the four viewers the owner's rule distinguishes ───────────────────────── */
-const admin: EditViewer = {
+/*
+ * 🛑 THE ADMIN FIXTURE IS `isAdmin` WITH AN EMPTY `permissions` ARRAY, and that
+ * correction found a real bug.
+ *
+ * It first listed the four permission strings explicitly — a shape the
+ * application never produces. `permissionsFor(user)` returns
+ * `{ isAdmin, permissions }` and `can()` short-circuits on the flag ("Admin
+ * always does"), so a REAL admin can hold an empty `permissions` array. The
+ * resolver's membership test therefore returned `false` for every actual
+ * admin, and all four admin arms were dead — while this verifier reported
+ * 29/29 green, because the fixture shared the code's misunderstanding.
+ *
+ * ⚠ A test built from the same wrong model as the code agrees with it. The
+ * fixture now matches what the app passes, and an `isAdmin`-less admin is
+ * asserted separately below.
+ */
+const admin: EditViewer = { isAdmin: true, permissions: [] };
+/* An employee with the explicit grants but NOT the admin flag — the other real
+ * shape, and the one that proves the arms are not merely `isAdmin` gates. */
+const employee: EditViewer = {
   permissions: [
     "admin:sections:write",
     "admin:products:write",
@@ -58,6 +77,21 @@ check(resolveEditTarget(homepage, admin)?.scope === "admin", "admin · homepage 
 check(resolveEditTarget(ticket, admin)?.scope === "admin", "admin · support → admin panel", resolveEditTarget(ticket, admin)?.href);
 check(resolveEditTarget(mine, admin)?.scope === "admin", "admin · any listing → admin editor", resolveEditTarget(mine, admin)?.href);
 check(resolveEditTarget(theirs, admin)?.scope === "admin", "admin · someone else's listing → admin editor");
+
+/*
+ * 🛑 The admin arms must fire for BOTH real shapes: `isAdmin` with no strings,
+ * and the strings with no flag. Only testing one is how the bug above survived.
+ */
+check(resolveEditTarget(homepage, employee)?.scope === "admin", "employee WITH the grant · homepage → admin panel");
+check(resolveEditTarget(mine, employee)?.scope === "admin", "employee WITH the grant · listing → admin editor");
+check(
+  resolveEditTarget(homepage, { isAdmin: true, permissions: [] })?.href === "/admin/sections/section-welcome-hero",
+  "🛑 an admin with an EMPTY permissions array still resolves (the flag is the entitlement)",
+);
+check(
+  resolveEditTarget(homepage, { permissions: ["admin:faqs:write"] }) === null,
+  "a grant for a DIFFERENT resource does not open the homepage editor",
+);
 
 /* "listing edit → own listing → seller dashboard edit" */
 const sellerOwn = resolveEditTarget(mine, seller);
