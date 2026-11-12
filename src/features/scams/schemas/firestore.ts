@@ -689,7 +689,19 @@ export const SCAM_PLATFORM_LABELS: Record<ScamPlatform, string> = {
   facebook_marketplace: "Facebook Marketplace",
   this_site: "{{siteName}}",
   /* Historical rows only — same token, so the two are indistinguishable to a
-   * reader. See the deprecation note on `SCAM_PLATFORM.LETITRIP`. */
+   * reader. See the deprecation note on the retired install-named member
+   * above.
+   *
+   * 🛑 That note is referred to by SHAPE, not spelled out, and this comment is
+   * why the rule exists. Naming the member here put the install's brand into
+   * the published `.js` and `.d.ts` a FIFTH time — in a comment whose whole
+   * purpose was to explain the de-branding, which is how the previous four got
+   * there too. Caught by the pre-publish tarball differential (4.97.0 = 364
+   * brand occurrences, this tree = 365, the one increased file being this
+   * one), never by review.
+   *
+   * ✅ The rule in the form that survives being forgotten: describe the SHAPE
+   * of what you removed, never its VALUE. */
   letitrip: "{{siteName}}",
   in_person: "In Person",
   phone_call: "Phone Call",
