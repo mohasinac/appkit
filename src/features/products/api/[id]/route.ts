@@ -91,7 +91,6 @@ const productUpdateSchema = z
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
-    allowShipBeforeEmiComplete: z.boolean().optional(),
     printMeta: printMetaSchema.optional(),
     /*
      * 🛑 DERIVED from `ALL_LISTING_TYPES`, never restated. This literal was

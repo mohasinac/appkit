@@ -666,12 +666,14 @@ export function ProductForm({
           onChange={(e) => update({ isPromoted: e.target.checked })}
           disabled={isReadonly}
         />
-        <Checkbox
-          label={t("formAllowShipBeforeEmiComplete")}
-          checked={!!product.allowShipBeforeEmiComplete}
-          onChange={(e) => update({ allowShipBeforeEmiComplete: e.target.checked })}
-          disabled={isReadonly}
-        />
+        {/*
+          🛑 The `allowShipBeforeEmiComplete` checkbox was DELETED here
+          2026-11-12. It asked a seller whether this listing may ship before an
+          instalment plan is paid off — a live control over a tender that no
+          longer exists, so whichever way the seller set it the answer governed
+          nothing. A toggle for a retired feature is worse than none: it reads
+          as a decision the seller has made.
+        */}
         <Checkbox
           label={t("formAllowOffers")}
           checked={!!product.allowOffers}

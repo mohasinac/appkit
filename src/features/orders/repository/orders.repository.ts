@@ -1446,10 +1446,10 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   /**
    * Cloud Functions: find delivered orders eligible for the weekly payout sweep.
    *
-   * EMI orders that still have unpaid installments are excluded — the seller
-   * is only eligible once the buyer has fully paid off the order, not merely
-   * once it's delivered (a seller-enabled `allowShipBeforeEmiComplete` item
-   * can be delivered long before EMI collection finishes).
+   * ⚠ The instalment hold this docblock used to describe is gone with the
+   * tender (2026-11-12). Delivery is now the only gate the sweep applies, so
+   * there is no longer a case where a delivered order is withheld because the
+   * buyer still owes money on it.
    */
   /*
    * 🛑 `getEligibleForPayoutSweep()` was DELETED on 2026-10-21. Do not

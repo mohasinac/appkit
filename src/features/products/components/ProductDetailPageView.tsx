@@ -154,14 +154,16 @@ export interface ProductDetailPageViewProps {
   productFeatures?: ProductFeatureDocument[];
   /** Site-wide COD availability (`siteSettings.payment.codEnabled`), threaded from the page's data layer. Drives the "Cash on Delivery" feature badge. */
   codEnabled?: boolean;
-  /**
-   * Fully-resolved EMI eligibility for this product — site-wide flag AND the
-   * seller's `StoreDocument.emiEnabled` opt-in AND price above
-   * `siteSettings.emi.minOrderValue`, computed by the page's data layer
-   * (mirrors `checkEmiEligibility()`'s checkout-time rule). Drives the "EMI
-   * Available" feature badge.
+  /*
+   * 🛑 `emiEnabled` DELETED 2026-11-12 — and it was dead on BOTH sides of the
+   * boundary before that. The "EMI Available" feature badge it drove had
+   * already been removed, so the prop was declared, destructured and never
+   * read, while the shop kept passing a hardcoded `false` into it.
+   *
+   * ⚠ That is the shape to watch for: a prop survives its only consumer
+   * silently, because the parent still passes something and the child still
+   * accepts it. Neither side errors and nothing renders.
    */
-  emiEnabled?: boolean;
   /**
    * Site-wide returns availability (`siteSettings.returns.windowDays > 0`),
    * threaded from the page's data layer. Drives the "Returnable" badge.
@@ -221,7 +223,6 @@ export async function ProductDetailPageView({
   compositionContent,
   productFeatures,
   codEnabled,
-  emiEnabled,
   returnsEnabled = true,
   pageRegionCards = [],
 }: ProductDetailPageViewProps) {

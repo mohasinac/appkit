@@ -735,8 +735,11 @@ export interface ProductDocument extends BaseDocument {
    * different sticker. Absent on the parent, which is the whole sheet.
    */
   sourceStickerPartOrdinal?: number;
-  /** When true, an EMI order for this product ships as soon as it's confirmed instead of waiting for every installment to be paid. Default false. */
-  allowShipBeforeEmiComplete?: boolean;
+  /*
+   * 🛑 `allowShipBeforeEmiComplete` DELETED 2026-11-12 with the instalment
+   * tender. It decided whether an order on a plan could ship before the plan
+   * was paid off; no order can be on a plan, so the question has no subject.
+   */
   /**
    * P-8 GST — buyer-facing tax rate on this product (%).
    *
@@ -1465,7 +1468,6 @@ export const PRODUCT_UPDATABLE_FIELDS = [
    * skip `deriveTaxonomy`. */
   "sourceStickerSheetId",
   "sourceStickerPartOrdinal",
-  "allowShipBeforeEmiComplete",
   /*
    * B3 — these three were MISSING, so the fields existed on the document
    * and were not type-legal to update: ProductUpdateInput is derived from

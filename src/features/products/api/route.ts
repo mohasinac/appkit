@@ -59,7 +59,6 @@ const productMutateSchema = z
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
-    allowShipBeforeEmiComplete: z.boolean().optional(),
     printMeta: printMetaSchema.optional(),
     sellerId: z.string().optional(),
     sellerName: z.string().optional(),

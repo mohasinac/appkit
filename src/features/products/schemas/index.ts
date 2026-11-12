@@ -102,7 +102,6 @@ export const productItemSchema = z.object({
     .optional(),
   featured: z.boolean().optional(),
   isPromoted: z.boolean().optional(),
-  allowShipBeforeEmiComplete: z.boolean().optional(),
   printMeta: printMetaSchema.optional(),
   currentBid: z.number().optional(),
   availableQuantity: z.number().optional(),
