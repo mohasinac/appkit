@@ -135,7 +135,25 @@ export const listingTypesSeedData: ListingTypeDefinition[] = [
   }),
 
   type({
-    key: "collector",
+    /*
+     * 🛑 `collector-drop`, NOT `collector`.
+     *
+     * This row said `collector` while the live `ListingType` union, the
+     * `PRODUCT_FIELDS.LISTING_TYPE_VALUES` list and `LISTING_TYPE_REGISTRY`
+     * all say `collector-drop`. Two registries keyed on listing type that do
+     * not agree on the KEY, so **any join between them silently dropped this
+     * type** — no error, just a row that matches nothing.
+     *
+     * The live union wins: it has readers and stored documents behind it,
+     * whereas this seed has never been loaded (it is one of the eleven config
+     * tables wired to nothing). Correcting the unread side costs nothing;
+     * correcting the read side would be a data migration.
+     *
+     * ⚠ `slug` stays `collector` — it is the URL segment, and it is already
+     * published. The key and the slug are allowed to differ, and conflating
+     * them is what produced this.
+     */
+    key: "collector-drop",
     label: "Collector",
     slug: "collector",
     enabled: true,
