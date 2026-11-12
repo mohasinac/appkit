@@ -323,7 +323,21 @@ export function EventEntriesListView({
         ) : (
           <span />
         )}
-        <Row align="center" gap="sm" className="flex-wrap">
+        {/*
+          The `wrap` PROP, not the raw wrapping class — the surface-props audit
+          flags the class form, and the pre-publish gate caught this exact line
+          as the one violation this change introduced.
+
+          ⚠ The literal class string is deliberately not written out above
+          either: these audits are regexes over SOURCE, so they cannot tell a
+          comment from an attribute. A comment quoting the banned token trips
+          the check it was written to explain — the same shape as the brand
+          leaks that keep shipping inside the comments describing them.
+
+          The Row one level out still uses the class form; that is pre-existing
+          and left attributable rather than swept in here.
+        */}
+        <Row align="center" gap="sm" wrap>
           <Text size="xs" color="faint">
             {copy.countLabel(data.total)}
           </Text>
