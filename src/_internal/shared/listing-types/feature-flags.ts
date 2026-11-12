@@ -104,6 +104,28 @@ export interface FeatureFlagSnapshot {
     categoryTypes?: Partial<Record<CategoryType, FlagValue>>;
     browsePages?: Partial<Record<BrowsePageKey, FlagValue>>;
   };
+  /**
+   * A FOURTH axis, and it governs PROSE rather than a surface.
+   *
+   * Added 2026-11-12 so a legal page can state which tenders a store accepts
+   * without that sentence being frozen into the copy. The approved policy text
+   * says *"Our only payment method is Cash on Delivery"* — true of an install
+   * with no gateway, and a **failure to disclose** the moment one is enabled.
+   * A policy whose payment paragraph is a code literal is a policy that goes
+   * stale silently, which is what this axis exists to prevent.
+   *
+   * ⚠ Deliberately the raw per-gateway booleans and NOT a derived
+   * `onlineEnabled`: these are the field names `siteSettings.payment` already
+   * stores and the admin form already writes, so there is no second spelling
+   * to drift. The derivation lives in `isOnlinePaymentEnabled` below — one
+   * reader, not a stored duplicate.
+   */
+  payment?: {
+    razorpayEnabled?: boolean;
+    phonepeEnabled?: boolean;
+    cashfreeEnabled?: boolean;
+    codEnabled?: boolean;
+  };
 }
 
 /**
@@ -276,6 +298,46 @@ export function isListingTypeListed(
 ): boolean {
   const flag = settings?.listings?.listingTypes?.[type];
   return flag !== false && flag !== "unlisted";
+}
+
+/**
+ * Is ANY online payment gateway enabled?
+ *
+ * ## 🛑 THE DEFAULT IS INVERTED HERE, AND THAT IS DELIBERATE
+ *
+ * Every other flag in this file answers *"absent means enabled"*, and the
+ * money-path rule recorded in CLAUDE.md is *"unknown degrades to `false`"*.
+ * **Neither applies**, because this flag does not grant a capability — it
+ * selects which SENTENCE a legal page publishes. The two failure directions
+ * are not symmetric:
+ *
+ *   read fails, we assume ONLINE  -> the policy discloses card/UPI handling on
+ *                                    a store that only takes cash. Over-
+ *                                    disclosure. Harmless.
+ *   read fails, we assume COD-ONLY -> the policy states "we never store card
+ *                                    details" on a store taking cards. A
+ *                                    FAILURE TO DISCLOSE, on the money path.
+ *
+ * So the conservative direction for a DISCLOSURE is to disclose MORE, which is
+ * the opposite of the conservative direction for a GRANT. An absent snapshot
+ * therefore answers `true`.
+ *
+ * ⚠ Do not "fix" this to match its neighbours. The asymmetry is the whole
+ * point, and it is why this is a named function rather than an inline
+ * `?? false` at the call site.
+ *
+ * An EXPLICIT snapshot with every gateway `false` answers `false` — that is a
+ * read that succeeded and said "no gateway", which is exactly the COD-only
+ * install the approved copy was written for.
+ */
+export function isOnlinePaymentEnabled(
+  settings: FeatureFlagSnapshot | null | undefined,
+): boolean {
+  const p = settings?.payment;
+  if (!p) return true; // see the asymmetry note above — disclose more, never less
+  return (
+    p.razorpayEnabled === true || p.phonepeEnabled === true || p.cashfreeEnabled === true
+  );
 }
 
 export function isCategoryTypeEnabled(

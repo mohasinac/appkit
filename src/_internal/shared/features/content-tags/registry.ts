@@ -30,6 +30,7 @@ import {
   isListingTypeEnabled,
   isCategoryTypeEnabled,
   isBrowsePageEnabled,
+  isOnlinePaymentEnabled,
   type BrowsePageKey,
   type FlagValue,
 } from "../../listing-types/feature-flags";
@@ -41,7 +42,14 @@ import {
  * `{ governs: "browsePage", value: "brands" }`.
  */
 export interface ContentTag {
-  governs: "listingType" | "categoryType" | "browsePage";
+  /**
+   * ⚠ `paymentMethod` governs PROSE, not a surface — the other three decide
+   * whether a page or link exists, this one decides which SENTENCE a legal
+   * page publishes. Added 2026-11-12 so the approved payment paragraph ("Our
+   * only payment method is Cash on Delivery") cannot keep asserting that after
+   * a gateway is enabled. Its only value today is `"online"`.
+   */
+  governs: "listingType" | "categoryType" | "browsePage" | "paymentMethod";
   value: string;
 }
 
@@ -51,6 +59,21 @@ export interface ContentFlagSnapshot {
     listingTypes?: Partial<Record<string, FlagValue>>;
     categoryTypes?: Partial<Record<string, FlagValue>>;
     browsePages?: Partial<Record<string, FlagValue>>;
+  };
+  /**
+   * The gateway flags, for `governs: "paymentMethod"`. Same field names
+   * `siteSettings.payment` already stores, so a caller passes the settings
+   * document straight through with no mapping step to drift.
+   *
+   * ⚠ Optional, and an absent group does NOT mean "no gateway" — see
+   * `isOnlinePaymentEnabled`, whose default is deliberately the opposite of
+   * every other flag in that file.
+   */
+  payment?: {
+    razorpayEnabled?: boolean;
+    phonepeEnabled?: boolean;
+    cashfreeEnabled?: boolean;
+    codEnabled?: boolean;
   };
 }
 
@@ -77,10 +100,33 @@ export function isContentVisible(
         return isCategoryTypeEnabled(tag.value as CategoryType, settings);
       case "browsePage":
         return isBrowsePageEnabled(tag.value as BrowsePageKey, settings);
+      case "paymentMethod":
+        /*
+         * Only `"online"` is meaningful today. An unrecognised value falls to
+         * the same answer as an absent snapshot — see `isOnlinePaymentEnabled`,
+         * where the default is deliberately "disclose more", because the
+         * asymmetric risk here is a policy FAILING to disclose card handling,
+         * not one disclosing a tender the store does not take.
+         */
+        return isOnlinePaymentEnabled(settings);
       default:
-        // Exhaustiveness: a future `governs` member must be handled above,
-        // not silently pass every check it was supposed to gate.
-        return true;
+        /*
+         * 🛑 FAILS CLOSED, changed 2026-11-12.
+         *
+         * This returned `true` under a comment warning that *"a future
+         * `governs` member must be handled above, not silently pass every
+         * check it was supposed to gate"* — i.e. it named the hazard and then
+         * chose it. Adding `paymentMethod` is exactly the "future member" that
+         * comment anticipated, and for a payment claim fail-open is the
+         * dangerous direction: an unhandled tag would render a COD-only
+         * sentence with a gateway live.
+         *
+         * Hiding content is the recoverable failure (an operator sees a gap);
+         * publishing a false claim is not. Unreachable today — the union is
+         * closed and every member is handled above — so this costs nothing
+         * now and is correct when it eventually fires.
+         */
+        return false;
     }
   });
 }
