@@ -172,14 +172,12 @@ export interface CustomShipOrderInput {
   actualCourierName?: string;
 }
 
-export interface MarkEmiInstallmentPaidInput {
-  /** 1-based installment number, matches EmiInstallment.index. */
-  installmentIndex: number;
-  /** Buyer-supplied UTR/reference number for this installment's manual payment. */
-  transactionId?: string;
-  /** Signed-URL media slug for the buyer's payment proof for this installment. */
-  proofUrl?: string;
-}
+/*
+ * 🛑 `MarkEmiInstallmentPaidInput` DELETED 2026-11-12 with the instalment
+ * tender. It described a buyer-typed reference number and a proof-screenshot
+ * slug for one installment; `EmiInstallment`, the field it indexed into, and
+ * the action that took it are all gone.
+ */
 
 export interface SellerListParams {
   filters?: string;

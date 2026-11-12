@@ -23,7 +23,6 @@ export {
  */
 export {
   assertPaymentMethodAllowed,
-  assertEmiOptInAllowed,
   blockedMethodsForCart,
   type BlockedMethod,
 } from "./payment-gate";

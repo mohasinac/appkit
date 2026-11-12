@@ -55,10 +55,6 @@ import type { OrderStatus, PaymentStatus } from "../types";
 // pull the checkout rule registry into the repository's runtime graph.
 import type { OrderType } from "../utils/order-splitter";
 import {
-  PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
-  type PaymentReviewQueueMode,
-} from "../constants/payment-window";
-import {
   isLegalOrderTransition,
   describeIllegalTransition,
 } from "../constants/transitions";
@@ -1632,28 +1628,18 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return rows;
   }
 
-  /**
-   * Cloud Functions: EMI reminder sweep — orders on an active (not yet fully
-   * paid) EMI plan. Per-installment due-date filtering happens in the job
-   * itself since `emiInstallments` is an array field Firestore can't range-
-   * query on.
+  /*
+   * 🛑 `getActiveEmiOrders()` DELETED 2026-11-12 with the instalment tender.
+   *
+   * It fed a reminder sweep by querying two fields that are no longer on
+   * `OrderDocument`, so Firestore matched nothing and the sweep had nothing
+   * to remind anyone about. It had no caller left either.
+   *
+   * ⚠ A query over deleted fields does not fail — it returns an empty page,
+   * which is indistinguishable from "no orders are due". That is why this
+   * went unnoticed; keeping it would have left a job that reports success
+   * forever.
    */
-  async getActiveEmiOrders(): Promise<
-    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
-  > {
-    const snap = await this.db
-      .collection(this.collection)
-      .where("emiEnabled", "==", true)
-      .where("emiComplete", "==", false)
-      .limit(500)
-      .get();
-
-    return snap.docs.map((d) => ({
-      id: d.id,
-      ref: d.ref as DocumentReference,
-      data: ({ id: d.id, ...d.data() } as OrderDocument),
-    }));
-  }
 
   /**
    * Cloud Functions: stage a payout-requested update into a caller-owned WriteBatch.

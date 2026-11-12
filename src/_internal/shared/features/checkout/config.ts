@@ -104,16 +104,13 @@ export const CHECKOUT_DEFAULT_COMMISSIONS = {
 export const CHECKOUT_PAYMENT_METHODS = ["cod", "online", "admin_bypass", "emi"] as const;
 export type CheckoutPaymentMethod = (typeof CHECKOUT_PAYMENT_METHODS)[number];
 
-export const CHECKOUT_DEFAULT_EMI_SETTINGS = {
-  enabled: false,
-  /** ₹10,000 — a seller's cart subtotal must exceed this for EMI to appear. */
-  minOrderValue: 10000,
-  tenureOptions: [2, 3, 4, 5, 6],
-  tokenPercent: 10,
-  /** Day of the month (1–10) the first (and every) installment is due. */
-  billingDay: 5,
-  /** Extra % of principal per month of tenure — the buyer's cost for spreading payment. */
-  surchargePercentPerMonth: 1,
-  /** Share of the surcharge that goes to the seller; the rest is the platform's cut. */
-  surchargeSellerSharePercent: 50,
-} as const;
+/*
+ * 🛑 `CHECKOUT_DEFAULT_EMI_SETTINGS` DELETED 2026-11-12. It was the fallback
+ * shape for an instalment settings block — min order value, tenure options,
+ * token percent, a per-month surcharge and its seller share — and it had no
+ * reader: the checkout action that consumed it went with the tender.
+ *
+ * ⚠ A defaults object for a retired feature is not inert. It states a price
+ * (1%/month) and a split (50/50) that nothing enforces, so the next reader to
+ * find it inherits terms no one has agreed to.
+ */

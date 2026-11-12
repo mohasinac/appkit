@@ -246,35 +246,15 @@ export function assertPaymentMethodAllowed(
   );
 }
 
-/**
- * Throw when anything in the cart forbids an instalment plan.
+/*
+ * 🛑 `assertEmiOptInAllowed` DELETED 2026-11-12 with the order-level
+ * instalment opt-in it guarded. It took an `emiOptIn` boolean that no
+ * checkout path produces any more, so it returned on its first line for
+ * every call — and it had no callers left.
  *
- * 🛑 Reads the SAME `blockedPaymentMethods` declaration, under the key
- * `"emi"`, rather than introducing a parallel `blocksEmi` field. The listing
- * rules already say "this listing type cannot be paid in instalments" — they
- * said it by naming a payment method, because that is what EMI was. Once EMI
- * became an order-level opt-in, that declaration needed a second reader, not
- * a second declaration: a rule stated twice is a rule that drifts (Root Cause
- * #61), and `clearanceRule`'s entry would otherwise have gone inert the day
- * the tender disappeared.
- *
- * `blockedPaymentMessage` is reused verbatim for the same reason the gate
- * above prefers it to a generated sentence: it names the REASON (winner
- * assignment waits on confirmed payment), which is what lets a buyer choose
- * differently instead of abandoning.
+ * ⚠ The `"emi"` entry in a listing rule's `blockedPaymentMethods` is NOT
+ * orphaned by this. `assertPaymentMethodAllowed` above reads that same
+ * declaration keyed by whichever method was CHOSEN, so the rule keeps a
+ * reader. Only the opt-in's second reader is gone — which is the whole
+ * reason this function existed.
  */
-export function assertEmiOptInAllowed(
-  items: readonly CartItemDocument[],
-  productById: ReadonlyMap<string, ProductDocument>,
-  emiOptIn: boolean,
-): void {
-  if (!emiOptIn) return;
-  const offender = blockedMethodsForCart(items, productById).get("emi");
-  if (!offender) return;
-  throw Object.assign(
-    new ValidationError(
-      `${offender.message} Pay for this order in full instead, or remove the item and buy it on its own.`,
-    ),
-    { code: "EMI_NOT_ALLOWED" },
-  );
-}

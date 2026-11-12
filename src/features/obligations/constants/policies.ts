@@ -40,7 +40,6 @@ import {
   ORDER_AUTO_CONFIRM_DAYS,
 } from "../../../_internal/shared/features/orders/config";
 import { PROTECTION_CLAIM_WINDOW_HOURS } from "../../../_internal/shared/features/shipping/protections";
-import { PAYMENT_WINDOW_MINUTES } from "../../orders/constants/payment-window";
 import { hasOpenCourierBlock } from "../../orders/utils/courier-block";
 import type { OrderDocument } from "../../orders/schemas/firestore";
 import type { ObligationDueAction, ObligationKind } from "../schemas/firestore";
@@ -517,9 +516,7 @@ export const OBLIGATION_POLICIES: Record<ObligationKind, ObligationPolicy> = {
  * Minutes a duration represents, for the non-business case.
  *
  * Exported so the sweep and `deadlinesFor` share one conversion rather than
- * two — and `PAYMENT_WINDOW_MINUTES` is imported here purely so the one
- * pre-existing minute-scale window in the system is expressible in the same
- * vocabulary if it is ever folded in.
+ * two.
  */
 export function durationToMinutes(d: Duration): number {
   switch (d.unit) {
@@ -532,9 +529,10 @@ export function durationToMinutes(d: Duration): number {
   }
 }
 
-/** The payment window, in this registry's vocabulary. Not yet an obligation kind. */
-export const PAYMENT_WINDOW_AS_DURATION: Duration = {
-  value: PAYMENT_WINDOW_MINUTES,
-  unit: "minutes",
-  calendar: "calendar",
-};
+/*
+ * 🛑 `PAYMENT_WINDOW_AS_DURATION` DELETED 2026-11-12. It restated the
+ * 15-minute manual-payment window in this registry's vocabulary so the window
+ * could one day be folded in as an obligation kind. The window itself is gone
+ * — it only ever applied to the out-of-band tenders — so there is nothing
+ * left to fold, and it had no reader.
+ */
