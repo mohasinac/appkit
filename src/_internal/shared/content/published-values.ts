@@ -48,7 +48,7 @@ import {
   POINTS_EXPIRY_MONTHS,
   POINTS_MAX_REDEMPTION_PERCENT,
 } from "../../../features/points/schemas/firestore";
-import { PAYMENT_WINDOW_MINUTES } from "../../../features/orders/constants/payment-window";
+/* 🛑 `PAYMENT_WINDOW_MINUTES` import deleted 2026-11-12 with its module. */
 import { SALE_PROTECTION_MAX_VALUE } from "../features/shipping/protections";
 import { LANE_CHECKOUT_WINDOW_MS } from "../checkout/lanes";
 import { PREORDER_MAX_DELIVERY_DAYS } from "../checkout/rules/_limits";
@@ -88,7 +88,6 @@ export type PublishedValueKey =
   | "returnRespondHours"
   | "returnPostDays"
   | "offerCheckoutHours"
-  | "paymentWindowMinutes"
   | "deliveryConfirmDays"
   | "orderCompleteDays"
   | "shipmentClaimHours"
@@ -313,7 +312,13 @@ export function resolvePublishedValues(
     returnRespondHours: String(policyHours("return-respond")),
     returnPostDays: String(policyDays("return-post")),
     offerCheckoutHours: String(OFFER_CHECKOUT_HOURS),
-    paymentWindowMinutes: String(PAYMENT_WINDOW_MINUTES),
+    /*
+     * 🛑 `paymentWindowMinutes` DELETED 2026-11-12. It published "15" as a
+     * `{{paymentWindowMinutes}}` token for policy copy, and the window is
+     * gone. ⚠ It had ZERO token consumers in either repo, so no published
+     * document ever interpolated it -- the value was computed and offered on
+     * every render for nobody.
+     */
     deliveryConfirmDays: String(policyDays("delivery-confirm")),
     orderCompleteDays: String(policyDays("order-complete")),
     shipmentClaimHours: String(policyHours("claim-shipping")),

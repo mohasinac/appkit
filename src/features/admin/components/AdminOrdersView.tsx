@@ -22,8 +22,7 @@ import { QuickEditMenu } from "./QuickEditMenu";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../next/routing/route-map";
 import { ADMIN_BULK_ACTIONS, ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
-import { ADMIN_ORDER_STATUS_TABS, ADMIN_ORDER_PAYMENT_REVIEW_TABS } from "../constants/filter-tabs";
-import { isPaymentReviewQueueMode } from "../../orders/constants/payment-window";
+import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
 import { useOrderScope } from "../../orders/components/OrderScopeTabs";
 import {
   toRecordArray,
@@ -172,24 +171,16 @@ function firstOrderItem(item: ListingItemRecord): { image?: string; title?: stri
   };
 }
 
-/**
- * Short marker appended to a row's secondary line so a manual payment needing
- * action is visible in the list itself, not only after opening the drawer.
- * Mirrors the same `paymentProofUrl` / `paymentReviewOutcome` derivation the
- * server-side queue uses (`listPaymentReviewQueue`) — kept in sync by reading
- * the same two fields rather than a denormalised flag (Root Cause #42).
+/*
+ * 🛑 `paymentReviewLabel` DELETED 2026-11-12 — the "delete both together when
+ * the admin list is next revised" its own comment asked for.
+ *
+ * It was a named no-op returning `undefined` for every row, left in the
+ * `.filter(Boolean).join(" · ")` chain so the column's absence read as a
+ * decision. It has served that purpose; keeping a function whose entire body
+ * is `return undefined` only invites someone to wire it back to fields that no
+ * longer exist.
  */
-function paymentReviewLabel(_item: ListingItemRecord): string | undefined {
-  /*
-   * 🛑 Always `undefined` now — the proof-review queue was manual-payment only
-   * and manual payment is retired (stages 3a-3d). `paymentProofUrl` and
-   * `paymentReviewOutcome` are off `OrderDocument`, so there is nothing left to
-   * label. Kept as a named no-op rather than deleted at the call site so the
-   * column's absence reads as a decision; delete both together when the admin
-   * list is next revised.
-   */
-  return undefined;
-}
 
 interface OrderRow {
   id: string;
@@ -199,18 +190,24 @@ interface OrderRow {
   updatedAt: string;
   image?: string;
   items: AdminOrderItemRow[];
-  paymentProofUrl?: string;
-  paymentTransactionId?: string;
   paymentMethod?: string;
   paymentStatus?: string;
-  displayedUpiId?: string;
-  buyerReportedUpiId?: string;
-  paymentUpiMismatch?: boolean;
-  buyerMarkedPaid?: boolean;
-  buyerFraudAgreementAccepted?: boolean;
-  /** Prior review outcome — the row already derives its label from this; the
-   *  editor needs it too so a decided order stops offering Verify/Reject. */
-  paymentReviewOutcome?: string;
+  /*
+   * 🛑 Eight manual-payment row members DELETED 2026-11-12:
+   * `paymentProofUrl`, `paymentTransactionId`, `displayedUpiId`,
+   * `buyerReportedUpiId`, `paymentUpiMismatch`, `buyerMarkedPaid`,
+   * `buyerFraudAgreementAccepted`, `paymentReviewOutcome`.
+   *
+   * ⚠ They were read off each row and threaded into the editor drawer, and
+   * none of them can be present: all eight are off `OrderDocument`. So the
+   * drawer rendered a proof-review panel over `undefined` on every order —
+   * blanks and a Verify/Reject pair with nothing to verify.
+   *
+   * 🛑 The row was the carrier, which is why this had to be removed here and
+   * in `AdminOrderEditorView` together: the drawer is fed entirely from
+   * `selectedRow` and never fetches the order, so a half-edit leaves one side
+   * declaring props the other no longer sends.
+   */
   /** Paid add-ons + coupon, surfaced as icon chips in the editor. */
   addons?: OrderAddonBadgesOrder;
   /*
@@ -355,7 +352,6 @@ export function AdminOrdersView({ children, pageRegionCards = [], ...props }: Ad
              * one thing on the row an admin searches by.
              */
             orderId,
-            paymentReviewLabel(item),
           ]
             .filter(Boolean)
             .join(" · "),
@@ -363,16 +359,8 @@ export function AdminOrdersView({ children, pageRegionCards = [], ...props }: Ad
           updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
           image,
           items: toOrderItemRows(item),
-          paymentProofUrl: toStringValue(item.paymentProofUrl, "") || undefined,
-          paymentTransactionId: toStringValue(item.paymentTransactionId, "") || undefined,
           paymentMethod: toStringValue(item.paymentMethod, "") || undefined,
           paymentStatus: toStringValue(item.paymentStatus, "") || undefined,
-          displayedUpiId: toStringValue(item.displayedUpiId, "") || undefined,
-          buyerReportedUpiId: toStringValue(item.buyerReportedUpiId, "") || undefined,
-          paymentUpiMismatch: Boolean(item.paymentUpiMismatch),
-          buyerMarkedPaid: Boolean(item.buyerMarkedPaid),
-          buyerFraudAgreementAccepted: Boolean(item.buyerFraudAgreementAccepted),
-          paymentReviewOutcome: toStringValue(item.paymentReviewOutcome, "") || undefined,
           // Straight off the order document — the admin list route returns
           // raw docs, so these need no serializer entry (cf. Root Cause #38).
           addons: {
@@ -419,24 +407,23 @@ export function AdminOrdersView({ children, pageRegionCards = [], ...props }: Ad
       }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-    // The payment-review queue is always `status == pending` by definition, so
-    // a status chip on top of it could only ever narrow to zero rows. When the
-    // queue is active the status filter is dropped rather than combined.
+    /*
+     * 🛑 The payment-review QUEUE MODE was removed from both of these
+     * 2026-11-12, with the manual tender it adjudicated.
+     *
+     * It was a second mode layered over this list: when active it suppressed
+     * the whole filter string and sent `?paymentReview=…` instead. The
+     * server-side `listPaymentReviewQueue` that answered it is already
+     * deleted, so the branch sent a parameter nothing read AND dropped the
+     * admin's real filters on the way — strictly worse than not offering it.
+     */
     buildFilters: (f) => {
-      if (isPaymentReviewQueueMode(f.paymentReview ?? "")) return undefined;
       const parts: string[] = [];
       if (f.status && f.status !== "All") parts.push(sieveFilter("status", SIEVE_OP.EQ, f.status));
       parts.push(...buildAdminFacetFilters(adminFacets, f));
       return parts.length > 0 ? parts.join(",") : undefined;
     },
-    // The payment-review queue is its own mode — it already ignores `status`
-    // (see buildFilters above), so it must ignore the lifecycle scope too, or
-    // an admin opening the queue from the default Active tab would see it
-    // silently narrowed.
-    buildExtraParams: (f) =>
-      isPaymentReviewQueueMode(f.paymentReview ?? "")
-        ? { paymentReview: f.paymentReview }
-        : orderScope.extraParams,
+    buildExtraParams: () => orderScope.extraParams,
     renderAboveContent: orderScope.renderAboveContent,
     // Mirrors the row action's "View full details" entry so the row itself
     // is clickable, not just the overflow menu.
@@ -509,14 +496,16 @@ export function AdminOrdersView({ children, pageRegionCards = [], ...props }: Ad
           label="Status"
           tabs={ADMIN_ORDER_STATUS_TABS}
           value={pendingFilters.status ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id, paymentReview: "" }))}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
         />
-        <FilterChipGroup
-          label="Manual payment"
-          tabs={ADMIN_ORDER_PAYMENT_REVIEW_TABS}
-          value={pendingFilters.paymentReview ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, paymentReview: id, status: "" }))}
-        />
+        {/*
+          🛑 The "Manual payment" chip group (`ADMIN_ORDER_PAYMENT_REVIEW_TABS`
+          — "Awaiting payment" / "Awaiting verification") was DELETED here
+          2026-11-12. Both chips selected on fields no order can carry, and
+          selecting either also cleared the admin's Status choice. A control
+          that discards a working filter to apply a dead one is not merely
+          inert.
+        */}
         <AdminFilterFacets
           facets={adminFacets}
           pendingFilters={pendingFilters}
@@ -544,16 +533,8 @@ export function AdminOrdersView({ children, pageRegionCards = [], ...props }: Ad
         orderLabel={selectedRow?.primary}
         currentStatus={selectedRow?.status}
         items={selectedRow?.items}
-        paymentProofUrl={selectedRow?.paymentProofUrl}
-        paymentTransactionId={selectedRow?.paymentTransactionId}
         paymentMethod={selectedRow?.paymentMethod}
         paymentStatus={selectedRow?.paymentStatus}
-        displayedUpiId={selectedRow?.displayedUpiId}
-        buyerReportedUpiId={selectedRow?.buyerReportedUpiId}
-        paymentUpiMismatch={selectedRow?.paymentUpiMismatch}
-        buyerMarkedPaid={selectedRow?.buyerMarkedPaid}
-        buyerFraudAgreementAccepted={selectedRow?.buyerFraudAgreementAccepted}
-        paymentReviewOutcome={selectedRow?.paymentReviewOutcome}
         addons={selectedRow?.addons}
         sourceContext={selectedRow?.sourceContext}
         balance={selectedRow?.balance}

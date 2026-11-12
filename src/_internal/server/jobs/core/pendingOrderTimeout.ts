@@ -9,18 +9,21 @@ import type { JobContext } from "../runtime/types";
 const DEFAULT_TIMEOUT_HOURS = 24;
 
 /**
- * COD 24h safety net. Orders with a `paymentDeadline` set (upi_manual/cash/
- * emi) are excluded — those belong to the 15-minute `paymentWindowTimeout`
- * sweep instead (Tier PP), which fires far sooner. Leaving them in this
- * job's scope too would just be redundant double-processing against the
- * same order under two different `cancellationReason`s.
+ * COD 24h safety net.
+ *
+ * ⚠ The `!entry.data.paymentDeadline` filter was removed 2026-11-12, and this
+ * is BEHAVIOUR-PRESERVING, not a widened sweep — the distinction matters on a
+ * job that cancels orders. It excluded orders belonging to the 15-minute
+ * window sweep; no document can carry `paymentDeadline` (the field is off
+ * `OrderDocument`), so the predicate was already true for every row and the
+ * filter already admitted the whole set. Measured, not assumed: the field has
+ * no writer left anywhere in the tree.
  */
 export async function runPendingOrderTimeout(ctx: JobContext): Promise<void> {
   const timeoutHours = Number(ctx.env("ORDER_TIMEOUT_HOURS") ?? DEFAULT_TIMEOUT_HOURS);
   ctx.logger.info(`Scanning orders unpaid > ${timeoutHours}h`);
 
-  const timedOutAll = await orderRepository.getTimedOutPending(timeoutHours);
-  const timedOut = timedOutAll.filter((entry) => !entry.data.paymentDeadline);
+  const timedOut = await orderRepository.getTimedOutPending(timeoutHours);
   if (timedOut.length === 0) {
     ctx.logger.info("No timed-out pending orders found");
     return;

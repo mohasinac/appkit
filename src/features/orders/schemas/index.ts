@@ -41,17 +41,13 @@ export const orderDroppedItemSchema = z.object({
   availableQty: z.number().int().nonnegative(),
 });
 
-export const emiInstallmentStatusSchema = z.enum(["pending", "paid", "overdue"]);
-export const emiInstallmentSchema = z.object({
-  index: z.number().int().positive(),
-  dueDate: firestoreDateSchema,
-  amount: rupeesSchema,
-  status: emiInstallmentStatusSchema,
-  paidAt: firestoreDateSchema.optional(),
-  transactionId: z.string().optional(),
-  proofUrl: z.string().optional(),
-  reminderSentAt: firestoreDateSchema.optional(),
-});
+/*
+ * 🛑 `emiInstallmentStatusSchema` / `emiInstallmentSchema` DELETED 2026-11-12.
+ * One instalment carried `transactionId` and `proofUrl` — a buyer-typed
+ * reference and an uploaded screenshot, the same assertion-dressed-as-evidence
+ * the manual tender was retired for. Their only consumer was the
+ * `emiInstallments` array below, deleted in the same pass.
+ */
 
 export const orderDocumentItemSchema = z.object({
   productId: z.string(),
@@ -199,13 +195,16 @@ export const orderFirestoreSchema = z.object({
   depositAmount: rupeesSchema.optional(),
   codRemainingAmount: rupeesSchema.optional(),
   codHandlingFee: rupeesSchema.optional(),
-  emiEnabled: z.boolean().optional(),
-  emiTenureMonths: z.number().int().min(2).max(6).optional(),
-  emiTokenAmount: rupeesSchema.optional(),
-  emiSurchargeAmount: rupeesSchema.optional(),
-  emiInstallments: z.array(emiInstallmentSchema).optional(),
-  emiRemainingBalance: rupeesSchema.optional(),
-  emiComplete: z.boolean().optional(),
+  /*
+   * 🛑 Seven instalment members DELETED 2026-11-12: `emiEnabled`,
+   * `emiTenureMonths`, `emiTokenAmount`, `emiSurchargeAmount`,
+   * `emiInstallments`, `emiRemainingBalance`, `emiComplete`.
+   *
+   * ⚠ All seven were already gone from `OrderDocument` — this schema was
+   * validating a shape the document could not hold. An optional member over a
+   * field nothing writes always passes, so the schema agreed with every
+   * payload while describing a different order than the one being stored.
+   */
   shippingFee: rupeesSchema.optional(),
   shippingMethod: orderShippingMethodSchema.optional(),
   shippingCarrier: z.string().optional(),

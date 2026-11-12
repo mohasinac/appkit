@@ -85,8 +85,8 @@ export function statusesForScope(scope: OrderScope): OrderStatus[] | undefined {
  * Tab definitions for the scope bar.
  *
  * NOT registered in `audit-filter-tab-enums.mjs`'s REGISTRY, and deliberately
- * so — the same reasoning its header gives for `ADMIN_ORDER_PAYMENT_REVIEW_TABS`
- * and `ADMIN_CART_OWNERSHIP_TABS`. These ids are a DERIVED grouping, not values
+ * so — the same reasoning its header gives for `ADMIN_CART_OWNERSHIP_TABS`.
+ * These ids are a DERIVED grouping, not values
  * any Firestore field holds, so there is no backing enum to compare them
  * against. `STATUS_SCOPE` above is what keeps them honest instead, at compile
  * time.

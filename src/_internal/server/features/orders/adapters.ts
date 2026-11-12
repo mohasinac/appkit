@@ -350,12 +350,13 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     refundCount: doc.refunds?.length ?? 0,
     paymentMethod: doc.paymentMethod,
     /*
-     * The manual-payment proof passthrough went with stages 3a-3d. Only
-     * `paymentDeadline` survives — it is the 15-minute WINDOW, kept
-     * deliberately because it still drives `paymentWindowTimeout`'s
-     * cancel-and-restock.
+     * The manual-payment proof passthrough went with stages 3a-3d, and
+     * `paymentDeadline` — the last survivor — followed it 2026-11-12. The
+     * note here said it was "kept deliberately because it still drives
+     * `paymentWindowTimeout`'s cancel-and-restock"; checkout had already
+     * stopped stamping the field, so it serialised `undefined` on every order
+     * and the sweep it supposedly drove matched nothing.
      */
-    paymentDeadline: toIsoOrUndefined(doc.paymentDeadline),
     cancellationReason: doc.cancellationReason,
     // ── W2: history + provenance ──────────────────────────────────────────
     //

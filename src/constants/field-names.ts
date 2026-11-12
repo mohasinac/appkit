@@ -299,10 +299,17 @@ export const ORDER_FIELDS = {
   ORDER_TYPE: "orderType",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
-  PAYMENT_DEADLINE: "paymentDeadline",
-  PAYMENT_PROOF_URL: "paymentProofUrl",
-  PAYMENT_PROOF_UPLOADED_AT: "paymentProofUploadedAt",
-  PAYMENT_REVIEW_OUTCOME: "paymentReviewOutcome",
+  /*
+   * 🛑 `PAYMENT_DEADLINE`, `PAYMENT_PROOF_URL`, `PAYMENT_PROOF_UPLOADED_AT`
+   * and `PAYMENT_REVIEW_OUTCOME` DELETED 2026-11-12 with the manual tender.
+   *
+   * ⚠ The point of this map is that a query names a field through one
+   * constant instead of a string literal, so a renamed field breaks the
+   * build. It cannot help when the field is DELETED: the constant still
+   * resolves to a valid string and the query still runs — it just matches
+   * nothing. Three of these four had no reader at all and the fourth fed a
+   * sweep that found no rows.
+   */
   PRIZE_WON: "prizeWon",
   PRIZE_DRAW_PRODUCT_ID: "prizeDrawProductId",
   PRIZE_REVEAL_MODE: "prizeRevealMode",

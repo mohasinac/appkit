@@ -66,21 +66,21 @@ export interface AdminOrderEditorViewProps {
   orderLabel?: string;
   currentStatus?: string;
   items?: AdminOrderItemRow[];
-  paymentProofUrl?: string;
-  paymentTransactionId?: string;
   paymentMethod?: string;
   paymentStatus?: string;
-  displayedUpiId?: string;
-  buyerReportedUpiId?: string;
-  paymentUpiMismatch?: boolean;
-  buyerMarkedPaid?: boolean;
-  buyerFraudAgreementAccepted?: boolean;
-  /**
-   * Which way a prior review went, if any. Without this the panel cannot tell
-   * "awaiting verification" from "already rejected" and re-offers live
-   * Verify/Reject buttons on a decided order.
+  /*
+   * 🛑 Eight manual-payment props DELETED 2026-11-12: `paymentProofUrl`,
+   * `paymentTransactionId`, `displayedUpiId`, `buyerReportedUpiId`,
+   * `paymentUpiMismatch`, `buyerMarkedPaid`, `buyerFraudAgreementAccepted`,
+   * `paymentReviewOutcome`. The proof-review panel that read them is already
+   * gone and no document carries any of them.
+   *
+   * ⚠ Removed in the SAME commit as the `AdminOrdersView` row members that
+   * fed them, and as the shop's `OrderViewClient` which threaded a second
+   * copy. Optional props make a half-edit typecheck cleanly in one direction,
+   * so a partial purge here would leave a sender with no receiver and nothing
+   * would complain.
    */
-  paymentReviewOutcome?: string;
   /**
    * Paid add-ons + applied coupon for this order. Operational, not decorative:
    * `whatsappNotifyAddon` is who a status change should message, and the
@@ -166,16 +166,8 @@ export function AdminOrderEditorView({
   items,
   sourceContext,
   currency,
-  paymentProofUrl,
-  paymentTransactionId,
   paymentMethod,
   paymentStatus,
-  displayedUpiId,
-  buyerReportedUpiId,
-  paymentUpiMismatch,
-  buyerMarkedPaid,
-  buyerFraudAgreementAccepted,
-  paymentReviewOutcome,
   addons,
   balance,
 }: AdminOrderEditorViewProps) {
@@ -488,18 +480,33 @@ export function AdminOrderEditorView({
            */
         />
 
-        /*
-         * 🛑 The manual-payment PROOF REVIEW UI was removed here (manual
-         * payment stages 3a-3d). It showed a buyer-uploaded screenshot with
-         * Verify / Request re-upload / Reject-as-fraud actions, and the
-         * fields it read (paymentProofUrl, paymentTransactionId,
-         * paymentReviewOutcome, displayedUpiId, buyerReportedUpiId,
-         * paymentUpiMismatch, buyerMarkedPaid) are all off OrderDocument now.
-         *
-         * ⚠ The pre-order BALANCE review below is a DIFFERENT review and
-         * stays — the two judge two payments months apart, and their
-         * rejections do opposite things.
-         */
+        {/*
+          🛑 The manual-payment PROOF REVIEW UI was removed here (manual
+          payment stages 3a-3d). It showed a buyer-uploaded screenshot with
+          Verify / Request re-upload / Reject-as-fraud actions, and every field
+          it read is off `OrderDocument`.
+
+          🛑 UNTIL 2026-11-12 THIS BLOCK WAS A BARE BLOCK COMMENT IN JSX
+          CHILDREN POSITION, WHICH IS NOT A COMMENT — IT IS TEXT. Proven by
+          emitting the TSX: the compiler produced the comment body as a child
+          STRING beside the elements, so the whole note RENDERED into the
+          admin's order drawer, internal field names included. Between
+          children, only a braced comment is a comment.
+
+          ⚠ Note the inverse trap recorded in CLAUDE.md: between JSX
+          ATTRIBUTES a plain block comment is correct and a braced one is a
+          syntax error (TS1005). The two positions take opposite forms, which
+          is how this got written — the attribute-position comment 8 lines
+          above is right.
+
+          ⚠ And a braced comment cannot quote a comment delimiter: the inner
+          terminator closes the outer block. That is why this note describes
+          the shape in words instead of showing it.
+
+          ⚠ The pre-order BALANCE review below is a DIFFERENT review and
+          stays — the two judge two payments months apart, and their
+          rejections do opposite things.
+        */}
 
         {/*
           D55 — the pre-order BALANCE review, below the deposit's.

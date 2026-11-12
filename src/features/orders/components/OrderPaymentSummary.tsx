@@ -2,12 +2,15 @@
 
 /**
  * OrderPaymentSummary — the single place both admin and seller order-detail
- * views render payment info from, regardless of how the buyer paid (manual
- * cash/UPI proof, PhonePe, or COD). Reads `order.paymentRecord` when present;
- * falls back to an adapter over the pre-existing legacy fields
- * (`paymentMethod`/`paymentId`/`paymentProofUrl`/`paymentTransactionId`) for
- * orders placed before Feature C shipped, so old orders keep rendering
- * correctly instead of showing a blank/broken Payment section.
+ * views render payment info from, regardless of how the buyer paid (online
+ * gateway or COD). Reads `order.paymentRecord` when present; falls back to an
+ * adapter over `paymentMethod` + `paymentId` when it is absent, so an order
+ * written without one renders a Payment section rather than a blank.
+ *
+ * ⚠ This docblock used to cite `paymentProofUrl` and `paymentTransactionId`
+ * as fallback sources "so old orders keep rendering". Both fields are gone and
+ * there are no old orders — the site has never gone live. Corrected
+ * 2026-11-12; see `legacyFallback` below for what the adapter still reads.
  */
 
 import React from "react";

@@ -237,7 +237,6 @@ import {
 } from "../../../../features/admin/actions/notification-actions";
 import { ORDER_MESSAGES_SELLER } from "../../jobs/handlers/messages";
 import { resolveSupplierIdentity } from "./supplier-identity";
-import { PAYMENT_WINDOW_MS } from "../../../../features/orders/constants/payment-window";
 import { assertCheckoutValueOtp } from "./value-otp-gate";
 /*
  * Item 1.39 — the blocking buyer policy agreement. Lives under
@@ -2355,10 +2354,9 @@ async function createOrderForGroup(
     ...groupRule.decorateOrderDoc(group[0].item, group[0].product),
   };
 
-  // ── 15-minute payment window + seller UPI resolution (Tier PP) ──────────
-  // Deadline + displayed UPI apply only to methods with a buyer-uploaded
   /*
-   * ── 🛑 THE 15-MINUTE PAYMENT WINDOW IS RETIRED (2026-11-11) ──────────────
+   * ── 🛑 THE 15-MINUTE PAYMENT WINDOW IS GONE (retired 2026-11-11, the last
+   *    of it deleted 2026-11-12) ────────────────────────────────────────────
    *
    * It existed for tenders that settle OUT OF BAND: the buyer was shown an
    * address, given 15 minutes to pay and upload proof, and the order was
@@ -2367,31 +2365,27 @@ async function createOrderForGroup(
    * decision. `cod` never had a window (money arrives with the courier) and
    * `online` cannot have one (payment is captured before the order exists).
    *
-   * So `paymentDeadline` is no longer stamped on any order.
+   * ⚠ Until 2026-11-12 this read `const paymentDeadline: Date | undefined =
+   * undefined;` and wrote it onto every order document, with a note 12 lines
+   * below claiming the field "SURVIVES ... still used by paymentWindowTimeout
+   * to cancel and restock a cash-on-pickup order nobody completes." That was
+   * false in two ways at once: there is no cash-on-pickup order to cancel, and
+   * a field pinned to `undefined` cannot drive a sweep. The sweep's query
+   * matched nothing, so the whole chain reported healthy while doing nothing.
+   * The variable, the field and the sweep half are all deleted now.
    *
-   * 🛑 DO NOT delete `paymentWindowTimeout` on the strength of that. The
-   * sweep carries TWO unrelated jobs riding along, folded in deliberately
-   * because Cloud Scheduler bills per registered job:
-   * `reconcileStuckGatewayEvents` (webhook events we received and lost) and
-   * `runDueJobRetries`. Removing the sweep would silently take out
-   * gateway-event reconciliation, which is a money path. Strip its
-   * payment-window half; keep the schedule and the passengers.
-   */
-  const paymentDeadline: Date | undefined = undefined;
-  /*
-   * 🛑 `displayedUpiId` / `resolveDisplayedUpiId` DELETED 2026-11-11.
+   * 🛑 `paymentWindowTimeout` ITSELF STAYS. The sweep carries TWO unrelated
+   * jobs riding along, folded in deliberately because Cloud Scheduler bills
+   * per registered job: `reconcileStuckGatewayEvents` (webhook events we
+   * received and lost) and `runDueJobRetries`. Deleting the job would silently
+   * take out gateway-event reconciliation, which is a money path.
    *
-   * It resolved the seller's UPI address to show a buyer paying by hand, and
-   * stored it on the order as the "ground truth" half of the
-   * buyer-reported-UPI cross-check. Both halves are gone: with manual payment
-   * retired nobody is shown an address to pay, and the cross-check it fed
-   * compared two strings WE and the BUYER supplied -- it never touched a bank,
-   * so a buyer who copied the address back correctly produced a clean match
-   * having paid nothing.
-   *
-   * ⚠ `paymentDeadline` above SURVIVES. It is the payment WINDOW, still used
-   * by `paymentWindowTimeout` to cancel and restock a cash-on-pickup order
-   * nobody completes.
+   * 🛑 `displayedUpiId` / `resolveDisplayedUpiId` DELETED 2026-11-11. It
+   * resolved the seller's UPI address to show a buyer paying by hand and
+   * stored it as the "ground truth" half of the buyer-reported-UPI
+   * cross-check. That cross-check compared two strings WE and the BUYER
+   * supplied -- it never touched a bank, so a buyer who copied the address
+   * back correctly produced a clean match having paid nothing.
    */
 
   /*
@@ -2549,7 +2543,6 @@ async function createOrderForGroup(
     paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
     paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
     paymentId: adminBatchId,
-    paymentDeadline,
     adminBypassBy: adminBypassBy,
     shippingAddress,
     /*

@@ -6446,15 +6446,18 @@ export type { OrderDocument } from "./features/orders/schemas/firestore";
 // to be able to name the type.
 export type { OrderSourceContext } from "./features/orders/schemas/firestore";
 export type { OrderRefundEvent, RefundType } from "./features/orders/schemas/firestore";
-// Manual-payment (cash / UPI / EMI) shared constants + the payment-review
-// queue discriminator. Pure data + predicates — no firebase-admin in the
-// import chain, so safe on the main barrel (see "appkit Export Rules").
-export {
-  PAYMENT_REVIEW_QUEUE_MODES,
-  isPaymentReviewQueueMode,
-  PAYMENT_REVIEW_QUEUE_SCAN_LIMIT,
-} from "./features/orders/constants/payment-window";
-export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
+/*
+ * 🛑 The manual-payment shared constants and the payment-review queue
+ * discriminator are DELETED (2026-11-12), along with the module that held them
+ * (`features/orders/constants/payment-window`). Gone from this barrel:
+ * `PAYMENT_REVIEW_QUEUE_MODES`, `isPaymentReviewQueueMode`,
+ * `PAYMENT_REVIEW_QUEUE_SCAN_LIMIT` and the `PaymentReviewQueueMode` type.
+ *
+ * The queue they discriminated had no server side left —
+ * `orderRepository.listPaymentReviewQueue` was removed with manual-payment
+ * stages 3a-3d — so these were the public surface of a feature with no
+ * implementation behind it.
+ */
 /*
  * The order status machine. Safe in the MAIN barrel — `constants/transitions.ts`
  * imports only a type from `../types/index`, so its chain never reaches

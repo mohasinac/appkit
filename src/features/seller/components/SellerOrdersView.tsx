@@ -212,9 +212,9 @@ interface OrderDetail {
   };
   paymentMethod?: string;
   paymentStatus?: string;
-  paymentTransactionId?: string;
-  paymentProofUrl?: string;
-  paymentReviewOutcome?: string;
+  /* 🛑 `paymentTransactionId`, `paymentProofUrl` and `paymentReviewOutcome`
+     DELETED 2026-11-12 — all three are off `OrderDocument`, and the badge and
+     UTR row that read them were already removed. */
   createdAt?: JsonValue;
   // Fulfilment flags — the seller has to act on all three, not just gift wrap:
   // WhatsApp changes how status updates go out, protection changes how a
@@ -276,23 +276,16 @@ function sellerOrderItemRow(item: SellerOrderItem, key: string) {
   );
 }
 
-/**
- * Manual-payment state for the seller's read-only badge. Derived from the same
- * two fields the admin queue uses (`paymentProofUrl` + `paymentReviewOutcome`)
- * rather than a denormalised flag, so seller and admin can't disagree about
- * whether an order is waiting on the buyer or on us (Root Cause #42).
+/*
+ * 🛑 `sellerPaymentBadge` DELETED 2026-11-12 — ZERO call sites. Its render was
+ * removed with the manual tender and the function was left behind.
+ *
+ * ⚠ Worth noting what it would have done had anyone re-wired it: of its five
+ * branches, three read fields that are off `OrderDocument` and one read a
+ * proof URL that cannot exist, so every order would have fallen through to
+ * the default — "Awaiting payment", on orders that were paid. A badge whose
+ * inputs all went absent does not stop rendering; it renders the last branch.
  */
-function sellerPaymentBadge(order: {
-  paymentStatus?: string;
-  paymentProofUrl?: string;
-  paymentReviewOutcome?: string;
-}): { label: string; variant: "success" | "warning" | "danger" | "info" } {
-  if (order.paymentStatus === "paid") return { label: "Verified", variant: "success" };
-  if (order.paymentReviewOutcome === "rejected_fraud") return { label: "Rejected", variant: "danger" };
-  if (order.paymentReviewOutcome === "reupload_requested") return { label: "Re-upload requested", variant: "warning" };
-  if (order.paymentProofUrl) return { label: "Awaiting verification", variant: "info" };
-  return { label: "Awaiting payment", variant: "warning" };
-}
 
 interface SellerOrdersResponse {
   items?: unknown[];

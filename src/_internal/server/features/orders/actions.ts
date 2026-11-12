@@ -61,7 +61,12 @@ import { sendNotification } from "../../../../features/admin/actions/notificatio
 import { restoreStockForOrder } from "../checkout/stock-restore";
 import { getAdminDb } from "../../../../providers/db-firebase";
 import { enqueueJob } from "../../../../features/jobs/actions/enqueue-job";
-import { PAYMENT_WINDOW_MS, PAYMENT_FRAUD_REJECTED_REASON } from "../../../../features/orders/constants/payment-window";
+/*
+ * 🛑 `PAYMENT_WINDOW_MS` and `PAYMENT_FRAUD_REJECTED_REASON` were imported
+ * here and NEVER REFERENCED — the fraud-rejection path that used them went
+ * with the manual tender. Both are deleted with their module (2026-11-12).
+ * Invisible because `noUnusedLocals` is off in this tree.
+ */
 /*
  * The dispute cutoff is DERIVED from the `order-complete` policy, never read
  * off a stored flag — one definition of "7 days after delivery", shared with

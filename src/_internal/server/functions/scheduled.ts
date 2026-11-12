@@ -66,7 +66,7 @@ export const collectorDropSettlement = defineFunction({
 
 export const pendingOrderTimeout = defineFunction({
   name: "pendingOrderTimeout",
-  description: "Cancel pending COD orders that exceeded the 24h timeout window (orders with a paymentDeadline are paymentWindowTimeout's domain instead).",
+  description: "Cancel pending COD orders that exceeded the 24h timeout window.",
   trigger: { kind: "schedule", cron: "0 */2 * * *" },
   handler: pendingOrderTimeoutHandler,
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },
@@ -129,24 +129,32 @@ export const pendingOrderTimeout = defineFunction({
  * the obligations collection was built to end (Root Cause #27: three sweeps,
  * pairwise disjoint, an order holding stock forever).
  *
- * `paymentReviewAutoApprove` has no candidate at all. The ONLY policy
- * mentioning `paymentReviewOutcome` is `proof-reupload`, keyed on
- * `=== "reupload_requested"` — the BUYER re-uploading, not staff failing to
- * review. Nothing in the twelve kinds means "a proof nobody looked at".
+ * ⚠ UPDATED 2026-11-12 — the second half of this measurement is now MOOT, and
+ * that is a change in the world rather than a correction of the reasoning.
+ * `paymentReviewAutoApprove` is gone, and so is the proof review it would have
+ * auto-approved: the manual tender was retired, so there is no uploaded proof
+ * to leave in limbo. The argument stands for `pendingOrderTimeout`, which is
+ * why that sweep is untouched — an unpaid COD order still holds real stock and
+ * `seller-accept` still excludes it for not being paid.
  *
- * **Retiring them would therefore**: leave unpaid COD orders holding real
- * stock forever, and leave an uploaded proof nobody reviewed in limbo forever.
- * Both silent — an order that is never cancelled raises nothing.
- *
- * So the correct state is THREE sweeps kept, not one. The plan's "retire the
- * other two" was an inference from a coverage claim that measurement does not
- * support, and this note exists so the next reader does not re-derive it from
- * the same plan line.
+ * So the correct state is now TWO sweeps kept: `pendingOrderTimeout` on its
+ * own merits, and the 5-minute slot below for its two passengers. The plan's
+ * "retire the other two" was an inference from a coverage claim measurement
+ * did not support, and this note exists so the next reader does not re-derive
+ * it from the same plan line.
  */
 export const paymentWindowTimeout = defineFunction({
   name: "paymentWindowTimeout",
+  /*
+   * ⚠ OPERATOR-VISIBLE. It said "Cancel + restock orders whose 15-minute
+   * manual-payment window expired without proof" until 2026-11-12 -- work
+   * this job no longer does and, since the window was retired, never did.
+   * An operator reading the job list would have believed a cancellation sweep
+   * was running. The NAME is now the 5-minute slot, not the work; it is kept
+   * because renaming a live Cloud Scheduler job is an infra change.
+   */
   description:
-    "Cancel + restock orders whose 15-minute manual-payment window expired without proof. Also hosts R1 (stuck gateway events) and the Phase 8 job-retry sweep, both before its early return.",
+    "The 5-minute slot. Hosts R1 (stuck gateway events) and the Phase 8 job-retry sweep. Its former payment-window half was deleted 2026-11-12 with the out-of-band tenders.",
   trigger: { kind: "schedule", cron: EVERY_5_MIN },
   handler: paymentWindowTimeoutHandler,
   options: { region: REGION, timeoutSeconds: 120, memory: "256MiB", maxInstances: 1 },

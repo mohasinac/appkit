@@ -58,12 +58,18 @@ export const ORDER_MESSAGES = {
   CANCELLED_TITLE: "Order cancelled",
   CANCELLED_TIMEOUT_MESSAGE: (productTitle: string, hours: number): string =>
     `Your order for "${productTitle}" was cancelled because payment was not received within ${hours} hours.`,
-  CANCELLED_PAYMENT_WINDOW_TITLE: "Payment window expired",
-  CANCELLED_PAYMENT_WINDOW_MESSAGE: (productTitle: string): string =>
-    `Your order for "${productTitle}" was cancelled because payment wasn't completed within the 15-minute window. The item is back in stock — you're welcome to order again.`,
-  AUTO_APPROVED_TITLE: "Payment auto-confirmed",
-  AUTO_APPROVED_MESSAGE: (productTitle: string): string =>
-    `Your payment proof for "${productTitle}" was auto-confirmed after 2 hours without manual review. If something looks wrong, you can raise a dispute from your order.`,
+  /*
+   * 🛑 Four buyer-facing strings DELETED 2026-11-12, all with zero senders:
+   *
+   * · `CANCELLED_PAYMENT_WINDOW_{TITLE,MESSAGE}` — "payment wasn't completed
+   *   within the 15-minute window". Only `paymentWindowTimeout`'s deleted half
+   *   sent them, and no order has had a window to miss since 2026-11-11.
+   * · `AUTO_APPROVED_{TITLE,MESSAGE}` — "your payment proof was auto-confirmed
+   *   after 2 hours without manual review". ⚠ Read what that sentence
+   *   promised: it told a buyer an unreviewed screenshot had been accepted.
+   *   The job behind it (`paymentReviewAutoApprove`) is already gone; leaving
+   *   the copy would have let any future caller re-assert it in one line.
+   */
   CONFIRMED_TITLE: "Order confirmed ✅",
   CONFIRMED_MESSAGE: (productTitle: string): string =>
     `Your order for "${productTitle}" has been confirmed and is being prepared.`,

@@ -170,11 +170,19 @@ export const PaymentStatusValues = {
 } as const satisfies Record<string, PaymentStatus>;
 
 /** Runtime-accessible payment method values â€" use instead of bare string literals. */
+/*
+ * 🛑 `CASH` and `UPI_MANUAL` DELETED 2026-11-12 — retired tenders, and
+ * `CheckoutPaymentMethod` has not included either since 2026-11-11, so these
+ * two members named values nothing could produce or accept.
+ *
+ * ⚠ `EMI` stays as a MEMBER ONLY, deliberately: `CHECKOUT_PAYMENT_METHODS`
+ * still carries `"emi"` (removing it was measured at ~160 references and is
+ * out of scope), and `emi.enabled: false` is what keeps it unreachable. The
+ * member is not a statement that the tender works.
+ */
 export const PaymentMethodValues = {
   COD: "cod",
-  CASH: "cash",
   ONLINE: "online",
-  UPI_MANUAL: "upi_manual",
   ADMIN_BYPASS: "admin_bypass",
   EMI: "emi",
 } as const;
@@ -1620,29 +1628,19 @@ export interface OrderDocument extends BaseDocument {
    * saying there is no ledger to reconcile against. The fields recorded an
    * assertion and dressed it as proof.
    *
-   * 🛑 `paymentDeadline` SURVIVES, immediately below. It is the 15-minute
-   * payment window, not part of the proof flow, and `paymentWindowTimeout`
-   * still cancels and restocks on it. CLAUDE.md records it as reused rather
-   * than deleted.
+   * 🛑 `paymentDeadline` WENT TOO, 2026-11-12. This block used to say it
+   * "SURVIVES ... and `paymentWindowTimeout` still cancels and restocks on
+   * it". It did not: checkout had already pinned the value to `undefined`, so
+   * the field was never written, and the sweep's range query cannot match an
+   * absent field. The window only ever applied to the out-of-band tenders
+   * that are now gone.
    *
-   * ⚠ TYPE REMOVAL, NOT A DATA MIGRATION — same as the EMI fields. Historical
-   * orders still carry these keys in Firestore and `set({ merge: true })`
-   * could not remove them anyway. What changes is that nothing here reads
-   * them, so a past manual order's proof renders nowhere. Accepted: the
-   * alternative is keeping the whole review surface alive to display evidence
-   * that was never evidence.
+   * ⚠ TYPE REMOVAL, NOT A DATA MIGRATION — and unlike the usual case, nothing
+   * is left behind: the site has never gone live, so no document carries any
+   * of these keys. The earlier note here reasoned about "a past manual
+   * order's proof"; there are no past orders.
    */
 
-  // ── 15-minute payment window (Tier PP) ───────────────────────────────────
-  /**
-   * Deadline for the buyer to pay/upload proof. Set only at creation for
-   * `upi_manual`/`cash`/`emi` orders — never for `cod`, `razorpay`, or
-   * `admin_bypass` (those either pay before order creation or have no proof
-   * step). `paymentWindowTimeout` cancels + restocks any order still
-   * `pending`/`pending` with no `paymentProofUrl` past this timestamp.
-   * Extended by 15 more minutes when admin requests a proof re-upload.
-   */
-  paymentDeadline?: Date;
   /** True once a cancellation path has restored `availableQuantity` for this order's items. Guards against double-restock. */
   stockRestored?: boolean;
   stockRestoredAt?: Date;

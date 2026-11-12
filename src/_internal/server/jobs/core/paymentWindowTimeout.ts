@@ -1,10 +1,4 @@
-import { orderRepository } from "../../../../repositories";
 import { normalizeError } from "../../../../errors/normalize";
-import { sendNotification } from "../../../../features/admin/actions/notification-actions";
-import { restoreStockForOrder } from "../../features/checkout/stock-restore";
-import { OrderStatusValues } from "../../../../features/orders/schemas/firestore";
-import { PAYMENT_WINDOW_EXPIRED_REASON } from "../../../../features/orders/constants/payment-window";
-import { ORDER_MESSAGES } from "../handlers/messages";
 import { reconcileStuckGatewayEvents } from "./paymentReconcile";
 /* Phase 8 — the job retry sweep. Folded in here rather than given its own
  * Scheduler job; see its own docstring and the 🛑 at the call site. */
@@ -12,17 +6,22 @@ import { runDueJobRetries } from "./onJobCreated";
 import type { JobContext } from "../runtime/types";
 
 /**
- * 15-minute payment window sweep — cancels + restocks any `upi_manual`/
- * `cash`/`emi` order still `pending`/`pending` with no proof uploaded past
- * its `paymentDeadline`. Runs every 5 minutes (`EVERY_5_MIN`), so an order
- * can overshoot its 15-minute deadline by up to ~5 minutes before this
- * catches it — acceptable, matches the existing tight-interval precedent
- * (`clearanceExpiryReveal`) rather than inventing a 1-minute cron that would
- * multiply invocation cost for marginal UX gain.
+ * The 5-minute sweep. Runs `EVERY_5_MIN`.
  *
- * Orders that already have a `paymentProofUrl` are excluded by the
- * repository query — those are the 2-hour auto-approve sweep's domain
- * (`paymentReviewAutoApprove`), not this one's.
+ * 🛑 IT NO LONGER SWEEPS A PAYMENT WINDOW. That half was deleted 2026-11-12
+ * with the out-of-band tenders it served (see the block at the end of the
+ * function). What remains is this job's two PASSENGERS, both of which need a
+ * 5-minute cadence and neither of which is worth its own Cloud Scheduler
+ * registration:
+ *
+ * · `reconcileStuckGatewayEvents` — webhook events we received and lost. A
+ *   money path.
+ * · `runDueJobRetries` — queued jobs whose backoff has elapsed. Nothing else
+ *   in the system will ever run them.
+ *
+ * ⚠ The NAME is now the schedule slot, not the work. It is kept because it is
+ * the registered Scheduler job id; read the two calls below for what actually
+ * happens here.
  */
 export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
   /*
@@ -88,57 +87,31 @@ export async function runPaymentWindowTimeout(ctx: JobContext): Promise<void> {
     });
   }
 
-  ctx.logger.info("Scanning orders past their 15-minute payment deadline");
-
-  const expired = await orderRepository.getExpiredPaymentDeadlines();
-  if (expired.length === 0) {
-    ctx.logger.info("No expired payment-window orders found");
-    return;
-  }
-
-  let restored = 0;
-  for (const entry of expired) {
-    try {
-      await restoreStockForOrder(ctx.db, { ...entry.data, id: entry.id }, {
-        status: OrderStatusValues.CANCELLED,
-        cancellationDate: ctx.now,
-        cancellationReason: PAYMENT_WINDOW_EXPIRED_REASON,
-        updatedAt: ctx.now,
-      });
-      restored += 1;
-    } catch (err) {
-      void normalizeError(err);
-      ctx.logger.error("Failed to cancel + restore stock for expired payment-window order", err, {
-        orderId: entry.id,
-      });
-    }
-  }
-
-  // Sequential: `order_cancelled` is email-eligible, so each send reserves a
-  // unit from the single-document daily budget counter and a concurrent sweep
-  // would contend on it. See pendingOrderTimeout for the full reasoning.
-  for (const entry of expired) {
-    try {
-      await sendNotification({
-        userId: entry.data.userId,
-        type: "order_cancelled",
-        priority: "normal",
-        title: ORDER_MESSAGES.CANCELLED_PAYMENT_WINDOW_TITLE,
-        message: ORDER_MESSAGES.CANCELLED_PAYMENT_WINDOW_MESSAGE(entry.data.productTitle),
-        relatedId: entry.id,
-        relatedType: "order",
-        storeId: entry.data.storeId,
-      });
-    } catch (err) {
-      void normalizeError(err);
-      ctx.logger.error("Failed to notify buyer of expired payment window (non-fatal)", err, {
-        orderId: entry.id,
-      });
-    }
-  }
-
-  ctx.logger.info("Payment window timeout sweep complete", {
-    scanned: expired.length,
-    restored,
+  /*
+   * ── 🛑 THE PAYMENT-WINDOW HALF OF THIS JOB WAS DELETED 2026-11-12 ─────────
+   *
+   * It scanned `getExpiredPaymentDeadlines()` and, for each row, cancelled the
+   * order, restored its stock and emailed the buyer. Every part of that chain
+   * is now unreachable: checkout stopped stamping `paymentDeadline`, the field
+   * is off `OrderDocument`, and a Firestore range filter cannot match an
+   * absent field. The query returned an empty page on every tick, took the
+   * early return, and logged "No expired payment-window orders found" — a
+   * sweep reporting success for work it could not find.
+   *
+   * ⚠ Deleting the early return is the part that actually matters here. R1 and
+   * the Phase 8 retry sweep above were placed FIRST precisely because this
+   * function used to return early on most ticks (Root Cause #27). With the
+   * payment-window half gone there is no early return left to trip over, so
+   * both passengers now run unconditionally — which is what their own
+   * docstrings always asked for.
+   *
+   * 🛑 THE JOB AND ITS SCHEDULE STAY. `paymentWindowTimeout` is the registered
+   * Cloud Scheduler name and the HOST for `reconcileStuckGatewayEvents` (a
+   * money path) and `runDueJobRetries`. Its name now describes the 5-minute
+   * SLOT rather than the work; renaming it would rename a live Scheduler job,
+   * which is an infrastructure change and not this commit's business.
+   */
+  ctx.logger.info("5-minute sweep complete", {
+    note: "gateway-event reconciliation + due job retries",
   });
 }

@@ -231,9 +231,10 @@ export interface Order {
    * after an earlier deny-list projection shipped it publicly (Root Cause #70).
    */
   /* `emiInstallments` removed with EMI stage 5 — `EmiInstallmentsPanel` and the
-     `EmiInstallment` type are both gone. */
-  /** Sum of unpaid instalments. 0 once the plan is settled. */
-  emiRemainingBalance?: number;
+     `EmiInstallment` type are both gone. `emiRemainingBalance`, the sum of
+     unpaid instalments, followed it 2026-11-12: with no schedule to sum it was
+     structurally `undefined`, and a money field that is always absent still
+     renders somewhere as a blank where an amount belongs. */
   supplierGstin?: string;
   supplierLegalName?: string;
   supplierAddress?: string;
@@ -414,30 +415,32 @@ export interface Order {
    */
   refundCount?: number;
   /**
-   * Manual-payment (cash / UPI / EMI) fields. Every one of these already
-   * existed on `OrderDocument` but was dropped by `orderDocumentToOrder`,
-   * so the buyer-facing surfaces that need them read `undefined`:
-   * `/user/orders/[id]/payment` gated its whole render on `paymentMethod`
-   * and therefore told every buyer "this order does not require manual
-   * payment upload", and the 15-minute countdown + UPI ID never rendered.
-   * (CLAUDE.md Root Cause Pattern #38 — adapter/serializer field drift.)
+   * How the buyer paid. A stored `OrderDocument.paymentMethod` value — `cod`
+   * or `online`, COD being the fallback when no gateway is configured.
    */
   paymentMethod?: string;
-  /** UPI ID the buyer was told to pay to — shown on the payment page and diffed against `buyerReportedUpiId` during admin review. */
-  displayedUpiId?: string;
-  /** ISO end of the 15-minute payment window; drives the buyer countdown. */
-  paymentDeadline?: string;
-  paymentProofUrl?: string;
-  paymentProofUploadedAt?: string;
-  paymentTransactionId?: string;
-  buyerReportedUpiId?: string;
-  buyerMarkedPaid?: boolean;
-  paymentUpiMismatch?: boolean;
-  /** Admin decision on the submitted proof; unset means "not reviewed yet". */
-  paymentReviewOutcome?: "approved" | "reupload_requested" | "rejected_fraud";
-  /** Admin's note — the reason shown to the buyer on a re-upload request or fraud rejection. */
-  paymentReviewNote?: string;
-  /** Why the order was cancelled — distinguishes a payment-window expiry / fraud rejection from an ordinary cancellation. */
+  /*
+   * ── THE TEN MANUAL-PAYMENT VIEW-MODEL FIELDS WERE DELETED HERE 2026-11-12 ──
+   *
+   * Gone: `displayedUpiId`, `paymentDeadline`, `paymentProofUrl`,
+   * `paymentProofUploadedAt`, `paymentTransactionId`, `buyerReportedUpiId`,
+   * `buyerMarkedPaid`, `paymentUpiMismatch`, `paymentReviewOutcome`,
+   * `paymentReviewNote`.
+   *
+   * 🛑 Every one was already off `OrderDocument` — the storage went with the
+   * manual tender on 2026-11-11. What survived here was the VIEW MODEL, which
+   * is the half that keeps UI alive: a declared optional field reads
+   * `undefined`, so each admin and seller surface that threaded it rendered a
+   * blank, a dash or a never-firing badge instead of failing. The type was the
+   * last thing telling five components that a proof-review flow existed.
+   *
+   * ⚠ This is a TYPE deletion with no data migration owed, and for once that
+   * is not a judgement call: the site has never gone live, so no document
+   * carries any of these keys and there is nothing to read back. The "fields
+   * stay, actions go" reasoning recorded against this surface was premised on
+   * historical orders existing. There are none.
+   */
+  /** Why the order was cancelled. Free-form; set by the cancellation paths. */
   cancellationReason?: string;
   /**
    * Reveal-mode prize-draw fields (SB4-H/SB8-C). Set once the winner has

@@ -1406,27 +1406,21 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return [...byId.values()];
   }
 
-  async getExpiredPaymentDeadlines(): Promise<
-    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
-  > {
-    const snap = await this.db
-      .collection(this.collection)
-      .where(ORDER_FIELDS.STATUS, "==", OrderStatusValues.PENDING)
-      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", "pending")
-      .where(ORDER_FIELDS.PAYMENT_DEADLINE, "<=", new Date())
-      .limit(500)
-      .get();
-
-    return snap.docs
-      .map((d) => ({
-        id: d.id,
-        ref: d.ref as DocumentReference,
-        data: ({ id: d.id, ...d.data() } as OrderDocument),
-      }));
-    /* The `!paymentProofUrl` exclusion went with manual payment: no order can
-       carry a proof now, so every expired row was already admitted — this is
-       behaviour-preserving, not a widened sweep. */
-  }
+  /*
+   * 🛑 `getExpiredPaymentDeadlines()` DELETED 2026-11-12 with the 15-minute
+   * payment window.
+   *
+   * It selected `status == pending && paymentStatus == pending &&
+   * paymentDeadline <= now` to feed `paymentWindowTimeout`'s cancel-and-
+   * restock. Checkout had already stopped stamping `paymentDeadline`, and a
+   * Firestore range filter cannot match an absent field — so the query
+   * returned an empty page on every run and the sweep logged a clean
+   * "0 cancelled" forever.
+   *
+   * ⚠ `paymentWindowTimeout` itself SURVIVES, carrying
+   * `reconcileStuckGatewayEvents` and `runDueJobRetries`. Only this half of
+   * it is gone.
+   */
 
   /*
    * 🛑 `getUnreviewedProofPastDeadline` removed with manual payment stage 3b.

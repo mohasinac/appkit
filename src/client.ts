@@ -971,14 +971,18 @@ export { CountdownDisplay } from "./ui/components/CountdownDisplay";
 export type { CountdownDisplayProps } from "./ui/components/CountdownDisplay";
 export { OrderAddonBadges } from "./features/orders/components/OrderAddonBadges";
 export type { OrderAddonBadgesOrder, OrderAddonBadgesProps } from "./features/orders/components/OrderAddonBadges";
-// Manual-payment (cash / UPI / EMI) shared constants — pure data + predicates,
-// no server deps. Used by the buyer proof-upload page and order-detail CTAs.
-export {
-  PAYMENT_REVIEW_QUEUE_MODES,
-  isPaymentReviewQueueMode,
-  PAYMENT_WINDOW_MINUTES,
-} from "./features/orders/constants/payment-window";
-export type { PaymentReviewQueueMode } from "./features/orders/constants/payment-window";
+/*
+ * 🛑 `features/orders/constants/payment-window` is DELETED (2026-11-12) and
+ * its four client exports go with it: `PAYMENT_REVIEW_QUEUE_MODES`,
+ * `isPaymentReviewQueueMode`, `PAYMENT_WINDOW_MINUTES` and the
+ * `PaymentReviewQueueMode` type. The buyer proof-upload page and the
+ * order-detail CTAs this block existed for are gone with the manual tender.
+ *
+ * ⚠ BREAKING for any consumer still importing them from `@mohasinac/appkit/client`.
+ * The shop's `OrderDetailPageClient` imports `PAYMENT_WINDOW_MINUTES` to word a
+ * "upload your payment screenshot within N minutes" line — that line and that
+ * import both have to go with the shop's half of this purge.
+ */
 export {
   ORDER_SCOPE_VALUES,
   ORDER_SCOPE_TABS,

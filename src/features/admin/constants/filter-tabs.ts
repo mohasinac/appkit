@@ -152,20 +152,13 @@ export const ADMIN_ORDER_STATUS_TABS = [
   { id: "returned", label: "Returned" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/**
- * Admin > Orders — manual-payment (cash / UPI / EMI) review queue.
- *
- * Deliberately NOT a `status` chip set: these two states are *derived* from
- * `paymentProofUrl` + `paymentReviewOutcome`, both of which are absent-by-
- * default fields that no Firestore equality filter can select on. The IDs are
- * `PaymentReviewQueueMode` values and are sent as the `paymentReview` query
- * param (not a Sieve filter) — see `orderRepository.listPaymentReviewQueue`.
+/*
+ * 🛑 `ADMIN_ORDER_PAYMENT_REVIEW_TABS` DELETED 2026-11-12 with the manual
+ * tender. "Awaiting payment" / "Awaiting verification" were derived from
+ * `paymentProofUrl` + `paymentReviewOutcome`, and the server-side
+ * `listPaymentReviewQueue` that answered the `paymentReview` param is already
+ * gone — so both chips queried a queue that no longer exists.
  */
-export const ADMIN_ORDER_PAYMENT_REVIEW_TABS = [
-  ALL_TAB,
-  { id: "awaiting_proof", label: "Awaiting payment" },
-  { id: "awaiting_verification", label: "Awaiting verification" },
-] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Reviews — moderation state filter chip set. */
 export const ADMIN_REVIEW_STATUS_TABS = [
