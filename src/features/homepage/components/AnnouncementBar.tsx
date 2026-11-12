@@ -126,7 +126,29 @@ export function AnnouncementBar({ message, link, className = "", onDismiss }: An
    * `TopBannerPortal`. It pushes the page down by exactly its own height at
    * every width, so there is nothing to overlap and no breakpoint to tune.
    */
-  const positionCls = "relative w-full bg-primary-700";
+  /*
+   * ── 🛑 MOBILE ONLY (owner, 2026-11-12) ────────────────────────────────────
+   *
+   * Owner: *"drop the action bar on desktop mode, only keep it on mobiles."*
+   *
+   * `lg:hidden` and NOT a conditional render, for the same reason
+   * `SidebarLayout.mobileOnly` is a class rather than a branch: this component
+   * is server-rendered into a portal above the sticky header, so a JS-width
+   * check would either need a client hook (making the bar flash in and out on
+   * every desktop load) or a `useMediaQuery` that is wrong during SSR. A CSS
+   * breakpoint is correct in both passes and costs no hydration.
+   *
+   * ⚠ Dropping it from the DOM entirely would also break the dismiss state:
+   * `mounted`/`onDismiss` persist a choice per visitor, and a desktop user who
+   * later opens the site on a phone should not be re-prompted by a bar their
+   * laptop never showed them.
+   *
+   * ⚠ `lg` (1024px) matches the breakpoint the rest of the chrome uses to
+   * decide mobile-vs-desktop — the hamburger is gated `lg:hidden` too. Picking
+   * a different one here would put the bar and the drawer on opposite sides of
+   * the same width.
+   */
+  const positionCls = "relative w-full bg-primary-700 lg:hidden";
   return (
     <Div
       className={`appkit-announcement-bar ${positionCls} transition-opacity duration-200 ${mounted ? "opacity-100" : "opacity-0"} ${className}`}
