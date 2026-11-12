@@ -907,21 +907,25 @@ export interface SiteSettingsDocument extends BaseDocument {
      */
     adminCheckoutBypass?: boolean;
   };
-  /** Site-wide EMI (installment) settings. A seller must ALSO have `StoreDocument.emiEnabled` on for EMI to appear at checkout for their items. */
-  emi: {
-    enabled: boolean;
-    /** Decimal rupees — a seller's cart subtotal must exceed this for EMI to appear as an option. */
-    minOrderValue: number;
-    tenureOptions: number[];
-    /** Down payment % collected at checkout. */
-    tokenPercent: number;
-    /** Day of month (1–10) each installment is due. */
-    billingDay: number;
-    /** Extra % of principal per month of tenure — the "excess EMI fee" the buyer pays for spreading payment. */
-    surchargePercentPerMonth: number;
-    /** Share of the surcharge that goes to the seller (0–100); the rest is the platform's cut. */
-    surchargeSellerSharePercent: number;
-  };
+  /*
+   * 🛑 `emi` REMOVED 2026-11-12 — the last orphan of the retired feature.
+   *
+   * It was a REQUIRED member of this interface with a full default below, and
+   * by the time it was deleted it had **zero readers in either repo** — the
+   * admin tab that wrote it and the checkout that consumed it were both gone.
+   * So the shape was being declared, defaulted and shipped to every consumer
+   * to describe a feature that no longer exists.
+   *
+   * ⚠ Deleted rather than kept, deliberately, and the distinction is the one
+   * recorded in CLAUDE.md: **retired means delete; switched OFF means flag.**
+   * Nothing has ever been ordered on this install, so no stored document
+   * carries an instalment plan and there is no back-compat to owe. Keeping the
+   * field "for historical orders" is exactly the reasoning that rule voids.
+   *
+   * 🛑 Not to be confused with `categoryId` / `brandId` / `storeId`, which are
+   * SWITCHED OFF for R1 and must keep being written — re-enabling those must
+   * never require a backfill.
+   */
   commissions: {
     /** Our platform cut charged to the buyer as a % of order value (e.g. 5 = 5%). */
     platformFeePercent: number;
@@ -1882,15 +1886,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     whatsappEnabled: false,
     dailyCeiling: { email: 80, whatsapp: 200, sms: 50 },
   },
-  emi: {
-    enabled: false,
-    minOrderValue: 10000,
-    tenureOptions: [2, 3, 4, 5, 6],
-    tokenPercent: 10,
-    billingDay: 5,
-    surchargePercentPerMonth: 1,
-    surchargeSellerSharePercent: 50,
-  },
+  /* `emi` removed 2026-11-12 with the feature — see the interface above. */
   commissions: {
     platformFeePercent: 5,
     gstPercent: 18,

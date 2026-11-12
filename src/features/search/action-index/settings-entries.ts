@@ -213,14 +213,20 @@ export const SITE_SETTINGS_ENTRIES: readonly SettingsIndexSource[] = [
     tab: "notifications",
     kind: "toggle",
   },
-  {
-    slug: "emi-threshold",
-    label: "EMI eligibility threshold",
-    description: "The order value above which instalments are offered.",
-    keywords: ["instalments", "installments", "emi minimum", "pay monthly"],
-    tab: "emi",
-    kind: "setting",
-  },
+  /*
+   * 🛑 `emi-threshold` REMOVED 2026-11-12 — the THIRD search surface found
+   * still advertising EMI after the feature was deleted, and the one no grep
+   * of the feature name would have caught: it keys off `tab: "emi"` and its
+   * discoverable text is *"instalments"* / *"pay monthly"*, never "EMI" as an
+   * identifier.
+   *
+   * ✅ It was surfaced by DELETING THE TYPE — `tab` is a union of live tab
+   * ids, so removing the EMI tab turned this row into a compile error. That is
+   * the argument for deleting a retired type rather than leaving it in place:
+   * the compiler then enumerates the remaining consumers for you. The two
+   * errors it produced were this row and the seed, both of which the
+   * identifier greps had missed.
+   */
   {
     slug: "gst-rates",
     label: "GST rates and HSN defaults",

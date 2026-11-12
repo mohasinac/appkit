@@ -104,10 +104,19 @@ import {
   siteSettingsGstFormSchema,
   type SiteSettingsGstFormValues,
 } from "../schemas/site-settings-gst-form";
-import {
-  siteSettingsEmiFormSchema,
-  type SiteSettingsEmiFormValues,
-} from "../schemas/site-settings-emi-form";
+/*
+ * 🛑 The EMI tab is DELETED (2026-11-12) along with
+ * `../schemas/site-settings-emi-form`. EMI is retired by owner decision and
+ * its modules are gone; this panel was the last thing still WRITING
+ * `siteSettings.emi`.
+ *
+ * ⚠ It was not merely cosmetic. The shop's `/api/admin/site` route parses a
+ * `.strict()` schema over a top-level allow-list, so every group this view
+ * emits must be on that list — meaning this panel was the reason `"emi"` had
+ * to stay writable. Deleting the producer is what lets the allow-list entry
+ * go; doing the allow-list first would have turned Save All into a 400.
+ * **Producer first, then the allow-list.**
+ */
 import {
   siteSettingsLegalFormSchema,
   type SiteSettingsLegalFormValues,
@@ -855,38 +864,17 @@ export function AdminSiteSettingsView({
     [procurementVisibilityFields, editMode, setProcurementFieldVisible, procurementFieldOrder, setProcurementFieldOrder],
   );
 
-  // ⑯ EMI — twelfth tab migrated to the Universal Template System,
-  // 2026-11-04. Seven useState calls collapsed into one combined object.
-  const [emiForm, setEmiForm] = React.useState<SiteSettingsEmiFormValues>({
-    emiEnabled: false, emiMinOrderValue: 10000, emiTenureOptionsText: "2,3,4,5,6",
-    emiTokenPercent: 20, emiBillingDay: 5,
-    emiSurchargePercentPerMonth: 2, emiSurchargeSellerSharePercent: 50,
-  });
-  const {
-    fields: emiVisibilityFields,
-    setVisible: setEmiFieldVisible,
-    fieldOrder: emiFieldOrder,
-    setFieldOrder: setEmiFieldOrder,
-  } = useFieldVisibility("admin-site-settings-emi");
-  const emiSections = React.useMemo(
-    () =>
-      buildSectionsFromSchema<SiteSettingsEmiFormValues>(siteSettingsEmiFormSchema, {
-        fieldVisibility: emiVisibilityFields,
-        editMode,
-        onToggleFieldVisibility: setEmiFieldVisible,
-        fieldOrder: emiFieldOrder,
-        onMoveField: (fieldName, neighborName) =>
-          setEmiFieldOrder(
-            swapFieldOrder(
-              emiFieldOrder,
-              resolveFields(siteSettingsEmiFormSchema).map((f) => f.name),
-              fieldName,
-              neighborName,
-            ),
-          ),
-      }),
-    [emiVisibilityFields, editMode, setEmiFieldVisible, emiFieldOrder, setEmiFieldOrder],
-  );
+  /*
+   * ⑯ EMI — tab DELETED 2026-11-12. The state, the field-visibility
+   * registration (`admin-site-settings-emi`) and the section builder all go
+   * with it.
+   *
+   * ⚠ The numbering of the surrounding tabs is left ALONE. Renumbering ⑰…
+   * would touch every comment below for no behavioural gain, and the circled
+   * digits are cross-referenced from the tab list — a gap reads as "something
+   * was removed here", which is accurate, where a silent renumber would make
+   * the two files disagree about which tab is which.
+   */
 
   // ⑰ GST — eleventh tab migrated to the Universal Template System,
   // 2026-11-04. Four useState calls collapsed into one combined object.
@@ -1929,15 +1917,12 @@ export function AdminSiteSettingsView({
       laborMaxHoursPerDay: s.laborRate?.maxHoursPerDay ?? 6,
     });
 
-    setEmiForm({
-      emiEnabled: s.emi?.enabled ?? false,
-      emiMinOrderValue: s.emi?.minOrderValue ?? 10000,
-      emiTenureOptionsText: (s.emi?.tenureOptions ?? [2, 3, 4, 5, 6]).join(","),
-      emiTokenPercent: s.emi?.tokenPercent ?? 20,
-      emiBillingDay: s.emi?.billingDay ?? 5,
-      emiSurchargePercentPerMonth: s.emi?.surchargePercentPerMonth ?? 2,
-      emiSurchargeSellerSharePercent: s.emi?.surchargeSellerSharePercent ?? 50,
-    });
+    /*
+     * 🛑 No `setEmiForm` — the EMI tab is deleted. A stored `settings.emi`
+     * block on an existing document is simply not READ any more, which is the
+     * correct shape for a retired feature: the field is ignored rather than
+     * migrated, and nothing re-writes it.
+     */
 
     setGstForm({
       gstEnabled: s.gst?.enabled ?? false,
@@ -2266,18 +2251,12 @@ export function AdminSiteSettingsView({
         platformShippingFixedMin: shippingForm.platformShippingFixedMin,
       },
       laborRate: { hourlyRate: procurementForm.laborHourlyRate, maxHoursPerDay: procurementForm.laborMaxHoursPerDay },
-      emi: {
-        enabled: emiForm.emiEnabled,
-        minOrderValue: emiForm.emiMinOrderValue,
-        tenureOptions: (emiForm.emiTenureOptionsText ?? "")
-          .split(",")
-          .map((v) => parseInt(v.trim(), 10))
-          .filter((v) => !isNaN(v) && v > 0),
-        tokenPercent: emiForm.emiTokenPercent,
-        billingDay: emiForm.emiBillingDay,
-        surchargePercentPerMonth: emiForm.emiSurchargePercentPerMonth,
-        surchargeSellerSharePercent: emiForm.emiSurchargeSellerSharePercent,
-      },
+      /*
+       * 🛑 No `emi:` group. THIS was the key that forced `"emi"` to stay on the
+       * consumer's writable allow-list, because `/api/admin/site` parses
+       * `.strict()` — a group emitted here and absent there is a 400 the admin
+       * reads as "save failed" with no indication of which field.
+       */
       gst: {
         enabled: gstForm.gstEnabled,
         gstin: (gstForm.gstin ?? "").trim().toUpperCase(),
@@ -2772,17 +2751,7 @@ export function AdminSiteSettingsView({
             />
           </TabsContent>
 
-          {/* ⑯ EMI — twelfth tab migrated to the Universal Template System. */}
-          <TabsContent value="emi">
-            <SectionForm<SiteSettingsEmiFormValues>
-              sections={emiSections}
-              values={emiForm}
-              onChange={(partial) => setEmiForm((prev) => ({ ...prev, ...partial }))}
-              onSubmit={() => undefined}
-              schema={siteSettingsEmiFormSchema}
-              hideActions
-            />
-          </TabsContent>
+          {/* ⑯ EMI — tab deleted 2026-11-12 with the feature. */}
 
           {/* ⑰ GST — eleventh tab migrated to the Universal Template System. */}
           <TabsContent value="gst">

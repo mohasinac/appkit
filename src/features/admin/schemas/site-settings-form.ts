@@ -156,14 +156,16 @@ export const siteSettingsFormSchema = z
       .passthrough()
       .optional(),
 
-    emi: z
-      .object({
-        surchargePercent: percent("EMI surcharge"),
-        surchargeSellerSharePercent: percent("Seller share"),
-        minOrderAmount: money("Minimum EMI order"),
-      })
-      .passthrough()
-      .optional(),
+    /*
+     * 🛑 `emi` REMOVED 2026-11-12 with the feature and its admin tab.
+     *
+     * ⚠ And it disagreed with the tab that wrote it, which is worth recording:
+     * this schema declared `surchargePercent` / `minOrderAmount` while the EMI
+     * form emitted `surchargePercentPerMonth` / `minOrderValue`. Only
+     * `.passthrough()` kept the save working — a validator that validated none
+     * of the three fields it named, for however long the two had been apart.
+     * Two definitions of one shape, drifting silently. Root Cause #42's shape.
+     */
 
     gst: z
       .object({

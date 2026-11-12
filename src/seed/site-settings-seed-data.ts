@@ -245,36 +245,27 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       upi_manual: { disabled: true },
     },
   },
-  emi: {
-    /*
-     * 🛑 OFF. Owner, 2026-11-11: *"emi is removed from the code as that is now
-     * built into the payment gateways"* — the bespoke instalment feature is
-     * superseded, and nothing may ship enabling it by default.
-     *
-     * ⚠ This is STAGE ONE of the removal, and it is deliberately the flag
-     * rather than the code. EMI touches 111 files across checkout, cart,
-     * pricing, API routes, schemas and jobs; deleting that in one sweep
-     * through the money path is how checkout breaks. The flag stops every new
-     * EMI plan immediately, at zero code risk, and lets the deletion proceed
-     * at a safe pace afterwards.
-     *
-     * ✅ Verified honoured rather than assumed: `checkEmiEligibility` returns
-     * `site_disabled` on `enabled: false`, and `groupEmiGate` — which the
-     * checkout action calls — refuses the order before any schedule is built.
-     * A config switch nothing reads is this repo's recurring defect, so the
-     * read path was traced before relying on it.
-     *
-     * The rest of this block is retained for the staged deletion and for any
-     * historical plan still being read. Owner confirmed there are none live.
-     */
-    enabled: false,
-    minOrderValue: 10000,
-    tenureOptions: [2, 3, 4, 5, 6],
-    tokenPercent: 10,
-    billingDay: 5,
-    surchargePercentPerMonth: 1,
-    surchargeSellerSharePercent: 50,
-  },
+  /*
+   * ✅ `emi` REMOVED 2026-11-12 — this is the LAST STAGE of the staged removal
+   * this block's own comment described, and it is worth recording that the
+   * staging worked exactly as written.
+   *
+   * The previous note called itself *"STAGE ONE … deliberately the flag rather
+   * than the code"*, on the reasoning that EMI touched 111 files across
+   * checkout, cart, pricing, routes, schemas and jobs, and that *"deleting
+   * that in one sweep through the money path is how checkout breaks."* The
+   * flag went first, the code came out in lanes afterwards, and by the time
+   * this row was deleted `settings.emi` had **zero readers in either repo**.
+   *
+   * It also retained the numbers *"for any historical plan still being read"*
+   * — which the 2026-11-12 ruling makes void: nothing has ever been ordered on
+   * this install, so there is no historical plan and never was. ⚠ **Check
+   * whether the data exists before designing to protect it.**
+   *
+   * 🛑 A seed row is a SHIPPED DEFAULT, not a fixture — leaving it would have
+   * re-created `settings.emi` on every reseed, including the authorised wipe,
+   * quietly restoring the field the code had just stopped understanding.
+   */
   socialLinks: {
     facebook: "",
     twitter: "",

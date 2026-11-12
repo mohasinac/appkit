@@ -136,12 +136,19 @@ export const SITE_SETTINGS_TABS = [
     description: "Labour rate and the defaults used to price inbound shipments.",
     keywords: ["labour rate", "labor", "import", "landed cost", "supplier"],
   },
-  {
-    id: "emi",
-    label: "⑯ EMI",
-    description: "Instalment plans: eligibility threshold, tenures and the surcharge split.",
-    keywords: ["instalments", "installments", "emi", "pay monthly", "finance"],
-  },
+  /*
+   * 🛑 ⑯ EMI REMOVED 2026-11-12 with the feature.
+   *
+   * ⚠ The `keywords` are the reason this entry could not simply be left in
+   * place as a harmless no-op: this list feeds the settings SEARCH, so
+   * "instalments" / "pay monthly" / "finance" would keep returning a tab that
+   * renders nothing. A search keyword is a promise — the same defect was found
+   * the same day on `/store/payout-settings`, whose omnibox keywords still
+   * advertised EMI after its toggle was deleted.
+   *
+   * The circled numbering of the tabs below is deliberately NOT shifted up;
+   * see the note in AdminSiteSettingsView.
+   */
   {
     id: "gst",
     label: "⑰ GST",
