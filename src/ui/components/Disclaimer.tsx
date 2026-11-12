@@ -117,13 +117,67 @@ export function Disclaimer({
 
   const body = resolvePublishedCopy(entry.body, publishedValues);
 
-  const content = (
+  /*
+   * ── EXPANDABLE: one line, then "More" (owner, 2026-11-12) ─────────────────
+   *
+   * Owner: *"let the disclaimer be expandable reads with one line start and
+   * more for expanding and reading all."*
+   *
+   * 🛑 `<details>`/`<summary>`, NOT a useState toggle. This file's own header
+   * says it in capitals — *"Safe in a Server Component. No hooks, no state …
+   * Do not add state here without checking every RSC call site (Root Cause
+   * #76)."* A client component here would force hydration onto every page
+   * carrying a disclaimer, which is most of them. `<details>` is native, works
+   * with no JS at all, is keyboard-operable and is announced by screen readers
+   * as an expandable region for free.
+   *
+   * 🛑 WARNING-TONE ENTRIES ARE NEVER COLLAPSED, and that is the whole
+   * judgement in this change. `tone: "warning"` is reserved — by the registry's
+   * own comment — for entries "where ignoring it has a consequence the user
+   * cannot undo". Hiding one behind a "More" affordance is precisely how a
+   * disclosure stops functioning as a disclosure: the user scrolls past a
+   * single line and never opens it. Collapsing is a READABILITY improvement for
+   * the quiet legal notes, not a licence to shorten a warning.
+   *
+   * ⚠ Collapsed is still DISCLOSED in the DOM — the full text ships in the
+   * HTML and is searchable and crawlable, which a JS-gated expander would not
+   * be. That distinction is what keeps this a presentation change rather than a
+   * legal one.
+   */
+  const COLLAPSE_OVER = 180;
+  const firstSentence = body.match(/^[\s\S]*?[.!?](\s|$)/)?.[0]?.trim();
+  const summary = entry.summary ?? firstSentence;
+  const collapsible =
+    entry.tone !== "warning" && !!summary && summary.length < body.length && body.length > COLLAPSE_OVER;
+
+  const heading = entry.heading && (
+    <Text size="xs" weight="semibold" transform="uppercase" color="muted">
+      {entry.heading}
+    </Text>
+  );
+
+  const content = collapsible ? (
     <Stack gap="xs">
-      {entry.heading && (
-        <Text size="xs" weight="semibold" transform="uppercase" color="muted">
-          {entry.heading}
+      {heading}
+      {/* Styling the marker is deliberate: the default triangle reads as a
+        * debug affordance in a legal note, and `list-none` + an explicit
+        * "More" is what the owner asked to see. */}
+      <details className="group">
+        <summary className="cursor-pointer list-none marker:content-['']">
+          <Text size="xs" color="muted" className="leading-relaxed">
+            {renderEmphasis(summary)}{" "}
+            <span className="underline group-open:hidden">More</span>
+            <span className="hidden underline group-open:inline">Less</span>
+          </Text>
+        </summary>
+        <Text size="xs" color="muted" className="mt-1 leading-relaxed">
+          {renderEmphasis(body)}
         </Text>
-      )}
+      </details>
+    </Stack>
+  ) : (
+    <Stack gap="xs">
+      {heading}
       <Text size="xs" color="muted" className="leading-relaxed">
         {renderEmphasis(body)}
       </Text>

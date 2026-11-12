@@ -68,6 +68,21 @@ export interface DisclaimerEntry {
   /** Short heading, when the surface renders one. Omit for inline notes. */
   heading?: string;
   /**
+   * ONE LINE shown before the reader expands (owner, 2026-11-12: *"one line
+   * start and more for expanding and reading all"*).
+   *
+   * Omit it and the renderer uses the body's FIRST SENTENCE, which is correct
+   * for most entries — these are written with the limit stated up front.
+   * Supply one only where the first sentence is context rather than the point.
+   *
+   * 🛑 It must still name the LIMIT or the EXCLUSION. A summary that reads
+   * "Please note the following" discloses nothing and turns the collapsed
+   * state into a hidden disclaimer — which is worse than not collapsing.
+   *
+   * ⚠ Ignored entirely for `tone: "warning"`: those never collapse.
+   */
+  summary?: string;
+  /**
    * The text. May contain `{{token}}`s resolved by `resolvePublishedCopy`.
    *
    * 🛑 Must name a limit or an exclusion — see rule 2 in the header. An entry
