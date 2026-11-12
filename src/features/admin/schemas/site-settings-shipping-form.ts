@@ -11,7 +11,7 @@
  * WHAT: Flat field names matching the component's own state, writing into
  *       THREE save-payload groups in `buildFullPayload()`:
  *         - `payment.{razorpayEnabled,phonepeEnabled,cashfreeEnabled,
- *           platformStoreId,upiManualEnabled,codEnabled,codMaxOrderValue,
+ *           platformStoreId,codEnabled,codMaxOrderValue,
  *           otpCheckoutThreshold}` (`platformStoreId` keeps its
  *           `.trim() || undefined` transform — see `buildFullPayload()`)
  *         - `shipping.{freeShippingThreshold,defaultCarrier,maxDeliveryRadius}`
@@ -85,10 +85,6 @@ export const siteSettingsShippingFormSchema = z.object({
   platformStoreId: annotate(z.string().trim().optional().or(z.literal("")), {
     section: "shipping", order: 4, row: "full", label: "Platform's own store ID",
     help: "The one store whose stock this business may collect payment for into its own account. LEAVE BLANK AND NO CART CAN BE PAID ONLINE: any cart holding another seller's items must be collected by a gateway that settles their share directly to them at capture (Cashfree Easy Split), because a non-splitting capture puts their money in this business's account first. Blank means every store counts as another seller's. e.g. store-your-official-slug.",
-  }),
-  upiManualEnabled: annotate(z.boolean(), {
-    section: "shipping", order: 5, row: "full", kind: "toggle",
-    label: "Manual UPI/bank transfer enabled",
   }),
   codEnabled: annotate(z.boolean(), {
     section: "shipping", order: 6, row: "full", kind: "toggle",

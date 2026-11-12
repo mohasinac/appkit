@@ -1291,7 +1291,6 @@ export const SITE_SETTINGS_FIELDS = {
     CASHFREE_ENABLED: "payment.cashfreeEnabled",
     /** The platform's own storeId. Unset ⇒ every store is third-party. */
     PLATFORM_STORE_ID: "payment.platformStoreId",
-    UPI_MANUAL_ENABLED: "payment.upiManualEnabled",
     COD_ENABLED: "payment.codEnabled",
   },
   COMMISSIONS: "commissions",

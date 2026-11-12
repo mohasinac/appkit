@@ -199,7 +199,6 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
      * default still protects an install that never configures it.
      */
     platformStoreId: PLATFORM_STORE_ID,
-    upiManualEnabled: true,
     codEnabled: true,
     otpCheckoutThreshold: 5000,
     /*

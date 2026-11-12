@@ -132,14 +132,6 @@ export const TOGGLE_CATALOG: ToggleCatalogEntry[] = [
     priority: 7,
   },
   {
-    id: "upi-manual-enabled",
-    dotPath: "payment.upiManualEnabled",
-    label: "Manual UPI/bank transfer enabled",
-    group: "payment",
-    keywords: ["payment", "manual", "upi", "bank transfer", "checkout"],
-    priority: 6,
-  },
-  {
     id: "emi-enabled",
     dotPath: "emi.enabled",
     label: "EMI (installments) enabled",

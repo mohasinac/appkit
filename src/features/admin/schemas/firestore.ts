@@ -792,7 +792,6 @@ export interface SiteSettingsDocument extends BaseDocument {
      * rule inheriting a default nobody chose.
      */
     platformStoreId?: string;
-    upiManualEnabled: boolean;
     codEnabled: boolean;
     /**
      * Cart total (rupees) ABOVE which cash on delivery is refused. Default
@@ -833,8 +832,8 @@ export interface SiteSettingsDocument extends BaseDocument {
      *
      * 🛑 A MAP keyed by an open slug, so enabling a method the code has never
      * heard of is a row rather than a release. The named booleans beside this
-     * (`codEnabled`, `phonepeEnabled`, `razorpayEnabled`, `cashfreeEnabled`,
-     * `upiManualEnabled`) are the LEGACY shape and are still honoured — see
+     * (`codEnabled`, `phonepeEnabled`, `razorpayEnabled`,
+     * `cashfreeEnabled`) are the LEGACY shape and are still honoured — see
      * `platformMethodRule` in `_internal/server/payments/method-gate.ts`,
      * which bridges them so this is additive and no existing admin screen or
      * stored document changes meaning.
@@ -1166,7 +1165,7 @@ export interface SiteSettingsDocument extends BaseDocument {
    * 2026-10-31 and is corrected below.
    *
    * It read: *"`buildFullPayload` writes `payment: { phonepeEnabled,
-   * upiManualEnabled, codEnabled, otpCheckoutThreshold }` — the WHOLE group,
+   * codEnabled, otpCheckoutThreshold }` — the WHOLE group,
    * from four pieces of form state — so any fifth key in there is silently
    * erased"*. Both halves were wrong. The key list was stale (it already wrote
    * `razorpayEnabled` and `codMaxOrderValue` too, and now `cashfreeEnabled`),
@@ -1854,7 +1853,6 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     razorpayEnabled: false,
     phonepeEnabled: false,
     cashfreeEnabled: false,
-    upiManualEnabled: true,
     codEnabled: true,
     codMaxOrderValue: COD_MAX_ORDER_VALUE_FALLBACK,
     otpCheckoutThreshold: 5000,

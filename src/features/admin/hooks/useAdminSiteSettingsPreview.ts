@@ -26,7 +26,6 @@ const FIELD_PATH_BY_SETTING_ID: Record<string, { read: (s: Record<string, any>) 
   "razorpay-enabled": { read: (s) => s.payment?.razorpayEnabled, default: false },
   "phonepe-enabled": { read: (s) => s.payment?.phonepeEnabled, default: false },
   "cashfree-enabled": { read: (s) => s.payment?.cashfreeEnabled, default: false },
-  "manual-payment-enabled": { read: (s) => s.payment?.upiManualEnabled, default: true },
   "cod-enabled": { read: (s) => s.payment?.codEnabled, default: true },
   "email-notifications": { read: (s) => s.notificationChannels?.email?.enabled, default: false },
   "daily-digest": { read: (s) => s.emailSettings?.dailyDigest?.enabled, default: false },

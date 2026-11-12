@@ -1109,7 +1109,7 @@ export function AdminSiteSettingsView({
   // commingling), and it would present as a completely successful checkout.
   const [shippingForm, setShippingForm] = React.useState<SiteSettingsShippingFormValues>({
     razorpayEnabled: false, phonepeEnabled: false, cashfreeEnabled: false,
-    platformStoreId: "", upiManualEnabled: true, codEnabled: true,
+        platformStoreId: "", codEnabled: true,
     freeShippingThreshold: 999, defaultCarrier: "custom", maxDeliveryRadius: 0,
     codMaxOrderValue: COD_MAX_ORDER_VALUE_FALLBACK, otpCheckoutThreshold: 5000,
     sellerShippingFixed: 0, platformShippingPercent: 10, platformShippingFixedMin: 0,
@@ -1126,7 +1126,6 @@ export function AdminSiteSettingsView({
         options: { defaultCarrier: CARRIER_OPTIONS },
         renderers: {
           phonepeEnabled: (props) => <AnchoredToggle id="setting-phonepe-enabled" {...props} />,
-          upiManualEnabled: (props) => <AnchoredToggle id="setting-manual-payment-enabled" {...props} />,
           codEnabled: (props) => <AnchoredToggle id="setting-cod-enabled" {...props} />,
         },
         fieldVisibility: shippingVisibilityFields,
@@ -1975,7 +1974,6 @@ export function AdminSiteSettingsView({
       phonepeEnabled: s.payment?.phonepeEnabled ?? false,
       cashfreeEnabled: s.payment?.cashfreeEnabled ?? false,
       platformStoreId: s.payment?.platformStoreId ?? "",
-      upiManualEnabled: s.payment?.upiManualEnabled ?? true,
       codEnabled: s.payment?.codEnabled ?? true,
       otpCheckoutThreshold: s.payment?.otpCheckoutThreshold ?? 5000,
       codMaxOrderValue: s.payment?.codMaxOrderValue ?? COD_MAX_ORDER_VALUE_FALLBACK,
@@ -2382,7 +2380,6 @@ export function AdminSiteSettingsView({
         phonepeEnabled: shippingForm.phonepeEnabled,
         cashfreeEnabled: shippingForm.cashfreeEnabled,
         platformStoreId: (shippingForm.platformStoreId ?? "").trim() || undefined,
-        upiManualEnabled: shippingForm.upiManualEnabled,
         codEnabled: shippingForm.codEnabled,
         codMaxOrderValue: shippingForm.codMaxOrderValue,
         otpCheckoutThreshold: shippingForm.otpCheckoutThreshold,

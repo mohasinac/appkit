@@ -57,16 +57,6 @@ import type { UserDocument } from "../../../features/auth/schemas/firestore";
  */
 const LEGACY_PLATFORM_TOGGLES: Readonly<Record<string, keyof NonNullable<SiteSettingsDocument["payment"]>>> = {
   cod: "codEnabled",
-  /*
-   * ⚠ `cash` KEPT in this bridge even though the method is retired
-   * (2026-11-11), and that is deliberate. The map's job is to honour what an
-   * admin ALREADY SET on the old screen, and some installs have
-   * `upiManualEnabled: false` stored. Removing the row would make that stored
-   * refusal stop being read — for a method that is disabled anyway, so the
-   * answer is the same, but a bridge that silently drops a stored kill switch
-   * is the wrong habit to leave in a file about ceilings.
-   */
-  cash: "upiManualEnabled",
   phonepe: "phonepeEnabled",
   razorpay: "razorpayEnabled",
   cashfree: "cashfreeEnabled",
