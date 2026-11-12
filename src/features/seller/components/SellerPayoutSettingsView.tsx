@@ -81,7 +81,6 @@ const payoutSettingsDraftSchema = z.object({
     section: "preferences", sectionLabel: "Preferences", order: 1, row: "quarter",
   }),
   minimumThreshold: annotate(z.string(), { section: "preferences", order: 2, row: "pair" }),
-  emiEnabled: annotate(z.boolean(), { section: "preferences", order: 3, row: "quarter" }),
   /*
    * How the seller types prices. Lives in PAYOUT settings, not the store
    * profile, because payout is what it actually changes: at 5% a ₹999
@@ -180,7 +179,6 @@ interface PayoutDraft {
   registeredAddress: string;
   autoPayout: boolean;
   minimumThreshold: string;
-  emiEnabled: boolean;
   pricesIncludeGst: boolean;
   supportsShippingProtection: boolean;
   supportsSaleProtection: boolean;
@@ -263,7 +261,6 @@ const DEFAULT_DRAFT: PayoutDraft = {
   registeredAddress: "",
   autoPayout: true,
   minimumThreshold: "",
-  emiEnabled: false,
   // Inclusive is the documented default — see StoreDocument.pricesIncludeGst.
   pricesIncludeGst: true,
   // OFF by default — matches StoreDocument, and absence must read as declined.
@@ -402,7 +399,6 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
           minimumThreshold: res?.data?.preferences?.minimumThreshold
             ? String(res.data.preferences.minimumThreshold)
             : "",
-          emiEnabled: res?.data?.emiEnabled ?? false,
           // Absent means inclusive, matching the schema default exactly.
           pricesIncludeGst: res?.data?.pricesIncludeGst ?? true,
           supportsShippingProtection: res?.data?.supportsShippingProtection ?? false,
@@ -440,7 +436,6 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
 
       const body = {
         ...methodFields,
-        emiEnabled: draft.emiEnabled,
         pricesIncludeGst: draft.pricesIncludeGst,
         supportsShippingProtection: draft.supportsShippingProtection,
         supportsSaleProtection: draft.supportsSaleProtection,
@@ -793,7 +788,7 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
     {
       id: "preferences",
       label: "Preferences",
-      fields: ["autoPayout", "minimumThreshold", "emiEnabled", "pricesIncludeGst", "supportsShippingProtection", "supportsSaleProtection", "advancedListingTypesEnabled"],
+      fields: ["autoPayout", "minimumThreshold", "pricesIncludeGst", "supportsShippingProtection", "supportsSaleProtection", "advancedListingTypesEnabled"],
       render: ({ values, onChange }) => (
         <Stack gap="md">
           <Heading level={3} className="mb-2">Payout Preferences</Heading>
@@ -819,18 +814,6 @@ export function SellerPayoutSettingsView({ apiBase = SELLER_ENDPOINTS.PAYOUT_SET
               Auto-payouts run every Monday for the previous week&apos;s settled orders. Manual payouts can be requested from the Payouts page at any time.
             </Text>
           </Div>
-          <Toggle
-            checked={values.emiEnabled}
-            onChange={(checked) => onChange({ emiEnabled: checked })}
-            label="Offer EMI financing on eligible orders"
-            disabled={busy}
-          />
-          <Text className="text-[var(--appkit-color-text-muted)]" size="sm">
-            Only shown to buyers when platform-wide EMI is also enabled and their
-            cart subtotal from your store exceeds the site&apos;s minimum order
-            value. Orders on an EMI plan hold your payout until every installment
-            is paid, unless you mark the item &quot;ship before EMI completes&quot;.
-          </Text>
           <Toggle
             checked={values.pricesIncludeGst}
             onChange={(checked) => onChange({ pricesIncludeGst: checked })}

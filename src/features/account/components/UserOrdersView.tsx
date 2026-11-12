@@ -64,12 +64,9 @@ const SORT_OPTIONS = [
 
 /**
  * Payment-method tabs — a THIRD axis, independent of the lane tabs above and
- * the lifecycle scope beside them.
- *
- * 🛑 EMI is not a lane and not a status, which is why it could not join
- * either existing control: `orderType` records how the order was WON
- * (standard / collector drop / offer) and the scope records where it IS. How it is
- * being PAID is orthogonal to both — a collector drop win can be on an EMI plan.
+ * the lifecycle scope beside them. `orderType` records how the order was WON
+ * (standard / collector drop / offer) and the scope records where it IS; how
+ * it is being PAID is orthogonal to both.
  *
  * Every id is exactly a stored `OrderDocument.paymentMethod` value, and
  * `paymentMethod` is `canFilter: true` in the orders SIEVE_FIELDS — checked
@@ -81,21 +78,20 @@ const SORT_OPTIONS = [
  * 🛑 MEASURED 2026-10-22 — this chip group was INERT, and the comment above it
  * explained why it should not have been while describing the wrong half.
  *
- * `buildFilters` emits `paymentMethod==emi` inside `filters`, and
- * `/api/user/orders` regex-extracts only `status==` and `orderType==` from
- * that string. Every other clause is silently dropped — so all three chips
+ * `buildFilters` emits `paymentMethod==cod` inside `filters`, and
+ * `/api/user/orders` regex-extracted only `status==` and `orderType==` from
+ * that string. Every other clause was silently dropped — so every chip
  * returned the buyer's ENTIRE order list while looking exactly like a working
  * filter. The note above was careful about the SIEVE allowlist (Root Cause
  * #62) and the route's own parser was the break, one layer earlier.
  *
- * 🛑 And "EMI plans" could not be a `paymentMethod` value any more regardless:
- * since 0f an instalment order's tender is `online` / `upi_manual` / `cash`,
- * so the id is now `emiEnabled`, refined in memory by the route alongside the
- * other two. `cod` and `online` stay real stored `paymentMethod` values.
+ * 🛑 Every id here must be a real stored `paymentMethod` value, which is
+ * why there are only two: `cod` (the fallback tender) and `online`. A chip
+ * keyed on anything else needs the route to special-case it, and a chip whose
+ * special case is removed silently becomes "show everything".
  */
 const PAYMENT_METHOD_TABS = [
   { id: "", label: "Any" },
-  { id: "emiEnabled", label: "EMI plans" },
   { id: "cod", label: "Cash on delivery" },
   { id: "online", label: "Paid online" },
 ] as const;
@@ -181,16 +177,8 @@ export function UserOrdersView({ onOrderClick, pageRegionCards = [] }: UserOrder
       [
         state.status ? sieveFilter("status", SIEVE_OP.EQ, state.status) : null,
         state.orderType ? sieveFilter("orderType", SIEVE_OP.EQ, state.orderType) : null,
-        /*
-         * 🛑 `emiEnabled` is NOT a `paymentMethod`, so it gets its own clause
-         * key — the route refines both in memory (see its note), and emitting
-         * `paymentMethod==emiEnabled` would be a filter for a value no order
-         * can hold.
-         */
         state.paymentMethod
-          ? state.paymentMethod === "emiEnabled"
-            ? sieveFilter("emiEnabled", SIEVE_OP.EQ, "true")
-            : sieveFilter("paymentMethod", SIEVE_OP.EQ, state.paymentMethod)
+          ? sieveFilter("paymentMethod", SIEVE_OP.EQ, state.paymentMethod)
           : null,
       ]
         .filter(Boolean)
