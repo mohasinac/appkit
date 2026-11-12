@@ -244,36 +244,91 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
   },
 };
 
+/**
+ * What an UNKNOWN listing type can do: as little as possible.
+ *
+ * ## 🛑 Why this exists
+ *
+ * `capabilityFor` used to be a bare index into the map. `ListingType` is a
+ * closed union, so the compiler believed that was total — but the argument
+ * arrives from a STORED Firestore value, and a stored slug this build has
+ * never seen (an older deploy reading newer config, a hand-edited document, a
+ * type added by config) indexes to `undefined`. The next property read then
+ * throws:
+ *
+ *     getCap(item).supportsShipping   // TypeError: undefined is not an object
+ *
+ * So the governing rule of this architecture — *unknown values DEGRADE, never
+ * throw* — was broken in the registry the architecture is named after, and the
+ * trigger is exactly what storing listing types as config does.
+ *
+ * ## 🛑 Why these particular values, and not `standard`'s
+ *
+ * Falling back to `standard` would be the dangerous kind of convenient: an
+ * unrecognised listing becomes freely purchasable, offerable and
+ * points-payable on the strength of a typo.
+ *
+ * Each field degrades to the side that REFUSES, except the two where `false`
+ * is itself the dangerous answer:
+ *
+ * - `supportsShipping: true` — a physical good misread as digital ships
+ *   nowhere and the buyer never gets an address form. Demanding an address we
+ *   might not need is recoverable; silently skipping fulfilment is not.
+ * - `requiresVendorVerified` / `requiresJurisdictionCheck: true` — these are
+ *   `requires*` gates, so `false` would SKIP a KYC or a regulated-goods check.
+ *   An unknown type is exactly when you want them on.
+ *
+ * Mirrors `UNKNOWN_METHOD_CAPABILITIES` in the payments registry, which
+ * already made this call correctly for payment methods.
+ */
+export const UNKNOWN_LISTING_TYPE_CAPABILITY: ListingTypeCapability = {
+  canAddToCart: false,
+  canBid: false,
+  supportsShipping: true,
+  requiresVendorVerified: true,
+  requiresJurisdictionCheck: true,
+  hasInstantFulfillment: false,
+  canMakeOffer: false,
+  acceptsPointsTender: false,
+  supportsSurpriseReveal: false,
+  supportsDeferredFulfilment: false,
+};
+
 export function capabilityFor(type: ListingType): ListingTypeCapability {
-  return LISTING_TYPE_CAPABILITIES[type];
+  // `?? UNKNOWN` and not a bare index: see above. The cast is deliberate —
+  // callers pass stored values, so the union is a claim, not a guarantee.
+  return (
+    LISTING_TYPE_CAPABILITIES[type] ??
+    UNKNOWN_LISTING_TYPE_CAPABILITY
+  );
 }
 
 export function canAddToCart(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].canAddToCart;
+  return capabilityFor(type).canAddToCart;
 }
 
 export function canBid(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].canBid;
+  return capabilityFor(type).canBid;
 }
 
 export function supportsShipping(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].supportsShipping;
+  return capabilityFor(type).supportsShipping;
 }
 
 export function requiresVendorVerified(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].requiresVendorVerified;
+  return capabilityFor(type).requiresVendorVerified;
 }
 
 export function requiresJurisdictionCheck(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].requiresJurisdictionCheck;
+  return capabilityFor(type).requiresJurisdictionCheck;
 }
 
 export function hasInstantFulfillment(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].hasInstantFulfillment;
+  return capabilityFor(type).hasInstantFulfillment;
 }
 
 export function canMakeOffer(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].canMakeOffer;
+  return capabilityFor(type).canMakeOffer;
 }
 
 /**
@@ -284,7 +339,7 @@ export function canMakeOffer(type: ListingType): boolean {
  * the table above — which is the entire point of the capability model.
  */
 export function acceptsPointsTender(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].acceptsPointsTender;
+  return capabilityFor(type).acceptsPointsTender;
 }
 
 /**
@@ -294,7 +349,7 @@ export function acceptsPointsTender(type: ListingType): boolean {
  * state is what actually gates cancellation and refunds.
  */
 export function supportsSurpriseReveal(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].supportsSurpriseReveal;
+  return capabilityFor(type).supportsSurpriseReveal;
 }
 
 /**
@@ -305,7 +360,7 @@ export function supportsSurpriseReveal(type: ListingType): boolean {
  * registry resolves both; call that, not this, at a fulfilment site.
  */
 export function supportsDeferredFulfilment(type: ListingType): boolean {
-  return LISTING_TYPE_CAPABILITIES[type].supportsDeferredFulfilment;
+  return capabilityFor(type).supportsDeferredFulfilment;
 }
 
 /**

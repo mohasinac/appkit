@@ -48,11 +48,49 @@ export const CATEGORY_CHECKOUT_RULES: Record<string, CategoryCheckoutRule> = {
 };
 
 /**
+ * The checkout rule for a listing type this build has never heard of.
+ *
+ * ## 🛑 Why `standard` was the wrong fallback
+ *
+ * `getListingRule` used to fall back to `CHECKOUT_RULES.standard`, which is
+ * `purchaseable: true`, `cartEligible: true`, `refundPolicy: { full, partial }`.
+ * So a stored slug this deploy does not recognise — an older build reading
+ * newer config, a hand-edited document, a type added by config — became
+ * **freely purchasable on the strength of a typo**, with a full refund policy
+ * attached.
+ *
+ * That is a degrade in the dangerous direction, on the money path. The
+ * governing rule is that unknown values degrade, and for `commerce` the
+ * conservative side is **refuse the operation**.
+ *
+ * ## ⚠ Note the asymmetry — refunds go the OTHER way
+ *
+ * Purchase refuses, but the refund policy stays **permissive**. Refusing a
+ * refund on an unrecognised type would punish a buyer for our configuration
+ * drift, and the conservative direction for a refund is to honour it. The two
+ * fields degrade opposite ways on purpose, which is exactly why a single
+ * blanket "unknown → false" would be wrong here.
+ */
+export const UNKNOWN_LISTING_RULE: ListingCheckoutRule = {
+  ...CHECKOUT_RULES.standard,
+  purchaseable: false,
+  cartEligible: false,
+  cartIneligibleHint:
+    "This listing is not available to buy right now. Please contact support if you think this is a mistake.",
+  // Deliberately NOT narrowed — see the asymmetry note above.
+  nonRefundable: false,
+  refundPolicy: { full: true, partial: true, partialGranularity: "item" },
+};
+
+/**
  * Lookup the checkout rule for a listing type. Every consumer that used to
  * inline `if (listingType === "X")` should call this instead.
+ *
+ * 🛑 An unrecognised type gets {@link UNKNOWN_LISTING_RULE}, which REFUSES.
+ * It must never fall back to `standard`; see that constant's docstring.
  */
 export function getListingRule(listingType: ListingType): ListingCheckoutRule {
-  return CHECKOUT_RULES[listingType] ?? CHECKOUT_RULES.standard;
+  return CHECKOUT_RULES[listingType] ?? UNKNOWN_LISTING_RULE;
 }
 
 /**
