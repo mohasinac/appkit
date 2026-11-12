@@ -10,3 +10,21 @@
 
 export { EditModeProvider, useEditMode } from "../_internal/client/edit-mode";
 export type { EditModeContextValue } from "../_internal/client/edit-mode";
+
+/*
+ * Where an inline edit affordance SENDS you — the owner's 2026-11-12 rule
+ * (homepage/support → admin panel · own listing → seller dashboard · others →
+ * nothing · admin → everything).
+ *
+ * Exported here rather than from `_internal/` so `audit-appkit-reexports`
+ * stays green, same as the provider above.
+ */
+export {
+  resolveEditTarget,
+  viewerCanUseEditMode,
+} from "../_internal/shared/edit-mode/resolve-edit-target";
+export type {
+  EditSubject,
+  EditTarget,
+  EditViewer,
+} from "../_internal/shared/edit-mode/resolve-edit-target";
