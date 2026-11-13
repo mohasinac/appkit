@@ -3170,6 +3170,17 @@ export async function createCheckoutOrderAction(
          forget to set, and no second source of truth about what a prize is. */
       isEventPrize: Boolean(preTxProductById.get(it.productId)?.eventPrize?.eventId),
       productTitle: it.productTitle,
+      /* How many units the buyer asked for — refused above the ticket's. */
+      quantity: it.quantity,
+      /*
+       * For a CEILING ticket (a generic prize, "anything under <configured
+       * value>").
+       *
+       * ⚠ The listing's NOMINAL worth, not its ₹0 checkout price. And an
+       * absent value REFUSES rather than matching, so omitting it here could
+       * only ever be stricter — never a way to re-open the catalogue.
+       */
+      itemValue: preTxProductById.get(it.productId)?.price,
     })),
     /*
      * 🛑 THE COUPON DOCUMENTS, NOT THE CART'S SNAPSHOT. `CartAppliedCoupon`

@@ -34,12 +34,40 @@ export interface PrizeGateItem {
   productTitle?: string;
   /** How many units the cart asks for. Absent ⇒ 1. */
   quantity?: number;
+  /**
+   * The listing's own value, for tickets that carry a ceiling.
+   *
+   * ⚠ Supplied by the caller rather than read here — this module is pure. 🛑
+   * An ABSENT value cannot satisfy a ceiling: a caller that forgets to pass it
+   * gets a refusal, never an unbounded match. The prize is ₹0 at checkout, so
+   * this is the listing's NOMINAL worth (what the win was "for"), not its
+   * price.
+   */
+  itemValue?: number;
 }
 
 /** A ticket the buyer has applied to this cart. */
 export interface PrizeGateTicket {
   /** Product ids this ticket entitles (`restrictions.applicableProducts`). */
   applicableProducts: readonly string[];
+  /**
+   * A VALUE CEILING instead of a fixed product set — for a generic prize.
+   *
+   * Owner: *"if in future we decide to do a more generic prize like anything
+   * from the listing store under 10k, then that is meaningful for them"*, and
+   * *"10k is a number I spouted, it has to be properly configured."*
+   *
+   * 🛑 A ticket with a ceiling entitles ANY prize listing at or under it, so
+   * `applicableProducts` may legitimately be empty on one. That is the ONLY
+   * case where empty is permitted — for every other ticket an empty product
+   * list means unscoped, which on ₹0 listings is the whole catalogue.
+   *
+   * ⚠ The ceiling is compared against the listing's OWN value, which the
+   * caller supplies per item. The gate never reads a product itself: it is a
+   * pure function and must stay one, so a caller that forgets the value gets
+   * a REFUSAL rather than a free pass.
+   */
+  maxItemValue?: number;
   /** Uids permitted to redeem (`restrictions.allowedUserIds`). */
   allowedUserIds?: readonly string[];
   /** How many units the win is worth. Absent ⇒ 1. */
@@ -91,9 +119,24 @@ export function refusedPrizeLines(input: PrizeGateInput): PrizeGateRefusal[] {
       continue;
     }
 
-    const entitling = input.tickets.filter((t) =>
-      t.applicableProducts.includes(item.productId),
-    );
+    /*
+     * A ticket entitles this line EITHER by naming it OR by covering its
+     * value. Two shapes, one predicate, so a generic prize and a fixed one
+     * cannot drift into two gates.
+     *
+     * 🛑 The ceiling arm requires BOTH a ceiling on the ticket AND a value on
+     * the item. A ticket with a ceiling and an item with no value is NOT a
+     * match — otherwise forgetting to pass `itemValue` would turn every
+     * ceiling ticket into a pass for the entire catalogue, which is the
+     * failure the whole gate exists to prevent.
+     */
+    const entitling = input.tickets.filter((t) => {
+      if (t.applicableProducts.includes(item.productId)) return true;
+      const ceiling = t.maxItemValue;
+      if (!Number.isFinite(ceiling) || (ceiling as number) <= 0) return false;
+      if (!Number.isFinite(item.itemValue)) return false;
+      return (item.itemValue as number) <= (ceiling as number);
+    });
 
     if (entitling.length === 0) {
       refusals.push({
@@ -148,7 +191,24 @@ export function refusedPrizeLines(input: PrizeGateInput): PrizeGateRefusal[] {
     const asked = Number.isFinite(item.quantity) && (item.quantity as number) > 0
       ? Math.floor(item.quantity as number)
       : 1;
-    const allowed = entitledQuantity(item.productId, input.tickets, input.buyerUserId);
+    /*
+     * 🛑 Derived from `entitling` — the tickets ALREADY matched above — not by
+     * re-matching. An earlier version called `entitledQuantity(productId, …)`,
+     * which matches by product id only, so a CEILING ticket (empty
+     * `applicableProducts`) always scored 0 and every generic prize was
+     * refused as over-entitlement. The ceiling arm was unusable and two
+     * assertions caught it.
+     *
+     * ⚠ And my comment at the time called that narrowing "deliberate", which
+     * was rationalising a bug rather than describing a decision. One predicate,
+     * evaluated once: the matching tickets are right here.
+     */
+    const allowed = entitling.reduce((max, t) => {
+      const q = Number.isFinite(t.claimQuantity) && (t.claimQuantity as number) > 0
+        ? Math.floor(t.claimQuantity as number)
+        : 1;
+      return q > max ? q : max;
+    }, 0);
     if (asked > allowed) {
       refusals.push({
         productId: item.productId,
@@ -187,6 +247,11 @@ export function entitledQuantity(
   if (!buyerUserId) return 0;
   let max = 0;
   for (const t of tickets) {
+    /* Same two-shape predicate as the gate. ⚠ The ceiling arm needs the
+       item value, which this signature does not take — so a ceiling ticket
+       is only counted when it NAMES the product. A caller wanting the
+       ceiling arm passes the value through `refusedPrizeLines`, which has
+       it. Deliberately narrower rather than silently permissive. */
     if (!t.applicableProducts.includes(productId)) continue;
     if (!(t.allowedUserIds?.length ?? 0)) continue;
     if (!t.allowedUserIds!.includes(buyerUserId)) continue;

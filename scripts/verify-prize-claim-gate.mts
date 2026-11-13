@@ -89,6 +89,54 @@ console.log("\n  ── a ticket for a DIFFERENT prize ──\n");
   check(r.length === 1, "a winner's ticket for ANOTHER prize does not unlock this one", "₹0 listings — a ticket must not escape its prize");
 }
 
+console.log("\n  ── the VALUE CEILING arm (generic prizes) ──\n");
+{
+  /* "anything from the listing store under <configured value>" */
+  const ceiling = { applicableProducts: [], allowedUserIds: [WINNER], claimQuantity: 1, maxItemValue: 2000 };
+  const under = { productId: "p-cheap", isEventPrize: true, itemValue: 1500 };
+  const over = { productId: "p-dear", isEventPrize: true, itemValue: 27750 };
+
+  check(
+    refusedPrizeLines({ items: [under], tickets: [ceiling], buyerUserId: WINNER }).length === 0,
+    "a ceiling ticket covers a listing UNDER it",
+    "applicableProducts may be empty on a ceiling ticket — the only such case",
+  );
+  check(
+    refusedPrizeLines({ items: [over], tickets: [ceiling], buyerUserId: WINNER }).length === 1,
+    "and refuses one OVER it",
+  );
+  const exact = { productId: "p-exact", isEventPrize: true, itemValue: 2000 };
+  check(
+    refusedPrizeLines({ items: [exact], tickets: [ceiling], buyerUserId: WINNER }).length === 0,
+    "the boundary is inclusive — 'under 2000' covers exactly 2000",
+    "stated so it is not silently flipped later",
+  );
+
+  /* 🛑 The dangerous omission. */
+  const noValue = { productId: "p-unknown", isEventPrize: true };
+  check(
+    refusedPrizeLines({ items: [noValue], tickets: [ceiling], buyerUserId: WINNER }).length === 1,
+    "🛑 a ceiling ticket against an item with NO VALUE is REFUSED",
+    "forgetting itemValue must not re-open the whole catalogue",
+  );
+
+  /* A ceiling of 0 or nonsense must not match anything. */
+  for (const bad of [0, -1, Number.NaN]) {
+    const t = { applicableProducts: [], allowedUserIds: [WINNER], maxItemValue: bad };
+    check(
+      refusedPrizeLines({ items: [under], tickets: [t], buyerUserId: WINNER }).length === 1,
+      `a ceiling of ${String(bad)} entitles nothing`,
+    );
+  }
+
+  /* And the ceiling does not bypass the OWNER check. */
+  check(
+    refusedPrizeLines({ items: [under], tickets: [ceiling], buyerUserId: OTHER }).length === 1,
+    "🛑 a ceiling ticket is still bound to its winner",
+    "the two restrictions are ANDed, not alternatives",
+  );
+}
+
 console.log("\n  ── entitled quantity ──\n");
 {
   check(entitledQuantity("prod-prize", [TICKET], WINNER) === 1, "a 1-unit ticket entitles 1");

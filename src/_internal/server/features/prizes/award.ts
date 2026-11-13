@@ -69,12 +69,19 @@ export interface IssueWinTicketsInput {
    * without re-authoring every promotion row"). A ticket's scope is therefore
    * "a set of ids" OR "anything up to a value", expressible from day one.
    *
-   * 🛑 BUT IT IS NOT YET ENFORCED, AND THAT IS WHY `issueWinTickets` REFUSES
-   * IT. A stored ceiling that nothing checks is worse than no ceiling: it
-   * reads as a restriction while permitting the entire catalogue, which on a
-   * claim path means any item at any price. Refusing to issue is the only
-   * honest state until the claim gate can read it — the declared-but-unwired
-   * defect, pre-empted rather than discovered.
+   * ✅ **NOW ENFORCED** by `refusedPrizeLines`, which matches a line EITHER by
+   * named product OR by this ceiling. Until it was, `issueWinTickets` REFUSED
+   * to issue against a ceiling at all — because a stored ceiling that nothing
+   * checks reads as a restriction while permitting the entire catalogue, which
+   * on a claim path is any item at any price.
+   *
+   * ⚠ That refusal is gone now that the reader exists. Keeping it would have
+   * been the mirror defect: a field the system can honour, refused by a guard
+   * nobody updated.
+   *
+   * 🛑 The gate's ceiling arm needs BOTH a ceiling here AND the listing's value
+   * at the call site. A ceiling ticket against an item with no value supplied
+   * is NOT a match — otherwise forgetting one argument re-opens the catalogue.
    *
    * 🛑 AND WHEN IT IS BUILT, THE NUMBER IS CONFIG — NEVER A CONSTANT. Owner,
    * 2026-11-13: *"10k is a number I spouted, it has to be properly
@@ -159,17 +166,6 @@ export async function issueWinTickets(
    * exists so it is not a migration later; issuing against it is blocked until
    * the claim gate can read it.
    */
-  if (input.maxItemValue !== undefined) {
-    serverLogger.error("[prize-award] refused: maxItemValue is not enforced yet", {
-      eventId: input.eventId,
-      maxItemValue: input.maxItemValue,
-    });
-    return {
-      issued: [],
-      failed: input.winnerUserIds.map((userId) => ({ userId, reason: "ceiling-not-enforced" })),
-    };
-  }
-
   const prizeIds = Array.from(new Set(input.prizeProductIds.filter(Boolean)));
   if (prizeIds.length === 0) {
     /* 🛑 Refuse rather than issue an unscoped ticket. An empty
@@ -230,6 +226,8 @@ export async function issueWinTickets(
           allowedUserIds: [userId],
           /* 🛑 The prize set, and nothing outside it. These listings are ₹0. */
           applicableProducts: prizeIds,
+          /* The ceiling arm, now ENFORCED by the purchase gate. */
+          ...(input.maxItemValue === undefined ? {} : { maxItemValue: input.maxItemValue }),
         },
         createdBy: input.awardedBy,
         eventId: input.eventId,
