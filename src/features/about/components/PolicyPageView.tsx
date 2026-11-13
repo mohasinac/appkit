@@ -18,6 +18,7 @@ import {
 } from "../../../_internal/shared/content/fragmented-paragraphs";
 import { AdminComposableRegion } from "../../dashboard/components/AdminComposableRegion";
 import type { DashboardCard } from "../../../_internal/shared/features/dashboard/recent-entry";
+import { buildPurchaseTermsSection } from "../purchase-terms";
 
 
 export type PolicyKey =
@@ -392,6 +393,48 @@ export async function PolicyPageView({
     // broken page. Every arm is non-empty today (asserted in
     // verify-payment-prose.mts) — this is the degrade, not the expectation.
     if (body) sections.push({ heading: disclosure.heading, body });
+  }
+
+  /*
+   * ── THE PURCHASE-TERMS CLAUSES, DERIVED FROM THE CONSENT RESOLVER ─────────
+   *
+   * 🛑 Why these have to be published at all. The checkout used to render the
+   * applicable clauses inline above the tick-box; that list was removed by
+   * owner decision, leaving a checkbox and two links. But the clauses are the
+   * HASH-VERIFIED CONSENT ARTEFACT — `hashPolicyClauses` digests them, the
+   * digest is stamped on every order, and the server gate refuses a checkout
+   * whose echo does not match. A consent record whose text a buyer cannot read
+   * anywhere is a signature on a document nobody published, so the text moves
+   * here.
+   *
+   * 🛑 DERIVED, NEVER COPIED. `buildPurchaseTermsSection` probes the same
+   * `resolveCheckoutPolicyClauses` the checkout offer and the server gate both
+   * call, and publishes the strings it hands back. There is no second copy of
+   * any clause to keep in step: an admin rewording one in Site Settings changes
+   * the hashed text and the published text in a single write.
+   *
+   * ⚠ A policy page has no cart and no chosen tender, so what is published is
+   * the SUPERSET — every clause this install could ask anyone to accept —
+   * introduced as applying per order rather than to all of them. The module
+   * builds that superset by probing the resolver, never by reimplementing its
+   * predicates.
+   *
+   * 🛑 Degrades to NOTHING, never to a throw. Unreadable or malformed settings
+   * return an empty clause list (the module logs and falls back to the shipped
+   * defaults first), and an empty list appends no section at all — the same
+   * shape as the payment disclosure's own `if (body)` guard above, and for the
+   * same reason: a heading with no prose reads as a broken page.
+   *
+   * 🛑 Typed `Partial<Record<PolicyKey, true>>` rather than an inline literal,
+   * exactly as `PAYMENT_DISCLOSURE` is: a mistyped policy key would otherwise
+   * compile, match nothing and silently never publish the clauses.
+   */
+  const PURCHASE_TERMS_POLICIES: Partial<Record<PolicyKey, true>> = {
+    terms: true,
+  };
+  if (PURCHASE_TERMS_POLICIES[policy]) {
+    const purchaseTerms = buildPurchaseTermsSection(settings);
+    if (purchaseTerms) sections.push(purchaseTerms);
   }
 
   // Derived from POLICY_META, so a newly added policy appears in every other
