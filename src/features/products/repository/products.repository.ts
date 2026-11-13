@@ -1786,6 +1786,22 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      */
     partGlossaryId: { canFilter: true, canSort: false },
     colourway: { canFilter: true, canSort: false },
+    /*
+     * 🛑 THE SAME TRAP, ONE FIELD OVER — and it was found by nearly falling
+     * into it. The event-prizes surface first reached for
+     * `productRepository.list()` with an `eventPrize.eventId` filter; the field
+     * was absent from this map, so `findField` would have returned undefined,
+     * the clause would have VANISHED, and a page scoped to one event's prizes
+     * would have rendered THE ENTIRE PUBLISHED CATALOGUE as that event's prize
+     * pool. Populated, plausible, wrong, and a 200.
+     *
+     * ⚠ A DOTTED path, which has precedent here (`metrics.productCount`,
+     * `validity.isActive`) and needs the matching composite index to exist
+     * before any sorted query against it will answer.
+     *
+     * `canSort: false`: it is identity, not an ordering anyone wants.
+     */
+    "eventPrize.eventId": { canFilter: true, canSort: false },
     isPromoted: { canFilter: true, canSort: true },
     isOnSale: { canFilter: true, canSort: false },
     price: { canFilter: true, canSort: true },

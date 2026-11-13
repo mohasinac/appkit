@@ -216,6 +216,33 @@ export interface ProductEventPrize {
   /** This listing's standing in that event — "Grand Prize", "Runner-up". */
   label?: string;
   /**
+   * Who may CLAIM this prize. Everyone can SEE it; only these uids can take it.
+   *
+   * Owner, 2026-11-13: *"all can see, only the winners can claim if multiple,
+   * and on the main shop only not from the events."*
+   *
+   * 🛑 A LIST, not a single `winnerUserId`. One prize can have several winners
+   * — a tier with three runners-up is one listing, three claimants — and a
+   * scalar would force a second prize row per person, duplicating the item and
+   * splitting its stock. The owner said "if multiple" precisely because that
+   * is the normal case.
+   *
+   * 🛑 VISIBILITY AND ENTITLEMENT ARE SEPARATE, DELIBERATELY. The prize is
+   * public (it is advertising); the claim is not. So this field gates an
+   * ACTION, never a render — a page that hid the prize from non-winners would
+   * also hide it from everyone the event is trying to attract.
+   *
+   * ⚠ Entitlement is enforced TWICE and the second is the real one: this list
+   * decides whether the claim affordance renders, and the claim coupon's
+   * `restrictions.allowedUserIds` decides whether it can be redeemed. A button
+   * is a hint; the coupon gate is the control. Anyone can reach the checkout
+   * URL by hand.
+   *
+   * Absent means nobody has won it yet — the prize shows with no claim
+   * affordance, which is the correct state for a running event.
+   */
+  winnerUserIds?: string[];
+  /**
    * Whether to advertise it on promotional surfaces.
    *
    * 🛑 Separate from `eventId`, and the separation is the point: a prize can
