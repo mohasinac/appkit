@@ -83,6 +83,20 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
   return (
     <Link
       /*
+       * 🛑 A FILTER, NOT A DESTINATION — superseding the note below.
+       *
+       * `browsePages.brands` is `false`, so `/brands/<slug>` 404s for everyone
+       * including admins (`guardBrowsePage` calls `notFound()` on the whole
+       * subtree). A tile pointing there is a dead link, and the visible
+       * consequence is not a 404 — it is an ABSENT BAND, because
+       * `HOMEPAGE_SECTION_BROWSE_PAGE` strips any section funnelling into a
+       * closed browse page. Same silent disappearance as the category band.
+       *
+       * ⚠ The reasoning below is still CORRECT about canonicalisation and is
+       * kept for the day R2 reopens those pages: when it does, this reverts to
+       * `BRAND_DETAIL` and the split-signal argument applies again.
+       *
+       * ── superseded, retained for R2 ──────────────────────────────────────
        * 🛑 BRAND_DETAIL, not CATEGORY_DETAIL.
        *
        * A brand IS a `categoryType: "brand"` row, so `/categories/brand-hasbro`
@@ -93,7 +107,7 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
        * `/brands/{slug}` is the one the sitemap advertises and the one the
        * brand page declares canonical.
        */
-      href={resolveSectionHref(ROUTES.PUBLIC.BRAND_DETAIL(brand.slug))}
+      href={resolveSectionHref(ROUTES.PUBLIC.PRODUCTS_BY_BRAND(brand.slug))}
       className="flex h-32 w-36 flex-col items-center justify-center gap-[var(--appkit-space-2)] rounded-xl border p-[var(--appkit-space-3)] shadow-sm transition-all hover:border-primary-300 hover:shadow-md border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] md:h-40"
     >
       {iconSrc || coverImage ? (

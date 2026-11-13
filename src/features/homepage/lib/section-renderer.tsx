@@ -329,7 +329,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
       return (
         <ShopByCategorySection
           title={cleanTitle(cfg?.title) || SECTION_TITLE.categories}
-          viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
+          viewMoreHref={ROUTES.PUBLIC.PRODUCTS}  /* `/categories` + `/brands` are CLOSED (404). The only browse surface R1 has is `/products`. */
           viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.categories}
           initialItems={sectionData.categories}
           limit={cfg?.maxCategories}
@@ -723,7 +723,7 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           title={cleanTitle(cfg?.title) || SECTION_TITLE.brands}
           subtitle={cfg?.subtitle}
           limit={cfg?.maxBrands || 12}
-          viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
+          viewMoreHref={ROUTES.PUBLIC.PRODUCTS}  /* `/categories` + `/brands` are CLOSED (404). The only browse surface R1 has is `/products`. */
           viewMoreLabel={cfg?.viewMoreLabel || VIEW_MORE_LABEL.brands}
           initialItems={sectionData.brands}
           cta={cfg?.cta}

@@ -80,7 +80,17 @@ function CategoryChip({ category }: { category: CategoryItem }) {
 
   return (
     <Link
-      href={resolveSectionHref(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))}
+      /*
+       * 🛑 A FILTER, NOT A DESTINATION. `CATEGORY_DETAIL` is `/categories/<slug>`,
+       * which 404s by decision (`browsePages.categories: false`), so every tile
+       * here used to be a dead link — and the consequence was not a broken link
+       * but an ABSENT SECTION: `HOMEPAGE_SECTION_BROWSE_PAGE` correctly strips a
+       * band that funnels into a closed browse page, so the whole category band
+       * silently stopped rendering. Four separate checks (API, renderer map,
+       * section `enabled`, Firestore index) all read green while the band was
+       * gone.
+       */
+      href={resolveSectionHref(ROUTES.PUBLIC.PRODUCTS_BY_CATEGORY(category.slug))}
       className={`${POSTER_CLASS.root} ${POSTER_CLASS.compact} w-full`}
     >
       {resolvedCover ? (

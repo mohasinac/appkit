@@ -79,6 +79,33 @@ export const DEFAULT_ROUTE_MAP = {
     BRANDS: "/brands",
     BRAND_DETAIL: (slug: string) => `/brands/${slug}`,
     /*
+     * ── A TAXONOMY AS A FILTER, NOT A DESTINATION ─────────────────────────
+     *
+     * 🛑 USE THESE, NOT `CATEGORY_DETAIL` / `BRAND_DETAIL`, on any surface
+     * that offers a taxonomy as a way to BROWSE.
+     *
+     * The four detail routes above 404 by decision — `browsePages.{categories,
+     * brands,franchises,stores}` are all `false`, and `guardBrowsePage` turns
+     * that into `notFound()` for the whole subtree. They are kept because the
+     * flag is reversible and R2 may reopen them; they are NOT a link target
+     * today.
+     *
+     * ⚠ The cost of getting this wrong is invisible rather than loud. A
+     * homepage section whose every tile points at a closed route is correctly
+     * stripped by `HOMEPAGE_SECTION_BROWSE_PAGE`, so the section simply does
+     * not render — no error, no warning, and the band looks "not built yet"
+     * rather than "pointing somewhere dead". That is exactly what happened to
+     * the category and brand bands, and it took four separate measurements
+     * (API, renderer map, section flag, index) to find, because every one of
+     * them was green.
+     *
+     * ✅ Verified against production 2026-11-13 that the filter is real, not
+     * decorative: `/products` → 12 listings, `?category=tops` → 7,
+     * `?category=does-not-exist` → 0.
+     */
+    PRODUCTS_BY_CATEGORY: (slug: string) => `/products?category=${encodeURIComponent(slug)}`,
+    PRODUCTS_BY_BRAND: (slug: string) => `/products?brand=${encodeURIComponent(slug)}`,
+    /*
      * FRANCHISE — what a collectible is FROM, where a brand is who MADE it.
      * Singular in the path because `CharacterHotspot` already ships eighteen
      * `/franchise/<slug>` links; matching them is what turns those 404s into

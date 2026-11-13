@@ -85,9 +85,40 @@ const HOMEPAGE_SECTION_CATEGORY_TYPE: Partial<Record<SectionType, CategoryType>>
  * gate that covers three of four reachable cases is the drift this codebase
  * keeps paying for (Root Cause #61).
  */
+/*
+ * ── 🛑 WHY `categories` AND `brands` ARE NO LONGER HERE (2026-11-13) ────────
+ *
+ * This map strips a homepage band that FUNNELS INTO a closed browse page, and
+ * that rule is right. What changed is where those two bands point.
+ *
+ * Their tiles used to link to `/categories/<slug>` and `/brands/<slug>`, which
+ * 404 by decision (`browsePages.*: false` → `guardBrowsePage` → `notFound()`
+ * on the whole subtree). So the gate correctly removed them, and the visible
+ * result was not a broken link — it was an ABSENT BAND. The homepage simply
+ * had no category or brand section, with nothing anywhere reporting why.
+ *
+ * ⚠ That silence is the expensive part, and it is worth recording how long it
+ * took: the API returned 6 roots, the renderer mapped the type, the section
+ * row was `enabled: true` at the right order, and the Firestore composite
+ * index was READY. FOUR green measurements, and the band still did not exist,
+ * because the one gate that mattered sat upstream of all of them.
+ *
+ * Under R1 a taxonomy is a FILTER, not a destination — so the tiles now point
+ * at `/products?category=…` and `/products?brand=…`, which are live and
+ * genuinely filter (verified on production: `/products` 12 listings,
+ * `?category=tops` 7, `?category=does-not-exist` 0). A band that advertises an
+ * OPEN surface must not be stripped for the state of a surface it no longer
+ * mentions.
+ *
+ * ✅ The protection is not lost. `gateHomepageSections` — the fourth gate —
+ * still walks the authored config and drops any section whose links all
+ * resolve to a closed path, so if these tiles ever point back at a closed
+ * route the band disappears again, on evidence rather than on a type name.
+ *
+ * 🛑 `stores` STAYS. R1 is single-vendor: there is no store directory, and a
+ * "filter by store" view of one store is not a thing a buyer wants.
+ */
 const HOMEPAGE_SECTION_BROWSE_PAGE: Partial<Record<SectionType, BrowsePageKey>> = {
-  categories: "categories",
-  brands: "brands",
   stores: "stores",
 };
 
