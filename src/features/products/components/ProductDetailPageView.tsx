@@ -1395,23 +1395,30 @@ export async function ProductDetailPageView({
                     </Row>
                   )}
                   {/*
-                    🛑 WHO PAYS the return freight — and the schema field it
-                    renders asked for this in writing: *"Must be DISCLOSED
-                    before purchase. A buyer who learns at RTO that they owe
-                    freight has been charged for something they never agreed
-                    to, which is a chargeback with a good story behind it."*
+                    ── WHO PAYS FOR A RETURN — MOVED TO CHECKOUT 2026-11-14 ───
 
-                    Here rather than on `/refund-policy`, for the reason rule 1
-                    of the registry gives: visible before the decision it
-                    qualifies. The decision is on this page.
+                    Owner: *"the return disclaimer is needed at the checkout,
+                    no need to show that on the details page."*
 
-                    ⚠ Inside the Delivery & Returns block deliberately, so it
-                    sits with "Returns accepted" / "Final sale" rather than
-                    below the fold as a separate legal slab. The rows above say
-                    WHETHER you can return; this says what it COSTS, which is
-                    the half a buyer never thinks to ask.
+                    🛑 MOVED, NOT DELETED, and the distinction is the whole
+                    point. `return-cost`'s registry note demands it be
+                    *"DISCLOSED before purchase — a buyer who learns at RTO
+                    that they owe freight has been charged for something they
+                    never agreed to."* Checkout is still before purchase, and
+                    it is nearer the decision than a browse page is, so the
+                    requirement is satisfied by the new location rather than
+                    waived.
+
+                    ⚠ Do NOT re-add it here as well. Two copies of one
+                    disclosure drift the moment the config behind it changes,
+                    and this block already carries the final-sale terms that a
+                    buyer needs while BROWSING. What it costs to send something
+                    back is a checkout-time fact.
+
+                    ⚠ `verify-return-cost-disclosure.mts` asserts the published
+                    wording follows `returnsBornBy`; its RENDER-location
+                    assertion now points at the checkout view.
                   */}
-                  <Disclaimer id="return-cost" inline />
                 </Stack>
                 </Details>
               )}

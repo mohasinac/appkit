@@ -442,7 +442,14 @@
   --appkit-gradient-accent-banner:    linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
   --appkit-gradient-promotion:        linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning));
   --appkit-gradient-spotlight:        linear-gradient(to bottom right, var(--appkit-color-info-surface), var(--appkit-color-bg), var(--appkit-color-info-surface));
-  --appkit-gradient-whatsapp-card:    linear-gradient(135deg, var(--appkit-color-whatsapp) 0%, var(--appkit-color-whatsapp-light) 48%, var(--appkit-color-whatsapp-dark) 100%);
+  /* 🛑 STARTS AT `whatsapp-light`, NOT `whatsapp`. The bright brand green
+     (#25D366) scores ~1.8:1 with white, and the first stop is exactly where the
+     heading and the CTA sit — so darkening only the middle stop left the
+     unreadable corner untouched. Measured, not assumed: that is precisely what
+     happened on the first attempt at this fix.
+     ⚠ `--appkit-color-whatsapp` is UNCHANGED and still the icon/badge colour;
+     it is simply not a text surface. */
+  --appkit-gradient-whatsapp-card:    linear-gradient(135deg, var(--appkit-color-whatsapp-light) 0%, var(--appkit-color-whatsapp-light) 45%, var(--appkit-color-whatsapp-dark) 100%);
   --appkit-gradient-glass:            linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent));
   --appkit-gradient-card-indigo:      linear-gradient(to bottom right, var(--appkit-color-primary-50), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-teal:        linear-gradient(to bottom right, var(--appkit-color-secondary-50), var(--appkit-color-surface), var(--appkit-color-surface));
@@ -578,7 +585,11 @@
   --appkit-gradient-accent-banner:   linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary));
   --appkit-gradient-promotion:       linear-gradient(to bottom right, var(--appkit-color-error), var(--appkit-color-primary), var(--appkit-color-warning));
   --appkit-gradient-spotlight:       linear-gradient(to bottom right, rgba(212,175,55,0.10), var(--appkit-color-bg), rgba(212,175,55,0.10));
-  --appkit-gradient-whatsapp-card:   linear-gradient(135deg, var(--appkit-color-whatsapp) 0%, var(--appkit-color-whatsapp-light) 48%, var(--appkit-color-whatsapp-dark) 100%);
+  /* Same fix as the light block — see the note there. ⚠ The two lines differed
+     by ONE SPACE of alignment, so a replace-all on the exact string updated
+     only one of them and left the DARK theme on the unreadable bright stop.
+     Whitespace is not cosmetic when it is load-bearing for a match. */
+  --appkit-gradient-whatsapp-card:   linear-gradient(135deg, var(--appkit-color-whatsapp-light) 0%, var(--appkit-color-whatsapp-light) 45%, var(--appkit-color-whatsapp-dark) 100%);
   --appkit-gradient-glass:           linear-gradient(to bottom right, color-mix(in srgb, var(--appkit-color-surface) 85%, transparent), color-mix(in srgb, var(--appkit-color-surface) 65%, transparent));
   --appkit-gradient-card-indigo:     linear-gradient(to bottom right, rgba(30,58,138,0.10), var(--appkit-color-surface), var(--appkit-color-surface));
   --appkit-gradient-card-teal:       linear-gradient(to bottom right, rgba(212,175,55,0.10), var(--appkit-color-surface), var(--appkit-color-surface));

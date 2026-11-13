@@ -622,7 +622,28 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
           // No `|| 5000` fallback: inventing a member count the site cannot
           // verify is a fabricated social-proof number.
           memberCount={cfg?.memberCount}
-          groupLink={cfg?.groupLink || "https://chat.whatsapp.com/"}
+          /*
+            🛑 FALLS BACK TO THE ENV INVITE, NOT TO THE BARE DOMAIN.
+            `"https://chat.whatsapp.com/"` is not a group — it is WhatsApp's
+            homepage. So an install that had not set `groupLink` rendered a
+            "Join the group" button that joined nothing, which is the dead-CTA
+            shape this repo keeps recording: an affordance that looks live and
+            goes nowhere.
+
+            ⚠ `NEXT_PUBLIC_WHATSAPP_GROUP_INVITE` is where the real invite
+            already lives and is what `constants/footer.tsx` already links to —
+            so the band was the ONLY surface not using it, and the two disagreed
+            on the same page.
+
+            ⚠ Undefined when neither is set, so the component can hide the CTA
+            rather than draw a broken one. A missing invite must cost the
+            button, never the page.
+          */
+          groupLink={
+            cfg?.groupLink?.trim() ||
+            process.env["NEXT_PUBLIC_WHATSAPP_GROUP_INVITE"]?.trim() ||
+            undefined
+          }
           benefits={cfg?.benefits ?? []}
           testimonial={cfg?.testimonial}
           buttonText={cfg?.buttonText}
