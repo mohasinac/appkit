@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { ROUNDED_MAP, type RoundedKey } from "./surface-tokens";
 
@@ -167,8 +168,48 @@ export function Details({
   className,
   style,
 }: DetailsProps) {
+  const ref = useRef<HTMLDetailsElement>(null);
+
+  /*
+   * 🛑 BEING THE #hash TARGET OPENS IT. Without this, a link to a collapsed
+   * disclosure scrolls the buyer to a closed box and makes them click again —
+   * measured exactly that way on the PDP: the "Final Sale" badge reached
+   * `#pdp-policies` at the right scroll offset with `open === false`.
+   *
+   * Owner, 2026-11-13: *"the tags auto explain themselves with proper focus
+   * and scroll to read."* Landing on a closed box is neither.
+   *
+   * ⚠ Browsers do NOT do this for `<details>`. The auto-reveal behaviour
+   * people remember is `hidden="until-found"`, which is a different mechanism
+   * — so relying on it would have looked right in a spec and failed in the
+   * product.
+   *
+   * 🛑 The SUMMARY is focused, not the panel: it is the real control, so a
+   * keyboard user lands somewhere they can act (Enter re-collapses) and a
+   * screen reader announces an expanded disclosure rather than loose prose.
+   * `preventScroll` because the browser's fragment scroll already placed it —
+   * focusing again would fight it and undo `scroll-mt`.
+   *
+   * Controlled instances are skipped: their `open` belongs to the caller, and
+   * forcing it here would silently overrule them.
+   */
+  useEffect(() => {
+    if (!id || open !== undefined) return;
+    const reveal = () => {
+      if (typeof window === "undefined" || window.location.hash !== `#${id}`) return;
+      const el = ref.current;
+      if (!el || el.open) return;
+      el.open = true;
+      el.querySelector("summary")?.focus({ preventScroll: true });
+    };
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
+  }, [id, open]);
+
   return (
     <details
+      ref={ref}
       id={id}
       open={open ?? defaultOpen}
       onToggle={(event) => {
