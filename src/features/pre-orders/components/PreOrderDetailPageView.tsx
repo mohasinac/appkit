@@ -193,7 +193,7 @@ function PreOrderInfoSection({
           conditionBroken: "For Parts",
           conditionRefurbished: "Refurbished",
           returnable: "Cancellable",
-          finalSale: "Final Sale",
+          finalSale: "Final Sale", eventPrize: "Event Prize",
           freeShipping: "Free Shipping",
           codAvailable: "Cash on Delivery",
                     wishlistCount: (n) => `${n} wishlisted`,

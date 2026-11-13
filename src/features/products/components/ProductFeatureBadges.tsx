@@ -15,6 +15,8 @@ interface ProductFeatureBadgeLabels {
   conditionRefurbished: string;
   returnable: string;
   finalSale: string;
+  /** Fallback when a prize carries no standing of its own. */
+  eventPrize: string;
   freeShipping: string;
   codAvailable: string;
   wishlistCount: (count: number) => string;
@@ -52,6 +54,12 @@ interface ProductFeatureBadgesProps {
    * Omitted → the badge stays plain text, exactly as before.
    */
   finalSaleHref?: string;
+  /**
+   * The prize block from the listing. Optional on every ordinary listing.
+   */
+  eventPrize?: { eventId: string; label?: string; showInPromotions?: boolean };
+  /** Where the prize badge points — normally the event on its own subdomain. */
+  eventPrizeHref?: string;
   labels: ProductFeatureBadgeLabels;
   formatCount?: (value: number) => string;
   categoryBadgeClassName?: string;
@@ -80,6 +88,8 @@ export function ProductFeatureBadges({
   codAvailable,
   codHref,
   finalSaleHref,
+  eventPrize,
+  eventPrizeHref,
   labels,
   formatCount,
   categoryBadgeClassName,
@@ -137,6 +147,33 @@ export function ProductFeatureBadges({
       colorClass: "text-primary",
       bgClass:
         "bg-primary/5 dark:bg-primary/10 border-primary/20 dark:border-primary/30",
+    });
+  }
+
+  /*
+   * ── EVENT PRIZE ───────────────────────────────────────────────────────────
+   *
+   * Owner, 2026-11-13: *"add event prize tag and event id to the listings, so
+   * they can be shown in the promotions."*
+   *
+   * 🛑 Gated on `showInPromotions`, NOT on the presence of `eventId`. A prize
+   * can be RECORDED against an event before it is ANNOUNCED, and linking the
+   * two must not publish it — see `ProductEventPrize`.
+   *
+   * ⚠ The label DEGRADES rather than disappearing: an entry whose `label` is
+   * missing still renders "Event Prize". The event itself is owned by another
+   * domain and is deliberately NOT fetched here, so this badge can never be
+   * blocked by that domain being unreachable.
+   */
+  if (eventPrize?.showInPromotions) {
+    badges.push({
+      key: "eventPrize",
+      icon: <Span size="xs">🏆</Span>,
+      label: eventPrize.label?.trim() || labels.eventPrize,
+      colorClass: "text-success dark:text-success",
+      bgClass:
+        "bg-success-surface dark:bg-success-surface border-success dark:border-success",
+      href: eventPrizeHref,
     });
   }
 

@@ -194,6 +194,38 @@ export interface ProductDigitalCodeMeta {
 // SB-UNI-K 2026-05-13 — Live-item listing fields (animals / plants).
 // `listingType:"live"` requires vendor verification + jurisdiction match
 // at add-to-cart. Carrier handoff is handled per-store (manual shipping).
+/**
+ * A listing that is a PRIZE for an event.
+ *
+ * 🛑 Being a prize does NOT change what the listing is. It stays an ordinary
+ * product row with its own price, stock and checkout path — the recorded
+ * design is explicit that *"a prize that is a listing is two flags on an
+ * existing row"*, claimed on the subdomain and **checked out through the
+ * shop's normal path**. So nothing here touches price, availability or the
+ * money path; it is a LABEL and a REFERENCE, and that is deliberate.
+ */
+export interface ProductEventPrize {
+  /**
+   * The event's document id, owned by the events subdomain.
+   *
+   * ⚠ Stored as an opaque id, never resolved here. Unknown or deleted events
+   * must DEGRADE — a prize badge whose event no longer exists renders the
+   * label alone rather than throwing or blanking the listing.
+   */
+  eventId: string;
+  /** This listing's standing in that event — "Grand Prize", "Runner-up". */
+  label?: string;
+  /**
+   * Whether to advertise it on promotional surfaces.
+   *
+   * 🛑 Separate from `eventId`, and the separation is the point: a prize can
+   * be RECORDED before it is ANNOUNCED. Collapsing the two would mean the act
+   * of linking a prize to an event publishes it, which is exactly the kind of
+   * surprise a config flag exists to prevent.
+   */
+  showInPromotions?: boolean;
+}
+
 export interface ProductLiveItemMeta {
   /** Species or cultivar name (taxonomic where applicable). */
   species: string;
@@ -649,6 +681,33 @@ export interface ProductDocument extends BaseDocument {
   digitalCode?: ProductDigitalCodeMeta;
   // SB-UNI-K 2026-05-13 — Live-item listing fields (animals / plants).
   liveItem?: ProductLiveItemMeta;
+  /**
+   * The event this listing is a PRIZE for.
+   *
+   * Owner, 2026-11-13: *"add event prize tag and event id to the listings, so
+   * they can be shown in the promotions."*
+   *
+   * 🛑 A NESTED BLOCK, not two loose columns, and not a `tags[]` entry.
+   * `tags` is free-form buyer-facing text — putting "diwali-prize" there makes
+   * the link a STRING MATCH, which is how a renamed tag silently unlinks a
+   * prize from its event. A declared block gives the relationship a shape, a
+   * dot path (`eventPrize.eventId`) that can be indexed when a query needs it,
+   * and one place to add `awardedAt`/`claimedBy` when prizes grow up.
+   *
+   * ⚠ `eventId` is a REFERENCE, exactly like `storeId` — the events subdomain
+   * OWNS the event, and this listing only names it. Nothing here reads event
+   * data directly; a surface that needs the event's title fetches it over
+   * HTTP. That is the microservice rule, and a denormalised `eventTitle` here
+   * would be a second copy to drift.
+   *
+   * ⚠ `label` exists because a prize's billing ("Grand Prize", "Runner-up")
+   * is a property of THIS listing's role in the event, not of the event — two
+   * listings can be prizes for one event with different standings.
+   *
+   * Absent on every ordinary listing, which is the overwhelming majority: an
+   * optional block costs nothing and adds no index.
+   */
+  eventPrize?: ProductEventPrize;
   // SB-UNI-L 2026-05-13 — Catalog/Offer split foundation slice. When set,
   // this ProductDocument is a "seller offer" linked to a shared
   // CatalogProductDocument row. The PDP aggregates all offers with the same

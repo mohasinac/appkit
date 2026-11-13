@@ -916,7 +916,7 @@ export async function ProductDetailPageView({
                   conditionBroken: "For Parts",
                   conditionRefurbished: "Refurbished",
                   returnable: "Returnable",
-                  finalSale: "Final Sale",
+                  finalSale: "Final Sale", eventPrize: "Event Prize",
                   freeShipping: "Free Shipping",
                   codAvailable: "Cash on Delivery",
                   wishlistCount: (n) => `${n} wishlisted`,

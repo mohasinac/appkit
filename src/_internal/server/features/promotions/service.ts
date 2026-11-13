@@ -54,6 +54,18 @@ export async function validateCoupon(
     }
   }
 
+  /*
+   * The per-user gate — ANDed with the role gate, never ORed. A prize coupon
+   * is bound to its WINNER, so a leaked code is worthless to anyone else.
+   * Reported as not-found for the same anti-oracle reason as above.
+   */
+  const allowedUserIds = coupon.restrictions?.allowedUserIds;
+  if (allowedUserIds && allowedUserIds.length > 0) {
+    if (!userId || !allowedUserIds.includes(userId)) {
+      throw new CouponNotFoundError(input.code);
+    }
+  }
+
   const now = Date.now();
   const startDate = coupon.validity?.startDate ? new Date(coupon.validity.startDate).getTime() : 0;
   const endDate = coupon.validity?.endDate ? new Date(coupon.validity.endDate).getTime() : Infinity;

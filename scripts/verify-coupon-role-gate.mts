@@ -99,6 +99,56 @@ console.log("\n  ── the REDEMPTION half: the gate's load-bearing properties 
   );
 }
 
+/*
+ * The PER-USER gate. This is what makes a prize coupon safe to hand out: the
+ * winner's uid, not possession of the code, is the control.
+ */
+console.log("\n  ── the per-user gate (prize coupons) ──\n");
+{
+  const repo = readFileSync(
+    join(import.meta.dirname, "..", "src", "features", "promotions", "repository", "coupons.repository.ts"),
+    "utf8",
+  );
+  const gate = /const allowedUserIds = coupon\.restrictions\?\.allowedUserIds;[\s\S]{0,360}?\n    \}/.exec(repo)?.[0] ?? "";
+
+  check(gate.length > 0, "the per-user gate exists in _fetchAndValidateCoupon");
+  check(
+    /!userId \|\| !allowedUserIds\.includes\(userId\)/.test(gate),
+    "a missing uid is REFUSED, not waved through",
+    "fail-closed, same as the role gate",
+  );
+  check(/Coupon not found/.test(gate), "refusal is reported as NOT FOUND (no oracle)");
+
+  /*
+   * 🛑 AND, never OR. If the two gates were ORed, naming a user id would
+   * WIDEN a role-restricted coupon instead of narrowing it — the exact
+   * inversion of what a restriction list means.
+   */
+  const roleIdx = repo.indexOf("const allowedRoles = coupon.restrictions?.allowedRoles;");
+  const userIdx = repo.indexOf("const allowedUserIds = coupon.restrictions?.allowedUserIds;");
+  const between = roleIdx >= 0 && userIdx > roleIdx ? repo.slice(roleIdx, userIdx) : "";
+  check(
+    roleIdx >= 0 && userIdx > roleIdx,
+    "both gates are present, role first",
+  );
+  check(
+    !/\|\|\s*$/m.test(between) && /return \{ ok: false/.test(between),
+    "the role gate RETURNS on failure — the two are ANDed, not ORed",
+    "an OR would make a user id widen a role restriction",
+  );
+
+  /* The service path carries the same gate, or one of two lanes is open. */
+  const svc = readFileSync(
+    join(import.meta.dirname, "..", "src", "_internal", "server", "features", "promotions", "service.ts"),
+    "utf8",
+  );
+  check(
+    /allowedUserIds/.test(svc),
+    "the server action path enforces it too",
+    "a gate on one of two validators is not a gate",
+  );
+}
+
 console.log("\n  ── the SESSION is the source of roles, never the request ──\n");
 {
   const route = readFileSync(

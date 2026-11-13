@@ -80,6 +80,25 @@ export interface RestrictionsConfig {
    * decorative.
    */
   allowedRoles?: string[];
+  /**
+   * User ids permitted to redeem this coupon. **Absent or empty means
+   * EVERYONE**, exactly like `allowedRoles`.
+   *
+   * 🛑 THIS IS WHAT MAKES A PRIZE COUPON A PRIZE. Owner, 2026-11-13: *"a
+   * winner gets the coupon, only to claim it… anyone can go to checkout with
+   * it, but only the person with the coupon can check it out."*
+   *
+   * A prize coupon is necessarily high-value — often the full price of the
+   * item it was won against — so possession of the CODE cannot be the control.
+   * Codes are shared, screenshotted and guessed. Binding the coupon to the
+   * winner's uid means a leaked code is worthless to anyone else, which is the
+   * only property that makes it safe to hand out at all.
+   *
+   * ⚠ ANDed with `allowedRoles`, never ORed: a coupon carrying both must
+   * satisfy both. OR would mean adding a user id WIDENS a role-restricted
+   * coupon, which is the opposite of what a restriction list is for.
+   */
+  allowedUserIds?: string[];
 }
 
 export interface CouponStats {

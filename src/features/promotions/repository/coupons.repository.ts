@@ -352,6 +352,30 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         return { ok: false, result: { valid: false, message: "Coupon not found" } };
       }
     }
+
+    /*
+     * ── THE PER-USER GATE — a PRIZE coupon's whole security model ───────────
+     *
+     * 🛑 ANDed with the role gate above, never ORed. A coupon carrying both
+     * must satisfy both; OR would mean naming a user WIDENS a role-restricted
+     * coupon, which inverts what a restriction list is for.
+     *
+     * `userId` here is the SESSION's uid — every caller resolves it from the
+     * cookie, never from the request body — so possession of the code grants
+     * nothing on its own. That is the point: a prize coupon is typically worth
+     * the full price of the item it was won against, and codes get shared,
+     * screenshotted and guessed. Binding to the winner is the only thing that
+     * makes handing one out safe.
+     *
+     * ⚠ Same "Coupon not found" wording as every other refusal, for the same
+     * reason: a distinct "this is not yours" confirms the code is real.
+     */
+    const allowedUserIds = coupon.restrictions?.allowedUserIds;
+    if (allowedUserIds && allowedUserIds.length > 0) {
+      if (!userId || !allowedUserIds.includes(userId)) {
+        return { ok: false, result: { valid: false, message: "Coupon not found" } };
+      }
+    }
     if (!isCouponValid(coupon)) {
       return { ok: false, result: { valid: false, coupon, message: "Coupon is not currently valid" } };
     }
