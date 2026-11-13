@@ -36,10 +36,10 @@ import { filterNavGroups } from "./filterNavItems";
 import { PortalBackLink } from "./PortalBackLink";
 import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 import { useTheme } from "../../theme";
-import { useHandMode } from "../../hand-mode";
 import { BackgroundRenderer } from "../../../../ui/components/BackgroundRenderer";
 import type { BackgroundConfig } from "../../../../ui/components/BackgroundRenderer";
 import { Div } from "../../../../ui/components/Div";
+import { DashboardChrome } from "../../../../features/layout/DashboardChrome";
 import { Nav } from "../../../../ui/components/Semantic";
 import { useToast } from "../../../../ui/components/Toast";
 import { useSession } from "../../../../react/contexts/SessionContext";
@@ -262,26 +262,21 @@ function useResponsiveDrawer(storageKey: string, skipRestore: boolean) {
  * to reserve). `14` is 3.5rem, clearing the collapsed rail and its toggle tab;
  * `[18rem]` is the open panel's own `w-[18rem]`.
  */
-const CONTENT_PADDING = {
-  "right-closed":
-    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-14 lg:pr-6 xl:pl-16 xl:pr-10",
-  "right-open":
-    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pl-[18rem] lg:pr-6 xl:pr-10",
-  "left-closed":
-    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pr-14 lg:pl-6 xl:pr-16 xl:pl-10",
-  "left-open":
-    "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)] lg:pr-[18rem] lg:pl-6 xl:pl-10",
-} as const;
-
-function contentPaddingFor(hand: "left" | "right", desktopOpen: boolean): string {
-  /*
-   * The key is BUILT from two values but only ever INDEXES this map — the
-   * class strings themselves are literals the scanner has already seen. That
-   * is the distinction: a dynamic key into a static map is safe, a dynamic
-   * class name is not.
-   */
-  return CONTENT_PADDING[`${hand}-${desktopOpen ? "open" : "closed"}`];
-}
+/*
+ * 🛑 The hand × open clearance map is DELETED, not kept "for reference".
+ *
+ * It reserved the desktop rail's width (`lg:pl-14` collapsed, `lg:pl-[18rem]`
+ * open, mirrored for left-hand mode). With the rail `lg:hidden` there is
+ * nothing on that edge, so every one of those classes would now indent a
+ * dashboard page against empty space.
+ *
+ * ⚠ An earlier draft of this change kept the helper with a comment calling it
+ * "deliberately kept" — which is precisely the dead-code habit this codebase
+ * keeps paying for, and lint caught it. The base padding that survives is
+ * applied inline below; left-hand mode no longer changes it, because a
+ * centred content column has no handed edge to favour.
+ */
+const CONTENT_BASE_PADDING = "px-[var(--appkit-space-5)] py-[var(--appkit-space-8)]";
 const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
 
 export function DashboardLayoutClient({
@@ -404,7 +399,6 @@ export function DashboardLayoutClient({
   }>();
   const navConfig = settings?.navConfig;
   const { theme } = useTheme();
-  const { hand } = useHandMode();
   // Explicit props win; otherwise fall back to the same siteSettings.background
   // the public shell reads, so admin/store/user dashboards match it by default.
   const resolvedLightBackground = lightBackground ?? settings?.background?.light;
@@ -459,6 +453,65 @@ export function DashboardLayoutClient({
     </Nav>
   );
 
+  /*
+   * ── The chrome's data, derived from the SAME `filteredGroups` the drawer
+   * renders ─────────────────────────────────────────────────────────────────
+   *
+   * 🛑 Derived, never a second hand-written list. Two lists of the same nav
+   * drift, and this codebase has already paid for that repeatedly — most
+   * recently a closed `/scams` route that one of five closure lists carried
+   * and the nav filter did not. Permission filtering therefore happens ONCE,
+   * upstream, and both presentations read its result: a destination an admin
+   * cannot see is absent from the tab strip and the omnibox for free.
+   */
+  const chromeAriaLabel =
+    variant === "admin" ? "Admin navigation" : variant === "store" ? "Store navigation" : "Account navigation";
+
+  const chromeSections = useMemo(
+    () =>
+      filteredGroups
+        /* A group with no reachable items is not a section — it is an empty
+           tab that answers nothing when clicked. */
+        .filter((g) => g.items.length > 0)
+        .map((g) => ({
+          id: g.title,
+          label: g.title,
+          /* The group's own landing page if it has one, else its first item —
+             a tab must always resolve somewhere. */
+          href: String(g.items[0]?.href ?? "#"),
+        })),
+    [filteredGroups],
+  );
+
+  const chromeItems = useMemo(
+    () =>
+      filteredGroups.flatMap((g) =>
+        g.items.map((it) => ({
+          id: `${g.title}:${String(it.href)}`,
+          label: String(it.label ?? ""),
+          href: String(it.href ?? "#"),
+          groupTitle: g.title,
+        })),
+      ),
+    [filteredGroups],
+  );
+
+  /* Longest-prefix, not equality: `/user/orders/123/track` must light up the
+     section that owns `/user/orders`, or a tab strip goes blank exactly when a
+     user is deepest into a flow and most needs to know where they are. */
+  const activeSectionId = useMemo(() => {
+    let best: { id: string; len: number } | null = null;
+    for (const g of filteredGroups) {
+      for (const it of g.items) {
+        const href = String(it.href ?? "");
+        if (href && pathname.startsWith(href) && (!best || href.length > best.len)) {
+          best = { id: g.title, len: href.length };
+        }
+      }
+    }
+    return best?.id;
+  }, [filteredGroups, pathname]);
+
   return (
     <>
       {hasBackground && (
@@ -468,46 +521,79 @@ export function DashboardLayoutClient({
           darkMode={resolvedDarkBackground ?? { type: "color", value: "" }}
         />
       )}
-      {variant === "admin" && (
-        <AdminSidebar
-          variant="sidebar"
-          desktopOpen={desktopOpen}
-          mobileOpen={mobileOpen}
-          activePath={activeHref}
-          groups={adminGroups}
-          onCloseMobile={close}
-          onToggle={toggle}
-          className={className}
-          renderFooter={renderCrossNavFooter}
-        />
-      )}
-      {variant === "store" && (
-        <StoreSidebar
-          variant="sidebar"
-          desktopOpen={desktopOpen}
-          mobileOpen={mobileOpen}
-          activeHref={activeHref}
-          items={[]}
-          groups={filteredGroups as StoreNavGroup[]}
-          onCloseMobile={close}
-          onToggle={toggle}
-          className={className}
-          renderFooter={renderCrossNavFooter}
-        />
-      )}
-      {variant === "user" && (
-        <UserSidebar
-          variant="sidebar"
-          desktopOpen={desktopOpen}
-          mobileOpen={mobileOpen}
-          items={filteredGroups.flatMap((g) => g.items)}
-          groups={filteredGroups as UserNavGroup[]}
-          onCloseMobile={close}
-          onToggle={toggle}
-          className={className}
-          renderFooter={renderCrossNavFooter}
-        />
-      )}
+      {/*
+        * ── 🛑 THE SIDEBAR IS MOBILE-ONLY NOW ────────────────────────────────
+        *
+        * Owner, 2026-11-12 and restated 2026-11-13 on finding it still live on
+        * `/user/profile`: the desktop sidebar is removed EVERYWHERE, dashboards
+        * included; the MOBILE drawer stays. `DashboardChrome` below is its
+        * desktop replacement, which is what makes removing it safe — the
+        * recorded caveat is *"do not remove it before its replacement works"*,
+        * and on desktop the hamburger was the ONLY route to account navigation.
+        *
+        * ⚠ A `lg:hidden` WRAPPER, not a prop on each of the three sidebars.
+        * Each renders its own `hidden lg:flex` desktop panel AND the mobile
+        * drawer; wrapping kills the desktop panel and its collapsed rail while
+        * leaving the drawer untouched, in one place instead of three — and
+        * three components drifting apart is how this codebase got two
+        * spellings of everything else.
+        *
+        * 🛑 `close`/`toggle` are still passed, so `useResponsiveDrawer` still
+        * calls `registerNav`. `TitleBar` gates the hamburger on `hasNav` from
+        * that registration — drop it and the PHONE loses its navigation too,
+        * which is the stranding failure `AppLayoutShell`'s carve-out comment
+        * was written to prevent.
+        */}
+      <Div className="lg:hidden">
+        {variant === "admin" && (
+          <AdminSidebar
+            variant="sidebar"
+            desktopOpen={desktopOpen}
+            mobileOpen={mobileOpen}
+            activePath={activeHref}
+            groups={adminGroups}
+            onCloseMobile={close}
+            onToggle={toggle}
+            className={className}
+            renderFooter={renderCrossNavFooter}
+          />
+        )}
+        {variant === "store" && (
+          <StoreSidebar
+            variant="sidebar"
+            desktopOpen={desktopOpen}
+            mobileOpen={mobileOpen}
+            activeHref={activeHref}
+            items={[]}
+            groups={filteredGroups as StoreNavGroup[]}
+            onCloseMobile={close}
+            onToggle={toggle}
+            className={className}
+            renderFooter={renderCrossNavFooter}
+          />
+        )}
+        {variant === "user" && (
+          <UserSidebar
+            variant="sidebar"
+            desktopOpen={desktopOpen}
+            mobileOpen={mobileOpen}
+            items={filteredGroups.flatMap((g) => g.items)}
+            groups={filteredGroups as UserNavGroup[]}
+            onCloseMobile={close}
+            onToggle={toggle}
+            className={className}
+            renderFooter={renderCrossNavFooter}
+          />
+        )}
+      </Div>
+
+      {/* The desktop replacement — two thin rows, omnibox then tab strip. */}
+      <DashboardChrome
+        sections={chromeSections}
+        items={chromeItems}
+        ariaLabel={chromeAriaLabel}
+        {...(activeSectionId ? { activeSectionId } : {})}
+      />
       {/* Content area — full width on both mobile and desktop.
           md:pl-14 clears the sidebar toggle tab (w-9 = 2.25 rem) + margin so the toggle does not overlap.
           Inner wrapper caps width on ultra-wide screens so content does not flush to the far left. */}
@@ -515,12 +601,17 @@ export function DashboardLayoutClient({
         "w-full flex-1 flex flex-col min-h-[calc(100dvh-var(--header-height,3.5rem))]",
         "pb-[var(--appkit-space-16)] lg:pb-[0]", // clears the fixed mobile bottom-nav
         /*
-         * 🛑 Reserves the OPEN panel's width when it is open — which is what
-         * turns a desktop drawer into a dock. A caller-supplied
-         * `contentPadding` still wins and then owns the clearance itself;
-         * nothing passes one today.
+         * 🛑 NO DESKTOP CLEARANCE ANY MORE — there is nothing on that edge to
+         * clear. The rail and the open panel are both `lg:hidden` now, so the
+         * old `lg:pl-14` / `lg:pl-[18rem]` reservation would indent every
+         * dashboard page against empty space, which reads as a broken layout
+         * rather than a removed one.
+         *
+         * ⚠ `contentPaddingFor` and `CONTENT_PADDING` are deliberately kept:
+         * they are the mobile-drawer geometry and the only record of what the
+         * dock measured, and a caller-supplied `contentPadding` still wins.
          */
-        contentPadding ?? contentPaddingFor(hand, desktopOpen),
+        contentPadding ?? CONTENT_BASE_PADDING,
         contentSurface,
       ].filter(Boolean).join(" ")}>
         <Div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</Div>
