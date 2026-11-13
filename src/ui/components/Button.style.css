@@ -189,13 +189,45 @@
   background: var(--appkit-color-primary-800);
 }
 
+/* 🛑 THE PRIMARY CTA'S FILL — the ramp rule applied to BACKGROUNDS, not ink.
+ *
+ * Owner, 2026-11-13: *"the colors are still not based on the background
+ * color… the reserve now gold button is still there."*
+ *
+ * This was `background: var(--appkit-color-secondary)` — #695617, the DARK end
+ * of the gold ramp — painted on a #020617 page. Measured in a browser on the
+ * live PDP:
+ *
+ *     Buy Now   bg #695617   vs page 2.83 : 1    ← the BUTTON is invisible
+ *               ink #fff     on bg  7.13 : 1     ← the TEXT was always fine
+ *
+ * ⚠ That split is why it survived every check, including mine. An ink-on-fill
+ * audit passes at 7.13; the defect is the FILL against the PAGE, which no
+ * ink-on-surface pair list contains. My earlier dark sweep deliberately
+ * rewrote only `color:` and said a background "is decorative and is not read"
+ * — wrong for a filled button, where the fill IS the control's shape.
+ *
+ * 🛑 And the hover was the tell: it resolved to `secondary-400`, far LIGHTER
+ * than the resting state, so the button lit up when pointed at and read as
+ * DISABLED the rest of the time. An affordance that only appears on hover is
+ * inverted — the same shape already recorded for hover ink, one property over.
+ *
+ * ✅ Resting takes the light rung and the ink INVERTS to the page colour, which
+ * is forced rather than chosen: white on #d6bb62 is 1.88 and would fail far
+ * worse than the bug being fixed. `--appkit-color-text-on-secondary` does not
+ * exist (it resolves to an empty string), so the page token is used directly —
+ * the same inversion the checkout's own inline CTA already does.
+ *
+ *     resting  bg #d6bb62  vs page 10.70 : 1   ink #020617 on it 10.02 : 1
+ *     hover    bg #e7d394  vs page 13.59 : 1   ink          12.72 : 1
+ */
 .dark .appkit-button.appkit-button--primary {
-  background: var(--appkit-color-secondary);
-  color: var(--appkit-color-text-on-primary);
+  background: var(--appkit-color-secondary-400);
+  color: var(--appkit-color-bg);
 }
 
 .dark .appkit-button.appkit-button--primary:hover:not(:disabled) {
-  background: var(--appkit-color-secondary-400);
+  background: var(--appkit-color-secondary-300);
 }
 
 /* Cascade fill foreground to all non-appkit-component children inside filled
