@@ -554,6 +554,9 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     saleProtectionFeeEnabled: true,
     saleProtectionFeePercent: 3,
     saleProtectionFeeMin: 49,
+    /* Order value covered with no add-on and no charge. Above it, protection
+       must be bought or the loss is not covered — owner, 2026-11-13. */
+    saleProtectionAutoCoverLimit: 2000,
     sellerShippingFixed: 0,
     platformShippingPercent: 0,
     platformShippingFixedMin: 0,

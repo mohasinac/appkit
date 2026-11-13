@@ -1031,6 +1031,30 @@ export interface SiteSettingsDocument extends BaseDocument {
     /** Sale protection fee: max(saleProtectionFeeMin, subtotal × saleProtectionFeePercent / 100). */
     saleProtectionFeePercent: number;
     saleProtectionFeeMin: number;
+    /**
+     * Order value covered automatically, with no add-on and at no charge.
+     * Above it, protection must be bought or the loss is not covered.
+     *
+     * Owner, 2026-11-13: *"items are covered automatically till 2k and more is
+     * the addon needed… if it is more than a threshold show the insurance is
+     * advised else loss won't be covered by the seller or platform."*
+     *
+     * 🛑 CONFIG, NOT A CONSTANT. This is the number most likely to move — it
+     * is a commercial judgement about how much loss the platform will absorb,
+     * and it will be revisited the first time a courier loses something
+     * expensive. A constant here means that revision is a release, which is
+     * exactly the deploy test this project is built around failing.
+     *
+     * ⚠ Compared against the ORDER's goods value, not the line price: a cart
+     * of ten ₹500 items is a ₹5,000 parcel to a courier, and the parcel is
+     * what gets lost. Comparing per item would leave the most valuable
+     * shipments uncovered precisely because each piece looked cheap.
+     *
+     * 🛑 Absent must read as 0 — NOT as "everything is covered". An unreadable
+     * config promising free cover on every order is the money-path direction
+     * this codebase refuses everywhere else (`unknown → false`).
+     */
+    saleProtectionAutoCoverLimit: number;
     sellerShippingFixed: number;
     platformShippingPercent: number;
     platformShippingFixedMin: number;
@@ -1916,6 +1940,10 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     saleProtectionFeeEnabled: true,
     saleProtectionFeePercent: 3,
     saleProtectionFeeMin: 49,
+    /* ₹2,000 covered automatically; above it the add-on is advised. CONFIG —
+       a commercial judgement about absorbed loss, revisited the first time a
+       courier loses something expensive. */
+    saleProtectionAutoCoverLimit: 2000,
     sellerShippingFixed: 0,
     platformShippingPercent: 10,
     platformShippingFixedMin: 0,
