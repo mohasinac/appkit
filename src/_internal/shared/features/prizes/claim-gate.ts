@@ -32,6 +32,8 @@ export interface PrizeGateItem {
   isEventPrize: boolean;
   /** For the message only — never part of the decision. */
   productTitle?: string;
+  /** How many units the cart asks for. Absent ⇒ 1. */
+  quantity?: number;
 }
 
 /** A ticket the buyer has applied to this cart. */
@@ -55,7 +57,7 @@ export interface PrizeGateInput {
 export interface PrizeGateRefusal {
   productId: string;
   productTitle?: string | undefined;
-  reason: "no-ticket" | "ticket-not-yours" | "unidentified-buyer";
+  reason: "no-ticket" | "ticket-not-yours" | "unidentified-buyer" | "over-entitlement";
   message: string;
 }
 
@@ -128,6 +130,34 @@ export function refusedPrizeLines(input: PrizeGateInput): PrizeGateRefusal[] {
         reason: "ticket-not-yours",
         message: "This winning ticket belongs to a different account.",
       });
+      continue;
+    }
+
+    /*
+     * ── HOW MANY THE WIN IS WORTH ───────────────────────────────────────
+     *
+     * ⚠ Checked HERE rather than in a second mechanism. An earlier draft
+     * documented CLAMPING the quantity instead — rejected because silently
+     * reducing 3 to 1 on a FREE item reads as a bug, and a buyer who meant to
+     * claim three cannot tell whether the other two failed or were never
+     * allowed. Refusing with the entitled number says exactly what happened.
+     *
+     * 🛑 And one gate, not two: a quantity rule living somewhere else is the
+     * drift this codebase keeps closing.
+     */
+    const asked = Number.isFinite(item.quantity) && (item.quantity as number) > 0
+      ? Math.floor(item.quantity as number)
+      : 1;
+    const allowed = entitledQuantity(item.productId, input.tickets, input.buyerUserId);
+    if (asked > allowed) {
+      refusals.push({
+        productId: item.productId,
+        productTitle: item.productTitle,
+        reason: "over-entitlement",
+        message: allowed === 1
+          ? "Your winning ticket covers 1 of this prize."
+          : `Your winning ticket covers ${allowed} of this prize.`,
+      });
     }
   }
 
@@ -137,10 +167,14 @@ export function refusedPrizeLines(input: PrizeGateInput): PrizeGateRefusal[] {
 /**
  * How many units of a prize a buyer's ticket entitles.
  *
- * ⚠ Separate from the refusal check on purpose: a buyer holding a valid ticket
- * for 1 unit who puts 3 in the cart is not an intruder, they have simply asked
- * for more than they won. The caller clamps the quantity rather than refusing
- * the line, which is the difference between a correction and a dead end.
+ * Used BY `refusedPrizeLines` for the over-entitlement refusal, and exported so
+ * a UI can show "covers N" without duplicating the arithmetic.
+ *
+ * ⚠ This comment previously said *"the caller clamps the quantity rather than
+ * refusing the line"* — which was true of an earlier draft and became FALSE
+ * when the check moved into the gate. Left as a note because a doc comment that
+ * describes behaviour the code no longer has is the drift this codebase keeps
+ * closing, and it survived one review here.
  *
  * Absent `claimQuantity` ⇒ 1. 🛑 Never unlimited: an unspecified quantity on a
  * ₹0 item is the same hole as no ticket at all.

@@ -243,6 +243,19 @@ export interface ProductEventPrize {
    */
   winnerUserIds?: string[];
   /**
+   * When the claim window closes — a SNAPSHOT of the ticket’s own expiry.
+   *
+   * 🛑 Stamped at award time so the claim BUTTON agrees with the TICKET.
+   * Without it the control draws years later, the buyer clicks, and
+   * `validateCoupon` refuses the expired ticket deep inside checkout — the
+   * dead affordance this codebase keeps producing.
+   *
+   * ⚠ ABSENT READS AS CLOSED, never as open-ended. A prize awarded before this
+   * field existed must not stay claimable forever, which is precisely what the
+   * owner asked to make impossible.
+   */
+  claimWindowEndsAt?: Date;
+  /**
    * When the event CLOSED — a snapshot, stamped by the same admin action that
    * records `winnerUserIds`.
    *

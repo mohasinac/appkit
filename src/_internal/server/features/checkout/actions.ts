@@ -201,6 +201,7 @@ import { PAYMENT_METHOD_LABEL } from "../../../shared/checkout/rules/payment-gat
  */
 import { amountDueNow } from "../../../shared/checkout/order-math";
 import { resolveAutoCover } from "../../../shared/features/protection/auto-cover";
+import { refusedPrizeLines } from "../../../shared/features/prizes/claim-gate";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
@@ -3140,6 +3141,76 @@ export async function createCheckoutOrderAction(
         platformStoreId: siteSettings?.payment?.platformStoreId,
       })
     : null;
+
+  /*
+   * ── THE PRIZE GATE — a ₹0 prize needs its win ticket ──────────────────────
+   *
+   * Owner, 2026-11-13: *"the prizes are 0 only, but a claim on it needs that
+   * coupons as win ticket"* and *"else it is blocked from purchase."*
+   *
+   * 🛑 HERE, BESIDE THE PAYMENT CEILING, AND BEFORE ANY STOCK IS TOUCHED. Same
+   * position and same reasoning: a refusal after a reservation has to undo it,
+   * and the undo is the part that breaks.
+   *
+   * 🛑 WITHOUT THIS CALL THE WHOLE PRIZE FEATURE IS DECORATION. The badge, the
+   * Prizes tab, the claim panel and the ticket issuance only advertise or
+   * authorise — none of them stops a purchase, and a prize listing is priced
+   * ₹0. Anyone with the URL could check one out for nothing, repeatedly, until
+   * the stock was gone.
+   *
+   * ⚠ The coupon's own `allowedUserIds` does NOT cover this. That refuses a
+   * non-winner REDEEMING a ticket; it has nothing to say about a buyer who
+   * presents NO ticket at all, which is exactly the hole — a ₹0 item needs no
+   * discount to be worth taking.
+   */
+  const prizeRefusals = refusedPrizeLines({
+    items: cartItems.map((it) => ({
+      productId: it.productId,
+      /* A listing IS a prize when it carries the block — no extra flag to
+         forget to set, and no second source of truth about what a prize is. */
+      isEventPrize: Boolean(preTxProductById.get(it.productId)?.eventPrize?.eventId),
+      productTitle: it.productTitle,
+    })),
+    /*
+     * 🛑 THE COUPON DOCUMENTS, NOT THE CART'S SNAPSHOT. `CartAppliedCoupon`
+     * carries code, amount, scope and the item ids it was priced against — by
+     * design, because that is all the PRICING needs. It does NOT carry
+     * `restrictions`, and denormalising them onto the cart would be worse than
+     * a read: a ticket revoked or re-scoped after it was applied would live on
+     * in a stale snapshot, and the one thing an entitlement must not be is a
+     * cached copy of itself.
+     *
+     * ⚠ Bounded: a cart carries at most a handful of coupons, and this runs
+     * once per checkout on a path that is already doing reads.
+     */
+    tickets: await (async () => {
+      const applied = cart.appliedCoupons ?? [];
+      if (applied.length === 0) return [];
+      const docs = await Promise.all(
+        applied.map((c) =>
+          c.couponId
+            ? couponsRepository.findById(c.couponId).catch(() => null)
+            : couponsRepository.getCouponByCode(c.code).catch(() => null),
+        ),
+      );
+      /* ⚠ An unreadable coupon contributes NO entitlement rather than being
+         skipped silently — `refusedPrizeLines` then refuses the prize line,
+         which is the fail-closed direction. */
+      return docs.filter(Boolean).map((d) => ({
+        applicableProducts: d!.restrictions?.applicableProducts ?? [],
+        allowedUserIds: d!.restrictions?.allowedUserIds ?? [],
+        claimQuantity: (d as { claimQuantity?: number }).claimQuantity,
+      }));
+    })(),
+    buyerUserId: uid,
+  });
+
+  if (prizeRefusals.length > 0) {
+    throw Object.assign(
+      new ValidationError(prizeRefusals[0]!.message),
+      { code: "PRIZE_TICKET_REQUIRED" },
+    );
+  }
 
   assertPaymentMethodAllowed(cartItems, preTxProductById, paymentMethod, {
     /*

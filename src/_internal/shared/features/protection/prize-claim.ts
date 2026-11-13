@@ -34,6 +34,26 @@ export interface PrizeClaimInput {
    * handing out a prize is to wait.
    */
   eventEndsAt?: Date | string | number | undefined;
+  /**
+   * When the claim window closes — the ticket's own expiry.
+   *
+   * Owner, 2026-11-14: *"make sure that there is a gate, say 7 or 10 days or 15
+   * days I can set, so that no one can claim something after 2-3 years"* and
+   * *"same like expirations."*
+   *
+   * 🛑 THE AFFORDANCE MUST NOT OUTLIVE THE TICKET. Without this the button
+   * still draws three years later, the buyer clicks it, and `validateCoupon`
+   * refuses the expired ticket somewhere deep in checkout. That is the dead
+   * affordance this codebase keeps producing — a control that looks live,
+   * fails elsewhere, and explains nothing. The window is checked HERE so the
+   * page says "claims closed" instead.
+   *
+   * ⚠ `undefined` means NO WINDOW RECORDED, which is NOT "open forever". A
+   * prize awarded before the window existed, or an award action that forgot to
+   * stamp it, must not become permanently claimable — the exact state the
+   * owner asked to make impossible. Treated as CLOSED.
+   */
+  claimWindowEndsAt?: Date | string | number | undefined;
   /** Clock, injected so this is testable without faking global time. */
   now: number;
 }
@@ -45,6 +65,8 @@ export type PrizeClaimState =
   | "not-awarded"
   /** Ended and awarded, viewer is not a winner (or is signed out). */
   | "not-yours"
+  /** The claim window has closed — the ticket is expired or was never dated. */
+  | "claim-window-closed"
   /** Ended, awarded, and this viewer won. */
   | "claimable";
 
@@ -104,6 +126,35 @@ export function resolvePrizeClaim(input: PrizeClaimInput): PrizeClaimDecision {
         winners.length === 1
           ? "This prize has been awarded to its winner."
           : `This prize has been awarded to ${winners.length} winners.`,
+    };
+  }
+
+  /*
+   * ── THE CLAIM WINDOW — checked LAST, and only for the winner ─────────────
+   *
+   * 🛑 Deliberately AFTER the winner test. A passer-by must not be told
+   * "claims closed" on a prize that was never theirs: that leaks the award
+   * state of an event to someone with no stake in it, and it is not the
+   * sentence they need anyway. Only the person who COULD have claimed is told
+   * that they no longer can.
+   *
+   * ⚠ An ABSENT window reads as CLOSED, never as open-ended. A prize awarded
+   * before this field existed, or an award action that forgot to stamp it,
+   * must not be claimable forever — which is exactly what the owner asked to
+   * make impossible: *"no one can claim something after 2-3 years."*
+   *
+   * ⚠ This duplicates no logic. The ticket's real expiry is its coupon
+   * `validity.endDate`, enforced by `validateCoupon`; this reads the same
+   * instant stamped on the prize so the BUTTON agrees with the TICKET. Without
+   * it the control draws, the buyer clicks, and the refusal surfaces deep in
+   * checkout — the dead affordance this codebase keeps producing.
+   */
+  const windowEndsAt = toTime(input.claimWindowEndsAt);
+  if (windowEndsAt === undefined || input.now > windowEndsAt) {
+    return {
+      state: "claim-window-closed",
+      canClaim: false,
+      reason: "The claim window for this prize has closed.",
     };
   }
 
