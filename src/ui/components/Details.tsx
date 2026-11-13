@@ -202,9 +202,39 @@ export function Details({
       el.open = true;
       el.querySelector("summary")?.focus({ preventScroll: true });
     };
+    /*
+     * 🛑 `hashchange` ALONE IS NOT ENOUGH, and this is the part that was wrong
+     * on the first attempt.
+     *
+     * The badge is a `TextLink` → `next/link`, so clicking it is a CLIENT-SIDE
+     * navigation that updates the URL through `history.pushState` — and
+     * **pushState does not fire `hashchange`**. The listener was correct, the
+     * event simply never arrived: measured in a browser as `location.hash ===
+     * "#pdp-policies"`, right scroll offset, and `open === false`.
+     *
+     * ⚠ It would have worked with a plain `<a>`, which is exactly why reading
+     * the code was not enough to catch it — the bug lives in the interaction
+     * between the primitive and the router, not in either one.
+     *
+     * So a capture-phase click listener covers in-app links, and `hashchange`
+     * still covers a pasted URL, a back/forward step and a full page load.
+     * Cheap: one comparison against a string, only on anchors.
+     */
+    const onClick = (e: MouseEvent) => {
+      const anchor = (e.target as Element | null)?.closest?.("a");
+      if (anchor?.getAttribute("href") === `#${id}`) {
+        /* After the router has moved, so the scroll it performs still wins. */
+        setTimeout(reveal, 0);
+      }
+    };
+
     reveal();
     window.addEventListener("hashchange", reveal);
-    return () => window.removeEventListener("hashchange", reveal);
+    document.addEventListener("click", onClick, true);
+    return () => {
+      window.removeEventListener("hashchange", reveal);
+      document.removeEventListener("click", onClick, true);
+    };
   }, [id, open]);
 
   return (
