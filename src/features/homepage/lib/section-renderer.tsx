@@ -639,6 +639,27 @@ const SECTION_REGISTRY: Record<SectionType, SectionDef> = {
             rather than draw a broken one. A missing invite must cost the
             button, never the page.
           */
+          /*
+            🛑 THE ENV FALLBACK BELOW CANNOT FIRE IN appkit, AND THE REASON IS
+            WORTH MORE THAN THE LINE: Next inlines `NEXT_PUBLIC_*` only for DOT
+            access (`process.env.X`). appkit sets
+            `noPropertyAccessFromIndexSignature`, which FORCES
+            `process.env["X"]` — and bracket notation is not statically
+            replaced, so it reads `undefined` in the bundle.
+
+            ⚠ Measured: with the fallback in place the CTA rendered with NO
+            href at all. It is kept only because a consumer that DOES use dot
+            access can still benefit, and because removing it would invite the
+            next person to add it back.
+
+            ✅ The real source is `config.groupLink` on the section document,
+            which is what the seed file already prescribes: the invite "must
+            not be committed to a seed file that ships in the package", and a
+            previous env indirection "was NOT reaching production — the live
+            document had no `groupLink` at all, so the section showed 'Join the
+            community' with the button silently missing." Both databases now
+            carry it.
+          */
           groupLink={
             cfg?.groupLink?.trim() ||
             process.env["NEXT_PUBLIC_WHATSAPP_GROUP_INVITE"]?.trim() ||
