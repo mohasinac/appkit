@@ -4,7 +4,7 @@
 }
 
 .dark .appkit-price-display__price {
-  color: var(--appkit-color-primary-400);
+  color: var(--appkit-color-primary-300);
 }
 
 .appkit-price-display__price--compact {

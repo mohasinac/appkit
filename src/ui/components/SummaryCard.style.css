@@ -76,5 +76,5 @@
 }
 
 .dark .appkit-summary-card__total-value {
-  color: var(--appkit-color-primary);
+  color: var(--appkit-color-primary-300);
 }

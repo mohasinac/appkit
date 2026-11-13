@@ -28,7 +28,7 @@
 }
 
 .dark .appkit-rating-display__star--active {
-  color: var(--appkit-color-primary);
+  color: var(--appkit-color-primary-300);
 }
 
 .appkit-rating-display__star--inactive {

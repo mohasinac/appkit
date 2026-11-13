@@ -62,5 +62,5 @@
 }
 
 .dark .appkit-active-filter-chips__clear {
-  color: var(--appkit-color-primary-400);
+  color: var(--appkit-color-primary-300);
 }

@@ -238,7 +238,7 @@
 }
 
 .dark .appkit-color--accent {
-  color: var(--appkit-color-primary-400);
+  color: var(--appkit-color-primary-300);
 }
 
 .dark .appkit-color--warning {
@@ -285,7 +285,7 @@
 /* `.appkit-caption--default` reads `--appkit-color-text-faint`, which already
  * inverts per theme; this override pinned it back to a fixed grey in dark. */
 .dark .appkit-caption--accent {
-  color: var(--appkit-color-primary-400);
+  color: var(--appkit-color-primary-300);
 }
 
 .dark .appkit-caption--inverse {

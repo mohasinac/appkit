@@ -56,7 +56,7 @@
 }
 
 .dark .appkit-breadcrumb__link:hover {
-  color: var(--appkit-color-primary-400);
+  color: var(--appkit-color-primary-300);
 }
 
 /*

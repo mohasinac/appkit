@@ -35,7 +35,7 @@
 }
 
 .dark .appkit-view-toggle__button--active {
-  color: var(--appkit-color-primary);
+  color: var(--appkit-color-primary-300);
   background: color-mix(in srgb, var(--appkit-color-primary) 14%, transparent);
   border-color: color-mix(in srgb, var(--appkit-color-primary) 35%, transparent);
 }
