@@ -27,6 +27,8 @@ import { productRepository } from "../../../../features/products/repository/prod
 import { serverLogger } from "../../../../monitoring/server-logger";
 import { normalizeError } from "../../../../errors/normalize";
 import { issueWinTickets, type IssuedWinTicket } from "./award";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
+import { userRepository } from "../../../../features/auth/repository/user.repository";
 
 export interface AwardPrizeInput {
   /** Every prize listing this win entitles. */
@@ -123,6 +125,49 @@ export async function awardPrize(input: AwardPrizeInput): Promise<AwardPrizeResu
         serverLogger.error("[prize-award] winner stamp failed", { productId, kind: e.kind });
         stampFailed.push(productId);
       }
+    }
+  }
+
+  /*
+   * ── TELL THE WINNER ───────────────────────────────────────────────────────
+   *
+   * Owner, 2026-11-13: *"send the coupon via email."*
+   *
+   * 🛑 AFTER the ticket exists, never before. An email naming a code that was
+   * not issued is worse than no email — the winner tries it, checkout refuses
+   * it, and support has nothing to look up. Only `issued` is notified, and a
+   * ticket that was `alreadyIssued` is notified again on purpose: a re-run is
+   * usually someone chasing a winner who did not receive the first one.
+   *
+   * ⚠ Failures here do NOT fail the award. The entitlement is the ticket; the
+   * email is delivery. Losing the message leaves a claimable prize the winner
+   * can still find on their coupons page, whereas failing the award over a mail
+   * problem would discard a correctly issued entitlement.
+   *
+   * ⚠ Sent per winner, never as one message to all of them — a prize with
+   * three winners must not disclose the other two to each.
+   */
+  for (const t of issued) {
+    try {
+      const user = await userRepository.findById(t.userId).catch(() => null);
+      const revealed = user ? userRepository.revealUser(user) : null;
+      await sendNotification({
+        userId: t.userId,
+        type: "system",
+        title: "You won a prize",
+        message:
+          `Your winning ticket is ${t.code}. Claim it before ` +
+          `${claimWindowEndsAt.toLocaleDateString("en-IN")} — after that the claim window closes.`,
+        ...(revealed?.email ? { userEmail: revealed.email } : {}),
+      } as never);
+    } catch (err) {
+      const e = normalizeError(err);
+      /* ⚠ The CODE is never logged — it is an entitlement, and logs are read
+         by more people than the winner. */
+      serverLogger.warn("[prize-award] could not notify a winner", {
+        userId: t.userId,
+        kind: e.kind,
+      });
     }
   }
 

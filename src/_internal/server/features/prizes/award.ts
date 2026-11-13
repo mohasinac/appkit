@@ -160,11 +160,15 @@ export async function issueWinTickets(
   const failed: Array<{ userId: string; reason: string }> = [];
 
   /*
-   * 🛑 REFUSE A CEILING NOTHING ENFORCES. See `maxItemValue` — a stored
-   * ceiling with no reader reads as a restriction while permitting the whole
-   * catalogue, which on a claim path is any item at any price. The shape
-   * exists so it is not a migration later; issuing against it is blocked until
-   * the claim gate can read it.
+   * ✅ The ceiling IS enforced now — `refusedPrizeLines` matches a line either
+   * by named product or by `maxItemValue`, so issuing against it is permitted.
+   *
+   * 🛑 The rule that got it here stands and is the reason this comment is kept:
+   * a stored ceiling with no reader reads as a restriction while permitting the
+   * whole catalogue — on a claim path, any item at any price. Issuing against
+   * `maxItemValue` was REFUSED until the gate could read it. If the gate's
+   * ceiling arm is ever removed, this refusal comes back; it does not become
+   * optional because the field already exists.
    */
   const prizeIds = Array.from(new Set(input.prizeProductIds.filter(Boolean)));
   if (prizeIds.length === 0) {

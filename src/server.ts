@@ -3023,3 +3023,15 @@ export type { PublicSurfaceCounts } from "./_internal/server/features/products/s
  * `audit-appkit-reexports` correctly blocks. Add one only if a consumer
  * genuinely needs to trigger a rollup from outside appkit.
  */
+
+/*
+ * Event prizes — the public read + projection, moved out of the shop so a
+ * second install does not reimplement the projection that keeps
+ * winnerUserIds and seller PII off a public response.
+ */
+export {
+  EVENT_PRIZE_DISPLAY_CAP,
+  toPublicEventPrize,
+  readPublicEventPrizes,
+} from "./_internal/server/features/prizes/public-prizes";
+export type { PublicEventPrizeCard } from "./_internal/server/features/prizes/public-prizes";

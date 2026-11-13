@@ -8,6 +8,15 @@ export type { CouponHelpDetailsProps } from "./CouponHelpDetails";
 export { CouponsIndexListing } from "./CouponsIndexListing";
 export type { CouponsIndexListingProps } from "./CouponsIndexListing";
 export {
+  EventPrizeLabel,
+  resolveEventPrizeLabel,
+  EVENT_PRIZE_FALLBACK_LABEL,
+} from "./EventPrizeLabel";
+export type {
+  EventPrizeLabelProps,
+  PublicEventPrizeTag,
+} from "./EventPrizeLabel";
+export {
   PromotionsView,
   PromotionsViewProductSection,
   PromotionsHero,
