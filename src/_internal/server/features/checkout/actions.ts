@@ -205,8 +205,9 @@ import { refusedPrizeLines } from "../../../shared/features/prizes/claim-gate";
 import { loadPrizeTickets, resolvePrizeWaiver } from "../prizes/resolve-waiver";
 import { billableUnitsFor } from "../../../shared/features/prizes/fee-waiver";
 import {
+  INHERIT,
+  override,
   resolveFreeDeliveryThreshold,
-  resolveGroupFreeDeliveryThreshold,
 } from "../../../shared/features/shipping/free-delivery";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
@@ -656,26 +657,20 @@ export async function resolveShippingCost(
     /** A real carrier rate, when one was obtained. `null` = none available. */
     carrierRate?: number | null;
     /**
-     * The STRICTEST `product.shipping.freeAbove` across this group's lines,
-     * from `resolveGroupFreeDeliveryThreshold`. Omitted means no line sets one,
-     * so the store's value stands.
+     * The group's ALREADY-RESOLVED free-delivery threshold.
      *
-     * ⚠ Resolved by the caller because only it knows the group's lines — and
-     * passed already-combined so this function never has to decide how several
-     * listings in one parcel reconcile.
-     */
-    listingFreeAbove?: number;
-    /**
-     * `siteSettings.shipping.minOrderForFree` — the platform default, used only
-     * when neither the listing nor the store sets one.
+     * 🛑 ONE VALUE, NOT A HIERARCHY. Owner, 2026-11-14: *"why do you need 3
+     * values… no need for so many fields."* An earlier draft threaded the
+     * listing, store and platform numbers through here, which meant every
+     * caller had to know the whole chain and every future config would add
+     * another parameter to this signature. The chain is resolved ONCE, by the
+     * caller that has the lines, through `resolveConfigChain` — this function
+     * receives the answer.
      *
-     * 🛑 A DEFAULT, NEVER A CEILING. This project's config precedence gives the
-     * platform both a hard ceiling and a soft floor, and collapsing them is
-     * what makes a kill switch overridable. Free delivery has no ceiling arm: a
-     * seller spending their own margin on carriage needs no permission. If a
-     * ceiling is ever wanted it is a SECOND field, not this one reinterpreted.
+     * Omitted leaves the store policy's own `freeAbove` untouched, so this is
+     * additive for every existing caller.
      */
-    platformFreeAbove?: number;
+    freeAbove?: number;
   },
 ): Promise<{
   shippingFee: number;
@@ -868,12 +863,12 @@ export async function resolveShippingCost(
    * cart's lines are known; absent lines leave the store value untouched, so
    * this is additive for every existing caller.
    */
-  const platformFreeAbove = opts?.platformFreeAbove;
-  const resolvedFreeAbove = resolveFreeDeliveryThreshold({
-    listing: opts?.listingFreeAbove,
-    store: basePolicy.freeAbove,
-    platform: platformFreeAbove,
-  });
+  const resolvedFreeAbove = resolveFreeDeliveryThreshold([
+    /* The caller's already-resolved answer wins — it is the narrower level. */
+    opts?.freeAbove === undefined ? INHERIT : override(opts.freeAbove),
+    /* Otherwise the seller's own policy. */
+    basePolicy.freeAbove === undefined ? INHERIT : override(basePolicy.freeAbove),
+  ]);
   const policy: StoreShippingPolicy = Number.isFinite(resolvedFreeAbove)
     ? { ...basePolicy, freeAbove: resolvedFreeAbove }
     : /* NEVER_FREE — drop the key entirely rather than writing Infinity into a
