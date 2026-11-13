@@ -2,20 +2,43 @@
   transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
+/*
+ * ── 🛑 USE `--appkit-color-link`. IT EXISTS, AND IT IS WHAT IT IS FOR. ───────
+ *
+ * This rule used `secondary-600` in light and `primary-400` in dark. Measured
+ * against each theme's own page background on 2026-11-13:
+ *
+ *   light   #d4af37 on #fafafa   2.01 : 1   🛑
+ *   dark    #1f52e4 on #020617   3.25 : 1   🛑   (2.21 as painted, over the
+ *                                                 translucent outline-button)
+ *
+ * Both below the 4.5 AA floor for body text — so the DEFAULT link style was
+ * unreadable in BOTH themes, at opposite ends of the brand ramp. Same mirror
+ * shape as the `brand-tri` gradient fixed the same day.
+ *
+ * ✅ The `link` token already passes both and needed no new colour:
+ *
+ *   light   #0f766e   5.24 : 1
+ *   dark    #22d3ee  11.16 : 1
+ *
+ * ⚠ Found by driving the live cart page and compositing the computed colours,
+ * NOT by the contrast audit — which enumerates ink-on-surface pairs and had no
+ * entry for an interactive-text token. The audit now carries `link` pairs so
+ * this class cannot come back silently.
+ *
+ * 🛑 Do not "restore the brand colour" here. A link is body-sized text; the
+ * gold is a 2:1 on white and is a decorative accent, not a legible ink.
+ */
 .appkit-text-link--default {
-  color: var(--appkit-color-secondary-600);
+  color: var(--appkit-color-link);
 }
 
 .appkit-text-link--default:hover {
   color: var(--appkit-color-secondary-700);
 }
 
-.dark .appkit-text-link--default {
-  color: var(--appkit-color-primary-400);
-}
-
 .dark .appkit-text-link--default:hover {
-  color: var(--appkit-color-primary-300);
+  color: var(--appkit-color-primary-200);
 }
 
 .appkit-text-link--muted {
@@ -34,17 +57,16 @@
   color: var(--appkit-color-border);
 }
 
+/* Same correction as `--default` above: `secondary-600` is 2.01:1 on a light
+ * page and `primary-400` is 3.25:1 on a dark one. An UNDERLINED link is still
+ * read, so it needs the same floor. */
 .appkit-text-link--underline {
-  color: var(--appkit-color-secondary-600);
+  color: var(--appkit-color-link);
   text-decoration: underline;
 }
 
 .appkit-text-link--underline:hover {
   text-decoration: none;
-}
-
-.dark .appkit-text-link--underline {
-  color: var(--appkit-color-primary-400);
 }
 
 /* nav — secondary text colour; hover to primary; no underline */

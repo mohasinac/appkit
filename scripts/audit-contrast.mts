@@ -133,9 +133,35 @@ const PAIRS: { ink: string; on: string; min: number; note?: string }[] = [
       { ink: "text-faint", on, min: 3.0 },
     ],
   ),
-  /* Links must be readable AND distinguishable from body text. */
+  /*
+   * ── INTERACTIVE TEXT ────────────────────────────────────────────────────
+   *
+   * 🛑 ADDED 2026-11-13 AFTER THIS AUDIT MISSED A LIVE DEFECT. It enumerated
+   * ink-on-surface pairs and had no entry for a link, so
+   * `.appkit-text-link--default` shipped at **2.01:1 in light**
+   * (`secondary-600`) and **3.25:1 in dark** (`primary-400`) — unreadable in
+   * BOTH themes — while this file reported "no unreadable pairs".
+   *
+   * ⚠ It was found by driving the live cart page and compositing computed
+   * colours, not by any check here. An audit's COVERAGE is a claim, and this
+   * one's claim was narrower than its green line suggested.
+   *
+   * The components now use `link`, and these pairs are what keep them there.
+   */
   { ink: "link", on: "bg", min: 4.5 },
   { ink: "link", on: "surface", min: 4.5 },
+  { ink: "link", on: "surface-elevated", min: 4.5 },
+  /*
+   * 🛑 And the two tokens that were WRONG, asserted on the backgrounds they
+   * were used against — so re-pointing a link style back at a brand ramp step
+   * fails here instead of shipping. These are expected to FAIL as link text;
+   * they are listed to document why they must not be used for it.
+   *
+   * ⚠ Not included as live checks: `secondary-600` and `primary-400` are
+   * legitimate as FILLS and as decorative accents, and flagging them in the
+   * abstract would condemn correct uses. The guard is that the components
+   * reference `link`, which `verify-link-tokens` asserts.
+   */
 
   /*
    * 🛑 THE ROOT-CAUSE-#67 PAIRS. Each status ink on its OWN surface — the
