@@ -66,6 +66,41 @@ export function AddressLocationFields({
 
   return (
     <Stack gap="sm">
+      {/*
+       * 🛑 THE POSTAL CODE COMES FIRST, because it FILLS the fields under it.
+       *
+       * Owner, 2026-11-13: *"if we are filling by the pin code put it at top."*
+       *
+       * It used to sit LAST — below country, state, city and both street lines
+       * — so by the time a buyer reached the one field that would have filled
+       * the others in for them, they had already typed them by hand. An
+       * autofill offered after the work it saves is not a convenience; it is a
+       * field that appears to do nothing.
+       *
+       * ⚠ Country stays BELOW it rather than above, even though the lookup is
+       * country-scoped (`isValidPostalCode(country, code)`), because country is
+       * defaulted and almost never changed — and changing it re-runs the lookup
+       * via `onPostalSettled` in its own handler, so the order cannot strand a
+       * stale result.
+       */}
+      <FieldInput
+        name="postalCode"
+        label={postalLabel}
+        required
+        value={postalCode}
+        error={errors.postalCode}
+        hint={
+          isLooking
+            ? "Looking up your city…"
+            : "We fill in the city and state when we recognise it."
+        }
+        onChange={(v) => {
+          onChange({ postalCode: v });
+          onPostalSettled(v, country);
+        }}
+        onBlur={() => onPostalSettled(postalCode, country)}
+      />
+
       <FormGroup columns={2}>
         <PaginatedSelectField
           label="Country"
@@ -103,23 +138,6 @@ export function AddressLocationFields({
         )}
       </FormGroup>
 
-      <FieldInput
-        name="postalCode"
-        label={postalLabel}
-        required
-        value={postalCode}
-        error={errors.postalCode}
-        hint={
-          isLooking
-            ? "Looking up your city…"
-            : "We fill in the city and state when we recognise it."
-        }
-        onChange={(v) => {
-          onChange({ postalCode: v });
-          onPostalSettled(v, country);
-        }}
-        onBlur={() => onPostalSettled(postalCode, country)}
-      />
       {!def && country.trim() && (
         <Text size="xs" color="muted">
           We do not know the postal format for that country, so anything

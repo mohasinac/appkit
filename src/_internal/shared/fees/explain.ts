@@ -140,11 +140,26 @@ export function explainPlatformFee(
 }
 
 /**
- * GST on the commission.
+ * GST on the PLATFORM FEE.
  *
- * 🛑 Levied on the commission ACTUALLY CHARGED, never on the uncapped figure —
- * which is the one thing a buyer checking ₹1.80 against a ₹39,500 subtotal
- * would get wrong.
+ * 🛑 "COMMISSION" IS THE WRONG WORD ON A BUYER'S BILL, and this said it twice.
+ *
+ * Owner, 2026-11-13: *"this is gst on the platform fees not our commission."*
+ * They are two different charges with two different payers:
+ *
+ *   platform fee  — the BUYER pays it, it is on this bill, and it is the
+ *                   amount this GST is levied on
+ *   commission    — the SELLER pays it out of their own proceeds
+ *
+ * The shipped FAQ already states the distinction outright — *"the seller pays
+ * a separate commission out of their own proceeds … the seller's commission
+ * never appears on your bill"* — so the line above it was contradicting the
+ * policy it sits next to, on the one screen where a buyer is checking what
+ * they are being charged and why.
+ *
+ * 🛑 Levied on the fee ACTUALLY CHARGED, never on the uncapped figure — which
+ * is the one thing a buyer checking ₹1.80 against a ₹39,500 subtotal would get
+ * wrong.
  */
 export function explainGstOnPlatformFee(
   platformFee: number,
@@ -155,9 +170,9 @@ export function explainGstOnPlatformFee(
   if (!fees || fees.gstPercent === undefined) return null;
   const money = (v: number) => formatCurrency(v, currency);
   return {
-    summary: `GST at ${pct(fees.gstPercent)}, charged on our commission — not on the price of the items.`,
+    summary: `GST at ${pct(fees.gstPercent)}, charged on the platform fee — not on the price of the items.`,
     steps: [
-      `${pct(fees.gstPercent)} of the ${money(platformFee)} commission = ${money(charged)}`,
+      `${pct(fees.gstPercent)} of the ${money(platformFee)} platform fee = ${money(charged)}`,
       "Item prices already include their own GST, shown below the total",
     ],
   };

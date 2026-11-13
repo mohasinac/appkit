@@ -117,17 +117,17 @@ export const addressFormSchema = z
       z.string().trim().min(3, "Enter the street address.").max(200),
       {
         section: "location", sectionLabel: "Where", sectionRequired: true,
-        order: 1, row: "full", label: "Address line 1",
+        order: 3, row: "full", label: "Address line 1",
       },
     ),
     addressLine2: annotate(z.string().trim().max(200).optional().or(z.literal("")), {
-      section: "location", order: 2, row: "full", label: "Address line 2",
+      section: "location", order: 4, row: "full", label: "Address line 2",
     }),
     landmark: annotate(z.string().trim().max(120).optional().or(z.literal("")), {
-      section: "location", order: 3, row: "pair", label: "Landmark",
+      section: "location", order: 5, row: "pair", label: "Landmark",
     }),
     city: annotate(z.string().trim().min(2, "Enter the city.").max(120), {
-      section: "location", order: 4, row: "pair", label: "City",
+      section: "location", order: 2, row: "pair", label: "City",
     }),
     /*
      * A picker where the country enumerates its subdivisions, free text where
@@ -136,7 +136,11 @@ export const addressFormSchema = z
      * writing the same field.
      */
     state: annotate(z.string().trim().min(2, "Enter the state or region.").max(120), {
-      section: "location", order: 5, row: "pair", label: "State / region",
+      /* 🛑 order 1 — this slot RENDERS the whole PIN / Country / State block
+         (`AddressLocationFields`), so its order positions that block, and the
+         block now leads the section because the PIN fills what follows it.
+         Owner, 2026-11-13: "if we are filling by the pin code put it at top." */
+      section: "location", order: 1, row: "pair", label: "State / region",
     }),
     /*
      * Only checked for emptiness HERE; the real rule is the country-aware one

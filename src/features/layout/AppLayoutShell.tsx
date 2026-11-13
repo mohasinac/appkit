@@ -22,7 +22,8 @@ import { useListingTypeFlags } from "../../react/hooks/useListingTypeFlags";
 import { isBuyerUser, isSellerUser, holdsRole } from "../auth/role-predicates";
 import { primaryRoleOf } from "../auth/auth-helpers";
 import { NavbarWithSettings } from "./NavbarWithSettings";
-import SideActionDock from "./SideActionDock";
+/* ⚠ `SideActionDock` is intentionally NOT imported — the page-action bar is
+   mobile-only by owner decision (2026-11-13). See the mount site below. */
 import BottomActions from "./BottomActions";
 import { BottomChrome } from "./BottomChrome";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
@@ -1473,17 +1474,23 @@ export function AppLayoutShell({
         */}
         {showFooter && <FooterLayout {...footer} />}
         {/*
-          The page-action control is ONE context with TWO presentations, and
-          exactly one of them is mounted at any width (`useIsDesktop`):
+          🛑 THE PAGE-ACTION BAR IS MOBILE-ONLY. There is NO desktop half.
 
-            < lg   <BottomActions/>  — a bar in the thumb zone, INSIDE the tier
-                                        so it stacks above the tab bar and its
-                                        height reaches --bottom-chrome-height.
-            >= lg  <SideActionDock/> — a floating puck at the vertical middle,
-                                        OUTSIDE the tier: it reserves no height,
-                                        and putting it in would push the footer
-                                        down by a bar that is a 56px button most
-                                        of the time.
+          Owner, 2026-11-13: *"not to show the action bar on desktop and keep
+          the bottom action bar only for mobiles."*
+
+          `<BottomActions/>` is mobile-only by construction (`useIsDesktop`) and
+          sits INSIDE the tier, so it stacks above the tab bar and its height
+          reaches `--bottom-chrome-height`. A phone has a thumb zone and a
+          bottom edge that mean something; a desktop window has neither, and the
+          inline CTA is already on screen there — which is the whole argument
+          for the asymmetry, and the same one that removed the desktop sidebar.
+
+          ⚠ `SideActionDock` was that desktop half and is NO LONGER MOUNTED. It
+          is deliberately still exported (nothing consumes it, but narrowing the
+          exports map is a MAJOR-version change and is sequenced last), so treat
+          the component as dormant rather than live — do not re-mount it here
+          without an owner decision.
 
           🛑 `<BottomChrome>` is not optional even when the bar inside it is
           absent. It is the tier container `ListingLayout`'s mobile pagination
@@ -1493,7 +1500,6 @@ export function AppLayoutShell({
         <BottomChrome>
           <BottomActions />
         </BottomChrome>
-        <SideActionDock />
         {showBottomNav && (
           <BottomNavbar
             user={user}

@@ -54,6 +54,7 @@ import { useBottomActionsContext } from "../../ui/chrome/BottomActionsContext";
 import type { BottomAction } from "../../ui/chrome/BottomActionsContext";
 import { useClickOutside } from "../../react";
 import { useHandMode } from "../../_internal/client/hand-mode";
+import { resolveDockFabAppearance } from "./dock-fab-appearance";
 import { useCtaReveal } from "./useCtaReveal";
 import { useIsDesktop } from "./useIsDesktop";
 import { ActionRow } from "../../ui/components/ActionRow";
@@ -79,6 +80,7 @@ const CLS_COUNT_BADGE = "bg-error-solid text-error-on-solid";
  * the exact moment they committed to a tap.
  */
 const SINGLE_ROW_MAX_ACTIONS = 2;
+
 
 function ActionButtons({
   actions,
@@ -371,10 +373,19 @@ export default function SideActionDock() {
    * a generic "more" button.
    */
   const primaryAction = pageActions[pageActions.length - 1];
+
+  /* 🛑 Resolved, not inlined — see `resolveDockFabAppearance`. The FAB must not
+     impersonate the state of an action it cannot take. */
+  const fab = resolveDockFabAppearance({
+    primaryAction,
+    isBulkMode,
+    bulkSelectedCount: bulk?.selectedCount,
+    infoLabel,
+  });
+  const borrowedAction = fab.borrowedAction;
+
   const fabBadge = isBulkMode ? bulk?.selectedCount : undefined;
-  const fabLabel = isBulkMode
-    ? `${bulk?.selectedCount ?? 0} selected — bulk actions`
-    : (primaryAction?.label ?? infoLabel ?? "Page actions");
+  const fabLabel = fab.ariaLabel;
 
   // Rule 4's deferred return — below every hook, for the reason given above.
   if (isBackToCta) {
@@ -545,21 +556,19 @@ export default function SideActionDock() {
           opens it and the attribute would have to lie. */}
       <Button
         type="button"
-        variant={isBulkMode ? "primary" : (primaryAction?.variant ?? "primary")}
+        variant={fab.variant}
         rounded="full"
         aria-expanded={expanded}
         aria-label={fabLabel}
         onClick={() => setExpanded((o) => !o)}
         className="relative shadow-lg h-14 min-h-0 px-[var(--appkit-space-5)]"
       >
-        {primaryAction?.icon && !isBulkMode && (
+        {borrowedAction?.icon && (
           <Span className="flex-shrink-0 mr-1.5" aria-hidden="true">
-            {primaryAction.icon}
+            {borrowedAction.icon}
           </Span>
         )}
-        <Span className="truncate max-w-[9rem]">
-          {isBulkMode ? "Bulk actions" : (primaryAction?.label ?? "Actions")}
-        </Span>
+        <Span className="truncate max-w-[9rem]">{fab.label}</Span>
         {fabBadge !== undefined && fabBadge > 0 && (
           <Span
             className={`absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] ${CLS_COUNT_BADGE} text-[10px] ${FLEX_CENTER} px-[var(--appkit-space-1)] pointer-events-none select-none`}
