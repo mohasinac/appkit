@@ -3469,8 +3469,39 @@ export async function createCheckoutOrderAction(
    * expansion because a BX-53 deck set is ONE listing purchased — ₹10, not ₹60
    * — however many components the box holds (owner, 2026-11-08).
    */
+  /*
+   * ── THE PRIZE FEE WAIVER ──────────────────────────────────────────────────
+   *
+   * Owner, 2026-11-14, shown a real claim that billed the winner ₹11.80 with
+   * ₹10.62 collected at the door: a prize claim costs **nothing**.
+   *
+   * 🛑 Resolved through `resolvePrizeWaiver` in ALL THREE pricing actions, not
+   * derived locally from `prizeRefusals` here. A local derivation would be a
+   * second opinion about who is entitled, and the preview, the order and the
+   * capture must agree to the paisa — see that module's header for what each
+   * way of disagreeing does to a buyer.
+   *
+   * ⚠ Costs nothing on an ordinary checkout: it returns early when no cart line
+   * carries an `eventPrize` block, which is every non-prize order.
+   */
+  const prizeWaiver = await resolvePrizeWaiver({
+    items: cartItems,
+    productById: preTxProductById,
+    appliedCoupons: cart.appliedCoupons ?? [],
+    buyerUserId: uid,
+    settings: siteSettings,
+  });
+
+  /*
+   * 🛑 `billableUnitsFor`, not `item.quantity`. An entitled prize line
+   * contributes ZERO units, so the fee arithmetic is untouched — no second
+   * code path through a money formula. And zeroing the UNITS is not the same
+   * as subtracting the line's fee afterwards: the bands taper per line by
+   * quantity, so a cart of one prize plus four normal units must bill the four
+   * at the four-unit rate.
+   */
   const lineUnitsOf = (g: { item: CartItemDocument }[]) =>
-    g.map(({ item }) => item.quantity ?? 0);
+    g.map(({ item }) => billableUnitsFor(item, prizeWaiver.entitled, prizeWaiver.waive));
   const lineUnitsByStore = new Map(
     orderGroups.map(({ items: g }) => [g[0].item.storeId, lineUnitsOf(g)] as const),
   );
@@ -4238,8 +4269,24 @@ export async function previewCheckoutPricing(
   // order path CHARGES are derived from one line set rather than two that
   // happen to agree — and under a per-line taper the SHAPE of that set changes
   // the answer, not just its sum.
+  /*
+   * The SAME waiver the order path resolves. 🛑 This is the arm that must not
+   * be forgotten: the preview is the number the buyer READS, and a preview that
+   * quotes a fee the order then waives (or vice versa) is the shown-vs-charged
+   * drift this file already carries several warnings about.
+   */
+  const previewPrizeWaiver = await resolvePrizeWaiver({
+    items: cartItems,
+    productById,
+    appliedCoupons: cart.appliedCoupons ?? [],
+    buyerUserId: uid,
+    settings: siteSettings,
+  });
+
   const previewLineUnitsOf = (g: { item: CartItemDocument }[]) =>
-    g.map(({ item }) => item.quantity ?? 0);
+    g.map(({ item }) =>
+      billableUnitsFor(item, previewPrizeWaiver.entitled, previewPrizeWaiver.waive),
+    );
   const previewLineUnitsByStore = new Map(
     orderGroups.map(({ items: g }) => [g[0].item.storeId, previewLineUnitsOf(g)] as const),
   );
@@ -6120,8 +6167,28 @@ export async function verifyAndPlaceGatewayOrderAction(
 
   // Same tapered per-unit fee + exact per-store split as the COD/UPI path.
   const gatewayCommissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+  /*
+   * The third and last arm. 🛑 This one decides what the GATEWAY captures, so a
+   * waiver applied here but not in the order path (or the reverse) makes the
+   * capture and the stored order differ to the paisa — the one thing an invoice
+   * must never do.
+   *
+   * ⚠ `bucketedPaid.available` is the item list, not `cart.items`: a line that
+   * went out of stock between intent and capture is not being charged for, so
+   * it must not contribute billable units either.
+   */
+  const gatewayPrizeWaiver = await resolvePrizeWaiver({
+    items: bucketedPaid.available.map(({ item }) => item),
+    productById: productByIdPaid,
+    appliedCoupons: cart.appliedCoupons ?? [],
+    buyerUserId: uid,
+    settings: siteSettings,
+  });
+
   const gatewayLineUnitsOf = (g: { item: CartItemDocument }[]) =>
-    g.map(({ item }) => item.quantity ?? 0);
+    g.map(({ item }) =>
+      billableUnitsFor(item, gatewayPrizeWaiver.entitled, gatewayPrizeWaiver.waive),
+    );
   const gatewayLineUnitsByStore = new Map(
     orderGroups.map(({ items: g }) => [g[0].item.storeId, gatewayLineUnitsOf(g)] as const),
   );
