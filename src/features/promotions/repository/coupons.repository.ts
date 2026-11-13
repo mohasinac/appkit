@@ -309,6 +309,12 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
   private async _fetchAndValidateCoupon(
     code: string,
     userId: string,
+    /**
+     * The redeemer's roles, resolved from the SESSION by the caller — never
+     * from a request body. `undefined` means the caller did not resolve them,
+     * which is deliberately NOT the same as "holds no roles".
+     */
+    redeemerRoles?: readonly string[],
   ): Promise<
     | { ok: false; result: { valid: false; coupon?: CouponDocument; message: string } }
     | { ok: true; coupon: CouponDocument }
@@ -319,6 +325,32 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     const coupon = await this.getCouponByCode(code);
     if (!coupon) {
       return { ok: false, result: { valid: false, message: "Coupon not found" } };
+    }
+
+    /*
+     * ── ROLE GATE, enforced HERE so both public validators inherit it ───────
+     *
+     * This private helper is the only path `validateCoupon` and
+     * `validateCouponForCart` share, so gating it means a restricted coupon
+     * cannot be redeemed through either. A gate honoured by one of two
+     * validators is not a gate.
+     *
+     * 🛑 Absent/empty `allowedRoles` means EVERYONE — every stored coupon is
+     * unaffected. When it IS set and roles are unresolved, the coupon is
+     * REFUSED: on a path whose failure mode is free merchandise, "unknown →
+     * allow" makes the gate decorative.
+     *
+     * ⚠ The message is the SAME "Coupon not found" the unknown-code branch
+     * above returns, on purpose. A distinct "you may not use this" confirms
+     * the code is real and turns the form into an oracle for guessing hidden
+     * codes — which matters precisely because this coupon is hidden.
+     */
+    const allowedRoles = coupon.restrictions?.allowedRoles;
+    if (allowedRoles && allowedRoles.length > 0) {
+      const roles = redeemerRoles ?? [];
+      if (!roles.some((r) => allowedRoles.includes(r))) {
+        return { ok: false, result: { valid: false, message: "Coupon not found" } };
+      }
     }
     if (!isCouponValid(coupon)) {
       return { ok: false, result: { valid: false, coupon, message: "Coupon is not currently valid" } };
@@ -353,13 +385,14 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     code: string,
     userId: string,
     orderTotal: number,
+    redeemerRoles?: readonly string[],
   ): Promise<{
     valid: boolean;
     coupon?: CouponDocument;
     discountAmount?: number;
     message?: string;
   }> {
-    const check = await this._fetchAndValidateCoupon(code, userId);
+    const check = await this._fetchAndValidateCoupon(code, userId, redeemerRoles);
     if (!check.ok) return check.result;
     const { coupon } = check;
 
@@ -599,6 +632,15 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       resolveCategorySlugs?: (
         productIds: string[],
       ) => Promise<Map<string, string[]>>;
+      /**
+       * The redeemer's roles, from the SESSION. Gates
+       * `restrictions.allowedRoles` — see `_fetchAndValidateCoupon`.
+       *
+       * ⚠ On `opts` rather than a positional parameter because this signature
+       * already takes four arguments and a fifth positional boolean-ish value
+       * is the shape that gets passed in the wrong slot.
+       */
+      redeemerRoles?: readonly string[];
     },
   ): Promise<{
     valid: boolean;
@@ -610,7 +652,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     storeId?: string;
     message?: string;
   }> {
-    const check = await this._fetchAndValidateCoupon(code, userId);
+    const check = await this._fetchAndValidateCoupon(code, userId, opts?.redeemerRoles);
     if (!check.ok) return check.result;
     const { coupon } = check;
 

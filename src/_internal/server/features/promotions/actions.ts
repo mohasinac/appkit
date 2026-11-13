@@ -25,13 +25,37 @@ import { ValidationError } from "../../../shared/errors/index";
 
 const ERR_INVALID_COUPON_INPUT = "Invalid coupon input";
 
+/**
+ * Every role the session user holds.
+ *
+ * 🛑 `roles` IS THE AUTHORITY, `role` is a legacy scalar. `AuthPayload`'s own
+ * doc says so at the line — *"deciding access from this field is what silently
+ * locked a multi-role admin out of `/admin`"* — so reading the scalar here
+ * would refuse the coupon to exactly the multi-role admin it exists for.
+ *
+ * ⚠ `roles` is OPTIONAL: a session cookie minted before the role-set work
+ * carries only the scalar. Falling back to `[role]` keeps those sessions
+ * working; returning `[]` instead would silently deny every one of them.
+ */
+function rolesOf(user: { role?: string; roles?: string[] }): string[] {
+  if (user.roles && user.roles.length > 0) return user.roles;
+  return user.role ? [user.role] : [];
+}
+
 export async function applyCouponAction(input: unknown): Promise<ActionResult<unknown>> {
   return wrapAction(async () => {
     const user = await requireRoleUser(["user", "buyer", "seller", "admin"]);
       const parsed = applyCouponSchema.safeParse(input);
       if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? ERR_INVALID_COUPON_INPUT);
     
-      const coupon = await validateCoupon(parsed.data, user.uid);
+      /*
+       * 🛑 Roles come from `requireRoleUser`'s SESSION user, never from
+       * `input` — this is what makes the `allowedRoles` gate real rather than
+       * declared. A coupon restricted to admins is refused here for anyone
+       * else, and reported as "not found" so the checkout cannot be used to
+       * confirm that a hidden code exists.
+       */
+      const coupon = await validateCoupon(parsed.data, user.uid, rolesOf(user));
       const discount = computeDiscount(coupon, parsed.data.cartTotal);
     
       // Coupon usage is recorded ONLY after order confirmation

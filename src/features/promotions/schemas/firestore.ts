@@ -60,6 +60,26 @@ export interface RestrictionsConfig {
   excludeProducts?: string[];
   excludeCategories?: string[];
   firstTimeUserOnly: boolean;
+  /**
+   * Roles permitted to redeem this coupon. **Absent or empty means EVERYONE** —
+   * the normal case, and the only backwards-compatible reading for the coupons
+   * already stored.
+   *
+   * 🛑 EXISTS FOR A COUPON THAT MUST NEVER REACH A CUSTOMER. Owner,
+   * 2026-11-13, asked for a 100%-off code to test checkout with — *"only role
+   * admin can use 100% off including the add ons"* and *"do not show the 100%
+   * off coupon on site"*. A code that zeroes an order is free merchandise the
+   * moment it leaks, and codes leak by being guessed, shoulder-surfed or
+   * shared, so hiding it from the listings is presentation and is NOT the
+   * control. This field is the control.
+   *
+   * ⚠ Enforced in `validateCoupon` on the SERVER, against the roles on the
+   * session — never against anything the client sends. The check fails CLOSED:
+   * a restricted coupon whose redeemer's roles cannot be resolved is refused,
+   * because on the money path "unknown → allow" is how a gate becomes
+   * decorative.
+   */
+  allowedRoles?: string[];
 }
 
 export interface CouponStats {
@@ -401,6 +421,26 @@ export function isCouponValid(coupon: CouponDocument): boolean {
  * is "should a human see this".
  */
 export function isCouponDisplayable(coupon: CouponDocument): boolean {
+  /*
+   * 🛑 A ROLE-RESTRICTED COUPON IS NEVER LISTED. Owner, 2026-11-13: *"do not
+   * show the 100% off coupon on site."*
+   *
+   * This is the DISPLAY half and it is deliberately unconditional — it takes
+   * no viewer, so it cannot "show it to admins only", and it should not try.
+   * Both of its callers are public, cacheable surfaces: the promotions page
+   * and the homepage rail. A coupon rendered into an ISR-cached page is
+   * public regardless of who first requested it, so a viewer-aware variant
+   * here would leak the code through the CACHE rather than through the check.
+   *
+   * ⚠ Hiding is NOT the control — `restrictions.allowedRoles` is, enforced
+   * server-side in `_fetchAndValidateCoupon`. This stops the code being
+   * ADVERTISED; the gate stops it being USED. Both are needed, and only one
+   * of them is load-bearing.
+   */
+  if (coupon.restrictions?.allowedRoles && coupon.restrictions.allowedRoles.length > 0) {
+    return false;
+  }
+
   const now = new Date();
   const endDate = coupon.validity.endDate
     ? new Date(coupon.validity.endDate)

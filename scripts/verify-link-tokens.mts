@@ -121,7 +121,8 @@ for (const [file, text] of [
 ] as const) {
   /* Every `.dark …{ … color: var(--appkit-color-X) … }` */
   for (const m of text.matchAll(/\.dark[^{]*\{([^}]*)\}/g)) {
-    const colour = /(?:^|[^-])color:\s*var\(--(appkit-color-[a-z0-9-]+)\)/m.exec(m[1]!);
+    const body = m[1]!;
+    const colour = /(?:^|[^-])color:\s*var\(--(appkit-color-[a-z0-9-]+)\)/m.exec(body);
     if (!colour) continue;
     const token = colour[1]!;
     const value = darkTokens[token];
@@ -131,8 +132,30 @@ for (const [file, text] of [
       console.log(`    ⚠ ${file}: ${token} = ${value ?? "undefined"} — not a plain hex, not evaluated`);
       continue;
     }
-    const r = ratio(value, darkBg);
-    check(r >= 4.5, `${file}: ${token} as ink on the dark page`, `${value} = ${r.toFixed(2)}:1`);
+
+    /*
+     * 🛑 INK IS READ AGAINST ITS OWN FILL WHEN THE RULE DECLARES ONE.
+     *
+     * This loop assumed every `.dark` `color:` is read against the PAGE, which
+     * is true for a link and false for a FILLED button. It reported a real
+     * fix as a failure: `.dark .appkit-button--primary` sets
+     * `background: secondary-400` and `color: bg` — a deliberate INVERSION,
+     * dark ink on a light gold fill, which scores 10.02:1 where it is actually
+     * rendered and 1.00:1 against a page it never touches.
+     *
+     * ⚠ Left unfixed, the only ways to go green would have been to revert the
+     * fix or to exempt the file — both of which would have made this verifier
+     * the reason an unreadable button shipped. A checker that cannot express
+     * "ink on its own background" will eventually be satisfied by the wrong
+     * thing.
+     */
+    const fill = /background:\s*var\(--(appkit-color-[a-z0-9-]+)\)/m.exec(body);
+    const fillValue = fill ? darkTokens[fill[1]!] : undefined;
+    const against = fillValue && /^#[0-9a-f]{6}$/i.test(fillValue) ? fillValue : darkBg;
+    const where = against === darkBg ? "the dark page" : `its own fill (${fill![1]})`;
+
+    const r = ratio(value, against);
+    check(r >= 4.5, `${file}: ${token} as ink on ${where}`, `${value} on ${against} = ${r.toFixed(2)}:1`);
   }
 }
 
