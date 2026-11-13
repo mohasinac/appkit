@@ -10,11 +10,41 @@
  *   · production `categories` = **0 documents**. The homepage category band,
  *     the brand tiles and every `/products` facet therefore render nothing —
  *     which is the whole reason the storefront reads as 3 of 12 mock sections.
- *   · dev-db `categories` = **4,000 documents, 4,000 of them ROOTS, zero
- *     children.** The tree machinery has never held a tree: every row is
- *     `tier: 0` with no `parentIds`.
+ *     ✅ This is the load-bearing measurement and it is independently verified.
+ *   · dev-db `categories` = **4,972 documents**, carrying per-PRODUCT rows
+ *     (`category-aeropegasus-3-70a` and friends) — categories named after a
+ *     single listing, which is a product wearing a category's clothes.
  *   · and its contents are the wrong vertical — `Bandai · Banpresto ·
  *     Bushiroad · Funskool · Hot Wheels · Mattel · McFarlane · Mezco`.
+ *
+ * 🛑 **CORRECTION, 2026-11-13 — a claim in the first version of this header
+ * was WRONG, and the error is more instructive than the fix.**
+ *
+ * It said dev-db held *"4,000 documents, 4,000 of them ROOTS, zero children —
+ * the tree machinery has never held a tree"*. That is false. Re-measured:
+ * **4,551 of 4,972 rows carry `parentIds`**, so the incumbent data was a real
+ * tree all along.
+ *
+ * The cause: I counted with `v.parentId` — **SINGULAR**. The field is
+ * `parentIds`, an array. A property that does not exist is `undefined` on
+ * every document, so `!v.parentId` was true 4,972 times and the data reported
+ * itself as entirely flat. ⚠ The measurement did not error, did not warn, and
+ * produced a confident, quotable, round number.
+ *
+ * This is the project's own recorded rule turned on its author: *"never carry
+ * a remembered number forward"* and *"verify the checker before the code"*. A
+ * one-character difference between a real field and an imagined one is
+ * invisible in output and fatal to a conclusion — which is exactly why
+ * `grep`ping for the field name in the schema costs one command and would have
+ * caught it.
+ *
+ * ✅ **What the correction does NOT change:** every other reason for this
+ * rebuild stands on its own measurement — production holds zero categories
+ * (the actual cause of the empty storefront), the vertical is wrong, and the
+ * owner's instruction was explicit: *"no need to have all 4000, just stick
+ * till systems and generations"*. The rebuild was right; one of the arguments
+ * for it was not, and saying so is cheaper than leaving a false number in a
+ * file future sessions will quote.
  *
  * 🛑 NOTHING IN THE CODE WAS MISSING. `parentIds[]`, `ancestors[]`, `tier`,
  * `path`, the product-side closure in `categorySlugs[]` and the

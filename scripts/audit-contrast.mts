@@ -204,6 +204,88 @@ if (missing.length) {
 }
 
 /*
+ * ── TS ↔ tokens.css AGREEMENT ───────────────────────────────────────────────
+ *
+ * 🛑 FOLDED IN HERE BECAUSE THE AUDIT THAT WAS SUPPOSED TO DO IT DOES NOT
+ * EXIST. `default-light.ts` says in writing:
+ *
+ *   "Drift between this file and `tokens.css` is detected by
+ *    `scripts/audit-theme-drift.mjs`."
+ *
+ * Measured 2026-11-13: that script is present only under
+ * `.claude/worktrees/` — stale copies from old agent runs — and is in NEITHER
+ * `appkit/scripts/` nor the shop's audit registry. So the drift it claims to
+ * detect has been undetected for however long, which is the
+ * declared-but-unwired class applied to a safety net. (Same shape as the seven
+ * `.mts` verifiers that no npm script ran.)
+ *
+ * It matters immediately: the tokens live in TWO files that must stay
+ * byte-identical, and a theme edit that lands in one is invisible — the CSS is
+ * what the browser paints, while the TS is what this audit reads. Change only
+ * the TS and every contrast number here is a fiction about colours nobody
+ * sees.
+ */
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const css = readFileSync(join(here, "..", "src", "tokens", "tokens.css"), "utf8");
+
+/*
+ * 🛑 STRIP COMMENTS FIRST. The file's own header contains a worked REBRAND
+ * EXAMPLE —
+ *
+ *     :root {
+ *       --appkit-color-primary:   #your-primary;
+ *       --appkit-color-secondary: #your-secondary;
+ *     }
+ *
+ * — so the first version of this check matched the documentation instead of
+ * the stylesheet and reported `CSS=#your-primary` as drift against the real
+ * TS value. Two "drifted" tokens, both fictional.
+ *
+ * ⚠ That is the fourth instance in this session of a checker measuring the
+ * wrong thing and saying so confidently (`parentId` vs `parentIds`, the
+ * hex-only colour parser, the `/tmp` path split, this). Each was caught only
+ * because the OUTPUT looked implausible — `#your-primary` is not a colour, and
+ * 2 vars is not a palette. **Read what a checker printed before believing what
+ * it concluded.**
+ */
+const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
+/* The light theme's `:root` block — up to the first theme-scoped override. */
+const cut = cssNoComments.search(/\[data-theme|\.theme-|@media[^{]*prefers-color-scheme/);
+const rootBlock = cssNoComments.slice(0, cut === -1 ? cssNoComments.length : cut);
+const cssVars = new Map<string, string>();
+for (const m of rootBlock.matchAll(/--(appkit-color-[a-z0-9-]+)\s*:\s*([^;]+);/g)) {
+  cssVars.set(m[1]!, m[2]!.trim());
+}
+/*
+ * A palette is dozens of vars. If the slice found a handful, it found the
+ * wrong region — fail LOUDLY rather than report "0 drifted" over nothing,
+ * which is the false-pass this whole file exists to prevent.
+ */
+if (cssVars.size < 20) {
+  console.log(`\n  🛑 only ${cssVars.size} vars parsed from the :root block — the slice is wrong, not the data`);
+  fail += 1;
+}
+
+const drift: string[] = [];
+for (const [k, v] of Object.entries(DEFAULT_LIGHT_THEME.tokens)) {
+  if (!k.startsWith("appkit-color-")) continue;
+  const inCss = cssVars.get(k);
+  if (inCss === undefined) continue; /* not every token is mirrored */
+  if (inCss.toLowerCase() !== String(v).toLowerCase()) {
+    drift.push(`${k}: TS=${v}  CSS=${inCss}`);
+    fail += 1;
+  }
+}
+console.log(`\n  ── TS ↔ tokens.css (light) ──`);
+console.log(`    ${cssVars.size} vars in the :root block, ${drift.length} drifted`);
+for (const d of drift) console.log(`    🛑 ${d}`);
+if (drift.length === 0) console.log(`    ✅ the two sources agree`);
+
+/*
  * ── PROVE THE AUDIT CAN FAIL ────────────────────────────────────────────────
  * A green checker that cannot go red has already produced one false PASS in
  * this project. White on a near-white surface is the literal Root Cause #67

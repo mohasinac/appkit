@@ -30,14 +30,14 @@
  */
 :root {
   /* Primary — Blue (light mode dominant) */
-  --appkit-color-primary:          #3570fc;
+  --appkit-color-primary:          #0c44ca;
   --appkit-color-primary-50:       #f6f8fe;
   --appkit-color-primary-100:      #dfe8ff;
   --appkit-color-primary-200:      #bfd2fe;
   --appkit-color-primary-300:      #9ab6f9;
   --appkit-color-primary-400:      #7c9eed;
   --appkit-color-primary-500:      #5183f9;
-  --appkit-color-primary-600:      #3570fc;
+  --appkit-color-primary-600:      #0c44ca;
   --appkit-color-primary-700:      #0c44ca;    /* AAA 7:1 with white text on the solid primary button */
   --appkit-color-primary-800:      #1547be;
   --appkit-color-primary-900:      #1b429d;
