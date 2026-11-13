@@ -73,6 +73,33 @@ export const PAYMENT_METHOD_CAPABILITIES: Readonly<Record<string, PaymentMethodC
   cashfree: { collectsOnDelivery: false, hasReversibleCapture: true, bypassesCapture: false },
   upi: { collectsOnDelivery: false, hasReversibleCapture: true, bypassesCapture: false },
   admin_bypass: { collectsOnDelivery: false, hasReversibleCapture: false, bypassesCapture: true },
+  /*
+   * Nothing was left to charge — a prize coupon or a full-coverage discount
+   * took the total to zero. Added with the ₹0 lane (2026-11-13).
+   *
+   * 🛑 `bypassesCapture: true` and `hasReversibleCapture: false` match
+   * `admin_bypass` because the OUTCOME is the same — no capture happened, so
+   * there is nothing a gateway can reverse. A refund here is a human-settled
+   * owed case, which for an order the buyer paid nothing for is usually
+   * "nothing is owed"; routing it to a person is the correct conservative
+   * answer rather than firing a refund against a capture that never existed.
+   *
+   * 🛑 `collectsOnDelivery: false` — and this entry exists PRECISELY so that
+   * stays explicit. The ₹0 lane's own guard is `!isCodLike`, i.e.
+   * `collectsOnDelivery(paymentMethod)`, so if this slug ever resolved to
+   * `true` the lane would exclude the very orders it was built for and they
+   * would sit PENDING forever waiting for a courier who has nothing to
+   * collect. Two pieces of this feature read the same function; they must not
+   * be able to disagree.
+   *
+   * ⚠ It would otherwise have fallen through to `UNKNOWN_METHOD_CAPABILITIES`,
+   * which is *almost* right (that corner is conservative in all three axes)
+   * but asserts `bypassesCapture: false` — i.e. "something took money we
+   * cannot return". For an order where nothing was taken that is a false
+   * statement on the money path, and it is the kind of nearly-correct default
+   * nobody re-examines.
+   */
+  no_payment: { collectsOnDelivery: false, hasReversibleCapture: false, bypassesCapture: true },
 };
 
 /**

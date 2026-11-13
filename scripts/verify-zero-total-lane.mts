@@ -104,6 +104,36 @@ check(
   "an order with nothing to collect can never leave PENDING on its own",
 );
 
+/*
+ * 🛑 THE CROSS-CHECK: `no_payment` must not be cash-like.
+ *
+ * The lane's own guard is `!isCodLike`, i.e. `collectsOnDelivery(method)`. If
+ * `no_payment` ever resolved `true` there, the lane would EXCLUDE the very
+ * orders it exists for and they would sit PENDING forever, waiting for a
+ * courier with nothing to collect. Two pieces of one feature read the same
+ * function; this asserts they cannot disagree.
+ *
+ * Executed against the real capability table, not asserted from its source.
+ */
+console.log("\n  ── the method's own capabilities ──\n");
+{
+  const { collectsOnDelivery, hasReversibleCapture, bypassesCapture } = await import(
+    "../src/_internal/shared/payments/method-capabilities.ts"
+  );
+  check(collectsOnDelivery("no_payment") === false, "no_payment does NOT collect on delivery", "or the lane excludes its own orders");
+  check(collectsOnDelivery("cod") === true, "cod still does — control", "proves the function is really being read");
+  check(
+    hasReversibleCapture("no_payment") === false,
+    "nothing to reverse — a refund is a human-settled owed case",
+    "firing a gateway refund against a capture that never happened fails deep",
+  );
+  check(
+    bypassesCapture("no_payment") === true,
+    "it bypasses capture, like admin_bypass",
+    "the UNKNOWN fallback says `false` — 'something took money we cannot return', which is FALSE here",
+  );
+}
+
 /* 🛑 And the gateway must still refuse zero, or the lane is bypassable. */
 const route = readFileSync(
   join(import.meta.dirname, "..", "..", "src", "app", "api", "payment", "create-order", "route.ts"), "utf8",
