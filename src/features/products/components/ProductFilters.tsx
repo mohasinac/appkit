@@ -147,7 +147,26 @@ export function ProductFilters({
   variant,
   statusOptions,
   currencyPrefix = "",
-  showShipping = true,
+  /*
+   * 🛑 OFF BY DEFAULT — a facet that can match nothing must not be offered.
+   *
+   * Owner, 2026-11-13: *"the free shipping filter either doesnt work or all
+   * products have that."* Measured: the FILTER is correct — it matches
+   * `shippingPaidBy == "seller"` — and **no product carries that field at
+   * all** (17/17 undefined, zero `*ship*` keys on the public payload), so
+   * ticking it empties the grid every time.
+   *
+   * ⚠ And on this store it is the wrong QUESTION, not just empty data: free
+   * shipping here is an ORDER-VALUE rule (`shipping.freeShippingThreshold`,
+   * seeded 999) — the promise the footer actually makes — so it is a property
+   * of the cart total, never of a listing. A per-product switch for it would
+   * stay misleading even once every product had the field.
+   *
+   * A consumer whose catalogue really does set `shippingPaidBy` per listing
+   * opts in explicitly. Same rule the homepage bands now follow: gate a
+   * surface on data it can fill.
+   */
+  showShipping = false,
   showBundleFilter = true,
   loadCategoryOptions,
   loadBrandOptions,
