@@ -41,6 +41,14 @@ import { DEFAULT_DARK_THEME } from "../src/tokens/themes/default-dark";
 
 const THEMES = [DEFAULT_LIGHT_THEME, DEFAULT_DARK_THEME];
 
+/*
+ * The BASE token set every theme inherits from — the light theme IS the `:root`
+ * block, and a theme that omits a key resolves to this in the browser. Named so
+ * the fallback in `get()` is obviously the cascade and not a guess.
+ */
+const BASE_TOKENS: Record<string, string | undefined> =
+  DEFAULT_LIGHT_THEME.tokens as unknown as Record<string, string | undefined>;
+
 /* ── colour parsing: hex AND rgba, because the dark theme uses both ─────────
  *
  * 🛑 ALPHA IS NOT OPTIONAL TO HANDLE. The dark theme declares seven of its
@@ -180,6 +188,38 @@ const PAIRS: { ink: string; on: string; min: number; note?: string }[] = [
 
   /* The one deliberately-inverted pair: white on the brand fill. */
   { ink: "text-on-primary", on: "primary", min: 4.5 },
+
+  /*
+   * ── THEME-INVARIANT BRAND SURFACES — the FIFTH widening of this file ──────
+   *
+   * Owner, 2026-11-14, pointing at the homepage band: *"still can't read — fix
+   * the root cause not the area of effect."* Measured in a browser: white on
+   * `whatsapp-light` was **2.45:1** (the "Join the community" heading, its
+   * description and the CTA) and `text-muted` on the cream `whatsapp-bg` was
+   * **1.87:1 in dark**.
+   *
+   * 🛑 WHY NOTHING CAUGHT IT, AND WHY THESE ROWS ARE THE FIX RATHER THAN THE
+   * COLOUR CHANGE. A WhatsApp colour is BRAND, not theme, so these tokens are
+   * declared ONCE with no per-theme override. This audit enumerated
+   * ink-on-SURFACE pairs per theme and had no row for a brand surface;
+   * `verify-link-tokens` walks `.dark` rules that set `color:` and a
+   * theme-invariant green appears in no `.dark` rule at all. The band was
+   * invisible to both checks in both themes simultaneously.
+   *
+   * ⚠ THE GENERAL SHAPE, stated so the next brand surface is covered on the
+   * day it is added: **a theme-INVARIANT surface drawn on with theme-VARIANT
+   * ink is always wrong in one theme**, and a screenshot in the other looks
+   * perfect. The remedy is ink declared beside the surface
+   * (`whatsapp-fg`, `whatsapp-fg-muted`) so the two move together — these rows
+   * assert that they still do.
+   *
+   * ⚠ `whatsapp` (#25D366) is the ICON/accent colour, not a text surface, so
+   * it is deliberately absent. Add a row when something draws text on it.
+   */
+  { ink: "text-on-primary", on: "whatsapp-light", min: 4.5, note: "heading + CTA sit on this green" },
+  { ink: "whatsapp-fg", on: "whatsapp-bg", min: 4.5, note: "invariant ink on invariant surface" },
+  { ink: "whatsapp-fg-muted", on: "whatsapp-bg", min: 4.5, note: "was text-muted: 1.87 in dark" },
+  { ink: "text-on-primary", on: "whatsapp-dark", min: 4.5, note: "the gradient's deep-teal end" },
   { ink: "text-on-primary", on: "primary-600", min: 4.5 },
   { ink: "text-on-primary", on: "primary-700", min: 4.5 },
 ];
@@ -241,7 +281,28 @@ const missing: string[] = [];
 
 for (const theme of THEMES) {
   const t = theme.tokens;
-  const get = (name: string) => t[`appkit-color-${name}`];
+  /**
+   * Resolve a token for this theme, falling back to the BASE (light) value when
+   * the theme omits it.
+   *
+   * 🛑 THIS FALLBACK IS THE BROWSER'S OWN BEHAVIOUR, AND WITHOUT IT THIS AUDIT
+   * PRODUCES A FALSE PASS. A theme-invariant token — a brand colour, declared
+   * once with no per-theme override — resolved to `undefined` under the dark
+   * theme, so every pair naming one was pushed to `missing` and **the run still
+   * exited 0**. The dark theme is exactly where the WhatsApp band was
+   * unreadable, so the four rows added to catch it were being skipped in the
+   * only theme that had the defect.
+   *
+   * ⚠ Found by SABOTAGE, not by review: reverting the green left the new pairs
+   * reporting "(undefined)" instead of a ratio, and the audit stayed green.
+   * *Verify the checker before the code* — the recorded rule, and the second
+   * time in one session that a check of mine passed while reading nothing.
+   *
+   * ⚠ `?? base` and not a merge of the whole record: a theme that genuinely
+   * overrides a token must keep winning. Only an ABSENT key inherits.
+   */
+  const get = (name: string) =>
+    t[`appkit-color-${name}`] ?? BASE_TOKENS[`appkit-color-${name}`];
   console.log(`\n  ── ${theme.name}  (${theme.mode}) ──`);
   const bad: string[] = [];
 

@@ -760,6 +760,34 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
     whatsapp: 20,
     email: 8,
   },
+  /*
+   * ── THE PRIZE CLAIM WINDOW ───────────────────────────────────────────────
+   *
+   * Owner, 2026-11-13: *"make sure that there is a gate, say 7 or 10 days or
+   * 15 days I can set, so that no one can claim something after 2-3 years"* —
+   * *"same like expirations."*
+   *
+   * 🛑 SEEDED, because a reseed that drops it re-opens the window. `awardPrize`
+   * has a bounded code default, so an absent value is safe rather than
+   * unlimited — but "safe" there means 30 days, not the number this install
+   * chose. A config decision that lives only in a hand-written row is lost the
+   * first time anyone reseeds, and this project has already recorded three
+   * seed-vs-live drifts found in one round.
+   *
+   * ⚠ HERE AND NOT IN `DEFAULT_SITE_SETTINGS`. That is appkit's generic
+   * fallback shared by every install; a claim window is a commercial choice,
+   * and baking one client's choice there breaks domain independence — the same
+   * line already drawn for `paymentMethodRules` and the fee curve.
+   *
+   * ⚠ And seeding it does NOT retrofit a live document: `appkit-seed load`
+   * uses `set(merge: true)`, which only lands on a collection never written.
+   * The live `siteSettings/global` on both databases was updated separately,
+   * read back. That asymmetry is why this comment exists rather than an
+   * assumption that the seed is the state.
+   */
+  prizes: {
+    claimWindowDays: 7,
+  },
   credentials: {
     phonepeClientId: "PGTESTPAYUAT_PLACEHOLDER",
     phonepeClientSecret: "secret_PLACEHOLDER",

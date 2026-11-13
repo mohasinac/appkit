@@ -233,9 +233,26 @@ export function WhatsAppCommunitySection({
                     </Text>
                   </Card>
                 ))}
+                {/*
+                  🛑 `--appkit-color-whatsapp-fg-muted`, NOT `color="muted"`.
+                  This row sits on the cream panel, which is theme-INVARIANT,
+                  while `--appkit-color-text-muted` flips per theme — so the
+                  muted token measured 6.20:1 here in light and 1.87:1 in dark.
+                  The surface stayed and the ink left.
+
+                  ⚠ `tone`/`color` props resolve page-surface tokens by design;
+                  on a component-painted surface they are the wrong authority,
+                  which is why this is a raw var rather than a new prop value.
+                */}
                 <Row align="center" gap="xs" className="self-end pt-[var(--appkit-space-1)]">
-                  <Icon name="lock" size="xs" tone="muted" />
-                  <Span size="xs" color="muted">End-to-end encrypted by WhatsApp</Span>
+                  <Icon
+                    name="lock"
+                    size="xs"
+                    className="text-[var(--appkit-color-whatsapp-fg-muted)]"
+                  />
+                  <Span size="xs" className="text-[var(--appkit-color-whatsapp-fg-muted)]">
+                    End-to-end encrypted by WhatsApp
+                  </Span>
                 </Row>
               </Stack>
             )}

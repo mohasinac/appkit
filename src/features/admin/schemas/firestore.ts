@@ -1526,6 +1526,26 @@ export interface SiteSettingsDocument extends BaseDocument {
      * a bounded default rather than treating it as unlimited.
      */
     claimWindowDays: number;
+    /**
+     * Waive the platform fee, its GST and shipping on a ticket-entitled prize
+     * line.
+     *
+     * Owner, 2026-11-14, shown a real claim that cost the winner ₹11.80 with
+     * ₹10.62 collected at the door: a prize claim should cost **nothing**.
+     *
+     * 🛑 OPTIONAL, AND ABSENT MEANS WAIVE — the inverse of this file's usual
+     * money-path rule. The flag reduces a CHARGE rather than granting a
+     * capability, so the two directions are not symmetric: assuming "waive" on
+     * a failed read loses ~₹12 of fee, while assuming "charge" bills a prize
+     * winner to collect their prize. Full reasoning, and why it must not be
+     * "tidied" into consistency with its neighbours, is on
+     * `isPrizeFeeWaiverEnabled`.
+     *
+     * ⚠ It cannot widen an entitlement. The waiver applies only to a line the
+     * purchase gate has already allowed, so no value of this flag makes a ₹0
+     * prize takeable without its win ticket.
+     */
+    waiveFeesOnClaim?: boolean;
   };
   returns: {
     windowDays: number;

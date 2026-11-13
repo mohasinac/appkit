@@ -215,8 +215,35 @@
   --appkit-color-tiktok:         #010101;
   --appkit-color-deviantart:     #05CC47;
   --appkit-color-whatsapp:       #25D366;
-  --appkit-color-whatsapp-light: #1ebe5d;
+  /* 🛑 DARKENED 2026-11-14 from #1ebe5d. White on #1ebe5d measured 2.45:1 in a
+     real browser — the "Join the community" heading, its description and the
+     CTA all sit on this green, in BOTH themes. #0b6b35 scores 6.48:1 with
+     white and keeps the brand hue.
+
+     ⚠ WHY IT ESCAPED EVERY CHECK, which is the part worth keeping: this token
+     and its siblings are declared ONCE, with no per-theme override, because
+     WhatsApp chrome is brand colour rather than theme colour. `audit-contrast`
+     enumerates ink-on-SURFACE pairs per theme and had no entry for a brand
+     surface, and `verify-link-tokens` walks `.dark` rules that set `color:` —
+     a theme-invariant green appears in neither. The FIFTH time that audit has
+     been too narrow (gradient stops → links → button ink → button fills →
+     this). */
+  --appkit-color-whatsapp-light: #0b6b35;
   --appkit-color-whatsapp-bg:    #ECE5DD;
+  /* 🛑 INK FOR THE CREAM PANEL, declared HERE so it cannot drift from the
+     surface it is read against.
+
+     `--appkit-color-whatsapp-bg` is theme-INVARIANT; `--appkit-color-text-muted`
+     is theme-VARIANT (#52525a light → #b4b4bd dark). So "End-to-end encrypted
+     by WhatsApp" scored 6.20:1 in light and **1.87:1 in dark** — the surface
+     stayed put and the ink flipped out from under it.
+
+     ⚠ That is the general shape, not a WhatsApp quirk: ANY component that
+     paints its own theme-invariant surface must draw with theme-invariant ink.
+     A token pair declared together is the only form of that rule which cannot
+     be forgotten. WhatsApp's own ink colours. */
+  --appkit-color-whatsapp-fg:        #111b21;
+  --appkit-color-whatsapp-fg-muted:  #54656f;
   /* WhatsApp's own deep teal. Needed as a third gradient stop: a green
      darkened with color-mix() reads olive, not teal, so the brand's dark end
      cannot be derived from --appkit-color-whatsapp. */

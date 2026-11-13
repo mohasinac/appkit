@@ -81,8 +81,15 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-color-accent-c": "#7e22ce",   // purple-700 on purple-50
     "appkit-color-accent-c-surface": "#faf5ff",
     "appkit-color-star": "#facc15",
-    "appkit-color-whatsapp-light": "#1ebe5d",
+    /* Darkened 2026-11-14 — white on the old #1ebe5d measured 2.45:1 in a
+       browser. See tokens.css for why no audit caught a theme-invariant
+       brand surface. */
+    "appkit-color-whatsapp-light": "#0b6b35",
     "appkit-color-whatsapp-bg": "#ECE5DD",
+    /* Theme-INVARIANT ink for the theme-invariant cream panel — declared
+       beside it so the two cannot drift apart. */
+    "appkit-color-whatsapp-fg": "#111b21",
+    "appkit-color-whatsapp-fg-muted": "#54656f",
     "appkit-color-whatsapp-dark": "#075E54",
 
     "appkit-color-focus-ring": "#3570fc",

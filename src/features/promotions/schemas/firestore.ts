@@ -61,6 +61,33 @@ export interface RestrictionsConfig {
   excludeCategories?: string[];
   firstTimeUserOnly: boolean;
   /**
+   * A VALUE CEILING for a win ticket: this ticket entitles any prize listing
+   * worth up to this much, rather than a named set of products.
+   *
+   * Owner, 2026-11-13: *"if in future we decide to do more generic prizes like
+   * anything from the listing store under 10k then that is meaningful"* — and
+   * *"10k is a number I spouted, it has to be properly configured."* So the
+   * number is per-ticket data, never a constant anywhere.
+   *
+   * 🛑 DECLARED HERE BECAUSE IT WAS BEING STORED AND NOT DECLARED. `award.ts`
+   * wrote `restrictions.maxItemValue`, `claim-gate.ts` had it on its own input
+   * type and read it — and this interface, the shape of the STORED document,
+   * never mentioned it. The checkout's ticket loader therefore built its input
+   * from the three fields it knew about and silently omitted this one, so the
+   * ceiling arm was never fed and a generic ticket matched nothing.
+   *
+   * ⚠ It failed CLOSED (an unfed ceiling refuses the line rather than opening
+   * the catalogue), which is why nothing broke visibly and why it survived a
+   * session that believed it was finished. A comment in `award.ts` asserting
+   * the ceiling was "now ENFORCED by the purchase gate" was written before this
+   * was measured; it is corrected there.
+   *
+   * ⚠ Compared against the listing's NOMINAL price, not its ₹0 checkout price,
+   * and an absent item value REFUSES rather than matching — so a missing
+   * figure can only ever be stricter.
+   */
+  maxItemValue?: number;
+  /**
    * Roles permitted to redeem this coupon. **Absent or empty means EVERYONE** —
    * the normal case, and the only backwards-compatible reading for the coupons
    * already stored.

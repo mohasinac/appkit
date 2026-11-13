@@ -202,6 +202,8 @@ import { PAYMENT_METHOD_LABEL } from "../../../shared/checkout/rules/payment-gat
 import { amountDueNow } from "../../../shared/checkout/order-math";
 import { resolveAutoCover } from "../../../shared/features/protection/auto-cover";
 import { refusedPrizeLines } from "../../../shared/features/prizes/claim-gate";
+import { loadPrizeTickets, resolvePrizeWaiver } from "../prizes/resolve-waiver";
+import { billableUnitsFor } from "../../../shared/features/prizes/fee-waiver";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
@@ -3194,25 +3196,15 @@ export async function createCheckoutOrderAction(
      * ⚠ Bounded: a cart carries at most a handful of coupons, and this runs
      * once per checkout on a path that is already doing reads.
      */
-    tickets: await (async () => {
-      const applied = cart.appliedCoupons ?? [];
-      if (applied.length === 0) return [];
-      const docs = await Promise.all(
-        applied.map((c) =>
-          c.couponId
-            ? couponsRepository.findById(c.couponId).catch(() => null)
-            : couponsRepository.getCouponByCode(c.code).catch(() => null),
-        ),
-      );
-      /* ⚠ An unreadable coupon contributes NO entitlement rather than being
-         skipped silently — `refusedPrizeLines` then refuses the prize line,
-         which is the fail-closed direction. */
-      return docs.filter(Boolean).map((d) => ({
-        applicableProducts: d!.restrictions?.applicableProducts ?? [],
-        allowedUserIds: d!.restrictions?.allowedUserIds ?? [],
-        claimQuantity: (d as { claimQuantity?: number }).claimQuantity,
-      }));
-    })(),
+    /*
+     * ⚠ `loadPrizeTickets`, NOT an inline loader. This WAS an inline IIFE that
+     * mapped three fields — and silently omitted `maxItemValue`, so the gate's
+     * value-ceiling arm was never fed and a generic prize ticket matched
+     * nothing. It failed closed, so nothing broke visibly. One loader now, used
+     * here and by `resolvePrizeWaiver`, because two loaders for one entitlement
+     * is how that omission happened.
+     */
+    tickets: await loadPrizeTickets(cart.appliedCoupons ?? []),
     buyerUserId: uid,
   });
 

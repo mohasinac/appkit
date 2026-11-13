@@ -160,15 +160,31 @@ export async function issueWinTickets(
   const failed: Array<{ userId: string; reason: string }> = [];
 
   /*
-   * ✅ The ceiling IS enforced now — `refusedPrizeLines` matches a line either
-   * by named product or by `maxItemValue`, so issuing against it is permitted.
+   * ⚠ CORRECTED 2026-11-14. An earlier version of this comment claimed the
+   * ceiling was "now ENFORCED by the purchase gate". It was not, and the way
+   * it was wrong is the useful part:
    *
-   * 🛑 The rule that got it here stands and is the reason this comment is kept:
-   * a stored ceiling with no reader reads as a restriction while permitting the
-   * whole catalogue — on a claim path, any item at any price. Issuing against
-   * `maxItemValue` was REFUSED until the gate could read it. If the gate's
-   * ceiling arm is ever removed, this refusal comes back; it does not become
-   * optional because the field already exists.
+   * `refusedPrizeLines` DID implement the ceiling arm and DID have
+   * `maxItemValue` on its input type. But `RestrictionsConfig` — the shape of
+   * the STORED coupon — never declared the field, so the checkout's ticket
+   * loader built its input from the three fields it knew about and omitted
+   * this one. The gate's ceiling arm was never fed.
+   *
+   * 🛑 Three layers each looked complete in isolation: the writer wrote it, the
+   * gate read it, the type between them did not mention it. Nothing could see
+   * the gap — `tsc` cannot flag a field absent from an interface that the
+   * writer never typed against, and the failure was SILENT because it failed
+   * CLOSED (an unfed ceiling refuses the line rather than opening the
+   * catalogue). A generic prize ticket simply never worked.
+   *
+   * ✅ Now genuinely end to end: declared on `RestrictionsConfig`, carried by
+   * `resolvePrizeWaiver`'s loader, read by the gate.
+   *
+   * 🛑 The original rule still stands: a stored ceiling with no reader reads as
+   * a restriction while permitting the whole catalogue — on a claim path, any
+   * item at any price. If the gate's ceiling arm or the loader's field is ever
+   * removed, issuing against `maxItemValue` must be REFUSED again. It does not
+   * become optional because the field exists.
    */
   const prizeIds = Array.from(new Set(input.prizeProductIds.filter(Boolean)));
   if (prizeIds.length === 0) {
