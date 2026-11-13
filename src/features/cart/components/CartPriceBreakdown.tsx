@@ -4,7 +4,7 @@ import React from "react";
 import { Details, Summary } from "../../../ui/components/Details";
 import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
-import { Text } from "../../../ui/components/Typography";
+import { Span, Text } from "../../../ui/components/Typography";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { FeeDerivation, FeeDerivations } from "../../../_internal/shared/fees/explain";
 
@@ -129,9 +129,26 @@ export interface CartPriceBreakdownProps {
  */
 function Derivation({ derivation }: { derivation: FeeDerivation }) {
   return (
-    <Details tone="muted" padding="sm" rounded="md">
-      <Summary size="xs" color="muted">
-        How is this calculated?
+    <Details tone="muted" padding="sm" rounded="md" className="group">
+      {/*
+        * 🛑 THE CHEVRON IS NOT DECORATION — without it this reads as a button
+        * or a link, not as something that expands.
+        *
+        * Owner, 2026-11-13: *"show a disclaimer dropdown arrow for them to
+        * click, right now it looks like a button link."* `Summary` hides the
+        * native `::-webkit-details-marker`, so a disclosure built on it has NO
+        * affordance at all unless one is drawn — and this one sits in the
+        * order summary beside money, where "is this a link that navigates
+        * away mid-checkout?" is a question a buyer should never have to ask.
+        */}
+      <Summary size="xs" color="muted" layout="flex" align="center" justify="between">
+        <Span>How is this calculated?</Span>
+        <Span
+          aria-hidden="true"
+          className="ml-2 transition-transform duration-200 group-open:rotate-180"
+        >
+          ▾
+        </Span>
       </Summary>
       <Stack gap="xs" className="pt-[var(--appkit-space-2)]">
         <Text size="xs" color="muted">
