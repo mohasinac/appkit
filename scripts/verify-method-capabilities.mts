@@ -30,6 +30,7 @@ import {
   hasReversibleCapture,
   isKnownPaymentMethod,
 } from "../src/_internal/shared/payments/method-capabilities";
+import { CHECKOUT_PAYMENT_METHODS } from "../src/_internal/shared/features/checkout/config.ts";
 
 let failures = 0;
 let checks = 0;
@@ -175,12 +176,49 @@ check(
   bypassesCapture("admin_bypass_"),
   false,
 );
+/*
+ * ── CAPTURE-BYPASSING TENDERS ─────────────────────────────────────────────
+ *
+ * This used to assert `=== ["admin_bypass"]`, i.e. "exactly ONE method
+ * bypasses capture". It FIRED when `no_payment` was added with the ₹0 lane,
+ * which is the tripwire working — but the count was never the property worth
+ * protecting. Its own message says what is: *"a second would silently become
+ * SUGGESTABLE."*
+ *
+ * 🛑 So assert THAT, executably. `payment-gate.ts` filters bypassers out of the
+ * suggestion list (`CHECKOUT_PAYMENT_METHODS.filter(m => !bypassesCapture(m) …)`),
+ * and the real invariant is that no capture-bypassing tender is ever offered
+ * to a buyer as an alternative. A staff override and a zeroed total are not
+ * things to suggest.
+ *
+ * ⚠ Widening the array to `["admin_bypass", "no_payment"]` would have been the
+ * cheap fix and would have left the assertion testing a COUNT — passing
+ * happily on the day a third bypasser arrives that IS selectable, which is the
+ * exact failure the message describes. The list is now derived, not enumerated.
+ */
+const bypassers = Object.entries(PAYMENT_METHOD_CAPABILITIES)
+  .filter(([, c]) => c.bypassesCapture)
+  .map(([m]) => m);
+
+/*
+ * ⚠ Asserted as CONCRETE FACTS per method, not as a clever derived expression.
+ * A first attempt checked "every bypasser is filtered out of the suggestions"
+ * — which is TAUTOLOGICAL, because the filter is the exclusion. A verifier
+ * that restates the implementation passes no matter what the implementation
+ * does; that is the same defect as a test re-typing the rule it tests.
+ *
+ * These two can genuinely regress, and each names what breaks:
+ */
 check(
-  "🛑 exactly ONE known method bypasses capture — a second would silently become suggestable",
-  Object.entries(PAYMENT_METHOD_CAPABILITIES)
-    .filter(([, c]) => c.bypassesCapture)
-    .map(([m]) => m),
-  ["admin_bypass"],
+  "🛑 the two known bypassers are exactly the staff override and the zeroed total",
+  bypassers.sort(),
+  ["admin_bypass", "no_payment"],
+);
+
+check(
+  "🛑 `no_payment` is NOT buyer-selectable — it is DERIVED after the gate runs",
+  (CHECKOUT_PAYMENT_METHODS as readonly string[]).includes("no_payment"),
+  false,
 );
 
 /**

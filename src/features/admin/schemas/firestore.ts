@@ -1495,6 +1495,38 @@ export interface SiteSettingsDocument extends BaseDocument {
      */
     provider?: "manual" | "shiprocket";
   };
+  /**
+   * Event prizes — how long a win stays claimable.
+   *
+   * Owner, 2026-11-14: *"make sure that there is a gate, say 7 or 10 days or 15
+   * days I can set, so that no one can claim something after 2-3 years"* and
+   * *"same like expirations."*
+   *
+   * 🛑 CONFIG, NOT A CONSTANT, and the owner named the reason twice: the figure
+   * is theirs to set, and *"10k is a number I spouted"* applies to this one too.
+   * A `7`/`10`/`15` literal in the award path is the deploy test failing.
+   *
+   * ⚠ It works exactly like a coupon expiry because it IS one: the window is
+   * written onto the win ticket's `validity.endDate`, and `validateCoupon`
+   * already refuses an expired coupon. So a stale ticket is dead by the same
+   * mechanism every other coupon uses — there is no second expiry system, and
+   * that is deliberate.
+   */
+  prizes: {
+    /**
+     * Days from AWARD, not from the event's close.
+     *
+     * ⚠ The distinction matters: winners are often announced days after an
+     * event ends, and dating the window from the close would silently eat part
+     * of it — on a slow announcement, all of it. A winner's clock starts when
+     * they could first have known they won.
+     *
+     * 🛑 Absent must NOT mean "forever". A missing value is the one case that
+     * recreates the problem this setting exists to prevent, so readers clamp to
+     * a bounded default rather than treating it as unlimited.
+     */
+    claimWindowDays: number;
+  };
   returns: {
     windowDays: number;
     /**
