@@ -9,7 +9,7 @@ import { Icon } from "../../../ui/components/Icon";
 import { useToast } from "../../../ui/components/Toast";
 import { useAddToCart } from "../../cart/hooks/useAddToCart";
 import { apiClient } from "../../../http";
-import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
+import { CART_ENDPOINTS, WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 import { addToGuestWishlist } from "../../wishlist/utils/guest-wishlist";
 import { ROUTES } from "../../../next/routing/route-map";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
@@ -94,9 +94,51 @@ export function ProductDetailActions({
     }
   }
 
+  /**
+   * Buy Now — checkout for THIS ITEM ONLY.
+   *
+   * 🛑 IT USED TO CHECK OUT THE WHOLE CART. The old body was
+   * `handleAddToCart(() => router.push(CHECKOUT))`: it added the item and
+   * navigated, and checkout then priced every line the buyer had. Someone with
+   * ₹40,000 of saved items who pressed "Buy Now" on a ₹299 spare was taken to
+   * a ₹40,299 checkout. Owner, 2026-11-13: *"if i am doing a buy now do not
+   * put the whole cart into the checkout, just the item i am buying out."*
+   *
+   * ✅ Scoped through `selectedItemIds`, the mechanism checkout ALREADY uses
+   * (`actions.ts`: `new Set(cart.selectedItemIds)`), rather than inventing a
+   * parallel buy-now lane. A stored "buyNowItemId" would be a sixth blocking
+   * mechanism and — worse — could go stale and silently scope every LATER
+   * checkout to one item. Selection is user-visible in the cart and the buyer
+   * can change it, so it cannot strand them.
+   *
+   * ⚠ The cart KEEPS every other item; only the selection narrows. That is the
+   * owner's "cart untouched" — nothing a buyer spent time building is lost.
+   *
+   * 🛑 FAILS CLOSED. If the scoping call fails we do NOT navigate: landing on
+   * checkout with an unnarrowed cart is the exact defect being fixed, and it
+   * would charge for items the buyer never chose. An error they can retry is
+   * strictly better than a silent overcharge.
+   */
   async function handleBuyNow() {
     requireAuth(ACTION_ID.BUY_NOW, async () => {
-      await handleAddToCart(() => router.push(String(ROUTES.USER.CHECKOUT)));
+      await handleAddToCart(async () => {
+        try {
+          const res = (await apiClient.get(CART_ENDPOINTS.GET)) as
+            | { cart?: { items?: Array<{ itemId: string; productId: string }> } }
+            | undefined;
+          const line = res?.cart?.items?.find((i) => i.productId === productId);
+          if (!line) throw new Error("cart line not found after add");
+          await apiClient.put(CART_ENDPOINTS.SELECTION, { itemIds: [line.itemId] });
+        } catch (err) {
+          void normalizeError(err);
+          showToast(
+            "Could not start a single-item checkout. Open your cart and try again.",
+            "error",
+          );
+          return;
+        }
+        router.push(String(ROUTES.USER.CHECKOUT));
+      });
     });
   }
 
