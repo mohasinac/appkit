@@ -620,6 +620,41 @@ function accumulateCouponUsage(
  * exact same per-seller shipping fee that order creation charges/records —
  * a single source of truth instead of a third re-implementation.
  */
+/**
+ * The STRICTEST listing-level free-delivery threshold across an order group.
+ *
+ * 🛑 ONE HELPER, THREE CALL SITES. `resolveShippingCost` is called from the
+ * order path, the preview and the gateway path, and a threshold computed in
+ * only some of them is the shown-vs-charged drift this file already carries
+ * several warnings about.
+ *
+ * ⚠ Returns `undefined` when NO line overrides — not `Infinity` — so the caller
+ * omits the option entirely and the seller's own `freeAbove` stands untouched.
+ * That is what makes this additive for every store that has never used the
+ * field.
+ *
+ * ⚠ STRICTEST wins, per the settled group convention: one parcel, one carriage
+ * charge, so the generous reading lets the cheapest qualifying line ship an
+ * entire group free.
+ */
+function groupFreeAboveOf(
+  group: readonly { product: ProductDocument | null }[],
+): number | undefined {
+  const declared = group
+    .map((g) => g.product?.shipping?.freeAbove)
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v) && v >= 0);
+  if (declared.length === 0) return undefined;
+  /*
+   * 🛑 Every line must declare one for the group to inherit a listing-level
+   * value. A group where only SOME lines opted in falls back to the store —
+   * otherwise one opted-in line would impose its threshold on items whose
+   * seller never chose it, which is the mandatory-by-inheritance failure the
+   * owner's "opt-in, not mandatory" ruling is about.
+   */
+  if (declared.length !== group.length) return undefined;
+  return Math.max(...declared);
+}
+
 export async function resolveShippingCost(
   storeId: string | undefined,
   /**
@@ -1898,8 +1933,18 @@ async function createOrderForGroup(
     (sum, { item, product }) => sum + lineTotalFor(item, product),
     0,
   );
+  /*
+   * The group's listing-level free-delivery threshold, resolved HERE because
+   * this is the only scope that holds the lines. Omitted when no listing
+   * overrides, so the seller's own value stands — additive, not a behaviour
+   * change for any store that has not used the field.
+   */
+  const groupListingFreeAbove = groupFreeAboveOf(group);
   const { shippingFee: resolvedShippingFee, shippingOffer, storeOwnerId, storeState, storeProtections, storeTaxIdentity, acceptsPoints, sharedPurchaseRates, storePaymentMethods } =
-    await resolveShippingCost(firstItem.storeId, { goodsValue: groupGoodsValue });
+    await resolveShippingCost(firstItem.storeId, {
+      goodsValue: groupGoodsValue,
+      ...(groupListingFreeAbove === undefined ? {} : { freeAbove: groupListingFreeAbove }),
+    });
 
   /*
    * ── §B: THE STORE AND LISTING LEVELS OF THE METHOD PRECEDENCE ────────────
@@ -4041,7 +4086,10 @@ export async function previewCheckoutPricing(
      * agreed, and both were wrong in the same direction.
      */
     const { shippingFee: groupShippingFee, shippingOffer: groupShippingOffer, storeState, storeProtections, acceptsPoints, sharedPurchaseRates: previewSharedRates } =
-      await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+      await resolveShippingCost(firstItem.storeId, {
+      goodsValue: groupTotal,
+      ...(groupFreeAboveOf(group) === undefined ? {} : { freeAbove: groupFreeAboveOf(group)! }),
+    });
 
     /*
      * ── WHAT THE BUYER MAY CHOOSE, priced by the server ──────────────────
@@ -4843,7 +4891,10 @@ async function createPhonePeGroupOrder(
   // seller group here, duplicated from resolveShippingCost.
   // D44: `groupTotal` is computed just above — pass it so a free-above
   // threshold can fire and an unpriceable store is recorded.
-  const { shippingFee, shippingOffer, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates } = await resolveShippingCost(firstItem.storeId, { goodsValue: groupTotal });
+  const { shippingFee, shippingOffer, storeOwnerId, storeState, storeTaxIdentity, storeProtections, acceptsPoints, sharedPurchaseRates } = await resolveShippingCost(firstItem.storeId, {
+      goodsValue: groupTotal,
+      ...(groupFreeAboveOf(group) === undefined ? {} : { freeAbove: groupFreeAboveOf(group)! }),
+    });
 
 
   /*
