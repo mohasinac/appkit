@@ -215,10 +215,35 @@
   background: var(--appkit-color-primary-100);
 }
 
+/*
+ * ── 🛑 A DARK RAMP STEP CANNOT BE INK ON A DARK PAGE ────────────────────────
+ *
+ * This used `--appkit-color-secondary` for BOTH the fill tint and the label.
+ * In the dark theme that token is `#695617` — a dark olive — so the label sat
+ * on a 16%-tint of itself over a near-black page:
+ *
+ *     measured on the live PDP:  1.9 : 1
+ *
+ * ⚠ And the button it renders is **"Add to Cart"**, the primary buy action.
+ * It read as DISABLED in a screenshot; it was not disabled, just invisible.
+ * That is worse than an unreadable label — it tells the buyer the money path
+ * is unavailable.
+ *
+ * ✅ The label now uses `secondary-400` (`#d6bb62`, 10.7:1 on `#020617`) — the
+ * light rung of the same brand ladder, so the identity is unchanged. The fill
+ * and border keep `secondary` because a 16% tint and a 1px edge are decorative
+ * and are not read.
+ *
+ * 🛑 THIRD INSTANCE OF THIS CLASS IN ONE DAY: the `brand-tri` gradient, the
+ * default text link, and now the secondary button. All three used a ramp step
+ * chosen for a light background as INK on a dark one. The rule that prevents a
+ * fourth: on a dark surface, ink comes from the LIGHT end of a ramp
+ * (`*-200`…`*-400`), never the base token or the dark end.
+ */
 .dark .appkit-button.appkit-button--secondary {
   background: color-mix(in srgb, var(--appkit-color-secondary) 16%, transparent);
-  border-color: var(--appkit-color-secondary);
-  color: var(--appkit-color-secondary);
+  border-color: var(--appkit-color-secondary-400);
+  color: var(--appkit-color-secondary-400);
 }
 
 .dark .appkit-button.appkit-button--secondary:hover:not(:disabled) {

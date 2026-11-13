@@ -53,8 +53,11 @@
   color: var(--appkit-color-text-faint);
 }
 
+/* 🛑 Was `border` (#334155) — a BORDER token used as ink, 1.95:1 on the dark
+ * page. A hover state that is less readable than the resting state inverts the
+ * affordance: the link disappears at the moment the user points at it. */
 .dark .appkit-text-link--muted:hover {
-  color: var(--appkit-color-border);
+  color: var(--appkit-color-text);
 }
 
 /* Same correction as `--default` above: `secondary-600` is 2.01:1 on a light
@@ -82,8 +85,10 @@
   color: var(--appkit-color-text-faint);
 }
 
+/* 🛑 Was `primary-400` (#1f52e4) — 3.25:1, the same dark-rung-as-ink error as
+ * the default link. `primary-200` is the light end of the same ramp. */
 .dark .appkit-text-link--nav:hover {
-  color: var(--appkit-color-primary-400);
+  color: var(--appkit-color-primary-200);
 }
 
 /* danger — red destructive link */

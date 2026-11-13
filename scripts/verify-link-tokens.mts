@@ -97,5 +97,44 @@ const oldDark = ratio(D["appkit-color-primary-400"]!, D["appkit-color-bg"]!);
 check(oldLight < 4.5, "light secondary-600 is below AA as link text", `${oldLight.toFixed(2)}:1`);
 check(oldDark < 4.5, "dark primary-400 is below AA as link text", `${oldDark.toFixed(2)}:1`);
 
+/*
+ * ── 🛑 THE GENERAL RULE, after three instances in one day ──────────────────
+ *
+ * The `brand-tri` gradient, `.appkit-text-link--default` and
+ * `.appkit-button--secondary` all used a ramp step chosen for a LIGHT
+ * background as INK on a DARK one. Each was invisible in exactly one theme;
+ * the button one read as a DISABLED "Add to Cart", which is worse than
+ * unreadable — it tells the buyer the money path is closed.
+ *
+ * On a dark surface, ink comes from the LIGHT end of a ramp (`*-200`…`*-400`).
+ * This checks every `.dark` rule that sets a `color:` from a brand ramp and
+ * asserts the result is readable on the dark page.
+ */
+console.log("\n  ── `.dark` rules must not use a dark ramp step as INK ──\n");
+const BUTTON_CSS = readFileSync(join(here, "..", "src", "ui", "components", "Button.style.css"), "utf8");
+const darkTokens = DEFAULT_DARK_THEME.tokens as Record<string, string>;
+const darkBg = darkTokens["appkit-color-bg"]!;
+
+for (const [file, text] of [
+  ["TextLink.style.css", css],
+  ["Button.style.css", BUTTON_CSS],
+] as const) {
+  /* Every `.dark …{ … color: var(--appkit-color-X) … }` */
+  for (const m of text.matchAll(/\.dark[^{]*\{([^}]*)\}/g)) {
+    const colour = /(?:^|[^-])color:\s*var\(--(appkit-color-[a-z0-9-]+)\)/m.exec(m[1]!);
+    if (!colour) continue;
+    const token = colour[1]!;
+    const value = darkTokens[token];
+    /* Only plain hex is evaluable; a color-mix or a missing token is skipped
+     * LOUDLY rather than silently passing. */
+    if (!value || !/^#[0-9a-f]{6}$/i.test(value)) {
+      console.log(`    ⚠ ${file}: ${token} = ${value ?? "undefined"} — not a plain hex, not evaluated`);
+      continue;
+    }
+    const r = ratio(value, darkBg);
+    check(r >= 4.5, `${file}: ${token} as ink on the dark page`, `${value} = ${r.toFixed(2)}:1`);
+  }
+}
+
 console.log(`\n${fail === 0 ? "✅ link tokens hold" : `🛑 ${fail} failure(s)`}`);
 process.exit(fail === 0 ? 0 : 1);
