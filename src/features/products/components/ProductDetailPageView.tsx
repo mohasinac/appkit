@@ -4,6 +4,9 @@ import { productRepository } from "../repository/products.repository";
 import { priceIndexRepository } from "../../categories/repository/price-index.repository";
 import { MarketPriceAnchor } from "./MarketPriceAnchor";
 
+/** Anchor a tag can scroll to — see the policy block below. */
+const PDP_POLICY_ANCHOR = "pdp-policies";
+
 const __P = {
   p3: "p-[var(--appkit-space-3)]",
   p5: "p-[var(--appkit-space-5)]",
@@ -39,6 +42,7 @@ import { Container, Row, Stack } from "../../../ui/components/Layout";
 import { Div } from "../../../ui/components/Div";
 import { Heading, Span, Text } from "../../../ui/components/Typography";
 import { Disclaimer } from "../../../ui/components/Disclaimer";
+import { Details, Summary } from "../../../ui/components/Details";
 import { Main, Section, Ul, Ol, Li } from "../../../ui/components/Semantic";
 import { PriceDisplay } from "../../../ui/components/PriceDisplay";
 import { RichText } from "../../../ui/rich-text/RichText";
@@ -899,6 +903,9 @@ export async function ProductDetailPageView({
                 condition={condition ?? undefined}
                 returnable={!finalSale && returnsEnabled}
                 finalSale={finalSale}
+                /* The badge explains itself: it points at the disclosure that
+                   says what "final sale" actually costs a buyer. */
+                finalSaleHref={`#${PDP_POLICY_ANCHOR}`}
                 labels={{
                   featured: "Featured",
                   fasterDelivery: "Faster Delivery",
@@ -1116,8 +1123,49 @@ export async function ProductDetailPageView({
                 shipping or policy text rendered this block not at all, so the
                 single most consequential term of the sale was invisible.
               */}
+              {/*
+                * ── THE POLICY BLOCK IS COLLAPSED BY DEFAULT ─────────────────
+                *
+                * Owner, 2026-11-13: *"disclaimers not hidden by default"* and
+                * *"show a disclaimer dropdown arrow for them to click, right
+                * now it looks like a button link"*.
+                *
+                * It rendered fully expanded in the buy box — "Final sale",
+                * the claim list, "WHO PAYS FOR A RETURN" and its freight
+                * paragraph — pushing the actual controls up and reading as a
+                * wall of legal text beside the price.
+                *
+                * 🛑 COLLAPSED, NOT REMOVED, and the distinction is the whole
+                * point. `return-cost`'s own registry note demands it be
+                * *"DISCLOSED before purchase — a buyer who learns at RTO that
+                * they owe freight has been charged for something they never
+                * agreed to"*. A disclosure one click away on the same screen
+                * is still before the decision; deleting it is not.
+                *
+                * ⚠ `Summary` hides the native marker, so the chevron is drawn
+                * here — without it the control reads as a link, which is
+                * exactly what the owner reported.
+                *
+                * `id` is the scroll target a tag can point at, with
+                * `scroll-mt` clearing the sticky header.
+                */}
               {(shippingInfo || returnPolicy || freeShipping || finalSale) && (
-                <Stack gap="sm" border="default" className="border-t" padding="t-md">
+                <Details
+                  id={PDP_POLICY_ANCHOR}
+                  tone="default"
+                  padding="none"
+                  className="group border-t border-[var(--appkit-color-border)] pt-[var(--appkit-space-4)] scroll-mt-[8rem]"
+                >
+                  <Summary size="xs" color="muted" layout="flex" align="center" justify="between">
+                    <Span>{finalSale ? "Final sale, delivery & returns" : "Delivery & returns"}</Span>
+                    <Span
+                      aria-hidden="true"
+                      className="ml-2 transition-transform duration-200 group-open:rotate-180"
+                    >
+                      ▾
+                    </Span>
+                  </Summary>
+                <Stack gap="sm" padding="t-md">
                   {freeShipping && (
                     <Row align="start" gap="sm">
                       <Span className={CLS_FREE_SHIPPING_ICON}>🚚</Span>
@@ -1179,6 +1227,7 @@ export async function ProductDetailPageView({
                   */}
                   <Disclaimer id="return-cost" inline />
                 </Stack>
+                </Details>
               )}
 
               {/* Tags */}

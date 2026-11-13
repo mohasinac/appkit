@@ -21,6 +21,14 @@ export interface DetailsProps {
   /** Auto-collapse other `<Details>` with the same `name` (browser-handled). */
   name?: string;
   /**
+   * DOM id — makes the disclosure an in-page ANCHOR TARGET.
+   *
+   * Added so a badge or tag can point at the disclosure that explains it
+   * ("Final Sale" → the delivery & returns block). Without an id the only way
+   * to reach a collapsed disclosure is to find and click it.
+   */
+  id?: string;
+  /**
    * Escape hatch for state-related classNames like `group` that drive
    * sibling `group-open:` animations. Variant slots (tone/padding) own
    * the visual styling; this is for behaviour-coupled utility classes.
@@ -155,11 +163,13 @@ export function Details({
   padding = "md",
   rounded,
   name,
+  id,
   className,
   style,
 }: DetailsProps) {
   return (
     <details
+      id={id}
       open={open ?? defaultOpen}
       onToggle={(event) => {
         if (onToggle) onToggle((event.currentTarget as HTMLDetailsElement).open);

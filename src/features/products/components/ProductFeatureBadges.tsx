@@ -41,6 +41,17 @@ interface ProductFeatureBadgesProps {
   codAvailable?: boolean;
   /** When set, the COD badge links here (e.g. the "How Checkout Works" policy page). */
   codHref?: string;
+  /**
+   * Where the "Final Sale" badge points — the disclosure that EXPLAINS it.
+   *
+   * Owner, 2026-11-13: *"move the disclaimers such that the tags auto explain
+   * themselves with proper focus and scroll to read."* A badge that states a
+   * refund consequence and cannot be asked "why?" is a warning with nowhere
+   * to go, and it matters most now that the explanation is COLLAPSED.
+   *
+   * Omitted → the badge stays plain text, exactly as before.
+   */
+  finalSaleHref?: string;
   labels: ProductFeatureBadgeLabels;
   formatCount?: (value: number) => string;
   categoryBadgeClassName?: string;
@@ -68,6 +79,7 @@ export function ProductFeatureBadges({
   categoryName,
   codAvailable,
   codHref,
+  finalSaleHref,
   labels,
   formatCount,
   categoryBadgeClassName,
@@ -140,6 +152,7 @@ export function ProductFeatureBadges({
       key: "finalSale",
       icon: <Span size="xs">⊘</Span>,
       label: labels.finalSale,
+      href: finalSaleHref,
       colorClass: "text-warning dark:text-warning",
       bgClass:
         "bg-warning-surface dark:bg-warning-surface border-warning dark:border-warning",
