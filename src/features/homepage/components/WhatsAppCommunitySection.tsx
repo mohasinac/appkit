@@ -180,29 +180,32 @@ export function WhatsAppCommunitySection({
               </Heading>
 
               {descriptionHtml && (
-                /* No colour class here. `prose-invert` sets `--tw-prose-body`
-                   itself, so ANY wrapper colour loses to it — the previous
-                   `text-white/80` on this element did nothing. */
-                {/*
-                  🛑 THE COLOUR IS FORCED, and `prose-invert` is not enough.
-                  Seen in a screenshot 2026-11-14: this line rendered as
-                  near-black on the dark green band. `prose-invert` only
-                  recolours when the typography plugin's inverted variables are
-                  in play; absent that the body inherits
-                  `--appkit-color-text`, which in the LIGHT theme is #18181b —
-                  about 2:1 on this gradient.
-
-                  ⚠ Same class as the two fixed above, third surface: an ink
-                  token tuned for the PAGE used on a brand surface the band
-                  paints itself. The heading beside it already solves this with
-                  `color="inverse"`; this element was the one left reading the
-                  page token.
-
-                  ⚠ `[&_*]` because the content is HTML — colouring only the
-                  wrapper leaves any <p> or <strong> inside it on the inherited
-                  colour, which is how it looked "sort of fixed" from the DOM
-                  and stayed unreadable on screen.
-                */}
+                /*
+                 * 🛑 THE COLOUR IS FORCED, and `prose-invert` is not enough.
+                 * The previous note here said "no colour class — prose-invert
+                 * sets --tw-prose-body itself, so any wrapper colour loses to
+                 * it". Seen in a screenshot 2026-11-14, that was wrong in
+                 * practice: this line rendered near-BLACK on the dark green.
+                 * `prose-invert` only recolours when the typography plugin's
+                 * inverted variables are in play; absent that, the body
+                 * inherits `--appkit-color-text`, which in the LIGHT theme is
+                 * #18181b — about 2:1 on this gradient.
+                 *
+                 * ⚠ Same class as the two fixed above, THIRD surface in one
+                 * band: an ink token tuned for the PAGE, used on a surface the
+                 * component paints itself. The heading beside it already
+                 * solves this with `color="inverse"`.
+                 *
+                 * ⚠ `[&_*]` because the content is HTML — colouring only the
+                 * wrapper leaves nested <p>/<strong> on the inherited colour,
+                 * which reads as fixed in the DOM and stays unreadable on
+                 * screen.
+                 *
+                 * ⚠ A PLAIN block comment, not `{...}`: a `{/* *\/}` here
+                 * would be a SECOND expression inside `cond && ( ... )`, which
+                 * is TS1005. That is the recorded JSX-comment trap, and it
+                 * cost a commit that did not compile.
+                 */
                 <RichText
                   html={descriptionHtml}
                   proseClass="prose prose-sm prose-invert max-w-none"
