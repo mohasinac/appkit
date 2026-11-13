@@ -158,12 +158,33 @@ export const DEFAULT_LIGHT_THEME: ThemeRecord = {
     "appkit-ease-out": "cubic-bezier(0, 0, 0.2, 1)",
   },
   gradients: {
+    /*
+     * ── READABLE STOPS, PER THEME (owner, 2026-11-13) ──────────────────────
+     *
+     * 🛑 These gradients are used with `background-clip: text` on display
+     * headings — the homepage `<h1>` is `brand-tri` — so every stop is TEXT
+     * and must clear the 3.0 large-text floor against this theme's `bg`.
+     * Measured on production before the fix:
+     *
+     *   light  secondary #d4af37  2.01:1   🛑   (and `secondary-500` 1.5:1)
+     *   light  accent    #8393b2  2.97:1   🛑
+     *
+     * The identity is unchanged — blue → gold — only the RUNG of each brand
+     * ladder differs per theme, which is the point: a single stop value cannot
+     * be readable on both a near-white and a near-black page.
+     *
+     * ⚠ `accent` is replaced by `info` as the third stop. It had no step in
+     * its ramp that clears the floor on this background, and the dark theme
+     * already used `info` here — so the two themes were drawing *different*
+     * gradients under one name. Unifying them fixes a readability failure and
+     * an inconsistency at once.
+     */
     brand:
-      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary))",
+      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary-800))",
     "brand-tri":
-      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary), var(--appkit-color-accent))",
+      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary-800), var(--appkit-color-info))",
     accent:
-      "linear-gradient(to right, var(--appkit-color-cobalt-500, var(--appkit-color-primary)), var(--appkit-color-secondary-500, var(--appkit-color-secondary)))",
+      "linear-gradient(to right, var(--appkit-color-secondary-800), var(--appkit-color-primary))",
     "accent-divider":
       "linear-gradient(to right, transparent, var(--appkit-color-primary), transparent)",
     "page-header":

@@ -127,12 +127,30 @@ export const DEFAULT_DARK_THEME: ThemeRecord = {
     "appkit-text-8xl": "6rem",
   },
   gradients: {
+    /*
+     * ── READABLE STOPS, PER THEME (owner, 2026-11-13) ──────────────────────
+     *
+     * 🛑 These are TEXT gradients (`background-clip: text` on display
+     * headings), so every stop must clear the 3.0 large-text floor against
+     * `bg` = #020617. Measured on production before the fix:
+     *
+     *   dark  primary   #1e3a8a  1.95:1   🛑
+     *   dark  secondary #695617  2.83:1   🛑
+     *
+     * The live symptom was the homepage `<h1>` "Buy Beyblade in India", where
+     * two of the three stops rendered the first two words nearly invisible —
+     * found by reading a dark-mode screenshot, not by any check.
+     *
+     * Same identity, lighter rung: on a near-black page the readable end of a
+     * brand ladder is the light end, which is the exact mirror of the light
+     * theme's choice. A single stop value cannot serve both.
+     */
     brand:
-      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary))",
+      "linear-gradient(to right, var(--appkit-color-primary-300), var(--appkit-color-secondary-400))",
     "brand-tri":
-      "linear-gradient(to right, var(--appkit-color-primary), var(--appkit-color-secondary), var(--appkit-color-info))",
+      "linear-gradient(to right, var(--appkit-color-primary-300), var(--appkit-color-secondary-400), var(--appkit-color-info))",
     accent:
-      "linear-gradient(to right, var(--appkit-color-secondary), var(--appkit-color-primary))",
+      "linear-gradient(to right, var(--appkit-color-secondary-400), var(--appkit-color-primary-300))",
     "accent-divider":
       "linear-gradient(to right, transparent, var(--appkit-color-primary), transparent)",
     "page-header":

@@ -243,7 +243,22 @@ for (const theme of THEMES) {
     const def = grads[name];
     if (!def) continue;
     /* Resolve `var(--appkit-color-x)` stops back to their token values. */
-    const stops = [...def.matchAll(/var\(--(appkit-color-[a-z0-9-]+)\)|(#[0-9a-f]{3,8})|(rgba?\([^)]*\))/gi)]
+    /*
+     * ⚠ NOTE THE MISSING `\)` after the token name — deliberate, and it fixes
+     * a blind spot that UNDER-REPORTED a failure.
+     *
+     * The light `accent` gradient was
+     * `var(--appkit-color-secondary-500, var(--appkit-color-secondary))` — a
+     * var with a FALLBACK. The old pattern required a closing paren
+     * immediately after the name, so it skipped the outer token and matched
+     * the inner FALLBACK instead, reporting `#d4af37` at 2.01:1. The browser
+     * uses the OUTER value when it is defined, and `secondary-500` is defined:
+     * the real rendered ratio was 1.5:1.
+     *
+     * So the audit was measuring a colour the page never painted, and
+     * flattering it. Matching the outer name first is what the cascade does.
+     */
+    const stops = [...def.matchAll(/var\(--(appkit-color-[a-z0-9-]+)|(#[0-9a-f]{3,8})|(rgba?\([^)]*\))/gi)]
       .map((m) => (m[1] ? t[m[1]] : (m[2] ?? m[3])))
       .filter((s): s is string => !!s && s !== "transparent");
     if (stops.length === 0) continue;
@@ -261,6 +276,14 @@ for (const theme of THEMES) {
     }
   }
 }
+/*
+ * 🛑 NOW BLOCKING. These were reported-not-failing only while the remedy was a
+ * pending owner decision about brand identity. The decision landed
+ * (2026-11-13: per-theme stops), the gradients were fixed, and a gate that
+ * stays advisory after its blocker clears is just a gate nobody obeys.
+ */
+fail += gradientWarn;
+
 if (gradientWarn === 0) {
   console.log(`    ✅ every text-gradient stop is readable on its own theme background`);
 } else {
@@ -278,10 +301,10 @@ if (gradientWarn === 0) {
    * above. The finding stays loud meanwhile; it just does not hold the gate.
    */
   console.log(`\n    ⚠ ${gradientWarn} gradient stop(s) below the 3.0 large-text floor — REPORTED, NOT FAILING.`);
-  console.log(`      Each is a BRAND colour, so the fix is an owner decision about identity.`);
-  console.log(`      Measured live on production: the homepage <h1> "Buy Beyblade in India"`);
-  console.log(`      renders through brand-tri, and in dark mode two of its three stops`);
-  console.log(`      (1.95:1 and 2.83:1) leave most of the headline barely visible.`);
+  console.log(`      Fix: pick a readable RUNG of the same brand ladder per theme — light`);
+  console.log(`      pages need the dark end, dark pages the light end. Identity is preserved;`);
+  console.log(`      only the step differs. A single stop value cannot serve both.`);
+
 }
 
 /*
