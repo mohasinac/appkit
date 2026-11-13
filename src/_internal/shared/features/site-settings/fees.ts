@@ -37,6 +37,21 @@ export interface BuyerFacingFees {
   saleProtectionFeeEnabled?: boolean;
   saleProtectionFeePercent?: number;
   saleProtectionFeeMin?: number;
+  /**
+   * The value up to which a parcel is covered for free.
+   *
+   * 🛑 PROJECTED BECAUSE THE BUYER IS TOLD THIS NUMBER. The three fee fields
+   * above shipped here while the LIMIT did not, so `StoreAddonsPicker` had no
+   * way to know it, its `autoCoverLimit` prop was never passed, and
+   * `resolveAutoCover` read the missing value as 0 — rendering *"Orders above
+   * ₹0 are not covered automatically"* while the server covered to ₹2,000.
+   *
+   * ⚠ A shown-vs-charged divergence on the money path, and the direction is
+   * the bad one: the buyer is told they have LESS cover than they do, so they
+   * buy protection they did not need. Found by reading the checkout screen,
+   * not by any check — both halves were individually correct.
+   */
+  saleProtectionAutoCoverLimit?: number;
   codHandlingFeeCap?: number;
   codHandlingFeePercent?: number;
   codDepositPercent?: number;
@@ -119,6 +134,9 @@ export function toBuyerFacingFees(
     saleProtectionFeeEnabled: commissions.saleProtectionFeeEnabled,
     saleProtectionFeePercent: commissions.saleProtectionFeePercent,
     saleProtectionFeeMin: commissions.saleProtectionFeeMin,
+    /* The limit the buyer is SHOWN — see the field's note for why its absence
+       rendered "covered above ₹0" while the server covered to ₹2,000. */
+    saleProtectionAutoCoverLimit: commissions.saleProtectionAutoCoverLimit,
     codHandlingFeeCap: commissions.codHandlingFeeCap,
     codHandlingFeePercent: commissions.codHandlingFeePercent,
     codDepositPercent: commissions.codDepositPercent,

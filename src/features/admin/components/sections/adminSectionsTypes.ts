@@ -617,7 +617,13 @@ export const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
      * the tile would render text-only, so a default that creates a correct
      * section has to carry real keys. See trust-icon-aliases.ts.
      */
-    { id: "ti-1", icon: "ship", title: "Free Shipping", description: "On orders above ₹999" },
+    /* ⚠ NO THRESHOLD IN A GENERIC DEFAULT. This read "On orders above ₹999" —
+       a rupee figure, in appkit's shared template, for an install that may
+       charge shipping on everything. A default that states a commercial
+       promise is a claim shipped to every consumer; the admin fills in their
+       own. (The shop's own hardcoded copy of this claim was hidden the same
+       day, for the same reason.) */
+    { id: "ti-1", icon: "ship", title: "Shipping", description: "" },
     { id: "ti-2", icon: "lock", title: "Secure Payment", description: "Protected checkout" },
     { id: "ti-3", icon: "verify", title: LABEL_VERIFIED_SELLERS, description: "Every store is manually verified" },
     { id: "ti-4", icon: "restore", title: "Easy Returns", description: "7-day hassle-free returns" },
