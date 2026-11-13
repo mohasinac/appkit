@@ -183,10 +183,30 @@ export function WhatsAppCommunitySection({
                 /* No colour class here. `prose-invert` sets `--tw-prose-body`
                    itself, so ANY wrapper colour loses to it — the previous
                    `text-white/80` on this element did nothing. */
+                {/*
+                  🛑 THE COLOUR IS FORCED, and `prose-invert` is not enough.
+                  Seen in a screenshot 2026-11-14: this line rendered as
+                  near-black on the dark green band. `prose-invert` only
+                  recolours when the typography plugin's inverted variables are
+                  in play; absent that the body inherits
+                  `--appkit-color-text`, which in the LIGHT theme is #18181b —
+                  about 2:1 on this gradient.
+
+                  ⚠ Same class as the two fixed above, third surface: an ink
+                  token tuned for the PAGE used on a brand surface the band
+                  paints itself. The heading beside it already solves this with
+                  `color="inverse"`; this element was the one left reading the
+                  page token.
+
+                  ⚠ `[&_*]` because the content is HTML — colouring only the
+                  wrapper leaves any <p> or <strong> inside it on the inherited
+                  colour, which is how it looked "sort of fixed" from the DOM
+                  and stayed unreadable on screen.
+                */}
                 <RichText
                   html={descriptionHtml}
                   proseClass="prose prose-sm prose-invert max-w-none"
-                  className="max-w-md text-[length:var(--appkit-text-base)] leading-relaxed"
+                  className="max-w-md text-[length:var(--appkit-text-base)] leading-relaxed text-white/90 [&_*]:text-white/90"
                 />
               )}
 
