@@ -2430,6 +2430,39 @@ async function createOrderForGroup(
    */
   const amountDueOnOrder = amountDueNow({ orderTotal, pointsApplied });
 
+  /*
+   * ── NOTHING LEFT TO COLLECT ───────────────────────────────────────────────
+   *
+   * Owner, 2026-11-13, chose a proper "no payment required" lane over capping
+   * discounts: an order whose total legitimately reaches zero — a prize
+   * coupon, or a full-coverage discount — is CONFIRMED here instead of being
+   * sent to a gateway that rejects zero-value captures.
+   *
+   * 🛑 DERIVED FROM THE SERVER'S OWN ARITHMETIC, never from anything a client
+   * sends. `amountDueOnOrder` is computed above from the priced cart; there is
+   * no field a buyer can post to claim their order is free.
+   *
+   * 🛑 EXCLUDES COD, AND THAT EXCLUSION IS THE WHOLE TRAP. For a cash-like
+   * method `amountDueOnOrder` is only the DEPOSIT — the balance rides on
+   * `codRemainingAmount` and is collected by the courier days later. A COD
+   * order with a zero deposit owes just as much as before, so treating "due
+   * now = 0" as "paid in full" would mark an unpaid order PAID and tell the
+   * courier to collect nothing. Both halves are checked: the method, and the
+   * remaining balance, because either one alone has a way to be wrong.
+   *
+   * ⚠ Status mirrors `adminBypass` (PROCESSING + PAID) for the same reason it
+   * does there — an order with nothing to collect can never leave PENDING on
+   * its own, and a payment that will never arrive is not a payment that is
+   * late. It is a DISTINCT `paymentMethod` from `admin_bypass` though: both
+   * are unpaid-but-complete, and only the method says whether an operator
+   * overrode it or the maths reached zero. See `PaymentMethodValues`.
+   */
+  const nothingToCollect =
+    !adminBypass &&
+    !isCodLike &&
+    amountDueOnOrder <= 0 &&
+    (codRemainingAmount ?? 0) <= 0;
+
   // Both creation paths call the SAME builder — two hand-written copies is the
   // create-vs-create axis of Root Cause #39, and these two functions have
   // already drifted once before (add-on fees, Root Cause #65).
@@ -2536,9 +2569,21 @@ async function createOrderForGroup(
     // Distinguishes a Buy Now purchase from a settled collector drop win. Both are
     // orderType "collector-drop"; only this one gets the 24h admin-review window.
     isBuyout: firstItem.isBuyout ? true : undefined,
-    status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
-    paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
-    paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
+    status:
+      adminBypass || nothingToCollect
+        ? OrderStatusValues.PROCESSING
+        : OrderStatusValues.PENDING,
+    paymentStatus:
+      adminBypass || nothingToCollect
+        ? PaymentStatusValues.PAID
+        : PaymentStatusValues.PENDING,
+    /* 🛑 Three distinct methods for three distinct reasons an order can be
+       complete with no money moving — see `PaymentMethodValues.NO_PAYMENT`. */
+    paymentMethod: adminBypass
+      ? PaymentMethodValues.ADMIN_BYPASS
+      : nothingToCollect
+        ? PaymentMethodValues.NO_PAYMENT
+        : paymentMethod,
     paymentId: adminBatchId,
     adminBypassBy: adminBypassBy,
     shippingAddress,

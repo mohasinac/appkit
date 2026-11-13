@@ -185,6 +185,26 @@ export const PaymentMethodValues = {
   ONLINE: "online",
   ADMIN_BYPASS: "admin_bypass",
   EMI: "emi",
+  /**
+   * The order was fully covered before payment — nothing was left to charge.
+   *
+   * 🛑 A DISTINCT METHOD, not `online` with a zero capture and not
+   * `admin_bypass`. All three produce a paid order with no money moving, and
+   * collapsing them would destroy the only record of WHY:
+   *
+   *   `online`        — money moved, there is a gateway reference
+   *   `admin_bypass`  — an operator overrode payment, with an actor logged
+   *   `no_payment`    — the arithmetic reached zero legitimately
+   *
+   * An accountant reconciling a month needs those three to be different rows;
+   * a refund path needs to know there is nothing to reverse; and support
+   * needs to answer "why was this free?" without guessing.
+   *
+   * ⚠ Reached ONLY when the SERVER's own computed total is zero — a coupon or
+   * prize covering the whole order, including its fees. It is never selectable
+   * and never sent by a client; see the order action, which derives it.
+   */
+  NO_PAYMENT: "no_payment",
 } as const;
 
 /**
