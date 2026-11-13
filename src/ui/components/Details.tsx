@@ -222,10 +222,25 @@ export function Details({
      */
     const onClick = (e: MouseEvent) => {
       const anchor = (e.target as Element | null)?.closest?.("a");
-      if (anchor?.getAttribute("href") === `#${id}`) {
-        /* After the router has moved, so the scroll it performs still wins. */
-        setTimeout(reveal, 0);
-      }
+      if (anchor?.getAttribute("href") !== `#${id}`) return;
+      /*
+       * 🛑 OPEN DIRECTLY — do NOT re-check `location.hash` here.
+       *
+       * The first version deferred to `reveal()`, which reads the hash. With
+       * `next/link` the router updates the URL ASYNCHRONOUSLY, so even on a
+       * `setTimeout(…, 0)` the hash was still the OLD value, `reveal()` bailed
+       * on its own guard, and the disclosure stayed shut — measured exactly
+       * that way, twice, with the listener firing correctly both times.
+       *
+       * The handler already knows the answer: this anchor targets this id.
+       * Asking the URL to confirm it was a redundant check that could only be
+       * wrong, which is the whole lesson — a guard that re-derives a fact the
+       * caller already has is a race, not a safeguard.
+       */
+      const el = ref.current;
+      if (!el || el.open) return;
+      el.open = true;
+      el.querySelector("summary")?.focus({ preventScroll: true });
     };
 
     reveal();
