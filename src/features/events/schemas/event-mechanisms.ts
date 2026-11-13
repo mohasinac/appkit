@@ -48,6 +48,16 @@ export const EVENT_MECHANISM = {
   SUBMISSION: "submission",
   /** Visitors vote on those entries; counts public, voters admin-only. */
   ENTRY_VOTING: "entryVoting",
+  /**
+   * The event declares PRIZES — so there is a prize list worth a tab.
+   *
+   * ⚠ Already present in the event-type config as data; this constant only
+   * names it for readers. Its row describes the obligation precisely:
+   * *"Declared prizes render; awarding them is a recorded decision"*, and it
+   * is flagged `moneyPath: true` — a prize is a thing of value, so who gets it
+   * and when is evidence, not presentation.
+   */
+  PRIZE_POOL: "prizePool",
 } as const;
 
 /** The config row for a stored `type` slug, or `undefined` if unrecognised. */
@@ -90,4 +100,23 @@ export function eventTypeHasEntryGallery(type: string | undefined): boolean {
 /** May visitors vote on this event's entries? */
 export function eventTypeHasEntryVoting(type: string | undefined): boolean {
   return eventTypeHasMechanism(type, EVENT_MECHANISM.ENTRY_VOTING);
+}
+
+/**
+ * Does this event type award PRIZES — i.e. is a Prizes tab meaningful?
+ *
+ * 🛑 A CAPABILITY, never `type === "contest"`. Three types already declare
+ * `prizePool` in the config table (tournament, giveaway, contest), so a type
+ * literal here would be wrong for two of them on the day it was written —
+ * which is exactly what the mechanisms table exists to prevent, and what the
+ * Entries tab's own comment warns about one function up.
+ *
+ * ⚠ Callers MUST pass the RAW STORED `event.type`, not a value through
+ * `normalizeEventType`. That helper maps against the eight closed built-in
+ * members and returns `undefined` for an open config slug like `"contest"` —
+ * which once made the Entries tab vanish in production while the page it
+ * pointed at rendered perfectly on a typed URL. Same trap, same shape.
+ */
+export function eventTypeHasPrizePool(type: string | undefined): boolean {
+  return eventTypeHasMechanism(type, EVENT_MECHANISM.PRIZE_POOL);
 }
