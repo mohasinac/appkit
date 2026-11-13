@@ -31,6 +31,8 @@ const CLS_BUNDLE_LABEL = "text-[length:var(--appkit-text-xs)] text-success dark:
 const CLS_BUNDLE_CTA = "flex-shrink-0 rounded-lg bg-success-solid hover:brightness-110 px-[var(--appkit-space-3)] py-[var(--appkit-space-1-5)] text-[length:var(--appkit-text-xs)] font-semibold text-success-on-solid transition-colors";
 import { ROUTES } from "../../../next/routing/route-map";
 import { productImageUrls } from "../schemas/firestore";
+import type { ProductEventPrize } from "../schemas/firestore";
+import { EventPrizeClaimPanel } from "./EventPrizeClaimPanel";
 import { ctaAnchorProps } from "../../layout/cta-anchor";
 import { ContextualTrail } from "../../categories/components/ContextualTrail";
 import { productCrumbs, withTrailHead } from "../../categories/utils/breadcrumb-chain";
@@ -213,6 +215,60 @@ function StarRating({ value }: { value: number }) {
       ))}
     </Row>
   );
+}
+
+/**
+ * A stored date, flattened to epoch milliseconds — or `undefined` for anything
+ * this cannot read.
+ *
+ * 🛑 TOTAL BY CONSTRUCTION. It is the only thing standing between a malformed
+ * `eventPrize.eventEndsAt` and the public product page, and `undefined` is the
+ * SAFE answer here rather than merely the tidy one: `resolvePrizeClaim` treats
+ * an unknown end date as "not ended", so a garbage value withholds the claim
+ * control instead of handing a prize out early.
+ *
+ * ⚠ Four shapes, because a date reaches this component by four routes: a live
+ * `Date` from the admin SDK, a Firestore `Timestamp` when the provider has not
+ * converted it, an ISO string once it has crossed a JSON boundary, and an epoch
+ * number from a seed row.
+ */
+function toEpochMs(value: unknown): number | undefined {
+  if (value === null || value === undefined) return undefined;
+  if (value instanceof Date) {
+    const t = value.getTime();
+    return Number.isFinite(t) ? t : undefined;
+  }
+  if (typeof value === "number") return Number.isFinite(value) ? value : undefined;
+  if (typeof value === "string") {
+    const t = Date.parse(value);
+    return Number.isFinite(t) ? t : undefined;
+  }
+  if (typeof value === "object") {
+    const o = value as {
+      toDate?: unknown;
+      seconds?: unknown;
+      _seconds?: unknown;
+    };
+    if (typeof o.toDate === "function") {
+      try {
+        const d = (o.toDate as () => unknown)();
+        if (d instanceof Date) {
+          const t = d.getTime();
+          return Number.isFinite(t) ? t : undefined;
+        }
+      } catch {
+        return undefined;
+      }
+    }
+    const secs =
+      typeof o.seconds === "number"
+        ? o.seconds
+        : typeof o._seconds === "number"
+          ? o._seconds
+          : undefined;
+    if (secs !== undefined && Number.isFinite(secs)) return secs * 1000;
+  }
+  return undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -658,6 +714,88 @@ export async function ProductDetailPageView({
   const sellerName = sellerIdentityVisible ? safeSeller : null;
   const sellerHref = sellerIdentityVisible ? storeHref : null;
 
+  /*
+   * ── THIS LISTING AS AN EVENT PRIZE ───────────────────────────────────────
+   *
+   * Owner, 2026-11-13: *"event claims go to the checkout like buy now on
+   * claims, all can see, only the winners can claim if multiple, and on the
+   * main shop only not from the events."*
+   *
+   * 🛑 TWO SURFACES, AND THE SPLIT IS THE POINT. The PRIZE is public, so it is
+   * advertised by the server-rendered feature badge below — in the HTML, for
+   * every visitor and every crawler. The CLAIM is per-viewer, so it is a client
+   * component (`EventPrizeClaimPanel`) that reads the session. Rendering the
+   * claim on the server would require the viewer's identity in a statically
+   * prerendered page; rendering the prize on the client would hide it from the
+   * crawler. Neither is a compromise — they are different questions.
+   *
+   * ⚠ NO EVENT READ HAPPENS HERE, BY DESIGN. The events subdomain owns the
+   * event and this listing only NAMES it (`eventPrize.eventId`), so everything
+   * the claim decision needs — the winners and the event's close — travels on
+   * the product row as a snapshot stamped by the award action. See
+   * `ProductEventPrize.eventEndsAt` for why a snapshot beat an HTTP read. The
+   * consequence is the degrade requirement satisfied structurally: an unknown
+   * or unreachable event cannot slow, break or blank this page, because nothing
+   * on it asks.
+   *
+   * ⚠ Validated to the one field that makes the block meaningful. A row whose
+   * `eventPrize` is present but has no `eventId` is corrupt, not a prize, and
+   * is treated as absent rather than rendered as a prize for nothing.
+   */
+  // `unknown`, not `FirestoreValue`: the guards below are the narrowing, and a
+  // direct cast from the union would be the kind tsc rightly refuses.
+  const eventPrizeRaw: unknown = p.eventPrize;
+  const eventPrize: ProductEventPrize | null =
+    eventPrizeRaw !== null &&
+    typeof eventPrizeRaw === "object" &&
+    typeof (eventPrizeRaw as { eventId?: unknown }).eventId === "string" &&
+    (eventPrizeRaw as { eventId: string }).eventId.length > 0
+      ? (eventPrizeRaw as ProductEventPrize)
+      : null;
+  const eventPrizeLabel =
+    typeof eventPrize?.label === "string"
+      ? eventPrize.label.trim() || undefined
+      : undefined;
+  /*
+   * ⚠ Filtered, not trusted. An empty-string uid inside the winners array would
+   * make `winners.length > 0` true while matching nobody — "awarded" with no
+   * claimant — and `SessionContext` already refuses an empty uid upstream for
+   * the mirror-image reason.
+   */
+  const eventPrizeWinners = Array.isArray(eventPrize?.winnerUserIds)
+    ? eventPrize.winnerUserIds.filter(
+        (w): w is string => typeof w === "string" && w.trim().length > 0,
+      )
+    : undefined;
+  const eventPrizeEndsAt = toEpochMs(eventPrize?.eventEndsAt);
+  /*
+   * The badge's link, resolved through the SAME closure rule the nav, footer,
+   * sitemap and edge gate use — not a new check of its own. `/events` lives on
+   * the events host, so `resolveSectionHref` turns it absolute; when the
+   * surface is closed the badge keeps its label and loses its href rather than
+   * pointing at a 404, which is the recorded failure for `/scams`.
+   */
+  const eventPrizeHrefRaw = eventPrize
+    ? String(ROUTES.PUBLIC.EVENT_DETAIL(eventPrize.eventId))
+    : null;
+  const eventPrizeHref =
+    eventPrizeHrefRaw &&
+    !isClosedHref(
+      eventPrizeHrefRaw,
+      closedSurfaceContext(siteSettings, undefined),
+    )
+      ? resolveSectionHref(eventPrizeHrefRaw)
+      : undefined;
+  const eventPrizeBadge:
+    | { eventId: string; label?: string; showInPromotions?: boolean }
+    | undefined = eventPrize
+    ? {
+        eventId: eventPrize.eventId,
+        ...(eventPrizeLabel !== undefined ? { label: eventPrizeLabel } : {}),
+        showInPromotions: eventPrize.showInPromotions === true,
+      }
+    : undefined;
+
   return (
     <Main>
       <HistoryTracker
@@ -906,6 +1044,21 @@ export async function ProductDetailPageView({
                 /* The badge explains itself: it points at the disclosure that
                    says what "final sale" actually costs a buyer. */
                 finalSaleHref={`#${PDP_POLICY_ANCHOR}`}
+                /*
+                  🛑 THE "ALL CAN SEE" HALF OF THE PRIZE RULE, and it was
+                  declared-but-unwired until now: `ProductFeatureBadges` has
+                  carried `eventPrize`/`eventPrizeHref` with a full doc comment
+                  and ZERO call sites passed either, so a listing could be an
+                  event's grand prize and say so nowhere. The badge is the only
+                  server-rendered statement of it, which makes it the only one a
+                  crawler ever reads.
+
+                  ⚠ `showInPromotions` still gates it inside the badge — a prize
+                  can be RECORDED before it is ANNOUNCED, and advertising it is
+                  exactly what that flag withholds.
+                */
+                eventPrize={eventPrizeBadge}
+                eventPrizeHref={eventPrizeHref}
                 labels={{
                   featured: "Featured",
                   fasterDelivery: "Faster Delivery",
@@ -1111,6 +1264,39 @@ export async function ProductDetailPageView({
                 needs it most.
               */}
               <Stack gap="sm" {...ctaAnchorProps()}>
+                {/*
+                  🛑 ABOVE Buy Now, because for the one viewer who sees the
+                  button this IS the primary action — they are not buying the
+                  item, they are collecting it. For everyone else the component
+                  renders either a quiet line of context or nothing at all, so
+                  the ordinary buy box is unchanged on every listing that is not
+                  a prize (the overwhelming majority: `eventPrize` is absent and
+                  nothing mounts).
+
+                  🛑 NOT inside `renderPrimaryActions`. That render prop is the
+                  CONSUMER's (the shop passes `ProductDetailActions` through it),
+                  so a new field on it only works once every consumer forwards
+                  it — and this file already carries the receipt for what that
+                  costs: `storeId`/`storeName` were declared optional, documented,
+                  and left unpassed until a guest reached the cart and read
+                  "SELLER DETAILS UNAVAILABLE" above a ₹10,500 item. This
+                  component has `product.eventPrize` in hand, so it mounts the
+                  panel itself and there is no prop for anyone to forget.
+                */}
+                {eventPrize && (
+                  <EventPrizeClaimPanel
+                    productId={product.id}
+                    productTitle={product.title}
+                    productImage={product.mainImage}
+                    price={price ?? undefined}
+                    storeId={typeof p.storeId === "string" ? (p.storeId as string) : undefined}
+                    storeName={typeof p.storeName === "string" ? (p.storeName as string) : undefined}
+                    winnerUserIds={eventPrizeWinners}
+                    eventEndsAt={eventPrizeEndsAt}
+                    showInPromotions={eventPrize.showInPromotions === true}
+                    inStock={inStock}
+                  />
+                )}
                 {!hasPrimaryActionsSlotOverride && primaryActionsNode}
                 {!hasOfferSlotOverride && offerActionNode}
               </Stack>

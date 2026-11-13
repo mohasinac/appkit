@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "../../../ui/components/Button";
 import { Stack } from "../../../ui/components/Layout";
 import { LoginRequiredModal } from "../../../ui/components/LoginRequiredModal";
 import { Icon } from "../../../ui/components/Icon";
 import { useToast } from "../../../ui/components/Toast";
 import { useAddToCart } from "../../cart/hooks/useAddToCart";
+import { useSingleItemCheckout } from "./useSingleItemCheckout";
 import { apiClient } from "../../../http";
-import { CART_ENDPOINTS, WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
+import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 import { addToGuestWishlist } from "../../wishlist/utils/guest-wishlist";
-import { ROUTES } from "../../../next/routing/route-map";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
 import { useBottomActions } from "../../../ui/chrome/useBottomActions";
@@ -55,18 +54,40 @@ export function ProductDetailActions({
   inStock,
   variant = "desktop",
 }: ProductDetailActionsProps) {
-  const router = useRouter();
   const { showToast } = useToast();
   const { requireAuth, isAuthResolving, modalOpen, modalMessage, closeModal } =
     useAuthGate();
   const { canSeePrices } = useCanSeePrices();
-  const [busy, setBusy] = useState<"buy" | "cart" | "wish" | null>(null);
+  /*
+   * ⚠ `"buy"` IS GONE FROM THIS UNION BECAUSE IT WAS NEVER SET. `setBusy` was
+   * only ever called with `"cart"` and `"wish"`, so `busy === "buy"` was dead:
+   * pressing Buy Now put "Adding…" on the ADD TO CART button and left the
+   * button actually being pressed reading "Buy Now". The buy lane now reports
+   * its own progress through `singleItemCheckout.running`, which is the state
+   * that genuinely tracks it.
+   */
+  const [busy, setBusy] = useState<"cart" | "wish" | null>(null);
   const [wishlisted, setWishlisted] = useState(false);
+
+  /*
+   * Buy Now and Claim prize are ONE lane — see `useSingleItemCheckout`, which
+   * owns the add → narrow-the-selection → checkout sequence and its fail-closed
+   * guard. This component keeps the auth gate (the message is per `ACTION_ID`)
+   * and nothing else about it.
+   */
+  const singleItemCheckout = useSingleItemCheckout({
+    productId,
+    productTitle,
+    productImage,
+    price,
+    storeId,
+    storeName,
+  });
 
   // `isAuthResolving` covers the window where the session has not settled and a
   // click would be parked by useAuthGate rather than acted on. Without it the
   // button looks live, swallows the click, and appears to do nothing.
-  const blocked = busy !== null || isAuthResolving;
+  const blocked = busy !== null || singleItemCheckout.running || isAuthResolving;
 
   // Success toast (item + updated count/total) is now shown by useAddToCart
   // itself — centralised so every add-to-cart call site gets the same
@@ -76,7 +97,14 @@ export function ProductDetailActions({
       showToast(toUserMessage((err as { code?: string })?.code, undefined, { fallback: "Could not add to cart" }), "error"),
   });
 
-  async function handleAddToCart(then?: () => void) {
+  /*
+   * ⚠ The `then?: () => void` continuation is GONE. Its only caller was the old
+   * inline Buy Now lane, which chained the selection call onto it; with that
+   * lane owned by `useSingleItemCheckout` the parameter had no caller left, and
+   * an optional callback nothing passes is the quietest form of the
+   * declared-but-unwired class — it reads like an extension point and is dead.
+   */
+  async function handleAddToCart() {
     setBusy("cart");
     try {
       await addCart.mutate({
@@ -88,7 +116,6 @@ export function ProductDetailActions({
         storeId,
         storeName,
       });
-      then?.();
     } finally {
       setBusy(null);
     }
@@ -97,48 +124,19 @@ export function ProductDetailActions({
   /**
    * Buy Now — checkout for THIS ITEM ONLY.
    *
-   * 🛑 IT USED TO CHECK OUT THE WHOLE CART. The old body was
-   * `handleAddToCart(() => router.push(CHECKOUT))`: it added the item and
-   * navigated, and checkout then priced every line the buyer had. Someone with
-   * ₹40,000 of saved items who pressed "Buy Now" on a ₹299 spare was taken to
-   * a ₹40,299 checkout. Owner, 2026-11-13: *"if i am doing a buy now do not
-   * put the whole cart into the checkout, just the item i am buying out."*
+   * 🛑 THE LANE ITSELF MOVED TO `useSingleItemCheckout`, and the reasons it is
+   * built the way it is are documented there. It moved because "Claim prize" is
+   * the same mechanic — one item, straight to checkout — and the owner asked for
+   * it in those words: *"event claims go to the checkout like buy now on
+   * claims."* Two callers, one implementation, one fail-closed guard.
    *
-   * ✅ Scoped through `selectedItemIds`, the mechanism checkout ALREADY uses
-   * (`actions.ts`: `new Set(cart.selectedItemIds)`), rather than inventing a
-   * parallel buy-now lane. A stored "buyNowItemId" would be a sixth blocking
-   * mechanism and — worse — could go stale and silently scope every LATER
-   * checkout to one item. Selection is user-visible in the cart and the buyer
-   * can change it, so it cannot strand them.
-   *
-   * ⚠ The cart KEEPS every other item; only the selection narrows. That is the
-   * owner's "cart untouched" — nothing a buyer spent time building is lost.
-   *
-   * 🛑 FAILS CLOSED. If the scoping call fails we do NOT navigate: landing on
-   * checkout with an unnarrowed cart is the exact defect being fixed, and it
-   * would charge for items the buyer never chose. An error they can retry is
-   * strictly better than a silent overcharge.
+   * What stays here is the AUTH GATE, deliberately: `requireAuth` resolves its
+   * message from `ACTION_ID`, and the claim surface answers to a different
+   * action with a different sentence.
    */
-  async function handleBuyNow() {
-    requireAuth(ACTION_ID.BUY_NOW, async () => {
-      await handleAddToCart(async () => {
-        try {
-          const res = (await apiClient.get(CART_ENDPOINTS.GET)) as
-            | { cart?: { items?: Array<{ itemId: string; productId: string }> } }
-            | undefined;
-          const line = res?.cart?.items?.find((i) => i.productId === productId);
-          if (!line) throw new Error("cart line not found after add");
-          await apiClient.put(CART_ENDPOINTS.SELECTION, { itemIds: [line.itemId] });
-        } catch (err) {
-          void normalizeError(err);
-          showToast(
-            "Could not start a single-item checkout. Open your cart and try again.",
-            "error",
-          );
-          return;
-        }
-        router.push(String(ROUTES.USER.CHECKOUT));
-      });
+  function handleBuyNow() {
+    requireAuth(ACTION_ID.BUY_NOW, () => {
+      void singleItemCheckout.start();
     });
   }
 
@@ -198,7 +196,11 @@ export function ProductDetailActions({
             },
             {
               id: ACTION_ID.BUY_NOW,
-              label: !inStock ? "Out of Stock" : busy === "buy" ? "Loading…" : "Buy Now",
+              label: !inStock
+                ? "Out of Stock"
+                : singleItemCheckout.running
+                  ? "Loading…"
+                  : "Buy Now",
               variant: "primary",
               disabled: !inStock || blocked,
               onClick: handleBuyNow,
@@ -248,7 +250,11 @@ export function ProductDetailActions({
           disabled={!inStock || blocked}
           onClick={handleBuyNow}
         >
-          {!inStock ? "Out of Stock" : busy === "buy" ? "Loading…" : "Buy Now"}
+          {!inStock
+            ? "Out of Stock"
+            : singleItemCheckout.running
+              ? "Loading…"
+              : "Buy Now"}
         </Button>
         <Button
           variant="secondary"

@@ -243,6 +243,48 @@ export interface ProductEventPrize {
    */
   winnerUserIds?: string[];
   /**
+   * When the event CLOSED — a snapshot, stamped by the same admin action that
+   * records `winnerUserIds`.
+   *
+   * 🛑 ABSENT MEANS NOT CLAIMABLE. `resolvePrizeClaim` already enforces this:
+   * an unknown end date resolves to `event-open`, because the conservative
+   * direction when handing out something of value is to WAIT. So a prize row
+   * that predates this field, or one whose award action forgot it, offers no
+   * claim control rather than offering one early. Nothing needs backfilling and
+   * nothing can leak by omission.
+   *
+   * 🛑 WHY A SNAPSHOT AND NOT A FETCH FROM THE EVENTS API. The events subdomain
+   * owns the event and the shop may not read its collection, so the only two
+   * compliant options were this field or an HTTP read. Four reasons chose this
+   * one, and the second is the decisive one:
+   *
+   *   1. A remote read puts a sibling deployment on the claim path. If events
+   *      is unreachable the shop gets no `endsAt`, the resolver correctly says
+   *      `event-open`, and a REAL WINNER is told the event has not finished.
+   *      That is a degrade that silently DENIES a legitimate claim, on the
+   *      money path, and it is indistinguishable from a running contest.
+   *   2. `winnerUserIds` beside it is ALREADY a denormalised snapshot of an
+   *      events-owned fact, written by the award action. Putting `eventEndsAt`
+   *      anywhere else would split one decision across two sources — winners
+   *      local, clock remote — so the two halves could disagree about the same
+   *      event. One writer, one moment, one row.
+   *   3. ⚠ The usual objection to denormalising — the source changes later —
+   *      does not apply here, and that is what makes this safe rather than
+   *      merely convenient. Awarding necessarily happens AFTER the close, and
+   *      the close date of a finished event is immutable: an event that has
+   *      ended cannot un-end. (An admin extending a still-RUNNING event is fine
+   *      too: no winners exist yet, so nothing is claimable either way.)
+   *   4. It costs zero reads on a page already at its read budget, so the PDP
+   *      gains no new failure mode at all — the degrade in requirement 4 is
+   *      structural, not a `try`/`catch`.
+   *
+   * ⚠ Stored as a `Date`, like every other date on this document. The reading
+   * surface normalises the wire shapes (`Date`, ISO string, epoch, Firestore
+   * `Timestamp`) and yields "unknown" for anything else, so a malformed value
+   * degrades to not-claimable instead of throwing on a public page.
+   */
+  eventEndsAt?: Date;
+  /**
    * Whether to advertise it on promotional surfaces.
    *
    * 🛑 Separate from `eventId`, and the separation is the point: a prize can
