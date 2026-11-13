@@ -54,7 +54,44 @@ export interface ServiceabilityResult {
   couriers: Array<{
     name: string;
     estimatedDays: number;
+    /**
+     * FREIGHT ONLY — what it costs to move the parcel.
+     *
+     * 🛑 Does NOT include insurance. Measured on Shiprocket 2026-11-14: `rate`
+     * and `freight_charge` are the same number, and coverage is a separate
+     * `coverage_charges`. A caller that charges `rate` and calls the parcel
+     * insured is wrong by the whole premium.
+     */
     rate: number;
+    /**
+     * The premium to insure this parcel, if the carrier quoted one.
+     *
+     * 🛑 OPTIONAL BECAUSE NOT EVERY PROVIDER HAS THE CONCEPT — the manual
+     * provider has no carrier and therefore no premium, and forcing it to
+     * supply `0` would make "no insurance product" indistinguishable from
+     * "insurance is free".
+     *
+     * ⚠ Measured scale, so nobody treats it as rounding: ₹99 to cover a ₹5,000
+     * parcel whose freight was ₹46.02 — more than double the freight. It is a
+     * separate line a buyer opts into, never folded into `rate`.
+     */
+    insuranceFee?: number;
+    /**
+     * Whether this courier will insure the parcel at all.
+     *
+     * 🛑 A DISTINCT FACT from `insuranceFee === 0`. Zero is a price; absent
+     * cover is a refusal. Collapsing them advertises protection no carrier
+     * agreed to provide — and the protection flow ADVISES insurance above the
+     * auto-cover ceiling, so a dead affordance there is a promise on the money
+     * path.
+     */
+    insuranceAvailable?: boolean;
+    /** Carrier's COD collection fee, when the tender is cash-like. */
+    codCharges?: number;
+    /** What the carrier bills if the parcel comes back (RTO). */
+    rtoCharges?: number;
+    /** Anything else the carrier itemises; present so it is not silently lost. */
+    otherCharges?: number;
   }>;
 }
 

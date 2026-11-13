@@ -188,6 +188,41 @@ const serviceabilityResponse = z.object({
           courier_name: z.string(),
           estimated_delivery_days: z.union([z.number(), z.string()]).nullish(),
           rate: z.union([z.number(), z.string()]).nullish(),
+          /*
+           * ── INSURANCE, ADDED 2026-11-14 AFTER A RAW PROBE ────────────────
+           *
+           * 🛑 ZOD STRIPS WHAT IT DOES NOT DECLARE, so admitting three keys
+           * meant these could not reach our tree at all — not displayed, not
+           * charged, not recorded. Owner asked "shiprocket insurance fees
+           * too"; the honest answer was that they were dropped at this line.
+           *
+           * Measured against the live API (read-only, pickup 413001 →
+           * 560001, 0.5 kg, declared_value 5000):
+           *
+           *   freight_charge    46.02
+           *   rate              46.02   ← EQUAL to freight_charge
+           *   coverage_charges  99      ← the insurance fee
+           *   cod_charges        0
+           *   rto_charges        0
+           *   other_charges      0
+           *
+           * 🛑 `rate` IS FREIGHT ONLY. Insuring a ₹5,000 parcel costs ₹99 —
+           * more than double the freight — so a quote built from `rate` alone
+           * understates an insured shipment by over 200%. That matters here
+           * specifically: the protection flow ADVISES insurance above the
+           * ₹2,000 auto-cover ceiling, and until these fields existed there
+           * was no number behind that advice.
+           *
+           * ⚠ `secure_shipment_disabled` is carried because availability is
+           * per courier: advising cover on a courier that cannot provide it
+           * is the dead-affordance shape this repo keeps recording.
+           */
+          freight_charge: z.union([z.number(), z.string()]).nullish(),
+          coverage_charges: z.union([z.number(), z.string()]).nullish(),
+          cod_charges: z.union([z.number(), z.string()]).nullish(),
+          rto_charges: z.union([z.number(), z.string()]).nullish(),
+          other_charges: z.union([z.number(), z.string()]).nullish(),
+          secure_shipment_disabled: z.union([z.boolean(), z.number()]).nullish(),
         }),
       )
       .nullish(),
@@ -587,7 +622,24 @@ export class ShiprocketShippingProvider extends IShippingProvider {
       const couriers = (out.data.available_courier_companies ?? []).map((c) => ({
         name: c.courier_name,
         estimatedDays: num(c.estimated_delivery_days),
+        /*
+         * ⚠ `rate` stays FREIGHT ONLY and keeps its meaning. Folding coverage
+         * into it would silently change what every existing caller charges,
+         * and a buyer who did not opt into insurance must not pay for it.
+         */
         rate: num(c.rate),
+        /*
+         * The insurance fee, carried separately so a caller must CHOOSE to add
+         * it. 🛑 `insuranceAvailable` is derived from the carrier's own flag
+         * rather than from `coverage_charges > 0`: a zero charge and an
+         * unavailable cover are different facts, and treating zero as "free
+         * cover" would advertise protection no courier agreed to provide.
+         */
+        insuranceFee: num(c.coverage_charges),
+        insuranceAvailable: !(c.secure_shipment_disabled === true || c.secure_shipment_disabled === 1),
+        codCharges: num(c.cod_charges),
+        rtoCharges: num(c.rto_charges),
+        otherCharges: num(c.other_charges),
       }));
       return { isServiceable: couriers.length > 0, couriers };
     } catch (err) {
