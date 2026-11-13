@@ -118,6 +118,20 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
       : typeof p.mainImage === "string"
         ? [p.mainImage]
         : [];
+
+  /*
+   * 🛑 The video the gallery would otherwise DROP SILENTLY.
+   *
+   * This view called `<ProductGalleryClient images={images} …/>` with no
+   * `video` prop, so a listing with a stored video rendered no video slide and
+   * nothing failed: the prop is optional, so it typechecks, renders, and is
+   * invisible until someone uploads one. Same shape as the guest-cart defect —
+   * an optional prop nobody passes.
+   *
+   * ⚠ Latent today only because no seeded listing of this kind has a video.
+   * That is a property of the fixtures, not of the code.
+   */
+  const productVideo = p.video as { url: string; thumbnailUrl?: string } | undefined;
   const meta = product.classified;
   const location = meta?.meetupArea ? [meta.meetupArea.locality, meta.meetupArea.city].filter(Boolean).join(", ") : null;
   const category = Array.isArray(p.categorySlugs) && p.categorySlugs.length > 0 ? String(p.categorySlugs[0]) : (typeof p.category === "string" ? p.category : null);
@@ -238,7 +252,7 @@ export async function ClassifiedDetailPageView({ slug, initialProduct, renderOff
           layout="grid-2"
           renderGallery={() => (
             <SectionVisibilityGate surfaceId="pdp-sections" sectionKey="gallery" initialVisible={pdpSectionVisibility.gallery !== false}>
-              <ProductGalleryClient images={images} productName={title} />
+              <ProductGalleryClient images={images} video={productVideo} productName={title} />
             </SectionVisibilityGate>
           )}
           renderInfo={() => (
