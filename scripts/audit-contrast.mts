@@ -184,6 +184,57 @@ const PAIRS: { ink: string; on: string; min: number; note?: string }[] = [
   { ink: "text-on-primary", on: "primary-700", min: 4.5 },
 ];
 
+/*
+ * ── FILLS AGAINST THE PAGE — a SECOND question this audit could not ask ────
+ *
+ * 🛑 A filled control has TWO contrast obligations and `PAIRS` only ever
+ * checked one. Its ink must be readable ON the fill, and the FILL must be
+ * distinguishable FROM the page — otherwise the text is perfectly legible on
+ * a button nobody can see, which reads as DISABLED.
+ *
+ * Measured 2026-11-13, and it had shipped: the dark primary CTA used
+ * `secondary` (#695617) on `bg` (#020617) — **2.83 : 1** against the page,
+ * while its white ink scored a comfortable 7.13 ON the fill. Every ink-on-
+ * surface pair passed. The owner found it by looking at the screen and saying
+ * the button was still gold.
+ *
+ * ⚠ This is the FOURTH time this file has been too narrow — gradient stops,
+ * links, then button ink, now button FILLS. *An audit's COVERAGE is a claim,
+ * and a green line is only as wide as the list behind it.* Each time the fix
+ * was to widen the question, not to loosen a threshold.
+ *
+ * `min: 3.0` — a control's boundary is a large graphical object under WCAG
+ * 1.4.11, not body text, so 3.0 is the correct floor rather than 4.5.
+ *
+ * 🛑 **EACH ENTRY DECLARES ITS THEME**, and that is not a detail. The first
+ * draft of this list did not, so it checked the dark CTA's gold rungs against
+ * the LIGHT page and the light CTA's navy against the DARK one — six failures,
+ * none of which any component renders. That is exactly what this file's own
+ * header warns against: *"Checking every ink against every colour would flag
+ * pairs no component renders and train people to ignore the audit."* I wrote
+ * the widening and immediately walked into it.
+ *
+ * `Button.style.css` is the source of truth for which rung each theme uses:
+ * light fills with `primary-700`, dark fills with `secondary-400`.
+ */
+const FILLS: { fill: string; on: string; min: number; mode: "light" | "dark"; note?: string }[] = [
+  /* LIGHT theme — `.appkit-button--primary` fills with primary-700, hover 800. */
+  { fill: "primary-700", on: "bg", min: 3.0, mode: "light", note: "the light-theme CTA fill" },
+  { fill: "primary-800", on: "bg", min: 3.0, mode: "light", note: "its hover" },
+
+  /* DARK theme — `.dark .appkit-button--primary` fills with secondary-400,
+     hover secondary-300. `secondary` (the base, #695617) is deliberately
+     ABSENT: it is the value that shipped the 2.83:1 defect, and listing it as
+     an acceptable fill is how a regression gets blessed by its own audit. */
+  { fill: "secondary-400", on: "bg", min: 3.0, mode: "dark", note: "the dark-theme CTA fill" },
+  { fill: "secondary-300", on: "bg", min: 3.0, mode: "dark", note: "its hover" },
+
+  /* Status fills are used in BOTH themes, so both are checked. */
+  ...(["success", "warning", "error", "info"] as const).flatMap((fill) =>
+    (["light", "dark"] as const).map((mode) => ({ fill, on: "bg", min: 3.0, mode })),
+  ),
+];
+
 let fail = 0;
 let checked = 0;
 const missing: string[] = [];
@@ -193,6 +244,35 @@ for (const theme of THEMES) {
   const get = (name: string) => t[`appkit-color-${name}`];
   console.log(`\n  ── ${theme.name}  (${theme.mode}) ──`);
   const bad: string[] = [];
+
+  /*
+   * Fills first, so a control that cannot be SEEN is reported before any
+   * finding about text printed on it. Same evaluator, same compositing, same
+   * missing-token rule — only the question differs.
+   */
+  for (const f of FILLS) {
+    /* Skip fills declared for the OTHER theme — a rung is only a defect in the
+       theme that actually paints with it. */
+    if (f.mode !== theme.mode) continue;
+    const fill = get(f.fill);
+    const page = get(f.on);
+    if (!fill || !page) {
+      missing.push(`${theme.id}: FILL ${f.fill} on ${f.on} (${!fill ? f.fill : f.on} undefined)`);
+      continue;
+    }
+    const r = ratio(fill, page, get("bg") ?? (theme.mode === "dark" ? "#000000" : "#ffffff"));
+    if (r === null) {
+      missing.push(`${theme.id}: FILL ${f.fill} on ${f.on} (unparseable colour)`);
+      continue;
+    }
+    checked += 1;
+    if (r < f.min) {
+      fail += 1;
+      bad.push(
+        `    🛑 ${r.toFixed(2)}:1  (needs ${f.min})  FILL ${f.fill} against ${f.on}  ${fill}/${page}${f.note ? `  [${f.note}]` : ""}`,
+      );
+    }
+  }
 
   for (const p of PAIRS) {
     const fg = get(p.ink);
