@@ -1409,6 +1409,11 @@ export function AdminSiteSettingsView({
   // object.
   const [limitsForm, setLimitsForm] = React.useState<SiteSettingsLimitsFormValues>({
     maxProductsPerStore: 100, maxCustomFields: 50, orderCancelWindow: 24,
+    /* ⚠ A FORM default, not a shipped one. An unset stored value still falls to
+       `awardPrize`'s bounded default; this is only what the input shows before
+       anyone has chosen. See the schema for why no `DEFAULT_SITE_SETTINGS`
+       entry exists. */
+    prizeClaimWindowDays: 7,
   });
   const {
     fields: limitsVisibilityFields,
@@ -2016,6 +2021,7 @@ export function AdminSiteSettingsView({
       maxProductsPerStore: s.platformLimits?.maxProductsPerStore ?? 100,
       maxCustomFields: s.platformLimits?.maxCustomFieldsPerProduct ?? 50,
       orderCancelWindow: s.platformLimits?.orderCancellationWindowHours ?? 24,
+      prizeClaimWindowDays: s.prizes?.claimWindowDays ?? 7,
     });
 
     setLegalForm({
@@ -2393,6 +2399,25 @@ export function AdminSiteSettingsView({
         maxProductsPerStore: limitsForm.maxProductsPerStore,
         maxCustomFieldsPerProduct: limitsForm.maxCustomFields,
         orderCancellationWindowHours: limitsForm.orderCancelWindow,
+      },
+      /*
+       * 🛑 A SEPARATE GROUP, not a member of `platformLimits`, even though the
+       * field is rendered on the Limits tab.
+       *
+       * `prizes.claimWindowDays` is where the award handler ALREADY reads it
+       * (`settings?.prizes?.claimWindowDays`). Writing it under
+       * `platformLimits` would save successfully, show the saved number back on
+       * this screen, and change nothing about any prize — the admin-rewrite
+       * failure already recorded for `legalPages.shipping`, which was written
+       * by the form and read by nothing.
+       *
+       * ⚠ The consumer's `WRITABLE_SITE_GROUPS` must list `"prizes"` or this
+       * group makes Save All a 400 (the schema is `.strict()`). PRODUCER BEFORE
+       * ALLOW-LIST: the allow-list entry lands first and is inert until this
+       * ships.
+       */
+      prizes: {
+        claimWindowDays: limitsForm.prizeClaimWindowDays,
       },
       legalPages: {
         terms: legalForm.termsHtml,
