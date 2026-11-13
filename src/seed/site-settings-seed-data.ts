@@ -785,6 +785,19 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
    * read back. That asymmetry is why this comment exists rather than an
    * assumption that the seed is the state.
    */
+  /*
+   * 🛑 THE ASSISTANT IS OFF FOR R1. Owner, 2026-11-14: *"disable this guy"* —
+   * and it is rebuilt as a resizable, config-driven widget in R2 (see the
+   * journal entry "THE ASSISTANT WIDGET").
+   *
+   * ⚠ SEEDED `false` EXPLICITLY, because `assistant?.enabled === false` is the
+   * ONLY disabling value and an ABSENT key means ENABLED. A reseed that merely
+   * omitted this would silently switch the panel back on — the same
+   * absent-means-open shape `browsePages` is spelled out for.
+   */
+  assistant: {
+    enabled: false,
+  },
   prizes: {
     claimWindowDays: 7,
   },
