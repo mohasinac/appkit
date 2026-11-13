@@ -1139,6 +1139,31 @@ export interface ProductDocument extends BaseDocument {
      */
     allowedProviderIds?: string[];
     /**
+     * Goods value at or above which THIS listing ships free — the most specific
+     * level of the free-delivery chain.
+     *
+     * Owner, 2026-11-14: *"like CSS — inline listings; seller inherits to
+     * listing if listing is not set, and seller inherits platform config if not
+     * set. All 3 are configs."*
+     *
+     *   listing.shipping.freeAbove
+     *     ?? store.shipping.freeAbove
+     *       ?? siteSettings.shipping.minOrderForFree
+     *
+     * 🛑 `??` AND NOT `||`. A listing that deliberately sets `0` means "always
+     * free"; with `||` that falls through and silently re-inherits the store's
+     * threshold, which is the precedence bug already recorded for payment
+     * methods. Zero is a value here, not an absence.
+     *
+     * ⚠ Across a parcel the STRICTEST (highest) resolved threshold applies —
+     * the convention this project already settled for per-listing config in an
+     * order group, where "one prepaid-only item makes its group prepaid-only".
+     * Shipping is billed per group and carriage cannot be split between lines,
+     * so the alternative lets the cheapest qualifying item ship an entire cart
+     * free.
+     */
+    freeAbove?: number;
+    /**
      * Per-provider fee / ETA overrides for this item (e.g. oversized surcharge).
      * Merged on top of the provider's store-wide config when displaying the
      * ShippingPicker.

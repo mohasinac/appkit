@@ -204,6 +204,10 @@ import { resolveAutoCover } from "../../../shared/features/protection/auto-cover
 import { refusedPrizeLines } from "../../../shared/features/prizes/claim-gate";
 import { loadPrizeTickets, resolvePrizeWaiver } from "../prizes/resolve-waiver";
 import { billableUnitsFor } from "../../../shared/features/prizes/fee-waiver";
+import {
+  resolveFreeDeliveryThreshold,
+  resolveGroupFreeDeliveryThreshold,
+} from "../../../shared/features/shipping/free-delivery";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
@@ -651,6 +655,27 @@ export async function resolveShippingCost(
     goodsValue?: number;
     /** A real carrier rate, when one was obtained. `null` = none available. */
     carrierRate?: number | null;
+    /**
+     * The STRICTEST `product.shipping.freeAbove` across this group's lines,
+     * from `resolveGroupFreeDeliveryThreshold`. Omitted means no line sets one,
+     * so the store's value stands.
+     *
+     * ⚠ Resolved by the caller because only it knows the group's lines — and
+     * passed already-combined so this function never has to decide how several
+     * listings in one parcel reconcile.
+     */
+    listingFreeAbove?: number;
+    /**
+     * `siteSettings.shipping.minOrderForFree` — the platform default, used only
+     * when neither the listing nor the store sets one.
+     *
+     * 🛑 A DEFAULT, NEVER A CEILING. This project's config precedence gives the
+     * platform both a hard ceiling and a soft floor, and collapsing them is
+     * what makes a kill switch overridable. Free delivery has no ceiling arm: a
+     * seller spending their own margin on carriage needs no permission. If a
+     * ceiling is ever wanted it is a SECOND field, not this one reinterpreted.
+     */
+    platformFreeAbove?: number;
   },
 ): Promise<{
   shippingFee: number;
@@ -818,9 +843,42 @@ export async function resolveShippingCost(
    * keep charging ₹100, not silently drop to free. Migration is a seller
    * visiting their settings, not a reseed.
    */
-  const policy = store?.shippingPricing
+  const basePolicy = store?.shippingPricing
     ? toStoreShippingPolicy(store.shippingPricing)
     : await legacyFlatPolicy(storeOwnerId);
+
+  /*
+   * ── THE THREE-LEVEL FREE-DELIVERY CHAIN ───────────────────────────────────
+   *
+   * Owner, 2026-11-14: *"like CSS — inline listings; seller inherits to listing
+   * if listing is not set, and seller inherits platform config if not set. All
+   * 3 are configs."*
+   *
+   * Applied HERE, at the one place the policy is assembled, so `quoteShipping`
+   * keeps its single `goodsValue >= policy.freeAbove` comparison and there is
+   * no second spelling of the rule.
+   *
+   * 🛑 This is also what finally gives `siteSettings.shipping.minOrderForFree`
+   * a READER. It was declared, typed and defaulted with zero consumers — so
+   * "free shipping over ₹999" sat on both live databases and had never once
+   * been applied. A config an admin can set and nothing honours is worse than
+   * an absent one: it reports a policy the store does not have.
+   *
+   * ⚠ The LISTING level is resolved by the caller, which is the only place the
+   * cart's lines are known; absent lines leave the store value untouched, so
+   * this is additive for every existing caller.
+   */
+  const platformFreeAbove = opts?.platformFreeAbove;
+  const resolvedFreeAbove = resolveFreeDeliveryThreshold({
+    listing: opts?.listingFreeAbove,
+    store: basePolicy.freeAbove,
+    platform: platformFreeAbove,
+  });
+  const policy: StoreShippingPolicy = Number.isFinite(resolvedFreeAbove)
+    ? { ...basePolicy, freeAbove: resolvedFreeAbove }
+    : /* NEVER_FREE — drop the key entirely rather than writing Infinity into a
+         policy that gets serialised and compared downstream. */
+      (({ freeAbove: _dropped, ...rest }) => rest)(basePolicy);
 
   /*
    * 🛑 D44 FIXED HERE: the quote now uses the caller's real goods value.
