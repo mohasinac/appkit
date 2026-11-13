@@ -204,6 +204,87 @@ if (missing.length) {
 }
 
 /*
+ * ── GRADIENT STOPS — found by LOOKING, then generalised ────────────────────
+ *
+ * 🛑 A REAL DEFECT THIS AUDIT COULD NOT SEE. The homepage `<h1>` renders
+ * "Buy Beyblade in India" with `background-clip: text` over the `brand-tri`
+ * gradient. Measured in a real browser on production, dark mode:
+ *
+ *     stop 1  rgb(30,58,138)   "Buy"        1.95 : 1   🛑
+ *     stop 2  rgb(105,86,23)   "Beyblade"   2.83 : 1   🛑
+ *     stop 3  rgb(56,189,248)  "in/India"   9.42 : 1   ✅
+ *
+ * against the dark page `#020617`. Two thirds of the site's largest headline
+ * is below the 3.0 large-text floor — the word "India" is barely visible.
+ *
+ * ⚠ The token-pair matrix above is blind to it: no token is paired with
+ * another here. The ink IS a gradient, and its stops are only readable via
+ * `gradients`. So the pair audit returned a confident green over the single
+ * most prominent piece of text on the storefront.
+ *
+ * ✅ And it generalises cleanly because the stops are TOKENS
+ * (`var(--appkit-color-primary)` …), so every gradient in every theme can be
+ * resolved and checked rather than this one being special-cased.
+ *
+ * ⚠ Thresholds: 3.0, the large-text bar. These gradients are used on display
+ * headings. A gradient used for a BACKGROUND rather than clipped to text is
+ * excluded by name below — judging a decorative wash by a text rule would
+ * flag correct design and train people to ignore the audit.
+ */
+let gradientWarn = 0;
+const TEXT_GRADIENTS = ["brand", "brand-tri", "accent"];
+
+console.log(`\n  ── gradient stops used as TEXT (background-clip: text) ──`);
+for (const theme of THEMES) {
+  const t = theme.tokens;
+  const pageBg = t["appkit-color-bg"] ?? (theme.mode === "dark" ? "#000000" : "#ffffff");
+  const grads = (theme as { gradients?: Record<string, string> }).gradients ?? {};
+  for (const name of TEXT_GRADIENTS) {
+    const def = grads[name];
+    if (!def) continue;
+    /* Resolve `var(--appkit-color-x)` stops back to their token values. */
+    const stops = [...def.matchAll(/var\(--(appkit-color-[a-z0-9-]+)\)|(#[0-9a-f]{3,8})|(rgba?\([^)]*\))/gi)]
+      .map((m) => (m[1] ? t[m[1]] : (m[2] ?? m[3])))
+      .filter((s): s is string => !!s && s !== "transparent");
+    if (stops.length === 0) continue;
+    for (const [i, stop] of stops.entries()) {
+      const r = ratio(stop, pageBg, pageBg);
+      if (r === null) {
+        missing.push(`${theme.id}: gradient ${name} stop ${i + 1} (unparseable ${stop})`);
+        continue;
+      }
+      checked += 1;
+      if (r < 3.0) {
+        gradientWarn += 1;
+        console.log(`    ⚠ ${theme.id}  ${name} stop ${i + 1}  ${r.toFixed(2)}:1 (needs 3.0)  ${stop} on ${pageBg}`);
+      }
+    }
+  }
+}
+if (gradientWarn === 0) {
+  console.log(`    ✅ every text-gradient stop is readable on its own theme background`);
+} else {
+  /*
+   * 🛑 REPORTED, NOT FAILING — deliberate rather than soft.
+   *
+   * Every failing stop is a BRAND colour (`#d4af37` gold, `#1e3a8a` navy), so
+   * the remedy is an owner decision about identity, not an engineering fix.
+   * Blocking `check:verifiers` on a pending decision makes the suite red for
+   * everyone, and a permanently-red gate is one people learn to bypass — the
+   * recorded failure of the absolute brand grep, which always failed against
+   * its own 439-occurrence baseline and trained readers to ignore it.
+   *
+   * ⚠ When the decision lands, change `gradientWarn` to `fail` on the line
+   * above. The finding stays loud meanwhile; it just does not hold the gate.
+   */
+  console.log(`\n    ⚠ ${gradientWarn} gradient stop(s) below the 3.0 large-text floor — REPORTED, NOT FAILING.`);
+  console.log(`      Each is a BRAND colour, so the fix is an owner decision about identity.`);
+  console.log(`      Measured live on production: the homepage <h1> "Buy Beyblade in India"`);
+  console.log(`      renders through brand-tri, and in dark mode two of its three stops`);
+  console.log(`      (1.95:1 and 2.83:1) leave most of the headline barely visible.`);
+}
+
+/*
  * ── TS ↔ tokens.css AGREEMENT ───────────────────────────────────────────────
  *
  * 🛑 FOLDED IN HERE BECAUSE THE AUDIT THAT WAS SUPPOSED TO DO IT DOES NOT
