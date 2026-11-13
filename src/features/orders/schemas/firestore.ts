@@ -1076,6 +1076,26 @@ export interface OrderDocument extends BaseDocument {
   saleProtectionAddon?: boolean;
   /** Fee charged for sale protection, decimal rupees — snapshot of siteSettings.commissions.saleProtectionFeePercent/Min at order time. */
   saleProtectionFee?: number;
+  /**
+   * The risk disclosure shown to the buyer when this parcel went out WITHOUT
+   * protection — stored verbatim, as it was shown, at the moment of purchase.
+   *
+   * Owner, 2026-11-13: *"if it is not opted tell them the risks clearly, and
+   * also make sure the invoice generated has that."*
+   *
+   * 🛑 STORED, NOT RE-DERIVED AT RENDER. The threshold is config and config
+   * moves: raising the free-cover limit to ₹5,000 next month must not rewrite
+   * what last month's invoice says about an order that really was uncovered at
+   * the time. An invoice is evidence, and evidence that silently restates
+   * itself when a setting changes is worthless in the dispute it exists for.
+   * Same rule as `saleProtectionFee` directly above — a SNAPSHOT at order
+   * time.
+   *
+   * ⚠ Absent on every protected or auto-covered order, which is the common
+   * case. Absence means "there was nothing to disclose", NOT "we forgot" —
+   * the invoice renders no row rather than an empty one.
+   */
+  protectionNotice?: string;
 
   /**
    * Add-ons by registry id, and what each one was CHARGED.

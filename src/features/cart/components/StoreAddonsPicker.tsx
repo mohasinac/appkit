@@ -6,6 +6,7 @@ import { Div } from "../../../ui/components/Div";
 import { Row, Stack } from "../../../ui/components/Layout";
 import { Text } from "../../../ui/components/Typography";
 import { Disclaimer } from "../../../ui/components/Disclaimer";
+import { resolveAutoCover } from "../../../_internal/shared/features/protection/auto-cover";
 import { IconBox } from "../../../ui/components/IconBox";
 import { FieldCheckbox } from "../../../ui/forms/FieldCheckbox";
 import { FieldTextarea } from "../../../ui/forms/FieldTextarea";
@@ -140,6 +141,19 @@ export interface StoreAddonsPickerProps {
   showGiftMessage?: boolean;
   currency?: string;
   className?: string;
+  /**
+   * `commissions.saleProtectionAutoCoverLimit` — the value covered for free.
+   *
+   * ⚠ Compared against THIS STORE's subtotal, and that is the right
+   * granularity rather than a convenience: each store ships its own parcel, so
+   * each parcel carries its own risk. Comparing a cart-wide total would warn
+   * about a ₹300 parcel because an unrelated seller's ₹5,000 one shared the
+   * checkout.
+   *
+   * 🛑 Absent reads as 0 — see `resolveAutoCover`. Unknown must WARN here, not
+   * promise free cover.
+   */
+  autoCoverLimit?: number;
 }
 
 export function StoreAddonsPicker({
@@ -154,6 +168,7 @@ export function StoreAddonsPicker({
   showGiftMessage = false,
   currency = "INR",
   className = "",
+  autoCoverLimit,
 }: StoreAddonsPickerProps) {
   if (!hasAnyStoreAddon(rates) || !rates) return null;
 
@@ -201,6 +216,17 @@ export function StoreAddonsPicker({
   const saleOffered = saleAvail.available;
   const shippingDeclined = !shipAvail.available && shipAvail.reason === "seller-not-supported";
   const saleDeclined = !saleAvail.available && saleAvail.reason === "seller-not-supported";
+
+  /*
+   * Is THIS store's parcel riding uncovered? Resolved rather than inlined, so
+   * the same decision — and the same words — reach the invoice.
+   */
+  const autoCover = resolveAutoCover({
+    orderGoodsValue: storeSubtotal,
+    autoCoverLimit,
+    protectionPurchased: value.saleProtectionAddon === true,
+    sellerOffersProtection: saleAvail.available,
+  });
   const saleBlockedByFinalSale = !saleAvail.available && saleAvail.reason === "final-sale";
 
   return (
@@ -299,6 +325,30 @@ export function StoreAddonsPicker({
               : shippingDeclined
                 ? "This seller does not offer shipment protection."
                 : "This seller does not offer sale protection."}
+          </Text>
+        </Row>
+      )}
+
+      {/*
+        ── THE THRESHOLD DISCLOSURE ─────────────────────────────────────────
+        Owner, 2026-11-13: *"if items are already more than a threshold, say
+        2k, show the insurance is advised else loss won't be covered by the
+        seller or platform."*
+
+        🛑 SEPARATE from the "does not offer" notice above, and louder. That
+        one states a seller's capability; this one states what the BUYER is
+        carrying right now on this parcel. A buyer who reads "this seller does
+        not offer sale protection" has been told a fact about the seller, not
+        that their own ₹27,750 order is riding uninsured.
+
+        ⚠ `warning` tone, not `muted`: it is advice to act on before paying,
+        and muted is the tone of the things on this panel that need no action.
+      */}
+      {autoCover.requiresDisclosure && autoCover.message && (
+        <Row gap="sm" align="start" className="min-w-0">
+          <IconBox size="sm" tone="warning"><ShieldOff size={14} /></IconBox>
+          <Text size="xs" color="warning" className="flex-1 min-w-0">
+            {autoCover.message}
           </Text>
         </Row>
       )}

@@ -758,6 +758,16 @@ export interface SaleProtectionFeeRates {
   saleProtectionFeePercent?: number;
   /** Rupee floor. Falls back to ₹49. */
   saleProtectionFeeMin?: number;
+  /**
+   * Order value covered for free. Above it the add-on is advised, and a buyer
+   * who declines is told so before paying.
+   *
+   * ⚠ Carried on the RATES type even though it prices nothing, because the
+   * disclosure and the fee are two answers to one question ("is this parcel
+   * covered?") and reading them from two different objects is how they end up
+   * disagreeing. 🛑 Optional, and absent must read as 0 — never as "covered".
+   */
+  saleProtectionAutoCoverLimit?: number;
 }
 
 /* Fallbacks live in `addon-registry.ts` — see the note above. */

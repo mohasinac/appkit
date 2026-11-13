@@ -200,6 +200,7 @@ import { PAYMENT_METHOD_LABEL } from "../../../shared/checkout/rules/payment-gat
  * not defaulted to 0.
  */
 import { amountDueNow } from "../../../shared/checkout/order-math";
+import { resolveAutoCover } from "../../../shared/features/protection/auto-cover";
 import type { CartAppliedCoupon } from "../../../../features/cart/schemas/firestore";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import { enforceMaxPerUserForCart } from "./prize-bundle-gates";
@@ -2136,6 +2137,29 @@ async function createOrderForGroup(
   });
 
   /*
+   * ── THE RISK, RECORDED AT PURCHASE TIME ───────────────────────────────────
+   *
+   * Owner, 2026-11-13: *"if it is not opted tell them the risks clearly, and
+   * also make sure the invoice generated has that."*
+   *
+   * 🛑 STORED VERBATIM, NOT RE-DERIVED WHEN THE INVOICE RENDERS. The threshold
+   * is config and config moves: raising the free-cover limit next month must
+   * not rewrite what this month's invoice says about an order that really was
+   * uncovered. An invoice is evidence, and evidence that restates itself when
+   * a setting changes is worthless in the dispute it exists for. Same rule as
+   * `saleProtectionFee` beside it — a snapshot at order time.
+   *
+   * ⚠ Compared against THIS GROUP's total, because a group is one seller's
+   * parcel and a parcel is what gets lost.
+   */
+  const autoCoverDecision = resolveAutoCover({
+    orderGoodsValue: groupTotal,
+    autoCoverLimit: commissions.saleProtectionAutoCoverLimit,
+    protectionPurchased: saleProtectionFee > 0,
+    sellerOffersProtection: storeProtections.sale,
+  });
+
+  /*
    * 🛑 THIS BLOCK WAS MOVED DOWN (2026-10-21) and its position is load-bearing.
    *
    * It used to sit ~90 lines above, before `codHandlingFee`, `giftWrapFee` and
@@ -2620,6 +2644,9 @@ async function createOrderForGroup(
     shipmentProtectionFee: !adminBypass && shipmentProtectionFee > 0 ? shipmentProtectionFee : undefined,
     saleProtectionAddon: !adminBypass && saleProtectionFee > 0 ? true : undefined,
     saleProtectionFee: !adminBypass && saleProtectionFee > 0 ? saleProtectionFee : undefined,
+    /* Absent when there was nothing to disclose — the invoice then renders no
+       row rather than an empty one. See `protectionNotice` on the schema. */
+    protectionNotice: autoCoverDecision.requiresDisclosure ? autoCoverDecision.message : undefined,
     /*
      * S5a — the arrangement, snapshotted. Written only when it IS a shared
      * purchase, so an ordinary order carries no field at all and every reader

@@ -301,6 +301,15 @@ export interface Order {
   /** Sale protection — the item itself rather than the transit (C5e). */
   saleProtectionAddon?: boolean;
   saleProtectionFee?: number;
+  /**
+   * The risk disclosure shown when this parcel went out UNPROTECTED, stored
+   * verbatim at purchase time.
+   *
+   * 🛑 Mirrored onto the client type because BOTH invoice documents render it
+   * and they have disagreed before — the PDF was once missing fee rows the
+   * HTML already had. One order, two documents, same facts.
+   */
+  protectionNotice?: string;
   /** Buyer-facing platform commission apportioned to this order. */
   platformFee?: number;
   /** COD handling fee, charged only on cash-on-delivery orders. */
