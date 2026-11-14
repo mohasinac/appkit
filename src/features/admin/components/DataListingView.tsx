@@ -394,9 +394,32 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
   const emptyIsFiltered = hasActiveState;
   const emptyLabel =
     config.emptyLabel ?? `No ${config.title.toLowerCase()} found`;
-  const resolvedEmptyLabel = emptyIsFiltered
-    ? `No ${config.title.toLowerCase()} match these filters`
-    : emptyLabel;
+  /*
+   * ── "EMPTY" AND "FAILED" ARE DIFFERENT ANSWERS ───────────────────────────
+   *
+   * 🛑 MEASURED ON THREE HOSTS 2026-11-14 — auth's user CMS, the blogs CMS and
+   * the events CMS each drew *"Something went wrong. Please try again."* AND
+   * *"No <things> found"* **at the same time, in one view**. The query had
+   * failed; the list underneath then reported an empty catalogue.
+   *
+   * 🛑 The two lead an operator to opposite actions. *"No posts"* means create
+   * one or accept the state. *"Could not load"* means retry or escalate.
+   * Drawing both makes them guess which is true — and the cheerful one reads as
+   * authoritative, because it sits where the data would have been.
+   *
+   * ⚠ This is the degraded-read-is-indistinguishable-from-no-data class this
+   * codebase has already paid for twice: a missing index returning
+   * `200 {items: []}` made every contest entry invisible, and `/money-flow`
+   * has its current shape precisely because "no rows", "not permitted" and
+   * "upstream unavailable" had to become three different sentences.
+   */
+  const loadFailed = Boolean(errorMessage);
+
+  const resolvedEmptyLabel = loadFailed
+    ? `${config.title} could not be loaded`
+    : emptyIsFiltered
+      ? `No ${config.title.toLowerCase()} match these filters`
+      : emptyLabel;
 
   const renderPrimaryAction = (size?: "sm") => {
     const action = config.primaryAction;
@@ -426,7 +449,13 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
 
   /** What an empty list offers: clear the filters, or create the first record. */
   const renderEmptyAction = () =>
-    emptyIsFiltered ? (
+    /*
+     * 🛑 NOTHING is offered when the read FAILED. Inviting someone to create
+     * the first record because a query errored is how a duplicate gets made —
+     * the row may well exist and simply not have loaded. "Clear filters" is
+     * equally wrong: the filters are not why the list is empty.
+     */
+    loadFailed ? undefined : emptyIsFiltered ? (
       <Button variant="secondary" onClick={resetAll}>
         Clear filters
       </Button>
