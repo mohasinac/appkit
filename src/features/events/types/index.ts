@@ -4,15 +4,69 @@ import type { ClientGiveawayConfig } from "../../giveaway/types";
 
 // --- Enums / union types ------------------------------------------------------
 
-export type EventType =
+/**
+ * An event's type — an **OPEN VALIDATED SLUG**, not an enum.
+ *
+ * ## 🛑 THE MEMBERS BELOW ARE DEFAULT TEMPLATES, NOT THE PERMITTED SET
+ *
+ * Owner, 2026-11-14: *"they are CONFIGS — so even if I decide to retire one,
+ * only the config goes; nothing about the main event ENTITY gets retired."*
+ * This is the governing rule of the whole project applied here: **we ship the
+ * mechanism and the default templates; the user overrides them.** A new kind
+ * of event is a seed ROW, never a release.
+ *
+ * 🛑 **IT WAS A CLOSED UNION UNTIL NOW, AND THAT WAS A MEASURED DEFECT.** The
+ * one event in PRODUCTION carries `type: "contest"` — a value this union did
+ * not list — so every `Record<EventType, …>` lookup missed the only live event
+ * on the platform. Adding it to the map produced `TS2353`, which is how the
+ * closed union was finally caught: *the schema had never described the data.*
+ *
+ * ⚠ The 2026-11-08 ruling already said this (*"event `type` is an open
+ * validated slug, not an enum — a photo contest is a seed row"*) and the union
+ * survived it. **Writing the rule down did not open the type**; only deleting
+ * the closure did.
+ *
+ * ## What this changes, and what it deliberately does not
+ *
+ * - ✅ A new type is a config row. No union edit, no publish, no deploy.
+ * - ✅ Retiring one deletes its ROW. The entity, its entries and every stored
+ *   value are untouched — which is why no shim or migration is owed.
+ * - 🛑 **Unknown values must DEGRADE, never throw.** `normalizeEventType`
+ *   already folds legacy spellings; the maps below cover the KNOWN defaults
+ *   and are not an exhaustiveness guarantee for stored data.
+ * - ⚠ `(string & {})` keeps editor autocomplete on the defaults while
+ *   admitting any validated slug. It is the same shape `BannedAction` and
+ *   `entryApproval` already use here, deliberately, rather than a third way of
+ *   expressing "open".
+ *
+ * ## 🛑 TWO TYPES, AND KEEPING THEM APART IS THE WHOLE SAFETY PROPERTY
+ *
+ * `EventType` is **what a document may STORE** — open. `KnownEventType` is
+ * **what this build ships defaults for** — closed, and what every
+ * `Record<…, X>` must be keyed on.
+ *
+ * ⚠ **Keying a `Record` on the OPEN type is worse than the closed union was.**
+ * `Record<string, X>` is an index signature, so `EVENT_TYPE_LABELS[anything]`
+ * TYPECHECKS AS `X` and is `undefined` at runtime — the lookup starts lying,
+ * silently, on exactly the unknown values the open type exists to admit. The
+ * closed union at least failed loudly.
+ *
+ * ✅ So: maps stay exhaustive over `KnownEventType` (a new shipped default is
+ * still a compile error in all three of them), and every READ of a stored
+ * value goes through a resolver that tolerates a miss. Same split the payment
+ * method registry already uses — `UNKNOWN_METHOD_CAPABILITIES` is that
+ * fallback, and this file's `normalizeEventType` is its sibling.
+ */
+export type KnownEventType =
   | "sale"
   | "offer"
   | "poll"
   | "survey"
-  | "feedback"
-  | "giveaway"
+  | "contest"
   | "bonus-spin"
   | "random-draw";
+
+export type EventType = KnownEventType | (string & {});
 
 /**
  * Pre-2026-10-31 spellings of the three chance-based types, kept as READ
@@ -29,10 +83,24 @@ export type EventType =
  * path must go through, and these entries must not be deleted on the
  * assumption the migration happened.
  */
-const LEGACY_EVENT_TYPE_ALIASES: Record<string, EventType> = {
-  raffle: "giveaway",
+const LEGACY_EVENT_TYPE_ALIASES: Record<string, KnownEventType> = {
+  /*
+   * 🛑 `raffle` RETARGETED 2026-11-14 — it pointed at `giveaway`, which this
+   * commit deleted. Aliases are resolved in ONE hop, not chained, so the old
+   * `raffle → giveaway → random-draw` path was never a path: after the
+   * deletion `raffle` resolved to a value no longer in the union, and
+   * `normalizeEventType` would have handed a dead string to every caller.
+   *
+   * ⚠ A typecheck could not see this. The map was `Record<string, EventType>`
+   * and `EventType` is open, so a dangling target is a perfectly valid string.
+   * **Found by reading the file after the deletion, which is the point** —
+   * deleting a union member enumerates its TYPE consumers, never its DATA
+   * references.
+   *
+   * Typed `KnownEventType` now, so a future deletion DOES break here.
+   */
+  raffle: "random-draw",
   spin_wheel: "bonus-spin",
-  giveaway: "random-draw",
 };
 
 /**
@@ -46,7 +114,33 @@ export function normalizeEventType(
 ): EventType | undefined {
   if (!type) return undefined;
   if (type in ALL_EVENT_TYPES_MAP) return type as EventType;
-  return LEGACY_EVENT_TYPE_ALIASES[type];
+
+  const alias = LEGACY_EVENT_TYPE_ALIASES[type];
+  if (alias) return alias;
+
+  /*
+   * 🛑 A SLUG THIS BUILD HAS NEVER HEARD OF PASSES THROUGH — it is not an
+   * error, it is the whole point of an open type.
+   *
+   * This used to `return LEGACY_EVENT_TYPE_ALIASES[type]`, i.e. `undefined`
+   * for anything unknown. With a CLOSED union that was right: an unrecognised
+   * value could only be corruption. With types as CONFIG it is the opposite —
+   * **a type an admin adds by writing a row is unknown to this build by
+   * design**, and returning `undefined` would make every config-defined event
+   * normalise away to nothing. The rule that types are data would have been
+   * cancelled by this one line.
+   *
+   * ⚠ It is NOT a widening of what is TRUSTED. This returns the caller's own
+   * value unchanged — it never guesses a default, so the recorded rule holds:
+   * *mislabelling a giveaway as an offer is worse than admitting we do not
+   * know.* Passing a value through is not labelling it.
+   *
+   * 🛑 Consumers must still treat the result as possibly-unknown: look it up in
+   * `EVENT_TYPE_LABELS`/`EVENT_TYPE_META` with a fallback, never with a
+   * non-null assertion. Those maps are keyed on `KnownEventType` precisely so
+   * that lookup is typed as possibly-missing.
+   */
+  return type;
 }
 
 /**
@@ -66,54 +160,64 @@ export function normalizeEventType(
  * value matching zero rows. It is a real member of the union now. Do not read
  * that paragraph as evidence the value is still fictional.
  */
-const ALL_EVENT_TYPES_MAP: Record<EventType, true> = {
+const ALL_EVENT_TYPES_MAP: Record<KnownEventType, true> = {
   sale: true,
   offer: true,
   poll: true,
   survey: true,
-  feedback: true,
-  giveaway: true,
+  /*
+   * 🛑 `contest` — ADDED 2026-11-14, and it was already the only PRODUCTION
+   * event's type.
+   *
+   * Measured: `(default)` holds 1 event and it is `type: "contest"`; dev-db
+   * holds `offer` + `contest`. So the single live event on this platform has
+   * carried a type the union did not declare — every `Record<EventType, …>`
+   * lookup missed it, which is exactly the Root Cause #61 shape this map's own
+   * header describes (a chip list offering values matching zero rows while
+   * omitting real ones).
+   */
+  contest: true,
   "bonus-spin": true,
   "random-draw": true,
 };
 
+/*
+ * ── `giveaway` and `feedback` are DELETED, not retired ──────────────────────
+ *
+ * Owner, 2026-11-14: *"no need to retire, just remove it — there is no live
+ * data."* Measured before deleting, in BOTH databases: `{offer:1, contest:1}`
+ * in dev-db, `{contest:1}` in production. **Zero rows carry either type.**
+ *
+ * 🛑 I had first built an accepted-never-written shim to keep stored rows
+ * validating — protecting data that does not exist. CLAUDE.md records that
+ * exact mistake, by me, once already: *"Check whether data exists before
+ * designing to protect it."* The site has never gone live, so **no back-compat
+ * is owed on anything retired** and a shim is pure cost: a dead branch, a
+ * second list to keep in sync, and a lie about what the system supports.
+ *
+ * ✅ Deleting the TYPE member is also the technique that FINDS every consumer —
+ * the compiler enumerates them, where a grep for the identifier does not. That
+ * is how the EMI purge found a seed row and a search index nothing else saw.
+ *
+ * - `giveaway` was a second name for `random-draw`.
+ * - `feedback` was `survey` with one free-text field; `formResponses` already
+ *   stores arbitrary fields, so it carried no capability `survey` lacks.
+ */
+
 export const ALL_EVENT_TYPES = Object.keys(ALL_EVENT_TYPES_MAP) as EventType[];
 
 /**
- * Types an admin may CREATE today — a strict subset of the union above.
+ * @deprecated Use `ALL_EVENT_TYPES`. The union IS the creatable set again.
  *
- * ## 🛑 WHY THIS IS A SECOND LIST AND NOT A NARROWER UNION
+ * ⚠ This existed for ~1 hour on 2026-11-14 to close the entry point on
+ * `giveaway`/`feedback` while keeping stored rows valid. The owner then
+ * pointed out there ARE no stored rows — measured `{offer:1, contest:1}` —
+ * so the members were deleted outright and a second list became exactly the
+ * duplicate-vocabulary defect it was meant to work around.
  *
- * Owner ruling, 2026-11-14: `giveaway` is **retired** — it was a second name
- * for `random-draw`, which is the duplicate-vocabulary defect this codebase
- * keeps closing — and `feedback` **merges into `survey`**, being a survey with
- * one free-text field.
- *
- * ⚠ Neither may leave `ALL_EVENT_TYPES_MAP`. That map IS the union, so deleting
- * a member makes every stored row carrying it fail validation — a DATA
- * MIGRATION, not an edit. The standing rule here is explicit: *"never DELETE a
- * deferred type — unlisted is reversible, deletion is a migration."*
- *
- * So the entry point closes and the read path stays open: **accepted, never
- * written**, exactly as `scamPlatform: "letitrip"` is handled.
- *
- * ⚠ And it is deliberately NOT derived by subtraction from the map. A derived
- * list silently re-admits whatever is added later, which is how a retired
- * value comes back — the same way `giveaway` returned to a picker once before.
- * Adding a creatable type must be a decision someone writes down here.
- *
- * 🛑 Do not use this for FILTERING or for labels. A surface that lists existing
- * events must still render a retired type correctly, or a historical giveaway
- * renders as "unknown" to the people who entered it.
+ * Kept as an alias for one release so no consumer breaks mid-edit; delete it.
  */
-export const CREATABLE_EVENT_TYPES: readonly EventType[] = [
-  "sale",
-  "offer",
-  "poll",
-  "survey",
-  "bonus-spin",
-  "random-draw",
-] as const;
+export const CREATABLE_EVENT_TYPES: readonly EventType[] = ALL_EVENT_TYPES;
 
 /**
  * Display labels for the admin/seller dashboards, which are not i18n-wrapped.
@@ -121,16 +225,43 @@ export const CREATABLE_EVENT_TYPES: readonly EventType[] = [
  *
  * `Record<EventType, string>` so a new union member is a compile error here too.
  */
-export const EVENT_TYPE_LABELS: Record<EventType, string> = {
+export const EVENT_TYPE_LABELS: Record<KnownEventType, string> = {
   sale: "Sale",
   offer: "Offer",
   poll: "Poll",
   survey: "Survey",
-  feedback: "Feedback",
-  giveaway: "Giveaway",
+  contest: "Contest",
   "bonus-spin": "Bonus Spin",
   "random-draw": "Random Draw",
 };
+
+/**
+ * The label for ANY stored type, including one this build ships no default for.
+ *
+ * ## 🛑 USE THIS, NEVER `EVENT_TYPE_LABELS[type]` DIRECTLY
+ *
+ * The map is keyed on `KnownEventType` (closed) while a document stores
+ * `EventType` (open), so a direct index is a `TS7053` — deliberately. That
+ * error is the guard: it forces every caller to decide what an unknown type
+ * renders as, instead of silently producing `undefined` and painting the word
+ * "undefined" into a chip.
+ *
+ * ⚠ The fallback HUMANISES rather than guessing a known label — `bonus-spin`
+ * would read "Bonus Spin" even if it were unknown. That follows the recorded
+ * rule for unknown rows: *identity still renders (humanised label, neutral
+ * chip), because mislabelling a giveaway as an offer is worse than admitting
+ * we do not know.* It never substitutes a different type's label.
+ */
+export function eventTypeLabel(type: EventType | undefined | null): string {
+  if (!type) return "Event";
+  const known = EVENT_TYPE_LABELS[type as KnownEventType];
+  if (known) return known;
+  return type
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
 
 /**
  * The DRAW MECHANISM a giveaway event uses — a different axis from

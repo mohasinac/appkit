@@ -28,7 +28,7 @@
  * @tag layer:constants
  */
 
-import { normalizeEventType, type EventType } from "../types";
+import { normalizeEventType, type EventType, type KnownEventType } from "../types";
 
 export interface EventTypeMeta {
   /** Human label. Title case, never the raw enum. */
@@ -46,7 +46,7 @@ export interface EventTypeMeta {
   blurb: string;
 }
 
-export const EVENT_TYPE_META: Record<EventType, EventTypeMeta> = {
+export const EVENT_TYPE_META: Record<KnownEventType, EventTypeMeta> = {
   sale: {
     label: "Sale",
     emoji: "🏷️",
@@ -72,18 +72,22 @@ export const EVENT_TYPE_META: Record<EventType, EventTypeMeta> = {
     chipClass: "bg-secondary-surface text-secondary",
     blurb: "A few questions, and your answers shape the answer.",
   },
-  feedback: {
-    label: "Feedback",
-    emoji: "💬",
-    chipClass: "bg-warning-surface text-warning",
-    blurb: "Tell us what is working and what is not.",
-  },
-  giveaway: {
-    label: "Giveaway",
-    emoji: "🎟️",
-    // Was identical to `feedback`. A giveaway is not a comment box.
+  /*
+   * 🛑 `contest` — the type the ONE PRODUCTION EVENT actually carries, and it
+   * had no entry here until 2026-11-14. So the live Diwali contest rendered
+   * the neutral grey 📅 fallback on every chip, every card and every hero,
+   * for its whole run. `eventTypeMeta` degraded exactly as designed; nothing
+   * errored; it simply looked unfinished.
+   *
+   * ⚠ That is the cost of a closed union that never described the data — the
+   * fallback hid it. A missing entry is invisible precisely BECAUSE the
+   * degrade path works.
+   */
+  contest: {
+    label: "Contest",
+    emoji: "🏆",
     chipClass: "bg-accent-surface text-accent",
-    blurb: "Free to enter. One entry, one winner.",
+    blurb: "Enter your best. The community decides.",
   },
   "bonus-spin": {
     // 🛑 THE BUG THIS FILE IS NAMED FOR. `capitalize` on the raw enum
@@ -132,7 +136,18 @@ export const EVENT_TYPE_META: Record<EventType, EventTypeMeta> = {
  */
 export function eventTypeMeta(type: string | undefined): EventTypeMeta {
   const canonical = normalizeEventType(type);
-  const known = canonical ? EVENT_TYPE_META[canonical] : undefined;
+  /*
+   * 🛑 The cast is REQUIRED and is the safe direction. `canonical` is the OPEN
+   * `EventType` (a config-defined slug is legitimate); the map is keyed on the
+   * CLOSED `KnownEventType`. Indexing one with the other is `TS7053` by
+   * design — and the `if (known)` below is exactly the miss-handling that
+   * error demands. Removing the cast by widening the MAP's key would delete
+   * the check instead of satisfying it, and the lookup would start typing as
+   * `EventTypeMeta` while returning `undefined`.
+   */
+  const known = canonical
+    ? (EVENT_TYPE_META as Partial<Record<EventType, EventTypeMeta>>)[canonical]
+    : undefined;
   if (known) return known;
   return {
     label: humaniseEventType(type),

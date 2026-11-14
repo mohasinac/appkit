@@ -41,7 +41,7 @@ import type {
   SpinPrize,
   SurveyFormField,
 } from "../types";
-import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";
+import { ALL_EVENT_TYPES, eventTypeLabel } from "../types";
 import { rafflePrizeCouponIdsOf } from "../schemas/firestore";
 import { ATTACHED_COUPON_MAX } from "../../promotions/constants/attached-coupons";
 import { SectionForm, useSectionFormNav } from "../../shell/SectionForm";
@@ -102,7 +102,7 @@ const CLS_RAFFLE_BODY = "text-warning dark:text-warning";
  */
 const EVENT_TYPE_OPTIONS = ALL_EVENT_TYPES.map((value) => ({
   value,
-  label: EVENT_TYPE_LABELS[value],
+  label: eventTypeLabel(value),
 }));
 
 /**

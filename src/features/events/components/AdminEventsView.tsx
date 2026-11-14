@@ -9,7 +9,7 @@ import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import type { ListingLayoutProps } from "../../../ui/components/ListingLayout";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_EVENT_STATUS_TABS, ALL_TAB } from "../../admin/constants/filter-tabs";
-import { ALL_EVENT_TYPES, EVENT_TYPE_LABELS } from "../types";
+import { ALL_EVENT_TYPES, eventTypeLabel } from "../types";
 import {
   toRecordArray,
   toRelativeDate,
@@ -36,7 +36,7 @@ import type { DashboardCard } from "../../../_internal/shared/features/dashboard
  */
 const TYPE_OPTIONS = [
   ALL_TAB,
-  ...ALL_EVENT_TYPES.map((type) => ({ id: type, label: EVENT_TYPE_LABELS[type] })),
+  ...ALL_EVENT_TYPES.map((type) => ({ id: type, label: eventTypeLabel(type) })),
 ];
 
 interface AdminEventsApiResponse {
