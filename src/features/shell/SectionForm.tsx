@@ -616,6 +616,52 @@ export function SectionForm<T extends object = Record<string, JsonValue>>({
   });
 
   /*
+   * ── 🛑 THE MISSING-PROVIDER TRAP, MADE SELF-REPORTING ────────────────────
+   *
+   * This component does not own `FormShellContext` (see `shellCtx` above) —
+   * the owning view does. When a view forgets, the consequence is SILENT and
+   * MOBILE-ONLY:
+   *
+   *   useFormBottomActions: active = enabled && !insideOverlay && ctx != null
+   *   ctx null  ->  active false  ->  `return []`  ->  no actions registered
+   *   BottomActions then renders its frame around NOTHING
+   *
+   * So on a phone the form has **no submit button at all**, while desktop
+   * looks perfect because `showInlineActions` renders the inline row there.
+   * Nothing throws, nothing logs, and the page is a correct 200.
+   *
+   * ⚠ Measured 2026-11-14: it had shipped on the events participate form —
+   * the one surface that host exists for — and on the shop's checkout OTP
+   * step, where a buyer could not submit the code that unlocks a high-value
+   * order. Both were found by grepping every `<SectionForm` for a sibling
+   * `FormShellContext`, which is not a check anyone runs twice.
+   *
+   * 🛑 A WARNING, NOT A THROW. Throwing would take down a page that renders
+   * correctly on desktop and merely loses a button on mobile — a worse
+   * outcome than the bug. And it is dev-only: a consumer in production can do
+   * nothing with it, and this project's rule is that unknown/degraded states
+   * surface to an operator, never to a visitor.
+   *
+   * ✅ The two legitimate answers are both named in the message, because the
+   * right one depends on the surface: mount the provider (a standalone form),
+   * or pass `bottomBar={false}` (a sub-step inside a flow that owns its own
+   * chrome — which is what checkout's OTP step correctly does).
+   */
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    if (!bottomBar || hideActions || shellCtx) return;
+    // eslint-disable-next-line no-console
+    console.warn(
+      "[SectionForm] No <FormShellContext.Provider> above this form, so its " +
+        "submit action cannot register with the bottom bar — the form will " +
+        "render with NO submit button on mobile (desktop is unaffected, which " +
+        "is why this is easy to miss). Either mount the provider via " +
+        "useFormShellState(), or pass bottomBar={false} if this form is a " +
+        "sub-step inside a flow that owns its own actions.",
+    );
+  }, [bottomBar, hideActions, shellCtx]);
+
+  /*
    * The bar above and the in-flow row at the end of this form are ONE
    * decision about where the primary action lives, so they are decided
    * together here rather than each guessing. `BottomActions` unmounts on
