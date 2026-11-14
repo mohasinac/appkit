@@ -1,7 +1,26 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { ChevronUp } from "lucide-react";
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronUp,
+  FileText,
+  Heart,
+  Home,
+  LayoutDashboard,
+  LifeBuoy,
+  Newspaper,
+  Package,
+  Receipt,
+  Search,
+  ShieldCheck,
+  ShoppingBag,
+  ShoppingCart,
+  Store,
+  Tag,
+  User,
+} from "lucide-react";
 import { AvatarDisplay, Div, Drawer, IconButton, Li, Span, TextLink, Ul } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
@@ -23,6 +42,65 @@ import { useCartCount } from "../cart/hooks/useCartCount";
  * token as a fill, which audit-status-color-pairs can't see through arbitrary
  * -value syntax. */
 const CLS_COUNT_BADGE = "appkit-hand-badge appkit-hand-badge--lg absolute -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-error-solid px-[var(--appkit-space-1)] leading-none text-error-on-solid";
+
+/**
+ * The default icon for a bottom-bar slot, keyed on the nav item's `key`.
+ *
+ * ## 🛑 WHY THIS LIVES IN appkit AND NOT IN EACH APP'S NAV TABLE
+ *
+ * The bug it fixes was on **every subdomain at once** — shop, events, blogs,
+ * auth and audit all rendered the same hamburger under every label, because
+ * none of their nav tables carries an `icon` and they all fall through to one
+ * shared fallback. Fixing it per host would have meant four near-identical
+ * maps, which is the duplicate-vocabulary defect this codebase keeps closing;
+ * the next host added would then ship hamburgers again until someone noticed.
+ *
+ * ⚠ And an app's `constants/nav.ts` is a `.ts` file of pure DATA, imported by
+ * the footer and the sidebar as well. Putting JSX there forces a `.tsx` rename
+ * and pulls React into a module two icon-less consumers also read.
+ *
+ * ## 🛑 KEYED ON `key`, NEVER ON `href` OR `label`
+ *
+ * A key is minted once and stable. Deriving an icon from an href means
+ * re-pointing a link silently drops its icon — the derived-id trap this
+ * project already records for `navItemId(portal, href)`, where changing a URL
+ * orphaned every toggle, order and badge attached to it.
+ *
+ * ## Precedence, and it matters
+ *
+ *   `item.icon`  →  this map  →  the hamburger
+ *
+ * An explicit per-item icon always wins, so a host that wants something
+ * specific is never fighting this. The hamburger remains for a key nobody has
+ * mapped — correct as a true last resort, and now rare rather than universal.
+ *
+ * ⚠ Sizing is deliberately NOT set here. `BottomNavItem` applies its own
+ * `iconClassName`; a hardcoded `h-5 w-5` would win over the bar's own sizing
+ * on one host and not another.
+ */
+export const NAV_SLOT_ICONS: Record<string, React.ReactNode> = {
+  home: <Home aria-hidden="true" />,
+  shop: <Store aria-hidden="true" />,
+  products: <ShoppingBag aria-hidden="true" />,
+  events: <CalendarDays aria-hidden="true" />,
+  blog: <Newspaper aria-hidden="true" />,
+  articles: <Newspaper aria-hidden="true" />,
+  wiki: <BookOpen aria-hidden="true" />,
+  search: <Search aria-hidden="true" />,
+  cart: <ShoppingCart aria-hidden="true" />,
+  wishlist: <Heart aria-hidden="true" />,
+  orders: <Package aria-hidden="true" />,
+  profile: <User aria-hidden="true" />,
+  account: <User aria-hidden="true" />,
+  dashboard: <LayoutDashboard aria-hidden="true" />,
+  deals: <Tag aria-hidden="true" />,
+  coupons: <Tag aria-hidden="true" />,
+  invoices: <Receipt aria-hidden="true" />,
+  audit: <ShieldCheck aria-hidden="true" />,
+  help: <LifeBuoy aria-hidden="true" />,
+  support: <LifeBuoy aria-hidden="true" />,
+  policies: <FileText aria-hidden="true" />,
+};
 
 export interface BottomNavItem {
   key: string;
@@ -103,7 +181,13 @@ function BottomNavSlot({
     <NavItem
       href={item.href}
       label={item.label}
-      icon={item.icon ?? fallbackIcon}
+      /*
+       * Precedence: an explicit per-item icon, then the shared slot registry,
+       * then the hamburger. See `NAV_SLOT_ICONS` for why the middle rung has
+       * to exist at all — without it every host that omits icons renders the
+       * same glyph in every slot, which is what shipped on all of them.
+       */
+      icon={item.icon ?? NAV_SLOT_ICONS[item.key] ?? fallbackIcon}
       isActive={isActive}
       variant="vertical"
       activeClassName={activeClassName}
@@ -240,6 +324,23 @@ export function BottomNavbar({
   } as const;
 
   const slotClassName = "relative flex h-full w-full flex-col items-center justify-center gap-[var(--appkit-space-1)] text-center transition-colors duration-200";
+  /*
+   * ── THE LAST-RESORT ICON, AND IT WAS REACHING EVERY SLOT ─────────────────
+   *
+   * 🛑 Reported from a phone 2026-11-14, on EVERY subdomain: the bottom bar
+   * rendered `Shop · Events · Articles · More` with the SAME hamburger under
+   * each label. Not one of the extracted apps' nav tables carries an `icon`,
+   * so every slot fell through to this.
+   *
+   * ⚠ Four identical icons are worse than four missing ones. The bar still
+   * LOOKS iconified, so nothing reads as broken — the icons simply carry zero
+   * information while the labels do all the work. A fallback that looks
+   * deliberate is exactly how this survived across four hosts.
+   *
+   * ✅ `NAV_SLOT_ICONS` below now answers first, keyed on the item's stable
+   * `key`. The hamburger stays as the true last resort for a slot nobody has
+   * mapped — which is correct, and should now be rare.
+   */
   const defaultIcon = (
     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
