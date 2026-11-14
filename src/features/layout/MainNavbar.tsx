@@ -11,7 +11,29 @@ export interface MainNavbarItem {
   href: string;
   /** Translated label */
   label: string;
+  /**
+   * A rendered icon, passed in CODE.
+   *
+   * ⚠ Prefer `iconName` for anything an operator might reasonably choose.
+   * A React node is not serializable, so this field can never come from a
+   * stored nav row — and a non-serializable value crossing the RSC boundary
+   * is what caused this project's React #441 outage.
+   */
   icon?: React.ReactNode;
+  /**
+   * The icon's NAME, from appkit's `NAV_ICON_REGISTRY` — the configurable rung.
+   *
+   * 🛑 Owner, 2026-11-14: *"icons and nav is a config."* This is the field
+   * that makes that true. It is a plain string, so an app's `constants/nav.ts`
+   * can declare it while staying a pure-DATA `.ts` module (no React import, no
+   * `.tsx` rename), and a stored `navConfig` row can carry it unchanged
+   * through JSON and Firestore.
+   *
+   * An unrecognised name falls through to the slot default and then to the
+   * caller's fallback — never a throw, so newer config cannot break an older
+   * deploy.
+   */
+  iconName?: string;
   highlighted?: boolean;
   /** Stable nav-* slug for siteSettings.navConfig toggling. */
   id?: string;

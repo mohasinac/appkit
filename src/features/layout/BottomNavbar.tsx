@@ -44,69 +44,150 @@ import { useCartCount } from "../cart/hooks/useCartCount";
 const CLS_COUNT_BADGE = "appkit-hand-badge appkit-hand-badge--lg absolute -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-error-solid px-[var(--appkit-space-1)] leading-none text-error-on-solid";
 
 /**
- * The default icon for a bottom-bar slot, keyed on the nav item's `key`.
+ * 🛑 THE ICON VOCABULARY — a NAME an admin can store, resolved to a component.
  *
- * ## 🛑 WHY THIS LIVES IN appkit AND NOT IN EACH APP'S NAV TABLE
+ * Owner, 2026-11-14: *"icons and nav is a config, why are we not following
+ * that?"* — and the first version of this file did not: it mapped a nav
+ * `key` straight to JSX, so a new link, a renamed one, or simply a different
+ * icon was an appkit publish plus four deploys. That is the governing rule's
+ * own deploy test failing: **if a change the USER should be able to make
+ * requires a deploy, it was built at the wrong layer.**
  *
- * The bug it fixes was on **every subdomain at once** — shop, events, blogs,
- * auth and audit all rendered the same hamburger under every label, because
- * none of their nav tables carries an `icon` and they all fall through to one
- * shared fallback. Fixing it per host would have meant four near-identical
- * maps, which is the duplicate-vocabulary defect this codebase keeps closing;
- * the next host added would then ship hamburgers again until someone noticed.
+ * ## Why a REGISTRY and not "just put the icon in the config"
  *
- * ⚠ And an app's `constants/nav.ts` is a `.ts` file of pure DATA, imported by
- * the footer and the sidebar as well. Putting JSX there forces a `.tsx` rename
- * and pulls React into a module two icon-less consumers also read.
+ * A config row lives in Firestore and travels as JSON. **JSX is not
+ * serializable** — this project has already taken a week-long outage from a
+ * non-serializable value crossing a boundary (the `buildHref` function prop,
+ * React #441). So config stores a **string name**, and this registry is the
+ * one place that turns a name into a component. Same split as every other
+ * registry here: the machinery is code, the choice is data.
  *
- * ## 🛑 KEYED ON `key`, NEVER ON `href` OR `label`
+ * ⚠ An unknown name resolves to `undefined` and falls through, never throws —
+ * newer config against an older deploy must not take a page down. That is the
+ * standing degrade rule, and for a decorative glyph the conservative answer is
+ * plainly "render the fallback".
  *
- * A key is minted once and stable. Deriving an icon from an href means
- * re-pointing a link silently drops its icon — the derived-id trap this
- * project already records for `navItemId(portal, href)`, where changing a URL
- * orphaned every toggle, order and badge attached to it.
+ * ## Adding an icon is still code — and that is the honest line
  *
- * ## Precedence, and it matters
- *
- *   `item.icon`  →  this map  →  the hamburger
- *
- * An explicit per-item icon always wins, so a host that wants something
- * specific is never fighting this. The hamburger remains for a key nobody has
- * mapped — correct as a true last resort, and now rare rather than universal.
- *
- * ⚠ Sizing is deliberately NOT set here. `BottomNavItem` applies its own
- * `iconClassName`; a hardcoded `h-5 w-5` would win over the bar's own sizing
- * on one host and not another.
+ * A name not in this table cannot render, so a genuinely NEW glyph is a
+ * publish. That is the same boundary §7.2 draws for a new primitive: the
+ * vocabulary is code, every CHOICE within it is config. The table is
+ * deliberately broad so that choosing is the common case and extending is
+ * rare — if extension stops being rare, the vocabulary is wrong.
  */
-export const NAV_SLOT_ICONS: Record<string, React.ReactNode> = {
+export const NAV_ICON_REGISTRY: Record<string, React.ReactNode> = {
   home: <Home aria-hidden="true" />,
-  shop: <Store aria-hidden="true" />,
-  products: <ShoppingBag aria-hidden="true" />,
-  events: <CalendarDays aria-hidden="true" />,
-  blog: <Newspaper aria-hidden="true" />,
-  articles: <Newspaper aria-hidden="true" />,
-  wiki: <BookOpen aria-hidden="true" />,
+  store: <Store aria-hidden="true" />,
+  bag: <ShoppingBag aria-hidden="true" />,
+  calendar: <CalendarDays aria-hidden="true" />,
+  newspaper: <Newspaper aria-hidden="true" />,
+  book: <BookOpen aria-hidden="true" />,
   search: <Search aria-hidden="true" />,
   cart: <ShoppingCart aria-hidden="true" />,
-  wishlist: <Heart aria-hidden="true" />,
-  orders: <Package aria-hidden="true" />,
-  profile: <User aria-hidden="true" />,
-  account: <User aria-hidden="true" />,
+  heart: <Heart aria-hidden="true" />,
+  package: <Package aria-hidden="true" />,
+  user: <User aria-hidden="true" />,
   dashboard: <LayoutDashboard aria-hidden="true" />,
-  deals: <Tag aria-hidden="true" />,
-  coupons: <Tag aria-hidden="true" />,
-  invoices: <Receipt aria-hidden="true" />,
-  audit: <ShieldCheck aria-hidden="true" />,
-  help: <LifeBuoy aria-hidden="true" />,
-  support: <LifeBuoy aria-hidden="true" />,
-  policies: <FileText aria-hidden="true" />,
+  tag: <Tag aria-hidden="true" />,
+  receipt: <Receipt aria-hidden="true" />,
+  shield: <ShieldCheck aria-hidden="true" />,
+  lifebuoy: <LifeBuoy aria-hidden="true" />,
+  document: <FileText aria-hidden="true" />,
 };
+
+/**
+ * The SHIPPED DEFAULT icon name for a well-known slot — a seed, not a rule.
+ *
+ * ⚠ This is the "default templates" half of *we ship the mechanism and the
+ * default templates; the user overrides them*. It answers only when a nav item
+ * names no icon of its own, so an install that never configures anything still
+ * gets a sensible bar — which is the state every extracted app was in when all
+ * four shipped the same hamburger.
+ *
+ * 🛑 Keyed on `key`, never on `href` or `label`. A key is minted once and
+ * stable; deriving from an href means re-pointing a link silently drops its
+ * icon, which is the derived-id trap already recorded for
+ * `navItemId(portal, href)`.
+ */
+export const DEFAULT_NAV_SLOT_ICON_NAMES: Record<string, string> = {
+  home: "home",
+  shop: "store",
+  products: "bag",
+  events: "calendar",
+  blog: "newspaper",
+  articles: "newspaper",
+  wiki: "book",
+  search: "search",
+  cart: "cart",
+  wishlist: "heart",
+  orders: "package",
+  profile: "user",
+  account: "user",
+  dashboard: "dashboard",
+  deals: "tag",
+  coupons: "tag",
+  invoices: "receipt",
+  audit: "shield",
+  help: "lifebuoy",
+  support: "lifebuoy",
+  policies: "document",
+};
+
+/**
+ * One slot's icon, resolved through the full precedence chain.
+ *
+ * ```
+ * item.icon            a component passed in code        (most specific)
+ *   ?? item.iconName   a NAME from config                 ← the configurable rung
+ *   ?? the slot default for item.key                      ← shipped template
+ *   ?? the caller's fallback                               (least specific)
+ * ```
+ *
+ * 🛑 `??` and not `||`, per the standing config rule: an explicit value at a
+ * specific level is a VALUE, and `||` would let a broader level silently
+ * re-supply something a narrower one deliberately set.
+ */
+export function resolveNavIcon(
+  item: { key: string; icon?: React.ReactNode; iconName?: string },
+  fallback: React.ReactNode,
+): React.ReactNode {
+  if (item.icon) return item.icon;
+  if (item.iconName && NAV_ICON_REGISTRY[item.iconName]) {
+    return NAV_ICON_REGISTRY[item.iconName];
+  }
+  const defaultName = DEFAULT_NAV_SLOT_ICON_NAMES[item.key];
+  if (defaultName && NAV_ICON_REGISTRY[defaultName]) {
+    return NAV_ICON_REGISTRY[defaultName];
+  }
+  return fallback;
+}
 
 export interface BottomNavItem {
   key: string;
   href: string;
   label: string;
+  /**
+   * A rendered icon, passed in CODE. Wins over everything.
+   *
+   * ⚠ Use `iconName` instead wherever the choice could reasonably be an
+   * operator's. This field cannot come from config — a React node is not
+   * serializable, and a non-serializable value crossing a boundary is what
+   * caused this project's React #441 outage.
+   */
   icon?: React.ReactNode;
+  /**
+   * The icon's NAME, from `NAV_ICON_REGISTRY` — the configurable rung.
+   *
+   * 🛑 This is the field a stored nav row carries. It is a plain string, so it
+   * survives JSON, Firestore and the RSC boundary, and changing which icon a
+   * link shows becomes a config edit rather than an appkit publish plus four
+   * deploys.
+   *
+   * An unrecognised name falls through to the slot default and then to the
+   * caller's fallback — never a throw, so newer config cannot break an older
+   * deploy.
+   */
+  iconName?: string;
   /**
    * Sub-items, reached by holding the slot or tapping its caret — the same
    * contract as the navbar dropdown and the sidebar's nested links.
@@ -187,7 +268,7 @@ function BottomNavSlot({
        * to exist at all — without it every host that omits icons renders the
        * same glyph in every slot, which is what shipped on all of them.
        */
-      icon={item.icon ?? NAV_SLOT_ICONS[item.key] ?? fallbackIcon}
+      icon={resolveNavIcon(item, fallbackIcon)}
       isActive={isActive}
       variant="vertical"
       activeClassName={activeClassName}
