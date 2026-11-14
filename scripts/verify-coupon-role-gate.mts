@@ -46,6 +46,24 @@ console.log("\n  ── the DISPLAY half: a restricted coupon is never listed �
   const restricted = base({ restrictions: { firstTimeUserOnly: false, allowedRoles: ["admin"] } } as Partial<CouponDocument>);
   check(isCouponDisplayable(open), "an unrestricted, valid coupon IS listed (no regression)");
   check(!isCouponDisplayable(restricted), "a coupon with allowedRoles is NOT listed");
+  /*
+   * 🛑 PER-USER COUPONS — WIN TICKETS. This assertion exists because the gate
+   * covered roles and NOT users, and the public promotions page was measured
+   * publishing a win ticket's CODE plus `allowedUserIds` (the winner's uid) to
+   * an anonymous visitor. Two disclosures in one row: the entitlement itself,
+   * and who won — which the owner ruled must not appear on a public surface.
+   */
+  const ticket = base({
+    restrictions: { firstTimeUserOnly: false, allowedUserIds: ["user-winner"] },
+  } as Partial<CouponDocument>);
+  check(!isCouponDisplayable(ticket), "🛑 a WIN TICKET (allowedUserIds) is NOT listed publicly");
+  const emptyUsers = base({
+    restrictions: { firstTimeUserOnly: false, allowedUserIds: [] },
+  } as Partial<CouponDocument>);
+  check(
+    isCouponDisplayable(emptyUsers),
+    "an EMPTY allowedUserIds still lists — absent/empty means everyone, so no stored coupon changes meaning",
+  );
   const emptyRoles = base({ restrictions: { firstTimeUserOnly: false, allowedRoles: [] } } as Partial<CouponDocument>);
   check(
     isCouponDisplayable(emptyRoles),

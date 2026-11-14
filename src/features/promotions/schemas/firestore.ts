@@ -486,6 +486,30 @@ export function isCouponDisplayable(coupon: CouponDocument): boolean {
   if (coupon.restrictions?.allowedRoles && coupon.restrictions.allowedRoles.length > 0) {
     return false;
   }
+  /*
+   * 🛑 AND PER-USER COUPONS — WIN TICKETS. Measured on the public promotions
+   * page 2026-11-14: the response carried `code: "WIN…"`,
+   * `restrictions.allowedUserIds: ["<uid>"]` and `applicableProducts` for a
+   * prize ticket, to an ANONYMOUS visitor, three occurrences in the HTML.
+   *
+   * ⚠ TWO separate disclosures in one row, and the second is the worse half:
+   *   - the CODE is the entitlement itself, published to everyone;
+   *   - `allowedUserIds` names WHO WON, which the owner's ruling says even
+   *     admin must not see on a public surface.
+   *
+   * 🛑 The role gate above was added days before this one and did not cover
+   * it, because a win ticket restricts by USER and not by ROLE. The lesson is
+   * the gate's shape, not the field: "is this coupon addressed to a specific
+   * subject?" is the question, and `allowedRoles` was only ever half of it.
+   *
+   * ⚠ Not merely cosmetic even though `_fetchAndValidateCoupon` would still
+   * refuse a non-winner: a listing that advertises a code nobody else can use
+   * is an oracle for who won, and a prize page read by people who did not
+   * enter should not name the winner.
+   */
+  if (coupon.restrictions?.allowedUserIds && coupon.restrictions.allowedUserIds.length > 0) {
+    return false;
+  }
 
   const now = new Date();
   const endDate = coupon.validity.endDate

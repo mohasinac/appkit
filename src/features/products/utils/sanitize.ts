@@ -43,6 +43,41 @@ export function sanitizeProductForPublic<T extends object>(
   for (const key of Object.keys(copy)) {
     if (/Index$/.test(key)) delete (copy as Record<string, JsonValue>)[key];
   }
+
+  /*
+   * ── THE NESTED PRIZE BLOCK — REBUILT, NOT COPIED ─────────────────────────
+   *
+   * 🛑 MEASURED LEAKING 2026-11-14. `/promotions/all` published
+   * `eventPrize.winnerUserIds: ["<uid>"]` plus `claimWindowEndsAt` to an
+   * ANONYMOUS visitor, on an ISR-cached page. The prizes SECTION was safe —
+   * `toPublicEventPrize` rebuilds the block field by field — but the same
+   * product also appeared in the FEATURED list, which passes product
+   * documents through this function instead.
+   *
+   * 🛑 EVERYTHING ABOVE IS A TOP-LEVEL SWEEP AND CANNOT SEE INSIDE A MAP.
+   * `winnerUserIds` is nested one level down, so neither the identity list nor
+   * the `/Index$/` suffix pass touched it. That is the same shape as the three
+   * leaks the suffix sweep was written for, one level deeper — and it is why
+   * this is handled here rather than in the one list that happened to expose
+   * it: any surface that ships a product gets the fix.
+   *
+   * ⚠ REBUILT, never `delete`d wholesale. The prize TAG is advertising and
+   * must survive — the owner's ruling is that a prize is public while the
+   * WINNER is not ("visibility ≠ entitlement"). Naming the three fields that
+   * may travel makes the leak unrepresentable rather than merely avoided, the
+   * same construction `toPublicEventPrize` uses.
+   */
+  const prize = (copy as Record<string, JsonValue>)["eventPrize"] as
+    | Record<string, JsonValue>
+    | undefined;
+  if (prize && typeof prize === "object") {
+    const safe: Record<string, JsonValue> = {};
+    if (typeof prize["eventId"] === "string") safe["eventId"] = prize["eventId"];
+    if (typeof prize["label"] === "string") safe["label"] = prize["label"];
+    if (prize["showInPromotions"] === true) safe["showInPromotions"] = true;
+    (copy as Record<string, JsonValue>)["eventPrize"] = safe;
+  }
+
   return copy;
 }
 
