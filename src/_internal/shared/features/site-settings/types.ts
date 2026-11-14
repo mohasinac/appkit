@@ -84,7 +84,19 @@ export interface PublicSiteSettings {
    * Opposite polarity to `chat` above — a kill switch on an already-shipped
    * path, so absence means ON; see the schema field's own doc comment.
    */
-  assistant?: { enabled: boolean };
+  /**
+   * ⚠ TWO flags, because there are two assistants and they are switched
+   * independently: `enabled` is the CUSTOMER widget, `adminEnabled` is the
+   * admin's internal panel. `AdminAssistantWidget` states why they must not be
+   * merged — an internal tool should not vanish because customer chat was
+   * turned off.
+   *
+   * 🛑 `adminEnabled` is projected by the adapter as well as declared here. A
+   * field added to this type without a line in `toPublicSiteSettings` is
+   * readable by nothing — the same shape that made the checkout show "₹0 of
+   * free cover" earlier today.
+   */
+  assistant?: { enabled: boolean; adminEnabled?: boolean };
   /**
    * Is the support desk reachable — read by `UserLayoutClient`, a client
    * component. Narrowed to the one boolean rather than passed by reference,

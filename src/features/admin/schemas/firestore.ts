@@ -1168,7 +1168,21 @@ export interface SiteSettingsDocument extends BaseDocument {
    * cannot route around the switch.
    */
   assistant?: {
+    /** The CUSTOMER-facing chat widget and its full page. */
     enabled: boolean;
+    /**
+     * The ADMIN's internal assistant panel — a separate switch on purpose.
+     *
+     * 🛑 NOT governed by `enabled`, and the separation is deliberate:
+     * `AdminAssistantWidget`'s own note says *"an admin's own internal tool
+     * should not vanish because a seller disabled customer-facing chat."*
+     * One flag for both would make that configuration unreachable forever.
+     *
+     * ⚠ OPTIONAL, and ABSENT MEANS ENABLED — matching its sibling, so a
+     * consumer that has never heard of this flag keeps its admin tool. Only
+     * an explicit `false` turns it off.
+     */
+    adminEnabled?: boolean;
   };
   /**
    * The public search index — the browser-side artifact, not the per-listing

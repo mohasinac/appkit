@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
+import type { PublicSiteSettings } from "../../../_internal/shared/features/site-settings/types";
 import { MessageCircle, X } from "lucide-react";
 import { Div } from "../../../ui/components/Div";
 import { IconButton } from "../../../ui/components/IconButton";
@@ -50,6 +52,7 @@ interface Exchange {
 
 export function AdminAssistantWidget() {
   const { user, loading } = useSession();
+  const { data: siteSettings } = useSiteSettings<PublicSiteSettings>();
   const { hand } = useHandMode();
   const [open, setOpen] = useState(false);
   const [question, setQuestion] = useState("");
@@ -73,6 +76,27 @@ export function AdminAssistantWidget() {
   // two-state gate would flash the launcher away from a signed-in admin on
   // every page load.
   if (loading || !isAdminUser(user)) {
+    return null;
+  }
+
+  /*
+   * ── ITS OWN KILL SWITCH ──────────────────────────────────────────────────
+   *
+   * Owner, 2026-11-14: both assistants off for R1. Found by driving /admin
+   * after disabling the customer widget and seeing this one still there.
+   *
+   * 🛑 A SEPARATE FLAG, NOT `assistant.enabled`. The comment at the top of
+   * this file gives the reason and it still holds: *"an admin's own internal
+   * tool should not vanish because a seller disabled customer-facing chat."*
+   * Reusing the customer flag would collapse that distinction permanently —
+   * you could never run the internal tool while customer chat stayed off.
+   *
+   * ⚠ `=== false` is the ONLY disabling value, matching its sibling: an ABSENT
+   * key means ENABLED, so a consumer that has never heard of this flag keeps
+   * its admin tool. Seeded `false` explicitly for this install, because a
+   * reseed that merely omitted it would switch the panel back on.
+   */
+  if (siteSettings?.assistant?.adminEnabled === false) {
     return null;
   }
 

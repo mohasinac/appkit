@@ -341,7 +341,14 @@ export function toPublicSiteSettings(
      * and only an explicit `false` disables it. Same reasoning `search`
      * below uses for the identical reason.
      */
-    assistant: { enabled: doc.assistant?.enabled !== false },
+    /* ⚠ BOTH flags projected. `adminEnabled` governs the admin's internal
+       panel, which deliberately does not read `enabled` — declaring it on the
+       type without projecting it here would leave the client unable to see it
+       at all. Same `!== false` so absent means ON for both. */
+    assistant: {
+      enabled: doc.assistant?.enabled !== false,
+      adminEnabled: doc.assistant?.adminEnabled !== false,
+    },
     /*
      * 🛑 `!== false`, the opposite of `chat` above, and the two sit together
      * deliberately so the difference is visible rather than looking like one

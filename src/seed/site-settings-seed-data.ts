@@ -797,6 +797,10 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
    */
   assistant: {
     enabled: false,
+    /* ⚠ The ADMIN panel has its own switch — see AdminAssistantWidget for why
+       it must not read the customer flag. Seeded false explicitly because an
+       ABSENT key means ENABLED. */
+    adminEnabled: false,
   },
   prizes: {
     claimWindowDays: 7,
