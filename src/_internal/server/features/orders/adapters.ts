@@ -245,6 +245,30 @@ export function orderDocumentToOrder(doc: OrderPlain): Order {
     pointsApplied: doc.pointsApplied,
     amountDue: doc.amountDue,
     /*
+     * The shipment-protection disclosure, frozen onto the order at checkout.
+     *
+     * 🛑 MEASURED MISSING 2026-11-14. The notice was STORED correctly —
+     * `protectionNotice: "Orders above ₹2,000 are not covered automatically…"`
+     * on order-2 — `OrderPlain` declared it, and `InvoicePageClient` renders it
+     * behind `typeof order.protectionNotice === "string" && …`. But this
+     * mapper is a field-by-field ALLOWLIST and never copied it, so that
+     * condition could not be true and the invoice omitted the disclosure
+     * entirely.
+     *
+     * ⚠ Exactly the Root Cause #57 shape the invoice-number comment below
+     * already describes, on the field beside it: a statutory document
+     * rendering without something the database held. The owner's ruling was
+     * explicit — *"make sure that the invoice generated has that"* — and three
+     * layers each looked correct in isolation.
+     *
+     * ⚠ Read from the ORDER, never recomputed: the cover ceiling is config and
+     * config moves, so an invoice re-deriving it would silently restate a
+     * disclosure the buyer never saw.
+     */
+    ...(typeof doc.protectionNotice === "string" && doc.protectionNotice.trim()
+      ? { protectionNotice: doc.protectionNotice }
+      : {}),
+    /*
      * Phase 7 — the invoice number, mapped for the same Root Cause #57 reason
      * as everything above. Unmapped, the buyer's invoice page would render a
      * statutory document with no number on it while the database held one, and
