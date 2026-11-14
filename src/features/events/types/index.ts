@@ -80,6 +80,42 @@ const ALL_EVENT_TYPES_MAP: Record<EventType, true> = {
 export const ALL_EVENT_TYPES = Object.keys(ALL_EVENT_TYPES_MAP) as EventType[];
 
 /**
+ * Types an admin may CREATE today — a strict subset of the union above.
+ *
+ * ## 🛑 WHY THIS IS A SECOND LIST AND NOT A NARROWER UNION
+ *
+ * Owner ruling, 2026-11-14: `giveaway` is **retired** — it was a second name
+ * for `random-draw`, which is the duplicate-vocabulary defect this codebase
+ * keeps closing — and `feedback` **merges into `survey`**, being a survey with
+ * one free-text field.
+ *
+ * ⚠ Neither may leave `ALL_EVENT_TYPES_MAP`. That map IS the union, so deleting
+ * a member makes every stored row carrying it fail validation — a DATA
+ * MIGRATION, not an edit. The standing rule here is explicit: *"never DELETE a
+ * deferred type — unlisted is reversible, deletion is a migration."*
+ *
+ * So the entry point closes and the read path stays open: **accepted, never
+ * written**, exactly as `scamPlatform: "letitrip"` is handled.
+ *
+ * ⚠ And it is deliberately NOT derived by subtraction from the map. A derived
+ * list silently re-admits whatever is added later, which is how a retired
+ * value comes back — the same way `giveaway` returned to a picker once before.
+ * Adding a creatable type must be a decision someone writes down here.
+ *
+ * 🛑 Do not use this for FILTERING or for labels. A surface that lists existing
+ * events must still render a retired type correctly, or a historical giveaway
+ * renders as "unknown" to the people who entered it.
+ */
+export const CREATABLE_EVENT_TYPES: readonly EventType[] = [
+  "sale",
+  "offer",
+  "poll",
+  "survey",
+  "bonus-spin",
+  "random-draw",
+] as const;
+
+/**
  * Display labels for the admin/seller dashboards, which are not i18n-wrapped.
  * Public surfaces use the `filters.eventType*` message keys instead.
  *
